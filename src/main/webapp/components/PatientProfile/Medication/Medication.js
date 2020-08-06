@@ -32,7 +32,7 @@ import Select from "react-select";
 import * as encounterAction from "actions/encounter";
 import * as actions from "actions/medication";
 import * as patientActions from "actions/patients";
-
+import { ToastContainer, toast } from "react-toastify";
 import { connect } from "react-redux";
 import { v1 as uuidv1 } from "uuid";
 import * as CODES from "api/codes";
@@ -169,10 +169,9 @@ function MedicationPage(props) {
 
     const defaults = {
       patient_id: PatientID,
-      drug_presription_id: uuidv1(),
+      //drug_presription_id: uuidv1(),
       prescription_status: 0,
       quantity_dispensed: 0,
-      brand_name_dispensed: "",
       user_id: 0,
     };
     const prescriptions = medis.map((x) => {
@@ -182,11 +181,13 @@ function MedicationPage(props) {
           drug_id: x.drug_order,
           generic_name: getDrugName(x.drug_order),
           duration_unit: x.duration_unit,
-          date_prescribed: moment(new Date()).format("DD-MM-YYYY"),
+          date_prescribed: x.drug_order_date,
+          time_prescribed: x.drug_order_time,
           start_date: moment(x.start_date).format("DD-MM-YYYY"),
           dosage: x.dose,
           dosage_frequency: x.dose_frequency,
           comment: x.comment,
+          brand_name_dispensed: x.brand_name_dispensed,
         },
         ...defaults,
       };
@@ -203,7 +204,7 @@ function MedicationPage(props) {
     setShowLoading(true);
     const onSuccess = () => {
       setShowLoading(false);
-      setSuccessMsg("Drug Order Successfully Saved!");
+      toast.success("Drug Order Successfully Saved!");
       setmedis([]);
       try {
         props.fetchPatientMedicationOrder(
@@ -215,7 +216,7 @@ function MedicationPage(props) {
     };
     const onError = (errstatus) => {
       setShowLoading(false);
-      setErrorMsg("Something went wrong, please contact administration");
+      toast.error("Something went wrong, please contact administration");
     };
     props.createMedication(data, onSuccess, onError);
   };
@@ -260,20 +261,19 @@ function MedicationPage(props) {
   }
   return (
     <Row>
+      <ToastContainer />
       <Col lg={5}>
-        <Card style={cardStyle} className=" p-3">
+        <Card>
           <CardHeader>Drug Order</CardHeader>
           <CardBody>
-            <div>
-              {successMsg ? <Alert color="success">{successMsg}</Alert> : ""}
-              {errorMsg ? <Alert color="info">{errorMsg}</Alert> : ""}
-              <NewDrugOrderForm
-                addDrugs={addDrugs}
-                drugOrder={drugOrder}
-                fetchingDrugs={fetchingDrugs}
-                visitId={props.patient.visitId}
-              />
-            </div>
+            {successMsg ? <Alert color="success">{successMsg}</Alert> : ""}
+            {errorMsg ? <Alert color="info">{errorMsg}</Alert> : ""}
+            <NewDrugOrderForm
+              addDrugs={addDrugs}
+              drugOrder={drugOrder}
+              fetchingDrugs={fetchingDrugs}
+              visitId={props.patient.visitId}
+            />
           </CardBody>
         </Card>
       </Col>
@@ -350,7 +350,11 @@ function MedicationPage(props) {
 
 function NewDrugOrderForm({ addDrugs, drugOrder, fetchingDrugs, visitId }) {
   const classes = useStyles();
-  const [medi, setmedi] = useState({ start_date: new Date() });
+  const [medi, setmedi] = useState({
+    start_date: new Date(),
+    drug_order_date: moment(new Date()).format("DD-MM-YYYY"),
+    drug_order_time: moment(new Date()).format("LT"),
+  });
   const [errorMsg, setErrorMsg] = useState("");
   const onChange = (e) => {
     e.persist();
@@ -369,7 +373,9 @@ function NewDrugOrderForm({ addDrugs, drugOrder, fetchingDrugs, visitId }) {
         medi.duration &&
         medi.dose &&
         medi.dose_frequency &&
-        medi.drug_order
+        medi.drug_order &&
+        medi.drug_order_date &&
+        medi.drug_order_time
       )
     ) {
       window.scrollTo(0, 0);
@@ -386,20 +392,45 @@ function NewDrugOrderForm({ addDrugs, drugOrder, fetchingDrugs, visitId }) {
       drug_order: "",
       generic_name: "",
       dose_frequency: "",
+      brand_name_dispensed: "",
+      drug_order_date: moment(new Date()).format("DD-MM-YYYY"),
+      drug_order_time: moment(new Date()).format("LT"),
     });
   };
 
   const handleChange = (newValue, actionMeta) => {
     setmedi({ ...medi, drug_order: newValue.value });
   };
+  const handleBrandNameChange = (newValue, actionMeta) => {
+    setmedi({ ...medi, brand_name_dispensed: newValue.value });
+  };
 
   return (
     <Form className={classes.formroot} onSubmit={handleAddDrugs}>
       {errorMsg ? <Alert color="danger">{errorMsg}</Alert> : ""}
-
       <Col md={12}>
         <FormGroup>
-          <Label for="hospitalNumber">Drug Generic Name </Label>
+          <Label for="encounterDate">Encounter Date & Time*</Label>
+          <DateTimePicker
+            name="encounterDate"
+            id="encounterDate"
+            defaultValue={new Date()}
+            max={new Date()}
+            onChange={(e) =>
+              setmedi({
+                ...medi,
+                ...{
+                  drug_order_date: e ? Moment(e).format("DD-MM-YYYY") : null,
+                  drug_order_time: e ? Moment(e).format("LT") : null,
+                },
+              })
+            }
+          />
+        </FormGroup>
+      </Col>
+      <Col md={12}>
+        <FormGroup>
+          <Label for="hospitalNumber">Drug Generic Name* </Label>
           <Select
             required
             isMulti={false}
@@ -411,8 +442,23 @@ function NewDrugOrderForm({ addDrugs, drugOrder, fetchingDrugs, visitId }) {
       </Col>
       <Col md={12}>
         <FormGroup>
+          <Label for="brandName">
+            Drug Brand Name <small>(Optional)</small>
+          </Label>
+          <Input
+            type="text"
+            name="brand_name_dispensed"
+            id="brand_name_dispensed"
+            placeholder="Brand Name To Dispense"
+            value={medi.brand_name_dispensed}
+            onChange={onChange}
+          />
+        </FormGroup>
+      </Col>
+      <Col md={12}>
+        <FormGroup>
           <Label for="dose">
-            Dose <small>(Amount of medication taken at one time)</small>
+            Dose* <small>(Amount of medication taken at one time)</small>
           </Label>
           <Input
             type="number"
@@ -431,7 +477,7 @@ function NewDrugOrderForm({ addDrugs, drugOrder, fetchingDrugs, visitId }) {
       <Col md={12}>
         <FormGroup>
           <Label for="dose_frequency">
-            Dose Frequency <small>(Frequency of dose per day)</small>
+            Dose Frequency* <small>(Frequency of dose per day)</small>
           </Label>
           <Input
             type="number"
@@ -448,7 +494,7 @@ function NewDrugOrderForm({ addDrugs, drugOrder, fetchingDrugs, visitId }) {
         </FormGroup>
       </Col>
       <Col md={12}>
-        <Label for="start_date">Start Date</Label>
+        <Label for="start_date">Start Date*</Label>
 
         <DateTimePicker
           time={false}
@@ -463,7 +509,7 @@ function NewDrugOrderForm({ addDrugs, drugOrder, fetchingDrugs, visitId }) {
       </Col>
       <Col md={12}>
         <FormGroup>
-          <Label for="duration">Duration</Label>
+          <Label for="duration">Duration*</Label>
           <Input
             type="number"
             name="duration"
@@ -481,7 +527,7 @@ function NewDrugOrderForm({ addDrugs, drugOrder, fetchingDrugs, visitId }) {
       </Col>
       <Col md={12}>
         <FormGroup>
-          <Label for="duration_unit">Duration Unit</Label>
+          <Label for="duration_unit">Duration Unit*</Label>
           <Input
             type="select"
             name="duration_unit"
@@ -535,16 +581,23 @@ function CurrentDrugOrders({ medi, index, removeDrug, drugTypeName }) {
       <ListItemText
         primary={
           <React.Fragment>
-            {drugTypeName}, {medi.dose} unit(s) to be taken{" "}
-            {medi.dose_frequency} time(s) a day
+            <b>{drugTypeName} - {medi.brand_name_dispensed}, {medi.dose}</b> unit(s) to
+            be taken <b>{medi.dose_frequency}</b> time(s) a day
           </React.Fragment>
         }
         secondary={
           <React.Fragment>
             <Typography component="span" variant="body2" color="textPrimary">
-              Start at {medi.start_date.toLocaleDateString()} for{" "}
-              {medi.duration} {medi.duration_unit} <br></br>
-              <small>{medi.comment}</small>
+              Start at <b>{medi.start_date.toLocaleDateString()}</b> for{" "}
+              <b>{medi.duration} {medi.duration_unit} </b><br></br>
+              Instruction: {medi.comment}
+              <br></br> Date Ordered:{" "}
+              <b>
+                {moment(medi.drug_order_date, "DD-MM-YYYY").format(
+                  "MMM DD, YYYY"
+                )}{" "}
+                {medi.drug_order_time}
+              </b>
             </Typography>
           </React.Fragment>
         }

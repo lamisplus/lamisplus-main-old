@@ -24,8 +24,6 @@ const sidebarBackground = {
   backgroundRepeat: 'no-repeat',
 };
 
-
-
 const navItems = [
   { to: '/dashboard', name: 'Dashboard', exact: true, Icon: MdDashboard },
   { to: '/patients', name: 'Find Patient', exact: false, Icon: FaUserPlus },
@@ -33,7 +31,7 @@ const navItems = [
   { to: '/pharmacy', name: 'Pharmacy', exact: false, Icon: GiMedicines },
   { to: '/appointments', name: 'Appointments', exact: false, Icon: MdGraphicEq },
   { to: '/form-dashboard', name: 'Administration', exact: false, Icon: FaUserCog },
-  { to: '/report', name: 'Report', exact: false, Icon: FaListUl },
+  { to: '/report-dashboard', name: 'Reports', exact: false, Icon: FaListUl },
   { to: '/visual', name: 'Visualization', exact: false, Icon: MdGraphicEq },
   //{ to: '/admin-dashboard', name: 'Administration Module', exact: false, Icon: FaUserCog },
 ];
@@ -44,7 +42,6 @@ class Sidebar extends React.Component {
   state = {
     isOpenComponents: false,
 
-   
   };
 
   handleClick = name => () => {

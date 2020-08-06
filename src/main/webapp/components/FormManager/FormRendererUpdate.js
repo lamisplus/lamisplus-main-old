@@ -56,6 +56,7 @@ const FormRenderer = props => {
 
   //fetch encounter by encounter id
   React.useEffect(() => {
+    setShowLoadingEncounter(true);
     formRendererService
       .fetchEncounterById(props.encounterId)
       .then((response) => {

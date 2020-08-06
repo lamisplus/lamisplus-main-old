@@ -68,7 +68,7 @@ function TestOrderPage(props) {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const currentUserSubject = new BehaviorSubject(
-      JSON.parse(localStorage.getItem("currentUser"))
+    JSON.parse(localStorage.getItem("currentUser"))
   );
 
   React.useEffect(() => {
@@ -77,8 +77,8 @@ function TestOrderPage(props) {
     }
     if (props.vlIndications.length === 0) {
       props.fetchApplicationCodeSet(
-          "VIRAL_LOAD_INDICATION",
-          APPLICATION_CODESET_VL_INDICATION
+        "VIRAL_LOAD_INDICATION",
+        APPLICATION_CODESET_VL_INDICATION
       );
     }
     if (props.testGroupList.length === 0) {
@@ -86,7 +86,7 @@ function TestOrderPage(props) {
       const onSuccess = () => {};
       const onError = (errstatus) => {
         setErrorMessage(
-            "Could not fetch test groups at the moment, try again later"
+          "Could not fetch test groups at the moment, try again later"
         );
       };
       props.fetchTestGroup(onSuccess, onError);
@@ -129,10 +129,10 @@ function TestOrderPage(props) {
 
   const isViralLoad = () => {
     let value =
-        testOrder &&
-        testOrder.test &&
-        testOrder.test.value &&
-        testOrder.test.value.name === "Viral Load";
+      testOrder &&
+      testOrder.test &&
+      testOrder.test.value &&
+      testOrder.test.value.name === "Viral Load";
     return value;
   };
 
@@ -142,13 +142,13 @@ function TestOrderPage(props) {
     if (!testOrder) return;
     //
     if (
-        !(
-            testOrder.sample_order_date &&
-            testOrder.sample_order_time &&
-            testOrder.test.value &&
-            testOrder.priority.value &&
-            testOrder.sampleOrderedBy
-        )
+      !(
+        testOrder.sample_order_date &&
+        testOrder.sample_order_time &&
+        testOrder.test.value &&
+        testOrder.priority.value &&
+        testOrder.sampleOrderedBy
+      )
     ) {
       window.scrollTo(0, 0);
       setErrorMessage("Fill all required fields");
@@ -235,116 +235,116 @@ function TestOrderPage(props) {
   };
 
   return (
-      <Row>
-        <ToastContainer />
-        <Col md={4}>
-          <Card>
-            <CardHeader> Test Order</CardHeader>
-            <CardBody>
-              {successMessage ? (
-                  <Alert color="success">{successMessage}</Alert>
-              ) : (
-                  ""
-              )}
-              {errorMessage ? <Alert color="danger">{errorMessage}</Alert> : ""}
-              <br />
-              <form onSubmit={addNewTest}>
-                <Row>
-                  <Col md={12}>
-                    <FormGroup>
-                      <Label for="encounterDate">Encounter Date & Time*</Label>
-                      <DateTimePicker
-                          name="encounterDate"
-                          id="encounterDate"
-                          defaultValue={new Date()}
-                          max={new Date()}
-                          required
-                          onChange={(e) =>
-                              setTestOrder({
-                                ...testOrder,
-                                ...{
-                                  sample_order_date: e ? Moment(e).format(
-                                      "DD-MM-YYYY"
-                                  ) : null,
-                                  sample_order_time: e ? Moment(e).format("LT") : null,
-                                },
-                              })
-                          }
-                          // onChange={(value1) =>
-                          //   setOtherFields({
-                          //     ...otherfields,
-                          //     time_sample_transfered: moment(value1).format("LT"),
-                          //   })
-                          // }
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col md={12}>
-                    <FormGroup>
-                      <Label for="testGroup">Select Test Order*</Label>
-                      <Select
-                          required
-                          isMulti={false}
-                          value={testOrder.testGroup}
-                          onChange={getTestByTestGroup}
-                          options={props.testGroupList.map((x) => ({
-                            label: x.name,
-                            value: x,
-                          }))}
-                      />
-                    </FormGroup>
-                  </Col>
-                  <Col md={12}>
-                    <FormGroup>
-                      <Label for="testGroup">Select Test*</Label>
+    <Row>
+      <ToastContainer />
+      <Col md={4}>
+        <Card>
+          <CardHeader> Test Order</CardHeader>
+          <CardBody>
+            {successMessage ? (
+              <Alert color="success">{successMessage}</Alert>
+            ) : (
+              ""
+            )}
+            {errorMessage ? <Alert color="danger">{errorMessage}</Alert> : ""}
+            <br />
+            <form onSubmit={addNewTest}>
+              <Row>
+                <Col md={12}>
+                  <FormGroup>
+                    <Label for="encounterDate">Encounter Date & Time*</Label>
+                    <DateTimePicker
+                      name="encounterDate"
+                      id="encounterDate"
+                      defaultValue={new Date()}
+                      max={new Date()}
+                      required
+                      onChange={(e) =>
+                        setTestOrder({
+                          ...testOrder,
+                          ...{
+                            sample_order_date: e ? Moment(e).format(
+                              "DD-MM-YYYY" 
+                            ) : null,
+                            sample_order_time: e ? Moment(e).format("LT") : null,
+                          },
+                        })
+                      }
+                      // onChange={(value1) =>
+                      //   setOtherFields({
+                      //     ...otherfields,
+                      //     time_sample_transfered: moment(value1).format("LT"),
+                      //   })
+                      // }
+                    />
+                  </FormGroup>
+                </Col>
+                <Col md={12}>
+                  <FormGroup>
+                    <Label for="testGroup">Select Test Order*</Label>
+                    <Select
+                      required
+                      isMulti={false}
+                      value={testOrder.testGroup}
+                      onChange={getTestByTestGroup}
+                      options={props.testGroupList.map((x) => ({
+                        label: x.name,
+                        value: x,
+                      }))}
+                    />
+                  </FormGroup>
+                </Col>
+                <Col md={12}>
+                  <FormGroup>
+                    <Label for="testGroup">Select Test*</Label>
 
-                      <Select
-                          isMulti={false}
-                          required
-                          value={testOrder.test}
-                          onChange={(e) => setTestOrder({ ...testOrder, test: e })}
-                          options={tests.map((x) => ({
-                            label: x.name,
-                            value: x,
-                          }))}
-                      />
-                    </FormGroup>
-                  </Col>
+                    <Select
+                      isMulti={false}
+                      required
+                      value={testOrder.test}
+                      onChange={(e) => setTestOrder({ ...testOrder, test: e })}
+                      options={tests.map((x) => ({
+                        label: x.name,
+                        value: x,
+                      }))}
+                    />
+                  </FormGroup>
+                </Col>
+                <Col md={12}>
+                  <FormGroup>
+                    <Label for="priority">Select Priority*</Label>
+                    <Select
+                      isMulti={false}
+                      required
+                      value={testOrder.priority}
+                      onChange={(e) =>
+                        setTestOrder({ ...testOrder, priority: e })
+                      }
+                      options={props.priorities.map((x) => ({
+                        label: x.display,
+                        value: x,
+                      }))}
+                    />
+                  </FormGroup>
+                </Col>
+                {isViralLoad() && (
                   <Col md={12}>
                     <FormGroup>
-                      <Label for="priority">Select Priority*</Label>
+                      <Label for="vlIndication">VL Indication*</Label>
                       <Select
-                          isMulti={false}
-                          required
-                          value={testOrder.priority}
-                          onChange={(e) =>
-                              setTestOrder({ ...testOrder, priority: e })
-                          }
-                          options={props.priorities.map((x) => ({
-                            label: x.display,
-                            value: x,
-                          }))}
+                        isMulti={false}
+                        required
+                        value={testOrder.vlIndication}
+                        onChange={(e) =>
+                          setTestOrder({ ...testOrder, vlIndication: e })
+                        }
+                        options={props.vlIndications.map((x) => ({
+                          label: x.display,
+                          value: x,
+                        }))}
                       />
                     </FormGroup>
-                  </Col>
-                  {isViralLoad() && (
-                      <Col md={12}>
-                        <FormGroup>
-                          <Label for="vlIndication">VL Indication*</Label>
-                          <Select
-                              isMulti={false}
-                              required
-                              value={testOrder.vlIndication}
-                              onChange={(e) =>
-                                  setTestOrder({ ...testOrder, vlIndication: e })
-                              }
-                              options={props.vlIndications.map((x) => ({
-                                label: x.display,
-                                value: x,
-                              }))}
-                          />
-                        </FormGroup>
-                        {/* <FormGroup>
+                    {/* <FormGroup>
                       <Label for="vlIndication">VL Indication*</Label>
                       <Input
                         required
@@ -354,142 +354,142 @@ function TestOrderPage(props) {
                         onChange={onInputChange}
                       />
                     </FormGroup> */}
-                      </Col>
-                  )}
-                  <Col md={12}>
-                    <FormGroup>
-                      <Label for="sampleOrderedBy">Sample Ordered By*</Label>
-                      <Input
-                          required
-                          name="sampleOrderedBy"
-                          id="sampleOrderedBy"
-                          value={testOrder.sampleOrderedBy}
-                          onChange={onInputChange}
-                      />
-                    </FormGroup>
                   </Col>
-
-                  <Col md={12}>
-                    <CheckedInValidation
-                        actionButton={
-                          <Button
-                              className="btn btn-primary "
-                              type="button"
-                              onClick={addNewTest}
-                          >
-                            Add Test
-                          </Button>
-                        }
-                        visitId={props.patient.visitId}
+                )}
+                <Col md={12}>
+                  <FormGroup>
+                    <Label for="sampleOrderedBy">Sample Ordered By*</Label>
+                    <Input
+                      required
+                      name="sampleOrderedBy"
+                      id="sampleOrderedBy"
+                      value={testOrder.sampleOrderedBy}
+                      onChange={onInputChange}
                     />
-                  </Col>
-                </Row>
-              </form>
-            </CardBody>
-          </Card>
-        </Col>
-        <Col md={8}>
-          {testOrders.length > 0 && (
-              <Row>
-                <Col md={12}>
-                  <Card>
-                    <CardHeader>Current Test Order</CardHeader>
-                    <Row>
-                      <Col md={12}>
-                        <List>
-                          {testOrders.map((testOrder, index) => (
-                              <TestOrderList
-                                  key={index}
-                                  index={index}
-                                  testOrder={testOrder}
-                                  removeTest={removeTest}
-                              />
-                          ))}
-                        </List>
-                      </Col>
-                    </Row>
-                  </Card>
+                  </FormGroup>
                 </Col>
-                <Col md={12}>
-                  <br></br>
-                  <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      startIcon={<SaveIcon />}
-                      onClick={saveTestOrder}
-                  >
-                    Save &nbsp;
-                    {showLoading ? (
-                        <Spinner animation="border" role="status">
-                          <span className="sr-only">Loading...</span>
-                        </Spinner>
-                    ) : (
-                        ""
-                    )}
-                  </Button>
 
-                  <br></br>
-                  <hr></hr>
+                <Col md={12}>
+                  <CheckedInValidation
+                    actionButton={
+                      <Button
+                        className="btn btn-primary "
+                        type="button"
+                        onClick={addNewTest}
+                      >
+                        Add Test
+                      </Button>
+                    }
+                    visitId={props.patient.visitId}
+                  />
                 </Col>
               </Row>
-          )}
+            </form>
+          </CardBody>
+        </Card>
+      </Col>
+      <Col md={8}>
+        {testOrders.length > 0 && (
           <Row>
             <Col md={12}>
               <Card>
-                <CardHeader>Previous Test Order</CardHeader>
-                <PreviousTestOrder patientId={props.patient.patientId} />
+                <CardHeader>Current Test Order</CardHeader>
+                <Row>
+                  <Col md={12}>
+                    <List>
+                      {testOrders.map((testOrder, index) => (
+                        <TestOrderList
+                          key={index}
+                          index={index}
+                          testOrder={testOrder}
+                          removeTest={removeTest}
+                        />
+                      ))}
+                    </List>
+                  </Col>
+                </Row>
               </Card>
             </Col>
+            <Col md={12}>
+              <br></br>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                startIcon={<SaveIcon />}
+                onClick={saveTestOrder}
+              >
+                Save &nbsp;
+                {showLoading ? (
+                  <Spinner animation="border" role="status">
+                    <span className="sr-only">Loading...</span>
+                  </Spinner>
+                ) : (
+                  ""
+                )}
+              </Button>
+
+              <br></br>
+              <hr></hr>
+            </Col>
           </Row>
-        </Col>
-      </Row>
+        )}
+        <Row>
+          <Col md={12}>
+            <Card>
+              <CardHeader>Previous Test Order</CardHeader>
+              <PreviousTestOrder patientId={props.patient.patientId} />
+            </Card>
+          </Col>
+        </Row>
+      </Col>
+    </Row>
   );
 }
 
 function TestOrderList({ testOrder, index, removeTest }) {
   return (
-      <ListItem>
-        <ListItemText
-            primary={
-              <strong>
-                {testOrder.testGroup ? testOrder.testGroup.value.name : ""} -{" "}
-                {testOrder.test ? testOrder.test.value.name : ""}
-              </strong>
-            }
-            secondary={
-              <React.Fragment>
-                <Typography component="span" variant="body2" color="textPrimary">
-                  Priority:{" "}
-                  <b>
-                    {" "}
-                    {testOrder.priority
-                        ? testOrder.priority.value.display
-                        : ""}{" "}
-                  </b>
-                  {testOrder.vlIndication ? (
-                      <span>
+    <ListItem>
+      <ListItemText
+        primary={
+          <strong>
+            {testOrder.testGroup ? testOrder.testGroup.value.name : ""} -{" "}
+            {testOrder.test ? testOrder.test.value.name : ""}
+          </strong>
+        }
+        secondary={
+          <React.Fragment>
+            <Typography component="span" variant="body2" color="textPrimary">
+              Priority:{" "}
+              <b>
+                {" "}
+                {testOrder.priority
+                  ? testOrder.priority.value.display
+                  : ""}{" "}
+              </b>
+              {testOrder.vlIndication ? (
+                <span>
                   {" "}
-                        | VL Indication:{" "}
-                        <b>{testOrder.vlIndication.value.display} </b>
+                  | VL Indication:{" "}
+                  <b>{testOrder.vlIndication.value.display} </b>
                 </span>
-                  ) : (
-                      ""
-                  )}
+              ) : (
+                ""
+              )}
+            
+              <br></br> Sample Ordered by: <b> {testOrder.sampleOrderedBy}</b> | Date Ordered: <b>{moment(testOrder.sample_order_date, "DD-MM-YYYY").format("MMM DD, YYYY")} {testOrder.sample_order_time}</b>
+              
+            </Typography>
+          </React.Fragment>
+        }
+      />
 
-                  <br></br> Sample Ordered by: <b> {testOrder.sampleOrderedBy}</b> | Date Ordered: <b>{moment(testOrder.sample_order_date, "DD-MM-YYYY").format("MMM DD, YYYY")} {testOrder.sample_order_time}</b>
-
-                </Typography>
-              </React.Fragment>
-            }
-        />
-
-        <ListItemSecondaryAction onClick={() => removeTest(index)}>
-          <IconButton edge="end" aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
-        </ListItemSecondaryAction>
-      </ListItem>
+      <ListItemSecondaryAction onClick={() => removeTest(index)}>
+        <IconButton edge="end" aria-label="delete">
+          <DeleteIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
   );
 }
 const mapStateToProps = (state) => {

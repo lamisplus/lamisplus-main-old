@@ -312,13 +312,14 @@ const validate = () => {
         e.preventDefault();
           
             if(validate()){
+                console.log(relatives)
+                console.log(relative)
                 const newRegistrationDate = moment(values.dateRegistration).format("DD-MM-YYYY");
                 const newDateOfBirth = moment(values.dob).format("DD-MM-YYYY");
                 //values["dateRegistration"] = newRegistrationDate;
                 values["personRelativeDTOs"] = relatives;
                 //values["dob"] = newDateOfBirth;
-                console.log(values.dateRegistration)
-                console.log(values.dob)
+                
                 setSaving(true);
                     const onSuccess = () => {
                         setSaving(false);

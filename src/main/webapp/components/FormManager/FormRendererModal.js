@@ -41,7 +41,7 @@ const FormRendererModal = (props) => {
       }
     >
       <ToastContainer />
-      <ModalHeader toggle={toggle}>{props.title || ""}</ModalHeader>
+      <ModalHeader toggle={toggle}>{props.title || props.currentForm.formName || ""}</ModalHeader>
       <ModalBody>
         <Alert color="danger" isOpen={showErrorMsg} toggle={onDismiss}>
           {errorMsg}

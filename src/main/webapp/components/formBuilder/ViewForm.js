@@ -42,7 +42,7 @@ const Update = props => {
     }, [])
     useEffect (() => {
          //props.fetchById()
-        props.fetchPatientByHospitalNumber('P123189', null, null)
+        props.fetchPatientByHospitalNumber('6768595', null, null)
     }, [])
 
     const handleProgramChange = (e) => {
@@ -115,7 +115,7 @@ const Update = props => {
                                 <Input type="select" class="form-control" id="programId" required value={programId}  onChange={e => handleProgramChange(e) }>
                                     {props.services.map(program => (<option key={program.id} value={program.id} >{program.name}</option>))}
                                 </Input>:  <Input type="select" class="form-control" id="programId" required value={programId} onChange={e => setprogramId(e.target.value)}>
-                                    <option>No program found</option>
+                                    <option>No programs found</option>
                                 </Input>}
                         </FormGroup></Col>
 
@@ -183,4 +183,4 @@ const mapActionsToProps = ({
 
 export default connect(mapStateToProps, mapActionsToProps)(Update)
 
-//
+

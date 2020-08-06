@@ -39,7 +39,7 @@ const columns = [
     sortable: false,
     cell: row => (
       <span>
-        {row.test_result  ? row.test_result +'' +row.unit_measurement : ''}
+        {row.test_result  ? row.test_result +' ' +row.unit_measurement : ''}
       </span>
     )
   }

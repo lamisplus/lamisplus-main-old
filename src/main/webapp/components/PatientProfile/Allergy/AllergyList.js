@@ -89,11 +89,11 @@ function PatientAllergies(props) {
                     <Table.Cell>{allergy.severity}</Table.Cell>
                     <Table.Cell>{allergy.comment}</Table.Cell>
                     <Table.Cell>
-                      {/* <Icon 
+                      <Icon 
                         name="edit"
                         onClick={() => editForm(allergy.encounterId)}
                       />{" "}
-                      <Icon  name="delete" /> */}
+                      {/* <Icon  name="delete" />  */}
                     </Table.Cell>
                   </Table.Row>
                 ))}

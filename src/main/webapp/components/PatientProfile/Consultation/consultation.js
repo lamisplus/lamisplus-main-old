@@ -19,6 +19,7 @@ import * as actions from "actions/consultation";
 import * as CODES from "api/codes";
 import FormRenderer from "components/FormManager/FormRenderer";
 import "./consultation.css"
+import { ToastContainer, toast } from "react-toastify";
 
 function ConsultationPage(props) {
   const [errorMsg, setErrorMsg] = React.useState("");
@@ -79,6 +80,7 @@ function ConsultationPage(props) {
       setShowLoading(false);
       setShowSuccessMsg(true);
       setSuccessMsg("Consultation saved successfully!");
+      toast.success("Consultation saved successfully!");
       window.scrollTo(0, 0);
     };
     const onError = (errstatus) => {
@@ -94,6 +96,7 @@ function ConsultationPage(props) {
       setShowErrorMsg(true);
       setShowLoading(false);
       window.scrollTo(0, 0);
+      toast.error(msg);
     };
     props.createConsultation(data, onSuccess, onError);
   };
@@ -105,6 +108,7 @@ function ConsultationPage(props) {
 
   return (
     <React.Fragment>
+      <ToastContainer />
     <Alert color="danger" isOpen={showErrorMsg} toggle={onDismiss}>
     {errorMsg}
   </Alert>

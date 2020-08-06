@@ -20,6 +20,8 @@ import {
 import FormBuilder from './FormBuilder';
 import ViewForm from './ViewForm';
 
+
+
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
     return (
@@ -183,7 +185,8 @@ export default function ScrollableTabsButtonForce(props) {
                     aria-label="scrollable force tabs example">
                     <Tab className={classes.title} label="Form Builder" icon={<MdDashboard />} {...a11yProps(0)} />
                     <Tab className={classes.title} label="Form Update" icon={<MdContacts />} {...a11yProps(1)} />
-                    <Tab className={classes.title} label="Application CodeSet Setup" icon={<GiFiles />} {...a11yProps(2)} />
+                    <Tab className={classes.title} label="Flexmonster Builder" icon={<GiFiles />} {...a11yProps(2)} />
+                    <Tab className={classes.title} label="JSReport Builder" icon={<GiFiles />} {...a11yProps(2)} />
                     <Tab className={classes.title} label="Facility Setup " icon={<GiFiles />} {...a11yProps(3)} />
                 </Tabs>
                 <div>
@@ -197,14 +200,10 @@ export default function ScrollableTabsButtonForce(props) {
             <TabPanel value={value} index={1}>
             <ViewForm/>
             </TabPanel>
-
             {/* Begining of consultation  */}
-            <TabPanel value={value} index={2}>
-                <ViewForm/>
-            </TabPanel>
+            
 
-            <TabPanel value={value} index={3}>
-            </TabPanel>
+       
             {/* End of consultation */}
             <TabPanel value={value} index={4}>
             </TabPanel>
@@ -265,7 +264,6 @@ export default function ScrollableTabsButtonForce(props) {
                     </Grid>
                 </Grid>
             </TabPanel>
-
         </div>
     );
 }

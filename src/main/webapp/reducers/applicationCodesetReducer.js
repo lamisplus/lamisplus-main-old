@@ -14,9 +14,9 @@ const applicationCodesetReducer = (state = initialState, action) => {
     case ACTION_TYPES.APPLICATION_CODESET_RELATIONSHIPS:
       return { ...state, relationships: [...action.payload] }
 
-    case ACTION_TYPES.APPLICATION_CODESET_VL_INDICATION:
+      case ACTION_TYPES.APPLICATION_CODESET_VL_INDICATION:
       return { ...state, vlIndications: [...action.payload] }
-
+      
     default:
       return state
   }

@@ -401,3 +401,25 @@ export const fetchCheckedInPatients = (onSuccess, onError) => dispatch => {
     }
     );
 };
+
+export const fetchPatientConsultationHistory = (id, onSuccess, onError) => dispatch => {
+  if(id){
+   axios
+     .get(`${baseUrl}patients/${id}/encounters/${CODES.CONSULTATION_FORM}`)
+     .then(response => {
+       dispatch({
+         type: ACTION_TYPES.PATIENT_CONSULTATION_HISTORY,
+         payload: response.data
+       })
+       onSuccess && onSuccess() ;
+     })
+     .catch(error => {
+       dispatch({
+         type: ACTION_TYPES.PATIENTS_ERROR,
+         payload: 'Something went wrong, please try again'
+       })
+       onError && onError();
+      }
+     )
+     }  
+ }

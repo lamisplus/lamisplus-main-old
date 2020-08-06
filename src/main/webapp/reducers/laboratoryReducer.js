@@ -32,6 +32,11 @@ const laboratoryReducer = (state = initialState, action) => {
     case ACTION_TYPES.FETCH_ALL_TESTS_BY_TEST_GROUP:
       return { ...state, tests: action.payload }
 
+    case ACTION_TYPES.FETCH_ALL_TESTS_BY_ENCOUNTER_ID:
+        return { ...state, tests: action.payload }
+
+      
+
     default:
       return state
   }
