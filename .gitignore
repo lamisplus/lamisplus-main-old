@@ -151,3 +151,8 @@ yarn-error.log*
 
 #/src/styles/reduction.css
 
+
+.idea/
+src/main/resources/static/
+src/main/resources/static/static/
+target/
