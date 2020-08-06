@@ -5,25 +5,12 @@
       <configuration>
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
-        <datasource-mapping>
-          <factory-entry name="Entities" />
-          <factory-entry name="entityManagerFactory" value="fbbdb471-2a67-4ba7-aa57-056a847428f9" />
-          <factory-entry name="noname-a.xml@0" value="b8822585-a5a2-4e90-930e-796a9ecf6d37" />
-        </datasource-mapping>
-        <naming-strategy-map>
-          <unit-entry name="entityManagerFactory" />
-        </naming-strategy-map>
+        <datasource-mapping />
+        <naming-strategy-map />
       </configuration>
     </facet>
     <facet type="Spring" name="Spring">
-      <configuration>
-        <fileset id="fileset" name="Spring Application Context" removed="false" profiles="dev">
-          <file>file://$MODULE_DIR$/src/main/java/org/lamisplus/base/config/SecurityConfig.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/org/lamisplus/modules/base/BaseApplication.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/org/lamisplus/modules/base/config/CorsConfig.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/org/lamisplus/modules/base/config/SwaggerConfig.java</file>
-        </fileset>
-      </configuration>
+      <configuration />
     </facet>
     <facet type="web" name="Web">
       <configuration>
@@ -33,19 +20,8 @@
         <sourceRoots>
           <root url="file://$MODULE_DIR$/src/main/java" />
           <root url="file://$MODULE_DIR$/src/main/resources" />
-          <root url="file://$MODULE_DIR$/src/main/webapp" />
           <root url="file://$MODULE_DIR$/target/generated-sources/annotations" />
         </sourceRoots>
-      </configuration>
-    </facet>
-    <facet type="hibernate" name="Hibernate">
-      <configuration>
-        <datasource-map>
-          <unit-entry name="org:lamisplus:base:config:persistence.xml" value="3d356221-f113-441e-ad19-4e238726b987" />
-          <unit-entry name="org:lamisplus:modules:base:config:persistence.xml" value="b2454779-a255-4936-acad-d97640d0a199" />
-        </datasource-map>
-        <naming-strategy-map />
-        <deploymentDescriptor name="hibernate.cfg.xml" url="file://$MODULE_DIR$/src/main/java/org/lamisplus/modules/base/config/persistence.xml" />
       </configuration>
     </facet>
   </component>
@@ -54,16 +30,13 @@
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/annotations" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/webapp" type="java-resource" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.foreach.across:across-test:4.0.0.M1" level="project" />
-    <orderEntry type="library" name="Maven: com.foreach.across:across-core:4.0.0.M1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-data-jpa:2.2.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-aop:2.2.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.aspectj:aspectjweaver:1.9.5" level="project" />
