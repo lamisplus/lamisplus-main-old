@@ -1,0 +1,93 @@
+{
+    "food_types": [
+      {
+        "type": "Fruit",
+        "groups": [
+          {
+            "group": "Carb",
+            "foodItem": [
+              {
+                "name": "Banana",
+                "key": "3964"
+              },
+              {
+                "name": "Orange",
+                "key": "3970"
+              }
+            ]
+          },
+          {
+            "group": "Fat",
+            "foodItem": [
+              {
+                "name": "Avocado",
+                "key": "3971"
+              },
+              {
+                "name": "Coconut",
+                "key": "3981"
+              },
+              {
+                "name": "Olives",
+                "key": "3982"
+              }
+            ]
+          },
+          {
+            "group": "Fibre",
+            "foodItem": [
+              {
+                "name": "Kiwi",
+                "key": "3995"
+              },
+              {
+                "name": "Plum",
+                "key": "3996"
+              },
+              {
+                "name": "Pear",
+                "key": "3997"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Veg",
+        "groups": [
+          {
+            "group": "Carb",
+            "foodItem": [
+              {
+                "name": "Potatoe",
+                "key": "3980"
+              }
+            ]
+          },
+          {
+            "group": "Protein",
+            "foodItem": [
+              {
+                "name": "Spinach",
+                "key": "3984"
+              },
+              {
+                "name": "Broccoli",
+                "key": "3985"
+              }
+            ]
+          },
+          {
+            "group": "Fibre",
+            "foodItem": [
+              {
+                "name": "Beetroot",
+                "key": "4012"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  

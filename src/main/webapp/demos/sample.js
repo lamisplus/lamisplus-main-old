@@ -1,0 +1,401 @@
+[
+    {
+        "id": 1,
+        "dateRegistration": "2020-01-04",
+        "facilityId": null,
+        "personId": 1,
+        "hospitalNumber": null,
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 1,
+            "dob": "2020-01-04",
+            "dobEstimated": true,
+            "firstName": "IDRIS",
+            "lastName": "OYISCO",
+            "otherNames": "SHSH",
+            "educationId": 1,
+            "genderId": 1,
+            "occupationId": 1,
+            "maritalStatusId": 1,
+            "personTitleId": null
+        }
+    },
+    {
+        "id": 2,
+        "dateRegistration": "2020-01-04",
+        "facilityId": null,
+        "personId": 2,
+        "hospitalNumber": null,
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 2,
+            "dob": "2020-01-04",
+            "dobEstimated": true,
+            "firstName": "NIYI",
+            "lastName": "OYISCO",
+            "otherNames": "SHSH",
+            "educationId": 1,
+            "genderId": 1,
+            "occupationId": 1,
+            "maritalStatusId": 1,
+            "personTitleId": null
+        }
+    },
+    {
+        "id": 3,
+        "dateRegistration": "2020-01-04",
+        "facilityId": null,
+        "personId": 3,
+        "hospitalNumber": null,
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 3,
+            "dob": "2020-01-04",
+            "dobEstimated": true,
+            "firstName": "IDRIS",
+            "lastName": "OYISCO",
+            "otherNames": "SHSH",
+            "educationId": 1,
+            "genderId": 1,
+            "occupationId": 1,
+            "maritalStatusId": 1,
+            "personTitleId": null
+        }
+    },
+    {
+        "id": 4,
+        "dateRegistration": "2020-01-04",
+        "facilityId": null,
+        "personId": 4,
+        "hospitalNumber": null,
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 4,
+            "dob": "2020-01-04",
+            "dobEstimated": true,
+            "firstName": "IDRIS",
+            "lastName": "OYISCO",
+            "otherNames": "SHSH",
+            "educationId": 1,
+            "genderId": 1,
+            "occupationId": 1,
+            "maritalStatusId": 1,
+            "personTitleId": null
+        }
+    },
+    {
+        "id": 5,
+        "dateRegistration": "2020-01-04",
+        "facilityId": null,
+        "personId": 5,
+        "hospitalNumber": null,
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 5,
+            "dob": "2020-01-04",
+            "dobEstimated": true,
+            "firstName": "IDRIS",
+            "lastName": "OYISCO",
+            "otherNames": "SHSH",
+            "educationId": 1,
+            "genderId": 1,
+            "occupationId": 1,
+            "maritalStatusId": 1,
+            "personTitleId": null
+        }
+    },
+    {
+        "id": 6,
+        "dateRegistration": "2020-01-04",
+        "facilityId": null,
+        "personId": 6,
+        "hospitalNumber": null,
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 6,
+            "dob": "2020-01-04",
+            "dobEstimated": true,
+            "firstName": "IDRIS",
+            "lastName": "OYISCO",
+            "otherNames": "SHSH",
+            "educationId": 1,
+            "genderId": 1,
+            "occupationId": 1,
+            "maritalStatusId": 1,
+            "personTitleId": null
+        }
+    },
+    {
+        "id": 7,
+        "dateRegistration": "2020-01-04",
+        "facilityId": null,
+        "personId": 7,
+        "hospitalNumber": null,
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 7,
+            "dob": "2020-01-04",
+            "dobEstimated": true,
+            "firstName": "IDRIS",
+            "lastName": "OYISCO",
+            "otherNames": "SHSH",
+            "educationId": 1,
+            "genderId": 1,
+            "occupationId": 1,
+            "maritalStatusId": 1,
+            "personTitleId": null
+        }
+    },
+    {
+        "id": 8,
+        "dateRegistration": "2020-01-04",
+        "facilityId": null,
+        "personId": 8,
+        "hospitalNumber": null,
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 8,
+            "dob": "2020-01-04",
+            "dobEstimated": true,
+            "firstName": "IDRIS",
+            "lastName": "OYISCO",
+            "otherNames": "SHSH",
+            "educationId": 1,
+            "genderId": 1,
+            "occupationId": 1,
+            "maritalStatusId": 1,
+            "personTitleId": null
+        }
+    },
+    {
+        "id": 9,
+        "dateRegistration": "2020-01-04",
+        "facilityId": null,
+        "personId": 9,
+        "hospitalNumber": null,
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 9,
+            "dob": "2020-01-04",
+            "dobEstimated": true,
+            "firstName": "IDRIS",
+            "lastName": "OYISCO",
+            "otherNames": "SHSH",
+            "educationId": 1,
+            "genderId": 1,
+            "occupationId": 1,
+            "maritalStatusId": 1,
+            "personTitleId": null
+        }
+    },
+    {
+        "id": 10,
+        "dateRegistration": "2020-01-04",
+        "facilityId": null,
+        "personId": 10,
+        "hospitalNumber": null,
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 10,
+            "dob": "2020-01-04",
+            "dobEstimated": true,
+            "firstName": "AJOOE",
+            "lastName": "AKOR",
+            "otherNames": "OYISVO",
+            "educationId": 1,
+            "genderId": 1,
+            "occupationId": 1,
+            "maritalStatusId": 1,
+            "personTitleId": null
+        }
+    },
+    {
+        "id": 17,
+        "dateRegistration": "2020-02-19",
+        "facilityId": null,
+        "personId": 17,
+        "hospitalNumber": null,
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 17,
+            "dob": "2020-02-19",
+            "dobEstimated": true,
+            "firstName": "emeka",
+            "lastName": "emy",
+            "otherNames": "steve",
+            "educationId": 1,
+            "genderId": 1,
+            "occupationId": 1,
+            "maritalStatusId": 1,
+            "personTitleId": null
+        }
+    },
+    {
+        "id": 19,
+        "dateRegistration": "2020-02-20",
+        "facilityId": null,
+        "personId": 19,
+        "hospitalNumber": null,
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 19,
+            "dob": "2020-02-20",
+            "dobEstimated": true,
+            "firstName": "Ada",
+            "lastName": "string",
+            "otherNames": "string",
+            "educationId": 1,
+            "genderId": 1,
+            "occupationId": 1,
+            "maritalStatusId": 1,
+            "personTitleId": null
+        }
+    },
+    {
+        "id": 20,
+        "dateRegistration": "2020-02-20",
+        "facilityId": null,
+        "personId": 20,
+        "hospitalNumber": "1234",
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 20,
+            "dob": "2020-02-20",
+            "dobEstimated": true,
+            "firstName": "JOhn",
+            "lastName": "Smith",
+            "otherNames": "Greg",
+            "educationId": 2,
+            "genderId": 1,
+            "occupationId": 1,
+            "maritalStatusId": 1,
+            "personTitleId": null
+        }
+    },
+    {
+        "id": 21,
+        "dateRegistration": "2020-02-20",
+        "facilityId": null,
+        "personId": 21,
+        "hospitalNumber": "HP123",
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 21,
+            "dob": "2020-02-20",
+            "dobEstimated": true,
+            "firstName": "Emma",
+            "lastName": "Lonar",
+            "otherNames": "Fred",
+            "educationId": 1,
+            "genderId": 1,
+            "occupationId": 1,
+            "maritalStatusId": 1,
+            "personTitleId": 1
+        }
+    },
+    {
+        "id": 24,
+        "dateRegistration": "2020-02-25",
+        "facilityId": null,
+        "personId": 29,
+        "hospitalNumber": "H1",
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 29,
+            "dob": "1980-02-25",
+            "dobEstimated": false,
+            "firstName": "Emeka",
+            "lastName": "Emy",
+            "otherNames": "",
+            "educationId": 1,
+            "genderId": 1,
+            "occupationId": 1,
+            "maritalStatusId": 1,
+            "personTitleId": 1
+        }
+    },
+    {
+        "id": 25,
+        "dateRegistration": "2020-02-25",
+        "facilityId": null,
+        "personId": 30,
+        "hospitalNumber": "H2",
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 30,
+            "dob": "1980-02-25",
+            "dobEstimated": false,
+            "firstName": "Emeka",
+            "lastName": "Emy",
+            "otherNames": "",
+            "educationId": null,
+            "genderId": null,
+            "occupationId": null,
+            "maritalStatusId": null,
+            "personTitleId": 1
+        }
+    },
+    {
+        "id": 27,
+        "dateRegistration": "2020-02-26",
+        "facilityId": null,
+        "personId": 34,
+        "hospitalNumber": "H13",
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 34,
+            "dob": "2000-02-26",
+            "dobEstimated": true,
+            "firstName": "Sam",
+            "lastName": "Ade",
+            "otherNames": "",
+            "educationId": 0,
+            "genderId": 0,
+            "occupationId": 0,
+            "maritalStatusId": 0,
+            "personTitleId": 0
+        }
+    },
+    {
+        "id": 28,
+        "dateRegistration": "2020-02-26",
+        "facilityId": null,
+        "personId": 35,
+        "hospitalNumber": "H14",
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 35,
+            "dob": "2000-02-26",
+            "dobEstimated": true,
+            "firstName": "Sam",
+            "lastName": "Ade",
+            "otherNames": "",
+            "educationId": 0,
+            "genderId": 0,
+            "occupationId": 0,
+            "maritalStatusId": 0,
+            "personTitleId": 0
+        }
+    },
+    {
+        "id": 40,
+        "dateRegistration": "2020-11-01",
+        "facilityId": null,
+        "personId": 49,
+        "hospitalNumber": "shghdjsjdh",
+        "facilityByFacilityId": null,
+        "personByPersonId": {
+            "id": 49,
+            "dob": null,
+            "dobEstimated": null,
+            "firstName": "Elijah",
+            "lastName": "Adegbite",
+            "otherNames": null,
+            "educationId": null,
+            "genderId": 2,
+            "occupationId": null,
+            "maritalStatusId": 3,
+            "personTitleId": 1
+        }
+    }
+]
