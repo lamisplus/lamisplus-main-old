@@ -2,12 +2,13 @@ package org.lamisplus.modules.base.extension.lims;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
 @Data
-public class EidSampleInformationDTO {
+public class EidSampleInformation implements Serializable {
     private String firstName;
     private String surName;
 
@@ -40,5 +41,5 @@ public class EidSampleInformationDTO {
     private String babyBreastFeedingNow;
     private String cotrimoxazoleGiven;
 
-    private List<PatientIdDTO> patientId;
+    private List<PatientID> patientId;
 }

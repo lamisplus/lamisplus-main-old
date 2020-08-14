@@ -1,8 +1,8 @@
 //Online Server
-export const url =  'http://lamisplus.org/base-module/api/';
+//export const url =  'http://lamisplus.org/base-module/api/';
 
 //Local Server
-//export const url =  'http://localhost:8080/api/';
+export const url =  'http://localhost:8080/api/';
 
 //Other const
 export const HIVSERVICECODE = "";

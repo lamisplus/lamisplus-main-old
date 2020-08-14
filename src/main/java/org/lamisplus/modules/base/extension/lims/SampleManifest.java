@@ -1,7 +1,6 @@
 package org.lamisplus.modules.base.extension.lims;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.lamisplus.modules.base.util.converter.LocalDateConverter;
@@ -10,19 +9,25 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 
 @Entity
 @Data
 @EqualsAndHashCode
+@Table(name = "sample_manifest")
 public class SampleManifest  implements Serializable {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Basic
     @Column(name = "manifest_id", nullable = false)
     private String manifestId;
+
+    @Basic
+    @Column(name = "patient_id", nullable = false)
+    private Long clientId;
 
     @Basic
     @Column(name = "sending_facility_id")
@@ -120,8 +125,57 @@ public class SampleManifest  implements Serializable {
     @Column(name = "dispatched")
     private Boolean dispatched;
 
-   @Basic
-    @Column(name = "patient_id", nullable = false)
-    private Long clientId;
+
+    @Basic
+    @Column(name = "pcr_lab_sample_number")
+    private String pcrLabSampleNumber;
+
+    @Basic
+    @Column(name = "visit_date")
+    @Convert(converter = LocalDateConverter.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private LocalDate visitDate;
+
+    @Basic
+    @Column(name = "date_sample_received_lab")
+    @Convert(converter = LocalDateConverter.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private LocalDate dateSampleReceivedLab;
+
+    @Basic
+    @Column(name = "test_result")
+    private String testResult;
+
+    @Basic
+    @Column(name = "date_result_reported")
+    @Convert(converter = LocalDateConverter.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private LocalDate dateResultReported;
+
+    @Basic
+    @Column(name = "date_assayed")
+    @Convert(converter = LocalDateConverter.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private LocalDate dateAssayed;
+
+    @Basic
+    @Column(name = "date_approved")
+    @Convert(converter = LocalDateConverter.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private LocalDate dateApproved;
+
+    @Basic
+    @Column(name = "date_result_dispatched")
+    @Convert(converter = LocalDateConverter.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private LocalDate dateResultDispatched;
+
+    @Basic
+    @Column(name = "sample_status")
+    private String sampleStatus;
+
+    @Basic
+    @Column(name = "sample_testable")
+    private Boolean sampleTestable;
 
 }

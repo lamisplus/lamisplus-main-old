@@ -1,16 +1,13 @@
 package org.lamisplus.modules.base.extension.lims.scheduler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.extension.lims.TestResultProcessor;
-import org.lamisplus.modules.base.extension.lims.TestResultRequest;
-import org.lamisplus.modules.base.extension.lims.TestResultResponse;
-import org.lamisplus.modules.base.extension.lims.SampleManifest;
-import org.lamisplus.modules.base.extension.lims.TestResultMapper;
-import org.lamisplus.modules.base.extension.lims.SampleManifestRepository;
+import org.lamisplus.modules.base.extension.lims.*;
+import org.lamisplus.modules.base.extension.lims.TestResultRequestMapper;
 import org.lamisplus.modules.base.util.HttpConnectionManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TestResultHandler {
     private final SampleManifestRepository sampleManifestRepository;
-    private final TestResultMapper testResultMapper;
+    private final TestResultRequestMapper testResultRequestMapper;
     private ObjectMapper mapper = new ObjectMapper();
     private List<TestResultResponse> testResultResponses = new ArrayList<>();
 
@@ -41,24 +38,26 @@ public class TestResultHandler {
         List<SampleManifest> sampleManifests = sampleManifestRepository.findAll();
         if (sampleManifests.size() > 0) {
             sampleManifests.forEach(sampleManifest ->  {
-                TestResultRequest testResultRequest = testResultMapper.toTestResultRequest(sampleManifest);
-                testResultRequest.setTestType(2);
+                TestResultRequest testResultRequest = testResultRequestMapper.toTestResultRequest(sampleManifest);
+                testResultRequest.setTestType("VL");
                 testResultResponses.add(getTestResult(testResultRequest));
             });
         }
-
         // Process all test result from lims
-        new TestResultProcessor().process(testResultResponses);
+        new TestResultProcessor(sampleManifestRepository).process(testResultResponses);
     }
 
     private TestResultResponse getTestResult(TestResultRequest testResultRequest) {
         TestResultResponse testResultResponse = new TestResultResponse();
         try {
             // Convert object to JSON string
+            mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
             String json = mapper.writeValueAsString(testResultRequest);
-            System.out.println(json);
             String response = new HttpConnectionManager().post(json, endpoint);
+
+            System.out.println("Response from server: "+response);
             testResultResponse = mapper.readValue(response, TestResultResponse.class);
+            System.out.println("Response from server: "+ testResultResponse.manifestID);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch (IOException e) {

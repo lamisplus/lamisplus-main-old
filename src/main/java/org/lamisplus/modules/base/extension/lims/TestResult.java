@@ -1,25 +1,29 @@
 package org.lamisplus.modules.base.extension.lims;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import org.lamisplus.modules.base.extension.lims.PatientIdDTO;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Data
-public class TestResult {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class TestResult implements Serializable {
     private String firstName;
-    private String surName;
+    private String lastName;
     private String sex;
+
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date dateOfBirth;
     private String sampleID;
     private String pcrLabSampleNumber;
+
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date visitDate;
     @JsonFormat(pattern="yyyy-MM-dd")
-    private Date dateSampleReceivedAtPCRLab;
+    private Date dateSampleRecievedAtPCRLab;
     private String testResult;
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date resultDate;
@@ -29,9 +33,8 @@ public class TestResult {
     private Date approvalDate;
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date dateResultDispatched;
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private Integer sampleStatus;
+    private String sampleStatus;
     private Boolean sampleTestable;
 
-    private List<PatientIdDTO> patientId;
+    private List<PatientID> patientID;
 }

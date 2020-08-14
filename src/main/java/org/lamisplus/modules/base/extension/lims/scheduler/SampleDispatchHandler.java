@@ -5,17 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.extension.lims.ViralLoadManifestDTO;
-import org.lamisplus.modules.base.extension.lims.PatientIdDTO;
+import org.lamisplus.modules.base.extension.lims.*;
 import org.lamisplus.modules.base.extension.lims.Container;
-import org.lamisplus.modules.base.extension.lims.ViralLoadSampleInformationDTO;
 import org.lamisplus.modules.base.domain.entity.Patient;
 import org.lamisplus.modules.base.domain.entity.Person;
-import org.lamisplus.modules.base.extension.lims.SampleManifest;
-import org.lamisplus.modules.base.extension.lims.SampleManifestMapper;
 import org.lamisplus.modules.base.repository.PatientRepository;
 import org.lamisplus.modules.base.repository.PersonRepository;
-import org.lamisplus.modules.base.extension.lims.SampleManifestRepository;
 import org.lamisplus.modules.base.util.CodeSetResolver;
 import org.lamisplus.modules.base.util.HttpConnectionManager;
 import org.lamisplus.modules.base.util.converter.LocalDateConverter;
@@ -48,8 +43,8 @@ public class SampleDispatchHandler {
     public void dispatch()  {
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
-        List<ViralLoadSampleInformationDTO> sampleInformations = new ArrayList<>();
-        final ViralLoadSampleInformationDTO[] sampleInformation = {new ViralLoadSampleInformationDTO()};
+        List<ViralLoadSampleInformation> sampleInformations = new ArrayList<>();
+        final ViralLoadSampleInformation[] sampleInformation = {new ViralLoadSampleInformation()};
         final LocalDateConverter localDateConverter = new LocalDateConverter();
 
         // Retrieve all sample information from manifest and dispatch
@@ -59,7 +54,7 @@ public class SampleDispatchHandler {
             //Retrieve the sample information for every undispatched manifest
             undispatchedManifests.forEach(undispatchedManifest -> {
                 // Create a manifest object from the sample dispatch manifest
-                ViralLoadManifestDTO manifest = sampleManifestMapper.toViralLoadManifest(undispatchedManifest);
+                ViralLoadManifest manifest = sampleManifestMapper.toViralLoadManifest(undispatchedManifest);
                 List<SampleManifest> sampleDispatchManifests = sampleManifestRepository.findSampleManifestsByManifestId(undispatchedManifest.getManifestId());
                 if (sampleDispatchManifests.size() > 0){
                     sampleDispatchManifests.forEach(sampleDispatchManifest -> {
@@ -103,10 +98,10 @@ public class SampleDispatchHandler {
         }
     }
 
-    private List<PatientIdDTO> getIdentifiers(Long clientId) {
-        List<PatientIdDTO> patientIds = new ArrayList<>();
+    private List<PatientID> getIdentifiers(Long clientId) {
+        List<PatientID> patientIds = new ArrayList<>();
         // get hospital number
-        PatientIdDTO patientId = new PatientIdDTO();
+        PatientID patientId = new PatientID();
         Optional<Patient> patient = patientRepository.findById(clientId);
         if(patient.isPresent()) {
             patientId.setIdNumber(patient.get().getHospitalNumber());

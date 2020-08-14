@@ -1,13 +1,13 @@
 package org.lamisplus.modules.base.extension.lims;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import org.lamisplus.modules.base.extension.lims.PatientIdDTO;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Data
-public class ViralLoadSampleInformationDTO {
+public class ViralLoadSampleInformation implements Serializable  {
     private String firstName;
     private String surName;
     private String sex;
@@ -39,5 +39,6 @@ public class ViralLoadSampleInformationDTO {
     private Date artCommencementDate;
     private String drugRegimen;
 
-    private List<PatientIdDTO> patientID;
+    private List<PatientID> patientID;
+
 }

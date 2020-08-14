@@ -4,9 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
-import org.lamisplus.modules.base.extension.lims.SampleManifestDTO;
-import org.lamisplus.modules.base.extension.lims.SampleManifest;
-import org.lamisplus.modules.base.extension.lims.SampleManifestRepository;
 import org.lamisplus.modules.base.util.RandomCodeGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +19,7 @@ import java.util.Optional;
 public class SampleManifestService {
     private final SampleManifestRepository sampleManifestRepository;
     private final PcrLabRespository pcrLabRespository;
+    private final SampleManifestMapper sampleManifestMapper;
 
     private static Object exist(Class o, String Param1, String Param2) {
         throw new RecordExistException(o, Param1, Param2);
@@ -35,11 +33,12 @@ public class SampleManifestService {
         return this.sampleManifestRepository.findAll();
     }
 
-    public List<SampleManifest> save(SampleManifestDTO sampleManifestDTO) {
-        List<SampleManifest> sampleManifests = new ArrayList<>();
-        if (sampleManifestDTO.getSampleManifests()!= null || sampleManifestDTO.getSampleManifests().size() > 0) {
-            sampleManifests = sampleManifestDTO.getSampleManifests();
-            sampleManifests.forEach(sampleManifest -> {
+    public List<SampleManifestDTO> save(SampleManifestDTOs sampleManifestDTOs) {
+        List<SampleManifestDTO> sampleManifests = new ArrayList<>();
+        if (sampleManifestDTOs.getSampleManifests()!= null || sampleManifestDTOs.getSampleManifests().size() > 0) {
+            sampleManifests = sampleManifestDTOs.getSampleManifests();
+            sampleManifests.forEach(sampleManifestDTO -> {
+                SampleManifest sampleManifest = sampleManifestMapper.toSampleManifest(sampleManifestDTO);
                 Optional<SampleManifest> sampleManifest1  = this.sampleManifestRepository.findById(sampleManifest.getId());
                 if(sampleManifest1.isPresent()) {
                     exist(SampleManifest.class, "Manifest ID", sampleManifest.getManifestId());
