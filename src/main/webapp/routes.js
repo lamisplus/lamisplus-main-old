@@ -10,6 +10,7 @@ import React, {Component} from "react";
 import { BrowserRouter, Redirect, Switch } from "react-router-dom";
 import "./styles/reduction.scss";
 import SignIn from "pages/SignPage";
+import { Register } from "pages/Register";
 import { history } from "./history";
 import { PrivateRoute } from "./PrivateRoute"
 
@@ -70,12 +71,15 @@ const AppointmentPage = React.lazy(() => import("components/Appointments/HomePag
 
 // const Prescription = React.lazy(() => import("components/Pharmacy/prescriptions"))
 
+const UsersPage = React.lazy(() => import("components/Users/UserPage"))
+const UserRegistration = React.lazy(() => import("components/Users/UserRegistration"))
+
 class Routes extends Component {
   render() {
     return (
       <BrowserRouter basename={getBasename()} history={history}>
         <Switch>
-
+          {/* <LayoutRoute exact path="/register" layout={EmptyLayout} component={Register} /> */}
         <LayoutRoute exact path="/login" layout={EmptyLayout} component={SignIn} />
         <LayoutRoute exact path="/print-sample" layout={EmptyLayout} component={PrintSamples} />
           <MainLayout breakpoint={this.props.breakpoint}>
@@ -141,6 +145,11 @@ class Routes extends Component {
               <PrivateRoute exact path="/form-renderer" component={FormRendererPage} />
               {/* The rout to Report*/}
               <PrivateRoute exact path="/report" component={ReportPage} />
+
+              <PrivateRoute exact path="/users" component={UsersPage} />
+
+              <PrivateRoute exact path="/user-registration" component={UserRegistration} />
+
               <PrivateRoute exact path="/appointments" component={AppointmentPage} />
               {/* The route to Appointment*/}
               
