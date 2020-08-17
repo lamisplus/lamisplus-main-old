@@ -20,16 +20,15 @@ class Report extends React.Component {
     render() {
         return (
             <Page
-            className="DashboardPage p-5"
-            title="Report and Visualization"
-          >
-        <br/>
-            <PivotTableUI
-                data={data}
-                onChange={s => this.setState(s)}
-                renderers={Object.assign({}, TableRenderers, PlotlyRenderers)}
-                {...this.state}/>
-        </Page>
+                className="DashboardPage p-5"
+                title="Report and Visualization">
+                <br/>
+                <PivotTableUI
+                    data={data}
+                    onChange={s => this.setState(s)}
+                    renderers={Object.assign({}, TableRenderers, PlotlyRenderers)}
+                    {...this.state}/>
+            </Page>
         );
     }
 }

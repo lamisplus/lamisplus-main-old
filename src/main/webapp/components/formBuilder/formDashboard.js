@@ -19,6 +19,8 @@ import {
     Card, CardBody } from 'reactstrap';
 import FormBuilder from './FormBuilder';
 import ViewForm from './ViewForm';
+import PivotTable from  './PivotTable'
+import ReactPivot from  './PivotTable'
 
 
 
@@ -185,8 +187,8 @@ export default function ScrollableTabsButtonForce(props) {
                     aria-label="scrollable force tabs example">
                     <Tab className={classes.title} label="Form Builder" icon={<MdDashboard />} {...a11yProps(0)} />
                     <Tab className={classes.title} label="Form Update" icon={<MdContacts />} {...a11yProps(1)} />
-                    <Tab className={classes.title} label="Flexmonster Builder" icon={<GiFiles />} {...a11yProps(2)} />
-                    <Tab className={classes.title} label="JSReport Builder" icon={<GiFiles />} {...a11yProps(2)} />
+                    <Tab className={classes.title} label="Pivot Table" icon={<GiFiles />} {...a11yProps(2)} />
+                    <Tab className={classes.title} label="React pivot" icon={<GiFiles />} {...a11yProps(3)} />
                     <Tab className={classes.title} label="Facility Setup " icon={<GiFiles />} {...a11yProps(3)} />
                 </Tabs>
                 <div>
@@ -201,11 +203,12 @@ export default function ScrollableTabsButtonForce(props) {
             <ViewForm/>
             </TabPanel>
             {/* Begining of consultation  */}
-            
-
-       
             {/* End of consultation */}
-            <TabPanel value={value} index={4}>
+            <TabPanel value={value} index={2}>
+                <PivotTable/>
+            </TabPanel>
+            <TabPanel value={value} index={3}>
+                <ReactPivot/>
             </TabPanel>
             <TabPanel value={value} index={5}>
                 <Grid container spacing={7} >
@@ -236,7 +239,6 @@ export default function ScrollableTabsButtonForce(props) {
                                     <Grid item >
                                         <Typography className={classes.pos} color="textSecondary" >
                                             Pulse : <span style={{fontSize: 'bold'}}>56pm</span>
-
                                         </Typography>
                                     </Grid>
 

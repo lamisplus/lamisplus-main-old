@@ -43,6 +43,8 @@ const PrintSamples = React.lazy(() => import("components/Laboratory/DispatchedMa
 const formDashboard = React.lazy(() => import('components/formBuilder/formDashboard'));
 const FormBuilder = React.lazy(() => import('components/formBuilder/FormBuilder'));
 const ViewForm = React.lazy(() => import('components/formBuilder/ViewForm'));
+const PivotTable = React.lazy(() => import('components/PivotTable/PivotTable'));
+const ReactPivot = React.lazy(() => import('components/PivotTable/ReactPivot'));
 
 /* Pharmacy page loading */
 const PharmacyDashboard = React.lazy(() => import("./components/Pharmacy/PharmacyDashboard"))
@@ -116,11 +118,7 @@ class Routes extends Component {
               
               <PrivateRoute exact path="/prescriptions" component={Prescription}/>
               <PrivateRoute exact path="/appointment" component={AppointmentPage} />
-              <PrivateRoute
-                exact
-                path="/checkedin-patients"
-                component={CheckInPatientPage}
-              />
+              <PrivateRoute exact path="/checkedin-patients" component={CheckInPatientPage}/>
 
               <PrivateRoute exact path="/view-vitals" component={ViewVitalsPage} />
               {/* <PrivateRoute exact path="/add-vitals" component={AddVitalsPage} /> */}
@@ -135,6 +133,8 @@ class Routes extends Component {
               <PrivateRoute exact path="/form-dashboard" component={formDashboard} />
               <PrivateRoute exact path="/form-builder" component={FormBuilder} />
               <PrivateRoute exact path="/view-form" component={ViewForm} />
+              <PrivateRoute exact path="/pivot-table" component={PivotTable} />
+                <PrivateRoute exact path="/react-pivot" component={ReactPivot} />
               
                 {/* The rout to that DataTabel */}
               <PrivateRoute exact path="/testpage" component={TestPage} />
