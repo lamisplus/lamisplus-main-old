@@ -15,7 +15,7 @@ import { history } from "./history";
 import { PrivateRoute } from "./PrivateRoute"
 
 const DashboardPage = React.lazy(() => import("pages/DashboardPage"));
-const AdministrativeDashboard = React.lazy(() => import("components/Admin/AdministrativeDashBoard"));
+const AdministrativeDashboard = React.lazy(() => import("components/Admin/HomePage"));
 /* New Page loading using easy loading */
 const PateintRegistationPage = React.lazy(() =>
   import("components/Patient/PateintRegistationPage")
@@ -151,6 +151,7 @@ class Routes extends Component {
               <PrivateRoute exact path="/user-registration" component={UserRegistration} />
 
               <PrivateRoute exact path="/appointments" component={AppointmentPage} />
+                <PrivateRoute exact path="/admin" component={AdministrativeDashboard} />
               {/* The route to Appointment*/}
               
             </React.Suspense>

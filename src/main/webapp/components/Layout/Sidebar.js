@@ -22,7 +22,7 @@ const navItems = [
   { to: '/pharmacy', name: 'Pharmacy', exact: false, Icon: GiMedicines },
   { to: '/appointments', name: 'Appointments', exact: false, Icon: MdGraphicEq },
   { to: '/report', name: 'Report', exact: false, Icon: FaListUl },
-  { to: '/form-dashboard', name: 'Administration', exact: false, Icon: FaUserCog },
+  { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog },
   { to: '/report-dashboard', name: 'Reports', exact: false, Icon: FaListUl },
 
   { to: '/visual', name: 'Visualization', exact: false, Icon: MdGraphicEq },
