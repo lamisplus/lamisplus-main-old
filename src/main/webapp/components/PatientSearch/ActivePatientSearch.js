@@ -72,7 +72,7 @@ const ActivePatientSearch = (props) => {
             icon: 'dashboard',
             iconProps: {color: 'primary'},
             tooltip: 'Patient Dashboard',
-            onClick: (event, rowData) => rowData.id ? window.location.href = "/patient-dashboard?hospitalNumber="+rowData.id: ""
+            onClick: (event, rowData) => rowData.id ? window.location.href = "patient-dashboard?hospitalNumber="+rowData.id: ""
           }]}
           //overriding action menu with props.actions 
           components={props.actions}

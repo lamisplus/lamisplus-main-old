@@ -65,6 +65,10 @@ const Prescription = React.lazy(() => import("components/Pharmacy/Prescriptions"
 
 //Appointment
 const AppointmentPage = React.lazy(() => import("components/Appointments/HomePage"));
+
+//Admin
+const GlobalVariableSearchPage = React.lazy(() => import("components/Admin/GlobalVariable/GlobalVariableSearch"));
+
 // const getBasename = () => {
 //   return `/${process.env.PUBLIC_URL.split("/").pop()}`;
 // };
@@ -152,6 +156,7 @@ class Routes extends Component {
 
               <PrivateRoute exact path="/appointments" component={AppointmentPage} />
                 <PrivateRoute exact path="/admin" component={AdministrativeDashboard} />
+                <PrivateRoute exact path={"/admin/global-variable"} component={GlobalVariableSearchPage} />
               {/* The route to Appointment*/}
               
             </React.Suspense>
