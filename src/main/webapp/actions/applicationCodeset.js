@@ -1,5 +1,6 @@
 import axios from "axios";
 import { url } from "api";
+import * as ACTION_TYPES from "./types";
 
 export const fetchApplicationCodeSet = (codesetGroup, actionType, onSuccess , onError) => dispatch => {
     axios
@@ -21,3 +22,75 @@ export const fetchApplicationCodeSet = (codesetGroup, actionType, onSuccess , on
         
       );
   };
+
+export const fetchAll = (onSuccess , onError) => dispatch => {
+    axios
+        .get(`${url}application-codesets`)
+        .then(response => {
+            dispatch({
+                type: ACTION_TYPES.APPLICATION_CODESET_LIST,
+                payload: response.data
+            });
+            if(onSuccess){
+                onSuccess();
+            }
+        })
+        .catch(error => {
+                if(onError){
+                    onError();
+                }
+            }
+
+        );
+};
+
+export const createApplicationCodeset = (data, onSuccess , onError) => dispatch => {
+    axios
+        .post(`${url}application-codesets`, data)
+        .then(response => {
+            if(onSuccess){
+                onSuccess();
+            }
+        })
+        .catch(error => {
+                if(onError){
+                    onError();
+                }
+            }
+
+        );
+};
+
+export const updateApplicationCodeset = (id, data, onSuccess , onError) => dispatch => {
+    axios
+        .put(`${url}application-codesets/${id}`, data)
+        .then(response => {
+            if(onSuccess){
+                onSuccess();
+            }
+        })
+        .catch(error => {
+                if(onError){
+                    onError();
+                }
+            }
+
+        );
+};
+
+export const deleteApplicationCodeset = (id, onSuccess , onError) => dispatch => {
+    axios
+        .delete(`${url}application-codesets/${id}`)
+        .then(response => {
+            if(onSuccess){
+                onSuccess();
+            }
+        })
+        .catch(error => {
+                if(onError){
+                    onError();
+                }
+            }
+
+        );
+};
