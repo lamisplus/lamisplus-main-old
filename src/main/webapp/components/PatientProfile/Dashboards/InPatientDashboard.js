@@ -6,6 +6,7 @@ import ClinicalHistory from 'components/PatientProfile/PatientDashboardWidgets/C
 import PatientChart from 'components/PatientProfile/PatientChart';
 import {  Card, CardBody, CardDeck} from 'reactstrap';
 
+//TODO: Add patient appointment widget to dashboard
 function InPatientDashboard(props) {
     return (
         <React.Fragment>
