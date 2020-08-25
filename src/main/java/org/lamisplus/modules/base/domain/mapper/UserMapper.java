@@ -32,6 +32,10 @@ public class UserMapper {
             User user = new User();
             user.setId(userDTO.getId());
             user.setUserName(userDTO.getUserName());
+            user.setEmail(userDTO.getEmail());
+            user.setPhoneNumber(userDTO.getPhoneNumber());
+            user.setGender(userDTO.getGender());
+            user.setOrganizationalUnit(userDTO.getOrganizationalUnit());
             Set<Authority> authorities = this.authoritiesFromStrings(userDTO.getAuthorities());
             user.setAuthorities(authorities);
             return user;

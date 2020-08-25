@@ -105,4 +105,15 @@ public class Person implements Serializable {
     @JsonIgnore
     private PersonContact personContactsByPerson;
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public LocalDate getDateofBirth() {
+        return dob;
+    }
 }

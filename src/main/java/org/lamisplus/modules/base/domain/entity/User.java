@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.*;
 
 @Entity
@@ -28,6 +29,10 @@ public class User implements Serializable {
     private Integer uploaded;
     private Time timeUploaded;
     private Long personId;
+    private String email;
+    private String phoneNumber;
+    private String gender;
+    private String organizationalUnit;
     private Person personByPersonId;
     private Set<Authority> authorities = new HashSet<>();
     private List <ClinicianPatient> clinicianPatientByUser = new ArrayList<>();
@@ -72,6 +77,46 @@ public class User implements Serializable {
 
     public void setActive(Integer active) {
         this.active = active;
+    }
+
+    @Basic
+    @Column(name = "phoneNumber", nullable = true)
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    @Basic
+    @Column(name = "email", nullable = true)
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Basic
+    @Column(name = "gender", nullable = true)
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    @Basic
+    @Column(name = "organizationalUnit", nullable = true)
+    public String getOrganizationalUnit() {
+        return organizationalUnit;
+    }
+
+    public void setOrganizationalUnit(String organizationalUnit) {
+        this.organizationalUnit = organizationalUnit;
     }
 
     @Basic
@@ -199,6 +244,10 @@ public class User implements Serializable {
                 Objects.equals(userName, user.userName) &&
                 Objects.equals(password, user.password) &&
                 Objects.equals(active, user.active) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(phoneNumber, user.phoneNumber) &&
+                Objects.equals(gender, user.gender) &&
+                Objects.equals(organizationalUnit, user.organizationalUnit) &&
                 Objects.equals(dateCreated, user.dateCreated) &&
                 Objects.equals(lastModifiedBy, user.lastModifiedBy) &&
                 Objects.equals(dateLastModified, user.dateLastModified) &&
@@ -214,7 +263,7 @@ public class User implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userName, password, active, dateCreated, lastModifiedBy, dateLastModified, activationKey, dateReset, resetKey, uploaded, timeUploaded, personId, personByPersonId, authorities);
+        return Objects.hash(id, userName, password, active, email, phoneNumber, gender, organizationalUnit, dateCreated, lastModifiedBy, dateLastModified, activationKey, dateReset, resetKey, uploaded, timeUploaded, personId, personByPersonId, authorities);
     }
 
     @OneToMany(mappedBy = "clinicianByUserId")
