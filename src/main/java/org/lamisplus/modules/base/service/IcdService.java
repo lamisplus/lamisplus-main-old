@@ -44,8 +44,7 @@ public class IcdService {
     public IcdDTO getIcd(Long id){
         Optional<Icd> icdOptional = icdRepository.findById(id);
         if (!icdOptional.isPresent())throw new EntityNotFoundException(Icd.class, "Id", id +"");
-        final IcdDTO icdDTO = icdMapper.toIcdDTO(icdOptional.get());
-        return icdDTO;
+        return icdMapper.toIcdDTO(icdOptional.get());
     }
 
     public List<IcdDTO> getAllIcd() {
@@ -76,7 +75,7 @@ public class IcdService {
 
     public List<IcdDTO> getAllCategory(){
         GenericSpecification<Icd> genericSpecification = new GenericSpecification<Icd>();
-        Specification<Icd> specification = genericSpecification.findAllDistinct("categoryTitle");
+        Specification<Icd> specification = genericSpecification.findAllDistinctBy("categoryTitle");
 
         List<Icd> icdList = icdRepository.findAll(specification);
 

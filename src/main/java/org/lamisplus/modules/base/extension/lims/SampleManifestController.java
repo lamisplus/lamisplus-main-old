@@ -25,19 +25,14 @@ public class SampleManifestController {
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.get(0).getId()))).body(result);
     }
 
-    @GetMapping ("/manifest/{id}")
+    @GetMapping ("/manifest/{manifestId}")
     public  ResponseEntity<List<SampleManifest>>  getSampleManifestByManifestId(@PathVariable String manifestId) {
         return ResponseEntity.ok(this.sampleManifestService.getSampleManifestByManifestId(manifestId));
     }
 
-    @GetMapping ("/undispatched")
-    public  ResponseEntity<List<SampleManifest>>  getUndispatchedSampleManifest() {
-        return ResponseEntity.ok(this.sampleManifestService.getUndispatchedSampleManifest());
-    }
-
-    @GetMapping ("/dispatched")
-    public  ResponseEntity<List<SampleManifest>>  getDispatchedSampleManifest() {
-        return ResponseEntity.ok(this.sampleManifestService.getDispatchedSampleManifest());
+    @GetMapping ("/dispatched-manifest/{dispatched}")
+    public  ResponseEntity<List<SampleManifest>>  getDispatchedSampleManifest(@PathVariable Boolean dispatched) {
+        return ResponseEntity.ok(this.sampleManifestService.getDispatchedSampleManifest(dispatched));
     }
 
     @GetMapping ("/pcrlab")
@@ -45,10 +40,9 @@ public class SampleManifestController {
         return ResponseEntity.ok(this.sampleManifestService.getPcrLab());
     }
 
-    @GetMapping ("/generate_manifest_id/{length}")
-    public  ResponseEntity<String>  generateManifestId(int length) {
+    @GetMapping ("/generate-manifest-id/{length}")
+    public  ResponseEntity<String>  generateManifestId(@PathVariable int length) {
         return ResponseEntity.ok(this.sampleManifestService.generateManifestId(length));
     }
-
 
 }

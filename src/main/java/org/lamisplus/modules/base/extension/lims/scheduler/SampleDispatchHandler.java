@@ -89,6 +89,7 @@ public class SampleDispatchHandler {
                     String samples = mapper.writeValueAsString(container);
                     System.out.println(samples);
                     new HttpConnectionManager().post(samples, endpoint);
+                    sampleManifestRepository.flagManifestAsDispatched(manifest.getManifestID());
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

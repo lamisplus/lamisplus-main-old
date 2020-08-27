@@ -54,13 +54,10 @@ public class Module implements Serializable {
 
     @Basic
     @Column(name = "date_created")
-    @JsonIgnore
-    @CreationTimestamp
     private Timestamp dateCreated;
 
     @Basic
     @Column(name = "created_by")
-    @JsonIgnore
     private String createdBy;
 
     @Basic
@@ -73,6 +70,20 @@ public class Module implements Serializable {
     @Column(name = "modified_by")
     @JsonIgnore
     private String modifiedBy;
+
+    @Basic
+    @Column(name = "date_installed")
+    @UpdateTimestamp
+    private Timestamp dateInstalled;
+
+    @Basic
+    @Column(name = "installed_by")
+    @JsonIgnore
+    private String installedBy;
+
+    @Basic
+    @Column(name = "status")
+    private Integer status;
 
     @Basic
     @Column(name = "archived")

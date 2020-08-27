@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 @Data
 @EqualsAndHashCode
-@Table(name = "Visit")
+@Table(name = "visit")
 public class Visit implements Serializable {
     @Id
     @Column(name = "id", nullable = false)
@@ -100,10 +100,10 @@ public class Visit implements Serializable {
     @JsonIgnore
     private Patient patientByVisit;
 
-    @JoinColumn(name = "visit_type_id", insertable = false, updatable = false)
+    /*@JoinColumn(name = "visit_type_id", insertable = false, updatable = false)
     @ManyToOne
     @JsonIgnore
-    private ApplicationCodeset visit_Type;
+    private ApplicationCodeset visit_Type;*/
 
     @OneToMany(mappedBy = "visitByVisitId")
     @ToString.Exclude

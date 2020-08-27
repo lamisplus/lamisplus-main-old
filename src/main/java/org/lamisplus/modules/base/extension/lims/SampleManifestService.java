@@ -55,13 +55,8 @@ public class SampleManifestService {
         return manifest;
     }
 
-    public  List<SampleManifest> getUndispatchedSampleManifest() {
-        List<SampleManifest> manifest = this.sampleManifestRepository.findSampleManifestsByDispatchedIsFalse();
-        return manifest;
-    }
-
-    public  List<SampleManifest> getDispatchedSampleManifest() {
-        List<SampleManifest> manifest = this.sampleManifestRepository.findSampleManifestsByDispatchedIsTrue();
+    public  List<SampleManifest> getDispatchedSampleManifest(Boolean dispatched) {
+        List<SampleManifest> manifest = dispatched? this.sampleManifestRepository.findSampleManifestsByDispatchedIsTrue() : this.sampleManifestRepository.findSampleManifestsByDispatchedIsFalse();
         return manifest;
     }
 

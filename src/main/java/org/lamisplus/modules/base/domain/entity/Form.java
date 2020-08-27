@@ -2,7 +2,7 @@ package org.lamisplus.modules.base.domain.entity;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
-import org.elasticsearch.common.Nullable;
+//import org.elasticsearch.common.Nullable;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -11,7 +11,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Collection;
 import java.util.List;
 
 @Data
