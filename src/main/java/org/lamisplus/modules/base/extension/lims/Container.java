@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 public class Container {
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private ViralLoadManifestDTO viralLoadManifest;
+    private ViralLoadManifest viralLoadManifest;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private EidManifestDTO eidManifest;
+    private EidManifest eidManifest;
 }

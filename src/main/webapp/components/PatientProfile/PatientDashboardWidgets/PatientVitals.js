@@ -62,7 +62,7 @@ import {
   return (
     
             <Card  >
-                    <CardHeader> Recent Vital Signs  <button type="button" className="float-right ml-3" onClick={toggle}><i className="fa fa-plus"></i> Add Vitals</button></CardHeader>
+                    <CardHeader> Recent Vital Signs  <button type="button" className="float-right ml-3" onClick={toggle}><i className="fa fa-plus"></i> Add Vital Signs</button></CardHeader>
                         
                     <CardBody>
                     {_.isEmpty(data) && 

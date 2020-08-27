@@ -154,6 +154,18 @@ export const UPDATE_VISIT_ERROR = 'UPDATE_VISIT_ERROR'
 /**
  * @TYPES
  * ===============================================
+ * USER
+ */
+
+export const REGISTER_REQUEST = 'USERS_REGISTER_REQUEST'
+export const REGISTER_SUCCESS =  'USERS_REGISTER_SUCCESS'
+export const REGISTER_FAILURE = 'USERS_REGISTER_FAILURE'
+export const FETCH_USERS = 'FETCH_USERS'
+export const FETCH_USER_BY_ID = 'FETCH_USER_BY_ID'
+export const USERS_ERROR = 'USERS_ERROR'
+/**
+ * @TYPES
+ * ===============================================
  * APPLICATION CODESET
  */
 export const APPLICATION_CODESET_PRIORITIES = 'APPLICATION_CODESET_PRIORITIES'

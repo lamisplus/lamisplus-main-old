@@ -192,7 +192,10 @@ function HomePage(props) {
           patientHospitalNumber={props.patient.hospitalNumber}
         />
 
-        {/* The DashBoard Tab  */}
+        {/* The DashBoard Tab
+          //TODO: Allow users to switch dashboards based on patient's service
+        */}
+
         <TabPanel value={value} index={0}>
           <InPatientDashboard patientId={props.patient.patientId} />
         </TabPanel>

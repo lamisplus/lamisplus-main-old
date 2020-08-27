@@ -6,8 +6,10 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.FormDTO;
 import org.lamisplus.modules.base.domain.entity.Form;
+import org.lamisplus.modules.base.domain.entity.Program;
 import org.lamisplus.modules.base.domain.mapper.FormMapper;
 import org.lamisplus.modules.base.repository.FormRepository;
+import org.lamisplus.modules.base.repository.ProgramRepository;
 import org.lamisplus.modules.base.util.GenericSpecification;
 import org.lamisplus.modules.base.util.UuidGenerator;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,8 +25,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FormService {
     private final FormRepository formRepository;
+    private final ProgramRepository programRepository;
     private final FormMapper formMapper;
     private final UserService userService;
+
 
     public List getAllForms() {
         GenericSpecification<Form> genericSpecification = new GenericSpecification<Form>();
@@ -34,10 +38,24 @@ public class FormService {
         List<FormDTO> formList = new ArrayList<>();
         forms.forEach(form -> {
             final FormDTO formDTO = formMapper.toForm(form);
+            Optional<Program>  program = this.programRepository.findProgramByCode(formDTO.getProgramCode());
+            program.ifPresent(value -> formDTO.setProgramName(value.getName()));
             formList.add(formDTO);
         });
         return formList;
     }
+
+
+/*
+    public List<Form> getAllForms() {
+       List<Form> forms = this.formRepository.findAll();
+        forms.forEach(form -> {
+            Optional<Program>  program = this.programRepository.findProgramByCode(form.getProgramCode());
+            program.ifPresent(value -> form.setProgramName(value.getName()));
+        });
+        return forms;
+    }
+*/
 
     public Form save(FormDTO formDTO) {
         formDTO.setCode(UuidGenerator.getUuid());
