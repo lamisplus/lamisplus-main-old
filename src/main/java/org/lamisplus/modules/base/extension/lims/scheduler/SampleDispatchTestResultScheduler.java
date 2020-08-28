@@ -19,7 +19,7 @@ public class SampleDispatchTestResultScheduler {
     }
 
     //repeat every 30 minutes value="0 0/30 * * * ?"
-    @Scheduled(cron="0 0/2 * * * ?")
+    @Scheduled(cron="0 0/30 * * * ?")
     public void resultJob() throws Exception {
         //testResultHandler.retrieve();
     }

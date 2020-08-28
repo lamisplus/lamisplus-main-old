@@ -98,7 +98,7 @@ public class SampleManifest  implements Serializable {
     private LocalTime timeSampleTransferred;
 
     @Basic
-    @Column(name = "sample_disptached_by", nullable = true)
+    @Column(name = "sample_dispatched_by", nullable = true)
     private String sampleDispatchedBy;
     @Basic
     @Column(name = "date_sample_dispatched")
@@ -177,5 +177,12 @@ public class SampleManifest  implements Serializable {
     @Basic
     @Column(name = "sample_testable")
     private Boolean sampleTestable;
+
+    @Transient  //Hibernate/JPA will ignore and not persist this property
+    private String firstName;
+    @Transient
+    private String surname;
+    @Transient
+    private String hospitalNumber;
 
 }

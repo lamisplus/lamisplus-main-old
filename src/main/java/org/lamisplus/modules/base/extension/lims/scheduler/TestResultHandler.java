@@ -24,8 +24,8 @@ import java.util.List;
 public class TestResultHandler {
     private final SampleManifestRepository sampleManifestRepository;
     private final TestResultRequestMapper testResultRequestMapper;
-    private ObjectMapper mapper = new ObjectMapper();
     private List<TestResultResponse> testResultResponses = new ArrayList<>();
+    private ObjectMapper mapper = new ObjectMapper();
 
     @Value("${lims.api.sample.result}")
     private String endpoint;
@@ -33,15 +33,20 @@ public class TestResultHandler {
     public void retrieve() throws Exception {
         // Create Object Mapper
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        // Retrieve all dispatched manifest with no reported test result
+        List<String> manifestIds = sampleManifestRepository.findManifestsDistinct();
+        if(manifestIds.size() > 0) {
+            manifestIds.forEach(this::retriever);
+        }
+    }
 
-        // Retrieve all dispatched manifest with an reported test result
-        List<SampleManifest> sampleManifests = sampleManifestRepository.findAll();
+    private void retriever(String manifestId) {
+        System.out.println("Manifest : "+manifestId);
+        List<SampleManifest> sampleManifests = sampleManifestRepository.findSampleManifestsByManifestId(manifestId);
         if (sampleManifests.size() > 0) {
-            sampleManifests.forEach(sampleManifest ->  {
-                TestResultRequest testResultRequest = testResultRequestMapper.toTestResultRequest(sampleManifest);
-                testResultRequest.setTestType("VL");
-                testResultResponses.add(getTestResult(testResultRequest));
-            });
+            TestResultRequest testResultRequest = testResultRequestMapper.toTestResultRequest(sampleManifests.get(0));
+            testResultRequest.setTestType("VL");
+            testResultResponses.add(getTestResult(testResultRequest));
         }
         // Process all test result from lims
         new TestResultProcessor(sampleManifestRepository).process(testResultResponses);
@@ -57,7 +62,6 @@ public class TestResultHandler {
 
             System.out.println("Response from server: "+response);
             testResultResponse = mapper.readValue(response, TestResultResponse.class);
-            System.out.println("Response from server: "+ testResultResponse.manifestID);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch (IOException e) {

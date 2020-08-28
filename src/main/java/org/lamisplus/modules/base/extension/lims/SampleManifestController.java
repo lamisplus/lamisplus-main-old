@@ -31,7 +31,7 @@ public class SampleManifestController {
     }
 
     @GetMapping ("/dispatched-manifest/{dispatched}")
-    public  ResponseEntity<List<SampleManifest>>  getDispatchedSampleManifest(@PathVariable Boolean dispatched) {
+    public  ResponseEntity<List<ManifestDTO>>  getDispatchedSampleManifest(@PathVariable Boolean dispatched) {
         return ResponseEntity.ok(this.sampleManifestService.getDispatchedSampleManifest(dispatched));
     }
 
@@ -41,8 +41,14 @@ public class SampleManifestController {
     }
 
     @GetMapping ("/generate-manifest-id/{length}")
-    public  ResponseEntity<String>  generateManifestId(@PathVariable int length) {
+    public  ResponseEntity<String>  generateManifestId(int length) {
         return ResponseEntity.ok(this.sampleManifestService.generateManifestId(length));
+    }
+
+    @GetMapping ("/test")
+    public  ResponseEntity<String>  test() {
+        this.sampleManifestService.test();
+        return ResponseEntity.ok("OK");
     }
 
 }

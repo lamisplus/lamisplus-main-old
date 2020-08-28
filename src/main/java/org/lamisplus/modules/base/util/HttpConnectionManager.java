@@ -19,7 +19,6 @@ public class HttpConnectionManager {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
             // Get response body
-            System.out.println(Objects.requireNonNull(response.body()).string());
             return Objects.requireNonNull(response.body()).string();
         }
 
@@ -48,7 +47,6 @@ public class HttpConnectionManager {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
             // Get response body
-            System.out.println(Objects.requireNonNull(response.body()).string());
             return Objects.requireNonNull(response.body()).string();
         }
 

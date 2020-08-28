@@ -4,11 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
+import org.lamisplus.modules.base.domain.entity.Person;
+import org.lamisplus.modules.base.repository.PatientRepository;
+import org.lamisplus.modules.base.repository.PersonRepository;
+import org.lamisplus.modules.base.util.PatientIdentifier;
 import org.lamisplus.modules.base.util.RandomCodeGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +25,8 @@ public class SampleManifestService {
     private final SampleManifestRepository sampleManifestRepository;
     private final PcrLabRespository pcrLabRespository;
     private final SampleManifestMapper sampleManifestMapper;
+    private final PersonRepository personRepository;
+    private final PatientRepository patientRepository;
 
     private static Object exist(Class o, String Param1, String Param2) {
         throw new RecordExistException(o, Param1, Param2);
@@ -51,22 +58,42 @@ public class SampleManifestService {
     }
 
     public  List<SampleManifest> getSampleManifestByManifestId(String manifestId) {
-        List<SampleManifest> manifest = this.sampleManifestRepository.findSampleManifestsByManifestId(manifestId);
-        return manifest;
+        PatientIdentifier patientIdentifier = new PatientIdentifier(patientRepository);
+
+        List<SampleManifest> sampleManifests = this.sampleManifestRepository.findSampleManifestsByManifestIdEquals(manifestId);
+        if(sampleManifests.size() > 0) {
+            sampleManifests.forEach(sampleManifest -> {
+                //Retrieve the sample information for this manifest
+                Optional<Person> person = personRepository.findById(sampleManifest.getClientId());
+                if(person.isPresent()){
+                    sampleManifest.setSurname(person.get().getLastName());
+                    sampleManifest.setFirstName(person.get().getFirstName());
+                    sampleManifest.setHospitalNumber(patientIdentifier.getHospitalNumber(sampleManifest.getClientId()));
+                }
+
+            });
+        }
+        return sampleManifests;
     }
 
-    public  List<SampleManifest> getDispatchedSampleManifest(Boolean dispatched) {
-        List<SampleManifest> manifest = dispatched? this.sampleManifestRepository.findSampleManifestsByDispatchedIsTrue() : this.sampleManifestRepository.findSampleManifestsByDispatchedIsFalse();
-        return manifest;
+    public  List<SampleManifest> getDispatchedSampleManifest1(Boolean dispatched) {
+        return dispatched? this.sampleManifestRepository.findSampleManifestsByDispatchedIsTrue() : this.sampleManifestRepository.findSampleManifestsByDispatchedIsFalse();
+    }
+
+    public  List<ManifestDTO> getDispatchedSampleManifest(Boolean dispatched) {
+        return this.sampleManifestRepository.findSampleManifestsDistinct(dispatched);
     }
 
     public  List<PcrLab> getPcrLab() {
-        List<PcrLab> pcrLabs = this.pcrLabRespository.findAll();
-        return pcrLabs;
+        return this.pcrLabRespository.findAll();
     }
 
     public String generateManifestId(int length) {
         return RandomCodeGenerator.randomAlphanumericString(length);
+    }
+
+    public void test() {
+        new TestProcessor(sampleManifestRepository).test();
     }
 }
 

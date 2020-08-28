@@ -5,6 +5,7 @@ import lombok.Data;
 import org.lamisplus.modules.base.util.converter.LocalTimeAttributeConverter;
 
 import javax.persistence.Convert;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -57,6 +58,7 @@ public class SampleManifestDTO implements Serializable {
     private String courierPhoneNumber;
     private Integer totalSampleShipment;
     private Boolean dispatched;
+
     private String pcrLabSampleNumber;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate visitDate;
@@ -73,4 +75,5 @@ public class SampleManifestDTO implements Serializable {
     private LocalDate dateResultDispatched;
     private String sampleStatus;
     private Boolean sampleTestable;
+
 }
