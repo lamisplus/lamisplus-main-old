@@ -92,4 +92,7 @@ public class Form extends JsonBEntity implements Serializable {
     @ToString.Exclude
     @JsonIgnore
     private List<Encounter> encountersByForm;
+
+    @Transient
+    private String programName;
 }

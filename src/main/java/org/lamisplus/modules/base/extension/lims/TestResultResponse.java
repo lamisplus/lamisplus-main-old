@@ -1,19 +1,15 @@
 package org.lamisplus.modules.base.extension.lims;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import java.util.List;
 
 @Data
 public class TestResultResponse {
-    private String manifestID;
-    private String receivingFacilityID;
-    private String receivingFacilityName;
-    private String sendingPCRLabID;
-    private String sendingPCRLabName;
-    private Integer testType;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private TestResult viralLoadTestReport;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private TestResult eidTestReport;
-
+    public String manifestID;
+    public String receivingFacilityID;
+    public String receivingFacilityName;
+    public String sendingPCRLabID;
+    public String sendingPCRLabName;
+    public String testType;
+    public List<ViralLoadTestReport> viralLoadTestReport;
 }

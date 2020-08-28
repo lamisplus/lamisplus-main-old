@@ -3,24 +3,17 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.BaseApplication;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.dto.ModuleDTO;
 import org.lamisplus.modules.base.domain.entity.Module;
 import org.lamisplus.modules.base.service.ModuleService;
-import org.lamisplus.modules.base.service.ModuleStorageService;
-import org.lamisplus.modules.base.util.module.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -46,5 +39,10 @@ public class ModuleController {
     @PostMapping("/bootstrap")
     public ResponseEntity<Module> bootstrap(@RequestParam("file") MultipartFile file, Boolean overrideExistFile) {
         return ResponseEntity.ok(moduleService.bootstrap(file, overrideExistFile));
+    }
+
+    @PostMapping("/start/{name}")
+    public void startModule(@PathVariable String name) {
+        moduleService.startModule(name);
     }
 }
