@@ -35,11 +35,11 @@ public class ModuleService {
     private final ModuleMapper moduleMapper;
     private final StorageUtil storageService;
     private final ApplicationProperties properties;
-    private List<String> classNames = new ArrayList<>();
+    private final List<String> classNames;
     private final String fileSeparator = File.separator;
     private final ModuleUtil moduleUtil;
-    private Set<Class> moduleClasses = new HashSet<>();
-    private GenericSpecification<Module> genericSpecification = new GenericSpecification<Module>();
+    private final Set<Class> moduleClasses;
+    private final GenericSpecification<Module> genericSpecification;
     private final UserService userService;
     private static final int MODULE_TYPE = 1;
     private static final int STATUS_INSTALLED = 2;
@@ -123,10 +123,13 @@ public class ModuleService {
                 }
             });
 
-        } catch (Exception e) {
+        } catch (IOException e) {
+            //TODO: Log error and Set modules active to false
+            //module.setActive(false);
             throw new RuntimeException("Server error module not loaded: " + e.getMessage());
         }
         module.setStatus(STATUS_INSTALLED);
+        //module.setActive(true);
         return moduleRepository.save(module);
     }
 

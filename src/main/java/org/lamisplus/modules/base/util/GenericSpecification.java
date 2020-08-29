@@ -1,10 +1,13 @@
 package org.lamisplus.modules.base.util;
 
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
+
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class GenericSpecification<T>  {
 
     private static final int UN_ARCHIVED = 0;
