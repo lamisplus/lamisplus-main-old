@@ -1,27 +1,32 @@
-package org.lamisplus.modules.base.service;
+package org.lamisplus.modules.base.bootstrap;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.lamisplus.modules.base.config.ApplicationProperties;
+import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
+import org.lamisplus.modules.base.domain.entity.Module;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.apache.commons.io.FileUtils;
 
 
 @Service
 @Slf4j
-public class ModuleStorageService {
+public class StorageUtil {
     private final Path rootLocation;
 
-    public ModuleStorageService(ApplicationProperties properties) {
+    public StorageUtil(ApplicationProperties properties) {
         this.rootLocation = Paths.get(properties.getModulePath());
     }
 
@@ -33,8 +38,12 @@ public class ModuleStorageService {
         //TODO: check...
         try {
 
-            if(overrideExistFile == true && Files.exists(rootLocation.resolve(module))){
+            if((overrideExistFile != null && overrideExistFile == true) && Files.exists(rootLocation.resolve(module))){
+                try {
                     Files.delete(rootLocation.resolve(module));
+                }catch (NullPointerException npe){
+                    throw new EntityNotFoundException(Module.class, filename, "not found");
+                }
             }
             if (file.isEmpty()) {
                 throw new RuntimeException("Failed to store empty file " + filename);
@@ -45,10 +54,10 @@ public class ModuleStorageService {
             }
 
             InputStream inputStream = file.getInputStream();
-                FileUtils.copyInputStreamToFile(inputStream, this.rootLocation.resolve(filename).toFile());
-                System.out.println("this.rootLocation.resolve(filename)..." + this.rootLocation.resolve(filename).toString());
+            FileUtils.copyInputStreamToFile(inputStream, this.rootLocation.resolve(filename).toFile());
 
-        } catch (IOException e) {
+        } catch (Exception e) {
+            //e.printStackTrace();
             throw new RuntimeException("Failed to store file " + filename, e);
         }
         return filename;
@@ -72,5 +81,14 @@ public class ModuleStorageService {
                 log.warn("Could not initialize storage: {}", e);
             }
         }
+    }
+
+    public URL getURL(String file) {
+        try {
+            return rootLocation.resolve(file).toUri().toURL();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

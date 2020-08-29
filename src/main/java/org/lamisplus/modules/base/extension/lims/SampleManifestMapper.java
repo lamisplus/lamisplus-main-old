@@ -11,40 +11,42 @@ public interface SampleManifestMapper {
             @Mapping(source="person.firstName", target="firstName"),
             @Mapping(source="person.lastName", target="surName"),
             @Mapping(source="person.dob", target="dateOfBirth"),
-            @Mapping(source="sampleManifest.labNumber", target="sampleID"),
+            @Mapping(source="sampleManifest.id", target="sampleID"),
             @Mapping(source="sampleManifest.sampleOrderedBy", target="sampleOrderedBy"),
             @Mapping(source="sampleManifest.dateSampleOrdered", target="sampleOrderDate"),
             @Mapping(source="sampleManifest.sampleCollectedBy", target="sampleCollectedBy"),
             @Mapping(source="sampleManifest.dateSampleCollected", target="sampleCollectionDate"),
             @Mapping(source="sampleManifest.dateSampleDispatched", target="dateSampleSent")
     })
-    ViralLoadSampleInformationDTO toViralLoadSampleInformation(SampleManifest sampleManifest, Person person);
+    ViralLoadSampleInformation toViralLoadSampleInformation(SampleManifest sampleManifest, Person person);
 
     @Mappings({
             @Mapping(source="person.firstName", target="firstName"),
             @Mapping(source="person.lastName", target="surName"),
             @Mapping(source="person.dob", target="dateOfBirth"),
-            @Mapping(source="sampleManifest.labNumber", target="sampleID"),
+            @Mapping(source="sampleManifest.id", target="sampleID"),
             @Mapping(source="sampleManifest.sampleOrderedBy", target="sampleOrderedBy"),
             @Mapping(source="sampleManifest.dateSampleOrdered", target="sampleOrderDate"),
             @Mapping(source="sampleManifest.sampleCollectedBy", target="sampleCollectedBy"),
             @Mapping(source="sampleManifest.dateSampleCollected", target="sampleCollectionDate"),
             @Mapping(source="sampleManifest.dateSampleDispatched", target="dateSampleSent")
     })
-    EidSampleInformationDTO toEidSampleInformation(SampleManifest sampleManifest, Person person);
+    EidSampleInformation toEidSampleInformation(SampleManifest sampleManifest, Person person);
 
     @Mappings({
             @Mapping(source="sampleManifest.manifestId", target="manifestID"),
             @Mapping(source = "sampleManifest.sendingFacilityId", target = "sendingFacilityID"),
             @Mapping(source = "sampleManifest.receivingLabId", target = "receivingLabID")
     })
-    ViralLoadManifestDTO toViralLoadManifest(SampleManifest sampleManifest);
+    ViralLoadManifest toViralLoadManifest(SampleManifest sampleManifest);
 
     @Mappings({
             @Mapping(source="sampleManifest.manifestId", target="manifestID"),
             @Mapping(source = "sampleManifest.sendingFacilityId", target = "sendingFacilityID"),
             @Mapping(source = "sampleManifest.receivingLabId", target = "receivingLabID")
     })
-    EidManifestDTO toEidManifest(SampleManifest sampleManifest);
+    EidManifest toEidManifest(SampleManifest sampleManifest);
+
+    SampleManifest toSampleManifest(SampleManifestDTO sampleManifestDTO);
 
 }

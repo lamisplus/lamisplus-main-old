@@ -9,7 +9,9 @@ import org.lamisplus.modules.base.domain.dto.ApplicationCodesetDTO;
 import org.lamisplus.modules.base.domain.entity.ApplicationCodeset;
 import org.lamisplus.modules.base.domain.mapper.ApplicationCodesetMapper;
 import org.lamisplus.modules.base.repository.ApplicationCodesetRepository;
+import org.lamisplus.modules.base.util.GenericSpecification;
 import org.lamisplus.modules.base.util.UuidGenerator;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,14 +24,23 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class ApplicationCodesetService {
+
     private final ApplicationCodesetRepository applicationCodesetRepository;
     private final ApplicationCodesetMapper applicationCodesetMapper;
     private final UserService userService;
+    private static final int ARCHIVED = 1;
+    private static final int IN_ACTIVE = 0;
+    private static final int ACTIVE = 1;
+    private final GenericSpecification<ApplicationCodeset> genericSpecification = new GenericSpecification<>();
+
 
 
     public List<ApplicationCodesetDTO> getAllApplicationCodeset(){
+        Specification<ApplicationCodeset> applicationCodesetSpecification = genericSpecification.findAllApplicationCodeset();
+        List<ApplicationCodeset> applicationCodesets = applicationCodesetRepository.findAll(applicationCodesetSpecification);
+
         List<ApplicationCodesetDTO> applicationCodesetDTOS = new ArrayList<>();
-        applicationCodesetRepository.findAll().forEach(applicationCodeset->{
+        applicationCodesets.forEach(applicationCodeset->{
             final ApplicationCodesetDTO applicationCodesetDTO = applicationCodesetMapper.toApplicationCodesetDTO(applicationCodeset);
             applicationCodesetDTOS.add(applicationCodesetDTO);
         });
@@ -37,8 +48,13 @@ public class ApplicationCodesetService {
     }
 
     public ApplicationCodeset save(ApplicationCodesetDTO applicationCodesetDTO){
-        Optional<ApplicationCodeset> applicationCodesetOptional = applicationCodesetRepository.findByDisplayAndCodesetGroup(applicationCodesetDTO.getDisplay(), applicationCodesetDTO.getCodesetGroup());
-        if (applicationCodesetOptional.isPresent()) throw new RecordExistException(ApplicationCodeset.class,"Display:",applicationCodesetDTO.getDisplay());
+        applicationCodesetDTO.setActive(ACTIVE);
+        Optional<ApplicationCodeset> applicationCodesetOptional = applicationCodesetRepository.findByDisplayAndCodesetGroupAndActive(applicationCodesetDTO.getDisplay(),
+                applicationCodesetDTO.getCodesetGroup(), applicationCodesetDTO.getActive());
+        if (applicationCodesetOptional.isPresent()) {
+            throw new RecordExistException(ApplicationCodeset.class,"Display:",applicationCodesetDTO.getDisplay());
+        }
+
         final ApplicationCodeset applicationCodeset = applicationCodesetMapper.toApplicationCodeset(applicationCodesetDTO);
         applicationCodeset.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
         applicationCodeset.setCode(UuidGenerator.getUuid());
@@ -58,8 +74,7 @@ public class ApplicationCodesetService {
     public ApplicationCodesetDTO getApplicationCodeset(Long id){
         Optional<ApplicationCodeset> applicationCodeset = applicationCodesetRepository.findById(id);
         if(!applicationCodeset.isPresent()) throw new EntityNotFoundException(ApplicationCodeset.class,"Display:",id+"");
-        final ApplicationCodesetDTO applicationCodesetDTO = applicationCodesetMapper.toApplicationCodesetDTO(applicationCodeset.get());
-        return  applicationCodesetDTO;
+        return  applicationCodesetMapper.toApplicationCodesetDTO(applicationCodeset.get());
     }
 
     public ApplicationCodeset update(Long id, ApplicationCodesetDTO applicationCodesetDTO){
@@ -75,7 +90,8 @@ public class ApplicationCodesetService {
     public Integer delete(Long id){
         Optional<ApplicationCodeset> applicationCodesetOptional = applicationCodesetRepository.findById(id);
         if(!applicationCodesetOptional.isPresent() || applicationCodesetOptional.get().getArchived() == 1) throw new EntityNotFoundException(ApplicationCodeset.class,"Display:",id+"");
-        applicationCodesetOptional.get().setArchived(1);
+        applicationCodesetOptional.get().setArchived(ARCHIVED);
+        applicationCodesetOptional.get().setActive(IN_ACTIVE);
         applicationCodesetOptional.get().setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
 
         return applicationCodesetOptional.get().getArchived();
@@ -83,7 +99,5 @@ public class ApplicationCodesetService {
 
     public Boolean exist(String display, String codesetGroup){
         return applicationCodesetRepository.existsByDisplayAndCodesetGroup(display, codesetGroup);
-
     }
-
 }

@@ -27,9 +27,15 @@ public class ModuleDTO {
 
     private String createdBy;
 
+    private Timestamp dateInstalled;
+
+    private String installedBy;
+
     private Timestamp dateModified;
 
     private String modifiedBy;
+
+    private String status;
 
     private Integer moduleType;
 }

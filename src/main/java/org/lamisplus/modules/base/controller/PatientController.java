@@ -29,8 +29,8 @@ public class PatientController {
         return ResponseEntity.ok(this.patientService.getAllPatients());
     }
 
-    @GetMapping("/{hospitalNumber}")
-    public ResponseEntity<PatientDTO> getPatientByHospitalNumber(@PathVariable String hospitalNumber) {
+    @GetMapping("/patientNumber")
+    public ResponseEntity<PatientDTO> getPatientByHospitalNumber(@RequestBody String hospitalNumber) {
         return ResponseEntity.ok(this.patientService.getPatientByHospitalNumber(hospitalNumber));
     }
 
@@ -60,7 +60,7 @@ public class PatientController {
     }
 
     @GetMapping("/{id}/encounters/programCodeExclusionList")
-    public ResponseEntity<List> getEncountersByPatientIdAndProgramCodeExclusionList(@PathVariable Long id, @RequestParam(required = false) List<String> programCodeExclusionList) throws URISyntaxException {
+    public ResponseEntity<List> getEncountersByPatientIdAndProgramCodeExclusionList(@PathVariable Long id, @RequestParam(required = false) List<String> programCodeExclusionList) {
         return ResponseEntity.ok(this.patientService.getEncountersByPatientIdAndProgramCodeExclusionList(id, programCodeExclusionList));
     }
 
@@ -76,10 +76,9 @@ public class PatientController {
             "Example - api/encounters/{programCode}/{formCode}?dateStart=01-01-2020&dateEnd=01-04-2020")
     @GetMapping("/{id}/encounters/{formCode}/{dateStart}/{dateEnd}")
     public List getEncountersByPatientIdAndDateEncounter(@PathVariable Long id, @PathVariable String formCode,
-                                                         @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional<String> dateStart,
-                                                         @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional<String> dateEnd) throws URISyntaxException {
-        List formDataList = this.patientService.getEncountersByPatientIdAndDateEncounter(id, formCode, dateStart, dateEnd);
-        return formDataList;
+                                                         @ApiParam(defaultValue = "") @PathVariable(required = false) Optional<String> dateStart,
+                                                         @ApiParam(defaultValue = "") @PathVariable(required = false) Optional<String> dateEnd) {
+        return patientService.getEncountersByPatientIdAndDateEncounter(id, formCode, dateStart, dateEnd);
     }
 
     @ApiOperation(value="getAllEncountersByPatientId", notes = " id=required\n\n" +

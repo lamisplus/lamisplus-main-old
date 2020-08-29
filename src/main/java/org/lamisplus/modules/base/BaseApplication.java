@@ -1,6 +1,6 @@
 package org.lamisplus.modules.base;
 
-import org.lamisplus.modules.base.util.module.JarFileLoader;
+import org.lamisplus.modules.base.service.ModuleService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,8 +20,8 @@ public class BaseApplication extends SpringBootServletInitializer {
 	}
 	public static void main(String[] args) {
 		context = SpringApplication.run(BaseApplication.class, args);
-		JarFileLoader jarFileLoader = context.getBean(JarFileLoader.class);
-		jarFileLoader.loadExternalModulesAtStartUp();
+		ModuleService moduleService = context.getBean(ModuleService.class);
+		moduleService.startModule();
 	}
 
 	public static void restart(Class [] clz) {
