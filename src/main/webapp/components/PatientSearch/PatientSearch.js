@@ -80,40 +80,39 @@ const PatientSearch = (props) => {
                         : calculate_age(row.dob),
                       address: row.street || '',
                       actions: 
-        <div>
-        
-          <Menu>
-              <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
-                Actions <span aria-hidden>▾</span>
-              </MenuButton>
-                  <MenuList style={{ color:"#000 !important"}} >
-                      <MenuItem  style={{ color:"#000 !important"}} onClick={() => window.location.href = "/patient-dashboard?hospitalNumber="+row.hospitalNumber}>                      
-                        
-                              <MdDashboard size="15" color="blue" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>
-                                                  
-                        </MenuItem>
-                        <MenuItem style={{ color:"#000 !important"}}>
-                              <Link
-                                  to={{
-                                    pathname: "/patient-update",
-                                    currentId: row
-                                  }}
-                                >
-                              <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Patient </span>                   
-                            </Link>
-                        </MenuItem>                                      
-                        <MenuItem style={{ color:"#000 !important"}}>
-                            <Link
-                                onClick={() => onDelete(row.patientId)}
-                            >
-                              <MdDeleteForever size="15" color="blue" />{" "}
-                              <span style={{color: '#000'}}>Delete Patient</span>
-                          </Link>                                  
-                        </MenuItem>
-                </MenuList>
-          </Menu>
-        </div>            
-        }))}
+                      <div>
+                        <Menu>
+                            <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
+                              Actions <span aria-hidden>▾</span>
+                            </MenuButton>
+                                <MenuList style={{ color:"#000 !important"}} >
+                                    <MenuItem  style={{ color:"#000 !important"}} onClick={() => window.location.href = "/patient-dashboard?hospitalNumber="+row.hospitalNumber}>                      
+                                      
+                                            <MdDashboard size="15" color="blue" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>
+                                                                
+                                      </MenuItem>
+                                      <MenuItem style={{ color:"#000 !important"}}>
+                                            <Link
+                                                to={{
+                                                  pathname: "/patient-update",
+                                                  currentId: row
+                                                }}
+                                              >
+                                            <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Patient </span>                   
+                                          </Link>
+                                      </MenuItem>                                      
+                                      <MenuItem style={{ color:"#000 !important"}}>
+                                          <Link
+                                              onClick={() => onDelete(row.patientId)}
+                                          >
+                                            <MdDeleteForever size="15" color="blue" />{" "}
+                                            <span style={{color: '#000'}}>Delete Patient</span>
+                                        </Link>                                  
+                                      </MenuItem>
+                              </MenuList>
+                        </Menu>
+                  </div>            
+                  }))}
         
         options={{
             headerStyle: {

@@ -157,11 +157,11 @@ const useStyles = makeStyles({
                     Action <span aria-hidden>▾</span>
                 </MenuButton>
                     <MenuList style={{hover:"#eee"}}>
-                            { e.data.lab_test_order_status!==5 ?
+                            { e.data.lab_test_order_status ===0 || e.data.lab_test_order_status ===null ?
                                 <MenuItem onSelect={() => handleSample(e,dateEncounter)}><FaPlusSquare size="15" style={{color: '#000'}}/>{" "}Collect Sample</MenuItem>
                                 :""
                             }
-                            { e.data.lab_test_order_status!==5 ?
+                            { e.data.lab_test_order_status ===1 ?
                                 <MenuItem onSelect={() => transferSample(e)}><TiArrowForward size="15" style={{color: '#000'}}/>{" "} Transfer Sample</MenuItem>             
                                 :""
                             }

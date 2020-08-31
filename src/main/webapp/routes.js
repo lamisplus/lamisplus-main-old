@@ -10,6 +10,7 @@ import React, {Component} from "react";
 import { BrowserRouter, Redirect, Switch } from "react-router-dom";
 import "./styles/reduction.scss";
 import SignIn from "pages/SignPage";
+import NewPage from "pages/NewPage";
 import { history } from "./history";
 import { PrivateRoute } from "./PrivateRoute"
 
@@ -38,8 +39,19 @@ const SampleVerification = React.lazy(() => import("components/Laboratory/Sample
 const DispatchedSamples = React.lazy(() => import("components/Laboratory/DispatchedManifest/DispatchedSamplesList"))
 const PatientsPage = React.lazy(() => import("components/PatientSearch/HomePage"));
 const PrintSamples = React.lazy(() => import("components/Laboratory/DispatchedManifest/PrintSample"));
+const PrintManifest = React.lazy(() => import("components/Laboratory/DispatchedManifest/PrintManifest"));
+const ViewSampleDispatched = React.lazy(() => import("components/Laboratory/DispatchedManifest/ViewPrintManifest"));
 
+/* Bootstrap configuration */
+const BootStrapConfiguration = React.lazy(() => import("components/AdministrativeModule/BootstrapConfiguration/Index"));
+const CreateModule = React.lazy(() => import("components/AdministrativeModule/BootstrapConfiguration/CreateModule"));
+const UpdateModule = React.lazy(() => import("components/AdministrativeModule/BootstrapConfiguration/UpdateModule"));
+const UpdatedModule = React.lazy(() => import("components/AdministrativeModule/BootstrapConfiguration/UpdatedModule"));
 
+/* Datasase Management configuration */
+const DataBaseManagement = React.lazy(() => import("components/AdministrativeModule/DatabaseManagement/Index"));
+const DataBaseSync = React.lazy(() => import("components/AdministrativeModule/DatabaseManagement/DatabaseSync"));
+/* End of Bootstrap configuration */
 const formDashboard = React.lazy(() => import('components/formBuilder/formDashboard'));
 const FormBuilder = React.lazy(() => import('components/formBuilder/FormBuilder'));
 const ViewForm = React.lazy(() => import('components/formBuilder/ViewForm'));
@@ -77,7 +89,7 @@ class Routes extends Component {
         <Switch>
 
         <LayoutRoute exact path="/login" layout={EmptyLayout} component={SignIn} />
-        <LayoutRoute exact path="/print-sample" layout={EmptyLayout} component={PrintSamples} />
+        <LayoutRoute exact path="/newpage" layout={EmptyLayout} component={NewPage} />
           <MainLayout breakpoint={this.props.breakpoint}>
             <React.Suspense fallback={<PageSpinner />}>
               {/* The new routes are here  */}
@@ -108,9 +120,22 @@ class Routes extends Component {
               <PrivateRoute exact path="/sample-verification" component={SampleVerification} />
               <PrivateRoute exact path="/collect-sample" component={CollectSample} />
               <PrivateRoute exact path="/dispatched-sample" component={DispatchedSamples} />
+              <PrivateRoute exact path="/print-sample"  component={PrintSamples}  />
+              <PrivateRoute exact path="/print-manifest"  component={PrintManifest}  />
               <PrivateRoute exact path="/patients" component={PatientsPage} />
-
               <PrivateRoute exact path="/print-sample" component={PrintSamples} />
+              <PrivateRoute exact path="/view-sample-dispatched" component={ViewSampleDispatched} />
+              
+              {/* BootstrapConfiguration Link */}
+              <PrivateRoute exact path="/bootstrap-configuration" component={BootStrapConfiguration} />
+              <PrivateRoute exact path="/create-module" component={CreateModule} />
+              <PrivateRoute exact path="/update-module" component={UpdateModule} />
+              <PrivateRoute exact path="/updated-module" component={UpdatedModule} />
+              {/* DataBaseManagement Link */}
+              <PrivateRoute exact path="/database-management" component={DataBaseManagement} />
+              <PrivateRoute exact path="/database-sync" component={DataBaseSync} />
+
+              
               {/* Pharmacy Links */}
               <PrivateRoute exact path="/pharmacy" component={PharmacyDashboard} />
               

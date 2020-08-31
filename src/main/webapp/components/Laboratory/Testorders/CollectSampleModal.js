@@ -119,7 +119,7 @@ const ModalSample = (props) => {
         temp.sample_collected_by = otherfields.sample_collected_by
             ? ""
             : "Collected By  is required.";
-        temp.comment = samples.comment ? "" : "This field is required.";
+        //temp.comment = samples.comment ? "" : "This field is required.";
         setErrors({
             ...temp,
         });
@@ -132,6 +132,7 @@ const ModalSample = (props) => {
             const newDatenow = moment(samples.date_sample_collected).format(
                 "DD-MM-YYYY"
             );
+            const newTimeSampleCollected = moment(otherfields.time_sample_collected).format("LT");
             datasample.data.lab_test_order_status = 1;
             datasample.data.date_sample_collected = newDatenow;
             datasample.data.comment = samples.comment;
@@ -162,10 +163,10 @@ const ModalSample = (props) => {
             datasample.data["sample_ordered_by"] = otherfields["sample_ordered_by"];
             datasample.data["sample_priority"] = "Normal";
             datasample.data["lab_number"] = lab_number;
-            datasample.data["time_sample_collected"] =
-                otherfields["time_sample_collected"];
+            datasample.data["time_sample_collected"] = newTimeSampleCollected;
             datasample.data["comment_sample_collected"] = samples["comment"];
             datasample.data["date_sample_ordered"] = datasample.dateEncounter;
+            console.log(datasample)
             props.createCollectedSample(datasample, labId, onSuccess, onError);
         }
     };
@@ -237,7 +238,7 @@ const ModalSample = (props) => {
                                                         id="time_sample_collected"
 
                                                         onChange={value1 =>
-                                                            setOtherFields({ ...otherfields, time_sample_collected: moment(value1).format("LT") })
+                                                            setOtherFields({ ...otherfields, time_sample_collected: value1 })
                                                         }
                                                         required
                                                     />
@@ -281,8 +282,8 @@ const ModalSample = (props) => {
                                                     />
                                                     {errors.sample_type != "" ? (
                                                         <span className={classes.error}>
-                              {errors.sample_type}
-                            </span>
+                                                    {errors.sample_type}
+                                                    </span>
                                                     ) : (
                                                         ""
                                                     )}
