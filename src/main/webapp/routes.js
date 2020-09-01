@@ -10,11 +10,11 @@ import React, {Component} from "react";
 import { BrowserRouter, Redirect, Switch } from "react-router-dom";
 import "./styles/reduction.scss";
 import SignIn from "pages/SignPage";
-<<<<<<< HEAD
+
 import NewPage from "pages/NewPage";
-=======
+
 import { Register } from "pages/Register";
->>>>>>> dev
+
 import { history } from "./history";
 import { PrivateRoute } from "./PrivateRoute"
 

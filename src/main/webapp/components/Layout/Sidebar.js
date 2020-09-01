@@ -1,28 +1,3 @@
-<<<<<<< HEAD
-import logo200Image from 'assets/img/logo/lamislogo.png';
-import sidebarBgImage from 'assets/img/sidebar/sidebar-4.jpg';
-import SourceLink from 'components/SourceLink';
-import React from 'react';
-import {
-  MdDashboard,
-  MdGraphicEq, 
-  MdSend,
-  MdKeyboardArrowDown
-} from 'react-icons/md';
-import { GiTestTubes, GiMedicines} from 'react-icons/gi';
-import { FaUserPlus,  FaListUl, FaUserCog} from 'react-icons/fa';
-import { NavLink } from 'react-router-dom';
-import {
-  Collapse,
-  Nav,
-  Navbar,
-  NavItem,
-  NavLink as BSNavLink,
-} from 'reactstrap';
-import bn from 'utils/bemnames';
-
-
-=======
 import logo200Image from "assets/img/logo/lamislogo.png";
 import sidebarBgImage from "assets/img/sidebar/sidebar-4.jpg";
 import SourceLink from "components/SourceLink";
@@ -33,7 +8,6 @@ import { FaUserPlus, FaListUl, FaUserCog, FaCogs, FaWpforms } from "react-icons/
 import { NavLink } from "react-router-dom";
 import { Collapse, Nav, Navbar, NavItem, NavLink as BSNavLink } from "reactstrap";
 import bn from "utils/bemnames";
->>>>>>> dev
 
 const sidebarBackground = {
   backgroundImage: `url("${sidebarBgImage}")`,
@@ -75,10 +49,6 @@ const bem = bn.create("sidebar");
 class Sidebar extends React.Component {
   state = {
     isOpenComponents: false,
-<<<<<<< HEAD
-    isOpenContents: false,
-=======
->>>>>>> dev
   };
 
   handleClick = (name) => () => {
@@ -122,18 +92,6 @@ class Sidebar extends React.Component {
                 </BSNavLink>
               </NavItem>
             ))}
-<<<<<<< HEAD
-   
-       {/* The AdminstrativeModule Menu  */} 
-       <NavItem
-              className={bem.e('nav-item')}
-              onClick={this.handleClick('Contents')}
-            >
-              <BSNavLink className={bem.e('nav-item-collapse')}>
-                <div className="d-flex">
-                  <MdSend className={bem.e('nav-item-icon')} />
-                  <span className="">Admininstrative Module</span>
-=======
             {/* The Pharmacy Menu  */}
             {/* The  Menu  Divider for Services*/}
             <NavItem
@@ -144,17 +102,12 @@ class Sidebar extends React.Component {
                 <div className="d-flex">
                   <FaCogs className={bem.e('nav-item-icon')} />
                   <span className="">Administration</span>
->>>>>>> dev
                 </div>
                 <MdKeyboardArrowDown
                   className={bem.e('nav-item-icon')}
                   style={{
                     padding: 0,
-<<<<<<< HEAD
-                    transform: this.state.isOpenContents
-=======
                     transform: this.state.isOpenAdministration
->>>>>>> dev
                       ? 'rotate(0deg)'
                       : 'rotate(-90deg)',
                     transitionDuration: '0.3s',
@@ -163,13 +116,8 @@ class Sidebar extends React.Component {
                 />
               </BSNavLink>
             </NavItem>
-<<<<<<< HEAD
-            <Collapse isOpen={this.state.isOpenContents}>
-              {navContents.map(({ to, name, exact, Icon }, index) => (
-=======
             <Collapse isOpen={this.state.isOpenAdministration}>
               {adminItems.map(({ to, name, exact, Icon }, index) => (
->>>>>>> dev
                 <NavItem key={index} className={bem.e('nav-item')}>
                   <BSNavLink
                     id={`navItem-${name}-${index}`}
@@ -184,14 +132,7 @@ class Sidebar extends React.Component {
                   </BSNavLink>
                 </NavItem>
               ))}
-<<<<<<< HEAD
-            </Collapse>        
-            
-      {/* The  Menu  Divider for Services*/}          
-      
-=======
             </Collapse>
->>>>>>> dev
           </Nav>
         </div>
       </aside>
