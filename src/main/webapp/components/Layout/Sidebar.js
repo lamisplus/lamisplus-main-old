@@ -42,6 +42,9 @@ const adminItems = [
     exact: false,
     Icon: FaWpforms,
   },
+  { to: '/bootstrap-configuration', name: 'Bootstrap Configuration', exact: false, Icon: FaListUl },
+  { to: '/database-management', name: 'DataBase Management', exact: false, Icon: FaUserCog },
+
 ];
 
 const bem = bn.create("sidebar");
