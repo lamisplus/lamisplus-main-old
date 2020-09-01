@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import logo200Image from 'assets/img/logo/lamislogo.png';
 import sidebarBgImage from 'assets/img/sidebar/sidebar-4.jpg';
 import SourceLink from 'components/SourceLink';
@@ -21,11 +22,23 @@ import {
 import bn from 'utils/bemnames';
 
 
+=======
+import logo200Image from "assets/img/logo/lamislogo.png";
+import sidebarBgImage from "assets/img/sidebar/sidebar-4.jpg";
+import SourceLink from "components/SourceLink";
+import React from "react";
+import { MdDashboard, MdGraphicEq, MdPerson, MdKeyboardArrowDown } from "react-icons/md";
+import { GiTestTubes, GiMedicines } from "react-icons/gi";
+import { FaUserPlus, FaListUl, FaUserCog, FaCogs, FaWpforms } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
+import { Collapse, Nav, Navbar, NavItem, NavLink as BSNavLink } from "reactstrap";
+import bn from "utils/bemnames";
+>>>>>>> dev
 
 const sidebarBackground = {
   backgroundImage: `url("${sidebarBgImage}")`,
-  backgroundSize: 'cover',
-  backgroundRepeat: 'no-repeat',
+  backgroundSize: "cover",
+  backgroundRepeat: "no-repeat",
 };
 
 const navItems = [
@@ -34,8 +47,10 @@ const navItems = [
   { to: '/laboratory', name: 'Laboratory', exact: false, Icon: GiTestTubes },
   { to: '/pharmacy', name: 'Pharmacy', exact: false, Icon: GiMedicines },
   { to: '/appointments', name: 'Appointments', exact: false, Icon: MdGraphicEq },
-  { to: '/form-dashboard', name: 'Administration', exact: false, Icon: FaUserCog },
+  { to: '/report', name: 'Report', exact: false, Icon: FaListUl },
+  { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog },
   { to: '/report-dashboard', name: 'Reports', exact: false, Icon: FaListUl },
+
   { to: '/visual', name: 'Visualization', exact: false, Icon: MdGraphicEq },
   //{ to: '/admin-dashboard', name: 'Administration Module', exact: false, Icon: FaUserCog },
   
@@ -45,18 +60,30 @@ const navContents = [
   { to: '/database-management', name: 'DataBase Management', exact: false, Icon: FaUserCog },
 ];
 
-const bem = bn.create('sidebar');
+const adminItems = [
+  { to: "/users", name: "Users", exact: false, Icon: MdPerson },
+  {
+    to: "/form-dashboard",
+    name: "Forms",
+    exact: false,
+    Icon: FaWpforms,
+  },
+];
+
+const bem = bn.create("sidebar");
 
 class Sidebar extends React.Component {
   state = {
     isOpenComponents: false,
+<<<<<<< HEAD
     isOpenContents: false,
+=======
+>>>>>>> dev
   };
 
-  handleClick = name => () => {
-    this.setState(prevState => {
+  handleClick = (name) => () => {
+    this.setState((prevState) => {
       const isOpen = prevState[`isOpen${name}`];
-
       return {
         [`isOpen${name}`]: !isOpen,
       };
@@ -66,8 +93,8 @@ class Sidebar extends React.Component {
   render() {
     return (
       <aside className={bem.b()} data-image={sidebarBgImage}>
-        <div className={bem.e('background')} style={sidebarBackground} />
-        <div className={bem.e('content')}>
+        <div className={bem.e("background")} style={sidebarBackground} />
+        <div className={bem.e("content")}>
           <Navbar>
             <SourceLink className="navbar-brand d-flex">
               <img
@@ -77,26 +104,25 @@ class Sidebar extends React.Component {
                 className="pr-2"
                 alt=""
               />
-              <span className="text-white">
-                LAMISPlus 
-              </span>
+              <span className="text-white">LAMISPlus</span>
             </SourceLink>
           </Navbar>
           <Nav vertical>
             {navItems.map(({ to, name, exact, Icon }, index) => (
-              
-              <NavItem key={index} className={bem.e('nav-item')}>
+              <NavItem key={index} className={bem.e("nav-item")}>
                 <BSNavLink
                   id={`navItem-${name}-${index}`}
                   tag={NavLink}
                   to={to}
                   activeClassName="active"
-                  exact={exact}>
-                  <Icon className={bem.e('nav-item-icon')} />
+                  exact={exact}
+                >
+                  <Icon className={bem.e("nav-item-icon")} />
                   <span className="">{name}</span>
                 </BSNavLink>
               </NavItem>
             ))}
+<<<<<<< HEAD
    
        {/* The AdminstrativeModule Menu  */} 
        <NavItem
@@ -107,12 +133,28 @@ class Sidebar extends React.Component {
                 <div className="d-flex">
                   <MdSend className={bem.e('nav-item-icon')} />
                   <span className="">Admininstrative Module</span>
+=======
+            {/* The Pharmacy Menu  */}
+            {/* The  Menu  Divider for Services*/}
+            <NavItem
+              className={bem.e('nav-item')}
+              onClick={this.handleClick('Administration')}
+            >
+              <BSNavLink className={bem.e('nav-item-collapse')}>
+                <div className="d-flex">
+                  <FaCogs className={bem.e('nav-item-icon')} />
+                  <span className="">Administration</span>
+>>>>>>> dev
                 </div>
                 <MdKeyboardArrowDown
                   className={bem.e('nav-item-icon')}
                   style={{
                     padding: 0,
+<<<<<<< HEAD
                     transform: this.state.isOpenContents
+=======
+                    transform: this.state.isOpenAdministration
+>>>>>>> dev
                       ? 'rotate(0deg)'
                       : 'rotate(-90deg)',
                     transitionDuration: '0.3s',
@@ -121,8 +163,13 @@ class Sidebar extends React.Component {
                 />
               </BSNavLink>
             </NavItem>
+<<<<<<< HEAD
             <Collapse isOpen={this.state.isOpenContents}>
               {navContents.map(({ to, name, exact, Icon }, index) => (
+=======
+            <Collapse isOpen={this.state.isOpenAdministration}>
+              {adminItems.map(({ to, name, exact, Icon }, index) => (
+>>>>>>> dev
                 <NavItem key={index} className={bem.e('nav-item')}>
                   <BSNavLink
                     id={`navItem-${name}-${index}`}
@@ -137,10 +184,14 @@ class Sidebar extends React.Component {
                   </BSNavLink>
                 </NavItem>
               ))}
+<<<<<<< HEAD
             </Collapse>        
             
       {/* The  Menu  Divider for Services*/}          
       
+=======
+            </Collapse>
+>>>>>>> dev
           </Nav>
         </div>
       </aside>
