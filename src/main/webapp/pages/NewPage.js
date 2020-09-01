@@ -199,8 +199,7 @@ const PrintManifest = (props) => {
                             <th>Sample Type</th>
                             <th>Date Dispatched</th>
                             <th>Lab Order Priority</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            
                             
                         </tr>
                     </thead>
@@ -214,8 +213,7 @@ const PrintManifest = (props) => {
                               <th className={classes.td}>{row.sampleType===""?" ":row.sampleType}</th>
                               <td className={classes.td}>{row.dateSampleDispatched==="" ? " ":row.dateSampleDispatched}</td>
                               <td className={classes.td}> {row.labOrderPriority} </td>
-                              <td className={classes.td}>{sampleStatus(row.testResult)}  </td>
-                              <td className={classes.td}> {} </td>
+                             
                             </tr>
                             :
                             <tr></tr>
