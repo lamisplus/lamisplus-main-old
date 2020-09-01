@@ -226,7 +226,7 @@ const CreateModule = (props) => {
                 <span style={{ fontWeight: 'bold'}}>Starting this module wil restart the application and all scheduled tasked
                 and background processes will be interupted. <br/>Do you want to Proceed?</span> 
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  < MatButton
+                  {/* < MatButton
                     type='submit'
                     variant='contained'
                     //variant="outlined"
@@ -234,7 +234,7 @@ const CreateModule = (props) => {
                     className={classes.button}   
                     >
                     <FaPowerOff/>{" "} Restart
-                </MatButton> 
+                </MatButton>  */}
                 <br/>
               </Typography>
             </Alert>
