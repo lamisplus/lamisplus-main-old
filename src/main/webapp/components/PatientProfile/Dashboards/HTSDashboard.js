@@ -6,19 +6,21 @@ import ClinicalHistory from 'components/PatientProfile/PatientDashboardWidgets/C
 import PatientChart from 'components/PatientProfile/PatientChart';
 import {  Card, CardBody, CardDeck} from 'reactstrap';
 import './dashboard.css'
+import HtsPatientChart from "../PatientDashboardWidgets/hts/HtsPatientChart";
+import ArtCommencement from "../PatientDashboardWidgets/hts/ArtCommencement";
 
-function InPatientDashboard(props) {
+function HTSDashboard(props) {
     return (
         <React.Fragment>
             <CardDeck >
          <PatientVitals patientId={props.patientId}  /> 
-        <PatientAllergies patientId={props.patientId} />
-        {/* <PatientVitals patientId={props.patient.patientId}  />  */}
+        <ArtCommencement patientId={props.patientId} />
+
       </CardDeck>
       <br></br>
-    <PatientChart patientId={props.patientId}  />
+    <HtsPatientChart patientId={props.patientId}  />
     <br></br>
-    <ClinicalHistory  patientId={props.patientId}/>
+     <ClinicalHistory  patientId={props.patientId}/>
         </React.Fragment>
     );
 
@@ -33,4 +35,4 @@ const mapStateToProps = (state) => {
   }
   
 
-  export default connect(mapStateToProps, mapActionToProps)(InPatientDashboard)
+  export default connect(mapStateToProps, mapActionToProps)(HTSDashboard)

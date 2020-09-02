@@ -22,6 +22,7 @@ export const FETCH_COUNTRIES = "FETCH_COUNTRIES";
 export const PATIENT_UPDATE = "PATIENT_UPDATE"
 export const PATIENT_DELETE = "PATIENT_DELETE"
 export const PATIENT_CONSULTATION_HISTORY = 'PATIENT_CONSULTATION_HISTORY'
+export const PATIENT_APPOINTMENTS = 'PATIENT_APPOINTMENTS'
 
 
 /**
@@ -180,3 +181,18 @@ export const APPLICATION_CODESET_LIST = 'APPLICATION_CODESET_LIST'
  */
 export const APPOINTMENTS_FETCH_ALL = 'APPOINTMENTS_FETCH_ALL'
 export const APPOINTMENTS_ERROR = 'APPOINTMENTS_ERROR'
+
+/**
+ * @TYPES
+ * ===============================================
+ * GLOBAL_VARIABLE
+ */
+export const GLOBAL_VARIABLE_FETCH_ALL = 'GLOBAL_VARIABLE_FETCH_ALL'
+
+
+/**
+ * @TYPES
+ * ===============================================
+ * STANDARDS
+ */
+export const ICD_STANDARDS_FETCH_ALL = 'ICD_STANDARDS_FETCH_ALL'

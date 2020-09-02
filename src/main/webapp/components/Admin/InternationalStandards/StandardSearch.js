@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import MaterialTable from 'material-table';
 import { connect } from "react-redux";
-import { fetchAll} from "actions/patients";
+import { fetchAllIcd} from "actions/internationalStandards";
 import {
     Card,
     CardBody
@@ -28,7 +28,7 @@ const InternationalStandardSearch = (props) => {
         const onError = () => {
             setLoading(false);
         };
-        props.fetchAllPatients(onSuccess, onError);
+        props.fetchAll(onSuccess, onError);
     }, []); //componentDidMount
 
 
@@ -44,39 +44,35 @@ const InternationalStandardSearch = (props) => {
                 </Breadcrumbs>
 <br/>
 <div className={"d-flex justify-content-end pb-2"}>
-    <Button
-        variant="contained"
-        color="primary"
-        startIcon={<FaPlus />}
-        onClick={() => toggleNewStandardModal()}
-        className={"pr-2"}
-    >
-        <span style={{textTransform: 'capitalize'}}>Add Standard</span>
-    </Button>
+    {/*<Button*/}
+    {/*    variant="contained"*/}
+    {/*    color="primary"*/}
+    {/*    startIcon={<FaPlus />}*/}
+    {/*    onClick={() => toggleNewStandardModal()}*/}
+    {/*    className={"pr-2"}*/}
+    {/*>*/}
+    {/*    <span style={{textTransform: 'capitalize'}}>Add ICD Standard</span>*/}
+    {/*</Button>*/}
 <Button
                         variant="contained"
                         color="primary"
                         startIcon={<FaPlus />}
                         onClick={() => toggleNewCodesetModal()}
                     >
-                        <span style={{textTransform: 'capitalize'}}>Add Standard Codeset</span>
+                        <span style={{textTransform: 'capitalize'}}>Add ICD Codeset</span>
                     </Button>
 
 </div>
             <MaterialTable
-                title="Find International Standards"
+                title="Find ICD Standards"
                 columns={[
-                    {
-                        title: "Name",
-                        field: "name",
-                    },
-                    { title: "Description", field: "id" }
+                    { title: "Category Name", field: "categoryTitle"},
+                    { title: "Category Code", field: "categoryCode" },
+                    { title: "Description", field: "fullDescription" },
+                    { title: "Diagnosis Code", field: "diagnosisCode" },
                 ]}
                 isLoading={loading}
-                data={props.patientsList.map((row) => ({
-                    name: row.firstName +  ' ' + row.lastName,
-                    id: row.hospitalNumber
-                }))}
+                data={props.list}
 
                 actions= {[
                     {
@@ -116,12 +112,12 @@ const InternationalStandardSearch = (props) => {
 const mapStateToProps = state => {
 
     return {
-        patientsList: state.patients.list
+        list: state.standards.icdList
     };
 };
 
 const mapActionToProps = {
-    fetchAllPatients: fetchAll
+    fetchAll: fetchAllIcd
 };
 
 export default connect(mapStateToProps, mapActionToProps)(InternationalStandardSearch);

@@ -60,10 +60,7 @@ function ClinicalHistory(props) {
   };
 
   return (
-    <div className={classes.root}>
-      <Typography className={classes.title} gutterBottom>
-        Clinical History
-      </Typography>
+    <div >
       <AppBar position="static">
         <Tabs
           value={value}

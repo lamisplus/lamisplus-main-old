@@ -423,3 +423,28 @@ export const fetchPatientConsultationHistory = (id, onSuccess, onError) => dispa
      )
      }  
  }
+
+export const fetchPatientAppointments = (id, onSuccess, onError) => dispatch => {
+    axios
+        .get(`${baseUrl}patients/${id}/encounters/${CODES.APPOINTMENT_FORM}/`)
+        .then(response => {
+            if(onSuccess){
+                onSuccess();
+            }
+            dispatch({
+                type: ACTION_TYPES.PATIENT_APPOINTMENTS,
+                payload: response.data
+            })
+        })
+        .catch(error => {
+                dispatch({
+                    type: ACTION_TYPES.PATIENTS_ERROR,
+                    payload: 'Something went wrong, please try again'
+                })
+                if(onError){
+                    onError();
+                }
+            }
+        )
+
+}

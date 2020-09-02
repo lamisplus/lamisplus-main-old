@@ -25,6 +25,7 @@ import ServiceForm from "./ServiceForm/serviceForm";
 import * as actions from "actions/patients";
 import { connect } from "react-redux";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import HTSDashboard from "./Dashboards/HTSDashboard";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -73,6 +74,13 @@ const useStyles = makeStyles((theme) => ({
 function HomePage(props) {
   const classes = useStyles();
   const [value, setValue] = useState(0);
+  const [currentDashboard, setDashboard] = useState("general");
+  const dashboardOptions = [
+    { key: 'general', text: 'General Dashboard', value: 'general' },
+    { key: 'hts',  text: 'HTS Dashboard', value: 'hts' },
+    { key: 'tb', text: 'TB Dashboard', value: 'tb' },
+  ]
+  const changeDashboard = (e, { value }) => setDashboard(value);
   const [fetchingPatient, setFetchingPatient] = useState(false);
   const getQueryParams = (params, url) => {
     let href = url;
@@ -108,6 +116,13 @@ function HomePage(props) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const dashboard = () => {
+    switch(currentDashboard) {
+      case "hts":   return <HTSDashboard patientId={props.patient.patientId} />;
+      default:      return <InPatientDashboard patientId={props.patient.patientId} />
+    }
+  }
 
   switch (isEmpty(props.patient)) {
   }
@@ -188,8 +203,13 @@ function HomePage(props) {
       </AppBar>
 
       <div>
+        
         <PatientDashboardSubMenu
           patientHospitalNumber={props.patient.hospitalNumber}
+          mainMenuTabIndex={value}
+          changeDashboard={changeDashboard}
+          dashboardOptions={dashboardOptions}
+          currentDashboard={currentDashboard}
         />
 
         {/* The DashBoard Tab
@@ -197,7 +217,9 @@ function HomePage(props) {
         */}
 
         <TabPanel value={value} index={0}>
-          <InPatientDashboard patientId={props.patient.patientId} />
+
+          {dashboard()}
+
         </TabPanel>
         {/* End of dashboard */}
 
