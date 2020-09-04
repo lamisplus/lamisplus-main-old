@@ -19,7 +19,7 @@ import { toast } from "react-toastify";
 export const fetchAllBootstrapModule = (onSuccess, onError) => dispatch => {
 
   axios
-    .get(`${baseUrl}encounters/${LABSERVICECODE}/{dateStart}/{dateEnd}`)
+    .get(`${baseUrl}encounters`)
     .then(response => {
       dispatch({
         type: ACTION_TYPES.FETCH_ALL_BOOTSTRAP_MODULE,
@@ -63,16 +63,16 @@ export const fetchBootstrapModuleID = (id)=> dispatch => {
 export const createBootstrapModule = (data) => dispatch => {
 console.log(data)
 
-    
   axios
-    .put(`${baseUrl}form-data/${lab_id}`, data)
+    .post(`${baseUrl}modules/upload`, data)
     .then(response => {
+      console.log(response)
       dispatch({
         type: ACTION_TYPES.CREATE_BOOTSTRAP_MODULE,
         payload: response.data
       });
-      onSuccess()
-      //toast.success("Sample Collection was successful");
+      //onSuccess()
+      toast.success("Module Uploaded Successfully");
     })
     .catch(error =>{
       
@@ -80,35 +80,11 @@ console.log(data)
         type: ACTION_TYPES.ERROR_CREATE_BOOTSTRAP_MODULE,
         payload: error
       })
-      onError()
-      //toast.error("Something went wrong, please try again");
+      //onError()
+      console.log(error)
+      toast.error("Something went wrong, please try again");
       
     });
   
 };
 
-export const updateFormDataObj = (data, lab_id) => dispatch => {
-  console.log(data)
-    if(lab_id){
-      
-    axios
-      .put(`${baseUrl}form-data/${lab_id}`, data)
-      .then(response => {
-        dispatch({
-          type: ACTION_TYPES.CREATE_COLLECT_SAMPLE,
-          payload: response.data
-        });
-      })
-      .catch(error =>{
-        
-        dispatch({
-          type: ACTION_TYPES.ERROR_CREATE_COLLECT_SAMPLE,
-          payload: error
-        })
-        
-      });
-    }else{
-      toast.error("Something went wrong, please try again");
-    }
-  };
-  

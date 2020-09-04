@@ -1,15 +1,13 @@
 import React from 'react'
 import { useState , useEffect} from 'react'
 import {Card, CardBody,CardHeader,Col,Row} from 'reactstrap'
-//import { useState , useEffect} from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
 import { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom';
-import  LinkRef from '@material-ui/core/Link';
 import MatButton from '@material-ui/core/Button'
 import { TiArrowBack} from 'react-icons/ti';
-import {FaPowerOff} from 'react-icons/fa'
 import 'react-widgets/dist/css/react-widgets.css'
+import { connect } from 'react-redux';
 //Date Picker
 import Page from '../../Page'
 import { Alert, AlertTitle } from '@material-ui/lab';
@@ -26,7 +24,7 @@ import { Table } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import {  MdDelete, MdModeEdit } from "react-icons/md";
-
+import { createBootstrapModule } from '../../../actions/bootstrapModule';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,6 +65,7 @@ const CreateModule = (props) => {
     console.log(steps['0'])
     if(steps['0']=='Select File to upload'){
       console.log(fileToUpload)
+      props.createBootstrapModule(fileToUpload)
     }
   };
 
@@ -119,7 +118,7 @@ const CreateModule = (props) => {
                       <Col sm={12}>
                           <DropzoneArea
                             //onChange={(files) => console.log('Files:', files)}
-                            onChange = {(files) => setFileToUpload({files})}
+                            onChange = {(file1) => setFileToUpload(file1)}
                             showFileNames="true"
                             //acceptedFiles={['jar']}
                             maxFileSize ={'100000000'}
@@ -334,6 +333,4 @@ return (
   )
   
 }
-
-
-export default CreateModule
+export default connect(null, { createBootstrapModule })(CreateModule);

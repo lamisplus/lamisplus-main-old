@@ -71,7 +71,6 @@ const ModalSample = (props) => {
     const sample_ordered_by = datasample.data ? datasample.data.sample_ordered_by : null ;
     const description = datasample.data ? datasample.data.description : null ;
     const lab_number = props.labnumber && props.labnumber["lab_number"]  ? props.labnumber["lab_number"] : null;
-    console.log(datasample)
     const labId = datasample.id
     const [loading, setLoading] = useState(false)
     const [visible, setVisible] = useState(true);
@@ -93,7 +92,6 @@ const ModalSample = (props) => {
                     body.map(({ display, id }) => ({ title: display, value: id }))
                 );
             } catch (error) {
-                console.log(error);
             }
         }
         getCharacters();
@@ -172,7 +170,9 @@ const ModalSample = (props) => {
     };
 
     function checklanumber(lab_num) {
-        if (lab_num === "") {
+        
+        if (lab_num === "" || lab_num===null) {
+            console.log('the code get here')
             return (
                 <Alert color="danger" isOpen={visible} toggle={onDismiss}>
                     Please make sure you enter a lab number

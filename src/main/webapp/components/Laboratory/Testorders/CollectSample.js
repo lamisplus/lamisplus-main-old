@@ -247,7 +247,6 @@ return (
                                             name='lab_number'
                                             id='lab_number'
                                             value={labNumber!=="" ? labNumber : labNum.lab_number}
-                                            
                                             onChange={handleLabNumber}
                                         />
                                         </FormGroup>                            
