@@ -1,0 +1,34 @@
+[
+  {
+    "codesetGroup": "TESTING",
+    "version": "1",
+    "language": "en",
+    "display": "Male",
+    "active": 1,
+    "code": "912016f2-dca1-45b2-a613-b0b3edc414db"
+  },
+  {
+    "codesetGroup": "TESTING",
+    "version": "1",
+    "language": "en",
+    "display": "Transgender(male to female)",
+    "active": 1,
+    "code": "34792968-e3df-4954-bd97-2f60d8fc1393"
+  },
+  {
+    "codesetGroup": "TESTING",
+    "version": "1",
+    "language": "en",
+    "display": "Transgender(Female to male)",
+    "active": 1,
+    "code": "3ffeb50c-dc25-4d58-8b81-93a9fe55963d"
+  },
+  {
+    "codesetGroup": "TESTING",
+    "version": "1",
+    "language": "en",
+    "display": "Female",
+    "active": 1,
+    "code": "a2e19199-b704-485f-98c3-e6471dab9b45"
+  }
+]

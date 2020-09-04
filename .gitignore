@@ -156,3 +156,6 @@ yarn-error.log*
 src/main/resources/static/
 src/main/resources/static/static/
 target/
+src/main/resources/application.properties
+
+base-module.iml
