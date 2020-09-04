@@ -187,51 +187,25 @@ const UpdateModule = (props) => {
       case 2:
         return (
           <>
-           <Row>
-              <Col>                  
-                <Alert severity="info">
-                  <AlertTitle>Instructions to add new module</AlertTitle>
-                    
-                    <br/>
-                    <strong>NOTE:</strong> This wizard will lead you step by step through the installation of your module.
-                    <br/>
-                    <strong>Click Next to continue, or Cancel to exit Setup.</strong> 
-                    <br/>
-                </Alert>
-              </Col>
-                  
-          </Row>
-          <Card className="mb-12">  
-          <CardBody>                   
-            <br />
-            <Row>
-                <Col>
-                  <Table striped>
-                    <thead style={{  backgroundColor:'#9F9FA5' }}>
-                    <tr>
-                      <th>Module Name</th>
-                      <th>Description</th>
-                      <th>Author</th>
-                      <th>Version</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    
-                    <tr>
-                      <td>HTS</td>
-                      <td>HTS</td>
-                      <td>Debora</td>
-                      <td>1.1</td>
-                      <td><LinkRef href="#" onClick={() => startModule()}><Badge  color="primary">Loaded</Badge></LinkRef></td>
-                    </tr>
-                  </tbody>
-              </Table>
-  
-                </Col>  
-              </Row>
-              </CardBody>
-            </Card>
+            <Alert color="info">
+              <Typography className={classes.instructions}>
+                <span style={{ fontWeight: 'bold'}}>Starting this module wil restart the application and all scheduled tasked
+                and background processes will be interupted. <br/>Do you want to Proceed?</span> 
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  {/* < MatButton
+                    type='submit'
+                    variant='contained'
+                    //variant="outlined"
+                    color="secondary"
+                    className={classes.button}   
+                    >
+                    <FaPowerOff/>{" "} Restart
+                </MatButton>  */}
+                <br/>
+              </Typography>
+            </Alert>
+              <br/>
+              <br/>
           </>
         );
       default:

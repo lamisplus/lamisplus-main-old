@@ -123,7 +123,7 @@ return (
                           <Col sm={12} className=" float-right mr-1">
                             <Link
                                 to={{
-                                  pathname: "/newpage",
+                                  pathname: "/print-dispatched-manifest",
                                   ManifestDetail: {samplesDispatched}
                                 }}
                             >

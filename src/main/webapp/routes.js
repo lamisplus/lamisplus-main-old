@@ -11,7 +11,7 @@ import { BrowserRouter, Redirect, Switch } from "react-router-dom";
 import "./styles/reduction.scss";
 import SignIn from "pages/SignPage";
 
-import NewPage from "pages/NewPage";
+import PrintDispatchedManifest from "pages/PrintManifest";
 
 import { Register } from "pages/Register";
 
@@ -100,7 +100,7 @@ class Routes extends Component {
         <Switch>
           {/* <LayoutRoute exact path="/register" layout={EmptyLayout} component={Register} /> */}
         <LayoutRoute exact path="/login" layout={EmptyLayout} component={SignIn} />
-        <LayoutRoute exact path="/newpage" layout={EmptyLayout} component={NewPage} />
+        <LayoutRoute exact path="/print-dispatched-manifest" layout={EmptyLayout} component={PrintDispatchedManifest} />
           <MainLayout breakpoint={this.props.breakpoint}>
             <React.Suspense fallback={<PageSpinner />}>
               {/* The new routes are here  */}

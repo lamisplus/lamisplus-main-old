@@ -17,7 +17,7 @@ import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { useSelector, useDispatch } from 'react-redux';
-import {  samplesManifestById } from './../actions/laboratory'
+import {  samplesManifestById } from '../actions/laboratory'
 import { Spinner } from 'reactstrap';
 import { Badge } from 'reactstrap';
 import { TiPrinter,TiArrowBack} from 'react-icons/ti'
@@ -194,12 +194,10 @@ const PrintManifest = (props) => {
                 <Table  striped responsive>
                     <thead style={{  backgroundColor:'#9F9FA5' }}>
                         <tr>
-                            <th>Hospital Number</th>
-                            <th>Patient Name </th>
+                            <th>Sample Manifest</th>
+                            <th>Patient ID </th>
+                            <th>Date Collected</th>
                             <th>Sample Type</th>
-                            <th>Date Dispatched</th>
-                            <th>Lab Order Priority</th>
-                            
                             
                         </tr>
                     </thead>
@@ -208,11 +206,10 @@ const PrintManifest = (props) => {
                         {!loading ? sampleManifestList.map((row) => (
                             row!==null?
                             <tr key={row.id} style={{ borderBottomColor: '#fff' }}>
-                              <th className={classes.td}>{row.manifestId !==null && row.clientId !=='' ? row.clientId : ''}</th>
-                              <td className={classes.td}> {row.firstName!==null && row.surname!=null ? row.firstName + " " + row.surname : ""} </td>
-                              <th className={classes.td}>{row.sampleType===""?" ":row.sampleType}</th>
-                              <td className={classes.td}>{row.dateSampleDispatched==="" ? " ":row.dateSampleDispatched}</td>
-                              <td className={classes.td}> {row.labOrderPriority} </td>
+                              <th className={classes.td}>{row.id !==null && row.id !=='' ? row.id : ''}</th>
+                              <td className={classes.td}> {row.clientId!==null || row.clientId=="" ? row.clientId : ""} </td>
+                              <td className={classes.td}>{row.dateSampleCollected==="" ? " ":row.dateSampleCollected}</td>
+                              <td className={classes.td}> {row.sampleType} </td>
                              
                             </tr>
                             :

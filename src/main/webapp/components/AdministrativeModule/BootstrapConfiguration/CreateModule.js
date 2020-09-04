@@ -60,9 +60,14 @@ const CreateModule = (props) => {
     const classes = useStyles()
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
+    const [fileToUpload, setFileToUpload] = useState({})
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    console.log(steps['0'])
+    if(steps['0']=='Select File to upload'){
+      console.log(fileToUpload)
+    }
   };
 
   const handleBack = () => {
@@ -113,9 +118,11 @@ const CreateModule = (props) => {
                     <Row>
                       <Col sm={12}>
                           <DropzoneArea
-                            onChange={(files) => console.log('Files:', files)}
+                            //onChange={(files) => console.log('Files:', files)}
+                            onChange = {(files) => setFileToUpload({files})}
                             showFileNames="true"
-                            acceptedFiles={['pdf']}
+                            //acceptedFiles={['jar']}
+                            maxFileSize ={'100000000'}
   
                           />
                       </Col>  
@@ -175,7 +182,7 @@ const CreateModule = (props) => {
                       <td>HTS</td>
                       <td>Debora</td>
                       <td>1.1</td>
-                      <td><Badge  color="warning">Unloaded</Badge></td>
+                      <td><Badge  color="warning">Unploaded</Badge></td>
                       <td>
                         <Menu>
                             <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
