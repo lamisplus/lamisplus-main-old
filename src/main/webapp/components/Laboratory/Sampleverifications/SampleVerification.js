@@ -162,8 +162,11 @@ const SampleVerification = (props) => {
                     Action <span aria-hidden>▾</span>
                 </MenuButton>
                     <MenuList style={{hover:"#eee"}}>
-                        <MenuItem onSelect={() => handleVerifySample(e)}><GoChecklist size="15" style={{color: '#3F51B5'}}/>{" "}Verify Sample</MenuItem>
-                        { e.data.lab_test_order_status==="4" ?
+                        { e.data.lab_test_order_status===1 ?
+                            <MenuItem onSelect={() => handleVerifySample(e)}><GoChecklist size="15" style={{color: '#3F51B5'}}/>{" "}Verify Sample</MenuItem>
+                            :""
+                        } 
+                        { e.data.lab_test_order_status==="3" ?
                         <MenuItem onSelect={() => handleRecollectSample(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Re-collect Sample</MenuItem>
                           :""
                         } 

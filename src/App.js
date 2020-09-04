@@ -4,7 +4,8 @@ import { Provider } from "react-redux";
 import store from "./../src/main/webapp/store";
 import Routes from "./../src/main/webapp/routes";
 import { Route, Router } from "react-router-dom";
-import { history } from "./../src/main/webapp/history"
+import { history } from "./main/webapp/history"
+
 
 //import { ToastProvider } from 'react-toast-notifications'
 
