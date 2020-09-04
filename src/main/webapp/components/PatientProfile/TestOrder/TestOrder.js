@@ -73,11 +73,11 @@ function TestOrderPage(props) {
 
   React.useEffect(() => {
     if (props.priorities.length === 0) {
-      props.fetchApplicationCodeSet("TEST_ORDER_PRIORITY", APPLICATION_CODESET_PRIORITIES);
+      props.fetchApplicationCodeSet("PRIORITY", APPLICATION_CODESET_PRIORITIES);
     }
     if (props.vlIndications.length === 0) {
       props.fetchApplicationCodeSet(
-        "VIRAL_LOAD_INDICATION",
+        "VL_INDICATION",
         APPLICATION_CODESET_VL_INDICATION
       );
     }
