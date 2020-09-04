@@ -12,6 +12,7 @@ import org.lamisplus.modules.base.domain.entity.Module;
 import org.lamisplus.modules.base.domain.mapper.ModuleMapper;
 import org.lamisplus.modules.base.repository.ModuleRepository;
 import org.lamisplus.modules.base.bootstrap.ClassPathHacker;
+import org.lamisplus.modules.base.repository.ProgramRepository;
 import org.lamisplus.modules.base.util.GenericSpecification;
 import org.lamisplus.modules.base.bootstrap.ModuleUtil;
 import org.lamisplus.modules.base.bootstrap.StorageUtil;
@@ -46,6 +47,7 @@ public class ModuleService {
     private static final int STATUS_UPLOADED = 1;
     private static final String ORG_LAMISPLUS_MODULES_PATH = "/org/lamisplus/modules/";
     private List<Module> externalModules;
+    private final ProgramRepository programRepository;
 
 
     public Module save(ModuleDTO moduleDTO) {
@@ -60,9 +62,7 @@ public class ModuleService {
 
     public List<Module> getAllModules(){
         Specification<Module> specification = genericSpecification.findAll();
-        List<Module> moduleList = this.moduleRepository.findAll(specification);
-        //if(moduleList.size() > 0 || moduleList == null) throw new EntityNotFoundException(Module.class, "Module", moduleId + "");
-        return moduleList;
+        return (List<Module>) this.moduleRepository.findAll(specification);
     }
 
     public List<Module> uploadAndUnzip(MultipartFile[] files, Boolean overrideExistFile) {
@@ -90,8 +90,15 @@ public class ModuleService {
         //Saving a module to db
         ModuleUtil.getModuleConfigs().forEach(module -> {
             module.setStatus(STATUS_UPLOADED);
-            module.setActive(true);
-            modules.add(moduleRepository.save(module));
+            module.setActive(false);
+            module.setModuleType(MODULE_TYPE);
+            final Module savedModule = moduleRepository.save(module);
+            modules.add(savedModule);
+
+            module.getProgramsByModule().forEach(program -> {
+                program.setModuleId(savedModule.getId());
+                programRepository.save(program);
+            });
         });
 
         return modules;
@@ -104,16 +111,21 @@ public class ModuleService {
         }
         Module module = moduleOptional.get();
 
+        log.debug("module is " + module);
+
         final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", module.getName());
         File rootFile = new File(moduleRuntimePath.toAbsolutePath().toString());
         File filePath = new File(moduleRuntimePath.toAbsolutePath().toString() +
                 ORG_LAMISPLUS_MODULES_PATH + module.getName());
+
+        log.debug("moduleRuntimePath is " + moduleRuntimePath.toString());
 
         try {
             ClassPathHacker.addFile(rootFile.getAbsolutePath());
             List<URL> classURL = showFiles(filePath.listFiles(), rootFile);
             ClassLoader loader = new URLClassLoader(classURL.toArray(
                     new URL[classURL.size()]), ClassLoader.getSystemClassLoader());
+            log.debug("rootFile is: " + rootFile.getAbsolutePath());
 
             classNames.forEach(className ->{
                 try {
@@ -129,7 +141,7 @@ public class ModuleService {
             throw new RuntimeException("Server error module not loaded: " + e.getMessage());
         }
         module.setStatus(STATUS_INSTALLED);
-        //module.setActive(true);
+        module.setActive(true);
         return moduleRepository.save(module);
     }
 
@@ -223,5 +235,13 @@ public class ModuleService {
         List<Module> modules = this.moduleRepository.findAll(moduleSpecification);
 
         return modules;
+    }
+
+    public Boolean delete(Long id) {
+        if(moduleRepository.findById(id).get().getModuleType() == 0){
+            throw new RuntimeException("Cannot delete Core module");
+        }
+        moduleRepository.deleteById(id);
+        return true;
     }
 }

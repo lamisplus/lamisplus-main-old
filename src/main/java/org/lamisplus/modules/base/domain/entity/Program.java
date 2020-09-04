@@ -15,7 +15,7 @@ import java.util.List;
 public class Program implements Serializable {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -25,7 +25,7 @@ public class Program implements Serializable {
 
     @Basic
     @Column(name = "code")
-    private String code;
+    private String uuid;
 
     @Basic
     @Column(name = "module_id")

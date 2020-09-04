@@ -8,6 +8,8 @@ import java.util.List;
 
 @Component
 public class DataLoader<T> {
+    private Boolean hasProgram;
+    private Boolean hasForm;
 
     private static String getJsonFile(String fileName) {
         return "src/main/resources/test/"+fileName;
@@ -41,4 +43,5 @@ public class DataLoader<T> {
          //TODO: implement the saving of forms associated with a service
          return false;
      }
+
 }

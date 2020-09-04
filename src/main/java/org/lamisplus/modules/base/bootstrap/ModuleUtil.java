@@ -108,8 +108,10 @@ public class ModuleUtil {
             if(module != null){
                 moduleConfigs.add(module);
             }
+            in.close();
         } catch (Exception e){
             e.printStackTrace();
+            throw new RuntimeException("Error: " + e.getMessage());
         }
     }
 

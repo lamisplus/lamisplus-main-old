@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -19,7 +20,7 @@ import java.util.List;
 @Table(name = "module")
 public class Module implements Serializable {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -50,7 +51,7 @@ public class Module implements Serializable {
     @Basic
     @Column(name = "uuid")
     @JsonIgnore
-    private String uuid;
+    private UUID uuid;
 
     @Basic
     @Column(name = "date_created")

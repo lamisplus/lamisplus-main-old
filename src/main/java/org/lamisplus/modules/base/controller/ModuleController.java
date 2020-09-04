@@ -58,4 +58,9 @@ public class ModuleController {
         moduleService.startModule();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> delete(@PathVariable Long id) {
+        return ResponseEntity.ok(moduleService.delete(id));
+    }
+
 }

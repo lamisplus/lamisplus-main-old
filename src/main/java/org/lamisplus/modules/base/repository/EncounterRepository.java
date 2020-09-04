@@ -1,7 +1,9 @@
 package org.lamisplus.modules.base.repository;
 
 import org.lamisplus.modules.base.domain.entity.Encounter;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +19,10 @@ import java.util.Optional;
 public interface EncounterRepository extends JpaRepository<Encounter, Long> , JpaSpecificationExecutor {
 
     List <Encounter> findAllByPatientIdAndFormCode(Long patientId, String FormCode, Pageable pageable);
+
+    //New
+    Page<Encounter> findAllByPatientIdAndFormCode(Pageable pageable, Long patientId, String FormCode);
+
 
     Optional<Encounter> findByPatientIdAndProgramCodeAndFormCodeAndDateEncounter(Long patientId, String ProgramCode, String FormCode, LocalDate dateFncounter);
 
