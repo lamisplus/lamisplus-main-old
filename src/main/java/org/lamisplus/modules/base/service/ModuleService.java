@@ -8,11 +8,14 @@ import org.lamisplus.modules.base.config.ApplicationProperties;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ModuleDTO;
+import org.lamisplus.modules.base.domain.entity.Form;
 import org.lamisplus.modules.base.domain.entity.Module;
 import org.lamisplus.modules.base.domain.mapper.ModuleMapper;
+import org.lamisplus.modules.base.repository.FormRepository;
 import org.lamisplus.modules.base.repository.ModuleRepository;
 import org.lamisplus.modules.base.bootstrap.ClassPathHacker;
 import org.lamisplus.modules.base.repository.ProgramRepository;
+import org.lamisplus.modules.base.util.DataLoader;
 import org.lamisplus.modules.base.util.GenericSpecification;
 import org.lamisplus.modules.base.bootstrap.ModuleUtil;
 import org.lamisplus.modules.base.bootstrap.StorageUtil;
@@ -33,6 +36,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ModuleService {
     private final ModuleRepository moduleRepository;
+    private final FormRepository formRepository;
     private final ModuleMapper moduleMapper;
     private final StorageUtil storageService;
     private final ApplicationProperties properties;
@@ -48,6 +52,7 @@ public class ModuleService {
     private static final String ORG_LAMISPLUS_MODULES_PATH = "/org/lamisplus/modules/";
     private List<Module> externalModules;
     private final ProgramRepository programRepository;
+    private final DataLoader<Form> formDataLoader;
 
 
     public Module save(ModuleDTO moduleDTO) {
@@ -87,17 +92,26 @@ public class ModuleService {
              }
          });
 
-        //Saving a module to db
+        //Saving a module, program, form to db
         ModuleUtil.getModuleConfigs().forEach(module -> {
             module.setStatus(STATUS_UPLOADED);
             module.setActive(false);
             module.setModuleType(MODULE_TYPE);
+            //Saving module...
             final Module savedModule = moduleRepository.save(module);
             modules.add(savedModule);
 
             module.getProgramsByModule().forEach(program -> {
                 program.setModuleId(savedModule.getId());
+                //Saving program...
                 programRepository.save(program);
+
+                loadExternalModuleForms(module.getName(), "Form.json", program.getUuid()).forEach(form ->{
+                    form.setProgramCode(program.getUuid());
+
+                    //Saving form...
+                    formRepository.save(form);
+                });
             });
         });
 
@@ -166,6 +180,24 @@ public class ModuleService {
 
     public List<Module> getAllModuleByModuleStatus(int moduleStatus) {
         return getAllModuleByStatusAndModuleType(moduleStatus, MODULE_TYPE);
+    }
+
+    public Boolean delete(Long id) {
+        Optional<Module> moduleOptional = moduleRepository.findById(id);
+        if(!moduleOptional.isPresent()){
+            throw new EntityNotFoundException(Module.class, "Module ", "Not Found");
+        }
+        Module module = moduleOptional.get();
+        if(module.getModuleType() == 0){
+            throw new IllegalStateException("Cannot not delete Core module");
+        }
+        module.getProgramsByModule().forEach(program -> {
+            program.getFormsByProgram().forEach(form -> formRepository.delete(form));
+            programRepository.delete(program);
+        });
+
+        moduleRepository.deleteById(id);
+        return true;
     }
 
 
@@ -237,11 +269,22 @@ public class ModuleService {
         return modules;
     }
 
-    public Boolean delete(Long id) {
-        if(moduleRepository.findById(id).get().getModuleType() == 0){
-            throw new RuntimeException("Cannot delete Core module");
+    private Class getBeanInContext(String clzName){
+        Boolean containsBean = BaseApplication.getContext().containsBean(clzName);
+        Class clz = null;
+        if(containsBean){
+            clz = BaseApplication.getContext().getBean(clzName).getClass();
         }
-        moduleRepository.deleteById(id);
-        return true;
+
+        return clz;
+    }
+
+    private List<Form> loadExternalModuleForms(String moduleName, String searchParam, String programCode){
+        final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", moduleName, searchParam);
+
+        String jsonFile = DataLoader.getJsonFile(moduleRuntimePath).toString();
+        List<Form> forms = formDataLoader.readJsonFile(new Form(), jsonFile);
+
+        return forms;
     }
 }
