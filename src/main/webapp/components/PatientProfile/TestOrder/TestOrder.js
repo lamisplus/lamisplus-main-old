@@ -331,18 +331,18 @@ function TestOrderPage(props) {
                   <Col md={12}>
                     <FormGroup>
                       <Label for="vlIndication">VL Indication*</Label>
-                      <Select
-                        isMulti={false}
-                        required
-                        value={testOrder.vlIndication}
-                        onChange={(e) =>
-                          setTestOrder({ ...testOrder, vlIndication: e })
-                        }
-                        options={props.vlIndications.map((x) => ({
-                          label: x.display,
-                          value: x,
-                        }))}
-                      />
+                            <Select
+                              isMulti={false}
+                              required
+                              value={testOrder.vlIndication}
+                              onChange={(e) =>
+                                setTestOrder({ ...testOrder, vlIndication: e })
+                              }
+                              options={props.vlIndications.map((x) => ({
+                                label: x.display,
+                                value: x,
+                              }))}
+                            />
                     </FormGroup>
                     {/* <FormGroup>
                       <Label for="vlIndication">VL Indication*</Label>

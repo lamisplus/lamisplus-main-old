@@ -97,11 +97,18 @@ function AdminSubMenu(props) {
                   International Standard setup
                   </Link>
                 </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => displayFormByFormName("DISCHARGE_PATIENT")}
-                >
+                <Dropdown.Item >
                   Organization Unit setup
                 </Dropdown.Item>
+                <Dropdown.Item >
+                  <Link
+                      to={{
+                        pathname: "/admin/wards"}}
+                  >
+                    Ward Manager
+                  </Link>
+                </Dropdown.Item>
+
               </Dropdown.Menu>
 
           </Dropdown>
