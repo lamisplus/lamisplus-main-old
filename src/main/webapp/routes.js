@@ -55,6 +55,9 @@ const UpdatedModule = React.lazy(() => import("components/AdministrativeModule/B
 /* Datasase Management configuration */
 const DataBaseManagement = React.lazy(() => import("components/AdministrativeModule/DatabaseManagement/Index"));
 const DataBaseSync = React.lazy(() => import("components/AdministrativeModule/DatabaseManagement/DatabaseSync"));
+/* Organization Unit Manager configuration */
+const OrganizationUnit = React.lazy(() => import("components/Admin/OrganizationUnit/Index"));
+
 /* End of Bootstrap configuration */
 const formDashboard = React.lazy(() => import('components/formBuilder/formDashboard'));
 const FormBuilder = React.lazy(() => import('components/formBuilder/FormBuilder'));
@@ -145,7 +148,8 @@ class Routes extends Component {
               {/* DataBaseManagement Link */}
               <PrivateRoute exact path="/database-management" component={DataBaseManagement} />
               <PrivateRoute exact path="/database-sync" component={DataBaseSync} />
-
+              {/* OrganizationUnit */}
+              <PrivateRoute exact path="/organization-unit" component={OrganizationUnit} />
               
               {/* Pharmacy Links */}
               <PrivateRoute exact path="/pharmacy" component={PharmacyDashboard} />

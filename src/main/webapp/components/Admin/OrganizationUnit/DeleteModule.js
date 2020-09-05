@@ -47,7 +47,12 @@ const useStyles = makeStyles(theme => ({
 const DeleteModule = (props) => {
     const classes = useStyles()
     const datasample = props.datasample ? props.datasample : {};
-    
+    const lab_test_group = datasample.data ? datasample.data.lab_test_group : null ;
+    const description = datasample.data ? datasample.data.description : null ;
+    const unit_measurement = datasample.data ? datasample.data.unit_measurement : null ;
+    const date_result_reported = datasample.data ? datasample.data.date_result_reported : null ;
+    const test_result = datasample.data ? datasample.data.test_result : null ;
+
 
 
   return (      
