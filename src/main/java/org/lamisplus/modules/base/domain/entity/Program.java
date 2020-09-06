@@ -1,11 +1,12 @@
 package org.lamisplus.modules.base.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 
 @Data
@@ -24,7 +25,7 @@ public class Program implements Serializable {
     private String name;
 
     @Basic
-    @Column(name = "code")
+    @Column(name = "uuid")
     private String uuid;
 
     @Basic

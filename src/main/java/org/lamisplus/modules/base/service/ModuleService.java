@@ -10,6 +10,7 @@ import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ModuleDTO;
 import org.lamisplus.modules.base.domain.entity.Form;
 import org.lamisplus.modules.base.domain.entity.Module;
+import org.lamisplus.modules.base.domain.entity.Program;
 import org.lamisplus.modules.base.domain.mapper.ModuleMapper;
 import org.lamisplus.modules.base.repository.FormRepository;
 import org.lamisplus.modules.base.repository.ModuleRepository;
@@ -93,24 +94,30 @@ public class ModuleService {
          });
 
         //Saving a module, program, form to db
-        ModuleUtil.getModuleConfigs().forEach(module -> {
-            module.setStatus(STATUS_UPLOADED);
-            module.setActive(false);
-            module.setModuleType(MODULE_TYPE);
+        ModuleUtil.getModuleConfigs().forEach(externalModule -> {
+            externalModule.setStatus(STATUS_UPLOADED);
+            externalModule.setActive(false);
+            externalModule.setModuleType(MODULE_TYPE);
             //Saving module...
-            final Module savedModule = moduleRepository.save(module);
-            modules.add(savedModule);
+            Optional<Module> moduleOptional = moduleRepository.findByName(externalModule.getName().toLowerCase());
 
-            module.getProgramsByModule().forEach(program -> {
-                program.setModuleId(savedModule.getId());
-                //Saving program...
-                programRepository.save(program);
+            final Module module = moduleOptional.isPresent()? moduleOptional.get(): moduleRepository.save(externalModule);
+            modules.add(module);
 
-                loadExternalModuleForms(module.getName(), "Form.json", program.getUuid()).forEach(form ->{
-                    form.setProgramCode(program.getUuid());
+            externalModule.getProgramsByModule().forEach(program -> {
+                if(programRepository.findByModuleId(module.getId()).size() < 1){
+                    program.setModuleId(module.getId());
+                    //Saving program...
+                    final Program program1 =  programRepository.save(program);
+                    program1.getUuid();
+                }
 
-                    //Saving form...
-                    formRepository.save(form);
+                loadExternalModuleForms(module.getName(), "Form.json").forEach(form ->{
+                    if(!formRepository.findByCode(form.getCode()).isPresent()){
+                        form.setProgramCode(program.getUuid());
+                        //Saving form...
+                        formRepository.save(form);
+                    }
                 });
             });
         });
@@ -118,21 +125,19 @@ public class ModuleService {
         return modules;
     }
 
-    public Module loadModule(Long moduleId){
+    public Module installModule(Long moduleId){
         Optional<Module> moduleOptional = this.moduleRepository.findById(moduleId);
         if(!moduleOptional.isPresent()) {
             throw new EntityNotFoundException(Module.class, "Module Id", moduleId + "");
         }
         Module module = moduleOptional.get();
 
-        log.debug("module is " + module);
-
         final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", module.getName());
         File rootFile = new File(moduleRuntimePath.toAbsolutePath().toString());
         File filePath = new File(moduleRuntimePath.toAbsolutePath().toString() +
                 ORG_LAMISPLUS_MODULES_PATH + module.getName());
 
-        log.debug("moduleRuntimePath is " + moduleRuntimePath.toString());
+        log.info("moduleRuntimePath is " + moduleRuntimePath.toString());
 
         try {
             ClassPathHacker.addFile(rootFile.getAbsolutePath());
@@ -205,7 +210,7 @@ public class ModuleService {
         externalModules = getAllModuleByStatusAndModuleType(status, moduleType);
 
         externalModules.forEach(module -> {
-            loadModule(module.getId());
+            installModule(module.getId());
         });
         //startModule();
     }
@@ -279,7 +284,7 @@ public class ModuleService {
         return clz;
     }
 
-    private List<Form> loadExternalModuleForms(String moduleName, String searchParam, String programCode){
+    private List<Form> loadExternalModuleForms(String moduleName, String searchParam){
         final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", moduleName, searchParam);
 
         String jsonFile = DataLoader.getJsonFile(moduleRuntimePath).toString();
