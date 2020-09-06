@@ -16,5 +16,4 @@ public interface IcdRepository extends JpaRepository<Icd, Long>, JpaSpecificatio
     /*@Query("SELECT DISTINCT i.categoryTitle FROM Icd i")
     List<Icd> findDistinctByCategoryTitle();*/
 
-
 }
