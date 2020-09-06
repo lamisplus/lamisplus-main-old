@@ -6,7 +6,9 @@ const initialState = {
   tests: [],
   testGroup: [],
   testorder:[],
-  formdata:[]
+  formdata:[],
+  manifest:[],
+  samplesmanifest:[]
 }
 
 const laboratoryReducer = (state = initialState, action) => {
@@ -35,7 +37,11 @@ const laboratoryReducer = (state = initialState, action) => {
     case ACTION_TYPES.FETCH_ALL_TESTS_BY_ENCOUNTER_ID:
         return { ...state, tests: action.payload }
 
-      
+    case ACTION_TYPES.SAMPLE_DISPATCHED:
+      return { ...state, manifest: action.payload }  
+    
+    case ACTION_TYPES.SAMPLES_MANIFEST_BY_ID:
+        return { ...state, samplesmanifest: action.payload }  
 
     default:
       return state

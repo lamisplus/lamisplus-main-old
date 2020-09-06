@@ -11,7 +11,7 @@ import "react-resizable/css/styles.css";
 
 ReactDOM.render(
    
-        <App />,
+    <App />,
     document.getElementById('root') 
     );
 
