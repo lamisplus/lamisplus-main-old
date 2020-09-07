@@ -87,6 +87,7 @@ public class ModuleService {
              try {
                  ModuleUtil.copyPathFromJar(storageService.getURL(jarFile.getName().toLowerCase()),
                          fileSeparator, moduleRuntimePath);
+                 storageService.deleteFile(file.getOriginalFilename());
 
              } catch (Exception e) {
                  throw new RuntimeException("Server error module not loaded: " + e.getMessage());
@@ -159,6 +160,20 @@ public class ModuleService {
             //module.setActive(false);
             throw new RuntimeException("Server error module not loaded: " + e.getMessage());
         }
+        for(File file: moduleRuntimePath.toFile().listFiles()){
+            System.out.println(file.getName());
+            //Load dependencies
+            if(file.getName().contains("lib")){
+                System.out.println(file.exists());
+                for(File jarfile: file.listFiles()) {
+                    try {
+                        ClassPathHacker.addFile(jarfile.getAbsolutePath());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
         module.setStatus(STATUS_INSTALLED);
         module.setActive(true);
         return moduleRepository.save(module);
@@ -176,12 +191,12 @@ public class ModuleService {
         }
     }
 
-    public void loadDependenciesOfModules(int status, int moduleType){
+    /*public void loadDependenciesOfModules(int status, int moduleType){
         List<Module> modules = getAllModuleByStatusAndModuleType(status, moduleType);
         modules.forEach(module -> {
             getDependency(module.getName());
         });
-    }
+    }*/
 
     public List<Module> getAllModuleByModuleStatus(int moduleStatus) {
         return getAllModuleByStatusAndModuleType(moduleStatus, MODULE_TYPE);
@@ -212,7 +227,6 @@ public class ModuleService {
         externalModules.forEach(module -> {
             installModule(module.getId());
         });
-        //startModule();
     }
 
     private List<URL> showFiles(File[] files, File rootFile) throws IOException {
@@ -226,6 +240,7 @@ public class ModuleService {
                     showFiles(file.listFiles(),rootFile); // Calls same method again.
                 } else {
                     if(file.getAbsolutePath().endsWith(".class")) {
+                        ClassPathHacker.addFile(file.getAbsolutePath());
                         String filePathName = file.getAbsolutePath().replace(absolutePath + fileSeparator, "");
                         String processedName = filePathName.replace(".class", "");
                         processedName = processedName.replace(fileSeparator, ".");
@@ -236,7 +251,7 @@ public class ModuleService {
         return urlList;
     }
 
-    private void getDependency(String moduleName){
+    /*private void getDependency(String moduleName){
         final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", moduleName);
         File dependencies = new File(moduleRuntimePath.toAbsolutePath().toString() + fileSeparator + "lib");
         List <String> dependencyClasses = new ArrayList<String>();
@@ -265,7 +280,7 @@ public class ModuleService {
                 e.printStackTrace();
             }
         });
-    }
+    }*/
 
     private List<Module> getAllModuleByStatusAndModuleType(int moduleStatus, int moduleType) {
         Specification<Module> moduleSpecification = genericSpecification.findAllModules(moduleStatus, moduleType);
