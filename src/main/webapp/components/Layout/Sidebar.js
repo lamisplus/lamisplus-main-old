@@ -44,6 +44,7 @@ const adminItems = [
   },
   { to: '/bootstrap-configuration', name: 'Bootstrap Configuration', exact: false, Icon: FaListUl },
   { to: '/database-management', name: 'DataBase Management', exact: false, Icon: FaUserCog },
+  { to: '/organization-unit', name: 'Organization Unit', exact: false, Icon: FaUserCog },
 
 ];
 

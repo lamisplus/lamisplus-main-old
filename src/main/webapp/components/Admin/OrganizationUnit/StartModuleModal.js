@@ -4,7 +4,7 @@ import { Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Label,Card,CardBody
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import CancelIcon from '@material-ui/icons/Cancel';
-import PrintIcon from '@material-ui/icons/Print';
+import {MdSwapHoriz} from 'react-icons/md';
 
 
 const useStyles = makeStyles(theme => ({
@@ -44,51 +44,50 @@ const useStyles = makeStyles(theme => ({
 
 
 
-const DeleteModule = (props) => {
+const ModalViewResult = (props) => {
     const classes = useStyles()
-    const datasample = props.datasample ? props.datasample : {};
     
-
-
   return (      
       <div >
-          {/* <ModalViewResult ref={componentRef} /> */}
+       
           
               <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
-                  <ModalHeader toggle={props.togglestatus}>Deactivate Module</ModalHeader>
+                  <ModalHeader toggle={props.togglestatus}>Start Module</ModalHeader>
                       <ModalBody>
                           <Card>
                             <CardBody>
                                 <Row style={{ marginTop: '20px'}}>
                                     <Col xs="12">
-                                        <span style={{ fontWeight: 'bold'}}>Are you sure you want to Deactivate the HTS module</span>
+                                        <span style={{ fontWeight: 'bold'}}>Starting this module wil restart the application and all scheduled tasked
+                                        and background processes will be interupted. <br/>Do you want to Proceed?</span> : 
                                         <br/>
                                     </Col>
                                     <br/>
                                     
-                                    <br/>
+                    
                                 </Row>
                             <br/>
-                            <MatButton
-                                type='submit'
-                                variant='contained'
-                                color='primary'
-                                className={classes.button}
-                                
-                                className=" float-right mr-1"
-                                
-                            >
-                                Deactivate 
-                            </MatButton>
+                            
                             <MatButton
                               variant='contained'
                               color='default'
                               onClick={props.togglestatus}
                               className={classes.button}
-                             
+                              startIcon={<CancelIcon />}
                               className=" float-right mr-1"
                             >
                               Cancel
+                            </MatButton>
+                            <MatButton
+                                type='submit'
+                                variant='contained'
+                                color='primary'
+                                className={classes.button}
+                                startIcon={<MdSwapHoriz />}
+                                className=" float-right mr-1"
+                                
+                            >
+                                Proceed  
                             </MatButton>
                       </CardBody>
                 </Card>
@@ -98,4 +97,4 @@ const DeleteModule = (props) => {
   );
 }
 
-export default DeleteModule;
+export default ModalViewResult;
