@@ -6,8 +6,10 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.FormDTO;
 import org.lamisplus.modules.base.domain.entity.Form;
+import org.lamisplus.modules.base.domain.entity.Program;
 import org.lamisplus.modules.base.domain.mapper.FormMapper;
 import org.lamisplus.modules.base.repository.FormRepository;
+import org.lamisplus.modules.base.repository.ProgramRepository;
 import org.lamisplus.modules.base.util.GenericSpecification;
 import org.lamisplus.modules.base.util.UuidGenerator;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,26 +25,46 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FormService {
     private final FormRepository formRepository;
+    private final ProgramRepository programRepository;
     private final FormMapper formMapper;
     private final UserService userService;
+    private static final int UN_ARCHIVED = 0;
+    private static final int ARCHIVED = 1;
+    private GenericSpecification<Form> genericSpecification;
 
     public List getAllForms() {
-        GenericSpecification<Form> genericSpecification = new GenericSpecification<Form>();
+
         Specification<Form> specification = genericSpecification.findAll();
 
         List<Form> forms = this.formRepository.findAll(specification);
         List<FormDTO> formList = new ArrayList<>();
         forms.forEach(form -> {
             final FormDTO formDTO = formMapper.toForm(form);
+            Optional<Program>  program = this.programRepository.findProgramByUuid(formDTO.getProgramCode());
+            program.ifPresent(value -> formDTO.setProgramName(value.getName()));
             formList.add(formDTO);
         });
         return formList;
     }
 
+
+/*
+    public List<Form> getAllForms() {
+       List<Form> forms = this.formRepository.findAll();
+        forms.forEach(form -> {
+            Optional<Program>  program = this.programRepository.findProgramByUuid(form.getProgramCode());
+            program.ifPresent(value -> form.setProgramName(value.getName()));
+        });
+        return forms;
+    }
+*/
+
     public Form save(FormDTO formDTO) {
         formDTO.setCode(UuidGenerator.getUuid());
         Optional<Form> formOptional = formRepository.findByCode(formDTO.getCode());
-        if (formOptional.isPresent()) throw new RecordExistException(Form.class, "Code", formDTO.getCode());
+        if (formOptional.isPresent()) {
+            throw new RecordExistException(Form.class, "Code", formDTO.getCode());
+        }
         Form form = formMapper.toFormDTO(formDTO);
         form.setArchived(0);
         form.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
@@ -51,26 +73,30 @@ public class FormService {
 
     public Form getForm(Long id) {
         Optional<Form> formOptional = this.formRepository.findById(id);
-        if(!formOptional.isPresent() || formOptional.get().getArchived() == 1) throw new EntityNotFoundException(Form.class, "Id", id+"");
+        if(!formOptional.isPresent() || formOptional.get().getArchived() == 1) {
+            throw new EntityNotFoundException(Form.class, "Id", id+"");
+        }
         return formOptional.get();
     }
 
     public Form getFormsByFormCode(String formCode) {
         Optional<Form> formOptional = formRepository.findByCode(formCode);
-        if(!formOptional.isPresent() || formOptional.get().getArchived() == 1) throw new EntityNotFoundException(Form.class, "Form Code", formCode);
+        if(!formOptional.isPresent() || formOptional.get().getArchived() == 1) {
+            throw new EntityNotFoundException(Form.class, "Form Code", formCode);
+        }
         return formOptional.get();
     }
 
     public List getFormsByUsageStatus(Integer usageStatus) {
         //TODO: Emeka add findAllByUsageCodeAndArchived(usageStatus, 0);
-        List<Form> formList = formRepository.findAllByUsageCode(usageStatus);
+        List<Form> formList = formRepository.findAllByUsageCodeAndArchived(usageStatus, UN_ARCHIVED);
         return formList;
     }
 
     public Form update(Long id, FormDTO formDTO) {
         Optional<Form> formOptional = formRepository.findById(id);
         log.info("form optional  is" + formOptional.get());
-        if(!formOptional.isPresent() || formOptional.get().getArchived() == 1)throw new EntityNotFoundException(Form.class, "Id", id +"");
+        if(!formOptional.isPresent() || formOptional.get().getArchived() == ARCHIVED)throw new EntityNotFoundException(Form.class, "Id", id +"");
         //TODO: Emeka form object should set id instead of formDTO
         formDTO.setId(id);
 

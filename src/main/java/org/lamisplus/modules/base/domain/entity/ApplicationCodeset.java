@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,32 +20,32 @@ import java.sql.Timestamp;
 @Table(name = "application_codeset")
 public class ApplicationCodeset implements Serializable {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Basic
-    @Column(name = "codeset_group", nullable = true)
+    @Column(name = "codeset_group")
     private String codesetGroup;
 
     @Basic
-    @Column(name = "version", nullable = true)
+    @Column(name = "version")
     private String version;
 
     @Basic
-    @Column(name = "language", nullable = true)
+    @Column(name = "language")
     private String language;
 
     @Basic
-    @Column(name = "display", nullable = true)
+    @Column(name = "display")
     private String display;
 
     @Basic
-    @Column(name = "active", nullable = true)
+    @Column(name = "active")
     private Integer active;
 
     @Basic
-    @Column(name = "code", nullable = true)
+    @Column(name = "code")
     private String code;
 
     @Basic
@@ -69,8 +71,13 @@ public class ApplicationCodeset implements Serializable {
     private String modifiedBy;
 
     @Basic
-    @Column(name = "archived", nullable = true)
+    @Column(name = "archived")
     @JsonIgnore
     private Integer archived = 0;
+
+    /*@OneToMany(mappedBy = "visit_Type")
+    @ToString.Exclude
+    @JsonIgnore
+    private List<Visit> visitsByApplicationCodeset;*/
 
 }

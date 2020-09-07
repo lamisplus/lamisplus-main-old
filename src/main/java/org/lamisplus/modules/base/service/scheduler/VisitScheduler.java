@@ -27,7 +27,7 @@ public class VisitScheduler {
     /**
      * Auto checkOut fires 1 hour
      */
-    @Scheduled(fixedRate = 10000000)
+    @Scheduled(fixedDelay = 10000000, initialDelay = 10000)
     public void autoCheckOut(){
         List<VisitDTO> visitDTOList = this.visitService.getAllVisits();
         visitDTOList.forEach(visitDTO -> {

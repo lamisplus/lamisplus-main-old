@@ -2,6 +2,7 @@ import axios from "axios";
 import { url as baseUrl , LABSERVICECODE} from "../api";
 import * as ACTION_TYPES from "./types";
 import { toast } from "react-toastify";
+import { GiConsoleController } from "react-icons/gi";
 
 /**
  * @Actions
@@ -86,7 +87,7 @@ export const fetchLabTestOrdersByEncounterID = (id)=> dispatch => {
     }
 };
 export const createCollectedSample = (data, lab_id, onSuccess, onError ) => dispatch => {
-
+console.log(data)
   if(lab_id){
     
   axios
@@ -114,29 +115,105 @@ export const createCollectedSample = (data, lab_id, onSuccess, onError ) => disp
   }
 };
 
-export const dispatchedManifestSamples = (data, lab_id) => dispatch => {
+export const updateFormDataObj = (data, lab_id) => dispatch => {
+  console.log(data)
+    if(lab_id){
+      
+    axios
+      .put(`${baseUrl}form-data/${lab_id}`, data)
+      .then(response => {
+        dispatch({
+          type: ACTION_TYPES.CREATE_COLLECT_SAMPLE,
+          payload: response.data
+        });
+      })
+      .catch(error =>{
+        
+        dispatch({
+          type: ACTION_TYPES.ERROR_CREATE_COLLECT_SAMPLE,
+          payload: error
+        })
+        
+      });
+    }else{
+      toast.error("Something went wrong, please try again");
+    }
+  };
+  
 
-  if(lab_id){
-    
+export const dispatchedManifestSamples = (data) => dispatch => {
+  console.log(data)
+  const options = {
+    headers: {
+        'Content-Type': 'application/json',
+    }
+  };
   axios
-    .put(`${baseUrl}form-data/${lab_id}`, data)
+    .post(`${baseUrl}sample-manifests`, data, options)
     .then(response => {
       dispatch({
-        type: ACTION_TYPES.CREATE_COLLECT_SAMPLE,
+        type: ACTION_TYPES.DISPATCH_MANIFEST_SAMPLE,
         payload: response.data
       });
-     
+     console.log(response.data)
     })
     .catch(error =>{
       
       dispatch({
-        type: ACTION_TYPES.ERROR_CREATE_COLLECT_SAMPLE,
+        type: ACTION_TYPES.ERROR_DISPATCH_MANIFEST_SAMPLE,
         payload: error
       })
-      
+      console.log(error)
     });
-  }else{
-    toast.error("Something went wrong, please try again");
+  
+};
+//Samples Dispatched
+export const sampleDispatched = (onSuccess, onError) => dispatch => {
+
+  axios
+    .get(`${baseUrl}sample-manifests/dispatched-manifest/true`)
+    .then(response => {
+      dispatch({
+        type: ACTION_TYPES.SAMPLE_DISPATCHED,
+        payload: response.data
+      })
+      console.log(response)
+      onSuccess();
+    })
+    .catch(error => {
+      dispatch({
+        type: ACTION_TYPES.ERROR_SAMPLE_DISPATCHED,
+        payload: 'Something went wrong, please try again'
+      })
+      onError();
+      console.log(error)
+    });
+
+};
+
+//Get list of samples Manifest by ID 
+export const samplesManifestById = (id,onSuccess, onError) => dispatch => {
+  console.log(id)
+  if(id){
+  axios
+    .get(`${baseUrl}sample-manifests/manifest/${id}`)
+    .then(response => {
+      dispatch({
+        type: ACTION_TYPES.SAMPLES_MANIFEST_BY_ID,
+        payload: response.data
+      });
+      console.log(response.data)
+      onSuccess(); 
+    })
+    .catch(error => {
+      dispatch({
+        type: ACTION_TYPES.ERROR_SAMPLES_MANIFEST_BY_ID,
+        payload: error
+      })
+      onError();
+      console.log(error)
+    }
+    );
   }
 };
 export const sampleVerification = (data, lab_id, onSuccess, onError ) => dispatch => {

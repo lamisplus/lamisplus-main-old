@@ -21,6 +21,17 @@ public class FormDataController {
     private final FormDataService formDataService;
     private static final String ENTITY_NAME = "FormData";
 
+
+    @GetMapping
+    public ResponseEntity<List<FormData>> getAllFormData() {
+        return ResponseEntity.ok(formDataService.getAllFormData());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FormData> getFormData(@PathVariable Long id) {
+        return ResponseEntity.ok(formDataService.getFormData(id));
+    }
+
     @PostMapping
     public ResponseEntity<FormData> save(@RequestBody FormData formData) throws URISyntaxException {
         FormData result = formDataService.save(formData);
@@ -34,16 +45,6 @@ public class FormDataController {
         return ResponseEntity.created(new URI("/api/form-data/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId())))
                 .body(result);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<FormData>> getAllFormData() {
-        return ResponseEntity.ok(formDataService.getAllFormData());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<FormData> getFormData(@PathVariable Long id) {
-        return ResponseEntity.ok(formDataService.getFormData(id));
     }
 
     @DeleteMapping("/{id}")
