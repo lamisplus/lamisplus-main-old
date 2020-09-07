@@ -200,6 +200,19 @@ const PatientRegistration = ({...props}) => {
             }
         handleEstimation();
     }
+    function age(birthday)
+        {
+            birthday = new Date(birthday);
+            return  new Number((new Date().getTime() - birthday.getTime()) / 31536000000).toFixed(0);
+        }
+    const handleDOb = dateSelected => {
+        setValues({ ...values, dob: moment(dateSelected).format("DD-MM-YYYY")  })
+        
+        const currentDate  = moment(new Date()).format("DD-MM-YYYY");
+        const selectedDob = moment(dateSelected).format("DD-MM-YYYY")
+        //console.log(age(selectedDob) )
+        document.getElementById("age").value = age(selectedDob);
+    }
 
     /*** Handles UI behaviour on check of Estimation box*/
     const handleEstimation = () => {
@@ -518,9 +531,11 @@ const handleSubmit = e => {
                                                                 name="dob"
                                                                 dropUp
                                                                 value={values.dobDate}
-                                                                onChange={value1 =>
-                                                                  setValues({ ...values, dob: moment(value1).format("DD-MM-YYYY")  })
-                                                                }
+                                                                // onChange={value1 =>
+                                                                //   setValues({ ...values, dob: moment(value1).format("DD-MM-YYYY")  })
+                                                                  
+                                                                // }
+                                                                onChange ={value1 => handleDOb(value1)}
                                                                 //defaultValue={new Date()}
                                                                 max={new Date()}
                                                             />

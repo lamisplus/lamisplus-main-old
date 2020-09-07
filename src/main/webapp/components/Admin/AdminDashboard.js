@@ -77,13 +77,13 @@ function AdminDashboard(props) {
                 <CardBody>
             <Statistic.Group widths='four'  size='mini'>
                 <Statistic>
-                    <Statistic.Value> <Icon name='trash' />22</Statistic.Value>
+                    <Statistic.Value> <Icon name='trash alternate outline' />22</Statistic.Value>
                     <Statistic.Label>Archived Records</Statistic.Label>
                 </Statistic>
 
                 <Statistic>
                     <Statistic.Value>
-                        <Icon name='user' />
+                        <Icon name='user outline' />
                         144
                     </Statistic.Value>
                     <Statistic.Label>Users</Statistic.Label>
@@ -91,7 +91,7 @@ function AdminDashboard(props) {
 
                 <Statistic>
                     <Statistic.Value>
-                        <Icon name='sticky note outline' />5
+                        <Icon name='wpforms' />5
                     </Statistic.Value>
                     <Statistic.Label>Forms</Statistic.Label>
                 </Statistic>

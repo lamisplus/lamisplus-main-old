@@ -50,12 +50,17 @@ public class ModuleController {
 
     @PostMapping("{id}/install")
     public ResponseEntity<Module> installModule(@PathVariable Long id) {
-        return ResponseEntity.ok(moduleService.loadModule(id));
+        return ResponseEntity.ok(moduleService.installModule(id));
     }
 
     @PostMapping("/start/all")
     public void startModule() {
         moduleService.startModule();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> delete(@PathVariable Long id) {
+        return ResponseEntity.ok(moduleService.delete(id));
     }
 
 }

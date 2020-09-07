@@ -5,11 +5,19 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.dto.*;
+import org.lamisplus.modules.base.domain.entity.Encounter;
 import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.service.PatientService;
+import org.lamisplus.modules.base.util.PaginationUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -58,6 +66,14 @@ public class PatientController {
                                                                        @RequestParam (required = false) String sortField, @RequestParam(required = false) Integer limit){
         return ResponseEntity.ok(this.patientService.getEncountersByPatientIdAndFormCode(id, formCode, sortField, sortOrder, limit));
     }
+
+    /*@GetMapping("/{id}/encounters/{fCode}")
+    public ResponseEntity<List> getEncountersByPatientIdAndFCode(@PathVariable Long id,
+                                                                    @PathVariable String fCode,Pageable pageable) {
+        final Page<Encounter> page = patientService.getEncountersByPatientIdAndFCode(pageable, id, fCode);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }*/
 
     @GetMapping("/{id}/encounters/programCodeExclusionList")
     public ResponseEntity<List> getEncountersByPatientIdAndProgramCodeExclusionList(@PathVariable Long id, @RequestParam(required = false) List<String> programCodeExclusionList) {

@@ -24,6 +24,7 @@ export const TRANSFER_INPATIENT_FORM = '4c0db2ee-7916-4ea6-b24d-42234c8ac0a7'
 export const CHECK_OUT_PATIENT_FORM = 'ec84dd9a-9493-4b73-b501-6201a06982a6'
 export const PATIENT_ALLERGY_FORM = '796f2a0f-1e76-42af-a24a-e6f09dfedbe7'
 export const APPOINTMENT_FORM = '22ec08bd-eeae-4f5e-9041-44461d511e90'
+export const RADIOLOGY_TEST_ORDER = 'bdf039fb-06e8-4aec-bb28-20c09eb3651d'
 
 /**
  * @CODES

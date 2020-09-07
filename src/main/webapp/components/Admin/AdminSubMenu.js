@@ -74,13 +74,12 @@ function AdminSubMenu(props) {
   return (
     <React.Fragment>
       <Menu size="mini" color={"silver"} inverted>
-          <Dropdown text="Configurations"   labeled simple    className='icon link item'>
+          <Dropdown text="System Configurations"   labeled simple    className='icon link item'>
               <Dropdown.Menu>
-                <Dropdown.Item
-                  onClick={() => displayFormByFormName("TRANSFER_INPATIENT")}
-                >
-
+                <Dropdown.Item>
+                  <Link to={{pathname: "/admin/application-codesets"}} >
                  Application Codeset Manager
+                  </Link>
                 </Dropdown.Item>
                 <Dropdown.Item>
                   <Link
@@ -90,16 +89,26 @@ function AdminSubMenu(props) {
                   Global Variables
                   </Link>
                 </Dropdown.Item>
-                <Dropdown.Item
-                    onClick={() => displayFormByFormName("DISCHARGE_PATIENT")}
-                >
+                <Dropdown.Item >
+                  <Link
+                      to={{
+                        pathname: "/admin/standards"}}
+                  >
                   International Standard setup
+                  </Link>
                 </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => displayFormByFormName("DISCHARGE_PATIENT")}
-                >
+                <Dropdown.Item >
                   Organization Unit setup
                 </Dropdown.Item>
+                <Dropdown.Item >
+                  <Link
+                      to={{
+                        pathname: "/admin/wards"}}
+                  >
+                    Ward Manager
+                  </Link>
+                </Dropdown.Item>
+
               </Dropdown.Menu>
 
           </Dropdown>

@@ -11,9 +11,9 @@ import java.util.Optional;
 public interface ProgramRepository extends JpaRepository<Program, Long> {
     List<Program> findByModuleId(Long moduleId);
 
-    String findByCode(String programCode);
+    String findByUuid(String Uuid);
 
-    Optional<Program> findProgramByCode(String programCode);
+    Optional<Program> findProgramByUuid(String Uuid);
 
 }
 
