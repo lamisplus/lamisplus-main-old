@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {  Modal, ModalHeader, ModalBody, FormFeedback,Form,Row,Col,FormGroup,Label,Input,Card,CardBody} from 'reactstrap';
+import {  Modal, ModalHeader, ModalBody, Form,Row,Col,FormGroup,Label,Input,Card,CardBody} from 'reactstrap';
 import { connect } from 'react-redux';
 import MatButton from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
@@ -8,17 +8,9 @@ import CancelIcon from '@material-ui/icons/Cancel'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
-import { DateTimePicker } from 'react-widgets';
-import Moment from 'moment';
-import momentLocalizer from 'react-widgets-moment';
-import moment from "moment";
-
-import { newGlobalVariable, updateGlobalVariable } from 'actions/globalVariable';
-import { Alert } from 'reactstrap';
+import { createWard, updateWard } from 'actions/applicationCodeset';
 import { Spinner } from 'reactstrap';
 
-Moment.locale('en');
-momentLocalizer();
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -28,9 +20,8 @@ const useStyles = makeStyles(theme => ({
 
 const ModalSample = (props) => {
     const [loading, setLoading] = useState(false)
-    const defaultValues = {name:"",description:"",format:"" }
-    const [formData, setFormData] = useState(defaultValues)
-    const [errors, setErrors] = useState({});
+    const defaultValues = {name:""};
+    const [formData, setFormData] = useState( defaultValues)
     const classes = useStyles()
 
     useEffect(() => {
@@ -42,41 +33,29 @@ const ModalSample = (props) => {
         setFormData ({ ...formData, [e.target.name]: e.target.value});
     }
 
-    const handleNameInputChange = e => {
 
-        setFormData ({ ...formData, [e.target.name]: e.target.value.split(" ").join("")  });
-    }
 
-    const validate = () => {
-        let temp = { ...errors }
-        temp.name = formData.name ? "" : "Name is required"
-        setErrors({
-            ...temp
-        })
-        console.log(temp)
-        return Object.values(temp).every(x => x == "")
-    }
 
-    const createGlobalVariable = e => {
+    const create = e => {
         e.preventDefault()
-         setLoading(true);
+            setLoading(true);
 
             const onSuccess = () => {
                 setLoading(false);
-                toast.success("Global variable saved successfully!")
-                props.loadGlobalVariable();
+                toast.success("Ward saved successfully!")
+                props.loadApplicationCodeset();
                 props.toggleModal()
             }
             const onError = () => {
                 setLoading(false);
                 toast.error("Something went wrong, please contact administration");
+                //props.toggleModal()
             }
-
-        if(formData.id){
-            props.updateGlobalVariable(formData.id, formData, onSuccess, onError)
-            return
-        }
-        props.newGlobalVariable(formData, onSuccess,onError)
+            if(formData.id){
+                props.updateWard(formData.id, formData, onSuccess, onError)
+                return
+            }
+            props.createWard(formData, onSuccess,onError)
 
     }
     return (
@@ -85,12 +64,13 @@ const ModalSample = (props) => {
             <ToastContainer />
             <Modal isOpen={props.showModal} toggle={props.toggleModal} size="lg">
 
-                <Form onSubmit={createGlobalVariable}>
-                    <ModalHeader toggle={props.toggleModal}>New Global Variable </ModalHeader>
+                <Form onSubmit={create}>
+                    <ModalHeader toggle={props.toggleModal}> {props.formData && props.formData.id ? 'Edit' : 'New'} Ward </ModalHeader>
                     <ModalBody>
                         <Card >
                             <CardBody>
                                 <Row >
+
                                     <Col md={12}>
                                         <FormGroup>
                                             <Label>Name</Label>
@@ -100,41 +80,11 @@ const ModalSample = (props) => {
                                                 id='name'
                                                 placeholder=' '
                                                 value={formData.name}
-                                                onChange={handleNameInputChange}
-                                                required
-                                            />
-
-                                        </FormGroup>
-                                    </Col>
-                                    <Col md={12}>
-                                        <FormGroup>
-                                            <Label>Description</Label>
-                                            <Input
-                                                type='textarea'
-                                                name='description'
-                                                id='description'
-                                                placeholder=' '
-                                                value={formData.description}
                                                 onChange={handleInputChange}
                                                 required
                                             />
                                         </FormGroup>
                                     </Col>
-                                    <Col md={12}>
-                                        <FormGroup>
-                                            <Label>Value</Label>
-                                            <Input
-                                                type='textarea'
-                                                name='format'
-                                                id='format'
-                                                placeholder=' '
-                                                value={formData.format}
-                                                onChange={handleInputChange}
-                                                required
-                                            />
-                                        </FormGroup>
-                                    </Col>
-
                                 </Row>
 
                                 <MatButton
@@ -166,4 +116,6 @@ const ModalSample = (props) => {
     );
 }
 
-export default connect(null, { newGlobalVariable, updateGlobalVariable })(ModalSample);
+
+
+export default connect(null, { createWard , updateWard})(ModalSample);

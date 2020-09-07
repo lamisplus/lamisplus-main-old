@@ -3,7 +3,11 @@ import * as ACTION_TYPES from '../actions/types'
 const initialState = {
   priorities: [],
   relationships: [],
-  vlIndications: []
+  vlIndications: [],
+  applicationCodesetList: [],
+  wardList: [],
+  bookingStatusList: [],
+  genderList: []
 }
 
 const applicationCodesetReducer = (state = initialState, action) => {
@@ -16,7 +20,18 @@ const applicationCodesetReducer = (state = initialState, action) => {
 
       case ACTION_TYPES.APPLICATION_CODESET_VL_INDICATION:
       return { ...state, vlIndications: [...action.payload] }
-      
+
+    case ACTION_TYPES.APPLICATION_CODESET_LIST:
+      return { ...state, applicationCodesetList: [...action.payload] }
+
+    case ACTION_TYPES.APPLICATION_CODESET_GENDER:
+      return { ...state, genderList: [...action.payload] }
+
+    case ACTION_TYPES.APPLICATION_CODESET_BOOKING_STATUS:
+      return { ...state, bookingStatusList: [...action.payload] }
+
+    case ACTION_TYPES.WARD_LIST:
+      return { ...state, wardList: [...action.payload] }
     default:
       return state
   }

@@ -1,82 +1,83 @@
 import React, {useEffect} from 'react';
 import MaterialTable from 'material-table';
 import { connect } from "react-redux";
-import { fetchAll, deleteGlobalVariable} from "actions/globalVariable";
+import { fetchAllWards, deleteWard} from "actions/applicationCodeset";
 import {
     Card,
-    CardBody, Modal, ModalBody, ModalFooter, ModalHeader, Spinner
+    CardBody, Modal, ModalBody, ModalHeader, Spinner, ModalFooter
 } from 'reactstrap';
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Typography from "@material-ui/core/Typography";
 import Link from '@material-ui/core/Link';
 import Button from "@material-ui/core/Button";
 import { FaPlus } from "react-icons/fa";
-import NewGlobalVariable from "./NewGlobalVariable";
-import {toast} from "react-toastify";
+import NewWard from "./NewWard";
 import SaveIcon from "@material-ui/icons/Delete";
 import CancelIcon from "@material-ui/icons/Cancel";
 import {makeStyles} from "@material-ui/core/styles";
+import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles(theme => ({
     button: {
         margin: theme.spacing(1)
     }
 }))
-const GlobalVariableSearch = (props) => {
+const WardsSearch = (props) => {
     const [loading, setLoading] = React.useState(true);
-    const [showModal, setShowModal] = React.useState(false);
     const [deleting, setDeleting] = React.useState(false);
-    const [currentGlobalVariable, setCurrentGlobalVariable] = React.useState(null);
+    const [showModal, setShowModal] = React.useState(false);
     const [showDeleteModal, setShowDeleteModal] = React.useState(false);
-    const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal)
+    const [currentCodeset, setCurrentCodeset] = React.useState(null);
     const toggleModal = () => setShowModal(!showModal)
+    const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal)
     const classes = useStyles()
-    const loadGlobalVariable = () => {
-        const onSuccess = () => {
-            setLoading(false);
-        };
-        const onError = () => {
-            setLoading(false);
-        };
-        props.fetchAll(onSuccess, onError);
-    }
+
     useEffect(() => {
-       loadGlobalVariable()
+        loadApplicationCodeset()
     }, []); //componentDidMount
 
-    const openGlobalVariable = (row) => {
-        setCurrentGlobalVariable(row);
+ const loadApplicationCodeset = () => {
+     const onSuccess = () => {
+         setLoading(false);
+     };
+     const onError = () => {
+         setLoading(false);
+     };
+     props.fetchAll(onSuccess, onError);
+    }
+
+const processDelete = (id) => {
+     setDeleting(true);
+    const onSuccess = () => {
+        setDeleting(false);
+        toggleDeleteModal();
+        toast.success("Ward deleted successfully!");
+        loadApplicationCodeset();
+    };
+    const onError = () => {
+        setDeleting(false);
+        toast.error("Something went wrong, please contact administration");
+    };
+    props.delete(id, onSuccess, onError);
+}
+    const openWard = (row) => {
+        setCurrentCodeset(row);
         toggleModal();
     }
 
-    const deleteGlobalVariable = (row) => {
-        setCurrentGlobalVariable(row);
+    const deleteWard = (row) => {
+        setCurrentCodeset(row);
         toggleDeleteModal();
-    }
-
-    const processDelete = (id) => {
-        setDeleting(true);
-        const onSuccess = () => {
-            setDeleting(false);
-            toggleDeleteModal();
-            toast.success("Global variable deleted successfully!");
-            loadGlobalVariable();
-        };
-        const onError = () => {
-            setDeleting(false);
-            toast.error("Something went wrong, please contact administration");
-        };
-        props.delete(id, onSuccess, onError);
     }
     return (
         <Card>
-
+<ToastContainer />
             <CardBody>
                 <Breadcrumbs aria-label="breadcrumb">
                     <Link color="inherit" href="/admin" >
                         Admin
                     </Link>
-                    <Typography color="textPrimary">Global Variable</Typography>
+                    <Typography color="textPrimary">Wards Manager</Typography>
                 </Breadcrumbs>
 <br/>
 <div className={"d-flex justify-content-end pb-2"}>
@@ -84,21 +85,21 @@ const GlobalVariableSearch = (props) => {
                         variant="contained"
                         color="primary"
                         startIcon={<FaPlus />}
-                        onClick={() => openGlobalVariable(null)}
+                        onClick={() => openWard(null)}
                     >
-                        <span style={{textTransform: 'capitalize'}}>Add Global Variable</span>
+                        <span style={{textTransform: 'capitalize'}}>Add New Ward</span>
                     </Button>
 
 </div>
             <MaterialTable
-                title="Find Global Variable"
+                title="Find Wards"
                 columns={[
                     {
-                        title: "Name",
+                        title: "Ward Name",
                         field: "name",
                     },
-                    { title: "Description", field: "description" },
-                    { title: "Value", field: "format", filtering: false }
+                    { title: "Date Created", field: "display" },
+                    { title: "Created By", field: "createdBy" }
                 ]}
                 isLoading={loading}
                 data={props.list}
@@ -107,14 +108,14 @@ const GlobalVariableSearch = (props) => {
                     {
                         icon: 'edit',
                         iconProps: {color: 'primary'},
-                        tooltip: 'Edit Global Variable',
-                        onClick: (event, rowData) => openGlobalVariable(rowData)
+                        tooltip: 'Edit Ward',
+                        onClick: (event, rowData) => openWard(rowData)
                     },
                     {
                         icon: 'delete',
                         iconProps: {color: 'primary'},
-                        tooltip: 'Delete Global Variable',
-                        onClick: (event, rowData) => deleteGlobalVariable(rowData)
+                        tooltip: 'Delete Ward',
+                        onClick: (event, rowData) => deleteWard(rowData)
                     }
                         ]}
                 //overriding action menu with props.actions
@@ -136,12 +137,12 @@ const GlobalVariableSearch = (props) => {
             />
             </CardBody>
 
-            <NewGlobalVariable toggleModal={toggleModal} showModal={showModal} loadGlobalVariable={loadGlobalVariable} formData={currentGlobalVariable}/>
+            <NewWard toggleModal={toggleModal} showModal={showModal} loadApplicationCodeset={loadApplicationCodeset} formData={currentCodeset}/>
             <Modal isOpen={showDeleteModal} toggle={toggleDeleteModal} >
-                <ModalHeader toggle={toggleDeleteModal}> Delete Global Variable - {currentGlobalVariable && currentGlobalVariable.name ? currentGlobalVariable.name : ""} </ModalHeader>
-                <ModalBody>
-                    <p>Are you sure you want to proceed ?</p>
-                </ModalBody>
+                    <ModalHeader toggle={props.toggleDeleteModal}> Delete Wards - {currentCodeset && currentCodeset.name ? currentCodeset.name : ""} </ModalHeader>
+                    <ModalBody>
+                        <p>Are you sure you want to proceed ?</p>
+                    </ModalBody>
                 <ModalFooter>
                     <Button
                         type='button'
@@ -150,7 +151,7 @@ const GlobalVariableSearch = (props) => {
                         className={classes.button}
                         startIcon={<SaveIcon />}
                         disabled={deleting}
-                        onClick={() => processDelete(currentGlobalVariable.id)}
+                        onClick={() => processDelete(currentCodeset.id)}
                     >
                         Delete  {deleting ? <Spinner /> : ""}
                     </Button>
@@ -163,7 +164,7 @@ const GlobalVariableSearch = (props) => {
                         Cancel
                     </Button>
                 </ModalFooter>
-            </Modal>
+        </Modal>
         </Card>
     );
 }
@@ -171,13 +172,13 @@ const GlobalVariableSearch = (props) => {
 const mapStateToProps = state => {
 
     return {
-        list: state.globalVariables.list
+        list: state.applicationCodesets.wardList
     };
 };
 
 const mapActionToProps = {
-    fetchAll: fetchAll,
-    delete: deleteGlobalVariable
+    fetchAll: fetchAllWards,
+    delete: deleteWard
 };
 
-export default connect(mapStateToProps, mapActionToProps)(GlobalVariableSearch);
+export default connect(mapStateToProps, mapActionToProps)(WardsSearch);

@@ -105,10 +105,7 @@ return (
               </Card>
             </Col>
         </Row>
-      {/* <ModalSample modalstatus={modal} togglestatus={toggleModal} datasample={collectModal}  labnumber={labNum}/>
-      <ModalSampleTransfer modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} labnumber={labNum}/>
-      <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} /> */}
-
+      
     </Page>
   )
   

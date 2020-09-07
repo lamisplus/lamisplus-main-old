@@ -22,12 +22,16 @@ import { DateTimePicker } from 'react-widgets';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import { create } from 'actions/checkIn'
-import * as actions from "actions/patients";
+import {fetchById} from "actions/patients";
+import { fetchApplicationCodeSet } from "actions/applicationCodeset";
+import {
+    APPLICATION_CODESET_BOOKING_STATUS} from "actions/types";
 import { connect } from 'react-redux'
 import { initialfieldState_checkInPatient } from './initailFieldState'
 import Spinner from 'react-bootstrap/Spinner';
 import SaveIcon from '@material-ui/icons/Save'
 import CancelIcon from '@material-ui/icons/Cancel'
+import Select from "react-select";
 //Dtate Picker package
 Moment.locale('en');
 momentLocalizer();
@@ -38,7 +42,11 @@ const CheckInModal = (props ) => {
     const [showErrorMsg, setShowErrorMsg] = useState(false)
     const [loading, setLoading] = React.useState(false)
     const onDismiss = () => setShowErrorMsg(false)
-
+    React.useEffect(() => {
+        if (props.bookingStatusList.length === 0) {
+            props.fetchApplicationCodeSet("BOOKING STATUS", APPLICATION_CODESET_BOOKING_STATUS);
+        }
+    }, [props.bookingStatusList]);
     const toggle = () => {
    return props.setShowModal(!props.showModal)
 }
@@ -78,7 +86,7 @@ const {
         values['patientId'] = props.patientId
         e.preventDefault()
         setLoading(true);
-        if (validate()) {
+       // if (validate()) {
           const onSuccess = () => {
             setLoading(false)
             toast.success('Patient Checked In Successfully')
@@ -94,7 +102,7 @@ const {
           }
           props.checkInPatient(values, onSuccess, onError)
           
-        }
+       // }
       }
 
     return (
@@ -110,17 +118,17 @@ const {
             <Col md={4}>
               <FormGroup>
                 <Label for='qualification'>Visit Type</Label>
-                <Input
-                  type='select'
-                  name='visitTypeId'
-                  id='visitTypeId'
-                  value={values.visitTypeId}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value='2'>Booked</option>
-                  <option value='3'>Unbooked</option>
-                </Input>
+                  <Select
+                      isMulti={false}
+                      required
+                      onChange={(e) =>
+                          setValues({ ...values, visitTypeId: e.value.id })
+                      }
+                      options={props.bookingStatusList.map((x) => ({
+                          label: x.display,
+                          value: x,
+                      }))}
+                  />
               </FormGroup>
             </Col>
             <Col md={4}>
@@ -189,13 +197,15 @@ const {
 
 const mapStateToProps = state => {
   return {
-    patient: state.patients.patient
+    patient: state.patients.patient,
+      bookingStatusList: state.applicationCodesets.bookingStatusList
   }
 }
   
   const mapActionToProps = {
     checkInPatient: create,
-    fetchPatientByHospitalNumber: actions.fetchById,
+    fetchPatientByHospitalNumber: fetchById,
+      fetchApplicationCodeSet: fetchApplicationCodeSet
   }
   
   export default connect(mapStateToProps, mapActionToProps)(CheckInModal)

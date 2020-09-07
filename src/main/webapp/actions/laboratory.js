@@ -381,3 +381,29 @@ export const fetchAllTestsByTestGroup = (id, onSuccess, onError) => dispatch => 
     })
 }
 
+export const fetchRadiologyTestOrdersByEncounterID = (id, onSuccess, onError)=> dispatch => {
+  if(id){
+    axios
+        .get(`${baseUrl}encounters/${id}`)
+        .then(response => {
+          console.log(response)
+          dispatch({
+            type: ACTION_TYPES.FETCH_ALL_RADIOLOGY_TESTS_BY_ENCOUNTER_ID,
+            payload: response.data
+          })
+            if(onSuccess){
+                onSuccess()
+            }
+        })
+        .catch(error => {
+              dispatch({
+                type: ACTION_TYPES.ERROR_LABORATORY_TESTORDER_FOR_LAB,
+                payload: error
+              })
+            if(onError){
+                onError()
+            }
+            }
+        );
+  }
+};

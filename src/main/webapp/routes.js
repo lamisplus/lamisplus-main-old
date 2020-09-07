@@ -55,6 +55,9 @@ const UpdatedModule = React.lazy(() => import("components/AdministrativeModule/B
 /* Datasase Management configuration */
 const DataBaseManagement = React.lazy(() => import("components/AdministrativeModule/DatabaseManagement/Index"));
 const DataBaseSync = React.lazy(() => import("components/AdministrativeModule/DatabaseManagement/DatabaseSync"));
+/* Organization Unit Manager configuration */
+const OrganizationUnit = React.lazy(() => import("components/Admin/OrganizationUnit/Index"));
+
 /* End of Bootstrap configuration */
 const formDashboard = React.lazy(() => import('components/formBuilder/formDashboard'));
 const FormBuilder = React.lazy(() => import('components/formBuilder/FormBuilder'));
@@ -83,7 +86,12 @@ const AppointmentPage = React.lazy(() => import("components/Appointments/HomePag
 
 //Admin
 const GlobalVariableSearchPage = React.lazy(() => import("components/Admin/GlobalVariable/GlobalVariableSearch"));
+const StandardSearchPage = React.lazy(() => import("components/Admin/InternationalStandards/StandardSearch"));
+const ApplicationCodesetPage = React.lazy(() => import("components/Admin/ApplicationCodeset/ApplicationCodesetSearch"));
+const WardManagerPage = React.lazy(() => import("components/Admin/WardManager/WardSearch"));
 
+//Radiology
+const RadiologyTestDetailPage = React.lazy(() => import("components/Laboratory/Radiology/TestDetail"));
 // const getBasename = () => {
 //   return `/${process.env.PUBLIC_URL.split("/").pop()}`;
 // };
@@ -145,7 +153,8 @@ class Routes extends Component {
               {/* DataBaseManagement Link */}
               <PrivateRoute exact path="/database-management" component={DataBaseManagement} />
               <PrivateRoute exact path="/database-sync" component={DataBaseSync} />
-
+              {/* OrganizationUnit */}
+              <PrivateRoute exact path="/organization-unit" component={OrganizationUnit} />
               
               {/* Pharmacy Links */}
               <PrivateRoute exact path="/pharmacy" component={PharmacyDashboard} />
@@ -185,6 +194,10 @@ class Routes extends Component {
               <PrivateRoute exact path="/appointments" component={AppointmentPage} />
                 <PrivateRoute exact path="/admin" component={AdministrativeDashboard} />
                 <PrivateRoute exact path={"/admin/global-variable"} component={GlobalVariableSearchPage} />
+                <PrivateRoute exact path={"/admin/standards"} component={StandardSearchPage} />
+                <PrivateRoute exact path={"/admin/application-codesets"} component={ApplicationCodesetPage} />
+                <PrivateRoute exact path={"/admin/wards"} component={WardManagerPage} />
+                <PrivateRoute exact path={"/radiology"} component={RadiologyTestDetailPage} />
               {/* The route to Appointment*/}
               
             </React.Suspense>
