@@ -21,6 +21,7 @@ import org.lamisplus.modules.base.util.GenericSpecification;
 import org.lamisplus.modules.base.bootstrap.ModuleUtil;
 import org.lamisplus.modules.base.bootstrap.StorageUtil;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -113,11 +114,15 @@ public class ModuleService {
                     program1.getUuid();
                 }
 
-                loadExternalModuleForms(module.getName(), "Form.json").forEach(form ->{
-                    if(!formRepository.findByCode(form.getCode()).isPresent()){
-                        form.setProgramCode(program.getUuid());
-                        //Saving form...
-                        formRepository.save(form);
+                ModuleUtil.getJsonFile().forEach(jsonFile ->{
+                    if(jsonFile.getName().contains("Form")){
+                        loadExternalModuleForms(module.getName(), jsonFile).forEach(form ->{
+                            if(!formRepository.findByCode(form.getCode()).isPresent()){
+                                form.setProgramCode(program.getUuid());
+                                //Saving form...
+                                formRepository.save(form);
+                            }
+                        });
                     }
                 });
             });
@@ -299,10 +304,9 @@ public class ModuleService {
         return clz;
     }
 
-    private List<Form> loadExternalModuleForms(String moduleName, String searchParam){
-        final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", moduleName, searchParam);
+    private List<Form> loadExternalModuleForms(String moduleName, File searchParam){
 
-        String jsonFile = DataLoader.getJsonFile(moduleRuntimePath).toString();
+        String jsonFile = DataLoader.getJsonFile(searchParam.toPath()).toString();
         List<Form> forms = formDataLoader.readJsonFile(new Form(), jsonFile);
 
         return forms;
