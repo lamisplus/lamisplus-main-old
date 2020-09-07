@@ -38,6 +38,7 @@
     "lodash": "^4.17.15",
     "luxon": "^1.24.1",
     "material-table": "^1.57.2",
+    "material-ui-dropzone": "^3.4.0",
     "material-ui-number-input": "^5.0.24",
     "material-ui-pickers": "^2.2.4",
     "mdbreact": "^4.25.1",

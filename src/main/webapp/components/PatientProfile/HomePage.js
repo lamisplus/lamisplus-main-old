@@ -26,6 +26,7 @@ import * as actions from "actions/patients";
 import { connect } from "react-redux";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import HTSDashboard from "./Dashboards/HTSDashboard";
+import {getQueryParams} from "components/Utils/PageUtils";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -82,13 +83,7 @@ function HomePage(props) {
   ]
   const changeDashboard = (e, { value }) => setDashboard(value);
   const [fetchingPatient, setFetchingPatient] = useState(false);
-  const getQueryParams = (params, url) => {
-    let href = url;
-    //this expression is to get the query strings
-    let reg = new RegExp("[?&]" + params + "=([^&#]*)", "i");
-    let queryString = reg.exec(href);
-    return queryString ? queryString[1] : null;
-  };
+
 
   const hospitalNumber =
     getQueryParams("hospitalNumber", props.location.search) ||

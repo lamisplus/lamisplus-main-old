@@ -6,7 +6,8 @@ const initialState = {
   tests: [],
   testGroup: [],
   testorder:[],
-  formdata:[]
+  formdata:[],
+  radiologyTests: [],
 }
 
 const laboratoryReducer = (state = initialState, action) => {
@@ -35,7 +36,8 @@ const laboratoryReducer = (state = initialState, action) => {
     case ACTION_TYPES.FETCH_ALL_TESTS_BY_ENCOUNTER_ID:
         return { ...state, tests: action.payload }
 
-      
+    case ACTION_TYPES.FETCH_ALL_RADIOLOGY_TESTS_BY_ENCOUNTER_ID:
+      return { ...state, radiologyTests: action.payload }
 
     default:
       return state

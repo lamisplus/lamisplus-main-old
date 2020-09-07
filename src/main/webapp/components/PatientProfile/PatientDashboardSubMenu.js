@@ -146,7 +146,7 @@ function PatientDashboardSubMenu(props) {
   return (
     <React.Fragment>
       <Menu size="mini" color={"silver"} inverted>
-        {props.mainMenuTabIndex === 0 ?
+        {false && props.mainMenuTabIndex === 0 ?
         <Dropdown simple className='link item' options={props.dashboardOptions}  value={props.currentDashboard} onChange={props.changeDashboard}/>
             :""}
 
@@ -242,7 +242,7 @@ function PatientDashboardSubMenu(props) {
         )}
 
         {/* Show visit actions only when patient is checked in */}
-        {props.patient  ? (
+        {false && props.patient  ? (
             <Dropdown simple text="Actions" className='link item'>
 
               {props.patient.dateVisitStart && patientType && ( patientType === CODES.IN_PATIENT_UNBOOKED || patientType === CODES.IN_PATIENT_BOOKED)  ? (
