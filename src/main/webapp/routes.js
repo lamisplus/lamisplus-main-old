@@ -86,7 +86,12 @@ const AppointmentPage = React.lazy(() => import("components/Appointments/HomePag
 
 //Admin
 const GlobalVariableSearchPage = React.lazy(() => import("components/Admin/GlobalVariable/GlobalVariableSearch"));
+const StandardSearchPage = React.lazy(() => import("components/Admin/InternationalStandards/StandardSearch"));
+const ApplicationCodesetPage = React.lazy(() => import("components/Admin/ApplicationCodeset/ApplicationCodesetSearch"));
+const WardManagerPage = React.lazy(() => import("components/Admin/WardManager/WardSearch"));
 
+//Radiology
+const RadiologyTestDetailPage = React.lazy(() => import("components/Laboratory/Radiology/TestDetail"));
 // const getBasename = () => {
 //   return `/${process.env.PUBLIC_URL.split("/").pop()}`;
 // };
@@ -189,6 +194,10 @@ class Routes extends Component {
               <PrivateRoute exact path="/appointments" component={AppointmentPage} />
                 <PrivateRoute exact path="/admin" component={AdministrativeDashboard} />
                 <PrivateRoute exact path={"/admin/global-variable"} component={GlobalVariableSearchPage} />
+                <PrivateRoute exact path={"/admin/standards"} component={StandardSearchPage} />
+                <PrivateRoute exact path={"/admin/application-codesets"} component={ApplicationCodesetPage} />
+                <PrivateRoute exact path={"/admin/wards"} component={WardManagerPage} />
+                <PrivateRoute exact path={"/radiology"} component={RadiologyTestDetailPage} />
               {/* The route to Appointment*/}
               
             </React.Suspense>

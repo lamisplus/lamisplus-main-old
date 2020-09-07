@@ -5,7 +5,7 @@ import MatButton from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
 import SaveIcon from '@material-ui/icons/Save'
 import CancelIcon from '@material-ui/icons/Cancel'
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
 import { DateTimePicker } from 'react-widgets';
@@ -13,7 +13,7 @@ import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import moment from "moment";
 
-import { newGlobalVariable, updateGlobalVariable } from 'actions/globalVariable';
+import { sampleVerification, fetchFormById } from '../../../actions/laboratory';
 import { Alert } from 'reactstrap';
 import { Spinner } from 'reactstrap';
 
@@ -28,23 +28,11 @@ const useStyles = makeStyles(theme => ({
 
 const ModalSample = (props) => {
     const [loading, setLoading] = useState(false)
-    const defaultValues = {name:"",description:"",format:"" }
-    const [formData, setFormData] = useState(defaultValues)
+    const [formData, setFormData] = useState({name:"",description:"",value:"" })
     const [errors, setErrors] = useState({});
     const classes = useStyles()
-
-    useEffect(() => {
-        //for application codeset edit, load form data
-        setFormData(props.formData ? props.formData : defaultValues);
-    }, [props.formData]);
-
     const handleInputChange = e => {
         setFormData ({ ...formData, [e.target.name]: e.target.value});
-    }
-
-    const handleNameInputChange = e => {
-
-        setFormData ({ ...formData, [e.target.name]: e.target.value.split(" ").join("")  });
     }
 
     const validate = () => {
@@ -59,34 +47,28 @@ const ModalSample = (props) => {
 
     const createGlobalVariable = e => {
         e.preventDefault()
-         setLoading(true);
+        if(validate()){
+            setLoading(true);
 
             const onSuccess = () => {
                 setLoading(false);
-                toast.success("Global variable saved successfully!")
-                props.loadGlobalVariable();
                 props.toggleModal()
             }
             const onError = () => {
                 setLoading(false);
-                toast.error("Something went wrong, please contact administration");
+                props.toggleModal()
             }
 
-        if(formData.id){
-            props.updateGlobalVariable(formData.id, formData, onSuccess, onError)
-            return
+            props.sampleVerification(formData, formData.id,onSuccess,onError)
         }
-        props.newGlobalVariable(formData, onSuccess,onError)
-
     }
     return (
 
         <div >
-            <ToastContainer />
             <Modal isOpen={props.showModal} toggle={props.toggleModal} size="lg">
 
                 <Form onSubmit={createGlobalVariable}>
-                    <ModalHeader toggle={props.toggleModal}>New Global Variable </ModalHeader>
+                    <ModalHeader toggle={props.toggleModal}>New International Standard </ModalHeader>
                     <ModalBody>
                         <Card >
                             <CardBody>
@@ -100,7 +82,7 @@ const ModalSample = (props) => {
                                                 id='name'
                                                 placeholder=' '
                                                 value={formData.name}
-                                                onChange={handleNameInputChange}
+                                                onChange={handleInputChange}
                                                 required
                                             />
 
@@ -115,20 +97,6 @@ const ModalSample = (props) => {
                                                 id='description'
                                                 placeholder=' '
                                                 value={formData.description}
-                                                onChange={handleInputChange}
-                                                required
-                                            />
-                                        </FormGroup>
-                                    </Col>
-                                    <Col md={12}>
-                                        <FormGroup>
-                                            <Label>Value</Label>
-                                            <Input
-                                                type='textarea'
-                                                name='format'
-                                                id='format'
-                                                placeholder=' '
-                                                value={formData.format}
                                                 onChange={handleInputChange}
                                                 required
                                             />
@@ -166,4 +134,4 @@ const ModalSample = (props) => {
     );
 }
 
-export default connect(null, { newGlobalVariable, updateGlobalVariable })(ModalSample);
+export default connect(null, { sampleVerification, fetchFormById })(ModalSample);

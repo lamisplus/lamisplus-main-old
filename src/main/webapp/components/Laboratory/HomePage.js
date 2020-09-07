@@ -9,13 +9,14 @@ import LabTestResultSearch from './TestResult/LabTestResultSearch';
 import LabTestVerifySampleSearch from './Sampleverifications/LabTestVerifySampleSearch';
 import DispatchedManifest from './DispatchedManifest/DispatchedManifest';
 import Typography from "@material-ui/core/Typography";
-import { MdDashboard } from "react-icons/md";
+import { MdDashboard , MdFileUpload} from "react-icons/md";
 import { GiTestTubes,GiFiles, GiDrippingTube } from "react-icons/gi";
 import { GoRepoClone} from "react-icons/go";
 import Box from "@material-ui/core/Box";
 import PropTypes from "prop-types";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
+import RadiologyTestSearch from "./Radiology/RadiologyTestSearch";
 
 //Dtate Picker package
 Moment.locale("en");
@@ -86,7 +87,8 @@ function HomePage(props) {
           <Tab className={classes.title} label="Sample Collection" icon={<GiTestTubes />} {...a11yProps(1)} />
           <Tab className={classes.title} label="Sample Verification " icon={<GiDrippingTube style={{ color:'#fff'}}/>} {...a11yProps(2)} />
           <Tab className={classes.title} label="Results Reporting" icon={<GoRepoClone />} {...a11yProps(3)} />
-          <Tab className={classes.title} label="Sample Dispatch " icon={<GiFiles />} {...a11yProps(4)} />
+          <Tab className={classes.title} label="Radiology Uploads" icon={<MdFileUpload />} {...a11yProps(4)} />
+          <Tab className={classes.title} label="Sample Dispatch " icon={<GiFiles />} {...a11yProps(5)} />
       </Tabs>
       </AppBar>
 
@@ -103,7 +105,10 @@ function HomePage(props) {
           <LabTestResultSearch />
       </TabPanel>
       <TabPanel value={value} index={4}>
-          <DispatchedManifest />
+          <RadiologyTestSearch />
+      </TabPanel>
+      <TabPanel value={value} index={5}>
+        <DispatchedManifest />
       </TabPanel>
         
      </div> 

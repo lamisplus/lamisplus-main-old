@@ -8,17 +8,12 @@ import CancelIcon from '@material-ui/icons/Cancel'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
-import { DateTimePicker } from 'react-widgets';
-import Moment from 'moment';
-import momentLocalizer from 'react-widgets-moment';
-import moment from "moment";
 
-import { newGlobalVariable, updateGlobalVariable } from 'actions/globalVariable';
-import { Alert } from 'reactstrap';
+
+import { createApplicationCodeset, updateApplicationCodeset } from 'actions/applicationCodeset';
 import { Spinner } from 'reactstrap';
+import Select from "react-select/creatable";
 
-Moment.locale('en');
-momentLocalizer();
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -28,9 +23,8 @@ const useStyles = makeStyles(theme => ({
 
 const ModalSample = (props) => {
     const [loading, setLoading] = useState(false)
-    const defaultValues = {name:"",description:"",format:"" }
-    const [formData, setFormData] = useState(defaultValues)
-    const [errors, setErrors] = useState({});
+    const defaultValues = {display:"", language:"", version:"", codesetGroup:""};
+    const [formData, setFormData] = useState( defaultValues)
     const classes = useStyles()
 
     useEffect(() => {
@@ -42,41 +36,31 @@ const ModalSample = (props) => {
         setFormData ({ ...formData, [e.target.name]: e.target.value});
     }
 
-    const handleNameInputChange = e => {
+    const handleCodesetGroupChange = (newValue) => {
+        setFormData ({ ...formData, codesetGroup: newValue.value});
+    };
 
-        setFormData ({ ...formData, [e.target.name]: e.target.value.split(" ").join("")  });
-    }
-
-    const validate = () => {
-        let temp = { ...errors }
-        temp.name = formData.name ? "" : "Name is required"
-        setErrors({
-            ...temp
-        })
-        console.log(temp)
-        return Object.values(temp).every(x => x == "")
-    }
 
     const createGlobalVariable = e => {
         e.preventDefault()
-         setLoading(true);
+            setLoading(true);
 
             const onSuccess = () => {
                 setLoading(false);
-                toast.success("Global variable saved successfully!")
-                props.loadGlobalVariable();
+                toast.success("Application codeset saved successfully!")
+                props.loadApplicationCodeset();
                 props.toggleModal()
             }
             const onError = () => {
                 setLoading(false);
                 toast.error("Something went wrong, please contact administration");
+                //props.toggleModal()
             }
-
-        if(formData.id){
-            props.updateGlobalVariable(formData.id, formData, onSuccess, onError)
-            return
-        }
-        props.newGlobalVariable(formData, onSuccess,onError)
+            if(formData.id){
+                props.updateApplicationCodeset(formData.id, formData, onSuccess, onError)
+                return
+            }
+            props.createApplicationCodeset(formData, onSuccess,onError)
 
     }
     return (
@@ -86,55 +70,72 @@ const ModalSample = (props) => {
             <Modal isOpen={props.showModal} toggle={props.toggleModal} size="lg">
 
                 <Form onSubmit={createGlobalVariable}>
-                    <ModalHeader toggle={props.toggleModal}>New Global Variable </ModalHeader>
+                    <ModalHeader toggle={props.toggleModal}> {props.formData && props.formData.id ? 'Edit' : 'New'} Global Variable </ModalHeader>
                     <ModalBody>
                         <Card >
                             <CardBody>
                                 <Row >
                                     <Col md={12}>
                                         <FormGroup>
+                                            <Label>Codeset Group</Label>
+                                            <Select
+                                                required
+                                                name="cg"
+                                                id="cg"
+                                                isOptionDisabled={option => formData.id ? option.value !== formData.codesetGroup : false}
+                                                isMulti={false}
+                                                onChange={handleCodesetGroupChange}
+                                                options={props.applicationCodesetList ? Array.from(new Set(props.applicationCodesetList.map(x => x.codesetGroup))).sort().map (codesetGroup => ({value: codesetGroup, label: codesetGroup})) : []}
+                                                value={formData.codesetGroup ? {value: formData.codesetGroup, label: formData.codesetGroup} : ""}
+                                                isLoading={false}
+                                            />
+
+                                        </FormGroup>
+                                    </Col>
+                                    <Col md={12}>
+                                        <FormGroup>
                                             <Label>Name</Label>
                                             <Input
                                                 type='text'
-                                                name='name'
-                                                id='name'
+                                                name='display'
+                                                id='display'
                                                 placeholder=' '
-                                                value={formData.name}
-                                                onChange={handleNameInputChange}
-                                                required
-                                            />
-
-                                        </FormGroup>
-                                    </Col>
-                                    <Col md={12}>
-                                        <FormGroup>
-                                            <Label>Description</Label>
-                                            <Input
-                                                type='textarea'
-                                                name='description'
-                                                id='description'
-                                                placeholder=' '
-                                                value={formData.description}
-                                                onChange={handleInputChange}
-                                                required
-                                            />
-                                        </FormGroup>
-                                    </Col>
-                                    <Col md={12}>
-                                        <FormGroup>
-                                            <Label>Value</Label>
-                                            <Input
-                                                type='textarea'
-                                                name='format'
-                                                id='format'
-                                                placeholder=' '
-                                                value={formData.format}
+                                                value={formData.display}
                                                 onChange={handleInputChange}
                                                 required
                                             />
                                         </FormGroup>
                                     </Col>
 
+                                    <Col md={12}>
+                                        <FormGroup>
+                                            <Label>Language</Label>
+                                            <Input
+                                                type='text'
+                                                name='language'
+                                                id='language'
+                                                placeholder=' '
+                                                value={formData.language}
+                                                onChange={handleInputChange}
+                                                required
+                                            />
+                                        </FormGroup>
+                                    </Col>
+
+                                    <Col md={12}>
+                                        <FormGroup>
+                                            <Label>Version</Label>
+                                            <Input
+                                                type='text'
+                                                name='version'
+                                                id='version'
+                                                placeholder=' '
+                                                value={formData.version}
+                                                onChange={handleInputChange}
+                                                required
+                                            />
+                                        </FormGroup>
+                                    </Col>
                                 </Row>
 
                                 <MatButton
@@ -166,4 +167,10 @@ const ModalSample = (props) => {
     );
 }
 
-export default connect(null, { newGlobalVariable, updateGlobalVariable })(ModalSample);
+const mapStateToProps = (state) => {
+    return {
+        applicationCodesetList: state.applicationCodesets.applicationCodesetList
+    };
+};
+
+export default connect(mapStateToProps, { createApplicationCodeset , updateApplicationCodeset})(ModalSample);
