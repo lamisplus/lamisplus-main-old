@@ -20,7 +20,6 @@ import {
   Row,
 } from 'reactstrap';
 
-import { PowerBIEmbed } from 'powerbi-client-react';
 
 const cardStyle = {
   borderColor: '#fff',
