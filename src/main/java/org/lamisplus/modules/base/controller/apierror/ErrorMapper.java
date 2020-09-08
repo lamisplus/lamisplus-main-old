@@ -17,6 +17,4 @@ public class ErrorMapper {
                         (m, i) -> m.put(keyType.cast(entries[i]), valueType.cast(entries[i + 1])),
                         Map::putAll);
     }
-
-
 }

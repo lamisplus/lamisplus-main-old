@@ -78,9 +78,14 @@ public class ModuleService {
 
         Arrays.asList(files).stream().forEach(file ->{
              File jarFile = new File(file.getOriginalFilename());
-             String fileName = jarFile.getName().toLowerCase().replace(".jar","");
 
-             //Copy files
+            if(!jarFile.getName().contains(".jar")){
+                throw new RuntimeException("File is not a jar file");
+            }
+
+            String fileName = jarFile.getName().toLowerCase().replace(".jar","");
+
+            //Copy files
              storageService.store(fileName, file, overrideExistFile);
 
              final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", fileName);
