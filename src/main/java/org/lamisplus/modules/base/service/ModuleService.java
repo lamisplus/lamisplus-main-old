@@ -150,42 +150,46 @@ public class ModuleService {
 
         log.info("moduleRuntimePath is " + moduleRuntimePath.toString());
 
-        try {
-            ClassPathHacker.addFile(rootFile.getAbsolutePath());
-            List<URL> classURL = showFiles(filePath.listFiles(), rootFile);
-            ClassLoader loader = new URLClassLoader(classURL.toArray(
-                    new URL[classURL.size()]), ClassLoader.getSystemClassLoader());
-            log.debug("rootFile is: " + rootFile.getAbsolutePath());
+        if(rootFile != null && rootFile.exists()) {
+            try {
+                ClassPathHacker.addFile(rootFile.getAbsolutePath());
+                List<URL> classURL = showFiles(filePath.listFiles(), rootFile);
+                ClassLoader loader = new URLClassLoader(classURL.toArray(
+                        new URL[classURL.size()]), ClassLoader.getSystemClassLoader());
+                log.debug("rootFile is: " + rootFile.getAbsolutePath());
 
-            classNames.forEach(className ->{
-                try {
-                    moduleClasses.add(loader.loadClass(className));
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            });
-
-        } catch (IOException e) {
-            //TODO: Log error and Set modules active to false
-            //module.setActive(false);
-            throw new RuntimeException("Server error module not loaded: " + e.getMessage());
-        }
-        for(File file: moduleRuntimePath.toFile().listFiles()){
-            System.out.println(file.getName());
-            //Load dependencies
-            if(file.getName().contains("lib")){
-                System.out.println(file.exists());
-                for(File jarfile: file.listFiles()) {
+                classNames.forEach(className -> {
                     try {
-                        ClassPathHacker.addFile(jarfile.getAbsolutePath());
-                    } catch (IOException e) {
+                        moduleClasses.add(loader.loadClass(className));
+                    } catch (ClassNotFoundException e) {
                         e.printStackTrace();
+                    }
+                });
+
+            } catch (IOException e) {
+                //TODO: Log error and Set modules active to false
+                //module.setActive(false);
+                throw new RuntimeException("Server error module not loaded: " + e.getMessage());
+            }
+            for (File file : moduleRuntimePath.toFile().listFiles()) {
+                System.out.println(file.getName());
+                //Load dependencies
+                if (file.getName().contains("lib")) {
+                    System.out.println(file.exists());
+                    for (File jarfile : file.listFiles()) {
+                        try {
+                            ClassPathHacker.addFile(jarfile.getAbsolutePath());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
+            module.setStatus(STATUS_INSTALLED);
+            module.setActive(true);
+        } else {
+            return module;
         }
-        module.setStatus(STATUS_INSTALLED);
-        module.setActive(true);
         return moduleRepository.save(module);
     }
 
@@ -243,13 +247,14 @@ public class ModuleService {
         String absolutePath = rootFile.getAbsolutePath();
 
         List<URL> urlList = new ArrayList<>();
-        for (File file : files) {
+        if(files != null) {
+            for (File file : files) {
                 if (file.isDirectory()) {
                     ClassPathHacker.addFile(file.getAbsolutePath());
                     urlList.add(file.toURI().toURL());
-                    showFiles(file.listFiles(),rootFile); // Calls same method again.
+                    showFiles(file.listFiles(), rootFile); // Calls same method again.
                 } else {
-                    if(file.getAbsolutePath().endsWith(".class")) {
+                    if (file.getAbsolutePath().endsWith(".class")) {
                         ClassPathHacker.addFile(file.getAbsolutePath());
                         String filePathName = file.getAbsolutePath().replace(absolutePath + fileSeparator, "");
                         String processedName = filePathName.replace(".class", "");
@@ -257,6 +262,7 @@ public class ModuleService {
                         classNames.add(processedName);
                     }
                 }
+            }
         }
         return urlList;
     }
