@@ -37,8 +37,8 @@ public class PatientController {
         return ResponseEntity.ok(this.patientService.getAllPatients());
     }
 
-    @GetMapping("/patientNumber")
-    public ResponseEntity<PatientDTO> getPatientByHospitalNumber(@RequestBody String hospitalNumber) {
+    @GetMapping("/hospitalNumber")
+    public ResponseEntity<PatientDTO> getPatientByHospitalNumber(@RequestParam String hospitalNumber) {
         return ResponseEntity.ok(this.patientService.getPatientByHospitalNumber(hospitalNumber));
     }
 
