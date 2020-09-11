@@ -16,6 +16,7 @@ import {
     Row,
 } from 'reactstrap';
 import {Link} from 'react-router-dom';
+import _ from 'lodash';
 
 const useStyles = makeStyles(theme => ({
     root2: {
@@ -68,6 +69,20 @@ const GenerateReport = props => {
         props.generateReport(newdata2);
     }
 
+    const submitForm = (submission) => {
+        console.log('submitting');
+        console.log(submission);
+        const data = submission.data;
+        let formattedData = [];
+        _.forOwn(data, function(value, key) {
+            if(key !== "submit") {
+                formattedData.push({name: key, value: value})
+            }
+        } );
+
+        console.log(formattedData)
+        return;
+    }
 
     return (
         <Page title="Query Parameter Form" >
@@ -96,8 +111,8 @@ const GenerateReport = props => {
                         </FormGroup></Col>
                     </Row>
                     { form2 ?
-                        <Form form={row.parameterResourceObject} {...props} onChange={(schema) => {
-                            setRes(JSON.stringify(schema));
+                        <Form form={row.parameterResourceObject} {...props} onSubmit={(submission) => {
+                            return submitForm(submission);
                         }} />
                         : ""
                     }
