@@ -7,7 +7,6 @@ import {toast} from 'react-toastify';
 export const creatReport = (data, onSuccess, onError) => dispatch => {
     console.log(data)
     axios
-
         .post(`${url}jasper-reports/`, data)
         .then(response => {
             dispatch({
@@ -29,29 +28,46 @@ export const creatReport = (data, onSuccess, onError) => dispatch => {
 };
 
 
-export const generateReport = (data, onSuccess, onError) => dispatch => {
+// export const generateReport = (data, onSuccess, onError) => dispatch => {
+//     axios
+//         .post(`${url}jasper-reports/generate`, data)
+//         .then(response => {
+//             dispatch({
+//                 type: ACTION_TYPES.REPORTS_GENERATE_REPORT,
+//                 payload: response.data
+//             });
+//             console.log(response)
+//             this.setState(response.data)
+//             if(onSuccess){
+//                 onSuccess();
+//             }
+//         })
+//         .catch(error => {
+//                 if(onError){
+//                     onError();
+//                 }
+//             }
+//
+//         );
+// };
 
+export const generateReport = (data, onSuccess, onError) => dispatch => {
     axios
         .post(`${url}jasper-reports/generate`, data)
         .then(response => {
-            dispatch({
-                type: ACTION_TYPES.REPORTS_GENERATE_REPORT,
-                payload: response.data
-            });
-            console.log(response)
-            this.setState(response.data)
-            if(onSuccess){
-                onSuccess();
-            }
+//Create a Blob from the PDF Stream
+            const file = new Blob(
+                [response.data],
+                {type: 'application/pdf'});
+            //Build a URL from the file
+            const fileURL = URL.createObjectURL(file);
+//Open the URL on new Window
+            window.open(fileURL);
         })
         .catch(error => {
-                if(onError){
-                    onError();
-                }
-            }
-
-        );
-};
+            console.log(error);
+        });
+}
 
 export const fetchAll = (onSuccess) => dispatch => {
     axios
