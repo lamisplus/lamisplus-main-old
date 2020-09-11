@@ -1,7 +1,9 @@
 import axios from "axios";
 import { url as baseUrl , LABSERVICECODE} from "../api";
+import {RADIOLOGY_TEST_ORDER} from "api/codes";
 import * as ACTION_TYPES from "./types";
 import { toast } from "react-toastify";
+
 import { GiConsoleController } from "react-icons/gi";
 
 /**
@@ -407,3 +409,76 @@ export const fetchRadiologyTestOrdersByEncounterID = (id, onSuccess, onError)=> 
         );
   }
 };
+export const fetchAllRadiologyTestOrder = (onSuccess, onError) => dispatch => {
+    if(LABSERVICECODE){
+        axios
+            .get(`${baseUrl}encounters/${RADIOLOGY_TEST_ORDER}/{dateStart}/{dateEnd}`)
+            .then(response => {
+                dispatch({
+                    type: ACTION_TYPES.RADIOLOGY_TEST_ORDERS,
+                    payload: response.data
+                })
+                if(onSuccess){
+                    onSuccess()
+                }
+            })
+            .catch(error => {
+                if(onError){
+                    onError()
+                }
+            });
+    }
+};
+
+export const updateRadiologyByFormId = (data, id, onSuccess, onError ) => dispatch => {
+        axios
+            .put(`${baseUrl}form-data/${id}`, data)
+            .then(response => {
+                if(onSuccess){
+                    onSuccess()
+                }
+            })
+            .catch(error =>{
+                if(onError){
+                    onError()
+                }
+            });
+};
+
+export const fetchAllRadiologyTestGroup = (onSuccess, onError) => dispatch => {
+    axios
+        .get(`${baseUrl}radiology-test-groups/`)
+        .then(response => {
+            dispatch({
+                type: ACTION_TYPES.FETCH_ALL_RADIOLOGY_TEST_GROUP,
+                payload: response.data
+            })
+            onSuccess()
+        })
+        .catch(error => {
+            dispatch({
+                type: ACTION_TYPES.LABORATORY_ERROR,
+                payload: 'Something went wrong, please try again'
+            })
+            onError(error.response)
+        })
+}
+
+export const fetchAllRadiologyTestsByTestGroup = (id, onSuccess, onError) => dispatch => {
+    axios
+        .get(`${baseUrl}radiology-test-groups/radiology-tests/${id}`)
+        .then(response => {
+            dispatch({
+                type: ACTION_TYPES.FETCH_ALL_RADIOLOGY_TESTS_BY_TEST_GROUP,
+                payload: response.data
+            })
+            onSuccess()
+        })
+        .catch(error => {
+            dispatch({
+                type: ACTION_TYPES.LABORATORY_ERROR,
+                payload: 'Something went wrong, please try again'
+            })
+            onError(error.response)
+        })
+}

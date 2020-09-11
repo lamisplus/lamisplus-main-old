@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -17,6 +17,7 @@ import PropTypes from "prop-types";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import RadiologyTestSearch from "./Radiology/RadiologyTestSearch";
+import {getQueryParams} from "components/Utils/PageUtils";
 
 //Dtate Picker package
 Moment.locale("en");
@@ -64,8 +65,15 @@ function a11yProps(index) {
 }
 function HomePage(props) {
   const classes = useStyles();
-  const [value, setValue] = useState(0);
-
+  const [value, setValue] = useState(null);
+  const urlIndex = getQueryParams("tab", props.location.search) || "0";
+  useEffect ( () => {
+    switch(urlIndex){
+      case "radiology": return setValue(4)
+      case "lab_test_result": return setValue(3)
+      default: return setValue(0)
+    }
+  }, [urlIndex]);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };

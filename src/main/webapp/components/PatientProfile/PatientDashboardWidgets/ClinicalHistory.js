@@ -15,6 +15,7 @@ import ConsultationHistory from "components/PatientProfile/Consultation/Consulta
 import { connect } from "react-redux";
 import ArtCommencement from "./hts/ArtCommencement";
 import {  CardDeck} from 'reactstrap';
+import PreviousRadiologyTestOrder from "../TestOrder/RadiologyTestOrderHistory";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -72,7 +73,8 @@ function ClinicalHistory(props) {
           <Tab value="two" label="Vital Signs" wrapped {...a11yProps("two")} />
           <Tab value="three" label="Pharmacy" {...a11yProps("three")} />
           <Tab value="four" label="Laboratory" {...a11yProps("four")} />
-            <Tab value="five" label="ART" {...a11yProps("five")} />
+            <Tab value="six" label="Radiology" {...a11yProps("six")} />
+            <Tab value="five" label="Programs" {...a11yProps("five")} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index="one">
@@ -87,6 +89,9 @@ function ClinicalHistory(props) {
       <TabPanel value={value} index="four">
         <PreviousTestOrder patientId={props.patient.patientId} />
       </TabPanel>
+        <TabPanel value={value} index="six">
+            <PreviousRadiologyTestOrder patientId={props.patient.patientId} />
+        </TabPanel>
         <TabPanel value={value} index="five">
             <CardDeck>
                 <ArtCommencement/>
