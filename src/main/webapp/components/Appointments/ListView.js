@@ -1,11 +1,5 @@
 import React, { useState } from "react";
 import MaterialTable from "material-table";
-import IconButton from "@material-ui/core/IconButton";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import DateRangeIcon from "@material-ui/icons/DateRange";
-import Tooltip from "@material-ui/core/Tooltip";
 import * as _ from "lodash";
 import { connect } from "react-redux";
 import { fetchAllAppointments } from "actions/appointments";

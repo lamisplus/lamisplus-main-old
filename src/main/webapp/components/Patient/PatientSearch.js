@@ -95,8 +95,7 @@ const PatientSearch = (props) => {
                                 to={{
                                   pathname: "/patient-dashboard",
                                   state: { hospitalNumber: row.hospitalNumber  }
-                                }}
-                             >
+                                }}>
                                 <MdDashboard size="15" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>
                           </Link>                               
                           </MenuItem>
@@ -105,8 +104,7 @@ const PatientSearch = (props) => {
                                     to={{
                                       pathname: "/patient-update",
                                       currentId: row
-                                    }}
-                                  >
+                                    }}>
                                 <MdModeEdit size="15" />{" "}<span style={{color: '#000'}}>Edit Patient </span>                   
                               </Link>
                           </MenuItem>                                      

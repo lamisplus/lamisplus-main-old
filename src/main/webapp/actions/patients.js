@@ -80,7 +80,6 @@ export const create = (data,onSuccess, onError) => dispatch => {
   axios
     .post(`${baseUrl}patients/`, data)
     .then(response => {
-
       dispatch({
         type: ACTION_TYPES.PATIENTS_CREATE,
         payload: response.data
@@ -423,3 +422,4 @@ export const fetchPatientConsultationHistory = (id, onSuccess, onError) => dispa
      )
      }  
  }
+

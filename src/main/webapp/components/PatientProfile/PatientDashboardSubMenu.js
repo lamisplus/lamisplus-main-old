@@ -35,6 +35,8 @@ function PatientDashboardSubMenu(props) {
   const [currentForm, setCurrentForm] = useState(false);
   const [checkIn, setCheckIn] = useState(false);
   const [patientType, setPatientType] = useState();
+
+  //TODO: Add appointments to patient submenu
   const formInfo = [
     {
       code: CODES.ADMIT_PATIENT_FORM,

@@ -2,16 +2,17 @@ import React, { Component } from 'react'
 import * as WebDataRocksReact from './webdatarocks.react';
 import {Card, CardContent} from '@material-ui/core';
 import Page from 'components/Page';
+import "webdatarocks/webdatarocks.highcharts";
 import './PivotTable.css';
 
 export class PivotTable extends Component {
   render() {
     return (
         <div className="PivotTable">
-          <Page title="Report Builder" >
+          <Page title="Pivot Table Report" >
             <Card >
               <CardContent>
-                <h4>Create Report</h4>
+                <h4>Pivot Table</h4>
                 <hr />
                 <div>
                   <WebDataRocksReact.Pivot

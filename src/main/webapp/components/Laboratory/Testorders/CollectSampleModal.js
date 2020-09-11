@@ -184,7 +184,6 @@ const ModalSample = (props) => {
             <Card >
                 <CardBody>
                     <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
-
                         <Form onSubmit={saveSample}>
                             <ModalHeader toggle={props.togglestatus}>Collect Sample </ModalHeader>
                             <ModalBody>
@@ -209,7 +208,6 @@ const ModalSample = (props) => {
                                                 </Alert>
                                             </Col>
                                             <Col md={6}>
-
                                                 <FormGroup>
                                                     <Label for='maritalStatus'>Date Collected</Label>
                                                     <DateTimePicker

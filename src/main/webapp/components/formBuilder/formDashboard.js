@@ -20,8 +20,6 @@ import {
 import FormBuilder from './FormBuilder';
 import ViewForm from './ViewForm';
 import PivotTable from  './PivotTable'
-import ReactPivot from  './PivotTable'
-
 
 
 function TabPanel(props) {
@@ -208,7 +206,7 @@ export default function ScrollableTabsButtonForce(props) {
                 <PivotTable/>
             </TabPanel>
             <TabPanel value={value} index={3}>
-                <ReactPivot/>
+
             </TabPanel>
             <TabPanel value={value} index={5}>
                 <Grid container spacing={7} >
