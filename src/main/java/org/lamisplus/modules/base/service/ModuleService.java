@@ -50,6 +50,7 @@ public class ModuleService {
     private final UserService userService;
     private static final int MODULE_TYPE = 1;
     private static final int STATUS_INSTALLED = 2;
+    private static final int STATUS_STARTED = 3;
     private static final int STATUS_UPLOADED = 1;
     private static final String ORG_LAMISPLUS_MODULES_PATH = "/org/lamisplus/modules/";
     private List<Module> externalModules;
@@ -158,6 +159,21 @@ public class ModuleService {
                         new URL[classURL.size()]), ClassLoader.getSystemClassLoader());
                 log.debug("rootFile is: " + rootFile.getAbsolutePath());
 
+                for (File file : moduleRuntimePath.toFile().listFiles()) {
+                    System.out.println(file.getName());
+                    //Load dependencies
+                    if (file.getName().contains("lib")) {
+                        System.out.println(file.exists());
+                        for (File jarfile : file.listFiles()) {
+                            try {
+                                ClassPathHacker.addFile(jarfile.getAbsolutePath());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+
                 classNames.forEach(className -> {
                     try {
                         moduleClasses.add(loader.loadClass(className));
@@ -171,22 +187,12 @@ public class ModuleService {
                 //module.setActive(false);
                 throw new RuntimeException("Server error module not loaded: " + e.getMessage());
             }
-            for (File file : moduleRuntimePath.toFile().listFiles()) {
-                System.out.println(file.getName());
-                //Load dependencies
-                if (file.getName().contains("lib")) {
-                    System.out.println(file.exists());
-                    for (File jarfile : file.listFiles()) {
-                        try {
-                            ClassPathHacker.addFile(jarfile.getAbsolutePath());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+
+            switch (module.getStatus()){
+                case STATUS_UPLOADED:
+                    module.setStatus(STATUS_INSTALLED);
+                    break;
                 }
-            }
-            module.setStatus(STATUS_INSTALLED);
-            module.setActive(true);
         } else {
             return module;
         }
@@ -195,6 +201,13 @@ public class ModuleService {
 
     public void startModule(){
         loadAllExternalModules(STATUS_INSTALLED, MODULE_TYPE);
+
+        externalModules.forEach(module -> {
+            if(module.getStatus() == STATUS_INSTALLED) {
+                module.setStatus(STATUS_STARTED);
+                moduleRepository.save(module);
+            }
+        });
 
         //TODO: Set module status to 3 which is started
         if(moduleClasses.size() > 0){
@@ -237,6 +250,11 @@ public class ModuleService {
 
     private void loadAllExternalModules(int status, int moduleType){
         externalModules = getAllModuleByStatusAndModuleType(status, moduleType);
+
+        //getting all external module that has been started
+        getAllModuleByStatusAndModuleType(STATUS_STARTED, moduleType).forEach(module -> {
+            externalModules.add(module);
+        });
 
         externalModules.forEach(module -> {
             installModule(module.getId());
