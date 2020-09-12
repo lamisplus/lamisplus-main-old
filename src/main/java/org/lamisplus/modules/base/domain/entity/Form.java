@@ -1,15 +1,13 @@
 package org.lamisplus.modules.base.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.*;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
@@ -28,6 +26,7 @@ public class Form extends JsonBEntity implements Serializable {
 
     @Basic
     @Column(name = "code")
+    @NotNull
     private String code;
 
     @Type(type = "jsonb")
@@ -83,7 +82,7 @@ public class Form extends JsonBEntity implements Serializable {
     private Integer archived = 0;
 
     @ManyToOne
-    @JoinColumn(name = "program_code", referencedColumnName = "uuid", insertable = false, updatable = false)
+    @JoinColumn(name = "program_code", referencedColumnName = "code", insertable = false, updatable = false)
     @JsonIgnore
     private Program programByProgramCode;
 
