@@ -63,8 +63,13 @@ export const fetchBootstrapModuleID = (id)=> dispatch => {
 export const createBootstrapModule = (data) => dispatch => {
 console.log(data)
 
+const options = {
+  headers: {
+      'Content-Type': ' multipart/form-data',
+  }
+};
   axios
-    .post(`${baseUrl}modules/upload`, data)
+    .post(`${baseUrl}modules/upload`, data,options)
     .then(response => {
       console.log(response)
       dispatch({
