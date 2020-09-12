@@ -3,53 +3,50 @@ package org.lamisplus.modules.base.report;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
-import org.apache.commons.io.FileUtils;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.util.JRSaver;
 import org.lamisplus.modules.base.domain.entity.JasperReportInfo;
 import org.lamisplus.modules.base.domain.entity.ReportDetailDTO;
-import org.lamisplus.modules.base.service.JasperReportInfoService;
+import org.lamisplus.modules.base.service.JasperReportService;
+import org.lamisplus.modules.base.util.FileStorage;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
 @Slf4j
 @RequiredArgsConstructor
 public class JasperReportGenerator {
-    private final JasperReportInfoService jasperReportInfoService;
+    private final JasperReportService jasperReportService;
+    private static String templatePath = "src/main/resources/report/";
 
-    public void createReport(ReportDetailDTO reportDetailDTO) throws JRException, IOException {
-        JasperReportInfo jasperReportInfo = this.jasperReportInfoService.getJasperReport(reportDetailDTO.getReportId());
+    public File createReport(ReportDetailDTO reportDetailDTO) throws JRException, IOException, URISyntaxException {
+        JasperReportInfo jasperReportInfo = this.jasperReportService.getJasperReport(reportDetailDTO.getReportId());
         // Fetching the .jrxml file from the resources folder.
-        String template = jasperReportInfo.getTemplate();
-        File destination = new File("./temp/");
-        if (!destination.exists()) {
-            destination.mkdirs();
-            System.out.println("Dir created");
-        }
-        System.out.println(System.getProperty("user.dir"));
+        /*String templateName = "art_summary"; //jasperReportInfo.getName();
 
-        String strClassPath = System.getProperty("java.class.path");
+        String jrxml = templatePath+templateName+".jrxml";
 
-        System.out.println("Classpath is " + strClassPath);
-/*
-        FileUtils.writeStringToFile(new File("/temp/report.jrxml"), template, String.valueOf(StandardCharsets.UTF_8));
-        final InputStream stream = this.getClass().getResourceAsStream("/templates/report.jrxml");
+        FileInputStream jrxmlStream = new FileInputStream(jrxml);
+        System.out.println("Template path: "+jrxmlStream);
 
         // Compile the Jasper report from .jrxml to .japser
-        final JasperReport report = JasperCompileManager.compileReport(stream);
-*/
+        final JasperReport report = JasperCompileManager.compileReport(jrxmlStream);
+        String jasper = templatePath+templateName+".jasper";
+        JRSaver.saveObject(report, jasper);
 
-/*
         // Fetching the data from the data source.
-        final List<Object>  data = new ArrayList<>();
+        final List<Object> data = new ArrayList<>();
         // TODO retrieve data from DataSourceProvider
         final JRBeanCollectionDataSource datasource = new JRBeanCollectionDataSource(data);
 
@@ -59,21 +56,15 @@ public class JasperReportGenerator {
 
         // Filling the report with the data and additional parameters information.
         final JasperPrint print = JasperFillManager.fillReport(report, parameters, datasource);
-
+*/
         // Users can change as per their project requirement  or can take it as request input requirement.
         // For simplicity, this tutorial will automatically place the file under the "c:" drive.
         // If users want to download the pdf file on the browser, then they need to use the "Content-Disposition" technique.
-        final String filePath = "\\";
         // Export the report to a PDF file.
-        JasperExportManager.exportReportToPdfFile(print, filePath + "report.pdf");
-*/
+        //JasperExportManager.exportReportToPdfFile(print, templatePath + "report.pdf");
+        FileStorage fileStorage = new FileStorage();
+        return fileStorage.load1("report1.pdf");
 
     }
 
-    private void makeDir(String directory) {
-        File destination = new File(directory);
-        if (!destination.exists()) {
-            destination.mkdirs();
-        }
-    }
 }

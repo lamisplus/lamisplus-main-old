@@ -9,13 +9,21 @@ import org.lamisplus.modules.base.domain.dto.JasperReportInfoDTO;
 import org.lamisplus.modules.base.domain.entity.JasperReportInfo;
 import org.lamisplus.modules.base.domain.entity.ReportDetailDTO;
 import org.lamisplus.modules.base.report.JasperReportGenerator;
-import org.lamisplus.modules.base.service.JasperReportInfoService;
+import org.lamisplus.modules.base.service.JasperReportService;
+import org.lamisplus.modules.base.util.FileStorage;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.util.List;
 
 @RestController
@@ -23,7 +31,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class JasperReportController {
-    private final JasperReportInfoService jasperReportInfoService;
+    private final JasperReportService jasperReportService;
     private final JasperReportGenerator jasperReportGenerator;
     private static final String ENTITY_NAME = "JasperReport";
 
@@ -32,37 +40,45 @@ public class JasperReportController {
         System.out.println("Saving:"+jasperReportInfoDTO.getName());
         System.out.println("Id:"+jasperReportInfoDTO.getId());
         jasperReportInfoDTO.setId(0L);
-        JasperReportInfo jasperReportInfo = this.jasperReportInfoService.save(jasperReportInfoDTO);
+        JasperReportInfo jasperReportInfo = this.jasperReportService.save(jasperReportInfoDTO);
         return ResponseEntity.created(new URI("/api/jasper-reports/" + jasperReportInfo.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(jasperReportInfo.getId()))).body(jasperReportInfo);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<JasperReportInfo> update(@PathVariable Long id, @RequestBody JasperReportInfoDTO jasperReportInfoDTO) throws URISyntaxException {
-        JasperReportInfo jasperReportInfo = this.jasperReportInfoService.update(id, jasperReportInfoDTO);
+        JasperReportInfo jasperReportInfo = this.jasperReportService.update(id, jasperReportInfoDTO);
         return ResponseEntity.created(new URI("/api/jasper-reports/" + id))
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(id))).body(jasperReportInfo);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
-        return ResponseEntity.ok(this.jasperReportInfoService.delete(id));
+        return ResponseEntity.ok(this.jasperReportService.delete(id));
     }
 
     @GetMapping
     public ResponseEntity<List<JasperReportInfo>> getAllJasperReports() {
-        return ResponseEntity.ok(this.jasperReportInfoService.getJasperReports());
+        return ResponseEntity.ok(this.jasperReportService.getJasperReports());
     }
 
     @GetMapping ("/{id}")
     public ResponseEntity<JasperReportInfo> getJasperReport(@PathVariable Long id) {
-        return ResponseEntity.ok(this.jasperReportInfoService.getJasperReport(id));
+        return ResponseEntity.ok(this.jasperReportService.getJasperReport(id));
     }
 
+
     @PostMapping("/generate")
-    public ResponseEntity<String> generateReport(@RequestBody ReportDetailDTO reportDetailDTO) throws IOException, JRException {
-        this.jasperReportGenerator.createReport(reportDetailDTO);
-        return ResponseEntity.ok("OK");
+    public HttpEntity<byte[]> generateReport(@RequestBody ReportDetailDTO data, HttpServletResponse response) throws IOException, JRException, URISyntaxException {
+        File file = this.jasperReportGenerator.createReport(data);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+
+        byte[] b = Files.readAllBytes(file.toPath());
+        System.out.println(b);
+        //new FileStorage().writeBytesToFile(b, "/rept.pdf");
+        return new HttpEntity<>(Files.readAllBytes(file.toPath()), headers);
     }
 
 }

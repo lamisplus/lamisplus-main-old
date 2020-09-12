@@ -2,6 +2,10 @@ package org.lamisplus.modules.base.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRSaver;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.JasperReportInfoDTO;
@@ -12,6 +16,8 @@ import org.lamisplus.modules.base.util.GenericSpecification;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +25,7 @@ import java.util.Optional;
 @Transactional
 @Slf4j
 @RequiredArgsConstructor
-public class JasperReportInfoService {
+public class JasperReportService {
     private final JasperReportInfoRepository jasperReportInfoRepository;
     private final JasperReportInfoMapper jasperReportInfoMapper;
 
@@ -59,4 +65,21 @@ public class JasperReportInfoService {
         return jasperReportInfoRepository.findAll(specification);
     }
 
+    private void generateJasperFile(JasperReportInfo jasperReportInfo) throws JRException, FileNotFoundException {
+        // Fetching the .jrxml file from the resources folder.
+       /* String templateName = jasperReportInfo.getName();
+        String template = jasperReportInfo.getTemplate();
+
+
+        String jrxml = templatePath+templateName+".jrxml";
+
+        FileInputStream jrxmlStream = new FileInputStream(jrxml);
+        System.out.println("Template path: "+jrxmlStream);
+
+        // Compile the Jasper report from .jrxml to .japser
+        final JasperReport report = JasperCompileManager.compileReport(jrxmlStream);
+        String jasper = templatePath+templateName+".jasper";
+        JRSaver.saveObject(report, jasper);
+*/
+    }
 }
