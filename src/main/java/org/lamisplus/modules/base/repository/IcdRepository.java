@@ -15,9 +15,15 @@ public interface IcdRepository extends JpaRepository<Icd, Long>, JpaSpecificatio
     List<Icd> findAllByCategoryCode(String categoryCode);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     /*@Query("SELECT DISTINCT i.categoryTitle FROM Icd i")
     List<Icd> findDistinctByCategoryTitle();*/
 
+=======
+    @Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.IcdDistinctDTO" +
+            "(i.categoryCode, i.categoryTitle) FROM Icd i ORDER BY i.categoryCode")
+    List<IcdDistinctDTO> findDistinctCategoryCodeAndCategoryTitle();
+>>>>>>> dev
 =======
     @Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.IcdDistinctDTO" +
             "(i.categoryCode, i.categoryTitle) FROM Icd i ORDER BY i.categoryCode")
