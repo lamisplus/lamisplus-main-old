@@ -7,10 +7,24 @@ import "./../laboratory.css";
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
+import { TiArrowBack } from 'react-icons/ti';
+import MatButton from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
 import Page from './../../Page';
 import { Badge } from 'reactstrap';
 import ModalSample from './../Testorders/CollectSampleModal';
 import ModalViewResult from './../TestResult/ViewResult';
+
+
+const useStyles = makeStyles({
+    root: {
+        width: '100%'
+    },
+    container: {
+        maxHeight: 440
+    },
+    td: { borderBottom :'#fff'}
+})
 
 const PatientSearch = (props) => {
     const [loading, setLoading] = useState('')
@@ -19,6 +33,7 @@ const PatientSearch = (props) => {
     const [modal3, setModal3] = useState(false)//modal to View Result
     const toggleModal3 = () => setModal3(!modal3)
     const [collectModal, setcollectModal] = useState([])//to collect array of datas into the modal and pass it as props
+    const classes = useStyles();
 
     useEffect(() => {
         setLoading('true');
@@ -32,7 +47,7 @@ const PatientSearch = (props) => {
     }, []); //componentDidMount
 
     const labTestType = [];    
-    //console.log(labTestType);
+    
     props.patientsTestOrderList.forEach(function(value, index, array) {
         const getList = value['formDataObj'].find(x => { 
             //console.log(value)
@@ -45,6 +60,7 @@ const PatientSearch = (props) => {
         
         })         
     });
+    // console.log(labTestType);
         
     const [labNum, setlabNum] = useState({lab_number:""})
 
@@ -101,7 +117,7 @@ const PatientSearch = (props) => {
                         }else if(value['data'].lab_test_order_status===5){
                             maxVal.push( <p><Badge  color="light">Result Available</Badge></p>);
                         }else{
-                            maxVal.push( <p>{" "}</p>);
+                            maxVal.push( <p>{" Processing "}</p>);
                         }
                     
                     }
@@ -161,17 +177,37 @@ const PatientSearch = (props) => {
 
     
   return (
-    <Page title='Dispatched Samples '>
+    <Page title='Print Manifest'>
       
       <div>
+      <br/>
+      <Link 
+        to ={{ 
+            pathname: "/laboratory",  
+            activetab: 1
+        }} >
+
+        <MatButton
+            type='submit'
+            variant='contained'
+            color='primary'
+            className={classes.button}                        
+            className=" float-right mr-1"
+        >
+            <TiArrowBack/>{" "} Back
+        </MatButton>
+        
+        </Link>
         <br/><br/>
           <MaterialTable
               title="Dispatched samples list"
               columns={[
+                  { title: "Manifest ID", field: "manifestId" , defaultGroupOrder: 0 },
                   { title: "Patient ID", field: "Id" },
                   {
                     title: "Patient Name",
                     field: "name",
+                    
                   },
                   { title: "Date Ordered", field: "dateOrdered", type: "date" , filtering: false},          
                   { title: "Date dispatched", field: "dateDispatched", type: "date" , filtering: false}, 
@@ -193,8 +229,16 @@ const PatientSearch = (props) => {
               ]}
               isLoading={loading}
               data={labTestType.map((row) => ({
+                  manifestId:   <Link to ={{ 
+                                      pathname: "/print-manifest",  
+                                      state: row
+                                  }} 
+                                      style={{ cursor: "pointer", color: "blue", fontStyle: "bold"}}
+                                >
+                                  {'MNF3456'}
+                                </Link>,
                   Id: row.patientId,
-                  name: row.firstName +  ' ' + row.lastName,
+                  name:row.firstName +  ' ' + row.lastName,
                   dateOrdered: row.dateEncounter,
                   dateDispatched: dateDispatched(row.formDataObj),
                   sampleType: sampleType(row.formDataObj),
@@ -215,7 +259,8 @@ const PatientSearch = (props) => {
                       margingLeft: '250px',
                   },
                   exportButton: true,
-                  searchFieldAlignment: 'left',          
+                  searchFieldAlignment: 'left',  
+                  grouping: false        
               }}
 
           />

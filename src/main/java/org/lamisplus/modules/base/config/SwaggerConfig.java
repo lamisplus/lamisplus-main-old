@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.config;
 import com.google.common.collect.Lists;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -16,10 +17,7 @@ import java.util.List;
 
 @Configuration
 @EnableSwagger2
-/**
- * <h1> Swagger Configuration Class</h1>
- * <b>Defines configuration information for Api documentation using swagger ui</b>
- */
+@Component
 public class SwaggerConfig {
     /**
      * Provides sensible defaults and convenience methods for configuration.
@@ -42,7 +40,7 @@ public class SwaggerConfig {
      *
      * @return ApiInfo for documentation
      */
-    ApiInfo apiInfo() {
+    private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Lamisplus")
                 .description("Lamisplus Application Api Documentation")
@@ -53,7 +51,7 @@ public class SwaggerConfig {
                 .build();
     }
 
-    List<SecurityReference> defaultAuth() {
+    private List<SecurityReference> defaultAuth() {
         AuthorizationScope authorizationScope
                 = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
@@ -80,5 +78,4 @@ public class SwaggerConfig {
     private ApiKey apiKey() {
         return new ApiKey("Authorization", "Bearer ", "header");
     }
-
 }

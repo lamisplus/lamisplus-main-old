@@ -13,6 +13,8 @@ import registrationReducer from './registrationReducer'
 import userReducer from './userReducer'
 import applicationCodesetReducer from './applicationCodesetReducer'
 import appointmentReducer from './appointmentReducer'
+import globalVariableReducer from "./globalVariableReducer";
+import internationalStandardReducer from "./internationalStandardReducer";
 
 export default combineReducers({
   patients: patientReducer,
@@ -28,6 +30,8 @@ export default combineReducers({
   registration: registrationReducer,
   users: userReducer,
   applicationCodesets: applicationCodesetReducer,
-  appointments: appointmentReducer
+  appointments: appointmentReducer,
+  globalVariables: globalVariableReducer,
+  standards: internationalStandardReducer
 })
 

@@ -5,24 +5,20 @@ import PatientVitals from 'components/PatientProfile/PatientDashboardWidgets/Pat
 import ClinicalHistory from 'components/PatientProfile/PatientDashboardWidgets/ClinicalHistory';
 import PatientChart from 'components/PatientProfile/PatientChart';
 import {  Card, CardBody, CardDeck} from 'reactstrap';
+import './dashboard.css'
 
-//TODO: Add patient appointment widget to dashboard
 function InPatientDashboard(props) {
     return (
         <React.Fragment>
-            <CardDeck>
+            <CardDeck >
          <PatientVitals patientId={props.patientId}  /> 
-        <PatientAllergies patientId={props.patientId} /> 
+        <PatientAllergies patientId={props.patientId} />
         {/* <PatientVitals patientId={props.patient.patientId}  />  */}
       </CardDeck>
       <br></br>
     <PatientChart patientId={props.patientId}  />
     <br></br>
-    <Card>
-                        <CardBody>
-                            <ClinicalHistory  patientId={props.patientId}/>                     
-                        </CardBody>                      
-                    </Card>
+    <ClinicalHistory  patientId={props.patientId}/>
         </React.Fragment>
     );
 
