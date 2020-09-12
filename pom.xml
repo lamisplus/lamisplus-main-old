@@ -201,16 +201,28 @@
 			<artifactId>snakeyaml</artifactId>
 			<version>1.26</version>
 		</dependency>
-	</dependencies>
-
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.4.0</version>
+		</dependency>
 		<!-- Jasper reports dependency. -->
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
 			<version>6.4.0</version>
 		</dependency>
-
-    </dependencies>
+	</dependencies>
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
