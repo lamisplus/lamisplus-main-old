@@ -191,6 +191,16 @@
 			<artifactId>okhttp</artifactId>
 			<version>4.2.2</version>
 		</dependency>
+
+
+		<!-- Jasper reports dependency. -->
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.4.0</version>
+		</dependency>
+
+
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
@@ -201,16 +211,19 @@
 			<artifactId>snakeyaml</artifactId>
 			<version>1.26</version>
 		</dependency>
+
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
 			<version>6.4.0</version>
 		</dependency>
+
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
 			<version>6.4.0</version>
 		</dependency>
+
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
@@ -222,6 +235,7 @@
 			<artifactId>jasperreports</artifactId>
 			<version>6.4.0</version>
 		</dependency>
+
 	</dependencies>
 
 	<build>
