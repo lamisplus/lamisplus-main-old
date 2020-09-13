@@ -6,7 +6,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
-          <factory-entry name="entityManagerFactory" />
+          <factory-entry name="entityManagerFactory" value="dd8d8cc9-ad65-4b68-9afb-9033b6da7ef6" />
         </datasource-mapping>
         <naming-strategy-map />
       </configuration>
@@ -229,10 +229,6 @@
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib:1.3.61" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.61" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains:annotations:13.0" level="project" />
-    <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
-    <orderEntry type="library" name="Maven: junit:junit:4.12" level="project" />
-    <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:2.1" level="project" />
-    <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.26" level="project" />
     <orderEntry type="library" name="Maven: net.sf.jasperreports:jasperreports:6.4.0" level="project" />
     <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.9.0" level="project" />
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.2" level="project" />
@@ -263,5 +259,9 @@
     <orderEntry type="library" name="Maven: org.olap4j:olap4j:0.9.7.309-JS-3" level="project" />
     <orderEntry type="library" name="Maven: com.google.zxing:core:3.2.1" level="project" />
     <orderEntry type="library" name="Maven: com.ibm.icu:icu4j:57.1" level="project" />
+    <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: junit:junit:4.12" level="project" />
+    <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:2.1" level="project" />
+    <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.26" level="project" />
   </component>
 </module>

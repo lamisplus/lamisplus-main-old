@@ -24,23 +24,32 @@ import java.nio.file.Paths;
 @Service
 @Slf4j
 public class StorageUtil {
-    private final Path rootLocation;
+    private Path rootLocation;
 
     public StorageUtil(ApplicationProperties properties) {
         this.rootLocation = Paths.get(properties.getModulePath());
     }
 
-    public String store(String module, MultipartFile file, Boolean overrideExistFile) {
-        module = module.toLowerCase().trim();
-        String filename = StringUtils.cleanPath(file.getOriginalFilename().trim());
+    public Path setRootLocation(Path path){
+        return this.rootLocation = path;
+    }
+
+    public URL store(MultipartFile file, Boolean overrideExistFile, String fileNewName) {
+        String filename;
+        URL filePath;
+        if(fileNewName != null || !fileNewName.isEmpty()){
+            filename = fileNewName;
+        } else {
+            filename = StringUtils.cleanPath(file.getOriginalFilename().trim());
+        }
         System.out.println("file name is " + filename);
 
         //TODO: check...
         try {
 
-            if((overrideExistFile != null && overrideExistFile == true) && Files.exists(rootLocation.resolve(module))){
+            if((overrideExistFile != null && overrideExistFile == true) && Files.exists(rootLocation.resolve(filename))){
                 try {
-                    Files.delete(rootLocation.resolve(module));
+                    Files.delete(rootLocation.resolve(filename));
                 }catch (NullPointerException npe){
                     throw new EntityNotFoundException(Module.class, filename, "not found");
                 }
@@ -54,13 +63,14 @@ public class StorageUtil {
             }
 
             InputStream inputStream = file.getInputStream();
+            filePath = this.rootLocation.resolve(filename).toUri().toURL();
             FileUtils.copyInputStreamToFile(inputStream, this.rootLocation.resolve(filename).toFile());
 
         } catch (Exception e) {
             //e.printStackTrace();
             throw new RuntimeException("Failed to store file " + filename, e);
         }
-        return filename;
+        return filePath;
     }
 
 

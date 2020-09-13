@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Table(name = "radiology_test_group")
 public class RadiologyTestGroup implements Serializable {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
