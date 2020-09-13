@@ -27,7 +27,6 @@ export const fetchAllLabTestOrder = (onSuccess, onError) => dispatch => {
         type: ACTION_TYPES.LABORATORY_TESTORDER,
         payload: response.data
       })
-      console.log(response)
       onSuccess();
     })
     .catch(error => {
@@ -36,12 +35,10 @@ export const fetchAllLabTestOrder = (onSuccess, onError) => dispatch => {
         payload: 'Something went wrong, please try again'
       })
       onError();
-      console.log(error)
     });
 }
 };
 export const fetchAllLabTestOrderOfPatient = (id, onSuccess, onError )=> dispatch => {
-  //console.log(id)
   if(id){
   axios
     .get(`${baseUrl}encounters/${id}/form-data`)
@@ -51,7 +48,6 @@ export const fetchAllLabTestOrderOfPatient = (id, onSuccess, onError )=> dispatc
         type: ACTION_TYPES.LABORATORY_TESTORDER_FOR_PATIENT,
         payload: response.data
       })
-      console.log(response.data)
       onSuccess();
       
     })
@@ -61,7 +57,6 @@ export const fetchAllLabTestOrderOfPatient = (id, onSuccess, onError )=> dispatc
         payload: error
       })
       onError();
-      console.log(error)
     }
     );
 }
@@ -71,7 +66,6 @@ export const fetchLabTestOrdersByEncounterID = (id)=> dispatch => {
   axios
     .get(`${baseUrl}encounters/${id}`)
     .then(response => {
-       console.log(response)
       dispatch({
         type: ACTION_TYPES.FETCH_ALL_TESTS_BY_ENCOUNTER_ID,
         payload: response.data
@@ -89,7 +83,6 @@ export const fetchLabTestOrdersByEncounterID = (id)=> dispatch => {
     }
 };
 export const createCollectedSample = (data, lab_id, onSuccess, onError ) => dispatch => {
-console.log(data)
   if(lab_id){
     
   axios
@@ -118,7 +111,6 @@ console.log(data)
 };
 
 export const updateFormDataObj = (data, lab_id) => dispatch => {
-  console.log(data)
     if(lab_id){
       
     axios
@@ -144,7 +136,6 @@ export const updateFormDataObj = (data, lab_id) => dispatch => {
   
 
 export const dispatchedManifestSamples = (data) => dispatch => {
-  console.log(data)
   const options = {
     headers: {
         'Content-Type': 'application/json',
@@ -157,7 +148,6 @@ export const dispatchedManifestSamples = (data) => dispatch => {
         type: ACTION_TYPES.DISPATCH_MANIFEST_SAMPLE,
         payload: response.data
       });
-     console.log(response.data)
     })
     .catch(error =>{
       
@@ -165,7 +155,6 @@ export const dispatchedManifestSamples = (data) => dispatch => {
         type: ACTION_TYPES.ERROR_DISPATCH_MANIFEST_SAMPLE,
         payload: error
       })
-      console.log(error)
     });
   
 };
@@ -179,7 +168,6 @@ export const sampleDispatched = (onSuccess, onError) => dispatch => {
         type: ACTION_TYPES.SAMPLE_DISPATCHED,
         payload: response.data
       })
-      console.log(response)
       onSuccess();
     })
     .catch(error => {
@@ -188,14 +176,12 @@ export const sampleDispatched = (onSuccess, onError) => dispatch => {
         payload: 'Something went wrong, please try again'
       })
       onError();
-      console.log(error)
     });
 
 };
 
 //Get list of samples Manifest by ID 
 export const samplesManifestById = (id,onSuccess, onError) => dispatch => {
-  console.log(id)
   if(id){
   axios
     .get(`${baseUrl}sample-manifests/manifest/${id}`)
@@ -204,8 +190,7 @@ export const samplesManifestById = (id,onSuccess, onError) => dispatch => {
         type: ACTION_TYPES.SAMPLES_MANIFEST_BY_ID,
         payload: response.data
       });
-      console.log(response.data)
-      onSuccess(); 
+      onSuccess();
     })
     .catch(error => {
       dispatch({
@@ -213,7 +198,6 @@ export const samplesManifestById = (id,onSuccess, onError) => dispatch => {
         payload: error
       })
       onError();
-      console.log(error)
     }
     );
   }
@@ -272,7 +256,6 @@ export const transferSample = (samples, lab_id) => dispatch => {
     });
 };
 export const fetchFormById = id => dispatch => {
-  //console.log(id)
   if(id){
   axios
     .get(`${baseUrl}form-data/${id}`)
@@ -281,14 +264,12 @@ export const fetchFormById = id => dispatch => {
         type: ACTION_TYPES.FORMDATA_FETCH_BY_ID,
         payload: response.data
       });
-      //console.log("is getting here ") 
     })
     .catch(error => {
       dispatch({
         type: ACTION_TYPES.ERROR_FORMDATA_FETCH_BY_ID,
         payload: error
       })
-      console.log(error)
     }
     );
   }
@@ -388,7 +369,6 @@ export const fetchRadiologyTestOrdersByEncounterID = (id, onSuccess, onError)=> 
     axios
         .get(`${baseUrl}encounters/${id}`)
         .then(response => {
-          console.log(response)
           dispatch({
             type: ACTION_TYPES.FETCH_ALL_RADIOLOGY_TESTS_BY_ENCOUNTER_ID,
             payload: response.data

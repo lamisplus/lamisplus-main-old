@@ -112,7 +112,7 @@ const ViewResultPage = (props) => {
 
                                        <Row>
                                         {testOrder.data.files.map((file, index) => (
-                                                <Col md={4} >
+                                                <Col md={4} key={index}>
                                             <ModalImage small={file.data}
                                             large={file.data}
                                                         className={"file-height"}

@@ -34,7 +34,8 @@ const useStyles = makeStyles(theme => ({
 }))
 const UploadResultPage = (props) => {
     const [saving, setSaving] = React.useState(false);
-    const [testOrder, setTestOrder] = React.useState({data:{files:[]}});
+    const defaultValues = {data:{files:[]}};
+    const [testOrder, setTestOrder] = React.useState(defaultValues);
     const [note, setNote] = React.useState("");
     const classes = useStyles()
 
@@ -72,110 +73,114 @@ const UploadResultPage = (props) => {
 
     <React.Fragment>
         <ToastContainer/>
-        <Modal isOpen={props.showModal} toggle={props.toggleModal} size="xl">
-            <Form onSubmit={uploadResult}>
-                <ModalHeader toggle={props.toggleModal}> Upload Result </ModalHeader>
-                <ModalBody>
 
-                    <Row style={{marginTop: '20px'}}>
-                        <Col md="12">
-                            <Alert color="dark" style={{backgroundColor: '#9F9FA5', color: "#000"}}>
-                                <Row>
-                                    <Col md={6}>
-                                        Test
-                                        Area: <b>{testOrder && testOrder.data && testOrder.data.description ? testOrder.data.description : ""}</b>
-                                    </Col>
-                                    <Col md={6}>
-                                        Test: <b>{testOrder && testOrder.data && testOrder.data.description ? testOrder.data.description : ""}</b>
-                                    </Col>
-                                    <Col md={6}>
-                                        Date Ordered : <b></b>
-                                    </Col>
-                                    <Col md={6}>
-                                        Ordered By : <b></b>
+        <Modal isOpen={props.showModal} toggle={props.toggleModal} size="xl">
+                <Form onSubmit={uploadResult}>
+                    <ModalHeader toggle={props.toggleModal}> Upload Result </ModalHeader>
+                    <ModalBody>
+
+                        <Row style={{marginTop: '20px'}}>
+                            <Col md="12">
+                                <Alert color="dark" style={{backgroundColor: '#9F9FA5', color: "#000"}}>
+                                    <Row>
+                                        <Col md={6}>
+                                            Test
+                                            Area: <b>{testOrder && testOrder.data && testOrder.data.description ? testOrder.data.description : ""}</b>
+                                        </Col>
+                                        <Col md={6}>
+                                            Test: <b>{testOrder && testOrder.data && testOrder.data.description ? testOrder.data.description : ""}</b>
+                                        </Col>
+                                        <Col md={6}>
+                                            Date Ordered
+                                            : <b>{testOrder && testOrder.data && testOrder.data.order_date ? testOrder.data.order_date : ""} {" "} {testOrder && testOrder.data && testOrder.data.order_time ? testOrder.data.order_time : ""}</b>
+                                        </Col>
+                                        <Col md={6}>
+                                            Ordered By
+                                            : <b>{testOrder && testOrder.data && testOrder.data.ordered_by ? testOrder.data.ordered_by : ""}</b>
+                                        </Col>
+                                    </Row>
+
+                                </Alert>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={6}>
+                                <DropzoneAreaBase
+                                    acceptedFiles={[".jpg", ".png", ".jpeg", ".gif"]}
+                                    showPreviews={true}
+                                    showPreviewsInDropzone={false}
+                                    useChipsForPreview
+                                    previewGridProps={{container: {spacing: 1, direction: 'row'}}}
+                                    previewChipProps={{classes: {root: classes.previewChip}}}
+                                    previewText="Selected files"
+                                    fileObjects={testOrder.data.files}
+                                    onAdd={newFileObjs => {
+                                        console.log('onAdd', newFileObjs);
+                                        testOrder.data["files"] = [].concat(testOrder.data.files, newFileObjs);
+                                        setTestOrder(testOrder);
+                                    }}
+                                    onDelete={deleteFileObj => {
+                                        //delete file object from the array
+                                        const files = testOrder.data.files.filter(x => x.file.name !== deleteFileObj.file.name);
+                                        console.log(files)
+                                        testOrder.data["files"] = files;
+                                        setTestOrder(testOrder);
+                                        console.log('onDelete', deleteFileObj);
+                                    }}
+
+                                />
+                            </Col>
+                            <Col md={6}>
+                                <Row><Col md={12}>
+                                    <FormGroup>
+                                        <Label for="encounterDate">Upload Date & Time*</Label>
+                                        <DateTimePicker
+                                            name="encounterDate"
+                                            id="encounterDate"
+                                            defaultValue={props.formData && props.formData.data && props.formData.data.result_date ? moment(props.formData.data.result_date + " " + props.formData.data.result_time, "DD-MM-YYYY LT").toDate() : new Date()}
+                                            min={moment(testOrder.data.order_date + " " + testOrder.data.order_time, "DD-MM-YYYY LT").toDate()}
+                                            max={new Date()}
+                                            required
+                                            onChange={(e) => {
+                                                testOrder.data["result_date"] = e ? Moment(e).format("DD-MM-YYYY") : null
+                                                testOrder.data["result_time"] = e ? Moment(e).format("LT") : null
+                                                setTestOrder(testOrder)
+                                            }
+                                            }
+
+                                        />
+                                    </FormGroup>
+                                </Col>
+                                    <Col md={"12"}>
+                                        <Label for="comment">Notes</Label>
+                                        <ReactQuill theme="snow" value={note} onChange={setNote}/>
                                     </Col>
                                 </Row>
-
-                            </Alert>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6}>
-                            <DropzoneAreaBase
-                                acceptedFiles={[".jpg", ".png", ".jpeg", ".gif"]}
-                                showPreviews={true}
-                                showPreviewsInDropzone={false}
-                                useChipsForPreview
-                                previewGridProps={{container: {spacing: 1, direction: 'row'}}}
-                                previewChipProps={{classes: {root: classes.previewChip}}}
-                                previewText="Selected files"
-                                fileObjects={testOrder.data.files}
-                                onAdd={newFileObjs => {
-                                    console.log('onAdd', newFileObjs);
-                                    testOrder.data["files"] = [].concat(testOrder.data.files, newFileObjs);
-                                    setTestOrder(testOrder);
-                                }}
-                                onDelete={deleteFileObj => {
-                                    //delete file object from the array
-                                    const files = testOrder.data.files.filter(x => x.file.name !== deleteFileObj.file.name);
-                                    console.log(files)
-                                    testOrder.data["files"] = files;
-                                    setTestOrder(testOrder);
-                                    console.log('onDelete', deleteFileObj);
-                                }}
-
-                            />
-                        </Col>
-                        <Col md={6}>
-                            <Row><Col md={12}>
-                                <FormGroup>
-                                    <Label for="encounterDate">Upload Date & Time*</Label>
-                                    <DateTimePicker
-                                        name="encounterDate"
-                                        id="encounterDate"
-                                        defaultValue={moment(testOrder.data.result_date + " " + testOrder.data.result_time, "DD-MM-YYYY LT").toDate()}
-                                        max={new Date()}
-                                        required
-                                        onChange={(e) => {
-                                            testOrder.data["result_date"] = e ? Moment(e).format("DD-MM-YYYY") : null
-                                            testOrder.data["result_time"] = e ? Moment(e).format("LT") : null
-                                            setTestOrder(testOrder)
-                                        }
-                                        }
-
-                                    />
-                                </FormGroup>
                             </Col>
-                                <Col md={"12"}>
-                                    <Label for="comment">Notes</Label>
-                                    <ReactQuill theme="snow" value={note} onChange={setNote}/>
-                                </Col>
-                            </Row>
-                        </Col>
-                    </Row>
+                        </Row>
 
-                </ModalBody>
-                <ModalFooter>
-                    <Button
-                        type='submit'
-                        variant='contained'
-                        color='primary'
-                        className={classes.button}
-                        startIcon={<SaveIcon/>}
-                        disabled={saving}
-                    >
-                        Upload {saving ? <Spinner/> : ""}
-                    </Button>
-                    <Button
-                        variant='contained'
-                        color='default'
-                        onClick={props.toggleModal}
-                        startIcon={<CancelIcon/>}
-                    >
-                        Cancel
-                    </Button>
-                </ModalFooter>
-            </Form>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button
+                            type='submit'
+                            variant='contained'
+                            color='primary'
+                            className={classes.button}
+                            startIcon={<SaveIcon/>}
+                            disabled={saving}
+                        >
+                            Upload {saving ? <Spinner/> : ""}
+                        </Button>
+                        <Button
+                            variant='contained'
+                            color='default'
+                            onClick={props.toggleModal}
+                            startIcon={<CancelIcon/>}
+                        >
+                            Cancel
+                        </Button>
+                    </ModalFooter>
+                </Form>
         </Modal>
 
     </React.Fragment>
