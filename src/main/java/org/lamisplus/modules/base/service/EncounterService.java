@@ -42,10 +42,12 @@ public class EncounterService {
     private final FormDataMapper formDataMapper;
     private final FormDataRepository formDataRepository;
     private final UserService userService;
+    private final GenericSpecification<Encounter> genericSpecification;
+    private static final int ARCHIVED = 1;
+
 
 
     public List<EncounterDTO> getAllEncounters() {
-        GenericSpecification<Encounter> genericSpecification = new GenericSpecification<Encounter>();
         Specification<Encounter> specification = genericSpecification.findAll();
         List<EncounterDTO> encounterDTOS = new ArrayList();
 
@@ -67,7 +69,9 @@ public class EncounterService {
 
     public EncounterDTO getEncounter(Long id) {
         Optional<Encounter> encounterOptional = encounterRepository.findById(id);
-        if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()==1) throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
+        if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()== ARCHIVED) {
+            throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
+        }
         Encounter encounter = encounterOptional.get();
 
         Patient patient = encounter.getPatientByPatientId();
@@ -91,7 +95,9 @@ public class EncounterService {
 
     public Encounter update(Long id, EncounterDTO encounterDTO) {
         Optional<Encounter> encounterOptional = this.encounterRepository.findById(id);
-        if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()==1) throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
+        if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()==ARCHIVED) {
+            throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
+        }
         Encounter encounter = encounterMapper.toEncounter(encounterDTO);
         encounter.setId(id);
         encounter.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
@@ -147,7 +153,9 @@ public class EncounterService {
 
     public Integer delete(Long id) {
         Optional<Encounter> encounterOptional = encounterRepository.findById(id);
-        if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()==1) throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
+        if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()== ARCHIVED) {
+            throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
+        }
         encounterOptional.get().setArchived(1);
         encounterOptional.get().setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
 
@@ -186,7 +194,6 @@ public class EncounterService {
                 formDataList.add(formData);
             });
             final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, singleEncounter, form);
-            log.info("GETTING encounter in List by getDateByRange... " + encounterDTO);
 
             encounterDTO.setFormDataObj(formDataList);
             encounterDTOS.add(encounterDTO);
@@ -196,7 +203,9 @@ public class EncounterService {
 
     public List getFormDataByEncounterId(Long encounterId) {
         Optional<Encounter> encounterOptional = encounterRepository.findById(encounterId);
-        if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()==1) throw new EntityNotFoundException(Encounter.class, "Id",encounterId+"" );
+        if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()==1) {
+            throw new EntityNotFoundException(Encounter.class, "Id",encounterId+"" );
+        }
         List<FormData> formDataList = encounterOptional.get().getFormDataByEncounter();
         return formDataList;
     }

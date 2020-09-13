@@ -1,7 +1,6 @@
-{"result":[
+[
   {
-    "id": 1,
-    "codesetGroup": "GENDER",
+    "codesetGroup": "TESTING",
     "version": "1",
     "language": "en",
     "display": "Male",
@@ -9,8 +8,7 @@
     "code": "912016f2-dca1-45b2-a613-b0b3edc414db"
   },
   {
-    "id": 2,
-    "codesetGroup": "GENDER",
+    "codesetGroup": "TESTING",
     "version": "1",
     "language": "en",
     "display": "Transgender(male to female)",
@@ -18,8 +16,7 @@
     "code": "34792968-e3df-4954-bd97-2f60d8fc1393"
   },
   {
-    "id": 3,
-    "codesetGroup": "GENDER",
+    "codesetGroup": "TESTING",
     "version": "1",
     "language": "en",
     "display": "Transgender(Female to male)",
@@ -27,8 +24,7 @@
     "code": "3ffeb50c-dc25-4d58-8b81-93a9fe55963d"
   },
   {
-    "id": 4,
-    "codesetGroup": "GENDER",
+    "codesetGroup": "TESTING",
     "version": "1",
     "language": "en",
     "display": "Female",
@@ -36,4 +32,3 @@
     "code": "a2e19199-b704-485f-98c3-e6471dab9b45"
   }
 ]
-}

@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.domain.dto;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.UUID;
 
 @Data
 public class ModuleDTO {
@@ -21,15 +22,21 @@ public class ModuleDTO {
 
     private String version;
 
-    private String uuid;
+    private UUID uuid;
 
     private Timestamp dateCreated;
 
     private String createdBy;
 
+    private Timestamp dateInstalled;
+
+    private String installedBy;
+
     private Timestamp dateModified;
 
     private String modifiedBy;
+
+    private String status;
 
     private Integer moduleType;
 }

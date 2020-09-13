@@ -3,7 +3,7 @@ import React from 'react';
 
 const EmptyLayout = ({ children, ...restProps }) => (
   <main className="cr-app bg-light" {...restProps}>
-    <Content fluid style={{backgroundColor:'#000'}}>
+    <Content fluid style={{backgroundColor:'#fff'}}>
         {children}
     </Content> 
 

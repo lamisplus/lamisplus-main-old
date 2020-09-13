@@ -27,7 +27,8 @@ public class TokenProvider {
     private static final String AUTHORITIES_KEY = "auth";
 
     private Key key;
-    private String secret = "ChangeThisSecret";
+    private String secret = "ChangeThisSecretForLamisplusApplication1234567890!@#$%^&*()_+" +
+            "ChangeThisSecretForLamisplusApplication1234567890!@#$%^&*()_+";
     private long tokenValidityInMilliseconds;
 
     private long tokenValidityInMillisecondsForRememberMe;
