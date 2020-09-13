@@ -26,8 +26,8 @@ public class FormController {
     @GetMapping
     public ResponseEntity<List<FormDTO>> getAllForms() {
             return ResponseEntity.ok(this.formService.getAllForms());
-
     }
+
     @GetMapping ("/{formCode}/formCode")
     public ResponseEntity<Form> getFormsByFormCode(@PathVariable String formCode) {
             return ResponseEntity.ok(this.formService.getFormsByFormCode(formCode));

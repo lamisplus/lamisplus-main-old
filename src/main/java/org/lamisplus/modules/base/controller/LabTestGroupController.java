@@ -25,6 +25,7 @@ public class LabTestGroupController {
     public ResponseEntity<List<LabTestGroup>> getAllLabTestGroups() {
         return ResponseEntity.ok(this.labTestGroupService.getAllLabTestGroups());
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<LabTestGroup> getLabTestGroup(@PathVariable Long id) {
         return ResponseEntity.ok(labTestGroupService.getLabTestGroup(id));

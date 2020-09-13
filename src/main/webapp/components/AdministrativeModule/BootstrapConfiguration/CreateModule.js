@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState , useEffect} from 'react'
-import {Card, CardBody,CardHeader,Col,Row} from 'reactstrap'
+import {Card, CardBody,CardHeader,Col,Row, Form} from 'reactstrap'
 import 'react-datepicker/dist/react-datepicker.css'
 import { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom';
@@ -25,6 +25,9 @@ import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import {  MdDelete, MdModeEdit } from "react-icons/md";
 import { createBootstrapModule } from '../../../actions/bootstrapModule';
+import Message from './Message';
+import Progress from './Progress';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,16 +62,70 @@ const CreateModule = (props) => {
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
     const [fileToUpload, setFileToUpload] = useState({})
+    const [uploadResponse, setUploadResponse] = React.useState({})
+    const [filename, setFilename] = useState('Choose File');
+    const [uploadedFile, setUploadedFile] = useState({});
+    const [message, setMessage] = useState('');
+    const [uploadPercentage, setUploadPercentage] = useState(0);
+    const [disableNextButtonProcess, setDisableNextButtonProcess] = React.useState(false);
+    const [installationMessage, setInstallationMessage] = useState();
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    console.log(steps['0'])
-    if(steps['0']=='Select File to upload'){
-      console.log(fileToUpload)
-      props.createBootstrapModule(fileToUpload)
+    
+    const handleNext = async e => {
+    //setActiveStep((prevActiveStep) => prevActiveStep + 1);
+
+    if(fileToUpload.length && steps['0']==='Select File to upload'){
+      setDisableNextButtonProcess(true)
+      setInstallationMessage('Processing, Please wait...')
+      console.log(uploadResponse)      
+      const form_Data = new FormData();
+      form_Data.append('file1', fileToUpload[0]);
+      console.log(fileToUpload[0])
+  
+      const token ='eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9BRE1JTiIsImV4cCI6MTYwMDEyNzY5Mn0.a-SMbK3ucT15Kyk9nM_NU1gJveSWnn3OzC4iaVzT8UdKIh6rMvrFuMxdfbGLR5arCCikOCi-PXfdjF5pjQ11Mg'
+       
+      try {
+        const res = await axios.post('https://lp-base.herokuapp.com/api/modules/upload', form_Data, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${token}` 
+          },
+        onUploadProgress: progressEvent => {
+          setUploadPercentage(
+            parseInt(
+              Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            )
+          );
+
+          // Clear percentage
+          setTimeout(() => setUploadPercentage(0), 10000);
+        }
+      });
+      
+      const { fileName, filePath } = res.data;
+
+      setUploadedFile({ fileName, filePath });
+
+      setMessage('File Uploaded');
+      setUploadResponse(res.data)
+      
+      setDisableNextButtonProcess(false) //Enable the next process button for the next stage 
+      setInstallationMessage('')
+      console.log(uploadResponse)
+      
+      setActiveStep((prevActiveStep) => prevActiveStep + 1); //auotmatically move to the next phase of installation in the wizard
+    } catch (err) {
+      console.log(err)
+      // if (err.status === 500) {
+      //   setMessage('There was a problem with the server');
+      // } else {
+      //   setMessage(err);
+      // }
     }
+    setDisableNextButtonProcess(false)
+  }
+    
   };
-
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -83,17 +140,50 @@ const CreateModule = (props) => {
   const [collectModal, setcollectModal] = useState([])//
 
   const startModule = (e) => {  
-    console.log('is getting here')
     setcollectModal({...collectModal, ...e});
     setModal(!modal) 
   }
 
+  const sampleAction = (e) =>{
+    
+    return (
+      <Menu>
+      <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
+        Actions <span aria-hidden>▾</span>
+      </MenuButton>
+          <MenuList style={{ color:"#000 !important"}} >
+              <MenuItem  style={{ color:"#000 !important"}} >                      
+                
+                      <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Load A Module</span>
+                                          
+                </MenuItem>
+                
+                <MenuItem style={{ color:"#000 !important"}}>
+                      <Link
+                          to={{
+                            pathname: "/updated-module",
+                            currentId: {}
+                          }}
+                      >
+                      <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Update A Module </span>                   
+                    </Link>
+                </MenuItem> 
+                <MenuItem  style={{ color:"#000 !important"}} >                      
+                
+                      <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Deactivate</span>
+                                          
+                </MenuItem>                                    
+                
+        </MenuList>
+    </Menu>
+      )
+}
 
   function getStepContent(stepIndex) {
     switch (stepIndex) {
       case 0:
         return (
-          
+                  <Form enctype="multipart/form-data">
                   <Card className="mb-12">  
                     <CardBody>                   
                       <br />
@@ -109,13 +199,11 @@ const CreateModule = (props) => {
                                     <br/>
                                     <strong>NOTE:</strong> Adding, or uploading a module will restart the application, therefore all scheduled task and background processes will be interrupted. 
                                 </Alert>
-                             
-  
-                          </Col>
-                    
+                             </Col>
                     </Row>
                     <Row>
                       <Col sm={12}>
+                        {message ? <Message msg={message} /> : null}
                           <DropzoneArea
                             //onChange={(files) => console.log('Files:', files)}
                             onChange = {(file1) => setFileToUpload(file1)}
@@ -125,11 +213,18 @@ const CreateModule = (props) => {
   
                           />
                       </Col>  
+                      
                     </Row>
-                    
+                    <Row>
+                      <Col sm={12}>
+                          <Progress percentage={uploadPercentage} />
+                          <br/>
+                          {installationMessage}
+                      </Col>
+                    </Row>
                   </CardBody>
                 </Card>
-              
+              </Form> 
         );
       case 1:
         return (
@@ -166,54 +261,18 @@ const CreateModule = (props) => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      
-                      <td>HIV</td>
-                      <td>HIV</td>
-                      <td>Dorcas</td>
-                      <td>1.1</td>
-                      <td><Badge  color="primary">Loaded</Badge></td>
-                      <td></td>
+                  {uploadResponse.map((row) => (
+                    <tr key={row.id}>
+                      <td>{row.name===""?" ":row.name}</td>
+                      <td>{row.description===""?" ":row.description}</td>
+                      <td>{row.basePackage===""?" ":row.basePackage}</td>
+                      <td>{row.version===""?" ":row.version}</td>
+                      <td><Badge  color="primary">{row.status===2 ? "Uploaded":"Unploaded"}</Badge></td>
+                      <td>{sampleAction(row)}</td>
                     </tr>
-                    <tr>
-                      
-                      <td>HTS</td>
-                      <td>HTS</td>
-                      <td>Debora</td>
-                      <td>1.1</td>
-                      <td><Badge  color="warning">Unploaded</Badge></td>
-                      <td>
-                        <Menu>
-                            <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
-                              Actions <span aria-hidden>▾</span>
-                            </MenuButton>
-                                <MenuList style={{ color:"#000 !important"}} >
-                                    <MenuItem  style={{ color:"#000 !important"}} >                      
-                                      
-                                            <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Load A Module</span>
-                                                                
-                                      </MenuItem>
-                                      
-                                      <MenuItem style={{ color:"#000 !important"}}>
-                                            <Link
-                                                to={{
-                                                  pathname: "/updated-module",
-                                                  currentId: {}
-                                                }}
-                                            >
-                                            <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Update A Module </span>                   
-                                          </Link>
-                                      </MenuItem> 
-                                      <MenuItem  style={{ color:"#000 !important"}} >                      
-                                      
-                                            <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Deactivate</span>
-                                                                
-                                      </MenuItem>                                    
-                                      
-                              </MenuList>
-                        </Menu>
-                      </td>
-                    </tr>
+
+                  ))
+                }
                     
                   </tbody>
                 </Table>
@@ -315,7 +374,12 @@ return (
                             >
                               Previous
                             </Button>
-                            <Button variant="contained" color="primary" onClick={handleNext}>
+                            <Button 
+                              variant="contained" 
+                              color="primary" 
+                              onClick={handleNext}
+                              disabled= {disableNextButtonProcess }
+                              >
                               {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                             </Button>
                           </div>

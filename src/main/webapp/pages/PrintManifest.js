@@ -75,8 +75,7 @@ const PrintManifest = (props) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false)
   const [collectManifest, setcollectManifest] = useState([])
-  const [modal2, setModal2] = useState(false) //Modal  
-  const toggleModal2 = () => setModal2(!modal2)
+
 
     useEffect(() => {
         
