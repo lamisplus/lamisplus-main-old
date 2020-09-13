@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import MaterialTable from 'material-table';
 import { Link } from 'react-router-dom'
 import { connect } from "react-redux";
-import { fetchAllLabTestOrder } from "./../../../actions/laboratory";
+import { fetchAllRadiologyTestOrder } from "./../../../actions/laboratory";
 import "./../laboratory.css";
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -19,7 +19,7 @@ const RadiologyTestSearch = (props) => {
     const onError = () => {
       setLoading(false)     
     }
-        props.fetchAllLabTestOrderToday(onSuccess, onError);
+        props.fetchAllTestOrder(onSuccess, onError);
       }, []); //componentDidMount
       
       function totalResultCollected (test){
@@ -54,7 +54,7 @@ const RadiologyTestSearch = (props) => {
           },
           {
             title: "Total Result ",
-            field: "samplecount",
+            field: "resultCount",
             filtering: false
           },
           {
@@ -69,7 +69,7 @@ const RadiologyTestSearch = (props) => {
           name: row.firstName +  ' ' + row.lastName,
           date: row.dateEncounter,
           count: row.formDataObj.length,
-          samplecount: totalResultCollected(row.formDataObj),
+          resultCount: row.formDataObj.filter(x => x.data && x.data.files && x.data.files.length > 0).length,
           actions: <Link to ={"/radiology?encId="+row.encounterId+"&hospitalNumber="+row.hospitalNumber}
                         style={{ cursor: "pointer", color: "blue", 
                         fontStyle: "bold" }}>
@@ -107,12 +107,12 @@ const RadiologyTestSearch = (props) => {
 const mapStateToProps = state => {
 
     return {
-      patientsTestOrderList: state.laboratory.list
+      patientsTestOrderList: state.laboratory.radiologySearchList
     };
   };
   
   const mapActionToProps = {
-    fetchAllLabTestOrderToday: fetchAllLabTestOrder
+    fetchAllTestOrder: fetchAllRadiologyTestOrder
   };
   
 export default connect(mapStateToProps, mapActionToProps)(RadiologyTestSearch);

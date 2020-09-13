@@ -19,6 +19,8 @@ import { update } from "actions/visit";
 import { fetchByHospitalNumber} from "actions/patients";
 import { APPLICATION_CODESET_RELATIONSHIPS } from "actions/types";
 import { fetchApplicationCodeSet } from "actions/applicationCodeset";
+import {Modal, ModalBody, ModalHeader } from 'reactstrap';
+import AddVitalsPage from 'components/Vitals/AddVitalsPage';
 
 Moment.locale("en");
 momentLocalizer();
@@ -35,7 +37,10 @@ function PatientDashboardSubMenu(props) {
   const [currentForm, setCurrentForm] = useState(false);
   const [checkIn, setCheckIn] = useState(false);
   const [patientType, setPatientType] = useState();
-
+  const [showVitalSignsModal, setShowVitalSignsModal] = useState(false);
+  const toggleVitalSign = () => {
+    return setShowVitalSignsModal(!showVitalSignsModal)
+  }
   //TODO: Add appointments to patient submenu
   const formInfo = [
     {
@@ -215,7 +220,7 @@ function PatientDashboardSubMenu(props) {
                 >
                   Discharge Patient
                 </Dropdown.Item>
-                  <Dropdown.Item>Capture Vital Signs</Dropdown.Item>
+                  <Dropdown.Item onClick={() => toggleVitalSign()}>Capture Vital Signs</Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item  onClick={() => displayFormByFormName("New Appointment")} >
                     New Appointment
@@ -229,7 +234,7 @@ function PatientDashboardSubMenu(props) {
                 >
                   Admit Patient
                 </Dropdown.Item>
-                  <Dropdown.Item>Capture Vital Signs</Dropdown.Item>
+                  <Dropdown.Item onClick={() => toggleVitalSign()}>Capture Vital Signs</Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item  onClick={() => displayFormByFormName("New Appointment")} >
                     New Appointment
@@ -318,6 +323,12 @@ function PatientDashboardSubMenu(props) {
         onError={onError}
         options={currentForm.options}
       />
+      <Modal isOpen={showVitalSignsModal} toggle={toggleVitalSign} size='lg' zIndex={"9999"}>
+        <ModalHeader toggle={toggleVitalSign}>Take Patient Vitals</ModalHeader>
+        <ModalBody>
+          <AddVitalsPage patientId={props.patient.patientId} showModal={showVitalSignsModal} toggle={toggleVitalSign}/>
+        </ModalBody>
+      </Modal>
       <ToastContainer />
     </React.Fragment>
   );

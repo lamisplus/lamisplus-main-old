@@ -20,6 +20,7 @@ import Typography from "@material-ui/core/Typography";
 import { connect } from "react-redux";
 import * as CODES from "api/codes";
 import PreviousTestOrder from "./TestOrderHistory";
+import PreviousRadiologyTestOrder from "./RadiologyTestOrderHistory";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
@@ -150,27 +151,26 @@ function TestOrderPage(props) {
     // default values in the create lab test order API payload
     const defaults = {
       patient_id: props.patientId,
-      test_result: "",
-      date_result_reported: "",
-      date_sample_collected: "",
-      comment: "",
+      files: [],
+      note: "",
+      result_date: null,
+      result_time: null,
       user_id: "",
-      sample_type: "",
-      lab_test_order_status: 0
+      test_order_status: 0
     };
 
     //looping through the test order to create the formData structure expected by the server
     var orders = radiologyTestOrders.map((x) => {
       return {
         ...{
-          lab_test_id: x.test.value.id,
+          test_id: x.test.value.id,
           description: x.test.value.name,
-          lab_test_group: x.testGroup.value.name,
-          lab_test_group_id: x.testGroup.value.id,
+          test_group: x.testGroup.value.name,
+          test_group_id: x.testGroup.value.id,
           order_priority: x.priority.value,
-          sample_ordered_by: x.sampleOrderedBy,
-          sample_order_date: x.sample_order_date,
-          sample_order_time: x.sample_order_time,
+          ordered_by: x.sampleOrderedBy,
+          order_date: x.sample_order_date,
+          order_time: x.sample_order_time,
         },
         ...defaults,
       };
@@ -189,7 +189,7 @@ function TestOrderPage(props) {
 
     const onSuccess = () => {
       setShowLoading(false);
-      setTestOrders([]);
+      setRadiologyTestOrders([]);
       toast.success("Test Order Successfully Saved!");
       props.fetchPatientRadiologyTestOrder(props.patientId);
     };
@@ -332,7 +332,7 @@ function TestOrderPage(props) {
           <Col md={12}>
             <Card>
               <CardHeader>Previous Radiology Order</CardHeader>
-              <PreviousTestOrder patientId={props.patient.patientId} />
+              <PreviousRadiologyTestOrder patientId={props.patient.patientId} />
             </Card>
           </Col> }
         </Row>
@@ -441,6 +441,7 @@ const mapActionToProps = {
   createLabOrder: encounterActions.create,
   fetchApplicationCodeSet: fetchApplicationCodeSet,
   fetchPatientTestOrder: fetchPatientTestOrders,
+  fetchPatientRadiologyTestOrder: fetchPatientRadiologyTestOrder
 };
 
 export default connect(mapStateToProps, mapActionToProps)(TestOrderPage);

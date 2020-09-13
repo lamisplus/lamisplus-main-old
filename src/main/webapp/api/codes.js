@@ -53,3 +53,10 @@ export const LAB_ORDER_STATUS = [{name:"Sample Collected", id: 1},
 export const DRUG_ORDER_STATUS = [{name:"Not Dispensed", id: 0},
 {name:"Dispensed", id: 1}];
 
+/**
+ * @CODES
+ * ==============================================
+ * RADIOLOGY ORDER STATUS CODES
+ */
+export const RADIOLOGY_ORDER_STATUS = [{name:"Result Available", id: 1},
+    {name:"Pending", id:0}];

@@ -237,16 +237,16 @@ function RadiologyTestOrderPage(props) {
 const mapStateToProps = (state) => {
     return {
         patient: state.patients.patient,
-        testGroupList: state.laboratory.testGroup,
-        tests: state.laboratory.tests,
+        testGroupList: state.laboratory.radiologyTestGroup,
+        tests: state.laboratory.radiologyTestTypes,
         priorities: state.applicationCodesets.priorities,
         vlIndications: state.applicationCodesets.vlIndications,
     };
 };
 
 const mapActionToProps = {
-    fetchTestGroup: actions.fetchAllTestGroup,
-    fetchTestByTestGroup: actions.fetchAllTestsByTestGroup,
+    fetchTestGroup: actions.fetchAllRadiologyTestGroup,
+    fetchTestByTestGroup: actions.fetchAllRadiologyTestsByTestGroup,
     fetchApplicationCodeSet: fetchApplicationCodeSet,
 };
 

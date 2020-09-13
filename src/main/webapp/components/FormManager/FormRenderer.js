@@ -11,6 +11,7 @@ import { fetchLastEncounter } from '_services/form-renderer';
 import { url } from "api";
 import axios from "axios";
 import { formRendererService } from "_services/form-renderer";
+import { authHeader } from '_helpers/auth-header';
 
 Moment.locale("en");
 momentLocalizer();
@@ -23,7 +24,7 @@ const FormRenderer = (props) => {
   const [showLoadingForm, setShowLoadingForm] = React.useState(true);
   const [showLoadingEncounter, setShowLoadingEncounter] = React.useState(false)
   const [formId, setFormId] = React.useState()
-  const [submission, setSubmission] = React.useState({...props.submission, ...{ data: { patient: props.patient }}});
+  const [submission, setSubmission] = React.useState({...props.submission, ...{ data: { patient: props.patient, authHeader: authHeader() }}});
   const onDismiss = () => setShowErrorMsg(false);
   const options = {
     noAlerts: true,
