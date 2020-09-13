@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import {url} from '../../api'
 import {fetchService, fetchById, updateForm, fetchForms} from '../../actions/formBuilder'
 import {fetchByHospitalNumber} from '../../actions/patients'
-
+import { authHeader } from '_helpers/auth-header';
 import {
     FormGroup,
     Input,
@@ -75,7 +75,7 @@ const Update = props => {
                     <Form
                         form={JSON.parse(res)}
                         ref={form => myform = form}
-                        submission={{data : {patient: props.patient}}}
+                        submission={{data : {patient: props.patient, authHeader: authHeader()}}}
                         //src={url}
                         hideComponents={props.hideComponents}
                         //onSubmit={props.onSubmit}
