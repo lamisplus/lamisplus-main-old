@@ -1,6 +1,5 @@
 //Online Server
-export const url =  'https://lp-base.herokuapp.com/api/';
-
+export const url =  'http://localhost:8080/api/';
 //Local Server
 //export const url =  'http://localhost:8080/api/';
 
