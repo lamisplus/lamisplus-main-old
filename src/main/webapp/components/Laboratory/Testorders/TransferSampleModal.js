@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Modal, ModalHeader, ModalBody,Form,FormFeedback,
 Row,Col,FormGroup,Label,Input, Card,CardBody} from 'reactstrap';
 import { connect } from 'react-redux';
@@ -14,6 +14,7 @@ import {url} from '../../../api'
 import { Alert } from 'reactstrap';
 import { createCollectedSample, fetchFormById } from '../../../actions/laboratory';
 import { Spinner } from 'reactstrap';
+import axios from "axios";
 
 Moment.locale('en');
 momentLocalizer();
@@ -68,24 +69,46 @@ const ModalSampleTransfer = (props) => {
     const [loading, setLoading] = useState(false)
     const [visible, setVisible] = useState(true);
     const onDismiss = () => setVisible(false);
-    const [otherfields, setOtherFields] = useState({date_sample_transfered:"",sample_transfered_by:"",sample_priority:"",time_sample_transfered:"",comment:"", lab_test_order_status:""});
+    const [otherfields, setOtherFields] = useState({date_sample_transfered:"",sample_transfered_by:"",sample_priority:"",time_sample_transfered:"",comment:"", lab_test_order_status:"", receivingLabName:""});
     const [errors, setErrors] = useState({});
+    const [pcrOptions, setOptionPcr] = useState([]);
+
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+                const response = await axios(
+                    url + "sample-manifests/pcrlab"
+                );
+                const body = response.data;
+                
+                setOptionPcr(
+                     body.map(({ name, id }) => ({ title: name, value: id }))
+                 );
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getCharacters();
+    }, []);
 
     const handleOtherFieldInputChange = e => {
         setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
         console.log(otherfields)
     }
+
+
     const validate = () => {
         let temp = { ...errors }
         temp.date_sample_transfered = otherfields.date_sample_transfered ? "" : "Date is required"
         temp.time_sample_transfered = otherfields.time_sample_transfered ? "" : "Time  is required."
-        temp.lab_test_order_status = otherfields.lab_test_order_status ? "" : "This field is required."
+        //temp.lab_test_order_status = otherfields.lab_test_order_status ? "" : "This field is required."
         temp.sample_transfered_by = otherfields.sample_transfered_by ? "" : "This filed is required."
-        temp.comment = otherfields.comment ? "" : "Comment is required." 
+        //temp.comment = otherfields.comment ? "" : "Comment is required." 
+        temp.receivingLabName = otherfields.receivingLabName ? "" : "This field is required"
         setErrors({
             ...temp
         })
-      
+            console.log(temp)
             return Object.values(temp).every(x => x == "")
     }
 
@@ -186,18 +209,22 @@ const ModalSampleTransfer = (props) => {
                                       <Col md={6}>
                                           <FormGroup>
                                               <Label for="exampleSelect">Lab Transfered To</Label>
-                                                  <Input type="select" name="lab_test_order_status" id="lab_test_order_status" 
-                                                  onChange={handleOtherFieldInputChange}
-                                                    {...(errors.lab_test_order_status && { invalid: true})}
+                                                  <Input type="select" name="receivingLabName" id="receivingLabName" 
+                                                    vaule={otherfields.receivingLabName}
+                                                    onChange={handleOtherFieldInputChange}
+                                                    {...(errors.receivingLabName && { invalid: true})}
                                                   >
-                                                      <option value=""></option>
-                                                      <option value="2">PCI Lab 1</option>
-                                                      <option value="2">PCI Lab 2</option>
-                                                      <option value="2">LIMS Lab</option>
-                                                      <option value="2">Others</option>
+                                                        <option> </option>
+                                                        {pcrOptions.map(({ title, value }) => (
+                                                            
+                                                            <option key={value} value={value}>
+                                                                {title}
+                                                            </option>
+                                                        ))}
                                                   </Input>
-                                                      <FormFeedback>{errors.lab_test_order_status}</FormFeedback>
+                                                      <FormFeedback>{errors.receivingLabName}</FormFeedback>
                                           </FormGroup>
+                                          
                                       </Col>
                                       <Col md={5}>
                                           <FormGroup>
@@ -227,11 +254,11 @@ const ModalSampleTransfer = (props) => {
                                                       name='comment'
                                                       id='comment'
                                                       onChange={handleOtherFieldInputChange}
-                                                        value = {otherfields.comment}                                     
-                                                            {...(errors.comment && { invalid: true})}                                   
+                                                      value = {otherfields.comment}                                     
+                                                                                            
                                                   >                         
                                                    </Input>
-                                                      <FormFeedback>{errors.comment}</FormFeedback>          
+                                                              
                                           </FormGroup>          
                                       </Col>
                                       

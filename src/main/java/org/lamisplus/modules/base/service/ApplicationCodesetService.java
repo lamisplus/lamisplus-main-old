@@ -31,7 +31,7 @@ public class ApplicationCodesetService {
     private static final int ARCHIVED = 1;
     private static final int IN_ACTIVE = 0;
     private static final int ACTIVE = 1;
-    private final GenericSpecification<ApplicationCodeset> genericSpecification = new GenericSpecification<>();
+    private final GenericSpecification<ApplicationCodeset> genericSpecification;
 
 
 
@@ -79,7 +79,9 @@ public class ApplicationCodesetService {
 
     public ApplicationCodeset update(Long id, ApplicationCodesetDTO applicationCodesetDTO){
         Optional<ApplicationCodeset> applicationCodesetOptional = applicationCodesetRepository.findById(id);
-        if(!applicationCodesetOptional.isPresent() || applicationCodesetOptional.get().getArchived() == 1) throw new EntityNotFoundException(ApplicationCodeset.class,"Display:",id+"");
+        if(!applicationCodesetOptional.isPresent() || applicationCodesetOptional.get().getArchived() == 1) {
+            throw new EntityNotFoundException(ApplicationCodeset.class,"Display:",id+"");
+        }
         final ApplicationCodeset applicationCodeset = applicationCodesetMapper.toApplicationCodeset(applicationCodesetDTO);
         applicationCodeset.setId(id);
         applicationCodeset.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());

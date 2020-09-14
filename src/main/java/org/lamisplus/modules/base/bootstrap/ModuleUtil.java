@@ -19,6 +19,7 @@ import java.util.zip.ZipInputStream;
 public class ModuleUtil {
     private static List<String> classNames = new ArrayList<String>();
     private static List<Module> moduleConfigs = new ArrayList<Module>();
+    private static List<File> jsonFiles = new ArrayList<File>();
 
 
     public List<String> readZipFileRecursive(final InputStream zipFile, String jarName, boolean install) {
@@ -93,6 +94,9 @@ public class ModuleUtil {
                     if (theFile.getName().endsWith(".yml")) {
                         readModuleYml(theFile);
                     }
+                    if (theFile.getName().endsWith(".json")) {
+                        getJson(theFile);
+                    }
                     return FileVisitResult.CONTINUE;
                 }
             });
@@ -108,9 +112,19 @@ public class ModuleUtil {
             if(module != null){
                 moduleConfigs.add(module);
             }
+            in.close();
         } catch (Exception e){
             e.printStackTrace();
+            throw new RuntimeException("Error: " + e.getMessage());
         }
+    }
+
+    private static void getJson(File jsonFile){
+        jsonFiles.add(jsonFile);
+    }
+
+    public static List<File> getJsonFile(){
+        return jsonFiles;
     }
 
     public static List<Module> getModuleConfigs(){

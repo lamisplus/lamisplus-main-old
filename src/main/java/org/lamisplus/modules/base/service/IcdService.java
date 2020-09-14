@@ -26,6 +26,7 @@ public class IcdService {
     private final IcdRepository icdRepository;
     private final IcdMapper icdMapper;
     private final Integer archived = 1;
+    private final GenericSpecification<Icd> genericSpecification;
 
     public Icd save(IcdDTO icdDTO) {
         Optional<Icd> icdOptional = icdRepository.findByFullCode(icdDTO.getFullCode());
@@ -48,7 +49,6 @@ public class IcdService {
     }
 
     public List<IcdDTO> getAllIcd() {
-        GenericSpecification<Icd> genericSpecification = new GenericSpecification<>();
         Specification<Icd> specification = genericSpecification.findAll();
         List<IcdDTO> icdDTOList = new ArrayList();
         List <Icd> icdList = icdRepository.findAll(specification);
@@ -73,26 +73,15 @@ public class IcdService {
         return icdDTOList;
     }
 
-    public List<IcdDTO> getAllCategory(){
-        GenericSpecification<Icd> genericSpecification = new GenericSpecification<Icd>();
-        Specification<Icd> specification = genericSpecification.findAllDistinctBy("categoryTitle");
-
-        List<Icd> icdList = icdRepository.findAll(specification);
-
-        List<IcdDTO> icdDTOList = new ArrayList();
-
-        icdList.forEach(icd -> {
-            final IcdDTO icdDTO = icdMapper.toIcdDTO(icd);
-            icdDTOList.add(icdDTO);
-        });
-
-        return icdDTOList;
+    public List getAllDistinctCategoryCodeAndCategoryTitle(){
+        List icdList = icdRepository.findDistinctCategoryCodeAndCategoryTitle();
+        return icdList;
     }
 
     public Integer delete(Long id){
-        Optional<Icd> standardCodesetOptional = icdRepository.findById(id);
-        if (!standardCodesetOptional.isPresent())throw new EntityNotFoundException(Icd.class, "Id", id +"");
-        standardCodesetOptional.get().setArchived(archived);
-        return standardCodesetOptional.get().getArchived();
+        Optional<Icd> icdOptional = icdRepository.findById(id);
+        if (!icdOptional.isPresent())throw new EntityNotFoundException(Icd.class, "Id", id +"");
+        icdOptional.get().setArchived(archived);
+        return icdOptional.get().getArchived();
     }
 }

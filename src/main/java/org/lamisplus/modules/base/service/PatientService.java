@@ -16,6 +16,7 @@ import org.lamisplus.modules.base.util.UuidGenerator;
 
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -115,7 +116,9 @@ public class PatientService {
     public PatientDTO getPatientByHospitalNumber(String hospitalNumber) {
         Optional<Patient> patientOptional = this.patientRepository.findByHospitalNumber(hospitalNumber);
 
-        if(!patientOptional.isPresent() || patientOptional.get().getArchived()==1)throw new EntityNotFoundException(Patient.class, "Hospital Number", hospitalNumber+"");
+        if(!patientOptional.isPresent() || patientOptional.get().getArchived()==1){
+            throw new EntityNotFoundException(Patient.class, "Hospital Number", hospitalNumber+"");
+        }
 
         Person person = patientOptional.get().getPersonByPersonId();
         PersonContact personContact = person.getPersonContactsByPerson();
@@ -222,6 +225,27 @@ public class PatientService {
         return this.getFormData(encountersList);
     }
 
+    @Transactional(readOnly = true)
+    public Page<Encounter> getEncountersByPatientIdAndFCode(Pageable pageable, Long patientId, String formCode, String sortField, String sortOrder, Integer limit) {
+        if(sortField == null || sortField.equals("")){
+            sortField = "dateEncounter";
+        }
+        if(sortOrder != null || !sortOrder.equals("")){
+            if (sortOrder.equalsIgnoreCase("Asc")) {
+                pageable.getSort().ascending().getOrderFor(sortField);
+            } else if (sortOrder.equalsIgnoreCase("Desc")){
+                pageable.getSort().descending().getOrderFor(sortField);
+            }
+        } else {
+            pageable.getSort().ascending().getOrderFor(sortField);
+        }
+
+
+
+
+        return encounterRepository.findAllByPatientIdAndFormCode(pageable, patientId,formCode);
+    }
+
     public List getEncountersByPatientIdAndProgramCodeExclusionList(Long patientId, List<String> programCodeExclusionList) {
         List<Encounter> encounters = getEncounterByPatientIdDesc(patientId);
         List<EncounterDTO> encounterDTOS = new ArrayList<>();
@@ -302,7 +326,6 @@ public class PatientService {
     }
 
     public Boolean exist(String patientNumber){
-        //log.info("We are in exist....");
         return patientRepository.existsByHospitalNumber(patientNumber);
     }
 

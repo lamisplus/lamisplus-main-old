@@ -20,6 +20,7 @@ import {
   Row,
 } from 'reactstrap';
 
+
 const cardStyle = {
   borderColor: '#fff',
 };
