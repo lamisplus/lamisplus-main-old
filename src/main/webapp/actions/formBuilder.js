@@ -77,7 +77,9 @@ export const updateForm = (id, data) => dispatch => {
             dispatch({
                 type: FORMTYPES.FORMTYPES_UPDATE,
                 payload: response.data
-            })
+            });
+            toast.success("Form was saved successfully!");
+            console.log(response)
         })
         .catch(error => {
             dispatch({
@@ -86,7 +88,6 @@ export const updateForm = (id, data) => dispatch => {
             })
         })
 }
-
 
 
 export const fetchById = (programId) => dispatch => {

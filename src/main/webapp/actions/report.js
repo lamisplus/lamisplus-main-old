@@ -97,7 +97,6 @@ export const Delete = (id) => dispatch => {
                 type: ACTION_TYPES.REPORTS_DELETE,
                 payload: id
             });
-
             toast.success("Report was deleted successfully!");
         })
         .catch(error => {
