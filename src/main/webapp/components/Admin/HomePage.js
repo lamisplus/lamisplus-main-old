@@ -8,6 +8,9 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { ToastContainer } from "react-toastify";
 import AdminDashboard from "components/Admin/AdminDashboard";
+import FormPage from "components/Admin/FormPage";
+import ReportHome from "components/Reports/ReportHome";
+
 
 // {/* Auto textfield complete */}
 import { MdDashboard, MdContacts } from "react-icons/md";
@@ -16,10 +19,8 @@ import { FaBriefcaseMedical } from "react-icons/fa";
 //{/*  Check box list */}
 
 import AdminSubMenu from "components/Admin/AdminSubMenu";
-
 import * as actions from "actions/patients";
 import { connect } from "react-redux";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import UserPage from "../Users/UserPage";
 
 function TabPanel(props) {
@@ -129,7 +130,7 @@ function HomePage(props) {
 
                     <Tab
                         className={classes.title}
-                        label="Bootstrap Configuration"
+                        label="Form Builder"
                         icon={<GiTestTubes />}
                         {...a11yProps(1)}
                     />
@@ -148,9 +149,15 @@ function HomePage(props) {
 
                     <Tab
                         className={classes.title}
-                        label="Advance Configuration"
+                        label="Bootstrap Configuration"
                         icon={<GiFiles />}
                         {...a11yProps(4)}
+                    />
+                    <Tab
+                        className={classes.title}
+                        label="Report Builder"
+                        icon={<GiFiles />}
+                        {...a11yProps(5)}
                     />
                 </Tabs>
 
@@ -170,7 +177,7 @@ function HomePage(props) {
 
                 {/* Begining of bootstrap  */}
                 <TabPanel value={value} index={1}>
-
+                    <FormPage/>
                 </TabPanel>
                 {/* End of boostrap */}
 
@@ -190,7 +197,16 @@ function HomePage(props) {
                 <TabPanel value={value} index={4}>
 
                 </TabPanel>
+                {/* service forms */}
+                <TabPanel value={value} index={5}>
+                    <ReportHome/>
+                </TabPanel>
+                <TabPanel value={value} index={6}>
+
+                </TabPanel>
+
                 {/* advance config */}
+
             </div>
         </div>
     );

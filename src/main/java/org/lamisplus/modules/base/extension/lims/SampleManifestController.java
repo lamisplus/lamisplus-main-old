@@ -35,10 +35,10 @@ public class SampleManifestController {
         return ResponseEntity.ok(this.sampleManifestService.getDispatchedSampleManifest(dispatched));
     }
 
-    @GetMapping ("/pcrlab")
+    /*@GetMapping ("/pcrlab")
     public  ResponseEntity<List<PcrLab>>  getPcrLab() {
         return ResponseEntity.ok(this.sampleManifestService.getPcrLab());
-    }
+    }*/
 
     @GetMapping ("/generate-manifest-id/{length}")
     public  ResponseEntity<String>  generateManifestId(int length) {

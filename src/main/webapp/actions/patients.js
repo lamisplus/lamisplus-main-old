@@ -79,7 +79,6 @@ export const create = (data,onSuccess, onError) => dispatch => {
   axios
     .post(`${baseUrl}patients/`, data)
     .then(response => {
-
       dispatch({
         type: ACTION_TYPES.PATIENTS_CREATE,
         payload: response.data
@@ -99,8 +98,6 @@ export const create = (data,onSuccess, onError) => dispatch => {
         //toast.error(error.response.data.apierror.message);
         toast.error("Something went wrong. Please try again...");
       }
-       
-       //console.log(error.response.data.apierror.message);
     });
 };
 
@@ -423,6 +420,7 @@ export const fetchPatientConsultationHistory = (id, onSuccess, onError) => dispa
      }  
  }
 
+
 export const fetchPatientAppointments = (id, onSuccess, onError) => dispatch => {
     axios
         .get(`${baseUrl}patients/${id}/encounters/${CODES.APPOINTMENT_FORM}/`)
@@ -473,3 +471,4 @@ export const fetchPatientRadiologyTestOrder = (id, onSuccess, onError) => dispat
             )
     }
 }
+

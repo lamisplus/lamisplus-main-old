@@ -44,7 +44,6 @@ public class ModuleService {
     private final ApplicationProperties properties;
     private final List<String> classNames;
     private final String fileSeparator = File.separator;
-    private final ModuleUtil moduleUtil;
     private final Set<Class> moduleClasses;
     private final GenericSpecification<Module> genericSpecification;
     private final UserService userService;
@@ -87,7 +86,7 @@ public class ModuleService {
             String fileName = jarFile.getName().toLowerCase().replace(".jar","");
 
             //Copy files
-             storageService.store(fileName, file, overrideExistFile);
+             storageService.store(file, overrideExistFile, null);
 
              final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", fileName);
 

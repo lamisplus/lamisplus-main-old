@@ -80,9 +80,7 @@ const FormRendererModal = (props) => {
           onSuccess={props.onSuccess}
           onSubmit={props.currentForm.onSubmit}
           typePatient={props.currentForm.typePatient}
-          encounterId={props.currentForm.encounterId}
-        />
-}
+          encounterId={props.currentForm.encounterId}/>}
       </ModalBody>
     </Modal>
   );

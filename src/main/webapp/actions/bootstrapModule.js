@@ -19,7 +19,7 @@ import { toast } from "react-toastify";
 export const fetchAllBootstrapModule = (onSuccess, onError) => dispatch => {
 
   axios
-    .get(`${baseUrl}encounters`)
+    .get(`${baseUrl}modules`)
     .then(response => {
       dispatch({
         type: ACTION_TYPES.FETCH_ALL_BOOTSTRAP_MODULE,
@@ -38,24 +38,28 @@ export const fetchAllBootstrapModule = (onSuccess, onError) => dispatch => {
     });
 };
 
-export const fetchBootstrapModuleID = (id)=> dispatch => {
+export const installBootstrapModule = (id, onSuccess, onError)=> dispatch => {
   if(id){
   axios
-    .get(`${baseUrl}encounters/${id}`)
+    .post(`${baseUrl}modules/${id}/install/`)
     .then(response => {
        console.log(response)
       dispatch({
-        type: ACTION_TYPES.FETCH_ALL_TESTS_BY_ENCOUNTER_ID,
+        type: ACTION_TYPES.INSTALL_BOOSTRAP_MODULE_BY_ID,
         payload: response.data
       })
-      //onSuccess();
+
+      onSuccess && onSuccess();
+      toast.success("Module installed successfully!");
     })
     .catch(error => {
+      console.log(error)
       dispatch({
-        type: ACTION_TYPES.ERROR_LABORATORY_TESTORDER_FOR_LAB,
+        type: ACTION_TYPES.ERROR_INSTALL_BOOSTRAP_MODULE_BY_ID,
         payload: error
       })
-   
+      onError && onError();
+      toast.error("Something went wrong!");
     }
     );
     }
@@ -92,4 +96,6 @@ const options = {
     });
   
 };
+
+
 

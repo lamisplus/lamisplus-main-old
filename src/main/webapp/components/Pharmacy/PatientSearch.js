@@ -65,8 +65,7 @@ const PatientSearch = (props) => {
                   prescription.firstName + " " + prescription.lastName,
                 encounterId: prescription.encounterId,
               }}
-              style={{ cursor: "pointer", color: "blue", fontStyle: "bold" }}
-            >
+              style={{ cursor: "pointer", color: "blue", fontStyle: "bold" }}>
               <Tooltip title="View Prescription">
                 <IconButton aria-label="View Prescription">
                   <VisibilityIcon color="primary" />

@@ -6,9 +6,6 @@ import { Table } from 'reactstrap'
 import { makeStyles } from "@material-ui/core/styles";
 import { ToastContainer } from "react-toastify";
 import momentLocalizer from "react-widgets-moment";
-import VisibilityIcon from "@material-ui/icons/Visibility";
-import { TiArrowForward } from "react-icons/ti";
-import Tooltip from "@material-ui/core/Tooltip";
 import Moment from "moment";
 import PatientDetailCard from "./PatientDetailCard";
 import { Link } from "react-router-dom";
@@ -24,30 +21,19 @@ import {
   CardHeader,
   Col,
   Row,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
 } from "reactstrap";
 
 Moment.locale("en");
 momentLocalizer();
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-  },
-  container: {
-    maxHeight: 440,
-  },
+
+  // root: {
+  //   width: "100%",
+  // },
+  // container: {
+  //   maxHeight: 440,
+  // },
   card: {
     margin: theme.spacing(20),
     display: "flex",
@@ -77,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
     },
   },
+
   input: {
     display: "none",
   },
@@ -134,7 +121,6 @@ const Prescriptions = (props) => {
      </button>
    );
 
-
   const formData = props.location.form ? props.location.form.formDataObj : null 
 
  const Actions = (form) => {
@@ -175,10 +161,6 @@ const Prescriptions = (props) => {
            </MenuItem>
          )}
          <MenuItem onSelect={() => toggle1(form)}>
-           {/* <VisibilityIcon
-             size="10"
-             style={{ color: "#000", cursor: "pointer" }}
-           />{" "} */}
            <i
              className="fa fa-eye"
              aria-hidden="true"
@@ -192,10 +174,6 @@ const Prescriptions = (props) => {
      </Menu>
    );
  };
-
-
-
-
   return (
     <Page title="Dispense Drugs">
       <ToastContainer autoClose={2000} />
@@ -215,8 +193,7 @@ const Prescriptions = (props) => {
                         variant="contained"
                         color="primary"
                         className={classes.button}
-                        className=" float-right mr-1"
-                      >
+                        className=" float-right mr-1">
                         <TiArrowBack /> &nbsp; back
                       </MatButton>
                     </Link>
