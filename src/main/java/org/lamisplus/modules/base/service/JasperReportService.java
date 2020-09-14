@@ -2,24 +2,27 @@ package org.lamisplus.modules.base.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.util.JRSaver;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.apache.commons.io.IOUtils;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.JasperReportInfoDTO;
 import org.lamisplus.modules.base.domain.entity.JasperReportInfo;
+import org.lamisplus.modules.base.domain.entity.ReportDetailDTO;
 import org.lamisplus.modules.base.domain.mapper.JasperReportInfoMapper;
 import org.lamisplus.modules.base.repository.JasperReportInfoRepository;
+import org.lamisplus.modules.base.util.FileStorage;
 import org.lamisplus.modules.base.util.GenericSpecification;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.List;
-import java.util.Optional;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 @org.springframework.stereotype.Service
 @Transactional
@@ -65,21 +68,40 @@ public class JasperReportService {
         return jasperReportInfoRepository.findAll(specification);
     }
 
-    private void generateJasperFile(JasperReportInfo jasperReportInfo) throws JRException, FileNotFoundException {
-        // Fetching the .jrxml file from the resources folder.
-       /* String templateName = jasperReportInfo.getName();
-        String template = jasperReportInfo.getTemplate();
-
-
-        String jrxml = templatePath+templateName+".jrxml";
-
-        FileInputStream jrxmlStream = new FileInputStream(jrxml);
-        System.out.println("Template path: "+jrxmlStream);
-
+    public File generateReport(ReportDetailDTO reportDetailDTO) throws JRException, IOException, URISyntaxException {
+        JasperReportInfo jasperReportInfo = getJasperReport(reportDetailDTO.getReportId());
         // Compile the Jasper report from .jrxml to .japser
-        final JasperReport report = JasperCompileManager.compileReport(jrxmlStream);
-        String jasper = templatePath+templateName+".jasper";
-        JRSaver.saveObject(report, jasper);
+        InputStream inputStream = new ByteArrayInputStream(jasperReportInfo.getTemplate().getBytes());
+        final JasperReport report = JasperCompileManager.compileReport(inputStream);
+
+/*
+        String initialString = "text";
+        InputStream targetStream = IOUtils.toInputStream(initialString);
 */
+
+        // Fetching the data from the data source.
+        final List<Object> data = new ArrayList<>();
+        // TODO retrieve data from DataSourceProvider
+        final JRBeanCollectionDataSource datasource = new JRBeanCollectionDataSource(data);
+
+        // Adding the additional parameters to the report.
+        final Map<String, Object> parameters = new HashMap<>();
+        // TODO retrieve parameters from DataSourceProvider
+
+        // Filling the report with the data and additional parameters information.
+        final JasperPrint print = JasperFillManager.fillReport(report, parameters, datasource);
+
+        // Export the report to a PDF file.
+        String path = "";
+
+        Path source = Paths.get(this.getClass().getResource("/").getPath());
+        Path newFolder = Paths.get(source.toAbsolutePath() + "/newFolder/");
+        System.out.println(newFolder);
+        //Files.createDirectories(newFolder);
+
+        JasperExportManager.exportReportToPdfFile(print, path + "report.pdf");
+        FileStorage fileStorage = new FileStorage();
+        return fileStorage.load1("report1.pdf");
+
     }
 }

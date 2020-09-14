@@ -23,8 +23,8 @@ import java.nio.file.Paths;
 public class FileStorage {
     private final Path root = Paths.get("src/main/resources/report/");
 
-     @PostConstruct
-     public void init() {
+    @PostConstruct
+    public void init() {
         try {
             Files.createDirectory(root);
         } catch (IOException e) {
@@ -41,12 +41,12 @@ public class FileStorage {
     }
 
     public Resource load(String filename) {
-       try {
+        try {
             Path file = root.resolve(filename);
             Resource resource = new UrlResource(file.toUri());
             System.out.println("File Resource: "+resource);
 
-           if (resource.exists() || resource.isReadable()) {
+            if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
                 throw new RuntimeException("Could not read the file!");
@@ -84,7 +84,7 @@ public class FileStorage {
     }
 
     public void writeBytesToFile(byte[] bFile, String fileDest) {
-         fileDest = "src/main/resources/report/rep.pdf";
+        fileDest = "src/main/resources/report/rep.pdf";
         try (FileOutputStream fileOuputStream = new FileOutputStream(fileDest)) {
             fileOuputStream.write(bFile);
         } catch (IOException e) {
@@ -92,3 +92,4 @@ public class FileStorage {
         }
     }
 }
+

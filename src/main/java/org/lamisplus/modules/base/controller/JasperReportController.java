@@ -8,10 +8,7 @@ import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.dto.JasperReportInfoDTO;
 import org.lamisplus.modules.base.domain.entity.JasperReportInfo;
 import org.lamisplus.modules.base.domain.entity.ReportDetailDTO;
-import org.lamisplus.modules.base.report.JasperReportGenerator;
 import org.lamisplus.modules.base.service.JasperReportService;
-import org.lamisplus.modules.base.util.FileStorage;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -32,7 +29,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JasperReportController {
     private final JasperReportService jasperReportService;
-    private final JasperReportGenerator jasperReportGenerator;
     private static final String ENTITY_NAME = "JasperReport";
 
     @PostMapping
@@ -67,18 +63,20 @@ public class JasperReportController {
         return ResponseEntity.ok(this.jasperReportService.getJasperReport(id));
     }
 
-
     @PostMapping("/generate")
     public HttpEntity<byte[]> generateReport(@RequestBody ReportDetailDTO data, HttpServletResponse response) throws IOException, JRException, URISyntaxException {
-        File file = this.jasperReportGenerator.createReport(data);
+        File file = this.jasperReportService.generateReport(data);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
 
+/*
         byte[] b = Files.readAllBytes(file.toPath());
         System.out.println(b);
-        //new FileStorage().writeBytesToFile(b, "/rept.pdf");
+        new FileStorage().writeBytesToFile(b, "/temp.pdf");
+*/
         return new HttpEntity<>(Files.readAllBytes(file.toPath()), headers);
     }
 
 }
+
