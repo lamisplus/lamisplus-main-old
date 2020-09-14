@@ -35,7 +35,7 @@ public class RadiologyService {
 
         storageService.setRootLocation(Paths.get("src", "main", "resources", "images"));
         //Upload image
-        URL fileUrl = storageService.store(file, overrideExistFile, fileName);
+        URL fileUrl = storageService.store(fileName, file, overrideExistFile, fileName);
         //Retrieve form data
         final FormData formData = formDataService.getFormData(formId);
 

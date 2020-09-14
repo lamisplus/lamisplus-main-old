@@ -34,22 +34,18 @@ public class StorageUtil {
         return this.rootLocation = path;
     }
 
-    public URL store(MultipartFile file, Boolean overrideExistFile, String fileNewName) {
-        String filename;
+    public URL store(String module, MultipartFile file, Boolean overrideExistFile, String fileNewName) {
         URL filePath;
-        if(fileNewName != null || !fileNewName.isEmpty()){
-            filename = fileNewName;
-        } else {
-            filename = StringUtils.cleanPath(file.getOriginalFilename().trim());
-        }
+        module = module.toLowerCase().trim();
+        String filename = StringUtils.cleanPath(file.getOriginalFilename().trim());
         System.out.println("file name is " + filename);
 
         //TODO: check...
         try {
 
-            if((overrideExistFile != null && overrideExistFile == true) && Files.exists(rootLocation.resolve(filename))){
+            if((overrideExistFile != null && overrideExistFile == true) && Files.exists(rootLocation.resolve(module))){
                 try {
-                    Files.delete(rootLocation.resolve(filename));
+                    Files.delete(rootLocation.resolve(module));
                 }catch (NullPointerException npe){
                     throw new EntityNotFoundException(Module.class, filename, "not found");
                 }
@@ -62,9 +58,10 @@ public class StorageUtil {
                 throw new RuntimeException("Cannot store file with relative path outside current directory " + filename);
             }
 
+            filePath = this.rootLocation.resolve(filename).toFile().toURI().toURL();
             InputStream inputStream = file.getInputStream();
-            filePath = this.rootLocation.resolve(filename).toUri().toURL();
             FileUtils.copyInputStreamToFile(inputStream, this.rootLocation.resolve(filename).toFile());
+            inputStream.close();
 
         } catch (Exception e) {
             //e.printStackTrace();

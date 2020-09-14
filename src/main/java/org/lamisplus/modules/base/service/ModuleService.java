@@ -86,7 +86,7 @@ public class ModuleService {
             String fileName = jarFile.getName().toLowerCase().replace(".jar","");
 
             //Copy files
-             storageService.store(file, overrideExistFile, null);
+             storageService.store(fileName, file, overrideExistFile, null);
 
              final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", fileName);
 
@@ -156,7 +156,6 @@ public class ModuleService {
                 List<URL> classURL = showFiles(filePath.listFiles(), rootFile);
                 ClassLoader loader = new URLClassLoader(classURL.toArray(
                         new URL[classURL.size()]), ClassLoader.getSystemClassLoader());
-                log.debug("rootFile is: " + rootFile.getAbsolutePath());
 
                 for (File file : moduleRuntimePath.toFile().listFiles()) {
                     System.out.println(file.getName());
@@ -165,6 +164,9 @@ public class ModuleService {
                         System.out.println(file.exists());
                         for (File jarfile : file.listFiles()) {
                             try {
+                                if(jarfile.getName().contains("validation")){
+                                    continue;
+                                }
                                 ClassPathHacker.addFile(jarfile.getAbsolutePath());
                             } catch (IOException e) {
                                 e.printStackTrace();
