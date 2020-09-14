@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState , useEffect} from 'react'
-import {Card, CardBody,CardHeader,Col,Row, Form} from 'reactstrap'
+import {Card, CardBody,Col,Row, Form} from 'reactstrap'
 import 'react-datepicker/dist/react-datepicker.css'
 import { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom';
@@ -25,9 +25,14 @@ import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import {  MdDelete, MdModeEdit } from "react-icons/md";
 import { createBootstrapModule } from '../../../actions/bootstrapModule';
+import { installBootstrapModule } from '../../../actions/bootstrapModule';
 import Message from './Message';
 import Progress from './Progress';
 import axios from 'axios';
+import OverlayLoader from 'react-overlay-loading/lib/OverlayLoader'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "react-widgets/dist/css/react-widgets.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,7 +53,7 @@ td: { borderBottom :'#fff'}
 
 
 function getSteps() {
-  return ['Select File to upload', 'Load Module', 'Start Module'];
+  return ['Upload module', 'Install module', 'Start module'];
 }
 
 
@@ -69,19 +74,16 @@ const CreateModule = (props) => {
     const [uploadPercentage, setUploadPercentage] = useState(0);
     const [disableNextButtonProcess, setDisableNextButtonProcess] = React.useState(false);
     const [installationMessage, setInstallationMessage] = useState();
-
+    const [installationOverlay, setInstallationOverlay] = useState(false)
     
     const handleNext = async e => {
     //setActiveStep((prevActiveStep) => prevActiveStep + 1);
 
-    if(fileToUpload.length && steps['0']==='Select File to upload'){
+    if(fileToUpload.length && steps['0']==='Upload module'){
       setDisableNextButtonProcess(true)
-      setInstallationMessage('Processing, Please wait...')
-      console.log(uploadResponse)      
+      setInstallationMessage('Processing, please wait...')     
       const form_Data = new FormData();
-      form_Data.append('file1', fileToUpload[0]);
-      console.log(fileToUpload[0])
-  
+      form_Data.append('file1', fileToUpload[0]); 
       const token ='eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9BRE1JTiIsImV4cCI6MTYwMDEyNzY5Mn0.a-SMbK3ucT15Kyk9nM_NU1gJveSWnn3OzC4iaVzT8UdKIh6rMvrFuMxdfbGLR5arCCikOCi-PXfdjF5pjQ11Mg'
        
       try {
@@ -90,6 +92,7 @@ const CreateModule = (props) => {
             'Content-Type': 'multipart/form-data',
             'Authorization': `Bearer ${token}` 
           },
+          
         onUploadProgress: progressEvent => {
           setUploadPercentage(
             parseInt(
@@ -112,7 +115,6 @@ const CreateModule = (props) => {
       setDisableNextButtonProcess(false) //Enable the next process button for the next stage 
       setInstallationMessage('')
       console.log(uploadResponse)
-      
       setActiveStep((prevActiveStep) => prevActiveStep + 1); //auotmatically move to the next phase of installation in the wizard
     } catch (err) {
       console.log(err)
@@ -144,8 +146,23 @@ const CreateModule = (props) => {
     setModal(!modal) 
   }
 
-  const sampleAction = (e) =>{
-    
+  const installModule = (id) => {
+    setInstallationOverlay(true)
+    setDisableNextButtonProcess(true)
+    const onSuccess = () => {
+      setInstallationOverlay(false) 
+      setDisableNextButtonProcess(false)
+    }
+    const onError = () => {
+      setInstallationOverlay(false)
+      setDisableNextButtonProcess(false) 
+    }
+    props.installBootstrapModule(id, onSuccess, onError);
+
+  }
+
+  const sampleAction = (id) =>{
+
     return (
       <Menu>
       <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
@@ -154,7 +171,7 @@ const CreateModule = (props) => {
           <MenuList style={{ color:"#000 !important"}} >
               <MenuItem  style={{ color:"#000 !important"}} >                      
                 
-                      <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Load A Module</span>
+                      <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}} onClick={() => installModule(id)}>Install Module</span>
                                           
                 </MenuItem>
                 
@@ -165,14 +182,19 @@ const CreateModule = (props) => {
                             currentId: {}
                           }}
                       >
-                      <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Update A Module </span>                   
+                      <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Update Module </span>                   
                     </Link>
                 </MenuItem> 
                 <MenuItem  style={{ color:"#000 !important"}} >                      
                 
-                      <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Deactivate</span>
+                      <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Deactivate Module</span>
                                           
-                </MenuItem>                                    
+                </MenuItem>
+                <MenuItem  style={{ color:"#000 !important"}} >                      
+                
+                      <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Delete Module</span>
+                                          
+                </MenuItem>                                     
                 
         </MenuList>
     </Menu>
@@ -219,7 +241,7 @@ const CreateModule = (props) => {
                       <Col sm={12}>
                           <Progress percentage={uploadPercentage} />
                           <br/>
-                          {installationMessage}
+                          <strong>{installationMessage}</strong>
                       </Col>
                     </Row>
                   </CardBody>
@@ -229,6 +251,7 @@ const CreateModule = (props) => {
       case 1:
         return (
           <>
+          <ToastContainer autoClose={3000} hideProgressBar />
           <Row>
               <Col>                  
                 <Alert severity="info">
@@ -248,6 +271,14 @@ const CreateModule = (props) => {
             <br />
             <Row>
                 <Col>
+                <OverlayLoader 
+                  color={'red'} // default is white
+                  loader="ScaleLoader" // check below for more loaders
+                  text="Installing... please wait!" 
+                  active={installationOverlay} 
+                  backgroundColor={'black'} // default is black
+                  opacity=".4" // default is .9  
+                >
                   <Table striped>
                     <thead style={{  backgroundColor:'#9F9FA5' }}>
                     <tr>
@@ -268,7 +299,7 @@ const CreateModule = (props) => {
                       <td>{row.basePackage===""?" ":row.basePackage}</td>
                       <td>{row.version===""?" ":row.version}</td>
                       <td><Badge  color="primary">{row.status===2 ? "Uploaded":"Unploaded"}</Badge></td>
-                      <td>{sampleAction(row)}</td>
+                      <td>{sampleAction(row.id)}</td>
                     </tr>
 
                   ))
@@ -276,7 +307,7 @@ const CreateModule = (props) => {
                     
                   </tbody>
                 </Table>
-  
+              </OverlayLoader>
                 </Col>  
               </Row>
               </CardBody>
@@ -397,4 +428,6 @@ return (
   )
   
 }
-export default connect(null, { createBootstrapModule })(CreateModule);
+
+
+export default connect(null, { createBootstrapModule, installBootstrapModule })(CreateModule);
