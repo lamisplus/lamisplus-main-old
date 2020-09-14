@@ -19,6 +19,8 @@ import { update } from "actions/visit";
 import { fetchByHospitalNumber} from "actions/patients";
 import { APPLICATION_CODESET_RELATIONSHIPS } from "actions/types";
 import { fetchApplicationCodeSet } from "actions/applicationCodeset";
+import {Modal, ModalBody, ModalHeader } from 'reactstrap';
+import AddVitalsPage from 'components/Vitals/AddVitalsPage';
 
 Moment.locale("en");
 momentLocalizer();
@@ -35,30 +37,38 @@ function PatientDashboardSubMenu(props) {
   const [currentForm, setCurrentForm] = useState(false);
   const [checkIn, setCheckIn] = useState(false);
   const [patientType, setPatientType] = useState();
-
+  const [showVitalSignsModal, setShowVitalSignsModal] = useState(false);
+  const toggleVitalSign = () => {
+    return setShowVitalSignsModal(!showVitalSignsModal)
+  }
   //TODO: Add appointments to patient submenu
   const formInfo = [
     {
       code: CODES.ADMIT_PATIENT_FORM,
       programCode: CODES.GENERAL_SERVICE,
-      formName: "ADMIT_PATIENT",
+      formName: "Admit Patient",
       typePatient: CODES.IN_PATIENT_UNBOOKED,
     },
     {
       code: CODES.DISCHARGE_PATIENT_FORM,
       programCode: CODES.GENERAL_SERVICE,
-      formName: "DISCHARGE_PATIENT",
+      formName: "Discharge Patient",
       typePatient: CODES.OUT_PATIENT_UNBOOKED,
     },
     {
       code: CODES.TRANSFER_INPATIENT_FORM,
       programCode: CODES.GENERAL_SERVICE,
-      formName: "TRANSFER_INPATIENT",
+      formName: "Transfer Patient",
     },
     {
       code: CODES.CHECK_OUT_PATIENT_FORM,
       programCode: CODES.GENERAL_SERVICE,
-      formName: "CHECK_OUT_PATIENT",
+      formName: "Check Out Patient",
+    },
+    {
+      code: CODES.APPOINTMENT_FORM,
+      programCode: CODES.GENERAL_SERVICE,
+      formName: "New Appointment",
     },
   ];
   const checkInPatient = () => {
@@ -77,7 +87,7 @@ function PatientDashboardSubMenu(props) {
   };
 
   const checkOutPatient = () => {
-    displayFormByFormName("CHECK_OUT_PATIENT");
+    displayFormByFormName("Check Out Patient");
     const onSubmit = (submission) => {
       const data = {
         id: props.patient.visitId,
@@ -96,7 +106,7 @@ function PatientDashboardSubMenu(props) {
     setCurrentForm({
       code: CODES.CHECK_OUT_PATIENT_FORM,
       programCode: CODES.GENERAL_SERVICE,
-      formName: "CHECK_OUT_PATIENT",
+      formName: "Check Out Patient",
       options: {
         modalSize: "modal-lg",
       },
@@ -141,6 +151,10 @@ function PatientDashboardSubMenu(props) {
   return (
     <React.Fragment>
       <Menu size="mini" color={"silver"} inverted>
+        {false && props.mainMenuTabIndex === 0 ?
+        <Dropdown simple className='link item' options={props.dashboardOptions}  value={props.currentDashboard} onChange={props.changeDashboard}/>
+            :""}
+
         <Menu.Item name="Alerts" active={false}>
           Alerts &nbsp;
           <Badge color="dark">0</Badge>
@@ -191,35 +205,89 @@ function PatientDashboardSubMenu(props) {
         </Menu.Item>
 
         {/* Show visit actions only when patient is checked in */}
-        {props.patient && props.patient.dateVisitStart ? (
-          <Dropdown item text="Visit Actions">
-            {patientType && ( patientType === CODES.IN_PATIENT_UNBOOKED || patientType === CODES.IN_PATIENT_BOOKED)  ? (
-              <Dropdown.Menu>
+        {props.patient  ? (
+          <Dropdown simple text="Actions" className='link item'>
+
+            {props.patient.dateVisitStart && patientType && ( patientType === CODES.IN_PATIENT_UNBOOKED || patientType === CODES.IN_PATIENT_BOOKED)  ? (
+                <Dropdown.Menu>
                 <Dropdown.Item
-                  onClick={() => displayFormByFormName("TRANSFER_INPATIENT")}
+                  onClick={() => displayFormByFormName("Transfer Patient")}
                 >
                   Transfer Patient to Ward / Service
                 </Dropdown.Item>
                 <Dropdown.Item
-                  onClick={() => displayFormByFormName("DISCHARGE_PATIENT")}
+                  onClick={() => displayFormByFormName("Discharge Patient")}
                 >
                   Discharge Patient
                 </Dropdown.Item>
+                  <Dropdown.Item onClick={() => toggleVitalSign()}>Capture Vital Signs</Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item  onClick={() => displayFormByFormName("New Appointment")} >
+                    New Appointment
+                  </Dropdown.Item>
               </Dropdown.Menu>
             ) : (
-              <Dropdown.Menu>
+                <Dropdown.Menu>
+                {/*<Dropdown.Header>Visit Actions</Dropdown.Header>*/}
                 <Dropdown.Item
-                  onClick={() => displayFormByFormName("ADMIT_PATIENT")}
+                  onClick={() => displayFormByFormName("Admit Patient")}
                 >
                   Admit Patient
                 </Dropdown.Item>
-              </Dropdown.Menu>
+                  <Dropdown.Item onClick={() => toggleVitalSign()}>Capture Vital Signs</Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item  onClick={() => displayFormByFormName("New Appointment")} >
+                    New Appointment
+                  </Dropdown.Item>
+                </Dropdown.Menu>
             )}
           </Dropdown>
         ) : (
           ""
         )}
 
+        {/* Show visit actions only when patient is checked in */}
+        {false && props.patient  ? (
+            <Dropdown simple text="Actions" className='link item'>
+
+              {props.patient.dateVisitStart && patientType && ( patientType === CODES.IN_PATIENT_UNBOOKED || patientType === CODES.IN_PATIENT_BOOKED)  ? (
+                  <Dropdown.Menu>
+                    <Dropdown.Header>Visit Actions</Dropdown.Header>
+                    <Dropdown.Item
+                        onClick={() => displayFormByFormName("Transfer Patient")}
+                    >
+                      Transfer Patient to Ward / Service
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                        onClick={() => displayFormByFormName("Discharge Patient")}
+                    >
+                      Discharge Patient
+                    </Dropdown.Item>
+                    <Dropdown.Item>Capture Vital Signs</Dropdown.Item>
+                    <Dropdown.Header>Other Actions</Dropdown.Header>
+                    <Dropdown.Item  onClick={() => displayFormByFormName("New Appointment")} >
+                      New Appointment
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+              ) : (
+                  <Dropdown.Menu>
+                    <Dropdown.Header>Visit Actions</Dropdown.Header>
+                    <Dropdown.Item
+                        onClick={() => displayFormByFormName("Admit Patient")}
+                    >
+                      Admit Patient
+                    </Dropdown.Item>
+                    <Dropdown.Item>Capture Vital Signs</Dropdown.Item>
+                    <Dropdown.Header>Other Actions</Dropdown.Header>
+                    <Dropdown.Item  onClick={() => displayFormByFormName("New Appointment")} >
+                      New Appointment
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+              )}
+            </Dropdown>
+        ) : (
+            ""
+        )}
         <Menu.Menu position="right">
           {props.patient && props.patient.dateVisitStart ? (
             <Menu.Item>
@@ -255,6 +323,12 @@ function PatientDashboardSubMenu(props) {
         onError={onError}
         options={currentForm.options}
       />
+      <Modal isOpen={showVitalSignsModal} toggle={toggleVitalSign} size='lg' zIndex={"9999"}>
+        <ModalHeader toggle={toggleVitalSign}>Take Patient Vitals</ModalHeader>
+        <ModalBody>
+          <AddVitalsPage patientId={props.patient.patientId} showModal={showVitalSignsModal} toggle={toggleVitalSign}/>
+        </ModalBody>
+      </Modal>
       <ToastContainer />
     </React.Fragment>
   );

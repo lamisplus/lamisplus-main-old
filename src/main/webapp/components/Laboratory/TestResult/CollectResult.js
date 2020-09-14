@@ -40,8 +40,7 @@ const useStyles = makeStyles({
 const ResultReporting = (props) => {
     const sampleCollections = props.location.state && props.location.state.formDataObj!==null ? props.location.state.formDataObj : {};
     const encounterDate = props.location.state && props.location.state.dateEncounter ? props.location.state.dateEncounter : null ;
-    const classes = useStyles()
-    
+    const classes = useStyles()  
     const testOrders = useSelector(state => state.laboratory.testorder);
     const dispatch = useDispatch();
     const [loading, setLoading] = useState('')

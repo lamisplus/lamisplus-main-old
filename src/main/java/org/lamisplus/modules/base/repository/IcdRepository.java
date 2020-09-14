@@ -1,5 +1,6 @@
 package org.lamisplus.modules.base.repository;
 
+import org.lamisplus.modules.base.domain.dto.IcdDistinctDTO;
 import org.lamisplus.modules.base.domain.entity.Icd;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -13,7 +14,7 @@ public interface IcdRepository extends JpaRepository<Icd, Long>, JpaSpecificatio
 
     List<Icd> findAllByCategoryCode(String categoryCode);
 
-    /*@Query("SELECT DISTINCT i.categoryTitle FROM Icd i")
-    List<Icd> findDistinctByCategoryTitle();*/
-
+    @Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.IcdDistinctDTO" +
+            "(i.categoryCode, i.categoryTitle) FROM Icd i ORDER BY i.categoryCode")
+    List<IcdDistinctDTO> findDistinctCategoryCodeAndCategoryTitle();
 }

@@ -24,6 +24,17 @@ public class ModuleController {
     private final String ENTITY_NAME = "Module";
     private final ModuleService moduleService;
 
+
+    @GetMapping
+    public ResponseEntity<List<Module>> getAllModule() {
+        return ResponseEntity.ok(this.moduleService.getAllModules());
+    }
+
+    @GetMapping("{moduleStatus}")
+    public ResponseEntity<List<Module>> getAllModuleByModuleStatus(@PathVariable int moduleStatus) {
+        return ResponseEntity.ok(this.moduleService.getAllModuleByModuleStatus(moduleStatus));
+    }
+
     @PostMapping
     public ResponseEntity<Module> save(@RequestBody ModuleDTO moduleDTO) throws URISyntaxException {
         Module module = this.moduleService.save(moduleDTO);
@@ -31,18 +42,25 @@ public class ModuleController {
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(module.getId()))).body(module);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Module>> getAllModule() {
-        return ResponseEntity.ok(this.moduleService.getAllModules());
+    @PostMapping("/upload")
+    public ResponseEntity<List<Module>> uploadAndUnzip(@RequestParam("file1") MultipartFile [] jarFile,
+                                                  Boolean overrideExistFile) {
+        return ResponseEntity.ok(moduleService.uploadAndUnzip(jarFile, overrideExistFile));
     }
 
-    @PostMapping("/bootstrap")
-    public ResponseEntity<Module> bootstrap(@RequestParam("file") MultipartFile file, Boolean overrideExistFile) {
-        return ResponseEntity.ok(moduleService.bootstrap(file, overrideExistFile));
+    @PostMapping("{id}/install")
+    public ResponseEntity<Module> installModule(@PathVariable Long id) {
+        return ResponseEntity.ok(moduleService.installModule(id));
     }
 
-    @PostMapping("/start/{name}")
-    public void startModule(@PathVariable String name) {
-        moduleService.startModule(name);
+    @PostMapping("/start/all")
+    public void startModule() {
+        moduleService.startModule();
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> delete(@PathVariable Long id) {
+        return ResponseEntity.ok(moduleService.delete(id));
+    }
+
 }

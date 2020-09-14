@@ -70,10 +70,11 @@ useEffect(() => {
   //console.log(labTestType)
 
   return (
+    
     <div>
       <br/>
-      <Link to={{ 
-                  pathname: "/",  
+      {/* <Link to={{ 
+                  pathname: "/print-sample",  
                   name: "testing"
               }}>
         <Button
@@ -86,7 +87,7 @@ useEffect(() => {
           <span style={{textTransform: 'capitalize'}}>Print Manifest  </span>
                           
         </Button>
-      </Link>
+      </Link> */}
       <Link to="/dispatched-sample">
         {/* <Link to="/dispatched-sample"> */}
             <Button
@@ -98,7 +99,7 @@ useEffect(() => {
               {<GiFiles />} &nbsp;&nbsp;
               <span style={{textTransform: 'capitalize'}}>Dispatched  </span>
                   &nbsp;&nbsp;
-              <span style={{textTransform: 'capitalize'}}>Samples </span>              
+              <span style={{textTransform: 'capitalize'}}> Samples</span>              
             </Button>
       </Link>
         <br/>
@@ -115,77 +116,74 @@ useEffect(() => {
           
           {
               title: "Sample Type",
-              field: "sample_type",
+              field: "sampleType",
           },
 
           {
             title: "Date Sample Ordered ",
-            field: "date_sample_ordered",
+            field: "dateSampleOrdered",
           },
           { 
             title: "Time Sample Ordered", 
-            field: "time_sample_ordered"
+            field: "timeSampleOrdered"
           },
           { 
             title: "Date Sample Collected", 
-            field: "date_sample_collected", 
+            field: "dateSampleCollected", 
             type: "date" , 
             filtering: false
           },
           {
             title: "Time Sample Collected",
-            field: "time_sample_collected",
+            field: "timeSampleCollected",
           },
 
           { 
             title: "Sample Ordered By", 
-            field: "sample_ordered_by"
+            field: "sampleOrderedBy"
           },   
           { 
             title: "Sample Transferred By", 
-            field: "sample_transferred_by",
-            hidden: true
+            field: "sampleTransferredBy",
+            
           },    
           { 
             title: "Date Sample Transferred", 
-            field: "date_sample_transferred",
-            hidden: true
+            field: "dateSampleTransferred",hidden: true 
+            
           },
-           
-          { 
-            title: "Time Sample Transferred", 
-            field: "time_sample_transferred",
-            hidden: true
+          
+          {
+            title: "Date Sample Transfered",
+            field: "dateSampleTransferred",  hidden: true          
+          },
+          {
+            title: "Sample Collected By",
+            field: "sampleCollectedBy",  hidden: true 
           }, 
-          { 
-            title: "Vira Load Indication", 
-            field: "viral_load_indication",
-            hidden: true
-          },
-          { 
-            title: "Lab Order Priority", 
-            field: "lab_order_priority",
-            hidden: true
-          },
-                  
+          {
+            title: "Sample Transfered By",
+            field: "sampleTransferredBy",  hidden: true           
+          },      
           {
               title: "Viral Load Indication",
-              field: "viralLoadIndication",
-              hidden: true
+              field: "viralLoadIndication", hidden: true  
           },
+          
           
         ]}
         isLoading={loading}
         data={labTestType.map((row) => ({
             formDataObj:row,
-            sample_type: row.data.sample_type,
-            lab_order_priority: row.data.order_priority,
-            date_sample_ordered: row.data.date_sample_ordered,
-            time_sample_ordered: row.data.time_sample_collected,
-            date_sample_collected: row.data.date_sample_collected,
-            time_sample_collected: row.data.time_sample_collected,
-            sample_ordered_by: row.data.sample_collected_by,
-            viralLoadIndication: row.data.viralLoadIndication,
+            sampleType: row.data.sample_type,
+            dateSampleOrdered: row.data.date_sample_ordered,
+            timeSampleOrdered: row.data.time_sample_collected,
+            dateSampleCollected: row.data.date_sample_collected,
+            timeSampleCollected: row.data.time_sample_collected,
+            sampleOrderedBy: row.data.sample_ordered_by,
+            sampleTransferredBy: row.data.sample_transfered_by,
+            dateSampleTransferred : row.data.date_sample_transfered,
+            sampleCollectedBy: row.data.sample_collected_by,
             }))}
         options={{
             search: false,

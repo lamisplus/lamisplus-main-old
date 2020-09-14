@@ -1,7 +1,9 @@
 import axios from "axios";
 import { url as baseUrl , LABSERVICECODE} from "../api";
+import {RADIOLOGY_TEST_ORDER} from "api/codes";
 import * as ACTION_TYPES from "./types";
 import { toast } from "react-toastify";
+import { GiConsoleController } from "react-icons/gi";
 
 /**
  * @Actions
@@ -24,7 +26,6 @@ export const fetchAllLabTestOrder = (onSuccess, onError) => dispatch => {
         type: ACTION_TYPES.LABORATORY_TESTORDER,
         payload: response.data
       })
-      console.log(response)
       onSuccess();
     })
     .catch(error => {
@@ -33,12 +34,10 @@ export const fetchAllLabTestOrder = (onSuccess, onError) => dispatch => {
         payload: 'Something went wrong, please try again'
       })
       onError();
-      console.log(error)
     });
 }
 };
 export const fetchAllLabTestOrderOfPatient = (id, onSuccess, onError )=> dispatch => {
-  //console.log(id)
   if(id){
   axios
     .get(`${baseUrl}encounters/${id}/form-data`)
@@ -48,7 +47,6 @@ export const fetchAllLabTestOrderOfPatient = (id, onSuccess, onError )=> dispatc
         type: ACTION_TYPES.LABORATORY_TESTORDER_FOR_PATIENT,
         payload: response.data
       })
-      console.log(response.data)
       onSuccess();
       
     })
@@ -58,7 +56,6 @@ export const fetchAllLabTestOrderOfPatient = (id, onSuccess, onError )=> dispatc
         payload: error
       })
       onError();
-      console.log(error)
     }
     );
 }
@@ -68,7 +65,6 @@ export const fetchLabTestOrdersByEncounterID = (id)=> dispatch => {
   axios
     .get(`${baseUrl}encounters/${id}`)
     .then(response => {
-       console.log(response)
       dispatch({
         type: ACTION_TYPES.FETCH_ALL_TESTS_BY_ENCOUNTER_ID,
         payload: response.data
@@ -86,7 +82,6 @@ export const fetchLabTestOrdersByEncounterID = (id)=> dispatch => {
     }
 };
 export const createCollectedSample = (data, lab_id, onSuccess, onError ) => dispatch => {
-
   if(lab_id){
     
   axios
@@ -114,29 +109,96 @@ export const createCollectedSample = (data, lab_id, onSuccess, onError ) => disp
   }
 };
 
-export const dispatchedManifestSamples = (data, lab_id) => dispatch => {
+export const updateFormDataObj = (data, lab_id) => dispatch => {
+    if(lab_id){
+      
+    axios
+      .put(`${baseUrl}form-data/${lab_id}`, data)
+      .then(response => {
+        dispatch({
+          type: ACTION_TYPES.CREATE_COLLECT_SAMPLE,
+          payload: response.data
+        });
+      })
+      .catch(error =>{
+        
+        dispatch({
+          type: ACTION_TYPES.ERROR_CREATE_COLLECT_SAMPLE,
+          payload: error
+        })
+        
+      });
+    }else{
+      toast.error("Something went wrong, please try again");
+    }
+  };
+  
 
-  if(lab_id){
-    
+export const dispatchedManifestSamples = (data) => dispatch => {
+  const options = {
+    headers: {
+        'Content-Type': 'application/json',
+    }
+  };
   axios
-    .put(`${baseUrl}form-data/${lab_id}`, data)
+    .post(`${baseUrl}sample-manifests`, data, options)
     .then(response => {
       dispatch({
-        type: ACTION_TYPES.CREATE_COLLECT_SAMPLE,
+        type: ACTION_TYPES.DISPATCH_MANIFEST_SAMPLE,
         payload: response.data
       });
-     
     })
     .catch(error =>{
       
       dispatch({
-        type: ACTION_TYPES.ERROR_CREATE_COLLECT_SAMPLE,
+        type: ACTION_TYPES.ERROR_DISPATCH_MANIFEST_SAMPLE,
         payload: error
       })
-      
     });
-  }else{
-    toast.error("Something went wrong, please try again");
+  
+};
+//Samples Dispatched
+export const sampleDispatched = (onSuccess, onError) => dispatch => {
+
+  axios
+    .get(`${baseUrl}sample-manifests/dispatched-manifest/true`)
+    .then(response => {
+      dispatch({
+        type: ACTION_TYPES.SAMPLE_DISPATCHED,
+        payload: response.data
+      })
+      onSuccess();
+    })
+    .catch(error => {
+      dispatch({
+        type: ACTION_TYPES.ERROR_SAMPLE_DISPATCHED,
+        payload: 'Something went wrong, please try again'
+      })
+      onError();
+    });
+
+};
+
+//Get list of samples Manifest by ID 
+export const samplesManifestById = (id,onSuccess, onError) => dispatch => {
+  if(id){
+  axios
+    .get(`${baseUrl}sample-manifests/manifest/${id}`)
+    .then(response => {
+      dispatch({
+        type: ACTION_TYPES.SAMPLES_MANIFEST_BY_ID,
+        payload: response.data
+      });
+      onSuccess();
+    })
+    .catch(error => {
+      dispatch({
+        type: ACTION_TYPES.ERROR_SAMPLES_MANIFEST_BY_ID,
+        payload: error
+      })
+      onError();
+    }
+    );
   }
 };
 export const sampleVerification = (data, lab_id, onSuccess, onError ) => dispatch => {
@@ -193,7 +255,6 @@ export const transferSample = (samples, lab_id) => dispatch => {
     });
 };
 export const fetchFormById = id => dispatch => {
-  //console.log(id)
   if(id){
   axios
     .get(`${baseUrl}form-data/${id}`)
@@ -202,14 +263,12 @@ export const fetchFormById = id => dispatch => {
         type: ACTION_TYPES.FORMDATA_FETCH_BY_ID,
         payload: response.data
       });
-      //console.log("is getting here ") 
     })
     .catch(error => {
       dispatch({
         type: ACTION_TYPES.ERROR_FORMDATA_FETCH_BY_ID,
         payload: error
       })
-      console.log(error)
     }
     );
   }
@@ -304,3 +363,101 @@ export const fetchAllTestsByTestGroup = (id, onSuccess, onError) => dispatch => 
     })
 }
 
+export const fetchRadiologyTestOrdersByEncounterID = (id, onSuccess, onError)=> dispatch => {
+  if(id){
+    axios
+        .get(`${baseUrl}encounters/${id}`)
+        .then(response => {
+          dispatch({
+            type: ACTION_TYPES.FETCH_ALL_RADIOLOGY_TESTS_BY_ENCOUNTER_ID,
+            payload: response.data
+          })
+            if(onSuccess){
+                onSuccess()
+            }
+        })
+        .catch(error => {
+              dispatch({
+                type: ACTION_TYPES.ERROR_LABORATORY_TESTORDER_FOR_LAB,
+                payload: error
+              })
+            if(onError){
+                onError()
+            }
+            }
+        );
+  }
+};
+export const fetchAllRadiologyTestOrder = (onSuccess, onError) => dispatch => {
+    if(LABSERVICECODE){
+        axios
+            .get(`${baseUrl}encounters/${RADIOLOGY_TEST_ORDER}/{dateStart}/{dateEnd}`)
+            .then(response => {
+                dispatch({
+                    type: ACTION_TYPES.RADIOLOGY_TEST_ORDERS,
+                    payload: response.data
+                })
+                if(onSuccess){
+                    onSuccess()
+                }
+            })
+            .catch(error => {
+                if(onError){
+                    onError()
+                }
+            });
+    }
+};
+
+export const updateRadiologyByFormId = (data, id, onSuccess, onError ) => dispatch => {
+        axios
+            .put(`${baseUrl}form-data/${id}`, data)
+            .then(response => {
+                if(onSuccess){
+                    onSuccess()
+                }
+            })
+            .catch(error =>{
+                if(onError){
+                    onError()
+                }
+            });
+};
+
+export const fetchAllRadiologyTestGroup = (onSuccess, onError) => dispatch => {
+    axios
+        .get(`${baseUrl}radiology-test-groups/`)
+        .then(response => {
+            dispatch({
+                type: ACTION_TYPES.FETCH_ALL_RADIOLOGY_TEST_GROUP,
+                payload: response.data
+            })
+            onSuccess()
+        })
+        .catch(error => {
+            dispatch({
+                type: ACTION_TYPES.LABORATORY_ERROR,
+                payload: 'Something went wrong, please try again'
+            })
+            onError(error.response)
+        })
+}
+
+export const fetchAllRadiologyTestsByTestGroup = (id, onSuccess, onError) => dispatch => {
+    axios
+        .get(`${baseUrl}radiology-test-groups/radiology-tests/${id}`)
+        .then(response => {
+            dispatch({
+                type: ACTION_TYPES.FETCH_ALL_RADIOLOGY_TESTS_BY_TEST_GROUP,
+                payload: response.data
+            })
+            onSuccess()
+        })
+        .catch(error => {
+            dispatch({
+                type: ACTION_TYPES.LABORATORY_ERROR,
+                payload: 'Something went wrong, please try again'
+            })
+            onError(error.response)
+        })
+}

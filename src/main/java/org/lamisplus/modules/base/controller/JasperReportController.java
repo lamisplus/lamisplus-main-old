@@ -7,7 +7,7 @@ import net.sf.jasperreports.engine.JRException;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.dto.JasperReportInfoDTO;
 import org.lamisplus.modules.base.domain.entity.JasperReportInfo;
-import org.lamisplus.modules.base.domain.entity.ReportDetailDTO;
+import org.lamisplus.modules.base.domain.dto.ReportDetailDTO;
 import org.lamisplus.modules.base.service.JasperReportService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -54,7 +54,7 @@ public class JasperReportController {
     }
 
     @GetMapping
-    public ResponseEntity<List<JasperReportInfo>> getAllJasperReports() {
+    public ResponseEntity<List<JasperReportInfoDTO>> getAllJasperReports() {
         return ResponseEntity.ok(this.jasperReportService.getJasperReports());
     }
 
