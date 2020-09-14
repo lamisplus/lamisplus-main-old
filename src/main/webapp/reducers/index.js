@@ -8,6 +8,7 @@ import laboratoryReducer from "./laboratoryReducer"
 import consultationReducer from './consultationReducer'
 import medicationReducer from './medicationReducer'
 import formReducers from './formReducers'
+import reportReducer from './reportReducer'
 import visitReducer from './visitReducer'
 import registrationReducer from './registrationReducer'
 import userReducer from './userReducer'
@@ -26,6 +27,7 @@ export default combineReducers({
   formManager: formManagerReducer,
   consultations: consultationReducer,
   formReducers: formReducers,
+  reportReducer: reportReducer,
   medication: medicationReducer,
   visit: visitReducer,
   registration: registrationReducer,

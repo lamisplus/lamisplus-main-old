@@ -1,3 +1,7 @@
+
+// export const url =  'http://lamisplus.org/base-module/api/';
+// export const url =  'http://192.168.43.58:8081/api/';
+
 //Online Server
 export const url =  'http://www.lamisplus.org/base-module/api/';
 

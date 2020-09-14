@@ -21,11 +21,10 @@ const navItems = [
   { to: '/laboratory', name: 'Laboratory', exact: false, Icon: GiTestTubes },
   { to: '/pharmacy', name: 'Pharmacy', exact: false, Icon: GiMedicines },
   { to: '/appointments', name: 'Appointments', exact: false, Icon: MdGraphicEq },
-  { to: '/report', name: 'Report', exact: false, Icon: FaListUl },
-  { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog },
-  { to: '/report-dashboard', name: 'Reports', exact: false, Icon: FaListUl },
-
+  { to: '/report', name: 'Reports', exact: false, Icon: FaListUl },
   { to: '/visual', name: 'Visualization', exact: false, Icon: MdGraphicEq },
+  { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog },
+
   //{ to: '/admin-dashboard', name: 'Administration Module', exact: false, Icon: FaUserCog },
   
 ];

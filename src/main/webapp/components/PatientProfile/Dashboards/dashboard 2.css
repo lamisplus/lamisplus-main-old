@@ -1,0 +1,15 @@
+.card-deck .card {
+    margin-left: 3px !important;
+    margin-right: 3px !important;
+    margin-bottom: 3px !important;
+}
+
+.card-deck {
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+    margin-bottom: -15px !important;
+}
+
+.MuiBox-root {
+    padding: 1px !important;
+}
