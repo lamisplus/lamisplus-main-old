@@ -1,5 +1,5 @@
 import axios from "axios";
-import { url } from "../api";
+import {url} from "../api";
 import * as ACTION_TYPES from "./types";
 import {toast} from "react-toastify"
 
@@ -53,6 +53,25 @@ export const fetchPatientPrescriptions = (patientId) => dispatch => {
       });
     });
 
+}
+
+export const fetchAll = (onSuccess, onError) => dispatch => {
+  axios
+      .get(`${url}drugs/`)
+      .then(response => {
+        dispatch({
+          type: ACTION_TYPES.MEDICATION_FETCH,
+          payload: response.data
+        })
+        onSuccess()
+      })
+      .catch(error => {
+        dispatch({
+          type: ACTION_TYPES.MEDICATION_ERROR,
+          payload: 'Something went wrong, please try again'
+        })
+        onError(error.response)
+      })
 }
 // export const fetchEncounterById = (encounterId) => (dispatch) => {
 //          console.log(encounterId);

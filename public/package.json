@@ -85,6 +85,7 @@
     "victory": "^32.0.0"
   },
   "devDependencies": {
+    "components": "^0.1.0",
     "gh-pages": "^2.2.0",
     "node-sass": "^4.13.1",
     "react-scripts": "^2.1.8",

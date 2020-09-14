@@ -1,12 +1,6 @@
 import { EmptyLayout, LayoutRoute, MainLayout } from "components/Layout";
 import PageSpinner from "components/PageSpinner";
-
-// import AuthPage from 'pages/AuthPage';
 import React, {Component} from "react";
-// React Toast Notification 
-// import { ToastContainer } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
-// import componentQueries from 'react-component-queries';
 import { BrowserRouter, Redirect, Switch } from "react-router-dom";
 import "./styles/reduction.scss";
 import SignIn from "pages/SignPage";
@@ -17,6 +11,8 @@ import { Register } from "pages/Register";
 
 import { history } from "./history";
 import { PrivateRoute } from "./PrivateRoute"
+
+
 
 const DashboardPage = React.lazy(() => import("pages/DashboardPage"));
 const AdministrativeDashboard = React.lazy(() => import("components/Admin/HomePage"));
@@ -62,6 +58,10 @@ const OrganizationUnit = React.lazy(() => import("components/Admin/OrganizationU
 const formDashboard = React.lazy(() => import('components/formBuilder/formDashboard'));
 const FormBuilder = React.lazy(() => import('components/formBuilder/FormBuilder'));
 const ViewForm = React.lazy(() => import('components/formBuilder/ViewForm'));
+const PivotTable = React.lazy(() => import('components/PivotTable/PivotTable'));
+const ReactPivot = React.lazy(() => import('components/PivotTable/ReactPivot'));
+const FormPage = React.lazy(() => import('components/Admin/FormPage'));
+
 
 /* Pharmacy page loading */
 const PharmacyDashboard = React.lazy(() => import("./components/Pharmacy/PharmacyDashboard"))
@@ -77,6 +77,9 @@ const TestPage = React.lazy(() => import("pages/TestPage"));
 const FormRendererPage = React.lazy(() => import("components/FormManager/FormRendererPage"));
 //Reporting components
 const ReportPage = React.lazy(() => import("components/Reports/ReportingPage"));
+const JasperTemplate = React.lazy(() => import("components/Reports/JasperTemplate"));
+const ReportView = React.lazy(() => import("components/Reports/ReportView"));
+const JasperTemplateUpdate = React.lazy(() => import("components/Reports/JasperTemplateUpdate"));
 const getBasename = () => {return `/${process.env.PUBLIC_URL.split("/").pop()}`;};
 
 const Prescription = React.lazy(() => import("components/Pharmacy/Prescriptions"))
@@ -161,11 +164,7 @@ class Routes extends Component {
               
               <PrivateRoute exact path="/prescriptions" component={Prescription}/>
               <PrivateRoute exact path="/appointment" component={AppointmentPage} />
-              <PrivateRoute
-                exact
-                path="/checkedin-patients"
-                component={CheckInPatientPage}
-              />
+              <PrivateRoute exact path="/checkedin-patients" component={CheckInPatientPage}/>
 
               <PrivateRoute exact path="/view-vitals" component={ViewVitalsPage} />
               {/* <PrivateRoute exact path="/add-vitals" component={AddVitalsPage} /> */}
@@ -180,12 +179,19 @@ class Routes extends Component {
               <PrivateRoute exact path="/form-dashboard" component={formDashboard} />
               <PrivateRoute exact path="/form-builder" component={FormBuilder} />
               <PrivateRoute exact path="/view-form" component={ViewForm} />
+              <PrivateRoute exact path="/pivot" component={PivotTable} />
+                <PrivateRoute exact path="/react-pivot" component={ReactPivot} />
+                <PrivateRoute exact path="/form-home" component={FormPage} />
+
               
                 {/* The rout to that DataTabel */}
-              <PrivateRoute exact path="/testpage" component={TestPage} />
+              <PrivateRoute exact path="/test-page" component={TestPage} />
               <PrivateRoute exact path="/form-renderer" component={FormRendererPage} />
               {/* The rout to Report*/}
               <PrivateRoute exact path="/report" component={ReportPage} />
+                <PrivateRoute exact path="/jasper" component={JasperTemplate} />
+                <PrivateRoute exact path="/report-view" component={ReportView} />
+                <PrivateRoute exact path="/template-update" component={JasperTemplateUpdate} />
 
               <PrivateRoute exact path="/users" component={UsersPage} />
 

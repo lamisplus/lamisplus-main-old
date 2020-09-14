@@ -38,8 +38,7 @@ function NewAppointmentPage(props) {
                   },
               });
               setShowAppointmentForm(true);
-        }}
-      >
+        }}>
         <FaCalendarPlus />
       </IconButton>
     ),
@@ -63,8 +62,7 @@ function NewAppointmentButton() {
       color="primary"
       aria-label="View Patient"
       title="View Patient"
-      onClick={openAppointmentForm}
-    >
+      onClick={openAppointmentForm}>
       <FaCalendarPlus
         title="Create Appointment"
         aria-label="Create Appointment"

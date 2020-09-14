@@ -2,7 +2,8 @@
 
 const initialState = {
   allPrescriptions: [],
-  patientPrescriptions: []
+  patientPrescriptions: [],
+  medicationList: []
 };
 
 export default (state = initialState, action) => {
@@ -11,6 +12,8 @@ export default (state = initialState, action) => {
       return { ...state, allPrescriptions: [...action.payload] };
     case ACTION_TYPES.FETCH_PATIENT_PRESCRIPTIONS:
       return { ...state, patientPrescriptions: [...action.payload] };
+    case ACTION_TYPES.MEDICATION_FETCH:
+      return {...state, medicationList:action.payload}
     case ACTION_TYPES.UPDATE_PRESCRIPTION_STATUS:
       return { ...state, update: action.payload };
     default:

@@ -4,9 +4,10 @@ import {  Errors, Form, FormBuilder } from 'react-formio';
 import {Card,CardContent,} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import {url} from '../../api'
-import {fetchService, fetchById, updateForm, fetchForms} from '../../actions/formBuilder'
+import {fetchService, fetchById, updateForm} from '../../actions/formBuilder'
 import {fetchByHospitalNumber} from '../../actions/patients'
+import MatButton from '@material-ui/core/Button';
+import { TiArrowBack } from "react-icons/ti";
 import { authHeader } from '_helpers/auth-header';
 import {
     FormGroup,
@@ -16,6 +17,7 @@ import {
     Row,
     Button
 } from 'reactstrap';
+import {Link} from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     root2: {
@@ -28,7 +30,6 @@ const useStyles = makeStyles(theme => ({
 const Update = props => {
     const [res, setRes] = React.useState("");
     const [displayType, setDisplayType] = React.useState("");
-    const [programId, setprogramId] = React.useState("");
     const [formCode, setformCode] = React.useState();
     const [form2, setform2] = React.useState();
     const classes = useStyles();
@@ -36,41 +37,60 @@ const Update = props => {
     const submission = props.patient;
     const textAreaRef = useRef(null);
 
+    const row = props.location.row;
+
     useEffect (() => {
-        props.fetchService();
-        props.fetchForms();
-    }, [])
-    useEffect (() => {
-         //props.fetchById()
+        setformCode(row.code);
+        console.log(row);
+
+        setform2(row)
+
         props.fetchPatientByHospitalNumber('6768595', null, null)
     }, [])
-
-    const handleProgramChange = (e) => {
-        setprogramId(e.target.value)
-        props.fetchById(e.target.value)
-    }
 
     const handleSubmit = () => {
         props.updateForm(form2.id, form2);
     }
 
-    const loadForm = (e) => {
-        console.log(JSON.parse(e.target.value));
-        const v = JSON.parse(e.target.value);
-        
-        setformCode(v.code);
-        
-        setform2(v)
-        //setRes(form.resourceObject);
-    }
     return (
         <Page title="Form Renderer" >
             <Card >
                 <CardContent>
+                    <Link to="/admin">
+                        <MatButton
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            className=" float-right mr-1">
+                            <TiArrowBack /> &nbsp; back
+                        </MatButton>
+                    </Link>
                     <h4>View Form</h4>
                     <hr />
                     <Errors errors={props.errors} />
-    
+                    {/*{!res ? "" :*/}
+                    {/*    <Form*/}
+                    {/*        form={JSON.parse(res)}*/}
+                    {/*        ref={form => myform = form}*/}
+                    {/*        submission={{data : {patient: props.patient}}}*/}
+                    {/*        //src={url}*/}
+                    {/*        hideComponents={props.hideComponents}*/}
+                    {/*        //onSubmit={props.onSubmit}*/}
+                    {/*        onSubmit={(submission) => {*/}
+                    {/*            console.log(submission);*/}
+                    {/*            return fetch('https://lp-base-app.herokuapp.com/api/', {*/}
+                    {/*                body: JSON.stringify(submission),*/}
+                    {/*                headers: {*/}
+                    {/*                    'content-type': 'application/json'*/}
+                    {/*                },*/}
+                    {/*                method: 'POST',*/}
+                    {/*                mode: 'cors',*/}
+                    {/*            }).then(res => {*/}
+                    {/*                console.log(res);*/}
+                    {/*                myform.emit('submitDone', submission);*/}
+                    {/*            })}}*/}
+                    {/*    />*/}
+                    {/*}*/}
                     {!res ? "" : 
                     <Form
                         form={JSON.parse(res)}
@@ -109,44 +129,18 @@ const Update = props => {
                                 <option value="wizard">Wizard</option></Input>
                         </FormGroup></Col>
 
-                        <Col md={4}> <FormGroup>
-                            <Label class="sr-only">Program Area</Label>
-                            {props.services.length && props.services.length > 0 ?
-                                <Input type="select" class="form-control" id="programId" required value={programId}  onChange={e => handleProgramChange(e) }>
-                                    {props.services.map(program => (<option key={program.id} value={program.id} >{program.name}</option>))}
-                                </Input>:  <Input type="select" class="form-control" id="programId" required value={programId} onChange={e => setprogramId(e.target.value)}>
-                                    <option>No programs found</option>
-                                </Input>}
-                        </FormGroup></Col>
-
-                        <Col md={4}> <FormGroup>
-                            <Label class="sr-only">Form Name</Label>
-                            {props.formList.length && props.formList.length > 0 ?
-                                <Input type="select" class="form-control" id="formCode" required value={formCode}  onChange={e => loadForm(e) }>
-                                    <option value="">Select One</option>
-                                    {props.formList.map(form => (<option value={JSON.stringify(form)}>{form.name}</option>))}
-                                </Input>:  <Input type="select" class="form-control" id="formCode" required value={formCode} onChange={e => setformCode(e.target.value)}>
-                                </Input>}
-                        </FormGroup></Col>
-                    </Row>
-                    <Row>
                         <Col md={2}> <FormGroup>
-                            <label class="sr-only"></label>
-                            <Button color="primary" className=" mt-4" onClick={() => loadForm()}>Load Form</Button>
-                        </FormGroup></Col>
-
-                        <Col md={2}> <FormGroup>
-                            <label class="sr-only"></label>
+                            <label class="sr-only" ></label>
                             <button type="button"  class="form-control btn btn-primary mt-4" onClick={() => handleSubmit()}>Update Form</button>
                         </FormGroup></Col>
                     </Row>
-                    { form2 ? 
-                    <FormBuilder form={form2.resourceObject} {...props} onChange={(schema) => {
-                       // console.log(JSON.stringify(schema));
-                        setRes(JSON.stringify(schema));
-                    }} />
-: ""
-                }
+                    { form2 ?
+                        <FormBuilder form={row.resourceObject} {...props} onChange={(schema) => {
+                            // console.log(JSON.stringify(schema));
+                            setRes(JSON.stringify(schema));
+                        }} />
+                        : ""
+                    }
                     <br></br>
                 </CardContent>
             </Card>
@@ -166,19 +160,15 @@ const Update = props => {
 }
 
 const mapStateToProps =  (state = { form:{}}) => {
-    console.log(state.forms)
     return {
         patient: state.patients.patient,
-        services: state.formReducers.services,
         formList: state.formReducers.form,
     }}
 
 const mapActionsToProps = ({
-    fetchService: fetchService,
     fetchById: fetchById,
     updateForm: updateForm,
     fetchPatientByHospitalNumber: fetchByHospitalNumber,
-    fetchForms:fetchForms
 })
 
 export default connect(mapStateToProps, mapActionsToProps)(Update)

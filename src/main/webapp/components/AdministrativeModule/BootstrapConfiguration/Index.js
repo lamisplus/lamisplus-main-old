@@ -1,6 +1,6 @@
 import React from 'react'
 import {Card, CardBody,CardHeader,Col,Row} from 'reactstrap'
-import { useState} from 'react'
+import { useState, useEffect} from 'react'
 import { TiPlus } from 'react-icons/ti'
 import MatButton from '@material-ui/core/Button'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -16,6 +16,9 @@ import "@reach/menu-button/styles.css";
 import MaterialTable from 'material-table';
 import {  MdDelete, MdModeEdit } from "react-icons/md";
 import DeleteModule from "./DeleteModule";
+import { useSelector, useDispatch } from 'react-redux';
+import {  fetchAllBootstrapModule } from '../../../actions/bootstrapModule';
+import { Badge } from 'reactstrap';
 
 
 const useStyles = makeStyles({
@@ -37,14 +40,91 @@ const useStyles = makeStyles({
     const [modal, setModal] = useState(false) //Modal to collect sample 
     const toggleModal = () => setModal(!modal)
     const classes = useStyles()
+    const [loading, setLoading] = useState('')
+    const dispatch = useDispatch();
+    const listOfAllModule = useSelector(state => state.boostrapmodule.list);
+    const [installationOverlay, setInstallationOverlay] = useState('true')
+    useEffect(() => {
+      setLoading(true);
+      const onSuccess = () => {
+          setLoading(false)
+          
+      }
+      const onError = () => {
+          setLoading(false)     
+      }
+        const fetchAllModule = dispatch(fetchAllBootstrapModule(onSuccess,onError ));
 
+  }, []); //componentDidMount
+  console.log(listOfAllModule)
     const deleteModule = (row) => {  
       setcollectModal({...collectModal, ...row});
       setModal(!modal) 
   }
-
-
+  const installModule = (moduleID) => {
     
+    setInstallationOverlay('true')
+    console.log(moduleID, "the code get here ")
+
+  }
+  console.log(installationOverlay)
+  const actionOnModules = (e) =>{
+    
+    return (
+      <Menu>
+      <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
+        Actions <span aria-hidden>▾</span>
+      </MenuButton>
+        
+          <MenuList style={{ color:"#000 !important"}} >
+            {e.status === 2 ?
+              
+                <MenuItem  style={{ color:"#000 !important"}} onSelect={() => installModule('id')}>                      
+                
+                    <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Install</span>
+                                    
+                </MenuItem> 
+                
+              : ""
+             }
+             {e.status === 2 ?
+              <>
+                <MenuItem style={{ color:"#000 !important"}}>
+                      <Link
+                          to={{
+                            pathname: "/updated-module",
+                            currentId: {}
+                          }}
+                      >
+                        <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Update  </span>                   
+                      </Link>
+                </MenuItem>
+                <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule('module to delete')}>                      
+                  <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Deactivate</span>
+                 </MenuItem>
+                 <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule('module to delete')}>                      
+                  <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Delete</span>
+                 </MenuItem>
+                </>
+                 : "" 
+              }                                    
+                
+        </MenuList>
+       </Menu>
+      )
+}
+const moduleStatus = e =>{
+  if(e===1){
+      return <p><Badge  color="info">Uploaded</Badge></p>
+  }else if(e===2){
+      return <p><Badge  color="light">installed</Badge></p>
+  }else if(e===3){
+    return <p><Badge  color="light">Active</Badge></p>
+  }
+  else{
+      return <p>{" "}</p>
+  }
+}   
 
 return (
     <Page >
@@ -71,6 +151,7 @@ return (
                     <Row>
                         <Col>
                             <Card body>
+                              
                             <Link 
                                 to ={{ 
                                 pathname: "/create-module",  
@@ -87,59 +168,27 @@ return (
                                   <TiPlus/>{" "} New Module
                                 </MatButton>
                             </Link>
+                          
                             <MaterialTable
                               title="List Of Bootstrap Module"
                               columns={[
                                 { title: 'Module Name', field: 'name' },
                                 { title: 'Description', field: 'description' },
-                                { title: 'Author', field: 'author', type: 'numeric' },
+                                { title: 'Author', field: 'author' },
                                 {title: 'Version',field: 'version', type: 'numeric'},
-                                { title: 'Date Updated', field: 'birthYear', type: 'date' },
+                                { title: 'Date Created', field: 'date', type: 'date' },
                                 { title: 'Status', field: 'status'},
                                 { title: 'Action', field: 'actions'},
                               ]}
-                              data={[
-                                  { 
-                                    name: 'General Service', 
-                                    description: 'General Service', 
-                                    author: 'Lamisplus Team', 
-                                    date: '04-08-2020', 
-                                    status:'completed',
-                                    actions: 
-                                      <div>
-                                        <Menu>
-                                            <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
-                                              Actions <span aria-hidden>▾</span>
-                                            </MenuButton>
-                                                <MenuList style={{ color:"#000 !important"}} >
-                                                    <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule('module to delete')}>                      
-                                                      
-                                                            <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Deactivate</span>
-                                                                                
-                                                      </MenuItem>
-                                                      
-                                                      <MenuItem style={{ color:"#000 !important"}}>
-                                                            <Link
-                                                                to={{
-                                                                  pathname: "/updated-module",
-                                                                  currentId: {}
-                                                                }}
-                                                            >
-                                                              <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Update  </span>                   
-                                                            </Link>
-                                                      </MenuItem> 
-                                                      <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule('module to delete')}>                      
-                                                      
-                                                            <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Delete</span>
-                                                                                
-                                                      </MenuItem>                                    
-                                                      
-                                              </MenuList>
-                                        </Menu>
-                                  </div>        
-                                  },
-                                
-                              ]}        
+                              data={listOfAllModule.map((row) => ({
+                                    name: row.name, 
+                                    description: row.description, 
+                                    author: row.createdBy, 
+                                    version: row.version,
+                                    date: row.dateCreated, 
+                                    status:moduleStatus(row.status),
+                                    actions: actionOnModules(row)   
+                              }))}      
                               options={{
                                 headerStyle: {
                                   backgroundColor: "#9F9FA5",
@@ -148,7 +197,8 @@ return (
                                   },
                                 filtering: true
                               }}
-                            />
+                            /> 
+                           
                             </Card>
                         </Col>
                   </Row>
