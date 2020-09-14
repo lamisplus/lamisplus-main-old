@@ -8,7 +8,8 @@ import { connect } from "react-redux";
 import { Col, Row } from "reactstrap";
 import { Label } from "semantic-ui-react";
 import * as CODES from "api/codes";
-
+import { fetchApplicationCodeSet } from "actions/applicationCodeset";
+import {APPLICATION_CODESET_GENDER} from "actions/types";
 const useStyles = makeStyles((theme) => ({
   root2: {
     width: "100%",
@@ -20,6 +21,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function PatientDetailCard(props) {
+  React.useEffect(() => {
+    if (props.genderList.length === 0) {
+      props.fetchApplicationCodeSet("GENDER", APPLICATION_CODESET_GENDER);
+    }
+  }, [props.genderList]);
+
+  const getGender = (id) => {
+    const gender = props.genderList.find((x) => x.id === id);
+    if(gender){
+      return gender.display
+    }
+    return 'N/A'
+  }
   const classes = useStyles();
 
   return (
@@ -62,7 +76,7 @@ function PatientDetailCard(props) {
               <span>
                 {" "}
                 Gender :{" "}
-                <b>{props.patient.genderId === 1 ? "Female" : "Male"}</b>
+                <b>{getGender(props.patient.genderId )}</b>
               </span>
             </Col>
             <Col md={4} className={classes.root2}>
@@ -101,7 +115,8 @@ function PatientDetailCard(props) {
 const mapStateToProps = (state) => {
   return {
     patient: state.patients.patient,
+    genderList: state.applicationCodesets.genderList
   };
 };
 
-export default connect(mapStateToProps, {})(PatientDetailCard);
+export default connect(mapStateToProps, {fetchApplicationCodeSet})(PatientDetailCard);

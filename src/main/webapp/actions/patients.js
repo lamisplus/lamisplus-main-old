@@ -76,7 +76,6 @@ export const fetchById = (id, onSuccess, onError) => dispatch => {
 
 
 export const create = (data,onSuccess, onError) => dispatch => {
-  console.log(data);
   axios
     .post(`${baseUrl}patients/`, data)
     .then(response => {
@@ -96,7 +95,8 @@ export const create = (data,onSuccess, onError) => dispatch => {
       if(error.response.data.apierror.message===null || error.response.data.apierror.message===""){
         toast.error("Something went wrong");
       }else{
-        toast.error(error.response.data.apierror.message);
+        //toast.error(error.response.data.apierror.message);
+        toast.error("Something went wrong. Please try again...");
       }
     });
 };
@@ -237,7 +237,6 @@ export const fetchPatientVitalSigns = (id, onSuccess, onError) => dispatch => {
      )
      }  
  }
-
 
  export const fetchPatientTestOrders = (id, onSuccess, onError) => dispatch => {
   if(id){
@@ -420,4 +419,56 @@ export const fetchPatientConsultationHistory = (id, onSuccess, onError) => dispa
      )
      }  
  }
+
+
+export const fetchPatientAppointments = (id, onSuccess, onError) => dispatch => {
+    axios
+        .get(`${baseUrl}patients/${id}/encounters/${CODES.APPOINTMENT_FORM}/`)
+        .then(response => {
+            if(onSuccess){
+                onSuccess();
+            }
+            dispatch({
+                type: ACTION_TYPES.PATIENT_APPOINTMENTS,
+                payload: response.data
+            })
+        })
+        .catch(error => {
+                dispatch({
+                    type: ACTION_TYPES.PATIENTS_ERROR,
+                    payload: 'Something went wrong, please try again'
+                })
+                if(onError){
+                    onError();
+                }
+            }
+        )
+
+}
+
+export const fetchPatientRadiologyTestOrder = (id, onSuccess, onError) => dispatch => {
+    if(id){
+        axios
+            .get(`${baseUrl}patients/${id}/encounters/${CODES.RADIOLOGY_TEST_ORDER}`, {limit: 5, sortField: "dateEncounter", sortOrder: "desc"})
+            .then(response => {
+                dispatch({
+                    type: ACTION_TYPES.PATIENT_RADIOLOGY_ORDERS,
+                    payload: response.data
+                })
+                if(onSuccess){
+                    onSuccess()
+                }
+            })
+            .catch(error => {
+                    dispatch({
+                        type: ACTION_TYPES.PATIENTS_ERROR,
+                        payload: 'Something went wrong, please try again'
+                    })
+                    if(onError){
+                        onError()
+                    }
+                }
+            )
+    }
+}
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Modal, ModalHeader, ModalBody,Form,FormFeedback,
 Row,Col,FormGroup,Label,Input, Card,CardBody} from 'reactstrap';
 import { connect } from 'react-redux';
@@ -13,9 +13,9 @@ import momentLocalizer from 'react-widgets-moment';
 import moment from "moment";
 import {url} from '../../../api'
 import { Alert } from 'reactstrap';
-import { dispatchedManifestSamples } from '../../../actions/laboratory';
+import { dispatchedManifestSamples, updateFormDataObj } from '../../../actions/laboratory';
 import { Spinner } from 'reactstrap';
-import { v4 as uuidv4 } from 'uuid';
+import axios from "axios";
 
 Moment.locale('en');
 momentLocalizer();
@@ -63,63 +63,146 @@ const ModalViewResult = (props) => {
     const classes = useStyles()
     const manifestSamples = props.manifestSamples && props.manifestSamples !==null ? props.manifestSamples : {};
     const manifestSample= Object.values(manifestSamples);
+    const manifestSampleForUpDateFormDataObj= Object.values(manifestSamples);
+    console.log(manifestSampleForUpDateFormDataObj)
     const  totalSampleShipment = Object.keys(manifestSamples).length;
-    console.log(Object.values(manifestSamples));
     const labId = manifestSamples.id
     const [loading, setLoading] = useState(false);
-    const [manifestId, setManifestId] = useState(uuidv4());
-    const [otherfields, setOtherFields] = useState({date_sample_dispatched:"",packaged_by:"",courier_phone_number:"",time_sample_dispatched:"",packaged_by_phone_number:"", courier_name:"", receiving_lab_name:"", manifest_status:""});
+    const [manifestId, setManifestId] = useState();
+    const [otherfields, setOtherFields] = useState({dateSampleDispatched:"",sampleDispatchedBy:"",courierPhoneNumber:"",timeSampleDispatched:"",sampleDispatchedByPhoneNumber:"", courierName:"", receivingLabName:"", manifest_status:""});
     const [manifestObj, setManifestObj] = useState(manifestSample)
     const [errors, setErrors] = useState({});
+    const [pcrOptions, setOptionPcr] = useState([]);
+    ///const [formdataObjUpdate, setformdataObjUpdate] = useState(manifestSampleForUpDateFormDataObj);
+    const [sampleManifest, setSampleManifest] = useState({sampleManifests: []})
+
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+                const response = await axios(
+                    url + "sample-manifests/generate-manifest-id/{length}?length=5"
+                );
+                const body = response.data;
+                setManifestId(body);
+            } catch (error) {
+                setManifestId(null);
+            }
+        }
+        getCharacters();
+    }, []);
+
+
+
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+                const response = await axios(
+                    url + "sample-manifests/pcrlab"
+                );
+                const body = response.data;
+                
+                setOptionPcr(
+                     body.map(({ name, id }) => ({ title: name, value: id }))
+                 );
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getCharacters();
+    }, []);
 
     const handleOtherFieldInputChange = e => {
         setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
-        console.log(otherfields)
+        //console.log(otherfields)
     }
     const validate = () => {
-
         let temp = { ...errors }
-        temp.date_sample_dispatched = otherfields.date_sample_dispatched ? "" : "Date is required"
-        temp.time_sample_dispatched = otherfields.time_sample_dispatched ? "" : "Time  is required."
-        temp.courier_name = otherfields.courier_name ? "" : "This field is required."
-        temp.packaged_by = otherfields.packaged_by ? "" : "This field is required."
-        temp.receiving_lab_name = otherfields.receiving_lab_name ? "" : "This is required." 
-        temp.courier_phone_number = otherfields.courier_phone_number ? "" : "This is required." 
+        temp.dateSampleDispatched = otherfields.dateSampleDispatched ? "" : "Date is required"
+        temp.timeSampleDispatched = otherfields.timeSampleDispatched ? "" : "Time  is required."
+        temp.courierName = otherfields.courierName ? "" : "This field is required."
+        temp.sampleDispatchedBy = otherfields.sampleDispatchedBy ? "" : "This field is required."
+        temp.receivingLabName = otherfields.receivingLabName ? "" : "This is required." 
+        temp.courierPhoneNumber = otherfields.courierPhoneNumber ? "" : "This is required." 
         setErrors({
             ...temp
-            })
-    
+            })    
         return Object.values(temp).every(x => x == "")
   }
 
-  const saveSample = e => {
+  //const samplesdispatched ={"sampleManifests": [] };
+    const saveSample = e => {
       e.preventDefault()
-          
-                    
+
+            const modifyFormDataObj= manifestSampleForUpDateFormDataObj.map(formobj => {                       
+                
+                formobj.formDataObj.data['manifest_status']=1;
+                return formobj;
+            })
+            // Modifying manifest samples by forming the object
             const modifyManifestSample= manifestSample.map(item => {                       
-                item.formDataObj.data['date_sample_dispatched']=otherfields['date_sample_dispatched'];
-                item.formDataObj.data['time_sample_dispatched'] = otherfields['time_sample_dispatched'];
-                item.formDataObj.data['receiving_lab_name'] =otherfields['receiving_lab_name'];
-                item.formDataObj.data['courier_name'] =otherfields['courier_name'];
-                item.formDataObj.data['sample_dispatched_by'] =otherfields['packaged_by'];
-                item.formDataObj.data['courier_phone_number'] =otherfields['courier_phone_number'];
-                item.formDataObj.data['manifest_status'] = 1;
+
+                item['labNumber'] = '67484';
+            
+                item['clientId'] = item.formDataObj.data['patient_id']
+                item['timeSampleTransferred'] = "10:10"//item.formDataObj.data['time_sample_transfered']
+                item['dateSampleTransferred'] = item.formDataObj.data['date_sample_transfered']
+                item['labOrderPriority'] = item.formDataObj.data.order_priority['display']
+                item['sampleTransferredBy'] = item.formDataObj.data['sample_transfered_by']
+                item['sampleOrderedBy'] = item.formDataObj.data['sample_ordered_by']
+                item['viralLoadIndication'] = item.formDataObj.data.viral_load_indication['display']
+                item['dateSampleDispatched'] = otherfields['dateSampleDispatched'];
+                item['timeSampleOrdered'] = "10:10"; //item.formDataObj.data['time_sample_collected]
+                item['timeSampleCollected'] = "10:10"//item.formDataobj.data['time_sample_collected]                
+                item['timeSampleDispatched'] = "10:10"//otherfields['timeSampleDispatched'];
+                item['courierName'] = otherfields['courierName'];
+                item['courierPhoneNumber'] = otherfields['courierPhoneNumber'];
+                item['sampleDispatchedBy'] = otherfields['sampleDispatchedBy'];
+                //item['sampleDispatchedByPhoneNumber'] = otherfields['sampleDispatchedByPhoneNumber'];
+                item['manifestId'] = manifestId;
+                item['receivingLabId'] = 'c5ty'
+                item['receivingLabName'] = otherfields['receivingLabName'];
+                item['totalSampleShipment'] = totalSampleShipment;
+                item['sendingFacilityId'] = 'lamis567';
+                item['sendingFacilityName'] = 'Lamisplus'
+                item['dispatched'] = true
+                item['id'] = 0;
+                item['visitDate'] = item.formDataObj.data['date_sample_ordered'];
+                item['dateResultReported'] = null
+                item['dateAssayed'] = null
+                item['dateResultDispatched'] = null
+                item['sampleStatus'] = null
+                item['sampleTestable'] = null
+                item['testResult'] = null
+                item['dateSampleReceivedLab'] = null
+                item['pcrLabSampleNumber'] = null
+                //delete item['formDataObj'];
+                delete item['tableData'];
                 
                 return item;
             })
-            console.log(manifestObj);  
-            console.log(modifyManifestSample);
+
+            //Manipulating the formDataObj to update the lab_test_status
+            
                 if(validate()){
-                    //setLoading(true);
-                    modifyManifestSample.forEach(function(value, index, array) {
-                        console.log(value.formDataObj,value.formDataObj.id);
-                        props.dispatchedManifestSamples(value.formDataObj, value.formDataObj.id)
-                            if(array.length == Object.keys(manifestSamples).length){
-                                props.togglestatus();
-                            }
+                    //Updating the FormDataObj informations
+                    modifyFormDataObj.forEach(function(value, index, array) {
+                        console.log(value);
+                        props.updateFormDataObj(value.formDataObj, value.formDataObj.id)
                     });
-                
-                    //props.createCollectedSample(manifestSamples, labId,'','')
+                    
+                    const modifyFormObj= manifestSample.map(item => { 
+                        delete item['formDataObj'];
+                        return item;
+                    })
+
+                    //Process the Samples to be dispatched 
+                    sampleManifest['sampleManifests'] = modifyManifestSample;
+                    props.dispatchedManifestSamples(sampleManifest)
+                                       
+                    //Closing of the modal 
+                    props.togglestatus();
+                    
+
           }
   }
 
@@ -141,7 +224,7 @@ const ModalViewResult = (props) => {
                                             <p style={{marginTop: '.7rem' }}>
                                                 Total Sample Shipment : &nbsp;&nbsp;&nbsp;<span style={{ fontWeight: 'bolder'}}>{Object.keys(manifestSamples).length }</span>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                
+                                                Manifest ID : &nbsp;&nbsp;&nbsp;<span style={{ fontWeight: 'bolder'}}>{manifestId}</span>
                                             </p>
 
                                         </Alert>
@@ -154,15 +237,15 @@ const ModalViewResult = (props) => {
                                           
                                                   <DateTimePicker
                                                       time={false}
-                                                      name="date_sample_dispatched"
-                                                      id="date_sample_dispatched"
+                                                      name="dateSampleDispatched"
+                                                      id="dateSampleDispatched"
                                                       onChange={date_transfered =>
-                                                        setOtherFields({ ...otherfields, date_sample_dispatched: moment(date_transfered).format("DD-MM-YYYY") })
+                                                        setOtherFields({ ...otherfields, dateSampleDispatched: moment(date_transfered).format("DD-MM-YYYY") })
                                                       }
                                                       required
                                                   /> 
-                                                      {errors.date_sample_dispatched !="" ? (
-                                                          <span className={classes.error}>{errors.date_sample_dispatched}</span>
+                                                      {errors.dateSampleDispatched !="" ? (
+                                                          <span className={classes.error}>{errors.dateSampleDispatched}</span>
                                                       ) : "" }
                                           </FormGroup>
                                       </Col>
@@ -171,89 +254,104 @@ const ModalViewResult = (props) => {
                                               <Label for=''>Time Dispatched</Label>
                                                   <DateTimePicker
                                                       date={false}
-                                                      name="time_sample_dispatched"
-                                                      id="time_sample_dispatched"
+                                                      name="timeSampleDispatched"
+                                                      id="timeSampleDispatched"
                                                       onChange={value1 =>
-                                                        setOtherFields({ ...otherfields, time_sample_dispatched: moment(value1).format("LT") })
+                                                        setOtherFields({ ...otherfields, timeSampleDispatched: moment(value1).format("LT") })
                                                       }
                                                   />
-                                                      {errors.time_sample_dispatched !="" ? (
-                                                        <span className={classes.error}>{errors.time_sample_dispatched}</span>
+                                                      {errors.timeSampleDispatched !="" ? (
+                                                        <span className={classes.error}>{errors.timeSampleDispatched}</span>
                                                       ) : "" }      
                                           </FormGroup>
                                       </Col>
                                       <Col md={6}>
                                           <FormGroup>
-                                              <Label for="exampleSelect">Courier Name</Label>
+                                              <Label for="">Dispatch Rider/Courier Name</Label>
                                                     <Input
                                                         type="text"
-                                                        name="courier_name"
-                                                        id="courier_name"
+                                                        name="courierName"
+                                                        id="courierName"
                                                         
-                                                        value={otherfields.courier_name}
+                                                        value={otherfields.courierName}
                                                         onChange={handleOtherFieldInputChange}
-                                                        {...(errors.courier_name && { invalid: true})}
+                                                        {...(errors.courierName && { invalid: true})}
                                                         
                                                     />
-                                                      <FormFeedback>{errors.courier_name}</FormFeedback>
+                                                      <FormFeedback>{errors.courierName}</FormFeedback>
                                           </FormGroup>
                                       </Col>
                                       <Col md={6}>
                                           <FormGroup>
-                                              <Label for="exampleSelect">Courier Phone Number</Label>
+                                              <Label for="exampleSelect">Dispatch Rider/Courier Phone Number</Label>
                                                     <Input
                                                         type="text"
-                                                        name="courier_phone_number"
-                                                        id="courier_phone_number"
+                                                        name="courierPhoneNumber"
+                                                        id="courierPhoneNumber"
                                                         
-                                                        value={otherfields.courier_phone_number}
+                                                        value={otherfields.courierPhoneNumber}
                                                         onChange={handleOtherFieldInputChange}
-                                                        {...(errors.courier_phone_number && { invalid: true})}
+                                                        {...(errors.courierPhoneNumber && { invalid: true})}
                                                         
                                                     />
-                                                      <FormFeedback>{errors.courier_phone_number}</FormFeedback>
+                                                      <FormFeedback>{errors.courierPhoneNumber}</FormFeedback>
                                           </FormGroup>
                                       </Col>
                                       <Col md={6}>
                                           <FormGroup>
-                                              <Label for="occupation">Packaged by </Label>
+                                              <Label for="occupation">Sample Dispatched By </Label>
 
                                                 <Input
                                                     type="select"
-                                                    name="packaged_by"
-                                                    id="packaged_by"
-                                                    vaule={otherfields.packaged_by}
+                                                    name="sampleDispatchedBy"
+                                                    id="sampleDispatchedBy"
+                                                    vaule={otherfields.sampleDispatchedBy}
                                                     onChange={handleOtherFieldInputChange}
-                                                    {...(errors.packaged_by && { invalid: true})} 
+                                                    {...(errors.sampleDispatchedBy && { invalid: true})} 
                                                 >
                                                       <option value=""></option>
                                                       <option value="Dorcas"> Dorcas </option>
                                                       <option value="Jeph"> Jeph </option>
                                                       <option value="Debora"> Debora </option>
                                                 </Input>
-                                                    <FormFeedback>{errors.sample_transfered_by}</FormFeedback>
+                                                    <FormFeedback>{errors.sampleDispatchedBy}</FormFeedback>
                                           </FormGroup>
                                       </Col>
-                                      
+                                      <Col md={6}>
+                                          <FormGroup>
+                                              <Label for="">Sender Phone Number</Label>
+                                                    <Input
+                                                        type="text"
+                                                        name="sampleDispatchedByPhoneNumber"
+                                                        id="sampleDispatchedByPhoneNumber"
+                                                        
+                                                        value={otherfields.sampleDispatchedByPhoneNumber}
+                                                        onChange={handleOtherFieldInputChange}
+                                                        {...(errors.sampleDispatchedByPhoneNumber && { invalid: true})}
+                                                        
+                                                    />
+                                                      <FormFeedback>{errors.sampleDispatchedByPhoneNumber}</FormFeedback>
+                                          </FormGroup>
+                                      </Col>
                                       <Col md={6}>
                                           <FormGroup>
                                               <Label for="occupation">Receiving Lab Name </Label>
 
-                                                <Input
-                                                    type="select"
-                                                    name="receiving_lab_name"
-                                                    id="receivingLabId"
-                                                    vaule={otherfields.receiving_lab_name}
+                                              <Input type="select" name="receivingLabName" id="receivingLabName" 
+                                                    vaule={otherfields.receivingLabName}
                                                     onChange={handleOtherFieldInputChange}
-                                                    {...(errors.receiving_lab_name && { invalid: true})} 
-                                                >
-                                                      <option value=""></option>
-                                                      <option value="Lab1"> FHI360 Lab </option>
-                                                      <option value="Lab2"> Abuja Teaching Hospital Lab </option>
-                                                      <option value="otherlabs"> Others </option>
-                                                </Input>
-                                                    <FormFeedback>{errors.receiving_lab_name}</FormFeedback>
-                                          </FormGroup>
+                                                    {...(errors.receivingLabName && { invalid: true})}
+                                                  >
+                                                        <option> </option>
+                                                        {pcrOptions.map(({ title, value }) => (
+                                                            
+                                                            <option key={title} value={title}>
+                                                                {title}
+                                                            </option>
+                                                        ))}
+                                                  </Input>
+                                                      <FormFeedback>{errors.receivingLabName}</FormFeedback>
+                                          </FormGroup>                                        
                                       </Col>                   
                                   </Row>
                                       <br/>
@@ -290,4 +388,4 @@ const ModalViewResult = (props) => {
   );
 }
 
-export default connect(null, { dispatchedManifestSamples })(ModalViewResult);
+export default connect(null, { dispatchedManifestSamples, updateFormDataObj })(ModalViewResult);

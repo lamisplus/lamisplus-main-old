@@ -296,7 +296,8 @@ const validate = () => {
     let temp = { ...errors }
     temp.firstName = values.firstName ? "" : "First Name is required"
     temp.hospitalNumber = values.hospitalNumber ? "" : "Patient Id is required."
-    temp.mobilePhoneNumber = values.mobilePhoneNumber ? "" : "Mobile numner is required."
+    temp.city = values.city ? "" : "This field is required."
+    temp.landmark = values.landmark ? "" : "This field is required."
     temp.lastName = values.lastName ? "" : "Last Name  is required."
     temp.genderId = values.genderId ? "" : "Gender is required." 
         setErrors({
@@ -602,10 +603,9 @@ const validate = () => {
                                                                               
                                                                                 value={values.mobilePhoneNumber}
                                                                                 onChange={handleInputChange}
-                                                                                {...(errors.mobilePhoneNumber && { invalid: true})}
                                                                                 
                                                                             />
-                                                                                <FormFeedback>{errors.mobilePhoneNumber}</FormFeedback>
+                                                                              
                                                                     </FormGroup>
                                                                 </Col>
                                                                 <Col md={4}>
@@ -709,7 +709,10 @@ const validate = () => {
                                                                               
                                                                                 value={values.city}
                                                                                 onChange={handleInputChange}
+                                                                                {...(errors.city && { invalid: true})}
                                                                             />
+                                                                            <FormFeedback>{errors.city}</FormFeedback>
+                                                                           
                                                                     </FormGroup>
                                                                 </Col>
 
@@ -723,7 +726,9 @@ const validate = () => {
                                                                               
                                                                                 value={values.landmark}
                                                                                 onChange={handleInputChange}
+                                                                                {...(errors.landmark && { invalid: true})}
                                                                             />
+                                                                                <FormFeedback>{errors.landmark}</FormFeedback>
                                                                     </FormGroup>
                                                                 </Col>
                                                                 <Col md={4}>

@@ -5,11 +5,19 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.dto.*;
+import org.lamisplus.modules.base.domain.entity.Encounter;
 import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.service.PatientService;
+import org.lamisplus.modules.base.util.PaginationUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -29,8 +37,8 @@ public class PatientController {
         return ResponseEntity.ok(this.patientService.getAllPatients());
     }
 
-    @GetMapping("/{hospitalNumber}")
-    public ResponseEntity<PatientDTO> getPatientByHospitalNumber(@PathVariable String hospitalNumber) {
+    @GetMapping("/hospitalNumber")
+    public ResponseEntity<PatientDTO> getPatientByHospitalNumber(@RequestParam String hospitalNumber) {
         return ResponseEntity.ok(this.patientService.getPatientByHospitalNumber(hospitalNumber));
     }
 
@@ -59,8 +67,16 @@ public class PatientController {
         return ResponseEntity.ok(this.patientService.getEncountersByPatientIdAndFormCode(id, formCode, sortField, sortOrder, limit));
     }
 
+    /*@GetMapping("/{id}/encounters/{fCode}")
+    public ResponseEntity<List> getEncountersByPatientIdAndFCode(@PathVariable Long id,
+                                                                    @PathVariable String fCode,Pageable pageable) {
+        final Page<Encounter> page = patientService.getEncountersByPatientIdAndFCode(pageable, id, fCode);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }*/
+
     @GetMapping("/{id}/encounters/programCodeExclusionList")
-    public ResponseEntity<List> getEncountersByPatientIdAndProgramCodeExclusionList(@PathVariable Long id, @RequestParam(required = false) List<String> programCodeExclusionList) throws URISyntaxException {
+    public ResponseEntity<List> getEncountersByPatientIdAndProgramCodeExclusionList(@PathVariable Long id, @RequestParam(required = false) List<String> programCodeExclusionList) {
         return ResponseEntity.ok(this.patientService.getEncountersByPatientIdAndProgramCodeExclusionList(id, programCodeExclusionList));
     }
 
@@ -76,10 +92,9 @@ public class PatientController {
             "Example - api/encounters/{programCode}/{formCode}?dateStart=01-01-2020&dateEnd=01-04-2020")
     @GetMapping("/{id}/encounters/{formCode}/{dateStart}/{dateEnd}")
     public List getEncountersByPatientIdAndDateEncounter(@PathVariable Long id, @PathVariable String formCode,
-                                                         @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional<String> dateStart,
-                                                         @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional<String> dateEnd) throws URISyntaxException {
-        List formDataList = this.patientService.getEncountersByPatientIdAndDateEncounter(id, formCode, dateStart, dateEnd);
-        return formDataList;
+                                                         @ApiParam(defaultValue = "") @PathVariable(required = false) Optional<String> dateStart,
+                                                         @ApiParam(defaultValue = "") @PathVariable(required = false) Optional<String> dateEnd) {
+        return patientService.getEncountersByPatientIdAndDateEncounter(id, formCode, dateStart, dateEnd);
     }
 
     @ApiOperation(value="getAllEncountersByPatientId", notes = " id=required\n\n" +

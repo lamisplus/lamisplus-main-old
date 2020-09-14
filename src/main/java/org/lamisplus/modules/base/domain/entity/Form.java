@@ -1,8 +1,8 @@
 package org.lamisplus.modules.base.domain.entity;
 
+
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
-import org.elasticsearch.common.Nullable;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -11,7 +11,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Collection;
 import java.util.List;
 
 @Data
@@ -84,7 +83,7 @@ public class Form extends JsonBEntity implements Serializable {
     private Integer archived = 0;
 
     @ManyToOne
-    @JoinColumn(name = "program_code", referencedColumnName = "code", insertable = false, updatable = false)
+    @JoinColumn(name = "program_code", referencedColumnName = "uuid", insertable = false, updatable = false)
     @JsonIgnore
     private Program programByProgramCode;
 
@@ -92,4 +91,7 @@ public class Form extends JsonBEntity implements Serializable {
     @ToString.Exclude
     @JsonIgnore
     private List<Encounter> encountersByForm;
+
+    @Transient
+    private String programName;
 }

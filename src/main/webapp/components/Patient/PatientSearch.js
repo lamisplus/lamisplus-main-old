@@ -84,7 +84,6 @@ const PatientSearch = (props) => {
                         address: row.street || '',
                         actions: 
           <div>
-          
             <Menu>
                 <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
                   Actions <span aria-hidden>▾</span>
@@ -92,10 +91,7 @@ const PatientSearch = (props) => {
                     <MenuList style={{ color:"#000 !important"}} >
                         <MenuItem  style={{ color:"#000 !important"}}>                      
                             <Link
-                                to={{
-                                  pathname: "/patient-dashboard",
-                                  state: { hospitalNumber: row.hospitalNumber  }
-                                }}>
+                                to={{pathname: "/patient-dashboard", state: { hospitalNumber: row.hospitalNumber  }}}>
                                 <MdDashboard size="15" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>
                           </Link>                               
                           </MenuItem>
@@ -118,7 +114,7 @@ const PatientSearch = (props) => {
                           </MenuItem>
                   </MenuList>
             </Menu>
-          </div>            
+          </div>
           }))}
           
           options={{

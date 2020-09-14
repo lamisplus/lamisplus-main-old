@@ -99,7 +99,7 @@ public class Encounter implements Serializable  {
     private Form formForEncounterByFormCode;
 
     @ManyToOne
-    @JoinColumn(name = "program_code", referencedColumnName = "code", insertable = false, updatable = false)
+    @JoinColumn(name = "program_code", referencedColumnName = "uuid", insertable = false, updatable = false)
     @JsonIgnore
     private Program programForEncounterByProgramCode;
 

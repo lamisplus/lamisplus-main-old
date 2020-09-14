@@ -1,24 +1,15 @@
 import React, { useState } from "react";
 import { Button, Dropdown, Menu } from "semantic-ui-react";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Popover from "@material-ui/core/Popover";
 import { connect } from "react-redux";
-import { Badge } from "reactstrap";
-import CheckInModal from "components/CheckIn/CheckInModal";
-import FormRendererModal from "components/FormManager/FormRendererModal";
 import * as CODES from "api/codes";
 import { ToastContainer, toast } from "react-toastify";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import { update } from "actions/visit";
 import { fetchByHospitalNumber} from "actions/patients";
-import { APPLICATION_CODESET_RELATIONSHIPS } from "actions/types";
 import { fetchApplicationCodeSet } from "actions/applicationCodeset";
-import {MenuItem} from '@reach/menu-button';
+import {Link} from "react-router-dom";
 
 Moment.locale("en");
 momentLocalizer();
@@ -83,50 +74,44 @@ function AdminSubMenu(props) {
   return (
     <React.Fragment>
       <Menu size="mini" color={"silver"} inverted>
-          <Dropdown text="Configurations"   labeled simple    className='icon link item'>
+          <Dropdown text="System Configurations"   labeled simple    className='icon link item'>
               <Dropdown.Menu>
-                <Dropdown.Item
-                  onClick={() => displayFormByFormName("TRANSFER_INPATIENT")}>
 
+                <Dropdown.Item>
+                  <Link to={{pathname: "/admin/application-codesets"}} >
                  Application Codeset Manager
+                  </Link>
                 </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => displayFormByFormName("DISCHARGE_PATIENT")}>
+                <Dropdown.Item>
+                  <Link
+                      to={{
+                        pathname: "/admin/global-variable"}}
+                  >
+                  Global Variables
+                  </Link>
+                </Dropdown.Item>
+                <Dropdown.Item >
+                  <Link
+                      to={{
+                        pathname: "/admin/standards"}}
+                  >
+                  International Standard setup
+                  </Link>
+                </Dropdown.Item>
+
+                <Dropdown.Item >
                   Organization Unit setup
                 </Dropdown.Item>
+                <Dropdown.Item >
+                  <Link to={{
+                        pathname: "/admin/wards"}}>
+                    Ward Manager
+                  </Link>
+                </Dropdown.Item>
+
               </Dropdown.Menu>
 
           </Dropdown>
-
-        <Dropdown text="Advance Configuration" className='link item' simple>
-          <Dropdown.Menu>
-            <Dropdown.Item>
-              New Form
-              </Dropdown.Item>
-            <Dropdown.Item>View All Forms</Dropdown.Item>
-            {/*<Dropdown.Item>*/}
-            {/*  <Dropdown text='New Form Designer'>*/}
-            {/*    <Dropdown.Menu>*/}
-            {/*      <Dropdown.Header>Mens</Dropdown.Header>*/}
-            {/*      <Dropdown.Item>Shirts</Dropdown.Item>*/}
-            {/*      <Dropdown.Item>Pants</Dropdown.Item>*/}
-            {/*      <Dropdown.Item>Jeans</Dropdown.Item>*/}
-            {/*      <Dropdown.Item>Shoes</Dropdown.Item>*/}
-            {/*      <Dropdown.Divider />*/}
-            {/*      <Dropdown.Header>Womens</Dropdown.Header>*/}
-            {/*      <Dropdown.Item>Dresses</Dropdown.Item>*/}
-            {/*      <Dropdown.Item>Shoes</Dropdown.Item>*/}
-            {/*      <Dropdown.Item>Bags</Dropdown.Item>*/}
-            {/*    </Dropdown.Menu>*/}
-            {/*  </Dropdown>*/}
-            {/*</Dropdown.Item>*/}
-            <Dropdown.Divider />
-            <Dropdown.Header>Report Designer</Dropdown.Header>
-            <Dropdown.Item>New Report</Dropdown.Item>
-            <Dropdown.Item>View All Reports</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-
       </Menu>
 
       <ToastContainer />

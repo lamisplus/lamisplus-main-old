@@ -25,6 +25,11 @@ const navItems = [
   { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog },
   { to: '/visual', name: 'Visualization', exact: false, Icon: MdGraphicEq },
   //{ to: '/admin-dashboard', name: 'Administration Module', exact: false, Icon: FaUserCog },
+  
+];
+const navContents = [
+  { to: '/bootstrap-configuration', name: 'Bootstrap Configuration', exact: false, Icon: FaListUl },
+  { to: '/database-management', name: 'DataBase Management', exact: false, Icon: FaUserCog },
 ];
 
 const adminItems = [
@@ -35,6 +40,10 @@ const adminItems = [
     exact: false,
     Icon: FaWpforms,
   },
+  { to: '/bootstrap-configuration', name: 'Bootstrap Configuration', exact: false, Icon: FaListUl },
+  { to: '/database-management', name: 'DataBase Management', exact: false, Icon: FaUserCog },
+  { to: '/organization-unit', name: 'Organization Unit', exact: false, Icon: FaUserCog },
+
 ];
 
 const bem = bn.create("sidebar");

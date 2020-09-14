@@ -4,7 +4,11 @@ import React, {Component} from "react";
 import { BrowserRouter, Redirect, Switch } from "react-router-dom";
 import "./styles/reduction.scss";
 import SignIn from "pages/SignPage";
+
+import PrintDispatchedManifest from "pages/PrintManifest";
+
 import { Register } from "pages/Register";
+
 import { history } from "./history";
 import { PrivateRoute } from "./PrivateRoute"
 
@@ -35,8 +39,22 @@ const SampleVerification = React.lazy(() => import("components/Laboratory/Sample
 const DispatchedSamples = React.lazy(() => import("components/Laboratory/DispatchedManifest/DispatchedSamplesList"))
 const PatientsPage = React.lazy(() => import("components/PatientSearch/HomePage"));
 const PrintSamples = React.lazy(() => import("components/Laboratory/DispatchedManifest/PrintSample"));
+const PrintManifest = React.lazy(() => import("components/Laboratory/DispatchedManifest/PrintManifest"));
+const ViewSampleDispatched = React.lazy(() => import("components/Laboratory/DispatchedManifest/ViewPrintManifest"));
 
+/* Bootstrap configuration */
+const BootStrapConfiguration = React.lazy(() => import("components/AdministrativeModule/BootstrapConfiguration/Index"));
+const CreateModule = React.lazy(() => import("components/AdministrativeModule/BootstrapConfiguration/CreateModule"));
+const UpdateModule = React.lazy(() => import("components/AdministrativeModule/BootstrapConfiguration/UpdateModule"));
+const UpdatedModule = React.lazy(() => import("components/AdministrativeModule/BootstrapConfiguration/UpdatedModule"));
 
+/* Datasase Management configuration */
+const DataBaseManagement = React.lazy(() => import("components/AdministrativeModule/DatabaseManagement/Index"));
+const DataBaseSync = React.lazy(() => import("components/AdministrativeModule/DatabaseManagement/DatabaseSync"));
+/* Organization Unit Manager configuration */
+const OrganizationUnit = React.lazy(() => import("components/Admin/OrganizationUnit/Index"));
+
+/* End of Bootstrap configuration */
 const formDashboard = React.lazy(() => import('components/formBuilder/formDashboard'));
 const FormBuilder = React.lazy(() => import('components/formBuilder/FormBuilder'));
 const ViewForm = React.lazy(() => import('components/formBuilder/ViewForm'));
@@ -68,6 +86,15 @@ const Prescription = React.lazy(() => import("components/Pharmacy/Prescriptions"
 
 //Appointment
 const AppointmentPage = React.lazy(() => import("components/Appointments/HomePage"));
+
+//Admin
+const GlobalVariableSearchPage = React.lazy(() => import("components/Admin/GlobalVariable/GlobalVariableSearch"));
+const StandardSearchPage = React.lazy(() => import("components/Admin/InternationalStandards/StandardSearch"));
+const ApplicationCodesetPage = React.lazy(() => import("components/Admin/ApplicationCodeset/ApplicationCodesetSearch"));
+const WardManagerPage = React.lazy(() => import("components/Admin/WardManager/WardSearch"));
+
+//Radiology
+const RadiologyTestDetailPage = React.lazy(() => import("components/Laboratory/Radiology/TestDetail"));
 // const getBasename = () => {
 //   return `/${process.env.PUBLIC_URL.split("/").pop()}`;
 // };
@@ -84,7 +111,7 @@ class Routes extends Component {
         <Switch>
           {/* <LayoutRoute exact path="/register" layout={EmptyLayout} component={Register} /> */}
         <LayoutRoute exact path="/login" layout={EmptyLayout} component={SignIn} />
-        <LayoutRoute exact path="/print-sample" layout={EmptyLayout} component={PrintSamples} />
+        <LayoutRoute exact path="/print-dispatched-manifest" layout={EmptyLayout} component={PrintDispatchedManifest} />
           <MainLayout breakpoint={this.props.breakpoint}>
             <React.Suspense fallback={<PageSpinner />}>
               {/* The new routes are here  */}
@@ -115,9 +142,23 @@ class Routes extends Component {
               <PrivateRoute exact path="/sample-verification" component={SampleVerification} />
               <PrivateRoute exact path="/collect-sample" component={CollectSample} />
               <PrivateRoute exact path="/dispatched-sample" component={DispatchedSamples} />
+              <PrivateRoute exact path="/print-sample"  component={PrintSamples}  />
+              <PrivateRoute exact path="/print-manifest"  component={PrintManifest}  />
               <PrivateRoute exact path="/patients" component={PatientsPage} />
-
               <PrivateRoute exact path="/print-sample" component={PrintSamples} />
+              <PrivateRoute exact path="/view-sample-dispatched" component={ViewSampleDispatched} />
+              
+              {/* BootstrapConfiguration Link */}
+              <PrivateRoute exact path="/bootstrap-configuration" component={BootStrapConfiguration} />
+              <PrivateRoute exact path="/create-module" component={CreateModule} />
+              <PrivateRoute exact path="/update-module" component={UpdateModule} />
+              <PrivateRoute exact path="/updated-module" component={UpdatedModule} />
+              {/* DataBaseManagement Link */}
+              <PrivateRoute exact path="/database-management" component={DataBaseManagement} />
+              <PrivateRoute exact path="/database-sync" component={DataBaseSync} />
+              {/* OrganizationUnit */}
+              <PrivateRoute exact path="/organization-unit" component={OrganizationUnit} />
+              
               {/* Pharmacy Links */}
               <PrivateRoute exact path="/pharmacy" component={PharmacyDashboard} />
               
@@ -158,6 +199,11 @@ class Routes extends Component {
 
               <PrivateRoute exact path="/appointments" component={AppointmentPage} />
                 <PrivateRoute exact path="/admin" component={AdministrativeDashboard} />
+                <PrivateRoute exact path={"/admin/global-variable"} component={GlobalVariableSearchPage} />
+                <PrivateRoute exact path={"/admin/standards"} component={StandardSearchPage} />
+                <PrivateRoute exact path={"/admin/application-codesets"} component={ApplicationCodesetPage} />
+                <PrivateRoute exact path={"/admin/wards"} component={WardManagerPage} />
+                <PrivateRoute exact path={"/radiology"} component={RadiologyTestDetailPage} />
               {/* The route to Appointment*/}
               
             </React.Suspense>

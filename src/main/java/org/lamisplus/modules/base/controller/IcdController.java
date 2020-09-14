@@ -54,8 +54,8 @@ public class IcdController {
     }
 
     @GetMapping("/category")
-    public ResponseEntity<List<IcdDTO>> getAllCategory() {
-        return ResponseEntity.ok(icdService.getAllCategory());
+    public ResponseEntity<List> getAllCategory() {
+        return ResponseEntity.ok(icdService.getAllDistinctCategoryCodeAndCategoryTitle());
     }
 
     @DeleteMapping("/{id}")

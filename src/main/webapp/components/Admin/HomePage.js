@@ -19,10 +19,9 @@ import { FaBriefcaseMedical } from "react-icons/fa";
 //{/*  Check box list */}
 
 import AdminSubMenu from "components/Admin/AdminSubMenu";
-
 import * as actions from "actions/patients";
 import { connect } from "react-redux";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import UserPage from "../Users/UserPage";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -176,25 +175,25 @@ function HomePage(props) {
                 </TabPanel>
                 {/* End of dashboard */}
 
-                {/* Begining of consultation  */}
+                {/* Begining of bootstrap  */}
                 <TabPanel value={value} index={1}>
                     <FormPage/>
                 </TabPanel>
-                {/* End of consultation */}
+                {/* End of boostrap */}
 
-                {/* test orders */}
+                {/* user setup */}
                 <TabPanel value={value} index={2}>
-
+                    <UserPage/>
                 </TabPanel>
-                {/* test orders */}
+                {/* user setup */}
 
-                {/* medication */}
+                {/* db manager */}
                 <TabPanel value={value} index={3}>
 
                 </TabPanel>
-                {/* medication */}
+                {/* db manager */}
 
-                {/* service forms */}
+                {/* advance config */}
                 <TabPanel value={value} index={4}>
 
                 </TabPanel>
@@ -205,6 +204,9 @@ function HomePage(props) {
                 <TabPanel value={value} index={6}>
 
                 </TabPanel>
+
+                {/* advance config */}
+
             </div>
         </div>
     );
