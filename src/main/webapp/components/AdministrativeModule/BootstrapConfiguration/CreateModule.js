@@ -33,6 +33,7 @@ import OverlayLoader from 'react-overlay-loading/lib/OverlayLoader'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
+import { url } from "./../../../api";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,13 +85,13 @@ const CreateModule = (props) => {
       setInstallationMessage('Processing, please wait...')     
       const form_Data = new FormData();
       form_Data.append('file1', fileToUpload[0]); 
-      const token ='eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9BRE1JTiIsImV4cCI6MTYwMDEyNzY5Mn0.a-SMbK3ucT15Kyk9nM_NU1gJveSWnn3OzC4iaVzT8UdKIh6rMvrFuMxdfbGLR5arCCikOCi-PXfdjF5pjQ11Mg'
+      //const token ='eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9BRE1JTiIsImV4cCI6MTYwMDEyNzY5Mn0.a-SMbK3ucT15Kyk9nM_NU1gJveSWnn3OzC4iaVzT8UdKIh6rMvrFuMxdfbGLR5arCCikOCi-PXfdjF5pjQ11Mg'
        
       try {
-        const res = await axios.post('https://lp-base.herokuapp.com/api/modules/upload', form_Data, {
+        const res = await axios.post(url+'modules/upload', form_Data, {
           headers: {
             'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${token}` 
+            //'Authorization': `Bearer ${token}` 
           },
           
         onUploadProgress: progressEvent => {
