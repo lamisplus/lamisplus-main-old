@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import IconButton from "@material-ui/core/IconButton";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import {
   Form,
   Input,
@@ -31,6 +30,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import Select from "react-select";
 import CheckedInValidation from "components/Utils/CheckedInValidation";
+import { fetchById} from 'actions/formBuilder'
 
 const cardStyle = {
   borderColor: "#fff",
@@ -47,7 +47,6 @@ function ServiceFormPage(props) {
   const [encounterMessage, setEncounterMessage] = useState("");
   const [serviceForms, setServiceForms] = useState([]);
   const [programs, setPrograms] = useState([]);
-  const [filteredForms, setFilteredForms] = useState([]);
   const [efilterText, setEFilterText] = React.useState("");
   const [eresetPaginationToggle, setEResetPaginationToggle] = React.useState(
     false
@@ -72,20 +71,6 @@ function ServiceFormPage(props) {
     return setShowFormPage(!showFormPage);
   };
 
-  React.useEffect(() => {
-    setShowServiceFormLoading(true);
-    const onSuccess = () => {
-      setShowServiceFormLoading(false);
-    };
-    const onError = () => {
-      setMessage(
-        "Could not fetch available service forms. Please try again later"
-      );
-      setShowServiceFormLoading(false);
-      setServiceForms([]);
-    };
-    props.fetchForms(onSuccess, onError);
-  }, []);
 
   React.useEffect(() => {
     setShowLoading(true);
@@ -100,17 +85,11 @@ function ServiceFormPage(props) {
     props.fetchPrograms(onSuccess, onError);
   }, []);
 
-  React.useEffect(() => {
-    const filteredForms = props.formList.filter(
-      (x) => x.programCode !== CODES.GENERAL_SERVICE
-    );
-    setServiceForms(filteredForms);
-  }, [props.formList]);
 
   React.useEffect(() => {
     setPrograms(
       props.programList
-        .map(({ name, code }) => ({ label: name, value: code }))
+        .map((x) => ({ ...x, label: x.name, value: x.code }))
         .filter((x) => x.value !== CODES.GENERAL_SERVICE)
     );
   }, [props.programList]);
@@ -206,14 +185,14 @@ function ServiceFormPage(props) {
     {
       cell: (row) => (
         <React.Fragment>
-          <IconButton
-            color="primary"
-            size="small"
-            aria-label="View All Forms"
-            title="View All Form"
-            onClick={() => viewAllForm(row)}
-            className="fa fa-list"
-          ></IconButton>
+          {/*<IconButton*/}
+          {/*  color="primary"*/}
+          {/*  size="small"*/}
+          {/*  aria-label="View All Forms"*/}
+          {/*  title="View All Form"*/}
+          {/*  onClick={() => viewAllForm(row)}*/}
+          {/*  className="fa fa-list"*/}
+          {/*></IconButton>*/}
           <IconButton
             color="primary"
             size="small"
@@ -257,9 +236,19 @@ function ServiceFormPage(props) {
   }, [efilterText, eresetPaginationToggle]);
 
   const handleProgramChange = (newValue, actionMeta) => {
-    setFilteredForms(
-      serviceForms.filter((x) => x.programCode === newValue.value)
-    );
+    setShowServiceFormLoading(true);
+    const onSuccess = () => {
+      setShowServiceFormLoading(false);
+    }
+
+    const onError = () => {
+      setShowServiceFormLoading(false);
+    }
+    props.fetchServiceByProgram(newValue.id, onSuccess, onError);
+
+    //setFilteredForms(
+      //serviceForms.filter((x) => x.programCode === newValue.value)
+    //);
   };
   const handleChange = (newValue, actionMeta) => {
     setCurrentForm({ ...newValue, type: "NEW" });
@@ -298,7 +287,7 @@ function ServiceFormPage(props) {
                         isMulti={false}
                         onChange={handleChange}
                         isLoading={showServiceFormLoading}
-                        options={filteredForms.map((x) => ({
+                        options={props.serviceList.map((x) => ({
                           ...x,
                           label: x.name,
                           value: x.id,
@@ -445,6 +434,7 @@ const mapStateToProps = (state) => {
     programList: state.formManager.programList,
     patientEncounterList: state.patients.exclusiveEncounters,
     encounter: state.encounter.encounter,
+    serviceList: state.formReducers.form,
   };
 };
 
@@ -454,6 +444,7 @@ const mapActionToProps = {
   fetchPatientEncounters:
     patientActions.fetchPatientEncounterProgramCodeExclusionList,
   fetchEncounterInfo: encounterAction.fetchById,
+  fetchServiceByProgram: fetchById
 };
 
 export default connect(mapStateToProps, mapActionToProps)(ServiceFormPage);

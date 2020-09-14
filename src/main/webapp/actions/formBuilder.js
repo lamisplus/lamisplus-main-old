@@ -90,7 +90,7 @@ export const updateForm = (id, data) => dispatch => {
 }
 
 
-export const fetchById = (programId) => dispatch => {
+export const fetchById = (programId, onSuccess, onError) => dispatch => {
     axios.get(`${url}programs/${programId}/forms`)
         .then(response => {
             console.log(response)
@@ -98,6 +98,9 @@ export const fetchById = (programId) => dispatch => {
                 type: FORMTYPES.FORMTYPES_FETCH_BY_ID,
                 payload: response.data
             })
+            if(onSuccess){
+                onSuccess()
+            }
         })
         .catch(error => {
             console.log(error)
@@ -106,6 +109,9 @@ export const fetchById = (programId) => dispatch => {
                 payload: 'Something went wrong'
 
             })
+            if(onError){
+                onError()
+            }
         })
 }
 
