@@ -19,6 +19,8 @@ import DeleteModule from "./DeleteModule";
 import { useSelector, useDispatch } from 'react-redux';
 import {  fetchAllBootstrapModule } from '../../../actions/bootstrapModule';
 import { Badge } from 'reactstrap';
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
 
 
 const useStyles = makeStyles({
@@ -127,34 +129,22 @@ const moduleStatus = e =>{
 }   
 
 return (
-    <Page >
-      
-        <Row>
-            <Col>
-              <h1>Bootstrap Configuration
-              < MatButton
-                    type='submit'
-                    variant='contained'
-                    //variant="outlined"
-                    color="default"
-                    className={classes.button}                        
-                    className=" float-right mr-1"
-                >
-                    <TiArrowBack/>{" "} Back
-                </MatButton>
-                </h1>
-                <Card className="mb-12">
-                
-                <CardBody>
+<React.Fragment>
 
-                <br />
-                    <Row>
-                        <Col>
                             <Card body>
-                              
+                                <Breadcrumbs aria-label="breadcrumb">
+                                    <Link color="inherit" to ={{
+                                        pathname: "/admin",
+                                        activetab: 1
+                                    }}  >
+                                        Admin
+                                    </Link>
+                                    <Typography color="textPrimary">Bootstrap Configuration</Typography>
+                                </Breadcrumbs>
+
                             <Link 
                                 to ={{ 
-                                pathname: "/create-module",  
+                                pathname: "/admin/bootstrap-configuration/create-module",
                                 activetab: 1
                                 }} 
                               >
@@ -200,15 +190,10 @@ return (
                             /> 
                            
                             </Card>
-                        </Col>
-                  </Row>
-                </CardBody>
-              </Card>
-            </Col>
-        </Row>
+
        <DeleteModule modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
-      
-    </Page>
+
+</React.Fragment>
   )
   
 }

@@ -12,6 +12,7 @@ import FormPage from "components/Admin/FormPage";
 import ReportHome from "components/Reports/ReportHome";
 
 
+
 // {/* Auto textfield complete */}
 import { MdDashboard, MdContacts } from "react-icons/md";
 import { GiFiles, GiTestTubes } from "react-icons/gi";
@@ -22,6 +23,7 @@ import AdminSubMenu from "components/Admin/AdminSubMenu";
 import * as actions from "actions/patients";
 import { connect } from "react-redux";
 import UserPage from "../Users/UserPage";
+import DatabaseManagement from "../AdministrativeModule/DatabaseManagement/Index";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -147,17 +149,12 @@ function HomePage(props) {
                         {...a11yProps(3)}
                     />
 
-                    <Tab
-                        className={classes.title}
-                        label="Bootstrap Configuration"
-                        icon={<GiFiles />}
-                        {...a11yProps(4)}
-                    />
+
                     <Tab
                         className={classes.title}
                         label="Report Builder"
                         icon={<GiFiles />}
-                        {...a11yProps(5)}
+                        {...a11yProps(4)}
                     />
                 </Tabs>
 
@@ -189,21 +186,15 @@ function HomePage(props) {
 
                 {/* db manager */}
                 <TabPanel value={value} index={3}>
-
+                    <DatabaseManagement/>
                 </TabPanel>
                 {/* db manager */}
 
-                {/* advance config */}
-                <TabPanel value={value} index={4}>
-
-                </TabPanel>
                 {/* service forms */}
-                <TabPanel value={value} index={5}>
+                <TabPanel value={value} index={4}>
                     <ReportHome/>
                 </TabPanel>
-                <TabPanel value={value} index={6}>
 
-                </TabPanel>
 
                 {/* advance config */}
 

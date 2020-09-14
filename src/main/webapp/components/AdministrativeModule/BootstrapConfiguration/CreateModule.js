@@ -179,7 +179,7 @@ const CreateModule = (props) => {
                 <MenuItem style={{ color:"#000 !important"}}>
                       <Link
                           to={{
-                            pathname: "/updated-module",
+                            pathname: "/admin/bootstrap-configuration/updated-module",
                             currentId: {}
                           }}
                       >
@@ -353,7 +353,7 @@ return (
               <h1>New Module
                 <Link 
                   to ={{ 
-                  pathname: "/bootstrap-configuration",  
+                  pathname: "/admin/bootstrap-configuration",
                   activetab: 1
                   }} 
                 >

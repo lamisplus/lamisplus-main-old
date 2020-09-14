@@ -55,20 +55,12 @@ const useStyles = makeStyles({
     
 
 return (
-    <Page >
-      
-        <Row>
-            <Col>
-              <h1>Database Management</h1>
-                
-                   
-                <br />
+    <React.Fragment >
                     <Row>
                         <Col>
-                           
-                            
+
                             <MaterialTable
-                              title=""
+                              title="Database Management"
                               columns={[
                                 { title: 'Database Name', field: 'name' },
                                 { title: 'Action', field: 'actions'},
@@ -123,12 +115,10 @@ return (
                             
                         </Col>
                   </Row>
-               
-            </Col>
-        </Row>
+
        <RestoreDatabase modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
        <BackupDatabase modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} />
-    </Page>
+    </React.Fragment>
   )
   
 }
