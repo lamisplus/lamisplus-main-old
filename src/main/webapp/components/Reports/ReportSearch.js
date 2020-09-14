@@ -12,7 +12,6 @@ import {Link} from 'react-router-dom';
 import {MdDeleteForever, MdModeEdit } from "react-icons/md";
 import "./ReportTable.css";
 
-//Dtate Picker package
 Moment.locale("en");
 momentLocalizer();
 
@@ -39,7 +38,7 @@ function ReportSearch(props) {
     React.useEffect(() => {
         setLoading(true);
         const onSuccess = () => {
-            // setLoading(false);
+            setLoading(false);
         };
         const onError = () => {
             setLoading(false);
@@ -59,6 +58,7 @@ function ReportSearch(props) {
                         { title: "Report Description", field: "description" },
                         {title: "Action", field: "actions", filtering: false,},
                     ]}
+                    isLoading={loading}
                     data={props.reportList.map((row) => ({
                         programCode: row.programCode,
                         name: row.name,

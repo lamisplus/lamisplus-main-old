@@ -35,13 +35,14 @@ function ReportSearch(props) {
     React.useEffect(() => {
         setLoading(true);
         const onSuccess = () => {
-            // setLoading(false);
+            setLoading(false);
         };
         const onError = () => {
             setLoading(false);
         };
         props.fetchAll(onSuccess, onError);
     }, []);
+
 
     return (
         <React.Fragment>
@@ -55,6 +56,7 @@ function ReportSearch(props) {
                         { title: "Report Description", field: "description" },
                         {title: "Action", field: "actions", filtering: false,},
                     ]}
+                    isLoading={loading}
                     data={props.reportList.map((row) => ({
                         programCode: row.programCode,
                         name: row.name,

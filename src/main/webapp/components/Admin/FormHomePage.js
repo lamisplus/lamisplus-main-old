@@ -9,8 +9,7 @@ import FormRendererModal from "components/Admin/FormRendererModal";
 import { ToastContainer, toast } from "react-toastify";
 import {Menu, MenuButton, MenuItem, MenuList} from '@reach/menu-button';
 import {Link} from 'react-router-dom';
-import { MdRemoveRedEye, MdDeleteForever, MdModeEdit } from "react-icons/md";
-import "./FormTablePage.css";
+import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 
 //Dtate Picker package
 Moment.locale("en");
@@ -53,13 +52,14 @@ function FormSearch(props) {
     React.useEffect(() => {
         setLoading(true);
         const onSuccess = () => {
-            // setLoading(false);
+            setLoading(false);
         };
         const onError = () => {
             setLoading(false);
         };
         props.fetchAllForms(onSuccess, onError);
     }, []);
+
 
     return (
         <React.Fragment>
@@ -73,6 +73,7 @@ function FormSearch(props) {
                         { title: "Form Version", field: "number" },
                         {title: "Action", field: "actions", filtering: false,},
                     ]}
+                    isLoading={loading}
                     data={props.formList.map((row) => ({
                         programName: row.programName,
                         name: row.name,

@@ -44,6 +44,7 @@ const CreateReports = props => {
         newdata2['dataSource']=dataSource;
         newdata2['template']=template;
 
+
         e.preventDefault()
         console.log('programCode'+programCode);
         props.creatReport(newdata2);
@@ -51,7 +52,7 @@ const CreateReports = props => {
 
     return (
         <div className="PivotTable">
-            <Page title="Jasper Template Upload " >
+            <Page title="Report Builder " >
                 <Card style={{ width: '80rem' }} >
                     <CardContent>
                         <Link to="/admin">
@@ -63,7 +64,7 @@ const CreateReports = props => {
                                 <TiArrowBack /> &nbsp; back
                             </MatButton>
                         </Link>
-                        <h4>Paste XML or JSON Template</h4>
+                        <h4>Build Report</h4>
                         <hr />
                         <Form onSubmit={handleSubmit} >
                             <Row>
@@ -94,24 +95,25 @@ const CreateReports = props => {
                                     <option></option>
                                     <option value="0">XML</option>
                                     <option value="1">JSON</option></Input>
-                            </FormGroup></Col>
+                                    </FormGroup></Col>
                                         <Col md={4}> <FormGroup>
                                             <Label class="sr-only">Display Type</Label>
                                             <Input type="select"  id="displayType" value={displayType} onChange={e => setDisplayType(e.target.value)}>
                                                 <option value="form">Form</option>
                                                 <option value="wizard">Wizard</option></Input>
                                         </FormGroup></Col>
-
-                                    <Col md={2}> <FormGroup>
-                                    <button type="submit"  class="form-control btn btn-primary mt-4" >Save Template</button>
-                                </FormGroup></Col>
-                            </Row>
-                            <Row>
-                                <Col md={12}> <FormGroup>
-                                    <Label class="sr-only">Template(Paste XML or JSON Template)</Label>
-                                    <Input type="textarea" name="text" id="template" value={template} rows="10" onChange={e => settemplate(e.target.value)}/>
-                                </FormGroup></Col>
-                            </Row>
+                                        </Row>
+                                    <Row>
+                                        <Col md={2}> <FormGroup>
+                                            <button type="submit"  class="form-control btn btn-primary mt-4" >Save Template</button>
+                                        </FormGroup></Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md={12}> <FormGroup>
+                                            <Label class="sr-only">Template(Paste XML or JSON Template)</Label>
+                                            <Input type="textarea" name="text" id="template" value={template} rows="10" onChange={e => settemplate(e.target.value)}/>
+                                        </FormGroup></Col>
+                                    </Row>
                         </Form>
                     </CardContent>
                 </Card>

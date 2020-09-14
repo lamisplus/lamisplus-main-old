@@ -662,10 +662,8 @@ const validate = () => {
                                                                                 type="select"
                                                                                 name="stateId"
                                                                                 id="stateId"
-                                                                                
                                                                                 value={values.stateId}
-                                                                                onChange={getProvinces}
-                                                                            >
+                                                                                onChange={getProvinces}>
                                                                                 {states.map(({ label, value }) => (
                                                                                     <option key={value} value={value}>
                                                                                       {label}

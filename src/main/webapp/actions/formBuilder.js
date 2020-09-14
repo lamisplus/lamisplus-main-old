@@ -1,7 +1,5 @@
 import axios from 'axios'
-
 import {url} from '../api'
-
 import * as FORMTYPES from './types'
 import {toast} from 'react-toastify';
 
@@ -24,7 +22,7 @@ export const fetchService = () => dispatch => {
         })
 }
 
-export const fetchAllForms = () => dispatch => {
+export const fetchAllForms = (onSuccess) => dispatch => {
     axios.get(`${url}forms`)
         .then(response => {
             console.log(response)
@@ -32,18 +30,20 @@ export const fetchAllForms = () => dispatch => {
                 type:FORMTYPES.FORMTYPES_FETCH_ALL_FORMS,
                 payload: response.data
             })
+            onSuccess()
         })
         .catch(error => {
-            console.log(error)
+            // onError()
             dispatch({
                 type: FORMTYPES.FORMTYPES_ERROR,
-                payload: 'Something went wrong'
-
+                payload: 'Something went wrong, please try again'
             })
+
         })
 }
 
-export const createForm = (data) => dispatch => {
+
+export const createForm = (data, onSuccess, onError) => dispatch => {
     console.log(data)
     axios
         .post(`${url}forms/`, data)
@@ -51,19 +51,24 @@ export const createForm = (data) => dispatch => {
             dispatch({
                 type: FORMTYPES.FORMTYPES_CREATE_FORM,
                 payload: response.data
-            })
+            });
+            toast.success("Form was saved successfully!");
             console.log(response)
         })
-        //onSuccess()
         .catch(error => {
-            //onError()
             dispatch({
                 type: FORMTYPES.FORMTYPES_ERROR,
-                payload: 'please try again'
-            })
-            //onError(error.response)
-        })
-}
+                payload: "Something went wrong"
+            });
+            onError()
+            if(error.response.data.apierror.message===null || error.response.data.apierror.message===""){
+                toast.error("Something went wrong");
+            }else{
+                toast.error(error.response.data.apierror.message);
+            }
+        });
+};
+
 
 export const updateForm = (id, data) => dispatch => {
     axios
@@ -81,6 +86,8 @@ export const updateForm = (id, data) => dispatch => {
             })
         })
 }
+
+
 
 export const fetchById = (programId) => dispatch => {
     axios.get(`${url}programs/${programId}/forms`)
@@ -100,6 +107,8 @@ export const fetchById = (programId) => dispatch => {
             })
         })
 }
+
+
 export const fetchAll = (onSuccess, onError) => dispatch => {
     axios
         .get(`${url}forms`)
@@ -119,6 +128,7 @@ export const fetchAll = (onSuccess, onError) => dispatch => {
 
         })
 }
+
 
 export const fetchForms = () => dispatch => {
     axios.get(`${url}programs/1/forms`)
@@ -150,7 +160,6 @@ export const Delete = (id) => dispatch => {
                 type: FORMTYPES.FORMTYPES_DELETE,
                 payload: id
             });
-
             toast.success("Form was deleted successfully!");
         })
         .catch(error => {

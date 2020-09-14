@@ -33,7 +33,6 @@ const GenerateReport = props => {
     }
     const [newdata2] = React.useState(datanew);
     const [res, setRes] = React.useState("");
-    const [displayType, setDisplayType] = React.useState("");
     const [formCode, setformCode] = React.useState();
     const [form2, setform2] = React.useState();
     const [reportId, setreportId] = React.useState();
@@ -42,11 +41,6 @@ const GenerateReport = props => {
 
     const row = props.location.row;
 
-    useEffect (() => {
-        props.fetchService();
-        props.fetchAll();
-
-    }, [])
 
     useEffect (() => {
         setformCode(row.code);
@@ -56,22 +50,8 @@ const GenerateReport = props => {
 
           }, [])
 
-
-    const handleSubmit = () => {
-        setreportId(form2.id);
-        let parameters = new Array(2);
-
-        // parameters.fill({'month':form2.id});
-        // parameters.fill({'month':form2.id});
-        console.log(parameters);
-        newdata2['reportId']=4;
-        newdata2['parameters']=parameters;
-        props.generateReport(newdata2);
-    }
-
     const submitForm = (submission) => {
         console.log('submitting');
-        console.log(submission);
         const data = submission.data;
         let formattedData = [];
         _.forOwn(data, function(value, key) {
@@ -79,8 +59,9 @@ const GenerateReport = props => {
                 formattedData.push({name: key, value: value})
             }
         } );
-
-        console.log(formattedData)
+        newdata2['reportId']=form2.id;
+        newdata2['parameters']=formattedData;
+        props.generateReport(newdata2);
         return;
     }
 
@@ -98,18 +79,6 @@ const GenerateReport = props => {
                         </MatButton>
                     </Link>
                     <h4>Query Parameter Form</h4>
-                    <Row>
-                        <Col md={4}> <FormGroup>
-                            <Label class="sr-only">Display Type</Label>
-                            <Input type="select"  id="displayType" value={displayType} onChange={e => setDisplayType(e.target.value)}>
-                                <option value="form">Form</option>
-                                <option value="wizard">Wizard</option></Input>
-                        </FormGroup></Col>
-                        <Col md={2}> <FormGroup>
-                            <label class="sr-only" ></label>
-                            <button type="button"  class="form-control btn btn-primary mt-4" onClick={() => handleSubmit()}>Ok</button>
-                        </FormGroup></Col>
-                    </Row>
                     { form2 ?
                         <Form form={row.parameterResourceObject} {...props} onSubmit={(submission) => {
                             return submitForm(submission);

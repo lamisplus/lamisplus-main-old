@@ -1,5 +1,5 @@
 import axios from "axios";
-import {url as baseUrl, url} from '../api'
+import {url} from '../api'
 import * as ACTION_TYPES from "./types";
 import {toast} from 'react-toastify';
 
@@ -13,6 +13,7 @@ export const creatReport = (data, onSuccess, onError) => dispatch => {
                 type: ACTION_TYPES.REPORTS_CREATE_REPORT,
                 payload: response.data
             });
+            toast.success("Report was saved successfully!");
             console.log(response)
             if(onSuccess){
                 onSuccess();
@@ -28,40 +29,17 @@ export const creatReport = (data, onSuccess, onError) => dispatch => {
 };
 
 
-// export const generateReport = (data, onSuccess, onError) => dispatch => {
-//     axios
-//         .post(`${url}jasper-reports/generate`, data)
-//         .then(response => {
-//             dispatch({
-//                 type: ACTION_TYPES.REPORTS_GENERATE_REPORT,
-//                 payload: response.data
-//             });
-//             console.log(response)
-//             this.setState(response.data)
-//             if(onSuccess){
-//                 onSuccess();
-//             }
-//         })
-//         .catch(error => {
-//                 if(onError){
-//                     onError();
-//                 }
-//             }
-//
-//         );
-// };
-
 export const generateReport = (data, onSuccess, onError) => dispatch => {
     axios
-        .post(`${url}jasper-reports/generate`, data)
+        .post(`${url}jasper-reports/generate`, data, {responseType: 'arraybuffer'})
         .then(response => {
-//Create a Blob from the PDF Stream
+        //Create a Blob from the PDF Stream
             const file = new Blob(
                 [response.data],
                 {type: 'application/pdf'});
             //Build a URL from the file
             const fileURL = URL.createObjectURL(file);
-//Open the URL on new Window
+        //Open the URL on new Window
             window.open(fileURL);
         })
         .catch(error => {
@@ -69,7 +47,7 @@ export const generateReport = (data, onSuccess, onError) => dispatch => {
         });
 }
 
-export const fetchAll = (onSuccess) => dispatch => {
+export const fetchAll = (onSuccess, onError) => dispatch => {
     axios
         .get(`${url}jasper-reports`)
         .then(response => {
@@ -96,7 +74,9 @@ export const update = (id, data) => dispatch => {
             dispatch({
                 type: ACTION_TYPES.REPORTS_UPDATE,
                 payload: response.data
-            })
+            });
+            toast.success("Report was updated successfully!");
+            console.log(response)
         })
         .catch(error => {
             dispatch({
@@ -105,6 +85,7 @@ export const update = (id, data) => dispatch => {
             })
         })
 }
+
 
 export const Delete = (id) => dispatch => {
     console.log(`${url}jasper-reports/${id}`);
@@ -117,7 +98,7 @@ export const Delete = (id) => dispatch => {
                 payload: id
             });
 
-            toast.success("Form was deleted successfully!");
+            toast.success("Report was deleted successfully!");
         })
         .catch(error => {
             dispatch({

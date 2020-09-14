@@ -98,8 +98,6 @@ export const create = (data,onSuccess, onError) => dispatch => {
       }else{
         toast.error(error.response.data.apierror.message);
       }
-       
-       //console.log(error.response.data.apierror.message);
     });
 };
 

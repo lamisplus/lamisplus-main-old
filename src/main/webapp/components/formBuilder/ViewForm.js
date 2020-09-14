@@ -4,8 +4,7 @@ import {  Errors, Form, FormBuilder } from 'react-formio';
 import {Card,CardContent,} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import {url} from '../../api'
-import {fetchService, fetchById, updateForm, fetchForms} from '../../actions/formBuilder'
+import {fetchService, fetchById, updateForm} from '../../actions/formBuilder'
 import {fetchByHospitalNumber} from '../../actions/patients'
 import MatButton from '@material-ui/core/Button';
 import { TiArrowBack } from "react-icons/ti";
@@ -30,7 +29,6 @@ const useStyles = makeStyles(theme => ({
 const Update = props => {
     const [res, setRes] = React.useState("");
     const [displayType, setDisplayType] = React.useState("");
-    const [programId, setprogramId] = React.useState("");
     const [formCode, setformCode] = React.useState();
     const [form2, setform2] = React.useState();
     const classes = useStyles();
@@ -39,26 +37,15 @@ const Update = props => {
     const textAreaRef = useRef(null);
 
     const row = props.location.row;
-    // console.log("Selected row:"+JSON.stringify(row));
-
-    useEffect (() => {
-        props.fetchService();
-        props.fetchForms();
-
-    }, [])
 
     useEffect (() => {
         setformCode(row.code);
+        console.log(row);
 
         setform2(row)
-         //props.fetchById()
+
         props.fetchPatientByHospitalNumber('6768595', null, null)
     }, [])
-
-    const handleProgramChange = (e) => {
-        setprogramId(e.target.value)
-        props.fetchById(e.target.value)
-    }
 
     const handleSubmit = () => {
         props.updateForm(form2.id, form2);
@@ -81,28 +68,28 @@ const Update = props => {
                     <hr />
                     <Errors errors={props.errors} />
                     {!res ? "" :
-                    <Form
-                        form={JSON.parse(res)}
-                        ref={form => myform = form}
-                        submission={{data : {patient: props.patient}}}
-                        //src={url}
-                        hideComponents={props.hideComponents}
-                        //onSubmit={props.onSubmit}
-                        onSubmit={(submission) => {
-                            console.log(submission);
-                            return fetch('https://lp-base-app.herokuapp.com/api/', {
-                                body: JSON.stringify(submission),
-                                headers: {
-                                    'content-type': 'application/json'
-                                },
-                                method: 'POST',
-                                mode: 'cors',
-                            }).then(res => {
-                                console.log(res);
-                                myform.emit('submitDone', submission);
-                            })}}
-                    />
-                        }
+                        <Form
+                            form={JSON.parse(res)}
+                            ref={form => myform = form}
+                            submission={{data : {patient: props.patient}}}
+                            //src={url}
+                            hideComponents={props.hideComponents}
+                            //onSubmit={props.onSubmit}
+                            onSubmit={(submission) => {
+                                console.log(submission);
+                                return fetch('https://lp-base-app.herokuapp.com/api/', {
+                                    body: JSON.stringify(submission),
+                                    headers: {
+                                        'content-type': 'application/json'
+                                    },
+                                    method: 'POST',
+                                    mode: 'cors',
+                                }).then(res => {
+                                    console.log(res);
+                                    myform.emit('submitDone', submission);
+                                })}}
+                        />
+                    }
                     <br></br>
                 </CardContent>
             </Card>
@@ -123,13 +110,13 @@ const Update = props => {
                             <button type="button"  class="form-control btn btn-primary mt-4" onClick={() => handleSubmit()}>Update Form</button>
                         </FormGroup></Col>
                     </Row>
-                    { form2 ? 
-                    <FormBuilder form={row.resourceObject} {...props} onChange={(schema) => {
-                       // console.log(JSON.stringify(schema));
-                        setRes(JSON.stringify(schema));
-                    }} />
-                    : ""
-                }
+                    { form2 ?
+                        <FormBuilder form={row.resourceObject} {...props} onChange={(schema) => {
+                            // console.log(JSON.stringify(schema));
+                            setRes(JSON.stringify(schema));
+                        }} />
+                        : ""
+                    }
                     <br></br>
                 </CardContent>
             </Card>
@@ -149,19 +136,15 @@ const Update = props => {
 }
 
 const mapStateToProps =  (state = { form:{}}) => {
-    // console.log(state.forms)
     return {
         patient: state.patients.patient,
-        services: state.formReducers.services,
         formList: state.formReducers.form,
     }}
 
 const mapActionsToProps = ({
-    fetchService: fetchService,
     fetchById: fetchById,
     updateForm: updateForm,
     fetchPatientByHospitalNumber: fetchByHospitalNumber,
-    fetchForms:fetchForms
 })
 
 export default connect(mapStateToProps, mapActionsToProps)(Update)

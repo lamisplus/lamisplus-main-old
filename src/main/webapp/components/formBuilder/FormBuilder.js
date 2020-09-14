@@ -1,7 +1,7 @@
 import React, {useRef, useEffect, useState} from 'react';
 import Page from 'components/Page';
 import { connect } from 'react-redux';
-import { Errors, FormBuilder } from 'react-formio';
+import {  Errors, FormBuilder } from 'react-formio';
 import {Card,CardContent,} from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import {fetchService, createForm} from '../../actions/formBuilder'
@@ -34,7 +34,6 @@ const Create = props => {
   const textAreaRef = useRef(null);
   const [modal, setModal] = useState(false);
   const toggle = () => {
-      console.log(res)
       setModal(!modal);
   }
 
@@ -74,7 +73,11 @@ const handleSubmit = e => {
                     <Modal isOpen={modal} toggle={toggle} >
                         <ModalHeader toggle={toggle}>Preview Form</ModalHeader>
                         <ModalBody>
-                            console.log(res)
+                            {!res ? "" :
+                                <Form
+                                    form={JSON.parse(res)}
+                                />
+                            }
                         </ModalBody>
                         <ModalFooter>
                             <Button color="secondary" onClick={toggle}>Cancel</Button>
@@ -135,7 +138,7 @@ const handleSubmit = e => {
                           </FormGroup></Col>
 
                           <Col md={2}> <FormGroup>
-                              <button type="preview"  class="form-control btn btn-primary mt-4" onClick={toggle} >Preview Form</button>
+                              <button type="submitForm"  class="form-control btn btn-primary mt-4" onClick={toggle} >Preview Form</button>
                           </FormGroup></Col>
 
                         <Col md={2}> <FormGroup>
@@ -162,14 +165,11 @@ const handleSubmit = e => {
 
             }
             const mapStateToProps = (state) => {
-                console.log(state.forms)
                 return {
-                    // modules: state.forms.modules,
                     services: state.formReducers.services
                 }}
 
             const mapActionsToProps = ({
-                // fetchModules: fetchModules,
                 fetchService: fetchService,
                 createForm: createForm
             })
