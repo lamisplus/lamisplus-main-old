@@ -5,7 +5,6 @@ import {  Errors, FormBuilder } from 'react-formio';
 import {Card,CardContent,} from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import {fetchService, createForm} from '../../actions/formBuilder'
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import {
     FormGroup,
     Input,
@@ -32,10 +31,6 @@ const Create = props => {
   const [usageOrder, setusageOrder] = React.useState("");
   const [version, setversion] = React.useState();
   const textAreaRef = useRef(null);
-  const [modal, setModal] = useState(false);
-  const toggle = () => {
-      setModal(!modal);
-  }
 
   let myform;
 
@@ -56,6 +51,7 @@ const handleSubmit = e => {
   e.preventDefault()
   props.createForm(newdata2);
 }
+
   return (
     <Page title="Form Builder" >
         <Card >
@@ -69,21 +65,6 @@ const handleSubmit = e => {
                         <TiArrowBack /> &nbsp; back
                     </MatButton>
                 </Link>
-                <div>
-                    <Modal isOpen={modal} toggle={toggle} >
-                        <ModalHeader toggle={toggle}>Preview Form</ModalHeader>
-                        <ModalBody>
-                            {!res ? "" :
-                                <Form
-                                    form={JSON.parse(res)}
-                                />
-                            }
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button color="secondary" onClick={toggle}>Cancel</Button>
-                        </ModalFooter>
-                    </Modal>
-                </div>
                   <h4>Create Form</h4>
                   <hr />
                   <Errors errors={props.errors} />
@@ -135,10 +116,6 @@ const handleSubmit = e => {
                                   <option value="3">Fourth</option>
                                   <option value="3">Fifth</option>
                               </Input>
-                          </FormGroup></Col>
-
-                          <Col md={2}> <FormGroup>
-                              <button type="submitForm"  class="form-control btn btn-primary mt-4" onClick={toggle} >Preview Form</button>
                           </FormGroup></Col>
 
                         <Col md={2}> <FormGroup>
