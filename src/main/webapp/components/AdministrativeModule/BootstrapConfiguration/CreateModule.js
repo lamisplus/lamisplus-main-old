@@ -24,7 +24,7 @@ import { Table } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import {  MdDelete, MdModeEdit } from "react-icons/md";
-import { createBootstrapModule } from '../../../actions/bootstrapModule';
+import { createBootstrapModule, startBootstrapModule } from '../../../actions/bootstrapModule';
 import { installBootstrapModule } from '../../../actions/bootstrapModule';
 import Message from './Message';
 import Progress from './Progress';
@@ -59,9 +59,6 @@ function getSteps() {
 
 
 
-
-
-
 const CreateModule = (props) => {
 
     const classes = useStyles()
@@ -73,61 +70,22 @@ const CreateModule = (props) => {
     const [uploadedFile, setUploadedFile] = useState({});
     const [message, setMessage] = useState('');
     const [uploadPercentage, setUploadPercentage] = useState(0);
-    const [disableNextButtonProcess, setDisableNextButtonProcess] = React.useState(false);
+    const [disableNextButtonProcess, setDisableNextButtonProcess] = React.useState(true);
     const [installationMessage, setInstallationMessage] = useState();
     const [installationOverlay, setInstallationOverlay] = useState(false)
-    
-    const handleNext = async e => {
-    //setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    const [uploadButton, setUploadButton] = useState(false)
+    const [uploadButtonhidden, setuploadButtonhidden] = useState(false)
+    const [buttonStatus, setButtonStatus] = useState(true)
+    const [hiddeStartModuleFinishButton, sethiddeStartModuleFinishButton] = useState(true)
 
-    if(fileToUpload.length && steps['0']==='Upload module'){
-      setDisableNextButtonProcess(true)
-      setInstallationMessage('Processing, please wait...')     
-      const form_Data = new FormData();
-      form_Data.append('file1', fileToUpload[0]); 
-      //const token ='eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9BRE1JTiIsImV4cCI6MTYwMDEyNzY5Mn0.a-SMbK3ucT15Kyk9nM_NU1gJveSWnn3OzC4iaVzT8UdKIh6rMvrFuMxdfbGLR5arCCikOCi-PXfdjF5pjQ11Mg'
-       
-      try {
-        const res = await axios.post(url+'modules/upload', form_Data, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            //'Authorization': `Bearer ${token}` 
-          },
-          
-        onUploadProgress: progressEvent => {
-          setUploadPercentage(
-            parseInt(
-              Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            )
-          );
+console.log(activeStep)
+  const handleNext = async e => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      if(activeStep === 1 && steps[2] === 'Start module'){
+        sethiddeStartModuleFinishButton(false)
+        setDisableNextButtonProcess(true)
+      }
 
-          // Clear percentage
-          setTimeout(() => setUploadPercentage(0), 10000);
-        }
-      });
-      
-      const { fileName, filePath } = res.data;
-
-      setUploadedFile({ fileName, filePath });
-
-      setMessage('File Uploaded');
-      setUploadResponse(res.data)
-      
-      setDisableNextButtonProcess(false) //Enable the next process button for the next stage 
-      setInstallationMessage('')
-      console.log(uploadResponse)
-      setActiveStep((prevActiveStep) => prevActiveStep + 1); //auotmatically move to the next phase of installation in the wizard
-    } catch (err) {
-      console.log(err)
-      // if (err.status === 500) {
-      //   setMessage('There was a problem with the server');
-      // } else {
-      //   setMessage(err);
-      // }
-    }
-    setDisableNextButtonProcess(false)
-  }
-    
   };
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -147,7 +105,7 @@ const CreateModule = (props) => {
     setModal(!modal) 
   }
 
-  const installModule = (id) => {
+  const handleInstallModule = (id) => {
     setInstallationOverlay(true)
     setDisableNextButtonProcess(true)
     const onSuccess = () => {
@@ -159,6 +117,69 @@ const CreateModule = (props) => {
       setDisableNextButtonProcess(false) 
     }
     props.installBootstrapModule(id, onSuccess, onError);
+  }
+
+  const handleUploadFile = async e => {
+      setDisableNextButtonProcess(true)
+      setInstallationMessage('Processing, please wait...')     
+      const form_Data = new FormData();
+      form_Data.append('file1', fileToUpload[0]); 
+      
+      try {
+        const res = await axios.post(url+'modules/upload', form_Data, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+
+          },
+          
+        onUploadProgress: progressEvent => {
+          setUploadPercentage(
+            parseInt(
+              Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            )
+          );
+
+              // Clear percentage
+              setTimeout(() => setUploadPercentage(0), 10000);
+            }
+          });
+          
+          const { fileName, filePath } = res.data;
+
+          setUploadedFile({ fileName, filePath });
+
+          setMessage('File Uploaded');
+          setUploadResponse(res.data===null ? {} :res.data)
+          setuploadButtonhidden(true)
+          setDisableNextButtonProcess(false) //Enable the next process button for the next stage 
+          setInstallationMessage('')
+          console.log(uploadResponse)
+          setActiveStep((prevActiveStep) => prevActiveStep + 1); //auotmatically move to the next phase of installation in the wizard
+        } catch (err) {
+          console.log(err)
+          if (err.response.status === 500) {
+            setMessage('There was a problem in uploading file! please try again');
+          } else {
+            setMessage('There was a problem in uploading file! please try again');
+          }
+        }
+
+  }
+
+  const handleStartModule = () => {
+    sethiddeStartModuleFinishButton(true)
+    setDisableNextButtonProcess(true)
+    const onSuccess = () => {
+      setInstallationOverlay(false) 
+      setDisableNextButtonProcess(true)
+      props.history.push(`/admin/bootstrap-configuration`)
+    }
+    const onError = () => {
+      setInstallationOverlay(false)
+      setDisableNextButtonProcess(true) 
+      sethiddeStartModuleFinishButton(false)
+    }
+    props.startBootstrapModule( onSuccess, onError);
 
   }
 
@@ -172,7 +193,7 @@ const CreateModule = (props) => {
           <MenuList style={{ color:"#000 !important"}} >
               <MenuItem  style={{ color:"#000 !important"}} >                      
                 
-                      <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}} onClick={() => installModule(id)}>Install Module</span>
+                      <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}} onClick={() => handleInstallModule(id)}>Install Module</span>
                                           
                 </MenuItem>
                 
@@ -293,7 +314,7 @@ const CreateModule = (props) => {
                     </tr>
                   </thead>
                   <tbody>
-                  {uploadResponse.map((row) => (
+                  {/* {uploadResponse.map((row) => (
                     <tr key={row.id}>
                       <td>{row.name===""?" ":row.name}</td>
                       <td>{row.description===""?" ":row.description}</td>
@@ -304,7 +325,7 @@ const CreateModule = (props) => {
                     </tr>
 
                   ))
-                }
+                } */}
                     
                   </tbody>
                 </Table>
@@ -406,11 +427,29 @@ return (
                             >
                               Previous
                             </Button>
+                            
                             <Button 
                               variant="contained" 
                               color="primary" 
+                              onClick={handleUploadFile}
+                              hidden={uploadButtonhidden}
+                              >
+                              Upload Module
+                            </Button>
+                            <Button 
+                              variant="contained" 
+                              color="primary" 
+                              onClick={handleStartModule}
+                              hidden={hiddeStartModuleFinishButton}
+                              >
+                              Finish/Start
+                            </Button>
+                           
+                            <Button 
+                              hidden={disableNextButtonProcess}
+                              variant="contained" 
+                              color="primary" 
                               onClick={handleNext}
-                              disabled= {disableNextButtonProcess }
                               >
                               {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                             </Button>
@@ -431,4 +470,4 @@ return (
 }
 
 
-export default connect(null, { createBootstrapModule, installBootstrapModule })(CreateModule);
+export default connect(null, { createBootstrapModule, installBootstrapModule, startBootstrapModule })(CreateModule);

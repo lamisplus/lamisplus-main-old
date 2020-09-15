@@ -170,6 +170,7 @@ return (
                                 { title: 'Status', field: 'status'},
                                 { title: 'Action', field: 'actions'},
                               ]}
+                              isLoading={loading}
                               data={listOfAllModule.map((row) => ({
                                     name: row.name, 
                                     description: row.description, 
