@@ -37,7 +37,7 @@ const InternationalStandardSearch = (props) => {
 
             <CardBody>
                 <Breadcrumbs aria-label="breadcrumb">
-                    <Link color="inherit" href="/admin" >
+                    <Link color="inherit" to={{pathname: "/admin"}} >
                         Admin
                     </Link>
                     <Typography color="textPrimary">International Standard Setup</Typography>
