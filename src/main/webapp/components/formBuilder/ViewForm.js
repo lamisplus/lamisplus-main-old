@@ -68,29 +68,6 @@ const Update = props => {
                     <h4>View Form</h4>
                     <hr />
                     <Errors errors={props.errors} />
-                    {/*{!res ? "" :*/}
-                    {/*    <Form*/}
-                    {/*        form={JSON.parse(res)}*/}
-                    {/*        ref={form => myform = form}*/}
-                    {/*        submission={{data : {patient: props.patient}}}*/}
-                    {/*        //src={url}*/}
-                    {/*        hideComponents={props.hideComponents}*/}
-                    {/*        //onSubmit={props.onSubmit}*/}
-                    {/*        onSubmit={(submission) => {*/}
-                    {/*            console.log(submission);*/}
-                    {/*            return fetch('https://lp-base-app.herokuapp.com/api/', {*/}
-                    {/*                body: JSON.stringify(submission),*/}
-                    {/*                headers: {*/}
-                    {/*                    'content-type': 'application/json'*/}
-                    {/*                },*/}
-                    {/*                method: 'POST',*/}
-                    {/*                mode: 'cors',*/}
-                    {/*            }).then(res => {*/}
-                    {/*                console.log(res);*/}
-                    {/*                myform.emit('submitDone', submission);*/}
-                    {/*            })}}*/}
-                    {/*    />*/}
-                    {/*}*/}
                     {!res ? "" : 
                     <Form
                         form={JSON.parse(res)}

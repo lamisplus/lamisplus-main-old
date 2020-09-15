@@ -149,9 +149,9 @@ class Routes extends Component {
               <PrivateRoute exact path="/view-sample-dispatched" component={ViewSampleDispatched} />
               
               {/* BootstrapConfiguration Link */}
-              <PrivateRoute exact path="/bootstrap-configuration" component={BootStrapConfiguration} />
-              <PrivateRoute exact path="/create-module" component={CreateModule} />
-              <PrivateRoute exact path="/update-module" component={UpdateModule} />
+              <PrivateRoute exact path="/admin/bootstrap-configuration" component={BootStrapConfiguration} />
+              <PrivateRoute exact path="/admin/bootstrap-configuration/create-module" component={CreateModule} />
+              <PrivateRoute exact path="/admin/bootstrap-configuration/update-module" component={UpdateModule} />
               <PrivateRoute exact path="/updated-module" component={UpdatedModule} />
               {/* DataBaseManagement Link */}
               <PrivateRoute exact path="/database-management" component={DataBaseManagement} />

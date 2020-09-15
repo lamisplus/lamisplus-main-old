@@ -222,7 +222,7 @@ return (
               <h1>Update Module
                 <Link 
                   to ={{ 
-                  pathname: "/bootstrap-configuration",  
+                  pathname: "/admin/bootstrap-configuration",
                   activetab: 1
                   }} 
                 >

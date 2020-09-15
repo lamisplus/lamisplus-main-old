@@ -76,7 +76,6 @@ function AdminSubMenu(props) {
       <Menu size="mini" color={"silver"} inverted>
           <Dropdown text="System Configurations"   labeled simple    className='icon link item'>
               <Dropdown.Menu>
-
                 <Dropdown.Item>
                   <Link to={{pathname: "/admin/application-codesets"}} >
                  Application Codeset Manager
@@ -98,9 +97,13 @@ function AdminSubMenu(props) {
                   International Standard setup
                   </Link>
                 </Dropdown.Item>
-
                 <Dropdown.Item >
+                  <Link
+                      to={{
+                        pathname: "/organization-unit"}}
+                  >
                   Organization Unit setup
+                  </Link>
                 </Dropdown.Item>
                 <Dropdown.Item >
                   <Link to={{
@@ -108,10 +111,9 @@ function AdminSubMenu(props) {
                     Ward Manager
                   </Link>
                 </Dropdown.Item>
-
               </Dropdown.Menu>
-
           </Dropdown>
+        <Menu.Item>  <Link to={{pathname: "/admin/bootstrap-configuration"}} >Bootstrap Configuration </Link></Menu.Item>
       </Menu>
 
       <ToastContainer />
