@@ -2,6 +2,8 @@ package org.lamisplus.modules.base.domain.dto;
 
 import lombok.Data;
 
+import javax.persistence.Transient;
+
 @Data
 public class JasperReportInfoDTO {
     private Long id;
@@ -17,5 +19,8 @@ public class JasperReportInfoDTO {
     private String template;
 
     private Object parameterResourceObject;
+
+    @Transient
+    private String programName;
 
 }
