@@ -42,6 +42,11 @@ public class PatientController {
         return ResponseEntity.ok(this.patientService.getPatientByHospitalNumber(hospitalNumber));
     }
 
+    @GetMapping("/{hospitalNumber}")
+    public ResponseEntity<PatientDTO> getPatientByHospitalNumber2(@PathVariable String hospitalNumber) {
+        return ResponseEntity.ok(this.patientService.getPatientByHospitalNumber(hospitalNumber));
+    }
+
     @GetMapping("/{hospitalNumber}/exist")
     public ResponseEntity<Boolean> exist(@PathVariable String hospitalNumber) {
         return ResponseEntity.ok(this.patientService.exist(hospitalNumber));
