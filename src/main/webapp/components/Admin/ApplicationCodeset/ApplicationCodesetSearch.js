@@ -74,7 +74,7 @@ const processDelete = (id) => {
 <ToastContainer />
             <CardBody>
                 <Breadcrumbs aria-label="breadcrumb">
-                    <Link color="inherit" href="/admin" >
+                    <Link color="inherit" to={{pathname: "/admin"}} >
                         Admin
                     </Link>
                     <Typography color="textPrimary">Application Codeset Manager</Typography>

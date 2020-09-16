@@ -73,7 +73,7 @@ const GlobalVariableSearch = (props) => {
 
             <CardBody>
                 <Breadcrumbs aria-label="breadcrumb">
-                    <Link color="inherit" href="/admin" >
+                    <Link color="inherit" to={{pathname: "/admin"}} >
                         Admin
                     </Link>
                     <Typography color="textPrimary">Global Variable</Typography>
