@@ -193,9 +193,9 @@ return (
                         <Link 
                             to ={{ 
                               pathname: "/laboratory",  
-                              activetab: 1
+                              state: 'collect-sample'
                             }} >
-                    
+                                
                             <MatButton
                                 type='submit'
                                 variant='contained'

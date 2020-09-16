@@ -30,7 +30,7 @@ import Message from './Message';
 import Progress from './Progress';
 import axios from 'axios';
 import OverlayLoader from 'react-overlay-loading/lib/OverlayLoader'
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
 import { url } from "./../../../api";
@@ -314,7 +314,7 @@ console.log(activeStep)
                     </tr>
                   </thead>
                   <tbody>
-                  {/* {uploadResponse.map((row) => (
+                  {uploadResponse.map((row) => (
                     <tr key={row.id}>
                       <td>{row.name===""?" ":row.name}</td>
                       <td>{row.description===""?" ":row.description}</td>
@@ -325,7 +325,7 @@ console.log(activeStep)
                     </tr>
 
                   ))
-                } */}
+                }
                     
                   </tbody>
                 </Table>
