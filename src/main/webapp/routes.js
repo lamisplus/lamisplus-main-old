@@ -43,14 +43,14 @@ const PrintManifest = React.lazy(() => import("components/Laboratory/DispatchedM
 const ViewSampleDispatched = React.lazy(() => import("components/Laboratory/DispatchedManifest/ViewPrintManifest"));
 
 /* Bootstrap configuration */
-const BootStrapConfiguration = React.lazy(() => import("components/AdministrativeModule/BootstrapConfiguration/Index"));
-const CreateModule = React.lazy(() => import("components/AdministrativeModule/BootstrapConfiguration/CreateModule"));
-const UpdateModule = React.lazy(() => import("components/AdministrativeModule/BootstrapConfiguration/UpdateModule"));
-const UpdatedModule = React.lazy(() => import("components/AdministrativeModule/BootstrapConfiguration/UpdatedModule"));
+const BootStrapConfiguration = React.lazy(() => import("components/Admin/BootstrapConfiguration/Index"));
+const CreateModule = React.lazy(() => import("components/Admin/BootstrapConfiguration/CreateModule"));
+const UpdateModule = React.lazy(() => import("components/Admin/BootstrapConfiguration/UpdateModule"));
+const UpdatedModule = React.lazy(() => import("components/Admin/BootstrapConfiguration/UpdatedModule"));
 
 /* Datasase Management configuration */
-const DataBaseManagement = React.lazy(() => import("components/AdministrativeModule/DatabaseManagement/Index"));
-const DataBaseSync = React.lazy(() => import("components/AdministrativeModule/DatabaseManagement/DatabaseSync"));
+const DataBaseManagement = React.lazy(() => import("components/Admin/DatabaseManagement/Index"));
+const DataBaseSync = React.lazy(() => import("components/Admin/DatabaseManagement/DatabaseSync"));
 /* Organization Unit Manager configuration */
 const OrganizationUnit = React.lazy(() => import("components/Admin/OrganizationUnit/Index"));
 
