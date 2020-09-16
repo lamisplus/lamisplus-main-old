@@ -58,6 +58,7 @@ public class ProgramService {
         Optional<Program> programOptional = this.programRepository.findById(programId);
         if(!programOptional.isPresent() || programOptional.get().getArchived() == 1) throw new EntityNotFoundException(Program.class, "Program Id", programId + "");
         List<Form> forms = programOptional.get().getFormsByProgram().stream()
+                .filter(form ->form.getArchived()!= null &&form.getArchived()== 0)
                 .sorted(Comparator.comparing(Form::getId).reversed())
                 .collect(Collectors.toList());
         return forms;
