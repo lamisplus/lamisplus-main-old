@@ -33,7 +33,7 @@ public class ProgramService {
         Optional<Module> moduleOptional = this.moduleRepository.findById(programDTO.getModuleId());
         if(!moduleOptional.isPresent()) throw new EntityNotFoundException(Module.class, "Module Id", programDTO.getModuleId() + "");
 
-        Optional<Program> programOptional = this.programRepository.findProgramByUuid(programDTO.getProgramCode());
+        Optional<Program> programOptional = this.programRepository.findProgramByCode(programDTO.getProgramCode());
         if(programOptional.isPresent()) throw new RecordExistException(Program.class, "Program Name", programDTO.getProgramCode() +"");
 
         final Program program = this.programMapper.toProgramDTO(programDTO);

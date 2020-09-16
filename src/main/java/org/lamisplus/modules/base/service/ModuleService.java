@@ -48,13 +48,14 @@ public class ModuleService {
     private final GenericSpecification<Module> genericSpecification;
     private final UserService userService;
     private static final int MODULE_TYPE = 1;
+    private static final int STATUS_UPLOADED = 1;
     private static final int STATUS_INSTALLED = 2;
     private static final int STATUS_STARTED = 3;
-    private static final int STATUS_UPLOADED = 1;
     private static final String ORG_LAMISPLUS_MODULES_PATH = "/org/lamisplus/modules/";
     private List<Module> externalModules;
     private final ProgramRepository programRepository;
     private final DataLoader<Form> formDataLoader;
+    private static final boolean ACTIVE = true;
 
 
     public Module save(ModuleDTO moduleDTO) {
@@ -80,6 +81,7 @@ public class ModuleService {
              File jarFile = new File(file.getOriginalFilename());
 
             if(!jarFile.getName().contains(".jar")){
+
                 throw new RuntimeException("File is not a jar file");
             }
 
@@ -116,14 +118,14 @@ public class ModuleService {
                     program.setModuleId(module.getId());
                     //Saving program...
                     final Program program1 =  programRepository.save(program);
-                    program1.getUuid();
+                    program1.getCode();
                 }
 
                 ModuleUtil.getJsonFile().forEach(jsonFile ->{
                     if(jsonFile.getName().contains("Form")){
                         loadExternalModuleForms(module.getName(), jsonFile).forEach(form ->{
                             if(!formRepository.findByCode(form.getCode()).isPresent()){
-                                form.setProgramCode(program.getUuid());
+                                form.setProgramCode(program.getCode());
                                 //Saving form...
                                 formRepository.save(form);
                             }
@@ -164,9 +166,9 @@ public class ModuleService {
                         System.out.println(file.exists());
                         for (File jarfile : file.listFiles()) {
                             try {
-                                if(jarfile.getName().contains("validation")){
+                                /*if(jarfile.getName().contains("validation")){
                                     continue;
-                                }
+                                }*/
                                 ClassPathHacker.addFile(jarfile.getAbsolutePath());
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -200,17 +202,21 @@ public class ModuleService {
         return moduleRepository.save(module);
     }
 
-    public void startModule(){
-        loadAllExternalModules(STATUS_INSTALLED, MODULE_TYPE);
+    public void startModule(Boolean isStartUp){
+        if(isStartUp){
+            loadAllExternalModules(STATUS_STARTED, MODULE_TYPE);
+        } else {
+            loadAllExternalModules(STATUS_INSTALLED, MODULE_TYPE);
+        }
 
         externalModules.forEach(module -> {
             if(module.getStatus() == STATUS_INSTALLED) {
                 module.setStatus(STATUS_STARTED);
+                module.setActive(ACTIVE);
                 moduleRepository.save(module);
             }
         });
 
-        //TODO: Set module status to 3 which is started
         if(moduleClasses.size() > 0){
             moduleClasses.add(BaseApplication.class);
             Class [] classArray = new Class[moduleClasses.size()];

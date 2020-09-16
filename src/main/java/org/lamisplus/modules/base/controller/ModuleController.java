@@ -55,7 +55,8 @@ public class ModuleController {
 
     @PostMapping("/start/all")
     public void startModule() {
-        moduleService.startModule();
+        Boolean isStartUp = false;
+        moduleService.startModule(isStartUp);
     }
 
     @DeleteMapping("/{id}")
