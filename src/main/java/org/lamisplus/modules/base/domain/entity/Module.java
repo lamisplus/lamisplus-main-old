@@ -49,7 +49,7 @@ public class Module implements Serializable {
     @Basic
     @Column(name = "uuid")
     @JsonIgnore
-    private UUID uuid;
+    private String uuid;
 
     @Basic
     @Column(name = "date_created")
