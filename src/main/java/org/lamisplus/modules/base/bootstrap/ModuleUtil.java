@@ -1,7 +1,9 @@
 package org.lamisplus.modules.base.bootstrap;
 
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.lamisplus.modules.base.domain.entity.Module;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
@@ -16,10 +18,12 @@ import java.util.zip.ZipInputStream;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ModuleUtil {
     private static List<String> classNames = new ArrayList<String>();
     private static List<Module> moduleConfigs = new ArrayList<Module>();
     private static List<File> jsonFiles = new ArrayList<File>();
+    private final StorageUtil storageUtil;
 
 
     public List<String> readZipFileRecursive(final InputStream zipFile, String jarName, boolean install) {
