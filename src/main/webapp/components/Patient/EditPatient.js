@@ -304,7 +304,6 @@ const PatientRegistration = props => {
  *  Validation 
  */
 const validate = () => {
-    console.log(values)
     let temp = { ...errors }
     temp.firstName = values.firstName ? "" : "First Name is required"
     temp.hospitalNumber = values.hospitalNumber ? "" : "Patient Id is required."
@@ -323,16 +322,10 @@ const validate = () => {
     */
     const handleSubmit = e => {
         e.preventDefault();
-          
             if(validate()){
-                console.log(relatives)
-                console.log(relative)
                 const newRegistrationDate = moment(values.dateRegistration).format("DD-MM-YYYY");
                 const newDateOfBirth = moment(values.dob).format("DD-MM-YYYY");
-                //values["dateRegistration"] = newRegistrationDate;
                 values["personRelativeDTOs"] = relatives;
-                //values["dob"] = newDateOfBirth;
-                
                 setSaving(true);
                     const onSuccess = () => {
                         setSaving(false);
@@ -988,7 +981,6 @@ function RelativeList({
           <ListItemText
               primary={
                   <React.Fragment>
-                    {console.log(relationshipTypeName)}
                     {relationshipTypeName}, {relative.firstName} {relative.otherNames}{" "}
                     {relative.lastName}
                   </React.Fragment>
