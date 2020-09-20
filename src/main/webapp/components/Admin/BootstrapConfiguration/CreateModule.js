@@ -156,7 +156,7 @@ console.log(activeStep)
           console.log(uploadResponse)
           setActiveStep((prevActiveStep) => prevActiveStep + 1); //auotmatically move to the next phase of installation in the wizard
         } catch (err) {
-          console.log(err)
+          console.log(err.response)
           if (err.response.status === 500) {
             setMessage('There was a problem in uploading file! please try again');
           } else {

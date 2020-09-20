@@ -100,7 +100,7 @@ const ModalViewResult = (props) => {
                     url + "sample-manifests/pcrlab"
                 );
                 const body = response.data;
-                
+                console.log(body)
                 setOptionPcr(
                      body.map(({ name, id }) => ({ title: name, value: id }))
                  );
