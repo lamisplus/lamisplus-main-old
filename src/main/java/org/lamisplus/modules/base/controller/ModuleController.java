@@ -44,7 +44,7 @@ public class ModuleController {
 
     @PostMapping("/upload")
     public ResponseEntity<List<Module>> uploadAndUnzip(@RequestParam("file1") MultipartFile [] jarFile,
-                                                  Boolean overrideExistFile) {
+                                                       @RequestParam Boolean overrideExistFile) {
         return ResponseEntity.ok(moduleService.uploadAndUnzip(jarFile, overrideExistFile));
     }
 

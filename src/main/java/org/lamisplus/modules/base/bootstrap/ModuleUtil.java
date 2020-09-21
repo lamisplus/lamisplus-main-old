@@ -1,7 +1,9 @@
 package org.lamisplus.modules.base.bootstrap;
 
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.lamisplus.modules.base.domain.entity.Module;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
@@ -16,13 +18,15 @@ import java.util.zip.ZipInputStream;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ModuleUtil {
     private static List<String> classNames = new ArrayList<String>();
     private static List<Module> moduleConfigs = new ArrayList<Module>();
     private static List<File> jsonFiles = new ArrayList<File>();
+    private final StorageUtil storageUtil;
 
 
-    public List<String> readZipFileRecursive(final InputStream zipFile, String jarName, boolean install) {
+    /*public List<String> readZipFileRecursive(final InputStream zipFile, String jarName, boolean install) {
         try (final InputStream zipFileStream = zipFile) {
             classNames.clear();
             classNames = this.readZipFileStream(zipFileStream);
@@ -30,9 +34,9 @@ public class ModuleUtil {
             log.error("error reading zip file %s!", zipFile, e);
         }
         return classNames;
-    }
+    }*/
 
-    private List<String> readZipFileStream(final InputStream zipFileStream) {
+    /*private List<String> readZipFileStream(final InputStream zipFileStream) {
         String classWordLength = ".class";
         int length = classWordLength.length();
         final ZipInputStream zipInputStream = new ZipInputStream(zipFileStream);
@@ -63,7 +67,7 @@ public class ModuleUtil {
             log.error("error reading zip file stream", e);
         }
         return classNames;
-    }
+    }*/
 
     public static void copyPathFromJar(final URL jarPath, final String path, final Path target) throws Exception {
         Map<String, String> env = new HashMap<>();
@@ -103,9 +107,10 @@ public class ModuleUtil {
         }
     }
 
-    private static void readModuleYml(File ymlFile){
+    private static void readModuleYml(File ymlFile) throws IOException {
+        BufferedReader in = null;
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(
+            in = new BufferedReader(new InputStreamReader(
                     new FileInputStream(ymlFile.getAbsolutePath())));
             Yaml yaml = new Yaml();
             Module module = yaml.loadAs(in, Module.class);
@@ -116,6 +121,8 @@ public class ModuleUtil {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException("Error: " + e.getMessage());
+        }finally {
+            if (in != null) {in.close(); }
         }
     }
 
