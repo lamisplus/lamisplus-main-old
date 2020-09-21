@@ -107,9 +107,10 @@ public class ModuleUtil {
         }
     }
 
-    private static void readModuleYml(File ymlFile){
+    private static void readModuleYml(File ymlFile) throws IOException {
+        BufferedReader in = null;
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(
+            in = new BufferedReader(new InputStreamReader(
                     new FileInputStream(ymlFile.getAbsolutePath())));
             Yaml yaml = new Yaml();
             Module module = yaml.loadAs(in, Module.class);
@@ -120,6 +121,8 @@ public class ModuleUtil {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException("Error: " + e.getMessage());
+        }finally {
+            if (in != null) {in.close(); }
         }
     }
 
