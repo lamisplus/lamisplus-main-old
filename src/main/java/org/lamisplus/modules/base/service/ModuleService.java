@@ -2,21 +2,21 @@ package org.lamisplus.modules.base.service;
 
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileSystemUtils;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.lamisplus.modules.base.BaseApplication;
 import org.lamisplus.modules.base.config.ApplicationProperties;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
+import org.lamisplus.modules.base.controller.apierror.IllegalTypeException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ModuleDTO;
 import org.lamisplus.modules.base.domain.entity.Form;
 import org.lamisplus.modules.base.domain.entity.Module;
+import org.lamisplus.modules.base.domain.entity.ModuleDependency;
 import org.lamisplus.modules.base.domain.entity.Program;
 import org.lamisplus.modules.base.domain.mapper.ModuleMapper;
 import org.lamisplus.modules.base.repository.FormRepository;
+import org.lamisplus.modules.base.repository.ModuleDependencyRepository;
 import org.lamisplus.modules.base.repository.ModuleRepository;
 import org.lamisplus.modules.base.bootstrap.ClassPathHacker;
 import org.lamisplus.modules.base.repository.ProgramRepository;
@@ -25,16 +25,12 @@ import org.lamisplus.modules.base.util.GenericSpecification;
 import org.lamisplus.modules.base.bootstrap.ModuleUtil;
 import org.lamisplus.modules.base.bootstrap.StorageUtil;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileLock;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -44,6 +40,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ModuleService {
     private final ModuleRepository moduleRepository;
+    private final ModuleDependencyRepository moduleDependencyRepository;
     private final FormRepository formRepository;
     private final ModuleMapper moduleMapper;
     private final StorageUtil storageService;
@@ -64,7 +61,6 @@ public class ModuleService {
     private static final boolean ACTIVE = true;
     private static final String FORM = "Form";
     private static final boolean INACTIVE = false;
-
     private Log log = LogFactory.getLog(ModuleService.class);
 
 
@@ -87,33 +83,42 @@ public class ModuleService {
     public List<Module> uploadAndUnzip(MultipartFile[] files, Boolean overrideExistFile) {
         ModuleUtil.setModuleConfigs();
         List<Module> modules = new ArrayList<Module>();
+        Arrays.asList(files).stream().forEach(file ->{
+            String fileName = file.getOriginalFilename().replace(".jar", "");
+           Optional<Module> optionalModule =  moduleRepository.findByName(fileName);
+           if(overrideExistFile == null || overrideExistFile == false){
+               if(optionalModule.isPresent()){
+                   throw new RecordExistException(Module.class, "Module Name", fileName
+                           + " (set override to true if replacing exist module)");
+               }
+           }
+            if(!file.getOriginalFilename().contains(".jar")){
+                log.info("File is not a jar file");
+                throw new IllegalTypeException(Module.class, "File", "not a jar file");
+            }
+        });
 
         Arrays.asList(files).stream().forEach(file ->{
              File jarFile = new File(file.getOriginalFilename());
-
-            if(!jarFile.getName().contains(".jar")){
-
-                log.info("File is not a jar file");
-                throw new RuntimeException("File is not a jar file");
-            }
 
             String fileName = jarFile.getName().toLowerCase().replace(".jar","");
             log.info("name of jar file: " + fileName);
 
             //Copy files
             URL url = storageService.store(fileName, file, overrideExistFile, null);
-            log.info(fileName +"Uploaded...");
+            log.info(fileName +" Uploaded...");
 
              final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", fileName);
 
              try {
                  ModuleUtil.copyPathFromJar(storageService.getURL(jarFile.getName().toLowerCase()),
                          fileSeparator, moduleRuntimePath);
-                 log.info(fileName +"Unzipped...");
-                 storageService.deleteFile(url.getFile());
+                 log.debug(fileName +" Unzipped...");
+                 //storageService.deleteFile(url.getFile());
 
              } catch (Exception e) {
                  log.debug(e.getMessage());
+                 e.printStackTrace();
                  throw new RuntimeException("Server error module not loaded: " + e.getMessage());
              }
          });
@@ -123,35 +128,45 @@ public class ModuleService {
             externalModule.setStatus(STATUS_UPLOADED);
             externalModule.setActive(INACTIVE);
             externalModule.setModuleType(MODULE_TYPE);
-            //Saving module...
             Optional<Module> moduleOptional = moduleRepository.findByName(externalModule.getName().toLowerCase());
 
+            //Saving module...
             final Module module = moduleOptional.isPresent()? moduleOptional.get(): moduleRepository.save(externalModule);
-            log.info(module.getName() + " saved...");
+            log.debug(module.getName() + " saved...");
             modules.add(module);
 
+            //Getting all dependencies
+            externalModule.getModuleDependencyByModule().forEach(moduleDependency -> {
+                moduleDependency.setModuleId(module.getId());
+                final ModuleDependency dependency = moduleDependencyRepository.save(moduleDependency);
+                log.debug(dependency.getArtifact_id() + " saved...");
+            });
+
+            //Get program
             externalModule.getProgramsByModule().forEach(program -> {
                 if(programRepository.findByModuleId(module.getId()).size() < 1){
                     program.setModuleId(module.getId());
                     //Saving program...
                     final Program program1 =  programRepository.save(program);
-                    log.info(program1.getName() + " saved...");
+                    log.debug(program1.getName() + " saved...");
                     program1.getCode();
                 }
 
+                //Get forms
                 ModuleUtil.getJsonFile().forEach(jsonFile ->{
                     if(jsonFile.getName().contains(FORM)){
-                        loadExternalModuleForms(module.getName(), jsonFile).forEach(form ->{
+                        loadExternalModuleForms(jsonFile).forEach(form ->{
                             if(!formRepository.findByCode(form.getCode()).isPresent()){
                                 form.setProgramCode(program.getCode());
                                 //Saving form...
                                 final Form form1 = formRepository.save(form);
-                                log.info(form1.getName() + " saved...");
+                                log.debug(form1.getName() + " saved...");
                             }
                         });
                     }
                 });
             });
+            cleanUpExternalModuleFolder(externalModule);
         });
 
         return modules;
@@ -169,7 +184,7 @@ public class ModuleService {
         File filePath = new File(moduleRuntimePath.toAbsolutePath().toString() +
                 ORG_LAMISPLUS_MODULES_PATH + module.getName());
 
-        log.info("moduleRuntimePath is " + moduleRuntimePath.toString());
+        log.debug("moduleRuntimePath is " + moduleRuntimePath.toString());
 
         if(rootFile != null && rootFile.exists()) {
             try {
@@ -180,7 +195,9 @@ public class ModuleService {
 
                 classNames.forEach(className -> {
                     try {
-                        moduleClasses.add(loader.loadClass(className));
+                        if(className.contains(module.getMain())) {
+                            moduleClasses.add(loader.loadClass(className));
+                        }
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -188,8 +205,8 @@ public class ModuleService {
 
             } catch (IOException e) {
                 //TODO: Log error and Set modules active to false
-
-                //module.setActive(false);
+                log.debug(e.getClass().getName()+": " + e.getMessage());
+                e.printStackTrace();
                 throw new RuntimeException("Server error module not loaded: " + e.getMessage());
             }
 
@@ -199,7 +216,8 @@ public class ModuleService {
                     break;
                 }
         } else {
-            return module;
+            log.debug("Cannot find " + module.getName());
+            //TODO: remove module from externalModules list
         }
         return moduleRepository.save(module);
     }
@@ -215,6 +233,7 @@ public class ModuleService {
             if(module.getStatus() == STATUS_INSTALLED) {
                 module.setStatus(STATUS_STARTED);
                 module.setActive(ACTIVE);
+                module.setInstalledBy(userService.getUserWithAuthorities().get().getUserName());
                 moduleRepository.save(module);
             }
         });
@@ -240,7 +259,7 @@ public class ModuleService {
         }
         Module module = moduleOptional.get();
         if(module.getModuleType() == 0){
-            throw new IllegalStateException("Cannot not delete Core module");
+            throw new IllegalTypeException(Module.class, "Core module", "cannot delete core module");
         }
         module.getProgramsByModule().forEach(program -> {
             program.getFormsByProgram().forEach(form -> formRepository.delete(form));
@@ -251,6 +270,32 @@ public class ModuleService {
         return true;
     }
 
+    public void loadDependencies(List<Module> modules){
+        if(externalModules == null || externalModules.isEmpty()){
+            if(modules == null || modules.isEmpty()){
+                externalModules = getAllModuleByStatusAndModuleType(STATUS_STARTED, MODULE_TYPE);
+            }
+        }
+            externalModules.forEach(module -> {
+                final Path moduleDependencyRuntimePath = Paths.get(properties.getModulePath(), "runtime", module.getName(), "lib");
+                    for (File file : moduleDependencyRuntimePath.toFile().listFiles()) {
+                        System.out.println(file.getName());
+                        //Load dependencies
+                        System.out.println(file.exists());
+                        module.getModuleDependencyByModule().forEach(moduleDependency -> {
+                            if (file.getName().contains(moduleDependency.getArtifact_id())) {
+                                try {
+                                    ClassPathHacker.addFile(file.getAbsolutePath());
+                                } catch (IOException e) {
+                                    log.debug(e.getClass().getName()+": " + e.getMessage());
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+
+                    }
+            });
+    }
 
     private void loadAllExternalModules(int status, int moduleType){
         externalModules = getAllModuleByStatusAndModuleType(status, moduleType);
@@ -260,29 +305,31 @@ public class ModuleService {
         });
     }
 
-    public void loadDependencies(List<Module> modules){
-        if(externalModules == null || externalModules.isEmpty()){
-            if(modules == null || modules.isEmpty()){
-                externalModules = getAllModuleByStatusAndModuleType(STATUS_STARTED, MODULE_TYPE);
-            }
+    private void cleanUpExternalModuleFolder(Module externalModule) {
+        Boolean foundFile = false;
+        final Path moduleJarPath = Paths.get(properties.getModulePath(), externalModule.getName()+".jar");
+        final Path moduleDependencyRuntimePath = Paths.get(properties.getModulePath(), "runtime", externalModule.getName(), "lib");
+        File jarFile = new File(moduleJarPath.toString());
+        if(jarFile != null){
+            jarFile.delete();
+            log.debug(jarFile.getName() + "deleted...");
         }
-            externalModules.forEach(module -> {
-                final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", module.getName());
-                for (File file : moduleRuntimePath.toFile().listFiles()) {
-                    System.out.println(file.getName());
-                    //Load dependencies
-                    if (file.getName().contains("lib")) {
-                        System.out.println(file.exists());
-                        for (File jarfile : file.listFiles()) {
-                            try {
-                                ClassPathHacker.addFile(jarfile.getAbsolutePath());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
+        if(externalModule.getModuleDependencyByModule().size() < moduleDependencyRuntimePath.toFile().list().length) {
+            for (File file : moduleDependencyRuntimePath.toFile().listFiles()) {
+                for (ModuleDependency moduleDependency : externalModule.getModuleDependencyByModule()) {
+                    if (file.getName().contains(moduleDependency.getArtifact_id())) {
+                        foundFile = true;
+                        break;
                     }
                 }
-            });
+                if(!foundFile){
+                    file.delete();
+                    log.debug(file.getName() + "deleted...");
+                } else {
+                    foundFile = false;
+                }
+            }
+        }
     }
 
     private List<URL> showFiles(File[] files, File rootFile) throws IOException {
@@ -309,37 +356,6 @@ public class ModuleService {
         return urlList;
     }
 
-    /*private void getDependency(String moduleName){
-        final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", moduleName);
-        File dependencies = new File(moduleRuntimePath.toAbsolutePath().toString() + fileSeparator + "lib");
-        List <String> dependencyClasses = new ArrayList<String>();
-        List <URL> dependencyURLs = new ArrayList<URL>();
-
-        for (File jar : dependencies.listFiles()) {
-            try {
-                InputStream targetStream = new FileInputStream(jar);
-                ClassPathHacker.addFile(dependencies.getAbsolutePath()+fileSeparator + jar.getName().toLowerCase());
-                dependencyClasses = moduleUtil.readZipFileRecursive(targetStream, jar.getName().toLowerCase(), false);
-                dependencyURLs.add(jar.toURI().toURL());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        URL [] urlArray = new URL[dependencyURLs.size()];
-        dependencyURLs.toArray(urlArray);
-
-        ClassLoader loader = new URLClassLoader(urlArray, ClassLoader.getSystemClassLoader());
-
-        dependencyClasses.forEach(dependencyClass ->{
-            try {
-                loader.loadClass(dependencyClass);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        });
-    }*/
-
     private List<Module> getAllModuleByStatusAndModuleType(int moduleStatus, int moduleType) {
         Specification<Module> moduleSpecification = genericSpecification.findAllModules(moduleStatus, moduleType);
         List<Module> modules = this.moduleRepository.findAll(moduleSpecification);
@@ -357,8 +373,7 @@ public class ModuleService {
         return clz;
     }
 
-    private List<Form> loadExternalModuleForms(String moduleName, File searchParam){
-
+    private List<Form> loadExternalModuleForms(File searchParam){
         String jsonFile = DataLoader.getJsonFile(searchParam.toPath()).toString();
         List<Form> forms = formDataLoader.readJsonFile(new Form(), jsonFile);
 
