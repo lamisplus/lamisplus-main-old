@@ -26,7 +26,7 @@ public class ModuleUtil {
     private final StorageUtil storageUtil;
 
 
-    public List<String> readZipFileRecursive(final InputStream zipFile, String jarName, boolean install) {
+    /*public List<String> readZipFileRecursive(final InputStream zipFile, String jarName, boolean install) {
         try (final InputStream zipFileStream = zipFile) {
             classNames.clear();
             classNames = this.readZipFileStream(zipFileStream);
@@ -34,9 +34,9 @@ public class ModuleUtil {
             log.error("error reading zip file %s!", zipFile, e);
         }
         return classNames;
-    }
+    }*/
 
-    private List<String> readZipFileStream(final InputStream zipFileStream) {
+    /*private List<String> readZipFileStream(final InputStream zipFileStream) {
         String classWordLength = ".class";
         int length = classWordLength.length();
         final ZipInputStream zipInputStream = new ZipInputStream(zipFileStream);
@@ -67,7 +67,7 @@ public class ModuleUtil {
             log.error("error reading zip file stream", e);
         }
         return classNames;
-    }
+    }*/
 
     public static void copyPathFromJar(final URL jarPath, final String path, final Path target) throws Exception {
         Map<String, String> env = new HashMap<>();
