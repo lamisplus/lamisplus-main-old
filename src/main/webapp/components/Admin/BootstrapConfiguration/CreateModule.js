@@ -58,7 +58,6 @@ function getSteps() {
 }
 
 
-
 const CreateModule = (props) => {
 
     const classes = useStyles()
@@ -77,8 +76,11 @@ const CreateModule = (props) => {
     const [uploadButtonhidden, setuploadButtonhidden] = useState(false)
     const [buttonStatus, setButtonStatus] = useState(true)
     const [hiddeStartModuleFinishButton, sethiddeStartModuleFinishButton] = useState(true)
+    const [modal, setModal] = useState(false)//modal to View 
+    const toggleModal = () => setModal(!modal)
+    const [collectModal, setcollectModal] = useState([])//
 
-console.log(activeStep)
+
   const handleNext = async e => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
       if(activeStep === 1 && steps[2] === 'Start module'){
@@ -94,11 +96,6 @@ console.log(activeStep)
   const handleReset = () => {
     setActiveStep(0);
   };
-
-
-  const [modal, setModal] = useState(false)//modal to View Result
-  const toggleModal = () => setModal(!modal)
-  const [collectModal, setcollectModal] = useState([])//
 
   const startModule = (e) => {  
     setcollectModal({...collectModal, ...e});
@@ -129,7 +126,6 @@ console.log(activeStep)
         const res = await axios.post(url+'modules/upload', form_Data, {
           headers: {
             'Content-Type': 'multipart/form-data',
-
           },
           
         onUploadProgress: progressEvent => {
@@ -147,7 +143,6 @@ console.log(activeStep)
           const { fileName, filePath } = res.data;
 
           setUploadedFile({ fileName, filePath });
-
           setMessage('File Uploaded');
           setUploadResponse(res.data===null ? {} :res.data)
           setuploadButtonhidden(true)
@@ -180,7 +175,6 @@ console.log(activeStep)
       sethiddeStartModuleFinishButton(false)
     }
     props.startBootstrapModule( onSuccess, onError);
-
   }
 
   const sampleAction = (id) =>{
@@ -293,43 +287,43 @@ console.log(activeStep)
             <br />
             <Row>
                 <Col>
-                <OverlayLoader 
-                  color={'red'} // default is white
-                  loader="ScaleLoader" // check below for more loaders
-                  text="Installing... please wait!" 
-                  active={installationOverlay} 
-                  backgroundColor={'black'} // default is black
-                  opacity=".4" // default is .9  
-                >
-                  <Table striped>
-                    <thead style={{  backgroundColor:'#9F9FA5' }}>
-                    <tr>
-                      
-                      <th>Module Name</th>
-                      <th>Description</th>
-                      <th>Author</th>
-                      <th>Version</th>
-                      <th>Status</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  {uploadResponse.map((row) => (
-                    <tr key={row.id}>
-                      <td>{row.name===""?" ":row.name}</td>
-                      <td>{row.description===""?" ":row.description}</td>
-                      <td>{row.basePackage===""?" ":row.basePackage}</td>
-                      <td>{row.version===""?" ":row.version}</td>
-                      <td><Badge  color="primary">{row.status===2 ? "Uploaded":"Unploaded"}</Badge></td>
-                      <td>{sampleAction(row.id)}</td>
-                    </tr>
+                  <OverlayLoader 
+                    color={'red'} // default is white
+                    loader="ScaleLoader" // check below for more loaders
+                    text="Installing... please wait!" 
+                    active={installationOverlay} 
+                    backgroundColor={'black'} // default is black
+                    opacity=".4" // default is .9  
+                  >
+                      <Table striped>
+                        <thead style={{  backgroundColor:'#9F9FA5' }}>
+                        <tr>
+                          
+                          <th>Module Name</th>
+                          <th>Description</th>
+                          <th>Author</th>
+                          <th>Version</th>
+                          <th>Status</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {uploadResponse.map((row) => (
+                          <tr key={row.id}>
+                            <td>{row.name===""?" ":row.name}</td>
+                            <td>{row.description===""?" ":row.description}</td>
+                            <td>{row.basePackage===""?" ":row.basePackage}</td>
+                            <td>{row.version===""?" ":row.version}</td>
+                            <td><Badge  color="primary">{row.status===2 ? "Uploaded":"Unploaded"}</Badge></td>
+                            <td>{sampleAction(row.id)}</td>
+                          </tr>
 
-                  ))
-                }
-                    
-                  </tbody>
-                </Table>
-              </OverlayLoader>
+                          ))
+                        }
+                        
+                      </tbody>
+                    </Table>
+                  </OverlayLoader>
                 </Col>  
               </Row>
               </CardBody>
@@ -344,15 +338,7 @@ console.log(activeStep)
                 <span style={{ fontWeight: 'bold'}}>Starting this module wil restart the application and all scheduled tasked
                 and background processes will be interupted. <br/>Do you want to Proceed?</span> 
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  {/* < MatButton
-                    type='submit'
-                    variant='contained'
-                    //variant="outlined"
-                    color="secondary"
-                    className={classes.button}   
-                    >
-                    <FaPowerOff/>{" "} Restart
-                </MatButton>  */}
+                  
                 <br/>
               </Typography>
             </Alert>
@@ -391,11 +377,8 @@ return (
                 </Link>
                 </h1>
                 <Card className="mb-12">
+                 <CardBody>
                  
-                <CardBody>
-                   
-                <br />
-                  
                 <div className={classes.root}>
                     <Stepper activeStep={activeStep} alternativeLabel>
                       {steps.map((label) => (

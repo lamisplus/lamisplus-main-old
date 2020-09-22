@@ -110,7 +110,6 @@ const mapStateToProps = state => {
         patientsTestOrderList: state.laboratory.list
     };
 };
-
 const mapActionToProps = {
     fetchAllLabTestOrderToday: fetchAllLabTestOrder
 };

@@ -36,14 +36,10 @@ const useStyles = makeStyles({
 })
 
 
-
-
-
   const CollectSample = (props) => {
     const sampleCollections = props.location.state && props.location.state.formDataObj  ? props.location.state.formDataObj : {};
     const encounterDate = props.location.state && props.location.state.dateEncounter ? props.location.state.dateEncounter : null ;
     const hospitalNumber = props.location.state && props.location.state.hospitalNumber ? props.location.state.hospitalNumber: null;
-    console.log()
     const testOrders = useSelector(state => state.laboratory.testorder);
     const dispatch = useDispatch();
     const [loading, setLoading] = useState('')
@@ -91,12 +87,9 @@ const useStyles = makeStyles({
             testOrders.forEach(function(value, index, array) {
                 if(value['data']!==null && value['data'].hasOwnProperty("lab_number")){
                     labNumber = value['data'].lab_number
-                } 
-                //console.log(value['data']) 
-              
+                }               
             });
           
-
     const handleLabNumber = e => {
         e.preventDefault();   
             setlabNum({ ...labNum, [e.target.name]: e.target.value })
@@ -105,7 +98,6 @@ const useStyles = makeStyles({
     const handleSample = (row,dateEncounter) => { 
         setcollectModal({...collectModal, ...row, dateEncounter, hospitalNumber});
         setModal(!modal) 
-        console.log()
     }
 
     const transferSample = (row) => {
@@ -121,12 +113,10 @@ const useStyles = makeStyles({
     const getGroup = e => {
         const getValue =e.target.value;
         if(getValue!=='All' || getValue ===null)
-        {
-            console.log(getValue)
+        { 
             //const testOrders = fetchTestOrders.length >0 ? fetchTestOrders:{}
             const getNewTestOrder = testOrders.find(x => x.data!==null && x.data.lab_test_group === getValue)
             setFetchTestOrders([getNewTestOrder]) 
-            console.log(fetchTestOrders)
         }else{
             setFetchTestOrders([...sampleCollections])
         }
@@ -210,7 +200,7 @@ return (
                   </CardHeader>
                 <CardBody>
                     <Alert color="primary">
-                        Please make sure you enter Lab number before collecting sample {console.log(labNum)}
+                        Please make sure you enter Lab number before collecting sample 
                     </Alert>
                 <br />
                     <Row>
@@ -264,7 +254,6 @@ return (
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {console.log(fetchTestOrders)}
                                                 {!loading ? fetchTestOrders.map((row) => (
                                                     row.data!==null?
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>
@@ -295,11 +284,8 @@ return (
       <ModalSample modalstatus={modal} togglestatus={toggleModal} datasample={collectModal}  labnumber={labNum}/>
       <ModalSampleTransfer modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} labnumber={labNum}/>
       <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />
-
     </Page>
-  )
-  
+  )  
 }
-
 
 export default CollectSample
