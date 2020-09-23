@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 public class BaseApplication extends SpringBootServletInitializer {
 	private static ConfigurableApplicationContext context;
+	private static Boolean isStartUp = true;
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -21,7 +22,7 @@ public class BaseApplication extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		context = SpringApplication.run(BaseApplication.class, args);
 		ModuleService moduleService = context.getBean(ModuleService.class);
-		moduleService.startModule();
+		moduleService.startModule(isStartUp);
 	}
 
 	public static void restart(Class [] clz) {

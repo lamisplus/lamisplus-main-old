@@ -71,7 +71,7 @@ public class JasperReportService {
         List<JasperReportInfoDTO> jasperReportInfoDTOS = new ArrayList<>();
         jasperReportInfos.forEach(jasperReportInfo -> {
             final JasperReportInfoDTO jasperReportInfoDTO1 = jasperReportInfoMapper.toJasperReportInfoDTO(jasperReportInfo);
-            Optional<Program>  program = this.programRepository.findProgramByUuid(jasperReportInfo.getProgramCode());
+            Optional<Program>  program = this.programRepository.findProgramByCode(jasperReportInfo.getProgramCode());
             program.ifPresent(value -> jasperReportInfoDTO1.setProgramName(value.getName()));
         });
         return jasperReportInfoDTOS;

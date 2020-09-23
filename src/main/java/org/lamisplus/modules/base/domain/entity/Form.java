@@ -83,7 +83,7 @@ public class Form extends JsonBEntity implements Serializable {
     private Integer archived = 0;
 
     @ManyToOne
-    @JoinColumn(name = "program_code", referencedColumnName = "uuid", insertable = false, updatable = false)
+    @JoinColumn(name = "program_code", referencedColumnName = "code", insertable = false, updatable = false)
     @JsonIgnore
     private Program programByProgramCode;
 
