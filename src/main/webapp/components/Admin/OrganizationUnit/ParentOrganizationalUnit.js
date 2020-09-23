@@ -18,7 +18,7 @@ import {  MdDelete, MdModeEdit, MdRemoveRedEye } from "react-icons/md";
 import DeleteModule from "./DeleteModule";
 import CreateOrganizationUnit from "./CreateOrganizationUnit";
 import { useSelector, useDispatch } from 'react-redux';
-import {  fetchAllOrganizationalUnit } from '../../../actions/organizationalUnit';
+import {  fetchAllParentOrganizationalUnit } from '../../../actions/organizationalUnit';
 
 
 
@@ -36,7 +36,8 @@ const useStyles = makeStyles({
 
 
 
-  const OrganizationUnit = (props) => {
+  const ParentOrganizationUnit = (props) => {
+    const parentOrganisationUnitId = props.location.state && props.location.state.parentOrganisationUnitId  ? props.location.state.parentOrganisationUnitId : {};
     const [collectModal, setcollectModal] = useState([])
     const [modal, setModal] = useState(false) // 
     const toggleModal = () => setModal(!modal)
@@ -45,7 +46,7 @@ const useStyles = makeStyles({
     const classes = useStyles()
     const [loading, setLoading] = useState('')
     const dispatch = useDispatch();
-    const listOfAllOrgUnit = useSelector(state => state.organizationalUnitReducer.list);
+    const listOfAllParentOrgUnit = useSelector(state => state.organizationalUnitReducer.list);
 
     useEffect(() => {
       setLoading(true);
@@ -56,7 +57,7 @@ const useStyles = makeStyles({
       const onError = () => {
           setLoading(false)     
       }
-        const fetchAllOrgUnit = dispatch(fetchAllOrganizationalUnit(onSuccess,onError ));
+        const fetchAllOrgUnit = dispatch(fetchAllParentOrganizationalUnit(parentOrganisationUnitId, onSuccess,onError ));
 
   }, []); //componentDidMount
     const deleteModule = (row) => {  
@@ -67,7 +68,7 @@ const useStyles = makeStyles({
     const createOrgUnit = () => {  
       setModal2(!modal2) 
     }
-console.log(listOfAllOrgUnit)
+console.log(props.location.state)
     
 
 return (
@@ -75,17 +76,23 @@ return (
       
         <Row>
             <Col>
-              <h1>Organization Unit Manager
-                <MatButton
-                  type='submit'
-                  variant='contained'
-                  color='primary'
-                  className={classes.button}                        
-                  className=" float-right mr-1"
-                  onClick={() => createOrgUnit()}
-                >
-                  <TiPlus/>{" "} New 
-                </MatButton>
+              <h1>Parent Organization Unit
+              <Link 
+                  to ={{ 
+                  pathname: "/admin/organization-unit"
+                  }} 
+                > 
+                  <MatButton
+                    type='submit'
+                    variant='contained'
+                    color='primary'
+                    className={classes.button}                        
+                    className=" float-right mr-1"
+                    onClick={() => createOrgUnit()}
+                  >
+                    <TiArrowBack/>{" "} Back 
+                  </MatButton>
+                </Link>
                 </h1>
                 <Card className="mb-12">
                 
@@ -106,7 +113,7 @@ return (
                                 { title: 'Action', field: 'actions'},
                               ]}
                               isLoading={loading}
-                                data={listOfAllOrgUnit.map((row) => ({
+                                data={listOfAllParentOrgUnit.map((row) => ({
                                       name: row.name,  
                                       description: row. description,
                                     
@@ -116,14 +123,7 @@ return (
                                             <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
                                               Actions <span aria-hidden>▾</span>
                                             </MenuButton>
-                                                <MenuList style={{ color:"#000 !important"}} >
-                                                    <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule('module to delete')}>                      
-                                                      <Link
-                                                        to={{pathname: "/admin/parent-organization-unit", state: { parentOrganisationUnitId: row.parentOrganisationUnitId  }}}>    
-                                                          <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>View Organ. Unit</span>
-                                                       </Link>  
-                                                      </MenuItem>
-                                                      
+                                                <MenuList style={{ color:"#000 !important"}} > 
                                                       <MenuItem style={{ color:"#000 !important"}}>
                                                             <Link
                                                                 to={{
@@ -131,12 +131,12 @@ return (
                                                                   currentId: {}
                                                                 }}
                                                             >
-                                                              <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Org. Unit  </span>                   
+                                                              <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit  Unit  </span>                   
                                                             </Link>
                                                       </MenuItem> 
                                                       <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule('module to delete')}>                      
                                                       
-                                                            <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Delete Org. Unit</span>
+                                                            <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Delete Unit</span>
                                                                                 
                                                       </MenuItem>                                    
                                                       
@@ -170,4 +170,4 @@ return (
 }
 
 
-export default OrganizationUnit
+export default ParentOrganizationUnit

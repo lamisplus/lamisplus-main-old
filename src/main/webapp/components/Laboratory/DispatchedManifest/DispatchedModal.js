@@ -180,9 +180,7 @@ const ModalViewResult = (props) => {
                 
                 return item;
             })
-
-            //Manipulating the formDataObj to update the lab_test_status
-            
+            //Manipulating the formDataObj to update the lab_test_status            
                 if(validate()){
                     //Updating the FormDataObj informations
                     modifyFormDataObj.forEach(function(value, index, array) {
