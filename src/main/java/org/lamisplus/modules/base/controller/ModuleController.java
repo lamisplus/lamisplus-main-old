@@ -23,6 +23,7 @@ import java.util.List;
 public class ModuleController {
     private final String ENTITY_NAME = "Module";
     private final ModuleService moduleService;
+    private static final Boolean IS_START_UP = false;
 
 
     @GetMapping
@@ -44,7 +45,7 @@ public class ModuleController {
 
     @PostMapping("/upload")
     public ResponseEntity<List<Module>> uploadAndUnzip(@RequestParam("file1") MultipartFile [] jarFile,
-                                                  Boolean overrideExistFile) {
+                                                       @RequestParam Boolean overrideExistFile) {
         return ResponseEntity.ok(moduleService.uploadAndUnzip(jarFile, overrideExistFile));
     }
 
@@ -55,8 +56,7 @@ public class ModuleController {
 
     @PostMapping("/start/all")
     public void startModule() {
-        Boolean isStartUp = false;
-        moduleService.startModule(isStartUp);
+        moduleService.startModule(IS_START_UP);
     }
 
     @DeleteMapping("/{id}")
