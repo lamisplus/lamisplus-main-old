@@ -105,8 +105,8 @@ public class ModuleService {
             log.info("name of jar file: " + fileName);
 
             //Copy files
-            URL url = storageService.store(fileName, file, overrideExistFile, null);
-            log.info(fileName +" Uploaded...");
+            storageService.store(fileName, file, overrideExistFile, null);
+            log.debug(fileName +" Uploaded...");
 
              final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", fileName);
 
@@ -142,6 +142,7 @@ public class ModuleService {
             //Getting all dependencies
             externalModule.getModuleDependencyByModule().forEach(moduleDependency -> {
                 moduleDependency.setModuleId(module.getId());
+                //save dependencies
                 final ModuleDependency dependency = moduleDependencyRepository.save(moduleDependency);
                 log.debug(dependency.getArtifact_id() + " saved...");
             });
@@ -176,6 +177,7 @@ public class ModuleService {
     }
 
     public Module installModule(Long moduleId){
+        classNames.clear();
         Optional<Module> moduleOptional = this.moduleRepository.findById(moduleId);
         if(!moduleOptional.isPresent()) {
             throw new EntityNotFoundException(Module.class, "Module Id", moduleId + "");
@@ -192,7 +194,7 @@ public class ModuleService {
         if(rootFile != null && rootFile.exists()) {
             try {
                 ClassPathHacker.addFile(rootFile.getAbsolutePath());
-                List<URL> classURL = showFiles(filePath.listFiles(), rootFile);
+                List<URL> classURL = showFiles(filePath.listFiles(), rootFile, module.getMain());
                 ClassLoader loader = new URLClassLoader(classURL.toArray(
                         new URL[classURL.size()]), ClassLoader.getSystemClassLoader());
 
@@ -338,7 +340,7 @@ public class ModuleService {
         }
     }
 
-    private List<URL> showFiles(File[] files, File rootFile) throws IOException {
+    private List<URL> showFiles(File[] files, File rootFile, String mainClass) throws IOException {
         String absolutePath = rootFile.getAbsolutePath();
 
         List<URL> urlList = new ArrayList<>();
@@ -347,14 +349,16 @@ public class ModuleService {
                 if (file.isDirectory()) {
                     ClassPathHacker.addFile(file.getAbsolutePath());
                     urlList.add(file.toURI().toURL());
-                    showFiles(file.listFiles(), rootFile); // Calls same method again.
+                    showFiles(file.listFiles(), rootFile, mainClass); // Calls same method again.
                 } else {
                     if (file.getAbsolutePath().endsWith(".class")) {
                         ClassPathHacker.addFile(file.getAbsolutePath());
                         String filePathName = file.getAbsolutePath().replace(absolutePath + fileSeparator, "");
                         String processedName = filePathName.replace(".class", "");
                         processedName = processedName.replace(fileSeparator, ".");
-                        classNames.add(processedName);
+                        if(processedName.contains(mainClass)){
+                            classNames.add(processedName);
+                        }
                     }
                 }
             }
