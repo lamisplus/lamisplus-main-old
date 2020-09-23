@@ -10,14 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -47,7 +45,7 @@ public class RadiologyController {
 
             Path path = storageService.store(file.getOriginalFilename(), file, overrideExistFile, newName);
             String url = MvcUriComponentsBuilder
-                    .fromMethodName(FilesController.class, "getFile", path.getFileName().toString()).build().toString();
+                    .fromMethodName(FileController.class, "getFile", path.getFileName().toString()).build().toString();
             urlList.add(url);
         });
         return ResponseEntity.ok(radiologyService.save(urlList, formId));

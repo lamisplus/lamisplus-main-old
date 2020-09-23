@@ -1,8 +1,7 @@
 package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.util.MediaTypeUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -21,10 +20,10 @@ import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/api/logs")
+@Slf4j
 @RequiredArgsConstructor
 public class LoggingController {
     private final ServletContext servletContext;
-    private Log log = LogFactory.getLog(LoggingController.class);
     @Value("${logging.file.name}")
     private String logFile;
 

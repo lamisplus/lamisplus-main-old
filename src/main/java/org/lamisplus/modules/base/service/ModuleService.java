@@ -2,8 +2,7 @@ package org.lamisplus.modules.base.service;
 
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.BaseApplication;
 import org.lamisplus.modules.base.config.ApplicationProperties;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
@@ -36,6 +35,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 @org.springframework.stereotype.Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class ModuleService {
@@ -61,7 +61,6 @@ public class ModuleService {
     private static final boolean ACTIVE = true;
     private static final String FORM = "Form";
     private static final boolean INACTIVE = false;
-    private Log log = LogFactory.getLog(ModuleService.class);
     private static final String CONTENT_TYPE = "application/java-archive";
 
 

@@ -3,7 +3,6 @@ package org.lamisplus.modules.base.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.bootstrap.StorageUtil;
 import org.lamisplus.modules.base.domain.entity.FormData;
 import org.lamisplus.modules.base.repository.FormDataRepository;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
@@ -21,6 +20,8 @@ public class RadiologyService {
     private static final String FILE_URL = "fileUrl";
     private final FormDataService formDataService;
     private final FormDataRepository formDataRepository;
+    //private Log log = LogFactory.getLog(RadiologyController.class);
+
 
 
     public List<String> save(List<String> urlList, Long formId) {
@@ -38,14 +39,15 @@ public class RadiologyService {
                 jsonArray = jsonObject.getJSONArray(FILE_URL);
                 }
 
-            for (String path : urlList) {
-                jsonArray.put(path);
+            for (String url : urlList) {
+                jsonArray.put(url);
             }
             jsonObject.put(FILE_URL, jsonArray);
             formData.setData(jsonObject.toString());
 
             //Update the form data
             formDataRepository.save(formData);
+            log.debug("formData saved...");
             for(int i=0; i < jsonArray.length(); i++){
                 fileUrlList.add(jsonArray.getString(i));
             }
