@@ -20,10 +20,10 @@ import java.util.zip.ZipInputStream;
 @Component
 @RequiredArgsConstructor
 public class ModuleUtil {
-    private static List<String> classNames = new ArrayList<String>();
     private static List<Module> moduleConfigs = new ArrayList<Module>();
     private static List<File> jsonFiles = new ArrayList<File>();
-    private final StorageUtil storageUtil;
+    private static final String YMLFILE = ".yml";
+    private static final String JSONFILE = ".json";
 
 
     /*public List<String> readZipFileRecursive(final InputStream zipFile, String jarName, boolean install) {
@@ -95,10 +95,10 @@ public class ModuleUtil {
                             .toString()), StandardCopyOption.REPLACE_EXISTING);
                     File theFile = new File(path.toString());
                     //Checking for module.yml i.e. config file
-                    if (theFile.getName().endsWith(".yml")) {
+                    if (theFile.getName().endsWith(YMLFILE)) {
                         readModuleYml(theFile);
                     }
-                    if (theFile.getName().endsWith(".json")) {
+                    if (theFile.getName().endsWith(JSONFILE)) {
                         getJson(theFile);
                     }
                     return FileVisitResult.CONTINUE;

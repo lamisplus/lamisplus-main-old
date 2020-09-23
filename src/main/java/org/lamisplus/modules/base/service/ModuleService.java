@@ -2,8 +2,7 @@ package org.lamisplus.modules.base.service;
 
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.BaseApplication;
 import org.lamisplus.modules.base.config.ApplicationProperties;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
@@ -36,6 +35,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 @org.springframework.stereotype.Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class ModuleService {
@@ -61,8 +61,7 @@ public class ModuleService {
     private static final boolean ACTIVE = true;
     private static final String FORM = "Form";
     private static final boolean INACTIVE = false;
-    private Log log = LogFactory.getLog(ModuleService.class);
-
+    private static final String CONTENT_TYPE = "application/java-archive";
 
 
     public Module save(ModuleDTO moduleDTO) {
@@ -92,7 +91,7 @@ public class ModuleService {
                            + " (set override to true if replacing exist module)");
                }
            }
-            if(!file.getOriginalFilename().contains(".jar")){
+            if(file.getContentType() != CONTENT_TYPE || !file.getOriginalFilename().contains(".jar")){
                 log.info("File is not a jar file");
                 throw new IllegalTypeException(Module.class, "File", "not a jar file");
             }
@@ -105,8 +104,8 @@ public class ModuleService {
             log.info("name of jar file: " + fileName);
 
             //Copy files
-            URL url = storageService.store(fileName, file, overrideExistFile, null);
-            log.info(fileName +" Uploaded...");
+            storageService.store(fileName, file, overrideExistFile, null);
+            log.debug(fileName +" Uploaded...");
 
              final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", fileName);
 
@@ -142,6 +141,7 @@ public class ModuleService {
             //Getting all dependencies
             externalModule.getModuleDependencyByModule().forEach(moduleDependency -> {
                 moduleDependency.setModuleId(module.getId());
+                //save dependencies
                 final ModuleDependency dependency = moduleDependencyRepository.save(moduleDependency);
                 log.debug(dependency.getArtifact_id() + " saved...");
             });
@@ -176,6 +176,7 @@ public class ModuleService {
     }
 
     public Module installModule(Long moduleId){
+        classNames.clear();
         Optional<Module> moduleOptional = this.moduleRepository.findById(moduleId);
         if(!moduleOptional.isPresent()) {
             throw new EntityNotFoundException(Module.class, "Module Id", moduleId + "");
@@ -192,7 +193,7 @@ public class ModuleService {
         if(rootFile != null && rootFile.exists()) {
             try {
                 ClassPathHacker.addFile(rootFile.getAbsolutePath());
-                List<URL> classURL = showFiles(filePath.listFiles(), rootFile);
+                List<URL> classURL = showFiles(filePath.listFiles(), rootFile, module.getMain());
                 ClassLoader loader = new URLClassLoader(classURL.toArray(
                         new URL[classURL.size()]), ClassLoader.getSystemClassLoader());
 
@@ -244,7 +245,7 @@ public class ModuleService {
                 }
             }
         });
-        loadDependencies(externalModules);
+        //loadDependencies(externalModules);
 
         if(moduleClasses.size() > 0){
             moduleClasses.add(BaseApplication.class);
@@ -338,7 +339,7 @@ public class ModuleService {
         }
     }
 
-    private List<URL> showFiles(File[] files, File rootFile) throws IOException {
+    private List<URL> showFiles(File[] files, File rootFile, String mainClass) throws IOException {
         String absolutePath = rootFile.getAbsolutePath();
 
         List<URL> urlList = new ArrayList<>();
@@ -347,14 +348,16 @@ public class ModuleService {
                 if (file.isDirectory()) {
                     ClassPathHacker.addFile(file.getAbsolutePath());
                     urlList.add(file.toURI().toURL());
-                    showFiles(file.listFiles(), rootFile); // Calls same method again.
+                    showFiles(file.listFiles(), rootFile, mainClass); // Calls same method again.
                 } else {
                     if (file.getAbsolutePath().endsWith(".class")) {
                         ClassPathHacker.addFile(file.getAbsolutePath());
                         String filePathName = file.getAbsolutePath().replace(absolutePath + fileSeparator, "");
                         String processedName = filePathName.replace(".class", "");
                         processedName = processedName.replace(fileSeparator, ".");
-                        classNames.add(processedName);
+                        if(processedName.contains(mainClass)){
+                            classNames.add(processedName);
+                        }
                     }
                 }
             }
