@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import {fetchByHospitalNumber} from "actions/patients";
 import {fetchRadiologyTestOrdersByEncounterID, updateRadiologyByFormId} from "actions/laboratory"
 import { TiArrowBack } from 'react-icons/ti';
-import Link from '@material-ui/core/Link';
+import { Link } from 'react-router-dom';
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
 import PatientDetailCard from "../../Functions/PatientDetailCard";
