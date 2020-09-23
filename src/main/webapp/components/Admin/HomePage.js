@@ -142,12 +142,12 @@ function HomePage(props) {
                         icon={<FaBriefcaseMedical />}
                         {...a11yProps(2)}
                     />{" "}
-                    <Tab
-                        className={classes.title}
-                        label="Database Management"
-                        icon={<GiFiles />}
-                        {...a11yProps(3)}
-                    />
+                    {/*<Tab*/}
+                    {/*    className={classes.title}*/}
+                    {/*    label="Database Management"*/}
+                    {/*    icon={<GiFiles />}*/}
+                    {/*    {...a11yProps(3)}*/}
+                    {/*/>*/}
 
 
                     <Tab
