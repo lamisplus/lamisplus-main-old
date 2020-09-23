@@ -100,7 +100,7 @@ const GlobalVariableSearch = (props) => {
         <Card>
             <CardHeader>Test Order Details
                 <Link
-                    href = "/laboratory?tab=radiology" >
+                    to={{pathname: "/laboratory?tab=radiology" }}>
 
                     <Button
                         type='submit'
