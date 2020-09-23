@@ -62,7 +62,7 @@ public class ModuleService {
     private static final String FORM = "Form";
     private static final boolean INACTIVE = false;
     private Log log = LogFactory.getLog(ModuleService.class);
-
+    private static final String CONTENT_TYPE = "application/java-archive";
 
 
     public Module save(ModuleDTO moduleDTO) {
@@ -92,9 +92,8 @@ public class ModuleService {
                            + " (set override to true if replacing exist module)");
                }
            }
-            if(!file.getOriginalFilename().contains(".jar")){
+            if(file.getContentType() != CONTENT_TYPE || !file.getOriginalFilename().contains(".jar")){
                 log.info("File is not a jar file");
-                System.out.println(file.getContentType());
                 throw new IllegalTypeException(Module.class, "File", "not a jar file");
             }
         });
@@ -247,7 +246,7 @@ public class ModuleService {
                 }
             }
         });
-        loadDependencies(externalModules);
+        //loadDependencies(externalModules);
 
         if(moduleClasses.size() > 0){
             moduleClasses.add(BaseApplication.class);
