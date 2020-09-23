@@ -94,6 +94,7 @@ public class ModuleService {
            }
             if(!file.getOriginalFilename().contains(".jar")){
                 log.info("File is not a jar file");
+                System.out.println(file.getContentType());
                 throw new IllegalTypeException(Module.class, "File", "not a jar file");
             }
         });
