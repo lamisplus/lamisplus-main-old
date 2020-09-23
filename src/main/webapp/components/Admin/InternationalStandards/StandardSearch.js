@@ -8,7 +8,7 @@ import {
 } from 'reactstrap';
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Typography from "@material-ui/core/Typography";
-import Link from '@material-ui/core/Link';
+import { Link } from 'react-router-dom';
 import Button from "@material-ui/core/Button";
 import { FaPlus } from "react-icons/fa";
 import NewStandard from "./NewStandard";
