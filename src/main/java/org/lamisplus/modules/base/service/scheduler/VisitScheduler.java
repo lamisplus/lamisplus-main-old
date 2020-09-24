@@ -27,32 +27,37 @@ public class VisitScheduler {
     /**
      * Auto checkOut fires 1 hour
      */
-    @Scheduled(fixedDelay = 10000000, initialDelay = 10000)
-    public void autoCheckOut(){
-        List<VisitDTO> visitDTOList = this.visitService.getAllVisits();
-        visitDTOList.forEach(visitDTO -> {
-            //Check patient type
-            if(visitDTO.getTypePatient() != null && visitDTO.getTypePatient() <= 2){
-                Visit visit = this.visitMapper.toVisit(visitDTO);
-                if(visit.getDateVisitStart() == null || visit.getTimeVisitStart() == null) {
-                    return;
-                }
-                if(visit.getDateVisitEnd() == null || visit.getTimeVisitEnd() == null) {
-                    LocalDate localDate = visit.getDateVisitStart().plusDays(1);
-                    LocalTime localTime = visit.getTimeVisitStart().plusHours(24);
-                    LocalDate customNowLocalDate = CustomDateTimeFormat.LocalDateByFormat(LocalDate.now(), "dd-MM-yyyy");
-                    LocalTime customNowLocalTime = CustomDateTimeFormat.LocalTimeByFormat(LocalTime.now(), "hh:mm a");
-                    if ((customNowLocalDate.isAfter(localDate) || customNowLocalDate.isEqual(localDate)) &&
-                            (customNowLocalTime.isAfter(localTime) || customNowLocalTime.equals(localTime))) {
-                        visit.setDateVisitEnd(localDate);
-                        visit.setTimeVisitEnd(localTime);
-                        visit.setModifiedBy("System");
-                        this.visitRepository.save(visit);
+    @Scheduled(fixedDelay = 10000000, initialDelay = 50000)
+    public void autoCheckOut() {
+        try {
+            List<VisitDTO> visitDTOList = this.visitService.getAllVisits();
+            visitDTOList.forEach(visitDTO -> {
+                //Check patient type
+                if (visitDTO.getTypePatient() != null && visitDTO.getTypePatient() <= 2) {
+                    Visit visit = this.visitMapper.toVisit(visitDTO);
+                    if (visit.getDateVisitStart() == null || visit.getTimeVisitStart() == null) {
+                        return;
                     }
-                }
+                    if (visit.getDateVisitEnd() == null || visit.getTimeVisitEnd() == null) {
+                        LocalDate localDate = visit.getDateVisitStart().plusDays(1);
+                        LocalTime localTime = visit.getTimeVisitStart().plusHours(24);
+                        LocalDate customNowLocalDate = CustomDateTimeFormat.LocalDateByFormat(LocalDate.now(), "dd-MM-yyyy");
+                        LocalTime customNowLocalTime = CustomDateTimeFormat.LocalTimeByFormat(LocalTime.now(), "hh:mm a");
+                        if ((customNowLocalDate.isAfter(localDate) || customNowLocalDate.isEqual(localDate)) &&
+                                (customNowLocalTime.isAfter(localTime) || customNowLocalTime.equals(localTime))) {
+                            visit.setDateVisitEnd(localDate);
+                            visit.setTimeVisitEnd(localTime);
+                            visit.setModifiedBy("System");
+                            this.visitRepository.save(visit);
+                        }
+                    }
 
-            }
-        });
+                }
+            });
+        }catch(NullPointerException e){
+            log.info(e.getMessage());
+        }
     }
+
 
 }
