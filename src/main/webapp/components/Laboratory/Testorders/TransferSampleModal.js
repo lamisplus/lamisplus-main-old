@@ -61,10 +61,8 @@ const useStyles = makeStyles(theme => ({
 const ModalSampleTransfer = (props) => {
     const classes = useStyles()
     const datasample = props.datasample ? props.datasample : {};
-    //console.log(datasample)
     const lab_test_group = datasample.data ? datasample.data.lab_test_group : null ;
     const description = datasample.data ? datasample.data.description : null ;
-    console.log(lab_test_group)
     const labId = datasample.id
     const [loading, setLoading] = useState(false)
     const [visible, setVisible] = useState(true);
@@ -85,7 +83,6 @@ const ModalSampleTransfer = (props) => {
                      body.map(({ name, id }) => ({ title: name, value: id }))
                  );
             } catch (error) {
-                console.log(error);
             }
         }
         getCharacters();
@@ -108,7 +105,6 @@ const ModalSampleTransfer = (props) => {
         setErrors({
             ...temp
         })
-            console.log(temp)
             return Object.values(temp).every(x => x == "")
     }
 

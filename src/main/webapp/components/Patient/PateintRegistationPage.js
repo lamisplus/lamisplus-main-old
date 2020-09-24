@@ -128,8 +128,7 @@ const PatientRegistration = ({...props}) => {
             } catch (error) {}
           }
         getCharacters();
-    }, []);  
-            
+    }, []);             
     /* ##### End of RelationshipTypes parameter from the endpoint ##########*/
     /*# Get list of gender parameter from the endpoint #*/
     useEffect(() => {
@@ -190,9 +189,8 @@ const PatientRegistration = ({...props}) => {
     };
     /**
      * Handles UI behaviour on Age Input change
-     */
-
-    const onAgeInputChange = e => {
+    */
+   const onAgeInputChange = e => {
         setDisplay(true);
         setValues({ ...values, dobEstimated: 1 });
             if (e.target.value === "" || e.target.value === null) {
@@ -207,22 +205,19 @@ const PatientRegistration = ({...props}) => {
         }
     const handleDOb = dateSelected => {
         setValues({ ...values, dob: moment(dateSelected).format("DD-MM-YYYY")  })
-        
         const currentDate  = moment(new Date()).format("DD-MM-YYYY");
-        const selectedDob = moment(dateSelected).format("DD-MM-YYYY")
-        //console.log(age(selectedDob) )
+        const selectedDob = moment(dateSelected).format("YYYY-MM-DD")
         document.getElementById("age").value = age(selectedDob);
     }
-
     /*** Handles UI behaviour on check of Estimation box*/
     const handleEstimation = () => {
         if (display) {
             const actualAge = document.getElementById("age").value;
             const dateOfBirth = moment(estimatedob(actualAge)).format("MM/DD/YYYY");
                 document.getElementById("dob").value = dateOfBirth;
-                //convert to the date format and setDob
-                    const newdobdate = moment(dateOfBirth).format("DD-MM-YYYY");
-                        setValues({ ...values, dob: newdobdate });
+            //convert to the date format and setDob
+            const newdobdate = moment(dateOfBirth).format("DD-MM-YYYY");
+                setValues({ ...values, dob: newdobdate });
         }
     };
 
@@ -248,7 +243,6 @@ const PatientRegistration = ({...props}) => {
             const stateId = e.target.value;
                 async function getCharacters() {
                     const response = await axios.get(`${url}state/`+stateId+"/provinces");
-                    console.log(response)
                     const provinceList =  {}; 
                     //const provinceList =  response.data;
                         setProvinces(provinceList);
@@ -263,14 +257,12 @@ const PatientRegistration = ({...props}) => {
               return objectArray.find(x => x.id === newId).name
         }    
     }
-
     /* Add Relative function **/
     const addRelative = value => {
         const allRelatives = [...relatives, value];
         setRelatives(allRelatives);
         setRelativeButton(false)
     };
-
     /* Remove Relative function **/
     const removeRelative = index => {
         relatives.splice(index, 1);
@@ -466,7 +458,7 @@ const handleSubmit = e => {
                                             </Col>
                                             <Col md={4}>
                                                 <FormGroup>
-                                                    <Label for="occupation">Occupation *</Label>
+                                                    <Label for="occupation">Employement Status *</Label>
                                                         <Input
                                                             type="select"
                                                             name="occupationId"
@@ -485,7 +477,7 @@ const handleSubmit = e => {
                                             </Col>
                                             <Col md={4}>
                                                 <FormGroup>
-                                                    <Label for="qualification">Hightest Qualification *</Label>
+                                                    <Label for="qualification">Highest Qualification *</Label>
                                                         <Input
                                                             type="select"
                                                             name="educationId"
@@ -531,12 +523,7 @@ const handleSubmit = e => {
                                                                 name="dob"
                                                                 dropUp
                                                                 value={values.dobDate}
-                                                                // onChange={value1 =>
-                                                                //   setValues({ ...values, dob: moment(value1).format("DD-MM-YYYY")  })
-                                                                  
-                                                                // }
                                                                 onChange ={value1 => handleDOb(value1)}
-                                                                //defaultValue={new Date()}
                                                                 max={new Date()}
                                                             />
                                                                 {values.dob ==="Invalid date" ? (
@@ -605,7 +592,7 @@ const handleSubmit = e => {
                                                                     <FormGroup>
                                                                         <Label for="phoneNumber">Phone Number *</Label>
                                                                             <Input
-                                                                                type="text"
+                                                                                type="number"
                                                                                 name="mobilePhoneNumber"
                                                                                 id="mobilePhoneNumber"
                                                                               

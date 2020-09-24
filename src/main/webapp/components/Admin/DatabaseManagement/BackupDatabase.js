@@ -3,8 +3,6 @@ import { Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Input,FormFeedback,Labe
 } from 'reactstrap';
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import CancelIcon from '@material-ui/icons/Cancel';
-import { DropzoneArea } from 'material-ui-dropzone';
 import { Alert, AlertTitle } from '@material-ui/lab';
 
 const useStyles = makeStyles(theme => ({

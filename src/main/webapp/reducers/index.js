@@ -16,7 +16,8 @@ import applicationCodesetReducer from './applicationCodesetReducer'
 import appointmentReducer from './appointmentReducer'
 import globalVariableReducer from "./globalVariableReducer";
 import internationalStandardReducer from "./internationalStandardReducer";
-import bootstrapModuleReducer from "./bootstrapReducer"
+import bootstrapModuleReducer from "./bootstrapReducer";
+import organizationalUnitReducer from './organizationalUnitReducer';
 
 export default combineReducers({
   patients: patientReducer,
@@ -36,6 +37,7 @@ export default combineReducers({
   appointments: appointmentReducer,
   globalVariables: globalVariableReducer,
   standards: internationalStandardReducer,
-  boostrapmodule: bootstrapModuleReducer
+  boostrapmodule: bootstrapModuleReducer,
+  organizationalUnitReducer : organizationalUnitReducer
 })
 
