@@ -149,7 +149,6 @@ function HomePage(props) {
                         {...a11yProps(3)}
                     />
 
-
                     <Tab
                         className={classes.title}
                         label="Report Builder"

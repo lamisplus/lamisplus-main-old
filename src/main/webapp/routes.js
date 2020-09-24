@@ -50,7 +50,6 @@ const UpdatedModule = React.lazy(() => import("components/AdministrativeModule/B
 
 /* Datasase Management configuration */
 const DataBaseManagement = React.lazy(() => import("components/AdministrativeModule/DatabaseManagement/Index"));
-const DataBaseSync = React.lazy(() => import("components/AdministrativeModule/DatabaseManagement/DatabaseSync"));
 /* Organization Unit Manager configuration */
 const OrganizationUnit = React.lazy(() => import("components/Admin/OrganizationUnit/Index"));
 
@@ -155,7 +154,6 @@ class Routes extends Component {
               <PrivateRoute exact path="/updated-module" component={UpdatedModule} />
               {/* DataBaseManagement Link */}
               <PrivateRoute exact path="/database-management" component={DataBaseManagement} />
-              <PrivateRoute exact path="/database-sync" component={DataBaseSync} />
               {/* OrganizationUnit */}
               <PrivateRoute exact path="/organization-unit" component={OrganizationUnit} />
               
