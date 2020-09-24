@@ -31,6 +31,7 @@ public class ApplicationCodesetService {
     private static final int ARCHIVED = 1;
     private static final int IN_ACTIVE = 0;
     private static final int ACTIVE = 1;
+    private static final int UN_ARCHIVED = 0;
     private final GenericSpecification<ApplicationCodeset> genericSpecification;
 
 
@@ -84,6 +85,8 @@ public class ApplicationCodesetService {
         }
         final ApplicationCodeset applicationCodeset = applicationCodesetMapper.toApplicationCodeset(applicationCodesetDTO);
         applicationCodeset.setId(id);
+        applicationCodeset.setArchived(UN_ARCHIVED);
+        applicationCodeset.setActive(ACTIVE);
         applicationCodeset.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
 
         return applicationCodesetRepository.save(applicationCodeset);

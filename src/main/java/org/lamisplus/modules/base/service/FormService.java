@@ -30,7 +30,7 @@ public class FormService {
     private final UserService userService;
     private static final int UN_ARCHIVED = 0;
     private static final int ARCHIVED = 1;
-    private GenericSpecification<Form> genericSpecification;
+    private final GenericSpecification<Form> genericSpecification;
 
     public List getAllForms() {
 
@@ -40,7 +40,7 @@ public class FormService {
         List<FormDTO> formList = new ArrayList<>();
         forms.forEach(form -> {
             final FormDTO formDTO = formMapper.toForm(form);
-            Optional<Program>  program = this.programRepository.findProgramByUuid(formDTO.getProgramCode());
+            Optional<Program>  program = this.programRepository.findProgramByCode(formDTO.getProgramCode());
             program.ifPresent(value -> formDTO.setProgramName(value.getName()));
             formList.add(formDTO);
         });

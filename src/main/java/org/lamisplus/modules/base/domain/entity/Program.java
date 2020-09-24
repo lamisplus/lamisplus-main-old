@@ -25,8 +25,8 @@ public class Program implements Serializable {
     private String name;
 
     @Basic
-    @Column(name = "uuid")
-    private String uuid;
+    @Column(name = "code")
+    private String code;
 
     @Basic
     @Column(name = "module_id")
