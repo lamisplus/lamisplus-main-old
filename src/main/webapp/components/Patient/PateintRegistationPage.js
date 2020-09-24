@@ -458,7 +458,7 @@ const handleSubmit = e => {
                                             </Col>
                                             <Col md={4}>
                                                 <FormGroup>
-                                                    <Label for="occupation">Occupation *</Label>
+                                                    <Label for="occupation">Employement Status *</Label>
                                                         <Input
                                                             type="select"
                                                             name="occupationId"
@@ -477,7 +477,7 @@ const handleSubmit = e => {
                                             </Col>
                                             <Col md={4}>
                                                 <FormGroup>
-                                                    <Label for="qualification">Hightest Qualification *</Label>
+                                                    <Label for="qualification">Highest Qualification *</Label>
                                                         <Input
                                                             type="select"
                                                             name="educationId"
@@ -592,7 +592,7 @@ const handleSubmit = e => {
                                                                     <FormGroup>
                                                                         <Label for="phoneNumber">Phone Number *</Label>
                                                                             <Input
-                                                                                type="text"
+                                                                                type="number"
                                                                                 name="mobilePhoneNumber"
                                                                                 id="mobilePhoneNumber"
                                                                               
