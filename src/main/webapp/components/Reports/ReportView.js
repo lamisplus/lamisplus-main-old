@@ -81,7 +81,6 @@ const GenerateReport = props => {
                             <TiArrowBack /> &nbsp; back
                         </MatButton>
                     </Link>
-                    <h4>Query Parameter Form</h4>
                     { form2 ?
                         <Form form={row.parameterResourceObject} {...props} onSubmit={(submission) => {
                             return submitForm(submission);
