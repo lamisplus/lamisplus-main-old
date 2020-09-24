@@ -16,13 +16,13 @@ import { toast } from "react-toastify";
  * Delete()
  */
 
-export const fetchAllBootstrapModule = (onSuccess, onError) => dispatch => {
+export const fetchAllOrganizationalUnit = (onSuccess, onError) => dispatch => {
 
   axios
-    .get(`${baseUrl}modules`)
+    .get(`${baseUrl}organisation-units`)
     .then(response => {
       dispatch({
-        type: ACTION_TYPES.FETCH_ALL_BOOTSTRAP_MODULE,
+        type: ACTION_TYPES.FETCH_ALL_ORGANIZATIONAL_UNIT_MODULE,
         payload: response.data
       })
       console.log(response)
@@ -30,7 +30,7 @@ export const fetchAllBootstrapModule = (onSuccess, onError) => dispatch => {
     })
     .catch(error => {
       dispatch({
-        type: ACTION_TYPES.ERROR_FETCH_ALL_BOOTSTRAP_MODULE,
+        type: ACTION_TYPES.ERROR_FETCH_ALL_ORGANIZATIONAL_UNIT_MODULE,
         payload: 'Something went wrong, please try again'
       })
       onError();
@@ -38,28 +38,25 @@ export const fetchAllBootstrapModule = (onSuccess, onError) => dispatch => {
     });
 };
 
-export const installBootstrapModule = (id, onSuccess, onError)=> dispatch => {
+export const fetchAllParentOrganizationalUnit = (id, onSuccess, onError)=> dispatch => {
   if(id){
   axios
-    .post(`${baseUrl}modules/${id}/install/`)
+    .get(`${baseUrl}organisation-units/parent-org-unit/${id}`)
     .then(response => {
        console.log(response)
       dispatch({
-        type: ACTION_TYPES.INSTALL_BOOSTRAP_MODULE_BY_ID,
+        type: ACTION_TYPES.FETCH_ALL_PARENT_ORGANIZATIONAL_UNIT,
         payload: response.data
       })
-
       onSuccess && onSuccess();
-      toast.success("Module installed successfully!");
     })
     .catch(error => {
       console.log(error)
       dispatch({
-        type: ACTION_TYPES.ERROR_INSTALL_BOOSTRAP_MODULE_BY_ID,
+        type: ACTION_TYPES.ERROR_FETCH_ALL_PARENT_ORGANIZATIONAL_UNIT,
         payload: error
       })
       onError && onError();
-      toast.error("Something went wrong!");
     }
     );
     }
