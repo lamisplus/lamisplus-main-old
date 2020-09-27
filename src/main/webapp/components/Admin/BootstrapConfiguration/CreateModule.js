@@ -54,7 +54,7 @@ td: { borderBottom :'#fff'}
 
 
 function getSteps() {
-  return ['Upload module', 'Install module', 'Start module'];
+  return ['Upload ', 'Install ', 'Start'];
 }
 
 
@@ -117,48 +117,52 @@ const CreateModule = (props) => {
   }
 
   const handleUploadFile = async e => {
-      setDisableNextButtonProcess(true)
-      setInstallationMessage('Processing, please wait...')     
-      const form_Data = new FormData();
-      form_Data.append('file1', fileToUpload[0]); 
-      
-      try {
-        const res = await axios.post(url+'modules/upload', form_Data, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          
-        onUploadProgress: progressEvent => {
-          setUploadPercentage(
-            parseInt(
-              Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            )
-          );
+      if(fileToUpload[0] !== null){
+        setDisableNextButtonProcess(true)
+        setInstallationMessage('Processing, please wait...')     
+        const form_Data = new FormData();
+        form_Data.append('file1', fileToUpload[0]); 
+        
+        try {
+          const res = await axios.post(url+'modules/upload', form_Data, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            
+          onUploadProgress: progressEvent => {
+            setUploadPercentage(
+              parseInt(
+                Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              )
+            );
 
-              // Clear percentage
-              setTimeout(() => setUploadPercentage(0), 10000);
+                // Clear percentage
+                setTimeout(() => setUploadPercentage(0), 10000);
+              }
+          
+            });
+            
+            const { fileName, filePath } = res.data;
+
+            setUploadedFile({ fileName, filePath });
+            setMessage('File Uploaded');
+            setUploadResponse(res.data===null ? {} :res.data)
+            setuploadButtonhidden(true)
+            setDisableNextButtonProcess(false) //Enable the next process button for the next stage 
+            setInstallationMessage('')
+            console.log(uploadResponse)
+            setActiveStep((prevActiveStep) => prevActiveStep + 1); //auotmatically move to the next phase of installation in the wizard
+          } catch (err) {
+            console.log(err.response)
+            if (err.response.status === 500) {
+              setMessage('There was a problem in uploading file! please try again');
+            } else if(err.response.status === 400){
+              setMessage('Module already exist');
+            }else{
+
             }
-          });
-          
-          const { fileName, filePath } = res.data;
-
-          setUploadedFile({ fileName, filePath });
-          setMessage('File Uploaded');
-          setUploadResponse(res.data===null ? {} :res.data)
-          setuploadButtonhidden(true)
-          setDisableNextButtonProcess(false) //Enable the next process button for the next stage 
-          setInstallationMessage('')
-          console.log(uploadResponse)
-          setActiveStep((prevActiveStep) => prevActiveStep + 1); //auotmatically move to the next phase of installation in the wizard
-        } catch (err) {
-          console.log(err.response)
-          if (err.response.status === 500) {
-            setMessage('There was a problem in uploading file! please try again');
-          } else {
-            setMessage('There was a problem in uploading file! please try again');
           }
-        }
-
+      }
   }
 
   const handleStartModule = () => {
