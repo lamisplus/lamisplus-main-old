@@ -35,7 +35,9 @@ public class GenericSpecification<T>  {
         return (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("moduleType"), moduleType)));
-            predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), status)));
+            if(status > 0) {
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), status)));
+            }
             criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };

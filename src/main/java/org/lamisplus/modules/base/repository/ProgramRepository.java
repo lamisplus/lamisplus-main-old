@@ -14,6 +14,7 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
     String findByCode(String Code);
 
     Optional<Program> findProgramByCode(String Code);
+    //Optional<Program> findByModuleId(Long moduleId);
 
 }
 

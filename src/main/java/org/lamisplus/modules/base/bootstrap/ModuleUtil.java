@@ -12,6 +12,7 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -20,10 +21,15 @@ import java.util.zip.ZipInputStream;
 @Component
 @RequiredArgsConstructor
 public class ModuleUtil {
+    private static final String TEMP = "_temp";
+    private static final int STATUS_UPLOADED = 1;
     private static List<Module> moduleConfigs = new ArrayList<Module>();
     private static List<File> jsonFiles = new ArrayList<File>();
     private static final String YMLFILE = ".yml";
     private static final String JSONFILE = ".json";
+    private static final int STATUS_MODULE_EXIST = 4;
+    private static Timestamp ts = new Timestamp(System.currentTimeMillis());
+
 
 
     /*public List<String> readZipFileRecursive(final InputStream zipFile, String jarName, boolean install) {
@@ -69,7 +75,7 @@ public class ModuleUtil {
         return classNames;
     }*/
 
-    public static void copyPathFromJar(final URL jarPath, final String path, final Path target) throws Exception {
+    public static void copyPathFromJar(final URL jarPath, final String path, final Path target, Boolean isExist) throws Exception {
         Map<String, String> env = new HashMap<>();
         String absPath = jarPath.toString();
         URI uri = URI.create("jar:" + absPath);
@@ -96,7 +102,7 @@ public class ModuleUtil {
                     File theFile = new File(path.toString());
                     //Checking for module.yml i.e. config file
                     if (theFile.getName().endsWith(YMLFILE)) {
-                        readModuleYml(theFile);
+                        readModuleYml(theFile, isExist);
                     }
                     if (theFile.getName().endsWith(JSONFILE)) {
                         getJson(theFile);
@@ -107,13 +113,20 @@ public class ModuleUtil {
         }
     }
 
-    private static void readModuleYml(File ymlFile) throws IOException {
+    private static void readModuleYml(File ymlFile, Boolean isExist) throws IOException {
         BufferedReader in = null;
         try {
             in = new BufferedReader(new InputStreamReader(
                     new FileInputStream(ymlFile.getAbsolutePath())));
             Yaml yaml = new Yaml();
             Module module = yaml.loadAs(in, Module.class);
+            module.setBatchNo(getTimeStamp());
+            if(isExist){
+                module.setStatus(STATUS_MODULE_EXIST);
+                module.setName(module.getName()+ TEMP);
+            } else {
+                module.setStatus(STATUS_UPLOADED);
+            }
             if(module != null){
                 moduleConfigs.add(module);
             }
@@ -140,5 +153,10 @@ public class ModuleUtil {
 
     public static void setModuleConfigs(){
         moduleConfigs = new ArrayList<Module>();
+    }
+
+    private static String getTimeStamp() {
+        return ts.toString().replace(":", "").replace("-", "").
+                replace(".","").replace(" ", "");
     }
 }
