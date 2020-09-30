@@ -54,7 +54,7 @@ td: { borderBottom :'#fff'}
 
 
 function getSteps() {
-  return ['Upload module', 'Install module', 'Start module'];
+  return ['Upload', 'Install', 'Start'];
 }
 
 
@@ -79,6 +79,28 @@ const CreateModule = (props) => {
     const [modal, setModal] = useState(false)//modal to View 
     const toggleModal = () => setModal(!modal)
     const [collectModal, setcollectModal] = useState([])//
+    const [disabledUploadButton, setDisabledUploadButton] = useState(false)
+    const [disabledNextButton, setDisabledNextButton] = useState(false)
+
+    ///storing a the response static variable 
+    const varAfterUpload = [
+      {
+        "id": 9,
+        "active": false,
+        "artifact_id": "demo",
+        "basePackage": "org.lamisplus.modules.demo",
+        "description": "demo test module",
+        "name": "demo",
+        "version": "1",
+        "dateCreated": "27-08-2020",
+        "createdBy": "Emeka",
+        "dateInstalled": "22-09-2020",
+        "status": 2,
+        "archived": 0,
+        "moduleType": 1,
+        "main": null
+      }
+    ];
 
 
   const handleNext = async e => {
@@ -103,13 +125,16 @@ const CreateModule = (props) => {
   }
 
   const handleInstallModule = (id) => {
+    setDisabledNextButton(true)
     setInstallationOverlay(true)
     setDisableNextButtonProcess(true)
     const onSuccess = () => {
+      setDisabledNextButton(false)
       setInstallationOverlay(false) 
       setDisableNextButtonProcess(false)
     }
     const onError = () => {
+      setDisabledNextButton(false)
       setInstallationOverlay(false)
       setDisableNextButtonProcess(false) 
     }
@@ -117,6 +142,9 @@ const CreateModule = (props) => {
   }
 
   const handleUploadFile = async e => {
+    
+    if(fileToUpload[0]){
+      setDisabledUploadButton(true)
       setDisableNextButtonProcess(true)
       setInstallationMessage('Processing, please wait...')     
       const form_Data = new FormData();
@@ -152,13 +180,21 @@ const CreateModule = (props) => {
           setActiveStep((prevActiveStep) => prevActiveStep + 1); //auotmatically move to the next phase of installation in the wizard
         } catch (err) {
           console.log(err.response)
-          if (err.response.status === 500) {
-            setMessage('There was a problem in uploading file! please try again');
-          } else {
-            setMessage('There was a problem in uploading file! please try again');
+          if (err.response && err.response.status === 500) {
+            setDisabledUploadButton(false)
+            setMessage('There was a problem in uploading file! please try again...');
+          } else if(err.response && err.response.status === 400){
+            setDisabledUploadButton(false)
+            setMessage('Module already exist! please try again...');
+            //setActiveStep((prevActiveStep) => prevActiveStep + 1); 
+          }else{
+            setDisabledUploadButton(false)
+            setMessage('Something went wrong! please try again...');
           }
         }
-
+      }else{
+        setMessage('Please upload a jar file');
+      }
   }
 
   const handleStartModule = () => {
@@ -191,21 +227,6 @@ const CreateModule = (props) => {
                                           
                 </MenuItem>
                 
-                <MenuItem style={{ color:"#000 !important"}}>
-                      <Link
-                          to={{
-                            pathname: "/admin/bootstrap-configuration/updated-module",
-                            currentId: {}
-                          }}
-                      >
-                      <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Update Module </span>                   
-                    </Link>
-                </MenuItem> 
-                <MenuItem  style={{ color:"#000 !important"}} >                      
-                
-                      <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Deactivate Module</span>
-                                          
-                </MenuItem>
                 <MenuItem  style={{ color:"#000 !important"}} >                      
                 
                       <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Delete Module</span>
@@ -232,7 +253,7 @@ const CreateModule = (props) => {
                                   <AlertTitle>Instructions to add new module</AlertTitle>
                                     <ul>
                                       <li>1. Add file  <strong>(only *.jar)</strong></li>
-                                      <li>2. Click proceed</li>
+                                      <li>2. Click Upload</li>
                                     </ul>
                                     <br/>
                                     <strong>NOTE:</strong> Adding, or uploading a module will restart the application, therefore all scheduled task and background processes will be interrupted. 
@@ -308,7 +329,8 @@ const CreateModule = (props) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {uploadResponse.map((row) => (
+                          {/* varAfterUpload*/}
+                          {uploadResponse.map((row) => (
                           <tr key={row.id}>
                             <td>{row.name===""?" ":row.name}</td>
                             <td>{row.description===""?" ":row.description}</td>
@@ -416,6 +438,7 @@ return (
                               color="primary" 
                               onClick={handleUploadFile}
                               hidden={uploadButtonhidden}
+                              disabled={disabledUploadButton}
                               >
                               Upload Module
                             </Button>
@@ -433,6 +456,7 @@ return (
                               variant="contained" 
                               color="primary" 
                               onClick={handleNext}
+                              disabled={disabledNextButton}
                               >
                               {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                             </Button>

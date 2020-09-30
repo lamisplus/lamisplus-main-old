@@ -82,16 +82,7 @@ const useStyles = makeStyles({
       </MenuButton>
         
           <MenuList style={{ color:"#000 !important"}} >
-            {e.status === 2 ?
-              
-                <MenuItem  style={{ color:"#000 !important"}} onSelect={() => installModule('id')}>                      
-                
-                    <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Install</span>
-                                    
-                </MenuItem> 
-                
-              : ""
-             }
+           
              {e.status === 2 ?
               <>
                 <MenuItem style={{ color:"#000 !important"}}>
