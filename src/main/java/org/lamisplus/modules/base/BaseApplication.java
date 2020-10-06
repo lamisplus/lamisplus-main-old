@@ -1,5 +1,7 @@
 package org.lamisplus.modules.base;
 
+import org.lamisplus.modules.base.bootstrap.ConsoleConfigClassLoader;
+import org.lamisplus.modules.base.bootstrap.Loaders;
 import org.lamisplus.modules.base.service.ModuleService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,7 @@ public class BaseApplication extends SpringBootServletInitializer {
 		if (context == null) {
 			context = configurableApplicationContext;
 		}
+
 		ApplicationArguments args = context.getBean(ApplicationArguments.class);
 
 		Thread thread = new Thread(() -> {

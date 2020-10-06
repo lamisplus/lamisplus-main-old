@@ -3,7 +3,9 @@ package org.lamisplus.modules.base.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.lamisplus.modules.base.BaseApplication;
+import org.lamisplus.modules.base.bootstrap.*;
 import org.lamisplus.modules.base.config.ApplicationProperties;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.IllegalTypeException;
@@ -15,23 +17,25 @@ import org.lamisplus.modules.base.domain.entity.ModuleDependency;
 import org.lamisplus.modules.base.domain.entity.Program;
 import org.lamisplus.modules.base.domain.mapper.ModuleMapper;
 import org.lamisplus.modules.base.repository.*;
-import org.lamisplus.modules.base.bootstrap.ClassPathHacker;
 import org.lamisplus.modules.base.util.DataLoader;
 import org.lamisplus.modules.base.util.GenericSpecification;
-import org.lamisplus.modules.base.bootstrap.ModuleUtil;
-import org.lamisplus.modules.base.bootstrap.StorageUtil;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 @org.springframework.stereotype.Service
 @Slf4j
@@ -71,6 +75,10 @@ public class ModuleService {
     private static final String DOT_JAR = ".jar";
     private Boolean startUp = false;
     private final ConfigurableApplicationContext context;
+    private ClassLoader loader;
+    ConsoleConfigClassLoader ccl;
+    //private final ConsoleConfigClassLoader consoleConfigClassLoader;
+    //private HashSet<String> setJarFileNamesToClose = new HashSet<String>();
     //private static final boolean IS_EXIST = true;
     //private static final String CONTENT_TYPE = "application/java-archive";
     //private static final int MODULE_EXIST = 4;
@@ -106,7 +114,6 @@ public class ModuleService {
         Arrays.asList(files).stream().forEach(file ->{
             File jarFile = new File(file.getOriginalFilename());
             String jarName = jarFile.getName().toLowerCase();
-            Boolean isExist;
 
             String fileName = jarFile.getName().toLowerCase().replace(DOT_JAR,"");
             log.info("name of jar file: " + fileName);
@@ -115,7 +122,8 @@ public class ModuleService {
 
             final Path modulePath = Paths.get(properties.getModulePath());
             storageService.setRootLocation(modulePath);
-            if(optionalModule.isPresent() && !optionalModule.get().getName().contains(TEMP)){
+            /*if(optionalModule.isPresent() && optionalModule.get().getStatus() == STATUS_STARTED
+                    && !optionalModule.get().getName().contains(TEMP)){
                     storageService.store(fileName, file, fileName + TEMP + DOT_JAR);
                     fileName = fileName + TEMP;
                     isExist = true;
@@ -126,13 +134,29 @@ public class ModuleService {
                 storageService.store(fileName, file, null);
                 log.debug(fileName + " Uploaded...");
                 isExist = false;
-            }
-
+            }*/
+            storageService.store(fileName, file, null);
             final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", fileName);
+            /*if(moduleRuntimePath != null){
+                try {
+                    FileUtils.deleteDirectory(moduleRuntimePath.toFile());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }*/
 
             try {
-                ModuleUtil.copyPathFromJar(storageService.getURL(jarName),
-                        fileSeparator, moduleRuntimePath, isExist);
+                if(!optionalModule.isPresent()){
+                    ModuleUtil.copyPathFromJar(storageService.getURL(jarName),
+                            fileSeparator, moduleRuntimePath);
+                }else if(optionalModule.isPresent() && optionalModule.get().getStatus() != STATUS_STARTED) {
+                    ModuleUtil.copyPathFromJar(storageService.getURL(jarName),
+                            fileSeparator, moduleRuntimePath);
+                } else {
+                    Module module = optionalModule.get();
+                    ModuleUtil.addModuleConfigs(module);
+                }
+
                 log.debug(fileName + " Unzipped...");
 
             } catch (Exception e) {
@@ -158,6 +182,7 @@ public class ModuleService {
                 externalModule.setActive(INACTIVE);
                 externalModule.setUuid(UUID.randomUUID().toString());
                 externalModule.setModuleType(MODULE_TYPE);
+                externalModule.setStatus(STATUS_UPLOADED);
                 externalModule.setArchived(ARCHIVED);
             }
             if(notArchived){
@@ -186,7 +211,6 @@ public class ModuleService {
                         module.getId(), moduleDependency.getArtifactId());
                 final ModuleDependency dependency =  OptionalDependency.isPresent()? OptionalDependency.get(): moduleDependencyRepository.save(moduleDependency);
                 log.debug(dependency.getArtifactId() + " saved...");
-
             });
 
             //Get program
@@ -201,9 +225,18 @@ public class ModuleService {
                         program.setArchived(UN_ARCHIVED);
                     }
                     //Saving program...
-                    final Program program1 = programRepository.save(program);
-                    program.setId(program1.getId());
-                    log.debug(program1.getName() + " saved...");
+                    final List<Program> programList = programRepository.findByModuleId(module.getId());
+                    Program program1 = null;
+                    if(programList.isEmpty() && programList.size() > 0) {
+                        program1 = programRepository.save(program);
+                        program.setId(program1.getId());
+                    }else{
+                        programList.forEach(program2 -> {
+                            program.setId(program2.getId());
+                        });
+                    }
+                    //final Program program1 = programRepository.save(program);
+                    log.debug(program.getName() + " saved...");
                 }
 
                 //Get forms
@@ -231,7 +264,9 @@ public class ModuleService {
                     }
                 }
             });
-            if(!replace) {
+            if(module.getStatus() == STATUS_STARTED) {
+                module.setStatus(STATUS_EXIST);
+            }else {
                 cleanUpExternalModuleFolder(externalModule);
             }
         });
@@ -254,6 +289,27 @@ public class ModuleService {
         }
 
         final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", module.getName());
+
+
+        if(module.getStatus() == STATUS_EXIST) {
+            final Path moduleJarPath = Paths.get(properties.getModulePath(), module.getName()+".jar");
+
+            if(moduleJarPath != null) {
+                File jarFile = moduleJarPath.toFile();
+                String jarName = jarFile.getName().toLowerCase();
+                try {
+                    ModuleUtil.copyPathFromJar(storageService.getURL(jarName),
+                            fileSeparator, moduleRuntimePath);
+                    module.setStatus(STATUS_UPLOADED);
+                    List<Module> modules = new ArrayList<>();
+                    modules.add(module);
+                    saveExternalModuleWithItsProperties(modules, false, false);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         File rootFile = new File(moduleRuntimePath.toAbsolutePath().toString());
         File filePath = new File(moduleRuntimePath.toAbsolutePath().toString() +
                 ORG_LAMISPLUS_MODULES_PATH + module.getName().replace(TEMP, ""));
@@ -301,10 +357,18 @@ public class ModuleService {
         return module;
     }
 
+    private ClassLoader getMyClassLoader(ClassLoader loader) {
+        return loader;
+    }
+
     public void changeFileNames(String tempName, String name) {
         final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", name);
         //final Path oldModulePath = Paths.get(properties.getModulePath(), "runtime", name+OLD_MODULE_SUFFIX);
         final Path moduleTempPath = Paths.get(properties.getModulePath(), "runtime", tempName);
+        final Path libPath = Paths.get(properties.getModulePath(), "libs", name);
+        final Path libTempPath = Paths.get(properties.getModulePath(), "libs", tempName);
+
+
         String oldModulePathRenamed = "";
         String moduleTempPathRenamed = "";
 
@@ -313,27 +377,46 @@ public class ModuleService {
                 oldModulePathRenamed = Files.move(moduleRuntimePath, moduleRuntimePath.resolveSibling(name+OLD_MODULE_SUFFIX)).toString();
                 moduleTempPathRenamed = Files.move(moduleTempPath, moduleTempPath.resolveSibling(name)).toString();
 
-            }catch (IOException ioe){
-                log.debug(ioe.getMessage());
-                ioe.printStackTrace();
-            }
-        //rootFile.delete();
-        System.out.println("changed rootFile- " + oldModulePathRenamed);
-        System.out.println("changed tempFile- " + moduleTempPathRenamed);
+            File file = new File(oldModulePathRenamed);
+            File libFiles = new File(libPath.toString());
+
+            file.setWritable(true);
+            libFiles.setWritable(true);
+
+            System.gc();
+            System.runFinalization();
+            Thread.currentThread().sleep(5000);
+
+            org.apache.tomcat.util.http.fileupload.FileUtils.forceDelete(file);
+            org.apache.tomcat.util.http.fileupload.FileUtils.forceDelete(libFiles);
+
+            Files.move(libTempPath, libTempPath.resolveSibling(name), REPLACE_EXISTING).toString();
+
+            //file.deleteOnExit();
+            System.out.println("changed rootFile- " + oldModulePathRenamed);
+            System.out.println("changed tempFile- " + moduleTempPathRenamed);
+
+        }catch (IOException | InterruptedException ie){
+            log.debug(ie.getMessage());
+            ie.printStackTrace();
+        }
 
     }
 
     private Module overridingOldModuleWithNewModule(Module newModule) {
-        List<Module> modules = new ArrayList<>();
+        List<Module> newModules = new ArrayList<>();
+        List<Module> oldModules = new ArrayList<>();
+
         String moduleName = newModule.getName();
         Long moduleId = newModule.getId();
-        modules.add(newModule);
+        newModules.add(newModule);
         String changedName = UUID.randomUUID().toString().replace("-", "");
         System.out.println(changedName);
         String oldName = moduleName.replace(TEMP,"");
         Optional<Module> optionalOldModule = moduleRepository.findByName(oldName);
         if(optionalOldModule.isPresent() && optionalOldModule.get() != null) {
             final Module oldModule = optionalOldModule.get();
+            oldModules.add(oldModule);
             oldModule.getProgramsByModule().forEach(program -> {
                 program.getFormsByProgram().forEach(form -> {
                     form.getEncountersByForm().forEach(encounter -> {
@@ -347,15 +430,18 @@ public class ModuleService {
                 program.setArchived(DEACTIVATED);
                 programRepository.save(program);
             });
-            oldModule.setName(oldName + OLD_MODULE_SUFFIX+"_"+changedName);
+
+            //Unloading a jar file
+            //loadDependencies(oldModules, true);
+
+            oldModule.setName(oldName + OLD_MODULE_SUFFIX + "_" + changedName);
             oldModule.setStatus(DEACTIVATED);
+            oldModule.setArchived(DEACTIVATED);
             //delete(oldModule.getId());
             moduleRepository.save(oldModule);
             newModule.setStatus(STATUS_UPLOADED);
             moduleRepository.save(newModule);
         }
-
-            //saveExternalModuleWithItsProperties(modules, true, false);
 
         return moduleRepository.findById(moduleId).get();
     }
@@ -377,6 +463,21 @@ public class ModuleService {
                     module.setArchived(UN_ARCHIVED);
                     module.setInstalledBy(userService.getUserWithAuthorities().get().getUserName());
                     moduleRepository.save(module);
+
+                    module.getModuleDependencyByModule().forEach(moduleDependency -> {
+                        moduleDependency.setArchived(UN_ARCHIVED);
+                        moduleDependencyRepository.save(moduleDependency);
+                    });
+
+                    module.getProgramsByModule().forEach(program -> {
+                        program.getFormsByProgram().forEach(form -> {
+                            form.setArchived(UN_ARCHIVED);
+                            formRepository.save(form);
+                        });
+                        program.setArchived(UN_ARCHIVED);
+                        programRepository.save(program);
+                    });
+
                 }
             }
         });
@@ -422,22 +523,51 @@ public class ModuleService {
             }
         }
         externalModules.forEach(module -> {
-            final Path moduleDependencyRuntimePath = Paths.get(properties.getModulePath(), "runtime", module.getName(), "lib");
-            for (File file : moduleDependencyRuntimePath.toFile().listFiles()) {
-                System.out.println(file.getName());
-                //Load dependencies
-                System.out.println(module.getName()+" : "+file.exists());
-                module.getModuleDependencyByModule().forEach(moduleDependency -> {
-                    if (file.getName().contains(moduleDependency.getArtifactId())) {
-                        try {
-                            ClassPathHacker.addFile(file.getAbsolutePath());
-                        } catch (IOException e) {
-                            log.debug(e.getClass().getName()+": " + e.getMessage());
-                            e.printStackTrace();
-                        }
-                    }
-                });
+            final Path moduleDependencyRuntimePath = Paths.get(properties.getModulePath(), "libs", module.getName());
+            //Path libPath = Paths.get(properties.getModulePath(), "libs", module.getName());
+            if(moduleDependencyRuntimePath != null) {
+                for (File file : moduleDependencyRuntimePath.toFile().listFiles()) {
+                    System.out.println(file.getName());
+                    //Load dependencies
+                    System.out.println(module.getName() + " : " + file.exists());
+                    module.getModuleDependencyByModule().forEach(moduleDependency -> {
+                        if (file.getName().contains(moduleDependency.getArtifactId())) {
+                            try {
+                                ClassPathHacker.addFile(file.getAbsolutePath());
+                            /*if(module.getName().contains(TEMP) && module.getStatus() == STATUS_STARTED){
+                                //final Path oldLibs = Paths.get(properties.getModulePath(), "libs", module.getName().replace(TEMP, ""));
+                                *//*if(oldLibs != null) {
+                                    for (File libFile : oldLibs.toFile().listFiles()) {
+                                        ccl = new ConsoleConfigClassLoader(new URL[]{libFile.toURI().toURL()},
+                                                ClassLoader.getSystemClassLoader());
+                                        HashSet<String> jarFileToClose = new HashSet<>();
+                                        jarFileToClose.add(libFile.getName());
+                                        ccl.setSetJarFileNames2Close(jarFileToClose);
+                                        ccl.cleanupJarFileFactory();
+                                        ccl.close();
+                                    }
+                                }*//*
+                                 *//* ccl = new ConsoleConfigClassLoader(new URL[]{file.toURI().toURL()},
+                                        ClassLoader.getSystemClassLoader());
+                                ccl.myAddURL();*//*
+                                ClassPathHacker.addFile(file.getAbsolutePath());
 
+                            }else {
+                                //ClassPathHacker.addFile(file.getAbsolutePath());
+                                *//*ccl = new ConsoleConfigClassLoader(new URL[]{file.toURI().toURL()},
+                                        ClassLoader.getSystemClassLoader());
+                                ccl.myAddURL();*//*
+                            }*/
+                            } catch (IOException e) {
+                                log.debug(e.getClass().getName() + ": " + e.getMessage());
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+                }
+            } else {
+                log.debug("Cannot load dependency to " + module.getName());
             }
         });
     }
@@ -475,6 +605,21 @@ public class ModuleService {
                 }
             }
         }
+        Path libPath = Paths.get(properties.getModulePath(), "libs", externalModule.getName());
+        File src = new File(Paths.get(properties.getModulePath(), "runtime", externalModule.getName(),"lib").toString());
+        File target = new File(libPath.toString());
+
+        //Copy dependencies in lib to libs
+        try {
+            for(File file: src.listFiles()) {
+                //FileSystemUtils.copyRecursively(file, target);
+                if(!file.isDirectory()) {
+                    FileUtils.copyFile(file, Paths.get(properties.getModulePath(), "libs", externalModule.getName(), file.getName()).toFile());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private List<URL> showFiles(File[] files, File rootFile, String mainClass) throws IOException {
@@ -484,16 +629,15 @@ public class ModuleService {
         if(files != null) {
             for (File file : files) {
                 if (file.isDirectory()) {
-                    ClassPathHacker.addFile(file.getAbsolutePath());
-                    urlList.add(file.toURI().toURL());
                     showFiles(file.listFiles(), rootFile, mainClass); // Calls same method again.
                 } else {
                     if (file.getAbsolutePath().endsWith(".class")) {
-                        ClassPathHacker.addFile(file.getAbsolutePath());
                         String filePathName = file.getAbsolutePath().replace(absolutePath + fileSeparator, "");
                         String processedName = filePathName.replace(".class", "");
                         processedName = processedName.replace(fileSeparator, ".");
                         if(processedName.contains(mainClass)){
+                            urlList.add(file.toURI().toURL());
+                            new Loaders.MasterLoader(ClassLoader.getSystemClassLoader()).refresh(new URL[] { file.toURI().toURL() });
                             classNames.add(processedName);
                         }
                     }

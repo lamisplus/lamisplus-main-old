@@ -9,6 +9,7 @@ import java.net.URLClassLoader;
 
 public class ClassPathHacker {
     private static final Class[] parameters = new Class[]{URL.class};
+
     public static void addFile(String filePath) throws IOException {
         File file = new File(filePath);
         addFile(file);
@@ -20,9 +21,9 @@ public class ClassPathHacker {
 
     public static void addURL(URL url) throws IOException {
         URLClassLoader systemClassLoader = (URLClassLoader)ClassLoader.getSystemClassLoader();
-        Class sysclass = URLClassLoader.class;
+        Class sysClass = URLClassLoader.class;
         try {
-            Method method = sysclass.getDeclaredMethod("addURL",parameters);
+            Method method = sysClass.getDeclaredMethod("addURL",parameters);
             method.setAccessible(true);
             method.invoke(systemClassLoader,new Object[]{ url });
         } catch (Throwable t) {

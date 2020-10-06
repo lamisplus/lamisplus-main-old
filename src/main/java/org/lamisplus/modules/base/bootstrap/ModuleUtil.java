@@ -75,7 +75,7 @@ public class ModuleUtil {
         return classNames;
     }*/
 
-    public static void copyPathFromJar(final URL jarPath, final String path, final Path target, Boolean isExist) throws Exception {
+    public static void copyPathFromJar(final URL jarPath, final String path, final Path target) throws Exception {
         Map<String, String> env = new HashMap<>();
         String absPath = jarPath.toString();
         URI uri = URI.create("jar:" + absPath);
@@ -102,7 +102,7 @@ public class ModuleUtil {
                     File theFile = new File(path.toString());
                     //Checking for module.yml i.e. config file
                     if (theFile.getName().endsWith(YMLFILE)) {
-                        readModuleYml(theFile, isExist);
+                        readModuleYml(theFile);
                     }
                     if (theFile.getName().endsWith(JSONFILE)) {
                         getJson(theFile);
@@ -110,10 +110,12 @@ public class ModuleUtil {
                     return FileVisitResult.CONTINUE;
                 }
             });
+        }catch (FileSystemNotFoundException fef){
+
         }
     }
 
-    private static void readModuleYml(File ymlFile, Boolean isExist) throws IOException {
+    private static void readModuleYml(File ymlFile) throws IOException {
         BufferedReader in = null;
         try {
             in = new BufferedReader(new InputStreamReader(
@@ -121,12 +123,7 @@ public class ModuleUtil {
             Yaml yaml = new Yaml();
             Module module = yaml.loadAs(in, Module.class);
             module.setBatchNo(getTimeStamp());
-            if(isExist){
-                module.setStatus(STATUS_MODULE_EXIST);
-                module.setName(module.getName()+ TEMP);
-            } else {
-                module.setStatus(STATUS_UPLOADED);
-            }
+
             if(module != null){
                 moduleConfigs.add(module);
             }
@@ -152,8 +149,15 @@ public class ModuleUtil {
     }
 
     public static void setModuleConfigs(){
-        moduleConfigs = new ArrayList<Module>();
+        if(moduleConfigs == null) {
+            moduleConfigs = new ArrayList<Module>();
+        }else moduleConfigs.clear();
     }
+
+    public static void addModuleConfigs(Module module){
+        moduleConfigs.add(module);
+    }
+
 
     private static String getTimeStamp() {
         return ts.toString().replace(":", "").replace("-", "").
