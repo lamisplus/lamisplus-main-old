@@ -18,7 +18,8 @@ public class DependencyLoader {
 
 
     /**
-     * Fires in 5 secs and no more
+     * Dead man’s solution: You will be dead before it fires again
+     * Fires in 1 sec and no more
      */
     @Scheduled(fixedDelay = Long.MAX_VALUE, initialDelay =1000)
     public void loadDependencies() {

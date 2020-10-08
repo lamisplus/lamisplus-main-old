@@ -33,7 +33,7 @@ public class FormService {
     private final GenericSpecification<Form> genericSpecification;
 
     public List getAllForms() {
-        Specification<Form> specification = genericSpecification.findAll();
+        Specification<Form> specification = genericSpecification.findAll(0);
 
         List<Form> forms = this.formRepository.findAll(specification);
         List<FormDTO> formList = new ArrayList<>();

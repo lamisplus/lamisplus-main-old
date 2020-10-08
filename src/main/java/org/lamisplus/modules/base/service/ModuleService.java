@@ -26,6 +26,7 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -73,21 +74,20 @@ public class ModuleService {
     private static final boolean INACTIVE = false;
     private static final String TEMP = "_temp";
     private static final String DOT_JAR = ".jar";
-    private Boolean startUp = false;
     private final ConfigurableApplicationContext context;
-    private ClassLoader loader;
-    ConsoleConfigClassLoader ccl;
+    private static final String MODULE_CLASS_NAME = "module";
+    private static final String DOT_CLASS = ".class";
+    private static final Class[] parameters = new Class[]{URL.class};
+
     //private final ConsoleConfigClassLoader consoleConfigClassLoader;
     //private HashSet<String> setJarFileNamesToClose = new HashSet<String>();
     //private static final boolean IS_EXIST = true;
     //private static final String CONTENT_TYPE = "application/java-archive";
     //private static final int MODULE_EXIST = 4;
 
-
-
     public Module save(ModuleDTO moduleDTO) {
         Optional<Module> moduleOptional = this.moduleRepository.findByName(moduleDTO.getName());
-        if(moduleOptional.isPresent()) throw new RecordExistException(Module.class, "Module Id", moduleDTO.getName());
+        if(moduleOptional.isPresent()) throw new RecordExistException(Module.class, MODULE_CLASS_NAME, moduleDTO.getName());
 
         final Module module = this.moduleMapper.toModuleDTO(moduleDTO);
         module.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
@@ -96,7 +96,7 @@ public class ModuleService {
     }
 
     public List<Module> getAllModules(){
-        Specification<Module> specification = genericSpecification.findAll();
+        Specification<Module> specification = genericSpecification.findAll(0);
         return (List<Module>) this.moduleRepository.findAll(specification);
     }
 
@@ -166,18 +166,17 @@ public class ModuleService {
             }
         });
 
-        return saveExternalModuleWithItsProperties(ModuleUtil.getModuleConfigs(), false, false);
+        return saveExternalModuleWithItsProperties(ModuleUtil.getModuleConfigs(), false);
     }
 
-    private List<Module> saveExternalModuleWithItsProperties(List<Module> moduleConfigs, Boolean replace,
-                                                             Boolean notArchived) {
+    private List<Module> saveExternalModuleWithItsProperties(List<Module> moduleConfigs, Boolean notArchived) {
         List<Module> modules = new ArrayList<Module>();
         //Saving a module, program, form to db
         moduleConfigs.forEach(externalModule -> {
-            if(replace){
+           /* if(replace){
                 externalModule.setStatus(STATUS_UPLOADED);
                 externalModule.setName(externalModule.getName().replace(TEMP, ""));
-            }
+            }*/
             if(externalModule.getId() == null) {
                 externalModule.setActive(INACTIVE);
                 externalModule.setUuid(UUID.randomUUID().toString());
@@ -279,20 +278,20 @@ public class ModuleService {
         List<Module> moduleList = new ArrayList<>();
 
         if(!moduleOptional.isPresent()) {
-            throw new EntityNotFoundException(Module.class, "Module Id", moduleId + "");
+            throw new EntityNotFoundException(Module.class, MODULE_CLASS_NAME, moduleId + "");
         }
         Module module = moduleOptional.get();
         moduleList.add(module);
 
-        if(moduleOptional.get().getName().contains(TEMP) && isInitialized == null) {
+        /*if(moduleOptional.get().getName().contains(TEMP) && isInitialized == null) {
             module = overridingOldModuleWithNewModule(moduleOptional.get());
-        }
+        }*/
 
         final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", module.getName());
 
 
         if(module.getStatus() == STATUS_EXIST) {
-            final Path moduleJarPath = Paths.get(properties.getModulePath(), module.getName()+".jar");
+            final Path moduleJarPath = Paths.get(properties.getModulePath(), module.getName()+DOT_JAR);
 
             if(moduleJarPath != null) {
                 File jarFile = moduleJarPath.toFile();
@@ -303,7 +302,7 @@ public class ModuleService {
                     module.setStatus(STATUS_UPLOADED);
                     List<Module> modules = new ArrayList<>();
                     modules.add(module);
-                    saveExternalModuleWithItsProperties(modules, false, false);
+                    saveExternalModuleWithItsProperties(modules, false);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -447,13 +446,14 @@ public class ModuleService {
     }
 
     public void startModule(Boolean isStartUp){
+        //Boolean startUp = false;
         if(isStartUp){
-            startUp = isStartUp;
+            //startUp = isStartUp;
             loadAllExternalModules(STATUS_STARTED, MODULE_TYPE);
         } else {
             loadAllExternalModules(STATUS_INSTALLED, MODULE_TYPE);
         }
-        startUp = false;
+        //startUp = false;
 
         externalModules.forEach(module -> {
             if(!isStartUp){
@@ -498,11 +498,11 @@ public class ModuleService {
     public Boolean delete(Long id) {
         Optional<Module> moduleOptional = moduleRepository.findById(id);
         if(!moduleOptional.isPresent()){
-            throw new EntityNotFoundException(Module.class, "Module ", "Not Found");
+            throw new EntityNotFoundException(Module.class, MODULE_CLASS_NAME, "Not Found");
         }
         Module module = moduleOptional.get();
         if(module.getModuleType() == 0){
-            throw new IllegalTypeException(Module.class, "Core module", "cannot delete core module");
+            throw new IllegalTypeException(Module.class, MODULE_CLASS_NAME, "cannot delete core module");
         }
         module.getProgramsByModule().forEach(program -> {
             program.getFormsByProgram().forEach(form -> formRepository.delete(form));
@@ -534,42 +534,28 @@ public class ModuleService {
                         if (file.getName().contains(moduleDependency.getArtifactId())) {
                             try {
                                 ClassPathHacker.addFile(file.getAbsolutePath());
-                            /*if(module.getName().contains(TEMP) && module.getStatus() == STATUS_STARTED){
-                                //final Path oldLibs = Paths.get(properties.getModulePath(), "libs", module.getName().replace(TEMP, ""));
-                                *//*if(oldLibs != null) {
-                                    for (File libFile : oldLibs.toFile().listFiles()) {
-                                        ccl = new ConsoleConfigClassLoader(new URL[]{libFile.toURI().toURL()},
-                                                ClassLoader.getSystemClassLoader());
-                                        HashSet<String> jarFileToClose = new HashSet<>();
-                                        jarFileToClose.add(libFile.getName());
-                                        ccl.setSetJarFileNames2Close(jarFileToClose);
-                                        ccl.cleanupJarFileFactory();
-                                        ccl.close();
-                                    }
-                                }*//*
-                                 *//* ccl = new ConsoleConfigClassLoader(new URL[]{file.toURI().toURL()},
-                                        ClassLoader.getSystemClassLoader());
-                                ccl.myAddURL();*//*
-                                ClassPathHacker.addFile(file.getAbsolutePath());
-
-                            }else {
-                                //ClassPathHacker.addFile(file.getAbsolutePath());
-                                *//*ccl = new ConsoleConfigClassLoader(new URL[]{file.toURI().toURL()},
-                                        ClassLoader.getSystemClassLoader());
-                                ccl.myAddURL();*//*
-                            }*/
                             } catch (IOException e) {
                                 log.debug(e.getClass().getName() + ": " + e.getMessage());
                                 e.printStackTrace();
                             }
                         }
                     });
-
                 }
             } else {
                 log.debug("Cannot load dependency to " + module.getName());
             }
         });
+    }
+
+    public List<Module> getAllModuleByModuleStatusAndBatchNo(int moduleStatus, String batchNo) {
+        if(moduleStatus > 0 && batchNo != null){
+            return moduleRepository.findAllByStatusAndBatchNo(moduleStatus, batchNo);
+        }else if(batchNo != null){
+            return moduleRepository.findAllByBatchNo(batchNo);
+        } else {
+            moduleStatus = 0;
+            return moduleRepository.findAllByStatus(moduleStatus);
+        }
     }
 
     private void loadAllExternalModules(int status, int moduleType){
@@ -607,7 +593,6 @@ public class ModuleService {
         }
         Path libPath = Paths.get(properties.getModulePath(), "libs", externalModule.getName());
         File src = new File(Paths.get(properties.getModulePath(), "runtime", externalModule.getName(),"lib").toString());
-        File target = new File(libPath.toString());
 
         //Copy dependencies in lib to libs
         try {
@@ -631,13 +616,12 @@ public class ModuleService {
                 if (file.isDirectory()) {
                     showFiles(file.listFiles(), rootFile, mainClass); // Calls same method again.
                 } else {
-                    if (file.getAbsolutePath().endsWith(".class")) {
+                    if (file.getAbsolutePath().endsWith(DOT_CLASS)) {
                         String filePathName = file.getAbsolutePath().replace(absolutePath + fileSeparator, "");
-                        String processedName = filePathName.replace(".class", "");
+                        String processedName = filePathName.replace(DOT_CLASS, "");
                         processedName = processedName.replace(fileSeparator, ".");
                         if(processedName.contains(mainClass)){
                             urlList.add(file.toURI().toURL());
-                            new Loaders.MasterLoader(ClassLoader.getSystemClassLoader()).refresh(new URL[] { file.toURI().toURL() });
                             classNames.add(processedName);
                         }
                     }
@@ -647,7 +631,7 @@ public class ModuleService {
         return urlList;
     }
 
-    public List<Module> getAllModuleByStatusAndModuleType(int moduleStatus, int moduleType) {
+    private List<Module> getAllModuleByStatusAndModuleType(int moduleStatus, int moduleType) {
         Specification<Module> moduleSpecification = genericSpecification.findAllModules(moduleStatus, moduleType);
         List<Module> modules = this.moduleRepository.findAll(moduleSpecification);
 
@@ -669,15 +653,5 @@ public class ModuleService {
         List<Form> forms = formDataLoader.readJsonFile(new Form(), jsonFile);
 
         return forms;
-    }
-
-    public List<Module> getAllModuleByModuleStatusAndBatchNo(int moduleStatus, String batchNo) {
-        if(moduleStatus > 0 && batchNo != null){
-            return moduleRepository.findAllByStatusAndBatchNo(moduleStatus, batchNo);
-        }else if(batchNo != null){
-            return moduleRepository.findAllByBatchNo(batchNo);
-        } else {
-            return moduleRepository.findAllByStatus(moduleStatus);
-        }
     }
 }

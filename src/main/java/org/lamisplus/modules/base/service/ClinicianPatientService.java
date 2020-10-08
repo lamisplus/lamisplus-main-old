@@ -52,7 +52,7 @@ public class ClinicianPatientService {
 
     public List getAllClinicianPatients() {
         GenericSpecification<ClinicianPatient> genericSpecification = new GenericSpecification<ClinicianPatient>();
-        Specification<ClinicianPatient> specification = genericSpecification.findAll();
+        Specification<ClinicianPatient> specification = genericSpecification.findAll(0);
         return clinicianPatientRepository.findAll(specification);
     }
 

@@ -15,11 +15,11 @@ public class ClassPathHacker {
         addFile(file);
     }
 
-    public static void addFile(File file) throws IOException {
+    private static void addFile(File file) throws IOException {
         addURL(file.toURI().toURL());
     }
 
-    public static void addURL(URL url) throws IOException {
+    private static void addURL(URL url) throws IOException {
         URLClassLoader systemClassLoader = (URLClassLoader)ClassLoader.getSystemClassLoader();
         Class sysClass = URLClassLoader.class;
         try {
