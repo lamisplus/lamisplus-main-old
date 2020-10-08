@@ -29,14 +29,15 @@ export const creatReport = (data, onSuccess, onError) => dispatch => {
 };
 
 
-export const generateReport = (data, onSuccess, onError) => dispatch => {
+export const generateReport = (data) => dispatch => {
+    const reportType = 'application/'+(data.reportType).toLowerCase();
     axios
         .post(`${url}jasper-reports/generate`, data, {responseType: 'arraybuffer'})
         .then(response => {
         //Create a Blob from the PDF Stream
             const file = new Blob(
                 [response.data],
-                {type: 'application/pdf'});
+                {type: reportType});
             //Build a URL from the file
             const fileURL = URL.createObjectURL(file);
         //Open the URL on new Window
@@ -47,7 +48,7 @@ export const generateReport = (data, onSuccess, onError) => dispatch => {
         });
 }
 
-export const fetchAll = (onSuccess, onError) => dispatch => {
+export const fetchAll = (onSuccess) => dispatch => {
     axios
         .get(`${url}jasper-reports`)
         .then(response => {
