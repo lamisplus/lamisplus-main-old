@@ -48,7 +48,7 @@ public class EncounterService {
 
 
     public List<EncounterDTO> getAllEncounters() {
-        Specification<Encounter> specification = genericSpecification.findAll();
+        Specification<Encounter> specification = genericSpecification.findAll(0);
         List<EncounterDTO> encounterDTOS = new ArrayList();
 
         List <Encounter> encounters = encounterRepository.findAll(specification);

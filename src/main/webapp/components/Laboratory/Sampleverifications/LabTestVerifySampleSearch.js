@@ -66,7 +66,7 @@ useEffect(() => {
           ]}
         isLoading={loading}
         data={props.patientsTestOrderList.map((row) => ({
-            Id: row.patientId,
+            Id: row.hospitalNumber,
             name: row.firstName +  ' ' + row.lastName,
             date: row.dateEncounter,
             count: row.formDataObj.length,

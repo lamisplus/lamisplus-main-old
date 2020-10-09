@@ -86,7 +86,7 @@ public class PatientService {
 
     public List<PatientDTO> getAllPatients() {
         GenericSpecification<Patient> genericSpecification = new GenericSpecification<Patient>();
-        Specification<Patient> specification = genericSpecification.findAll();
+        Specification<Patient> specification = genericSpecification.findAll(0);
 
         List<Patient> patients = patientRepository.findAll(specification);
         List<PatientDTO> patientDTOs = new ArrayList<>();
