@@ -1,16 +1,13 @@
 package org.lamisplus.modules.base.util;
 
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
+
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.stream.Stream;
 import org.springframework.core.io.Resource;
 
@@ -21,32 +18,38 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class FileStorage {
-    private final Path root = Paths.get("src/main/resources/report/");
+    private  Path path;
 
-    @PostConstruct
-    public void init() {
+    public FileStorage() {
+        Path source = Paths.get(this.getClass().getResource("/").getPath());
+        this.path = Paths.get(source.toAbsolutePath() + "/report/");
+    }
+
+     @PostConstruct
+     public void init() {
         try {
-            Files.createDirectory(root);
+            Files.createDirectory(path);
         } catch (IOException e) {
             throw new RuntimeException("Could not initialize folder for upload!");
         }
     }
 
+
     public void save(MultipartFile file) {
         try {
-            Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()));
+            Files.copy(file.getInputStream(), this.path.resolve(Objects.requireNonNull(file.getOriginalFilename())));
         } catch (Exception e) {
             throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
         }
     }
 
-    public Resource load(String filename) {
-        try {
-            Path file = root.resolve(filename);
+    public Resource load(String fileName) {
+       try {
+            Path file = path.resolve(fileName);
             Resource resource = new UrlResource(file.toUri());
             System.out.println("File Resource: "+resource);
 
-            if (resource.exists() || resource.isReadable()) {
+           if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
                 throw new RuntimeException("Could not read the file!");
@@ -56,40 +59,23 @@ public class FileStorage {
         }
     }
 
-    public File load1(String filename) throws URISyntaxException {
-        URL resource = getClass().getClassLoader().getResource("report1.pdf");
-        if (resource == null) {
-            throw new IllegalArgumentException("file not found!");
-        } else {
-            return new File(resource.toURI());
-        }
-    }
-
-    public Resource load1() throws IOException {
-        Resource resource = new ClassPathResource("report1.pdf");
-        InputStream input = resource.getInputStream();
-        return resource;
-    }
-
     public void deleteAll() {
-        FileSystemUtils.deleteRecursively(root.toFile());
+        FileSystemUtils.deleteRecursively(path.toFile());
     }
 
     public Stream<Path> loadAll() {
         try {
-            return Files.walk(this.root, 1).filter(path -> !path.equals(this.root)).map(this.root::relativize);
+            return Files.walk(this.path, 1).filter(path -> !path.equals(this.path)).map(this.path::relativize);
         } catch (IOException e) {
             throw new RuntimeException("Could not load the files!");
         }
     }
 
-    public void writeBytesToFile(byte[] bFile, String fileDest) {
-        fileDest = "src/main/resources/report/rep.pdf";
-        try (FileOutputStream fileOuputStream = new FileOutputStream(fileDest)) {
-            fileOuputStream.write(bFile);
+    public void writeBytesToFile(byte[] file, String fileName) {
+        try (FileOutputStream fileOuputStream = new FileOutputStream(path+"/"+fileName)) {
+            fileOuputStream.write(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 }
-

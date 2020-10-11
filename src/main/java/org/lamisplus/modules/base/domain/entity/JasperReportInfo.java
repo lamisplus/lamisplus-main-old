@@ -34,9 +34,8 @@ public class JasperReportInfo extends JsonBEntity implements Serializable {
     @Column(name = "program_code")
     private String programCode;
 
-    @Column(name = "template", columnDefinition = "xml")
-    @Type(type="org.lamisplus.modules.base.domain.entity.SQLXMLType")
-    @Basic(fetch = FetchType.LAZY)
+    //@Type(type="org.lamisplus.modules.base.domain.entity.SQLXMLType")
+    //@Column(name="template", nullable=false, columnDefinition = "xml")
     private String template;
 
     @Type(type = "jsonb")
@@ -49,6 +48,4 @@ public class JasperReportInfo extends JsonBEntity implements Serializable {
     @JsonIgnore
     private Integer archived = 0;
 
-    @Transient
-    private String programName;
 }
