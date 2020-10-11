@@ -95,7 +95,7 @@ public class Module implements Serializable {
     @OneToMany(mappedBy = "moduleByDependencyId")
     @JsonIgnore
     @ToString.Exclude
-    public List<ModuleDependencies> moduleDependenciesByModule;
+    public List<ModuleDependency> moduleDependenciesByModule;
 
     @OneToMany(mappedBy = "moduleByModuleId")
     @JsonIgnore

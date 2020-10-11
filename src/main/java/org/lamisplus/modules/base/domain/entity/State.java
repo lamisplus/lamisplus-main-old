@@ -45,9 +45,5 @@ public class State implements Serializable {
     @ToString.Exclude
     private List<PersonContact> personContactsByState;
 
-    @OneToMany(mappedBy = "stateByStateId")
-    @JsonIgnore
-    @ToString.Exclude
-    public List<Organisation> organizationsByState;
 
 }

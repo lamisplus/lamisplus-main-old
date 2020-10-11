@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode
 @Table(name = "module_dependencies")
-public class ModuleDependencies implements Serializable {
+public class ModuleDependency implements Serializable {
 
     @Id
     @Column(name = "id")
