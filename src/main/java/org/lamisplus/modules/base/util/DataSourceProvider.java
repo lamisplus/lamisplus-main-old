@@ -36,7 +36,7 @@ public class DataSourceProvider {
 
     public List<PatientList> patientList() {
         GenericSpecification<Patient> genericSpecification = new GenericSpecification<Patient>();
-        Specification<Patient> specification = genericSpecification.findAll();
+        Specification<Patient> specification = genericSpecification.findAll(0);
 
         List<Patient> patients = patientRepository.findAll(specification);
         List<PatientList> patientLists = new ArrayList<>();
