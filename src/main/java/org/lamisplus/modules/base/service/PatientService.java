@@ -48,6 +48,7 @@ public class PatientService {
     private final EncounterMapper encounterMapper;
     private final VisitMapper visitMapper;
     private final UserService userService;
+    private final ProgramRepository programRepository;
     private final Integer archived = 1;
 
 
@@ -405,6 +406,34 @@ public class PatientService {
 
         return encounters;
     }
+
+    //TODO: In progress...
+   /* public List<Form> getAllFormsByPatientIdAndPrecedence(Long patientId, String programCode) {
+        ArrayList<EncounterDistinctDTO> encounterDistinctDTOS = new ArrayList<>();
+        Optional<Program> optionalProgram = programRepository.findProgramByCode(programCode);
+        if(!optionalProgram.isPresent() || optionalProgram.get().getArchived() == 1){
+            throw new EntityNotFoundException(Program.class, "programCode", programCode+"");
+        }
+
+        encounterRepository.findDistinctPatientIdAndFormCode(patientId, programCode).forEach(encounterDistinctDTO -> {
+            encounterDistinctDTOS.add(encounterDistinctDTO);
+        });
+
+        if(encounterDistinctDTOS.size() > 0) {
+            encounterDistinctDTOS.forEach(encounterDistinctDTO -> {
+
+            });
+        }else {
+
+        }
+
+        Program program = optionalProgram.get();
+        program.getFormsByProgram().forEach(form -> {
+        });
+
+
+        return null;
+    }*/
 
     //TOdo add a method to get patient Relative - to avoid duplicate codes
 
