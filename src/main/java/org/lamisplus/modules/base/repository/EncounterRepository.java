@@ -30,10 +30,10 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
     List<Encounter> findByPatientId(Long PatientId);
 
     //TODO: in progress...
-    /*@Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.EncounterDistinctDTO" +
+    @Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.EncounterDistinctDTO" +
             "(e.patientId, e.formCode, e.programCode) FROM Encounter e WHERE e.patientId = ?1 and e.programCode = ?2")
     List<EncounterDistinctDTO> findDistinctPatientIdAndFormCode(Long patientId, String programCode);
-*/
+
     //List<PatientObservation> findByPatientAndFormCodeTitle(Patient patient, Long formCode, String title);
     Optional<Encounter> findFirstByPatientIdAndProgramCodeAndFormCodeOrderByDateEncounterDesc(Long patientId, String ProgramCode, String FormCode);
 
