@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.domain.mapper;
 
 import org.lamisplus.modules.base.domain.dto.PatientDTO;
+import org.lamisplus.modules.base.domain.dto.PatientList;
 import org.lamisplus.modules.base.domain.entity.Patient;
 import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.domain.entity.PersonContact;
@@ -28,6 +29,17 @@ public interface PatientMapper {
             @Mapping(source="person.id", target="personId"),
             @Mapping(source="patient.id", target="patientId")
     })
-    PatientDTO toPatientDTO(Person person,PersonContact personContact, Patient patient);
+    PatientDTO toPatientDTO(Person person, PersonContact personContact, Patient patient);
 
+    @Mappings({
+            @Mapping(source="person.id", target="personId"),
+            @Mapping(source="patient.id", target="patientId")
+    })
+    PatientList toPatientListDTO(Person person, PersonContact personContact, Patient patient);
+
+    @Mappings({
+            @Mapping(source="person.id", target="personId"),
+            @Mapping(source="patient.id", target="patientId")
+    })
+    PatientList toPatientListDTO(Person person, Visit visit, PersonContact personContact, Patient patient);
 }

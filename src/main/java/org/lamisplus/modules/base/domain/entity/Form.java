@@ -55,6 +55,11 @@ public class Form extends JsonBEntity implements Serializable {
     @Column(name = "name")
     private String name;
 
+    @Type(type = "jsonb")
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "form_precedence", nullable = false, columnDefinition = "jsonb")
+    private Object formPrecedence;
+
     @Basic
     @Column(name = "date_created")
     @JsonIgnore
