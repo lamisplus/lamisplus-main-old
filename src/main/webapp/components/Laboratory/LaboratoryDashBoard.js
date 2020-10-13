@@ -15,7 +15,11 @@ import { Bar, Pie } from 'react-chartjs-2';
 import { getColor } from 'utils/colors';
 import { randomNum } from 'utils/demos';
 import UserProgressTable from 'components/UserProgressTable';
-
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import {testGroup}  from './DashBoard/Visualisations/TestGroupChart';
+import {testOrders} from './DashBoard/Visualisations/TestOrdersChart';
+import {lamisChart} from './DashBoard/Visualisations/Limschart';
 
 
 
@@ -130,72 +134,13 @@ const useStyles = makeStyles(theme => ({
     };
   
 
-  const genPieData = () => {
-      return {
-          datasets: [
-              {
-                  data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
-                  backgroundColor: [
-                      getColor('primary'),
-                      getColor('secondary'),
-                      getColor('success'),
-                      getColor('info'),
-                      getColor('danger'),
-                  ],
-                  label: 'Test Order',
-              },
-          ],
-          labels: ['Chemistry', 'Haematology', 'Microbiology', 'Virology', 'Biochemistry'],
-      };
-  };
-  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
-  const genLineData = (moreData = {}, moreData2 = {}) => {
-      return {
-          labels: MONTHS,
-          datasets: [
-              {
-                  label: 'Test Order',
-                  backgroundColor: getColor('primary'),
-                  borderColor: getColor('primary'),
-                  borderWidth: 1,
-                  data: [
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                  ],
-                  ...moreData,
-              },
-              {
-                  label: 'Test Result',
-                  backgroundColor: getColor('secondary'),
-                  borderColor: getColor('secondary'),
-                  borderWidth: 1,
-                  data: [
-                      randomNum(),
-                      randomNum(),
-                      randomNum(),
-                      randomNum(),
-                      randomNum(),
-                      randomNum(),
-                      randomNum(),
-                  ],
-                  ...moreData2,
-              },
-        ],
-      };
-  };
 
   const userProgressTableData = 
       [
-          {name: 'Tom Suliman'},
-          {name: 'Jenny Alex'},
-          {name: 'Simi Adedeji'},
-          {name: 'Christine Ada'}
+          {name: 'Total Sample Transfered'},
+          {name: 'Total Sample Dispatached'},
+          {name: 'Total Sample Results'},
+          {name: 'Total Sample Rejected'}
   
       ];
 
@@ -209,35 +154,39 @@ export default function LaboratoryDashBoard(props) {
                     <Card >
                         <CardHeader> Laboratory Test Group Analysis</CardHeader>
                             <CardBody>
-                                <Pie data={genPieData()} />                      
+                                <div>
+                                    <HighchartsReact options={testGroup} />
+                                </div>                     
                             </CardBody>                      
                     </Card>
                     <Card >
                         <CardHeader> Laboratory Test Order/ Result</CardHeader>
                             <CardBody>
-                                <Bar data={genLineData()} />                     
+                                <div>
+                                    <HighchartsReact options={testOrders} />
+                                </div>                       
                             </CardBody>                      
                     </Card>
                 </CardDeck>
                     <br/><br/>
                 <Grid container spacing={2}>
-                    <Grid item xs='6' >                    
+                    <Grid item xs='8' >                    
                         <Card  >
-                            <CardHeader> Recent Lab. Test Order</CardHeader>
+                            <CardHeader> LIMS Chart Analysis</CardHeader>
                                 <CardBody>
-                                    <UserProgressTable
-                                        headers={['name'  ]}
-                                        usersData={userProgressTableData}
-                                    />
+                                    <div>
+                                        <HighchartsReact options={lamisChart} />
+                                    </div> 
+                                    
                                 </CardBody>                      
                         </Card>   
                     </Grid>
-                  <Grid item xs='6'>
+                  <Grid item xs='4'>
                       <Card  >
-                          <CardHeader> Recent Lab. Test Result</CardHeader>
+                          <CardHeader> Recent LIMS Analysis</CardHeader>
                               <CardBody>
                                   <UserProgressTable
-                                      headers={['name' ]}
+                                      headers={['' ]}
                                       usersData={userProgressTableData}
                                   />
                               </CardBody>                      

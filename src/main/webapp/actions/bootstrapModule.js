@@ -49,7 +49,7 @@ export const installBootstrapModule = (id, onSuccess, onError)=> dispatch => {
         payload: response.data
       })
 
-      onSuccess && onSuccess();
+      onSuccess && onSuccess(response.data);
       toast.success("Module installed successfully!");
     })
     .catch(error => {

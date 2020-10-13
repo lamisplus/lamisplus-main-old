@@ -61,10 +61,12 @@ function getSteps() {
 const CreateModule = (props) => {
 
     const classes = useStyles()
+    const apiURl = url + "module/";
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
     const [fileToUpload, setFileToUpload] = useState({})
     const [uploadResponse, setUploadResponse] = React.useState({})
+    const [uploadModuleList, setUploadModuleList] = React.useState({})
     const [filename, setFilename] = useState('Choose File');
     const [uploadedFile, setUploadedFile] = useState({});
     const [message, setMessage] = useState('');
@@ -82,25 +84,6 @@ const CreateModule = (props) => {
     const [disabledUploadButton, setDisabledUploadButton] = useState(false)
     const [disabledNextButton, setDisabledNextButton] = useState(false)
 
-    ///storing a the response static variable 
-    const varAfterUpload = [
-      {
-        "id": 9,
-        "active": false,
-        "artifact_id": "demo",
-        "basePackage": "org.lamisplus.modules.demo",
-        "description": "demo test module",
-        "name": "demo",
-        "version": "1",
-        "dateCreated": "27-08-2020",
-        "createdBy": "Emeka",
-        "dateInstalled": "22-09-2020",
-        "status": 2,
-        "archived": 0,
-        "moduleType": 1,
-        "main": null
-      }
-    ];
 
 
   const handleNext = async e => {
@@ -128,7 +111,8 @@ const CreateModule = (props) => {
     setDisabledNextButton(true)
     setInstallationOverlay(true)
     setDisableNextButtonProcess(true)
-    const onSuccess = () => {
+    const onSuccess = (installResponse) => {
+      console.log(installResponse)
       setDisabledNextButton(false)
       setInstallationOverlay(false) 
       setDisableNextButtonProcess(false)
@@ -177,6 +161,23 @@ const CreateModule = (props) => {
           setDisableNextButtonProcess(false) //Enable the next process button for the next stage 
           setInstallationMessage('')
           console.log(uploadResponse)
+          const moduleStatus = uploadResponse.status
+          const moduleBatchNum = uploadResponse.batchNo
+            /*# Get list of Modules from the uploaded Jar File  #*/
+            useEffect(() => {
+              async function getCharacters() {
+                  try {
+                      const response = await axios.get(url+'modules/'+moduleStatus+'/'+moduleBatchNum);
+                          const body = response.data;
+                          console.log(body)
+                          setUploadModuleList(body)   
+                  } catch (error) {
+                    setUploadModuleList({})
+                  }
+                }
+              getCharacters();
+          }, []);
+          
           setActiveStep((prevActiveStep) => prevActiveStep + 1); //auotmatically move to the next phase of installation in the wizard
         } catch (err) {
           console.log(err.response)
@@ -197,6 +198,14 @@ const CreateModule = (props) => {
       }
   }
 
+  function getModuleByBatchNum(batchNumber) {
+    async function getCharacters() {
+        const response = await axios.get(apiURl + batchNumber)
+        const moduleList = response.data;
+        console.log(moduleList)   
+    }
+    getCharacters();
+}
   const handleStartModule = () => {
     sethiddeStartModuleFinishButton(true)
     setDisableNextButtonProcess(true)
@@ -330,11 +339,11 @@ const CreateModule = (props) => {
                       </thead>
                       <tbody>
                           {/* varAfterUpload*/}
-                          {uploadResponse.map((row) => (
+                          {uploadModuleList.map((row) => (
                           <tr key={row.id}>
                             <td>{row.name===""?" ":row.name}</td>
                             <td>{row.description===""?" ":row.description}</td>
-                            <td>{row.basePackage===""?" ":row.basePackage}</td>
+                            <td>{row.createdBy===""?" ":row.createdBy}</td>
                             <td>{row.version===""?" ":row.version}</td>
                             <td><Badge  color="primary">{row.status===2 ? "Uploaded":"Unploaded"}</Badge></td>
                             <td>{sampleAction(row.id)}</td>

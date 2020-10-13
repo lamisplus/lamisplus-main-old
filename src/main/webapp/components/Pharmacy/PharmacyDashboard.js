@@ -15,7 +15,11 @@ import { randomNum } from 'utils/demos';
 import UserProgressTable from 'components/UserProgressTable';
 import PatientSearch from './PatientSearch';
 import { fetchPrescriptions } from "../../actions/pharmacy";
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import {drugChart} from './DashBoard/Visualisation/DrugChart';
+import {basicColumn} from './DashBoard/Visualisation/DrugChartBar'
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -151,67 +155,6 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const genPieData = () => {
-  
-    return {
-        datasets: [
-            {
-                data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
-                backgroundColor: [
-                    getColor('primary'),
-                    getColor('secondary'),
-                    getColor('success'),
-                    getColor('info'),
-                    getColor('danger'),
-                ],
-                label: 'Test Order',
-            },
-        ],
-        labels: ['Paracetamol', 'Chloroquine', 'Panadol', 'Ampiclox', 'Flagyl'],
-    };
-};
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
-const genLineData = (moreData = {}, moreData2 = {}) => {
-    return {
-        labels: MONTHS,
-        datasets: [
-            {
-                label: 'Pending',
-                backgroundColor: getColor('primary'),
-                borderColor: getColor('primary'),
-                borderWidth: 1,
-                data: [
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                ],
-                ...moreData,
-            },
-            {
-                label: 'Dispensed',
-                backgroundColor: getColor('secondary'),
-                borderColor: getColor('secondary'),
-                borderWidth: 1,
-                data: [
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                ],
-                ...moreData2,
-            },
-        ],
-    };
-};
-
 const userProgressTableData = [
     {
 
@@ -285,13 +228,18 @@ const ScrollableTabsButtonForce = (props) => {
             <Card>
               <CardHeader> Most Commonly Prescribed Drugs</CardHeader>
               <CardBody>
-                <Pie data={genPieData()} />
+                <div>
+                    <HighchartsReact options={drugChart} />
+                </div> 
               </CardBody>
             </Card>
             <Card>
-              <CardHeader> Total Monthly Prescriptions</CardHeader>
+              <CardHeader> Total Drug Prescriptions and Dispensed</CardHeader>
               <CardBody>
-                <Bar data={genLineData()} />
+                <div>
+                    <HighchartsReact options={basicColumn} />
+                </div> 
+              
               </CardBody>
             </Card>
           </CardDeck>
