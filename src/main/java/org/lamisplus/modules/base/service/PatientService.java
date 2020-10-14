@@ -410,34 +410,43 @@ public class PatientService {
     }
 
     //TODO: In progress...
-    public List<Form> getAllFormsByPatientIdAndPrecedence(Long patientId, String programCode) {
+    public List<Form> getAllFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
         ArrayList<EncounterDistinctDTO> encounterDistinctDTOS = new ArrayList<>();
         Optional<Program> optionalProgram = programRepository.findProgramByCode(programCode);
         if(!optionalProgram.isPresent() || optionalProgram.get().getArchived() == 1){
             throw new EntityNotFoundException(Program.class, "programCode", programCode+"");
         }
         Program program = optionalProgram.get();
-        HashSet <Form> forms = new HashSet<>();
+        List <Form> forms = new ArrayList<>();
+        HashSet <String>formCodeSet = new HashSet<>();
+        //HashSet <String>formPrecedenceSet = new HashSet<>();
+        HashSet <String> allFormCode = new HashSet<>();
 
+        //Check for filled forms by the patient in that program
         encounterRepository.findDistinctPatientIdAndFormCode(patientId, programCode).forEach(encounterDistinctDTO -> {
-            encounterDistinctDTOS.add(encounterDistinctDTO);
+            //encounterDistinctDTOS.add(encounterDistinctDTO);
+            formCodeSet.add(encounterDistinctDTO.getFormCode());
         });
+        System.out.println("level1: "+formCodeSet);
 
-        if(encounterDistinctDTOS.size() > 0) {
-                program.getFormsByProgram().forEach(form -> {
-                    List formPrecedenceList = new ArrayList();
-                    if(form.getFormPrecedence() != null) {
-                        formPrecedenceList = (List) form.getFormPrecedence();
-                    }
-                    formPrecedenceList.forEach(formCode ->{
-                        encounterDistinctDTOS.forEach(encounterDistinctDTO -> {
-                            if(encounterDistinctDTO.getFormCode() == formCode){
-                                return;
-                            }
-                        });
+        if(formCodeSet.size() > 0) {
+            program.getFormsByProgram().forEach(form -> {
+                allFormCode.add(form.getCode());
 
+                    //Check for formPrecedence
+                if(form.getFormPrecedence() != null) {
+                    getFormPrecedence(form).forEach(formPrecedenceCode ->{
+                        formCodeSet.add(formPrecedenceCode);
                     });
-                });
+                }
+            });
+            System.out.println("formCodeSet: " + formCodeSet);
+
+            allFormCode.removeAll(formCodeSet);
+            allFormCode.forEach(formCode ->{
+                forms.add(formRepository.findByCode(formCode).get());
+            });
+
         }else {
             program.getFormsByProgram().forEach(form -> {
                 if(form.getFormPrecedence() == null){
@@ -446,9 +455,41 @@ public class PatientService {
             });
 
         }
+        return forms;
+    }
 
+    public List<Form> getFilledFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
+        List<Form> forms = new ArrayList<>();
+        //Check for filled forms by the patient in that program
+        encounterRepository.findDistinctPatientIdAndFormCode(patientId, programCode).forEach(encounterDistinctDTO -> {
+            forms.add(formRepository.findByCode(encounterDistinctDTO.getFormCode()).get());
+        });
+        return forms;
+    }
 
-        return null;
+    private Set<String> getFormPrecedence(Form form) {
+        JSONArray jsonArray = new JSONArray();
+        HashSet<String> formPrecedenceSet = new HashSet<>();
+
+        try {
+
+            ObjectMapper mapper = new ObjectMapper();
+            String formPrecedenceJson = mapper.writeValueAsString(form.getFormPrecedence());
+            JSONObject jsonObject = new JSONObject(formPrecedenceJson);
+
+            if (jsonObject.has("formCode")) {
+                jsonArray = jsonObject.getJSONArray("formCode");
+            }
+            if (jsonArray.length() > 0) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    formPrecedenceSet.add(jsonArray.getString(i));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return formPrecedenceSet;
     }
 
     //TOdo add a method to get patient Relative - to avoid duplicate codes

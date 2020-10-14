@@ -99,8 +99,14 @@ public class PatientController {
 
     //TODO: in progress...
     @GetMapping("/{id}/{programCode}/form")
-    public ResponseEntity<List<Form>> getAllFormsByPatientIdAndPrecedence(@PathVariable Long patientId, @PathVariable String programCode){
-        return ResponseEntity.ok(this.patientService.getAllFormsByPatientIdAndPrecedence(patientId, programCode));
+    public ResponseEntity<List<Form>> getAllFormsByPatientIdAndProgramCode(@PathVariable Long id, @PathVariable String programCode){
+        return ResponseEntity.ok(this.patientService.getAllFormsByPatientIdAndProgramCode(id, programCode));
+    }
+
+    //TODO: in progress...
+    @GetMapping("/{id}/{programCode}/filledForms")
+    public ResponseEntity<List<Form>> getFilledFormsByPatientIdAndProgramCode(@PathVariable Long id, @PathVariable String programCode){
+        return ResponseEntity.ok(this.patientService.getFilledFormsByPatientIdAndProgramCode(id, programCode));
     }
 
 /*    @ApiOperation(value="getFormsByPatientId", notes = " id=required, formCode=required\n\n")

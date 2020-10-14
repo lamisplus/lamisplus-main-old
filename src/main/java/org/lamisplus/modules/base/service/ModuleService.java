@@ -34,6 +34,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.sql.Timestamp;
 import java.util.*;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -77,6 +78,8 @@ public class ModuleService {
     private final ConfigurableApplicationContext context;
     private static final String MODULE_CLASS_NAME = "module";
     private static final String DOT_CLASS = ".class";
+    private Timestamp ts = new Timestamp(System.currentTimeMillis());
+
     //private static final Class[] parameters = new Class[]{URL.class};
 
     //private final ConsoleConfigClassLoader consoleConfigClassLoader;
@@ -91,6 +94,10 @@ public class ModuleService {
 
         final Module module = this.moduleMapper.toModuleDTO(moduleDTO);
         module.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
+        if(module.getDateCreated() == null){
+            module.setDateCreated(ts);
+        }
+        module.setArchived(UN_ARCHIVED);
 
         return this.moduleRepository.save(module);
     }
