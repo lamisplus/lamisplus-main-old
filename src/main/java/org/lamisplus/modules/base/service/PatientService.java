@@ -420,7 +420,7 @@ public class PatientService {
         List <Form> forms = new ArrayList<>();
         HashSet <String>formCodeSet = new HashSet<>();
         //HashSet <String>formPrecedenceSet = new HashSet<>();
-        HashSet <String> allFormCode = new HashSet<>();
+        //HashSet <String> allFormCode = new HashSet<>();
 
         //Check for filled forms by the patient in that program
         encounterRepository.findDistinctPatientIdAndFormCode(patientId, programCode).forEach(encounterDistinctDTO -> {
@@ -431,19 +431,27 @@ public class PatientService {
 
         if(formCodeSet.size() > 0) {
             program.getFormsByProgram().forEach(form -> {
-                allFormCode.add(form.getCode());
-
+                if (formCodeSet.remove(form.getCode())) {
+                    return;
+                }else {
                     //Check for formPrecedence
-                if(form.getFormPrecedence() != null) {
-                    getFormPrecedence(form).forEach(formPrecedenceCode ->{
-                        formCodeSet.add(formPrecedenceCode);
-                    });
+                    if (form.getFormPrecedence() != null) {
+                        getFormPrecedence(form).forEach(formPrecedenceCode -> {
+                            if (formCodeSet.remove(form)) {
+                                return;
+                            }else{
+                                formCodeSet.add(formPrecedenceCode);
+                            }
+                        });
+                    } else {
+                        formCodeSet.add(form.getCode());
+                    }
                 }
             });
             System.out.println("formCodeSet: " + formCodeSet);
 
-            allFormCode.removeAll(formCodeSet);
-            allFormCode.forEach(formCode ->{
+            //allFormCode.removeAll(formCodeSet);
+            formCodeSet.forEach(formCode ->{
                 forms.add(formRepository.findByCode(formCode).get());
             });
 
