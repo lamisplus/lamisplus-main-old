@@ -52,6 +52,7 @@ public class PatientService {
     private final ProgramRepository programRepository;
     private final Integer archived = 1;
     private final FormRepository formRepository;
+    public static final String FORM_CODE = "formCode";
 
 
     public Person save(PatientDTO patientDTO) {
@@ -419,25 +420,26 @@ public class PatientService {
         Program program = optionalProgram.get();
         List <Form> forms = new ArrayList<>();
         HashSet <String>formCodeSet = new HashSet<>();
-        //HashSet <String>formPrecedenceSet = new HashSet<>();
-        //HashSet <String> allFormCode = new HashSet<>();
 
         //Check for filled forms by the patient in that program
-        encounterRepository.findDistinctPatientIdAndFormCode(patientId, programCode).forEach(encounterDistinctDTO -> {
+        encounterRepository.findDistinctPatientIdAndProgramCode(patientId, programCode).forEach(encounterDistinctDTO -> {
             //encounterDistinctDTOS.add(encounterDistinctDTO);
             formCodeSet.add(encounterDistinctDTO.getFormCode());
         });
-        System.out.println("level1: "+formCodeSet);
 
         if(formCodeSet.size() > 0) {
             program.getFormsByProgram().forEach(form -> {
+                //if form has been filled
                 if (formCodeSet.remove(form.getCode())) {
+                    formCodeSet.add(form.getCode());
                     return;
                 }else {
                     //Check for formPrecedence
                     if (form.getFormPrecedence() != null) {
                         getFormPrecedence(form).forEach(formPrecedenceCode -> {
-                            if (formCodeSet.remove(form)) {
+                            //if precedence form has been filled
+                            if (formCodeSet.remove(formPrecedenceCode)) {
+                                formCodeSet.add(formPrecedenceCode);
                                 return;
                             }else{
                                 formCodeSet.add(formPrecedenceCode);
@@ -448,9 +450,7 @@ public class PatientService {
                     }
                 }
             });
-            System.out.println("formCodeSet: " + formCodeSet);
 
-            //allFormCode.removeAll(formCodeSet);
             formCodeSet.forEach(formCode ->{
                 forms.add(formRepository.findByCode(formCode).get());
             });
@@ -461,7 +461,6 @@ public class PatientService {
                     forms.add(form);
                 }
             });
-
         }
         return forms;
     }
@@ -469,7 +468,7 @@ public class PatientService {
     public List<Form> getFilledFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
         List<Form> forms = new ArrayList<>();
         //Check for filled forms by the patient in that program
-        encounterRepository.findDistinctPatientIdAndFormCode(patientId, programCode).forEach(encounterDistinctDTO -> {
+        encounterRepository.findDistinctPatientIdAndProgramCode(patientId, programCode).forEach(encounterDistinctDTO -> {
             forms.add(formRepository.findByCode(encounterDistinctDTO.getFormCode()).get());
         });
         return forms;
@@ -480,13 +479,12 @@ public class PatientService {
         HashSet<String> formPrecedenceSet = new HashSet<>();
 
         try {
-
             ObjectMapper mapper = new ObjectMapper();
             String formPrecedenceJson = mapper.writeValueAsString(form.getFormPrecedence());
             JSONObject jsonObject = new JSONObject(formPrecedenceJson);
 
-            if (jsonObject.has("formCode")) {
-                jsonArray = jsonObject.getJSONArray("formCode");
+            if (jsonObject.has(FORM_CODE)) {
+                jsonArray = jsonObject.getJSONArray(FORM_CODE);
             }
             if (jsonArray.length() > 0) {
                 for (int i = 0; i < jsonArray.length(); i++) {
