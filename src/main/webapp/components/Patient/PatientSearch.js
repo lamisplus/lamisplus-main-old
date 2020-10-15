@@ -22,9 +22,7 @@ const PatientSearch = (props) => {
     useEffect(() => {
         console.log(props.patientsList)
         setLoading('true');
-        const onSuccess = () => {
-            
-        
+        const onSuccess = () => {      
         setLoading(false)
       }
         const onError = () => {

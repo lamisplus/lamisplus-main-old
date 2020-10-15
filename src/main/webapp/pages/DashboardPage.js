@@ -14,6 +14,7 @@ import {Card,CardBody,CardHeader,CardTitle,Col,Row,} from 'reactstrap';
 import {genderChart} from './DashBoardVisualisation/GenderChart';
 import {combineChart} from './DashBoardVisualisation/CombineChart'
 import CustomHighMap from './map'
+import worldMaps from './../components/Highcharts/WorldMap'
 
 
 const cardStyle = {
@@ -201,7 +202,9 @@ class DashboardPage extends React.Component {
                   highcharts={Highcharts}
                   options={options}
                 />
-              
+                <>
+                  <worldMaps />
+                </>
               </CardBody>
             </Card>
           </Col>
