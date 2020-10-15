@@ -92,6 +92,7 @@ const options = {
   }
 };
   axios
+  
     .post(`${baseUrl}modules/upload`, data,options)
     .then(response => {
       console.log(response)

@@ -148,8 +148,7 @@ const CreateModule = (props) => {
     props.installBootstrapModule(id, onSuccess, onError);
   }
 
-  const handleUploadFile = async e => {
-    
+  const handleUploadFile = async e => {  
     if(fileToUpload[0]){
       setDisabledUploadButton(true)
       setDisableNextButtonProcess(true)
