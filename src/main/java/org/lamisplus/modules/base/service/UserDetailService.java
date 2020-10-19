@@ -42,7 +42,7 @@ public class UserDetailService implements UserDetailsService {
 
     private User createSecurityUser(String lowercaseUserName, org.lamisplus.modules.base.domain.entity.User user){
         List<GrantedAuthority> grantedAuthorities = user
-                .getAuthorities()
+                .getRoles()
                 .stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getName()))
                 .collect(Collectors.toList());

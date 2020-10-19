@@ -1,6 +1,8 @@
 package org.lamisplus.modules.base.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
@@ -29,8 +31,10 @@ public class User implements Serializable {
     private Time timeUploaded;
     private Long personId;
     private Person personByPersonId;
-    private Set<Authority> authorities = new HashSet<>();
     private List <ClinicianPatient> clinicianPatientByUser = new ArrayList<>();
+    @Getter
+    @Setter
+    private Set<Role> roles;
     //private Collection<UserHasPermission> userHasPermissionById;
 
     @Id
@@ -173,13 +177,6 @@ public class User implements Serializable {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id") },
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")}
     )
-    public Set<Authority> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = authorities;
-    }
     @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id", nullable = false)
     public Person getPersonByPersonId() {
@@ -209,12 +206,12 @@ public class User implements Serializable {
                 Objects.equals(timeUploaded, user.timeUploaded) &&
                 Objects.equals(personId, user.personId) &&
                 Objects.equals(personByPersonId, user.personByPersonId) &&
-                Objects.equals(authorities, user.authorities);
+                Objects.equals(roles, user.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userName, password, active, dateCreated, lastModifiedBy, dateLastModified, activationKey, dateReset, resetKey, uploaded, timeUploaded, personId, personByPersonId, authorities);
+        return Objects.hash(id, userName, password, active, dateCreated, lastModifiedBy, dateLastModified, activationKey, dateReset, resetKey, uploaded, timeUploaded, personId, personByPersonId, roles);
     }
 
     @OneToMany(mappedBy = "clinicianByUserId")

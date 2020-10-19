@@ -1,10 +1,10 @@
 package org.lamisplus.modules.base.service;
 
 import org.lamisplus.modules.base.domain.dto.UserDTO;
-import org.lamisplus.modules.base.domain.entity.Authority;
 import org.lamisplus.modules.base.domain.entity.Person;
+import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.domain.entity.User;
-import org.lamisplus.modules.base.repository.AuthorityRepository;
+import org.lamisplus.modules.base.repository.RoleRepository;
 import org.lamisplus.modules.base.repository.PersonRepository;
 import org.lamisplus.modules.base.repository.UserRepository;
 import org.lamisplus.modules.base.security.AuthoritiesConstants;
@@ -37,12 +37,12 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final AuthorityRepository authorityRepository;
+    private final RoleRepository roleRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.authorityRepository = authorityRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Transactional
@@ -75,9 +75,9 @@ public class UserService {
         newUser.setPassword(encryptedPassword);
         newUser.setPersonByPersonId(newPerson);
         newUser.setPersonId(newPerson.getId());
-        Set<Authority> authorities = new HashSet<>();
-        authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
-        newUser.setAuthorities(authorities);
+        Set<Role> roles = new HashSet<>();
+        roleRepository.findById(AuthoritiesConstants.USER).ifPresent(roles::add);
+        newUser.setRoles(roles);
         userRepository.save(newUser);
         log.debug("User Created: {}", newUser);
         return newUser;

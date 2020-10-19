@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.domain.dto;
 
 
 import org.lamisplus.modules.base.domain.entity.Authority;
+import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.domain.entity.User;
 
 import java.util.Set;
@@ -13,7 +14,7 @@ public class UserDTO {
     private Long id;
     private String userName;
     //private String password;
-    private Set<String> authorities;
+    private Set<String> roles;
     private String firstName;
     private String lastName;
 
@@ -22,7 +23,7 @@ public class UserDTO {
     public UserDTO(User user) {
         this.id = user.getId();
         this.userName = user.getUserName();
-        this.authorities = user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet());
+        this.roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
         this.firstName = user.getPersonByPersonId().getFirstName();
         this.lastName = user.getPersonByPersonId().getLastName();
     }
@@ -52,12 +53,12 @@ public class UserDTO {
     }
 
 
-    public Set<String> getAuthorities() {
-        return authorities;
+    public Set<String> getRoles() {
+        return roles;
     }
 
-    public void setAuthorities(Set<String> authorities) {
-        this.authorities = authorities;
+    public void setRoles(Set<String> authorities) {
+        this.roles = authorities;
     }
 
     @Override
@@ -67,7 +68,7 @@ public class UserDTO {
                 ", userName='" + userName + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", authorities=" + authorities +
+                ", roles=" + roles +
                 '}';
     }
 }
