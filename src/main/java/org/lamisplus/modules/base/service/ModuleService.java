@@ -80,14 +80,6 @@ public class ModuleService {
     private static final String DOT_CLASS = ".class";
     private Timestamp ts = new Timestamp(System.currentTimeMillis());
 
-    //private static final Class[] parameters = new Class[]{URL.class};
-
-    //private final ConsoleConfigClassLoader consoleConfigClassLoader;
-    //private HashSet<String> setJarFileNamesToClose = new HashSet<String>();
-    //private static final boolean IS_EXIST = true;
-    //private static final String CONTENT_TYPE = "application/java-archive";
-    //private static final int MODULE_EXIST = 4;
-
     public Module save(ModuleDTO moduleDTO) {
         Optional<Module> moduleOptional = this.moduleRepository.findByName(moduleDTO.getName());
         if(moduleOptional.isPresent()) throw new RecordExistException(Module.class, MODULE_CLASS_NAME, moduleDTO.getName());
@@ -221,25 +213,17 @@ public class ModuleService {
 
             //Get program
             externalModule.getProgramsByModule().forEach(program -> {
+                Program program1 = null;
                 if(programRepository.findByModuleId(module.getId()).size() < 1){
                     if(program.getId() == null) {
                         program.setModuleId(module.getId());
                         program.setCode(UUID.randomUUID().toString());
                         program.setArchived(ARCHIVED);
+                        //Saving program...
+                        programRepository.save(program);
                     }
                     if(notArchived){
                         program.setArchived(UN_ARCHIVED);
-                    }
-                    //Saving program...
-                    final List<Program> programList = programRepository.findByModuleId(module.getId());
-                    Program program1 = null;
-                    if(programList.isEmpty() && programList.size() > 0) {
-                        program1 = programRepository.save(program);
-                        program.setId(program1.getId());
-                    }else{
-                        programList.forEach(program2 -> {
-                            program.setId(program2.getId());
-                        });
                     }
                     //final Program program1 = programRepository.save(program);
                     log.debug(program.getName() + " saved...");

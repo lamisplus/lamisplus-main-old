@@ -30,12 +30,12 @@ public class BaseApplication extends SpringBootServletInitializer {
 		if (context == null) {
 			context = configurableApplicationContext;
 		}
-
 		ApplicationArguments args = context.getBean(ApplicationArguments.class);
 
 		Thread thread = new Thread(() -> {
 			context.close();
-			context = SpringApplication.run(clz, args.getSourceArgs());
+			SpringApplication.run(clz, args.getSourceArgs());
+
 		});
 
 		thread.setDaemon(false);

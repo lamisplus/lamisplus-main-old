@@ -18,6 +18,7 @@ import java.util.*;
 @Component
 @RequiredArgsConstructor
 public class ModuleUtil {
+    private static final String APPLICATION_PROPERTIES = "application.properties";
     private static List<Module> moduleConfigs = new ArrayList<Module>();
     private static List<File> jsonFiles = new ArrayList<File>();
     private static final String YML_FILE = ".yml";
@@ -52,9 +53,10 @@ public class ModuleUtil {
                     //Checking for module.yml i.e. config file
                     if (theFile.getName().endsWith(YML_FILE)) {
                         readModuleYml(theFile);
-                    }
-                    if (theFile.getName().endsWith(JSON_FILE)) {
+                    } else if (theFile.getName().endsWith(JSON_FILE)) {
                         getJson(theFile);
+                    } else if (theFile.getName().contains(APPLICATION_PROPERTIES)) {
+                        theFile.delete();
                     }
                     return FileVisitResult.CONTINUE;
                 }
