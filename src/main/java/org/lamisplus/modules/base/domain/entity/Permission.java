@@ -22,7 +22,7 @@ public class Permission {
 
     @Getter
     @Setter
-    @ManyToMany(mappedBy = "permissions", cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<Role> roles;
 
     @Override

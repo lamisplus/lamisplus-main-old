@@ -79,7 +79,7 @@ public class PatientService {
         patient.setPersonByPersonId(createdPerson);
         patient.setPersonId(createdPerson.getId());
         patient.setUuid(UuidGenerator.getUuid());
-        patient.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
+        patient.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         this.patientRepository.save(patient);
         return person;
     }
@@ -181,7 +181,7 @@ public class PatientService {
         final Patient patient = patientMapper.toPatient(patientDTO);
         patient.setPersonId(updatedPerson.getId());
         patient.setId(id);
-        patient.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        patient.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         this.patientRepository.save(patient);
 
         return person;
@@ -272,7 +272,7 @@ public class PatientService {
      * @return integer to confirm archive
      */
     public Integer delete(Long id) {
-        String username = userService.getUserWithAuthorities().get().getUserName();
+        String username = userService.getUserWithRoles().get().getUserName();
         Optional<Patient> patientOptional = this.patientRepository.findById(id);
         if(!patientOptional.isPresent() || patientOptional.get().getArchived()==1)throw new EntityNotFoundException(Patient.class, "Id", id+"");
         //setting all patient archive to 1

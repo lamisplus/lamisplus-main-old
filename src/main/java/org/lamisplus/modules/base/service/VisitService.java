@@ -13,7 +13,6 @@ import org.lamisplus.modules.base.repository.*;
 import org.lamisplus.modules.base.util.CustomDateTimeFormat;
 import org.lamisplus.modules.base.util.UuidGenerator;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +21,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +63,7 @@ public class VisitService {
 
         Visit visit = visitMapper.toVisit(visitDTO);
         visit.setUuid(UuidGenerator.getUuid());
-        visit.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
+        visit.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         return this.visitRepository.save(visit);
     }
 
@@ -82,7 +80,7 @@ public class VisitService {
         Optional<Visit> visitOptional = this.visitRepository.findById(id);
         if (!visitOptional.isPresent() || visitOptional.get().getArchived() == 1 ) throw new EntityNotFoundException(Visit.class, "Id", id + "");
         visit.setId(id);
-        visit.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        visit.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return visitRepository.save(visit);
     }
 
@@ -90,7 +88,7 @@ public class VisitService {
         Optional<Visit> visitOptional = this.visitRepository.findById(id);
         if (!visitOptional.isPresent() || visitOptional.get().getArchived() == 1 ) throw new EntityNotFoundException(Visit.class, "Id", id + "");
         visitOptional.get().setArchived(1);
-        visitOptional.get().setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        visitOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return visitOptional.get().getArchived();
     }
     //TODO:

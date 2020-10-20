@@ -1,8 +1,5 @@
 package org.lamisplus.modules.base.domain.dto;
 
-
-
-import org.lamisplus.modules.base.domain.entity.Authority;
 import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.domain.entity.User;
 

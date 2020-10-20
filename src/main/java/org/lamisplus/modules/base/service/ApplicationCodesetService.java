@@ -57,7 +57,7 @@ public class ApplicationCodesetService {
         }
 
         final ApplicationCodeset applicationCodeset = applicationCodesetMapper.toApplicationCodeset(applicationCodesetDTO);
-        applicationCodeset.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
+        applicationCodeset.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         applicationCodeset.setCode(UuidGenerator.getUuid());
         return applicationCodesetRepository.save(applicationCodeset);
     }
@@ -87,7 +87,7 @@ public class ApplicationCodesetService {
         applicationCodeset.setId(id);
         applicationCodeset.setArchived(UN_ARCHIVED);
         applicationCodeset.setActive(ACTIVE);
-        applicationCodeset.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        applicationCodeset.setModifiedBy(userService.getUserWithRoles().get().getUserName());
 
         return applicationCodesetRepository.save(applicationCodeset);
     }
@@ -97,7 +97,7 @@ public class ApplicationCodesetService {
         if(!applicationCodesetOptional.isPresent() || applicationCodesetOptional.get().getArchived() == 1) throw new EntityNotFoundException(ApplicationCodeset.class,"Display:",id+"");
         applicationCodesetOptional.get().setArchived(ARCHIVED);
         applicationCodesetOptional.get().setActive(IN_ACTIVE);
-        applicationCodesetOptional.get().setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        applicationCodesetOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
 
         return applicationCodesetOptional.get().getArchived();
     }

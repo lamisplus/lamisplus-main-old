@@ -7,7 +7,7 @@ import org.lamisplus.modules.base.domain.entity.User;
 import org.lamisplus.modules.base.repository.RoleRepository;
 import org.lamisplus.modules.base.repository.PersonRepository;
 import org.lamisplus.modules.base.repository.UserRepository;
-import org.lamisplus.modules.base.security.AuthoritiesConstants;
+import org.lamisplus.modules.base.security.RolesConstants;
 import org.lamisplus.modules.base.security.SecurityUtils;
 import org.lamisplus.modules.base.util.UuidGenerator;
 import org.slf4j.Logger;
@@ -47,12 +47,12 @@ public class UserService {
 
     @Transactional
     public Optional<User> getUserWithAuthoritiesByUsername(String userName){
-        return userRepository.findOneWithAuthoritiesByUserName(userName);
+        return userRepository.findOneWithRolesByUserName(userName);
     }
 
     @Transactional(readOnly = true)
-    public  Optional<User> getUserWithAuthorities(){
-       return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByUserName);
+    public  Optional<User> getUserWithRoles(){
+       return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRolesByUserName);
     }
 
     public User registerUser(UserDTO userDTO, String password){
@@ -76,7 +76,7 @@ public class UserService {
         newUser.setPersonByPersonId(newPerson);
         newUser.setPersonId(newPerson.getId());
         Set<Role> roles = new HashSet<>();
-        roleRepository.findById(AuthoritiesConstants.USER).ifPresent(roles::add);
+        roleRepository.findById(RolesConstants.USER).ifPresent(roles::add);
         newUser.setRoles(roles);
         userRepository.save(newUser);
         log.debug("User Created: {}", newUser);

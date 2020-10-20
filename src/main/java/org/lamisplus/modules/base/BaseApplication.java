@@ -1,17 +1,29 @@
 package org.lamisplus.modules.base;
 
+import org.lamisplus.modules.base.domain.entity.Permission;
+import org.lamisplus.modules.base.domain.entity.Role;
+import org.lamisplus.modules.base.domain.entity.User;
+import org.lamisplus.modules.base.security.PermissionConstants;
+import org.lamisplus.modules.base.security.RolesConstants;
 import org.lamisplus.modules.base.service.ModuleService;
 import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.HashSet;
 
 @EnableScheduling
 @SpringBootApplication
-public class BaseApplication extends SpringBootServletInitializer {
+public class BaseApplication extends SpringBootServletInitializer implements CommandLineRunner {
 	private static ConfigurableApplicationContext context;
 
 	private static Boolean isStartUp = true;
@@ -44,6 +56,30 @@ public class BaseApplication extends SpringBootServletInitializer {
 
 	public static ConfigurableApplicationContext getContext(){
 		return context;
+	}
+
+	@PersistenceContext
+	EntityManager em;
+
+	@Transactional
+	@Override
+	public void run(String... args) throws Exception {
+
+		HashSet createdPermissions = new HashSet<>();
+
+		// Clear and Re-seed permissions
+		for (PermissionConstants.PermissionsEnum _permission : PermissionConstants.PermissionsEnum.values()) {
+			Permission permission = new Permission(_permission.toString());
+			createdPermissions.add(permission);
+			em.persist(permission);
+		}
+
+		Role admin = new Role(RolesConstants.ADMIN);
+		admin.setPermissions(createdPermissions);
+		em.persist(admin);
+
+		Role user = new Role(RolesConstants.USER);
+		em.persist(user);
 	}
 
 	/**

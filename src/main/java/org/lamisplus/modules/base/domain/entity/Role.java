@@ -22,7 +22,6 @@ public class Role {
     @Getter
     @Setter
     @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "Permission")
     private Set<Permission> permissions;
 
     @Override

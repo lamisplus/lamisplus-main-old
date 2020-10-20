@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +29,7 @@ public class UserDetailService implements UserDetailsService {
 
         String lowercaseUserName = userName.toLowerCase();
         return userRepository
-                .findOneWithAuthoritiesByUserName(lowercaseUserName)
+                .findOneWithRolesByUserName(lowercaseUserName)
                 .map(user -> createSecurityUser(lowercaseUserName, user))
                 .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseUserName + "was not found"));
 

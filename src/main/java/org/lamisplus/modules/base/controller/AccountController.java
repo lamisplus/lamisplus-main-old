@@ -4,7 +4,7 @@ import org.lamisplus.modules.base.controller.vm.ManagedUserVM;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.domain.entity.User;
 import org.lamisplus.modules.base.repository.UserRepository;
-import org.lamisplus.modules.base.security.AuthoritiesConstants;
+import org.lamisplus.modules.base.security.RolesConstants;
 import org.lamisplus.modules.base.service.UserService;
 import org.lamisplus.modules.base.util.PaginationUtil;
 import org.slf4j.Logger;
@@ -44,7 +44,7 @@ public class AccountController {
     @GetMapping("/account")
     public UserDTO getAccount(){
         return userService
-                .getUserWithAuthorities()
+                .getUserWithRoles()
                 .map(UserDTO::new)
                 .orElseThrow(() -> new AccountResourceException("User could not be found"));
     }
@@ -57,7 +57,7 @@ public class AccountController {
     }
 
     @GetMapping("/users")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasAuthority(\"" + RolesConstants.ADMIN + "\")")
     public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {
         final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
