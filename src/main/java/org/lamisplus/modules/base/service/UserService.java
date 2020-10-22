@@ -1,5 +1,6 @@
 package org.lamisplus.modules.base.service;
 
+import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.domain.entity.Role;
@@ -91,6 +92,13 @@ public class UserService {
     @Transactional(readOnly = true)
     public Page<UserDTO> getAllManagedUsers(Pageable pageable) {
         return userRepository.findAll(pageable).map(UserDTO::new);
+    }
+
+    public User update(Long id, User user) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if(!optionalUser.isPresent())throw new EntityNotFoundException(User.class, "Id", id +"");
+        user.setId(id);
+        return userRepository.save(user);
     }
 
 
