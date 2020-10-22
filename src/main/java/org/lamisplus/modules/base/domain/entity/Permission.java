@@ -20,11 +20,6 @@ public class Permission {
     @Setter
     private String name;
 
-    @Getter
-    @Setter
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    private Set<Role> roles;
-
     @Override
     public int hashCode() {
         if (id != null) {

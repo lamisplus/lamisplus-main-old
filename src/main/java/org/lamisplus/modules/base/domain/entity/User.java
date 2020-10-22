@@ -41,6 +41,6 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "clinicianByUserId")
     private List <ClinicianPatient> clinicianPatientByUser = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST)
     private Set<Role> roles;
 }

@@ -76,7 +76,12 @@ public class UserService {
         newUser.setPersonByPersonId(newPerson);
         newUser.setPersonId(newPerson.getId());
         Set<Role> roles = new HashSet<>();
-        roleRepository.findById(RolesConstants.USER).ifPresent(roles::add);
+        Role role = roleRepository.findAll().stream()
+                .filter(name -> RolesConstants.USER.equals(name.getName()))
+                .findAny()
+                .orElse(null);
+        if(role !=null)
+            roles.add(role);
         newUser.setRoles(roles);
         userRepository.save(newUser);
         log.debug("User Created: {}", newUser);

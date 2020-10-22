@@ -2,7 +2,6 @@ package org.lamisplus.modules.base;
 
 import org.lamisplus.modules.base.domain.entity.Permission;
 import org.lamisplus.modules.base.domain.entity.Role;
-import org.lamisplus.modules.base.domain.entity.User;
 import org.lamisplus.modules.base.security.PermissionConstants;
 import org.lamisplus.modules.base.security.RolesConstants;
 import org.lamisplus.modules.base.service.ModuleService;
@@ -19,72 +18,89 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.RollbackException;
+import javax.transaction.*;
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @EnableScheduling
 @SpringBootApplication
 public class BaseApplication extends SpringBootServletInitializer implements CommandLineRunner {
-	private static ConfigurableApplicationContext context;
+    private static ConfigurableApplicationContext context;
 
-	private static Boolean isStartUp = true;
+    private static Boolean isStartUp = true;
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(BaseApplication.class);
-	}
-	public static void main(String[] args) {
-		context = SpringApplication.run(BaseApplication.class, args);
-		ModuleService moduleService = context.getBean(ModuleService.class);
-		moduleService.startModule(isStartUp);
-	}
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(BaseApplication.class);
+    }
 
-	public static void restart(Class [] clz, ConfigurableApplicationContext configurableApplicationContext) {
-		if (context == null) {
-			context = configurableApplicationContext;
-		}
+    public static void main(String[] args) {
+        context = SpringApplication.run(BaseApplication.class, args);
+        ModuleService moduleService = context.getBean(ModuleService.class);
+        moduleService.startModule(isStartUp);
+    }
 
-		ApplicationArguments args = context.getBean(ApplicationArguments.class);
+    public static void restart(Class[] clz, ConfigurableApplicationContext configurableApplicationContext) {
+        if (context == null) {
+            context = configurableApplicationContext;
+        }
 
-		Thread thread = new Thread(() -> {
-			context.close();
-			context = SpringApplication.run(clz, args.getSourceArgs());
-		});
+        ApplicationArguments args = context.getBean(ApplicationArguments.class);
 
-		thread.setDaemon(false);
-		thread.start();
-	}
+        Thread thread = new Thread(() -> {
+            context.close();
+            context = SpringApplication.run(clz, args.getSourceArgs());
+        });
 
-	public static ConfigurableApplicationContext getContext(){
-		return context;
-	}
+        thread.setDaemon(false);
+        thread.start();
+    }
 
-	@PersistenceContext
-	EntityManager em;
+    public static ConfigurableApplicationContext getContext() {
+        return context;
+    }
 
-	@Transactional
-	@Override
-	public void run(String... args) throws Exception {
+    @PersistenceContext
+    EntityManager em;
 
-		HashSet createdPermissions = new HashSet<>();
+    @Transactional
+    @Override
+    public void run(String... args) throws Exception {
 
-		// Clear and Re-seed permissions
-		for (PermissionConstants.PermissionsEnum _permission : PermissionConstants.PermissionsEnum.values()) {
-			Permission permission = new Permission(_permission.toString());
-			createdPermissions.add(permission);
-			em.persist(permission);
-		}
+        HashSet createdPermissions = new HashSet<>();
 
-		Role admin = new Role(RolesConstants.ADMIN);
-		admin.setPermissions(createdPermissions);
-		em.persist(admin);
+        // Seed permissions
+        List<Permission> permissionsObject = em.createQuery("SELECT a FROM Permission a", Permission.class).getResultList();
+        List<String> permissions = permissionsObject.stream()
+                .map(Permission::getName)
+                .collect(Collectors.toList());
+        for (PermissionConstants.PermissionsEnum _permission : PermissionConstants.PermissionsEnum.values()) {
+            if (!permissions.contains(_permission.toString())) {
+                Permission permission = new Permission(_permission.toString());
+                createdPermissions.add(permission);
+                em.persist(permission);
+            }
+        }
+        List<Role> RolesObject = em.createQuery("SELECT a FROM Role a", Role.class).getResultList();
+        List<String> Roles = RolesObject.stream()
+                .map(Role::getName)
+                .collect(Collectors.toList());
+        if (!Roles.contains(RolesConstants.ADMIN)) {
+            Role admin = new Role(RolesConstants.ADMIN);
+            admin.setPermissions(createdPermissions);
+            em.persist(admin);
+        }
+        if (!Roles.contains(RolesConstants.USER)) {
+            Role user = new Role(RolesConstants.USER);
+            em.persist(user);
+        }
+    }
 
-		Role user = new Role(RolesConstants.USER);
-		em.persist(user);
-	}
-
-	/**
-	 * Refresh the given application context, if necessary.
-	 */
+    /**
+     * Refresh the given application context, if necessary.
+     */
 	/*protected void refreshApplicationContext(ApplicationContext applicationContext) {
 		if (applicationContext instanceof ConfigurableApplicationContext) {
 			ConfigurableApplicationContext cac = (ConfigurableApplicationContext) applicationContext;
