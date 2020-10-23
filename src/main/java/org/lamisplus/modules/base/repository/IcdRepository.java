@@ -17,4 +17,5 @@ public interface IcdRepository extends JpaRepository<Icd, Long>, JpaSpecificatio
     @Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.IcdDistinctDTO" +
             "(i.categoryCode, i.categoryTitle) FROM Icd i ORDER BY i.categoryCode")
     List<IcdDistinctDTO> findDistinctCategoryCodeAndCategoryTitle();
+
 }

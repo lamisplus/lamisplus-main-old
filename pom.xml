@@ -191,6 +191,7 @@
 			<artifactId>okhttp</artifactId>
 			<version>4.2.2</version>
 		</dependency>
+<<<<<<< HEAD
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
@@ -202,6 +203,17 @@
 			<version>1.26</version>
 		</dependency>
 	</dependencies>
+=======
+
+		<!-- Jasper reports dependency. -->
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.4.0</version>
+		</dependency>
+
+    </dependencies>
+>>>>>>> features/alex
 
 	<build>
 		<finalName>${project.artifactId}</finalName>

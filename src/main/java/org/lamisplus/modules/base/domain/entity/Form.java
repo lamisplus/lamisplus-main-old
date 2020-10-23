@@ -1,10 +1,15 @@
 package org.lamisplus.modules.base.domain.entity;
 
+<<<<<<< HEAD
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+=======
+import com.fasterxml.jackson.annotation.*;
+import lombok.*;
+>>>>>>> features/alex
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
