@@ -20,7 +20,7 @@ public class RoleService {
 
 
     public Role save(Role role) {
-        Optional<Role> RoleOptional = roleRepository.FindByName(role.getName());
+        Optional<Role> RoleOptional = roleRepository.findByName(role.getName());
         if (RoleOptional.isPresent()) throw new RecordExistException(Role.class, "Name", role.getName());
         return roleRepository.save(role);
     }

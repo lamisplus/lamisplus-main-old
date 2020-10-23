@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.controller;
 import lombok.RequiredArgsConstructor;
 import org.lamisplus.modules.base.domain.entity.Permission;
 import org.lamisplus.modules.base.domain.entity.Role;
+import org.lamisplus.modules.base.repository.PermissionRepository;
 import org.lamisplus.modules.base.repository.RoleRepository;
 import org.lamisplus.modules.base.service.RoleService;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.util.List;
 public class RoleController {
     private final RoleService roleService;
     private final RoleRepository roleRepository;
+    private final PermissionRepository permissionRepository;
 
     @GetMapping("/{id}")
     public ResponseEntity<Role> get(@PathVariable Long id) {
@@ -30,8 +32,21 @@ public class RoleController {
         try {
             Role role = roleRepository.findById(id).get();
             HashSet permissionsSet = new HashSet<>();
+            Permission permissionToAdd = new Permission();
             for(Permission p : permissions){
                 permissionsSet.add(p);
+            }
+            for(Permission p : permissions){
+                // add permissions by either id or name
+                if(null != p.getName()) {
+                    permissionToAdd = permissionRepository.findByName(p.getName()).get();
+                } else if(p.getId() != null ){
+                    permissionToAdd = permissionRepository.findById(p.getId()).get();
+                } else {
+                    ResponseEntity.badRequest();
+                    return null;
+                }
+                permissionsSet.add(permissionToAdd);
             }
             role.setPermissions(permissionsSet);
             roleService.update(id, role);
