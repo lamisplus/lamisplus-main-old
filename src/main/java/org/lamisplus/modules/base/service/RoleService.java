@@ -18,7 +18,6 @@ import java.util.Optional;
 public class RoleService {
     private final RoleRepository roleRepository;
 
-
     public Role save(Role role) {
         Optional<Role> RoleOptional = roleRepository.findByName(role.getName());
         if (RoleOptional.isPresent()) throw new RecordExistException(Role.class, "Name", role.getName());

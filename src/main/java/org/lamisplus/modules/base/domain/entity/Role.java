@@ -21,10 +21,7 @@ public class Role {
 
     @Getter
     @Setter
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToMany(cascade = CascadeType.PERSIST)
     private Set<Permission> permissions;
 
     @Override

@@ -34,9 +34,6 @@ public class RoleController {
             HashSet permissionsSet = new HashSet<>();
             Permission permissionToAdd = new Permission();
             for(Permission p : permissions){
-                permissionsSet.add(p);
-            }
-            for(Permission p : permissions){
                 // add permissions by either id or name
                 if(null != p.getName()) {
                     permissionToAdd = permissionRepository.findByName(p.getName()).get();
