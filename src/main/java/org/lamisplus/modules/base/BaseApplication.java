@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base;
 
 import org.lamisplus.modules.base.service.ModuleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,6 +16,7 @@ public class BaseApplication extends SpringBootServletInitializer {
 	private static ConfigurableApplicationContext context;
 
 	private static Boolean isStartUp = true;
+
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -31,11 +33,14 @@ public class BaseApplication extends SpringBootServletInitializer {
 			context = configurableApplicationContext;
 		}
 		ApplicationArguments args = context.getBean(ApplicationArguments.class);
-
 		Thread thread = new Thread(() -> {
-			context.close();
-			SpringApplication.run(clz, args.getSourceArgs());
-
+			try {
+				context.close();
+				SpringApplication.run(clz, args.getSourceArgs());
+			}catch (Exception ex){
+				ex.printStackTrace();
+				SpringApplication.run(BaseApplication.class, args.getSourceArgs());
+			}
 		});
 
 		thread.setDaemon(false);

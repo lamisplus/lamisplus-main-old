@@ -2,6 +2,8 @@ package org.lamisplus.modules.base.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +52,8 @@ public class JsonUtils {
     }
 
     private static String concatenate(String fileName) {
-        return "src/main/resources/test/"+fileName;
+        Path path = Paths.get("src","test", "java", "resource" + fileName);
+        return path.toString();
     }
 
 

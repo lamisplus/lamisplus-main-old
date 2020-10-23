@@ -45,7 +45,6 @@ public class StorageUtil {
         if(newName != null){
             filename = newName;
         }
-        System.out.println("file name is " + filename);
 
         try {
 
@@ -70,7 +69,7 @@ public class StorageUtil {
             inputStream.close();
 
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             throw new RuntimeException("Failed to store file " + filename, e);
         } finally {
             try {
