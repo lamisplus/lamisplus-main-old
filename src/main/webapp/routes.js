@@ -18,7 +18,10 @@ const DashboardPage = React.lazy(() => import("pages/DashboardPage"));
 const AdministrativeDashboard = React.lazy(() => import("components/Admin/HomePage"));
 /* New Page loading using easy loading */
 const PateintRegistationPage = React.lazy(() =>
-  import("components/Patient/PateintRegistationPage")
+    import("components/Patient/PateintRegistationPage")
+);
+const PatientRegistrationFormio = React.lazy(() =>
+    import("components/Patient/PatientRegistrationFormio")
 );
 const PateintUpdate= React.lazy(() => import("components/Patient/EditPatient"));
 const CheckInPage = React.lazy(() => import("components/CheckIn/CheckInPage"));
@@ -120,6 +123,10 @@ class Routes extends Component {
                 exact
                 path="/patient-registration"
                 component={PateintRegistationPage}/>
+                <PrivateRoute
+                    exact
+                    path="/patient-registration-formio"
+                    component={PatientRegistrationFormio}/>
               <PrivateRoute
                 exact
                 path="/patient-update"

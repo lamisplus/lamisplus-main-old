@@ -39,6 +39,16 @@ const GeneralPatientSearch = props => {
                 
               </Button>
             </Link>
+            {/*<Link to="/patient-registration-formio">*/}
+            {/*  <Button*/}
+            {/*      variant="contained"*/}
+            {/*      color="primary"*/}
+            {/*      className=" float-right mr-1"*/}
+            {/*      startIcon={<FaUserPlus />}*/}
+            {/*  >*/}
+            {/*    <span style={{textTransform: 'capitalize'}}>Add Patient - (Formio)</span>*/}
+            {/*  </Button>*/}
+            {/*</Link>*/}
             <br />
           </Title>
           <br />
