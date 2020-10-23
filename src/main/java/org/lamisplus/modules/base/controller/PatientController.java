@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.dto.*;
 import org.lamisplus.modules.base.domain.entity.Encounter;
+import org.lamisplus.modules.base.domain.entity.Form;
 import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.service.PatientService;
 import org.lamisplus.modules.base.util.PaginationUtil;
@@ -52,23 +53,10 @@ public class PatientController {
         return ResponseEntity.ok(this.patientService.exist(hospitalNumber));
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Person> save(@RequestBody PatientDTO patientDTO) throws URISyntaxException {
-        Person person = this.patientService.save(patientDTO);
-        return ResponseEntity.created(new URI("/api/patients/" + person.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(person.getId()))).body(person);
-    }
-
-    @PutMapping("/{id}")
-    public Person update(@PathVariable Long id, @RequestBody PatientDTO patientDTO) {
-        return this.patientService.update(id, patientDTO);
-    }
-
     @GetMapping("/{id}/encounters/{formCode}")
     public ResponseEntity<List> getEncountersByPatientIdAndFormCode(@PathVariable Long id,
-                                                                       @PathVariable String formCode, @RequestParam(required = false) String sortOrder,
-                                                                       @RequestParam (required = false) String sortField, @RequestParam(required = false) Integer limit){
+                                                                    @PathVariable String formCode, @RequestParam(required = false) String sortOrder,
+                                                                    @RequestParam (required = false) String sortField, @RequestParam(required = false) Integer limit){
         return ResponseEntity.ok(this.patientService.getEncountersByPatientIdAndFormCode(id, formCode, sortField, sortOrder, limit));
     }
 
@@ -109,6 +97,12 @@ public class PatientController {
         return ResponseEntity.ok(this.patientService.getAllEncountersByPatientId(id));
     }
 
+    //TODO: in progress...
+    @GetMapping("/{id}/{programCode}/form")
+    public ResponseEntity<List<Form>> getAllFormsByPatientIdAndPrecedence(@PathVariable Long patientId, @PathVariable String programCode){
+        return ResponseEntity.ok(this.patientService.getAllFormsByPatientIdAndPrecedence(patientId, programCode));
+    }
+
 /*    @ApiOperation(value="getFormsByPatientId", notes = " id=required, formCode=required\n\n")
     @GetMapping("/{id}/{formCode}")
     public ResponseEntity<List<EncounterDTO>> getFormsByPatientId(@PathVariable Long id, @PathVariable String formCode) throws BadRequestAlertException {
@@ -121,6 +115,21 @@ public class PatientController {
     public ResponseEntity<List<Form>> getFormsByPatientId(@PathVariable Long id) throws BadRequestAlertException {
         return ResponseEntity.ok(this.patientService.getFormsByPatientId(id, formCode));
     }*/
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Person> save(@RequestBody PatientDTO patientDTO) throws URISyntaxException {
+        Person person = this.patientService.save(patientDTO);
+        return ResponseEntity.created(new URI("/api/patients/" + person.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(person.getId()))).body(person);
+    }
+
+    @PutMapping("/{id}")
+    public Person update(@PathVariable Long id, @RequestBody PatientDTO patientDTO) {
+        return this.patientService.update(id, patientDTO);
+    }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> delete(@PathVariable Long id) {

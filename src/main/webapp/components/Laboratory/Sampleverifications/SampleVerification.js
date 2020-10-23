@@ -194,7 +194,7 @@ return (
                         <Link 
                             to ={{ 
                               pathname: "/laboratory",  
-                              activetab: 1
+                              state: 'sample-verification'
                             }} >
                     
                             <MatButton

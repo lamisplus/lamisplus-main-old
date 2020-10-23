@@ -36,8 +36,8 @@ public class ApplicationCodesetService {
 
 
 
-    public List<ApplicationCodesetDTO> getAllApplicationCodeset(){
-        Specification<ApplicationCodeset> applicationCodesetSpecification = genericSpecification.findAllApplicationCodeset();
+    public List<ApplicationCodesetDTO> getAllApplicationCodeset(int active){
+        Specification<ApplicationCodeset> applicationCodesetSpecification = genericSpecification.findAll(active);
         List<ApplicationCodeset> applicationCodesets = applicationCodesetRepository.findAll(applicationCodesetSpecification);
 
         List<ApplicationCodesetDTO> applicationCodesetDTOS = new ArrayList<>();

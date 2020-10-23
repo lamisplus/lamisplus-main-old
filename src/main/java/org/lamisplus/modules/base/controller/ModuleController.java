@@ -31,9 +31,15 @@ public class ModuleController {
         return ResponseEntity.ok(this.moduleService.getAllModules());
     }
 
-    @GetMapping("{moduleStatus}")
-    public ResponseEntity<List<Module>> getAllModuleByModuleStatus(@PathVariable int moduleStatus) {
-        return ResponseEntity.ok(this.moduleService.getAllModuleByModuleStatus(moduleStatus));
+    @GetMapping("{moduleType}")
+    public ResponseEntity<List<Module>> getAllModuleByModuleStatus(@PathVariable int moduleType) {
+        return ResponseEntity.ok(this.moduleService.getAllModuleByModuleStatus(moduleType));
+    }
+
+    @GetMapping("{moduleStatus}/{batchNo}")
+    public ResponseEntity<List<Module>> getAllModuleByModuleStatusAndBatchNo(@PathVariable int moduleStatus,
+                                                                             @PathVariable String batchNo) {
+        return ResponseEntity.ok(this.moduleService.getAllModuleByModuleStatusAndBatchNo(moduleStatus, batchNo));
     }
 
     @PostMapping
@@ -44,14 +50,13 @@ public class ModuleController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<List<Module>> uploadAndUnzip(@RequestParam("file1") MultipartFile [] jarFile,
-                                                       @RequestParam Boolean overrideExistFile) {
-        return ResponseEntity.ok(moduleService.uploadAndUnzip(jarFile, overrideExistFile));
+    public ResponseEntity<List<Module>> uploadAndUnzip(@RequestParam("file1") MultipartFile [] jarFile) {
+        return ResponseEntity.ok(moduleService.uploadAndUnzip(jarFile));
     }
 
     @PostMapping("{id}/install")
     public ResponseEntity<Module> installModule(@PathVariable Long id) {
-        return ResponseEntity.ok(moduleService.installModule(id));
+        return ResponseEntity.ok(moduleService.installModule(id, null));
     }
 
     @PostMapping("/start/all")
@@ -63,5 +68,7 @@ public class ModuleController {
     public ResponseEntity<Boolean> delete(@PathVariable Long id) {
         return ResponseEntity.ok(moduleService.delete(id));
     }
+
+    //TODO: CREATE endpoint for getting all external module only
 
 }

@@ -37,7 +37,7 @@ public class StorageUtil {
         return this.rootLocation = path;
     }
 
-    public Path store(String module, MultipartFile file, Boolean overrideExistFile, String newName) {
+    public Path store(String module, MultipartFile file, String newName) {
         Path filePath;
         InputStream inputStream = null;
         module = module.toLowerCase().trim();
@@ -47,10 +47,9 @@ public class StorageUtil {
         }
         System.out.println("file name is " + filename);
 
-        //TODO: check...
         try {
 
-            if((overrideExistFile != null && overrideExistFile == true) && Files.exists(rootLocation.resolve(module))){
+            if(Files.exists(rootLocation.resolve(module))){
                 try {
                     Files.delete(rootLocation.resolve(module));
                 }catch (NullPointerException npe){

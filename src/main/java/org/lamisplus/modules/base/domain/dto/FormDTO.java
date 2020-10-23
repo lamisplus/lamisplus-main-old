@@ -19,6 +19,8 @@ public class FormDTO {
 
     private String resourcePath;
 
+    private Object formPrecedence;
+
     private String programCode;
 
     private String version;
