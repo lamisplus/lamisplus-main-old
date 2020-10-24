@@ -88,7 +88,8 @@ const CreateModule = (props) => {
 
     useEffect(() => {
       const onSuccess = (data) => {
-          setUploadResponse(data)
+          //setUploadResponse(data)
+          setUploadModuleList(data)
          }
       const onError = () => {}
         props.fetchAllBootstrapModuleBYBatchNum(moduleStatus,moduleBatchNum, onSuccess,onError)
@@ -126,10 +127,10 @@ const CreateModule = (props) => {
   }
 
   const handleInstallModule = (id) => {
-    setDisabledNextButton(true)
-    setInstallationOverlay(true)
-    setDisableNextButtonProcess(true)
-    const onSuccess = (installResponse) => {
+      setDisabledNextButton(true)
+      setInstallationOverlay(true)
+      setDisableNextButtonProcess(true)
+      const onSuccess = (installResponse) => {
       const installModuleDetail = installResponse
       console.log(installResponse)
       setDisabledNextButton(false)
@@ -239,6 +240,29 @@ const CreateModule = (props) => {
     </Menu>
       )
 }
+
+const sampleActionForLastStage = (id) =>{
+
+  return (
+    <Menu>
+    <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
+      Actions <span aria-hidden>▾</span>
+    </MenuButton>
+        <MenuList style={{ color:"#000 !important"}} >
+            
+              <MenuItem  style={{ color:"#000 !important"}} >                      
+              
+                    <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Remove Module</span>
+                                        
+              </MenuItem>                                     
+              
+      </MenuList>
+  </Menu>
+    )
+}
+
+
+
 
   function getStepContent(stepIndex) {
     switch (stepIndex) {
@@ -368,6 +392,34 @@ const CreateModule = (props) => {
             </Alert>
               <br/>
               <br/>
+              <Table striped>
+                        <thead style={{  backgroundColor:'#9F9FA5' }}>
+                        <tr>
+                          
+                          <th>Module Name</th>
+                          <th>Description</th>
+                          <th>Author</th>
+                          <th>Version</th>
+                          <th>Status</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                          {uploadResponse.map((row) => (
+                          <tr key={row.id}>
+                            <td>{row.name===""?" ":row.name}</td>
+                            <td>{row.description===""?" ":row.description}</td>
+                            <td>{row.createdBy===""?" ":row.createdBy}</td>
+                            <td>{row.version===""?" ":row.version}</td>
+                            <td><Badge  color="primary">{row.status===1 ? "Uploaded":"Installed"}</Badge></td>
+                            <td>{sampleActionForLastStage(row.id)}</td>
+                          </tr>
+
+                          ))
+                        }
+                        
+                      </tbody>
+                    </Table>
           </>
         );
       default:

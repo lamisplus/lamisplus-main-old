@@ -13,9 +13,9 @@ import HighchartsReact from 'highcharts-react-official';
 import {Card,CardBody,CardHeader,CardTitle,Col,Row,} from 'reactstrap';
 import {genderChart} from './DashBoardVisualisation/GenderChart';
 import {combineChart} from './DashBoardVisualisation/CombineChart'
-import CustomHighMap from './map'
-import worldMaps from './../components/Highcharts/WorldMap'
-
+import CustomHighMap from './map';
+import {deathChart} from './DashBoardVisualisation/DeathChart';
+import {birthChart} from './DashBoardVisualisation/BirthChart';
 
 const cardStyle = {
   borderColor: '#fff',
@@ -23,7 +23,7 @@ const cardStyle = {
 
 const options = {
   title: {
-    text: 'My chart'
+    text: 'Total Number of Death'
   },
   series: [{
     data: [1, 10, 3, 10]
@@ -200,11 +200,9 @@ class DashboardPage extends React.Component {
               <CardBody>
                 <HighchartsReact
                   highcharts={Highcharts}
-                  options={options}
+                  options={deathChart}
                 />
-                <>
-                  <worldMaps />
-                </>
+                
               </CardBody>
             </Card>
           </Col>
@@ -213,9 +211,10 @@ class DashboardPage extends React.Component {
             <Card>
               <CardHeader></CardHeader>
               <CardBody>
-                <>
-                  <CustomHighMap />
-                </>
+                <HighchartsReact
+                  highcharts={Highcharts}
+                  options={birthChart}
+                />
               
               </CardBody>
             </Card>

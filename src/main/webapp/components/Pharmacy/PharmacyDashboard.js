@@ -246,7 +246,7 @@ const ScrollableTabsButtonForce = (props) => {
           <br />
           <br />
           <Grid container spacing={2}>
-            <Grid item xs={6}>
+            {/* <Grid item xs={6}>
               <Card>
                 <CardHeader> Recent Dispensed Orders</CardHeader>
 
@@ -257,8 +257,8 @@ const ScrollableTabsButtonForce = (props) => {
                   />
                 </CardBody>
               </Card>
-            </Grid>
-            <Grid item xs={6}>
+            </Grid> */}
+            {/* <Grid item xs={6}>
               <Card>
                 <CardHeader> Recent Pending Orders</CardHeader>
 
@@ -269,7 +269,7 @@ const ScrollableTabsButtonForce = (props) => {
                   />
                 </CardBody>
               </Card>
-            </Grid>
+            </Grid> */}
           </Grid>
         </TabPanel>
         <TabPanel value={value} index={1}>

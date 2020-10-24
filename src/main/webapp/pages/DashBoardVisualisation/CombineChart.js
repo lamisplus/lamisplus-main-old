@@ -10,10 +10,10 @@ xAxis: {
 },
 labels: {
     items: [{
-        html: 'Total Checked In, Checked Out and Emergency Patient',
+        html: 'Total Appointment , Attendance and Emergencies',
         style: {
             left: '50px',
-            top: '18px',
+            top: '2px',
             color: ( // theme
                 Highcharts.defaultOptions.title.style &&
                 Highcharts.defaultOptions.title.style.color
@@ -23,46 +23,15 @@ labels: {
 },
 series: [{
     type: 'column',
-    name: 'Checkin',
+    name: 'Appointment',
     data: [3, 2, 1, 3, 4]
 }, {
     type: 'column',
-    name: 'Checkout',
+    name: 'Attendance',
     data: [2, 3, 5, 7, 6]
 }, {
     type: 'column',
-    name: 'Emergency',
+    name: 'Emergencies',
     data: [4, 3, 3, 9, 0]
-}, {
-    type: 'spline',
-    name: 'Average',
-    data: [3, 2.67, 3, 6.33, 3.33],
-    marker: {
-        lineWidth: 2,
-        lineColor: Highcharts.getOptions().colors[3],
-        fillColor: 'white'
-    }
-}, {
-    type: 'pie',
-    name: 'Total Checked In, Checked Out and Emergency Patient',
-    data: [{
-        name: 'Checkin',
-        y: 13,
-        color: Highcharts.getOptions().colors[0] // Jane's color
-    }, {
-        name: 'Checkout',
-        y: 23,
-        color: Highcharts.getOptions().colors[1] // John's color
-    }, {
-        name: 'Emergency',
-        y: 19,
-        color: Highcharts.getOptions().colors[2] // Joe's color
-    }],
-    center: [100, 80],
-    size: 100,
-    showInLegend: false,
-    dataLabels: {
-        enabled: false
-    }
-}]
+}, ]
 };

@@ -35,7 +35,7 @@ export const genderChart = {
         data: [
             ['Male', 45.0],
             ['Female', 26.8],
-            
+            ['pediatric', 26.8],
         ]
     }]
 };
