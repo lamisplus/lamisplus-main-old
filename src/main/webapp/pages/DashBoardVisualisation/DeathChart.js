@@ -1,49 +1,44 @@
 //import React from 'react';
 import Highcharts from 'highcharts';
 
-export  const deathChart = {
-  chart: {
-    type: 'spline'
+export const deathChart = {
+
+chart: {
+  type: 'column',
+  options3d: {
+      enabled: true,
+      alpha: 10,
+      beta: 25,
+      depth: 70
+  }
 },
 title: {
-    text: 'Death Rate In 6 Month'
+  text: 'Total Death Rate for the pass 6 months'
 },
 subtitle: {
-    text: ''
-},
-xAxis: {
-    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'
-        ]
-},
-yAxis: {
-    title: {
-        text: 'Death Rate'
-    },
-    labels: {
-        // formatter: function () {
-        //     return this.value + '°';
-        // }
-    }
-},
-tooltip: {
-    crosshairs: true,
-    shared: true
+  text: ''
 },
 plotOptions: {
-    spline: {
-        // marker: {
-        //     radius: 4,
-        //     lineColor: '#666666',
-        //     lineWidth: 1
-        // }
-    }
+  column: {
+      depth: 25
+  }
+},
+xAxis: {
+  categories: Highcharts.getOptions().lang.shortMonths,
+  labels: {
+      skew3d: true,
+      style: {
+          fontSize: '16px'
+      }
+  }
+},
+yAxis: {
+  title: {
+      text: null
+  }
 },
 series: [{
-    name: 'Death',
-    // marker: {
-    //     symbol: 'square'
-    // },
-    data: [ 14.5, 18.2, 21.5, 25.2, 6, 18.3]
-
+  name: 'Birth Rate',
+  data: [2, 3, null, 4, 0, 8]
 }]
 };

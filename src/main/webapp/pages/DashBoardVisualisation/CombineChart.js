@@ -6,7 +6,7 @@ export const combineChart = {
     text: 'Combination chart'
 },
 xAxis: {
-    categories: ['Jan.', 'Feb.', 'March', 'April', 'May']
+    categories: ['Jan.', 'Feb.', 'March', 'April', 'May', 'June']
 },
 labels: {
     items: [{
@@ -24,14 +24,14 @@ labels: {
 series: [{
     type: 'column',
     name: 'Appointment',
-    data: [3, 2, 1, 3, 4]
+    data: [3, 2, 1, 3, 4,5]
 }, {
     type: 'column',
     name: 'Attendance',
-    data: [2, 3, 5, 7, 6]
+    data: [2, 3, 5, 7, 6,5]
 }, {
     type: 'column',
     name: 'Emergencies',
-    data: [4, 3, 3, 9, 0]
+    data: [4, 3, 3, 9, 0,4]
 }, ]
 };

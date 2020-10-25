@@ -132,14 +132,13 @@ const CreateModule = (props) => {
       setDisableNextButtonProcess(true)
       const onSuccess = (installResponse) => {
       const installModuleDetail = installResponse
-      console.log(installResponse)
-      setDisabledNextButton(false)
-      setInstallationOverlay(false) 
-      setDisableNextButtonProcess(false)
       var foundIndex = uploadResponse.findIndex(x => x.batchNo == installModuleDetail.batchNo);
       uploadResponse[foundIndex] = installModuleDetail
       console.log(uploadResponse)
-      
+      console.log(installResponse)
+      setDisabledNextButton(false)
+      setInstallationOverlay(false) 
+      setDisableNextButtonProcess(false)    
     }
     const onError = () => {
       setDisabledNextButton(false)
@@ -240,27 +239,6 @@ const CreateModule = (props) => {
     </Menu>
       )
 }
-
-const sampleActionForLastStage = (id) =>{
-
-  return (
-    <Menu>
-    <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
-      Actions <span aria-hidden>▾</span>
-    </MenuButton>
-        <MenuList style={{ color:"#000 !important"}} >
-            
-              <MenuItem  style={{ color:"#000 !important"}} >                      
-              
-                    <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Remove Module</span>
-                                        
-              </MenuItem>                                     
-              
-      </MenuList>
-  </Menu>
-    )
-}
-
 
 
 
@@ -401,7 +379,7 @@ const sampleActionForLastStage = (id) =>{
                           <th>Author</th>
                           <th>Version</th>
                           <th>Status</th>
-                          <th>Action</th>
+                          
                         </tr>
                       </thead>
                       <tbody>
@@ -412,7 +390,7 @@ const sampleActionForLastStage = (id) =>{
                             <td>{row.createdBy===""?" ":row.createdBy}</td>
                             <td>{row.version===""?" ":row.version}</td>
                             <td><Badge  color="primary">{row.status===1 ? "Uploaded":"Installed"}</Badge></td>
-                            <td>{sampleActionForLastStage(row.id)}</td>
+                           
                           </tr>
 
                           ))

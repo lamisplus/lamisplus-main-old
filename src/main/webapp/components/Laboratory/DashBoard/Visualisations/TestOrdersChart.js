@@ -1,57 +1,55 @@
-export const testOrders = {
-  chart: {
-      type: 'column'
-  },
-  title: {
-      text: 'Test Orders'
-  },
-  subtitle: {
-      text: ''
-  },
-  xAxis: {
-      categories: [
-          'Jan',
-          'Feb',
-          'Mar',
-          'Apr',
-          'May',
-          'Jun',
-          'Jul',
-          'Aug',
-          'Sep',
-          'Oct',
-          'Nov',
-          'Dec'
-      ],
-      crosshair: true
-  },
-  yAxis: {
-      min: 0,
-      title: {
-          text: 'TestOrders'
-      }
-  },
-  tooltip: {
-      headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-      pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-          '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
-      footerFormat: '</table>',
-      shared: true,
-      useHTML: true
-  },
-  plotOptions: {
-      column: {
-          pointPadding: 0.2,
-          borderWidth: 0
-      }
-  },
-  series: [{
-      name: 'Test Ordered',
-      data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+export const testOrders =  {
 
-  }, {
-      name: 'Result Available',
-      data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
-
-  }]
-};
+    chart: {
+        type: 'column'
+    },
+  
+    title: {
+        text: 'Test Orders'
+    },
+  
+    xAxis: {
+        categories: ['Jan.', 'Feburary', 'March', 'April', 'May', 'June']
+    },
+  
+    yAxis: {
+        allowDecimals: false,
+        min: 0,
+        title: {
+            text: 'Tests Ordered'
+        }
+    },
+  
+    tooltip: {
+        formatter: function () {
+            return '<b>' + this.x + '</b><br/>' +
+                this.series.name + ': ' + this.y + '<br/>' +
+                'Total: ' + this.point.stackTotal;
+        }
+    },
+  
+    plotOptions: {
+        column: {
+            stacking: 'normal'
+        }
+    },
+  
+    series: [{
+        name: 'Test Ordered',
+        data: [5, 3, 4, 7, 2,6],
+        stack: 'test'
+    }, {
+        name: 'Result Avialable',
+        data: [3, 4, 4, 2, 5,5],
+        stack: 'test'
+    }, {
+        name: 'Radiology Test Orders',
+        data: [2, 5, 6, 2, 1,7],
+        stack: 'result'
+    }, {
+        name: 'Radiology Result Avialable',
+        data: [3, 0, 4, 4, 3,8],
+        stack: 'result'
+    }]
+  
+  };

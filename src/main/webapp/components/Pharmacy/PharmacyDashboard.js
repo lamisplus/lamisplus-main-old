@@ -226,7 +226,7 @@ const ScrollableTabsButtonForce = (props) => {
         <TabPanel value={value} index={0}>
           <CardDeck>
             <Card>
-              <CardHeader> Most Commonly Prescribed Drugs</CardHeader>
+              <CardHeader> Total Prescriptions and Dispensed Drugs in last 7days</CardHeader>
               <CardBody>
                 <div>
                     <HighchartsReact options={drugChart} />
