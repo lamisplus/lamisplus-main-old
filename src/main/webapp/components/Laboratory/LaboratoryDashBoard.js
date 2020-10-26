@@ -137,7 +137,7 @@ const useStyles = makeStyles(theme => ({
 
   const userProgressTableData = 
       [
-          {name: 'Total Sample Transfered'},
+  
           {name: 'Total Sample Dispatached'},
           {name: 'Total Sample Results'},
           {name: 'Total Sample Rejected'}
@@ -183,7 +183,7 @@ export default function LaboratoryDashBoard(props) {
                     </Grid>
                   <Grid item xs='4'>
                       <Card  >
-                          <CardHeader> Recent LIMS Analysis</CardHeader>
+                          <CardHeader> Recent LIMS Analysis for the past 7days</CardHeader>
                               <CardBody>
                                   <UserProgressTable
                                       headers={['' ]}

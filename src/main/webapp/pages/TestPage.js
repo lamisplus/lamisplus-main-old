@@ -93,18 +93,18 @@ var stackBar = {
   },
 
   title: {
-      text: 'Total fruit consumption, grouped by gender'
+      text: 'Test Orders'
   },
 
   xAxis: {
-      categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+      categories: ['Jan.', 'Feburary', 'March', 'April', 'May', 'June']
   },
 
   yAxis: {
       allowDecimals: false,
       min: 0,
       title: {
-          text: 'Number of fruits'
+          text: 'Tests Ordered'
       }
   },
 
@@ -123,21 +123,21 @@ var stackBar = {
   },
 
   series: [{
-      name: 'John',
-      data: [5, 3, 4, 7, 2],
-      stack: 'male'
+      name: 'Test Ordered',
+      data: [5, 3, 4, 7, 2,6],
+      stack: 'test'
   }, {
-      name: 'Joe',
-      data: [3, 4, 4, 2, 5],
-      stack: 'male'
+      name: 'Result Avilable',
+      data: [3, 4, 4, 2, 5,5],
+      stack: 'test'
   }, {
-      name: 'Jane',
-      data: [2, 5, 6, 2, 1],
-      stack: 'female'
+      name: 'Radiology Test Orders',
+      data: [2, 5, 6, 2, 1,7],
+      stack: 'result'
   }, {
-      name: 'Janet',
-      data: [3, 0, 4, 4, 3],
-      stack: 'female'
+      name: 'Radiology Result Avialable',
+      data: [3, 0, 4, 4, 3,8],
+      stack: 'result'
   }]
 
 };

@@ -13,9 +13,9 @@ import HighchartsReact from 'highcharts-react-official';
 import {Card,CardBody,CardHeader,CardTitle,Col,Row,} from 'reactstrap';
 import {genderChart} from './DashBoardVisualisation/GenderChart';
 import {combineChart} from './DashBoardVisualisation/CombineChart'
-import CustomHighMap from './map'
-import worldMaps from './../components/Highcharts/WorldMap'
-
+import CustomHighMap from './map';
+import {deathChart} from './DashBoardVisualisation/DeathChart';
+import {birthChart} from './DashBoardVisualisation/BirthChart';
 
 const cardStyle = {
   borderColor: '#fff',
@@ -23,7 +23,7 @@ const cardStyle = {
 
 const options = {
   title: {
-    text: 'My chart'
+    text: 'Total Number of Death'
   },
   series: [{
     data: [1, 10, 3, 10]
@@ -68,10 +68,8 @@ class DashboardPage extends React.Component {
                         </Col>
                       </Row>
                       <p className="mt-3 mb-0 text-muted text-sm">
-                        <span className="text-success mr-2">
-                          <i className="fa fa-arrow-up" /> 3.48%
-                        </span>{" "}
-                        <span className="text-nowrap">this month</span>
+                        
+                        <span className="text-nowrap">This month</span>
                       </p>
                     </CardBody>
                   </Card>
@@ -98,9 +96,7 @@ class DashboardPage extends React.Component {
                         </Col>
                       </Row>
                       <p className="mt-3 mb-0 text-muted text-sm">
-                        <span className="text-danger mr-2">
-                          <i className="fas fa-arrow-down" /> 3.48%
-                        </span>{" "}
+                       {" "}
                         <span className="text-nowrap">This week</span>
                       </p>
                     </CardBody>
@@ -126,9 +122,7 @@ class DashboardPage extends React.Component {
                         </Col>
                       </Row>
                       <p className="mt-3 mb-0 text-muted text-sm">
-                        <span className="text-warning mr-2">
-                          <i className="fas fa-arrow-down" /> 1.10%
-                        </span>{" "}
+                        {" "}
                         <span className="text-nowrap">As at Today</span>
                       </p>
                     </CardBody>
@@ -156,9 +150,7 @@ class DashboardPage extends React.Component {
                         </Col>
                       </Row>
                       <p className="mt-3 mb-0 text-muted text-sm">
-                        <span className="text-success mr-2">
-                          <i className="fas fa-arrow-up" /> 12%
-                        </span>{" "}
+                        {" "}
                         <span className="text-nowrap">As at Today</span>
                       </p>
                     </CardBody>
@@ -200,11 +192,9 @@ class DashboardPage extends React.Component {
               <CardBody>
                 <HighchartsReact
                   highcharts={Highcharts}
-                  options={options}
+                  options={deathChart}
                 />
-                <>
-                  <worldMaps />
-                </>
+                
               </CardBody>
             </Card>
           </Col>
@@ -213,9 +203,10 @@ class DashboardPage extends React.Component {
             <Card>
               <CardHeader></CardHeader>
               <CardBody>
-                <>
-                  <CustomHighMap />
-                </>
+                <HighchartsReact
+                  highcharts={Highcharts}
+                  options={birthChart}
+                />
               
               </CardBody>
             </Card>
