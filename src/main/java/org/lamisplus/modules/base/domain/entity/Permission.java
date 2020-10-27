@@ -3,7 +3,6 @@ package org.lamisplus.modules.base.domain.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -12,7 +11,7 @@ public class Permission {
     @Id
     @Getter
     @Setter
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @NonNull

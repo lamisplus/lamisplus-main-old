@@ -21,7 +21,7 @@ public class Role {
 
     @Getter
     @Setter
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<Permission> permissions;
 
     @Override
