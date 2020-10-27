@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -33,27 +34,32 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List<PatientDTO>> getAllPatients() {
         return ResponseEntity.ok(this.patientService.getAllPatients());
     }
 
     @GetMapping("/hospitalNumber")
+    @PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<PatientDTO> getPatientByHospitalNumber(@RequestParam String hospitalNumber) {
         return ResponseEntity.ok(this.patientService.getPatientByHospitalNumber(hospitalNumber));
     }
 
     @GetMapping("/{hospitalNumber}")
+    @PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<PatientDTO> getPatientByHospitalNumber2(@PathVariable String hospitalNumber) {
         return ResponseEntity.ok(this.patientService.getPatientByHospitalNumber(hospitalNumber));
     }
 
     @GetMapping("/{hospitalNumber}/exist")
+    @PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<Boolean> exist(@PathVariable String hospitalNumber) {
         return ResponseEntity.ok(this.patientService.exist(hospitalNumber));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('patient_write')")
     public ResponseEntity<Person> save(@RequestBody PatientDTO patientDTO) throws URISyntaxException {
         Person person = this.patientService.save(patientDTO);
         return ResponseEntity.created(new URI("/api/patients/" + person.getId()))
@@ -61,11 +67,13 @@ public class PatientController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('patient_write')")
     public Person update(@PathVariable Long id, @RequestBody PatientDTO patientDTO) {
         return this.patientService.update(id, patientDTO);
     }
 
     @GetMapping("/{id}/encounters/{formCode}")
+    @PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List> getEncountersByPatientIdAndFormCode(@PathVariable Long id,
                                                                        @PathVariable String formCode, @RequestParam(required = false) String sortOrder,
                                                                        @RequestParam (required = false) String sortField, @RequestParam(required = false) Integer limit){
@@ -81,6 +89,7 @@ public class PatientController {
     }*/
 
     @GetMapping("/{id}/encounters/programCodeExclusionList")
+    @PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List> getEncountersByPatientIdAndProgramCodeExclusionList(@PathVariable Long id, @RequestParam(required = false) List<String> programCodeExclusionList) {
         return ResponseEntity.ok(this.patientService.getEncountersByPatientIdAndProgramCodeExclusionList(id, programCodeExclusionList));
     }
@@ -88,6 +97,7 @@ public class PatientController {
     @ApiOperation(value="getVisitByPatientIdAndVisitDate", notes = "patientId= required, dateStart=optional, dateEnd=optional\n\n" +
             "Example - /api/patient/20/visits?dateStart=02-03-2020")
     @GetMapping("/{id}/visits/{dateStart}/{dateEnd}")
+    @PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List<VisitDTO>> getVisitByPatientIdAndVisitDate(@PathVariable Optional<Long> id, @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional<String> dateStart,
                                                                           @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional <String> dateEnd) {
         return ResponseEntity.ok(patientService.getVisitByPatientIdAndVisitDate(id,dateStart,dateEnd));
@@ -96,6 +106,7 @@ public class PatientController {
     @ApiOperation(value="getEncountersByPatientIdAndDateEncounter", notes = " programCode= required, formCode=required, dateStart=optional, dateEnd=optional\n\n" +
             "Example - api/encounters/{programCode}/{formCode}?dateStart=01-01-2020&dateEnd=01-04-2020")
     @GetMapping("/{id}/encounters/{formCode}/{dateStart}/{dateEnd}")
+    @PreAuthorize("hasAuthority('patient_read')")
     public List getEncountersByPatientIdAndDateEncounter(@PathVariable Long id, @PathVariable String formCode,
                                                          @ApiParam(defaultValue = "") @PathVariable(required = false) Optional<String> dateStart,
                                                          @ApiParam(defaultValue = "") @PathVariable(required = false) Optional<String> dateEnd) {
@@ -105,6 +116,7 @@ public class PatientController {
     @ApiOperation(value="getAllEncountersByPatientId", notes = " id=required\n\n" +
             "Example - /api/encounters/20")
     @GetMapping("/{id}/encounters")
+    @PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List> getAllEncounterByPatientId(@PathVariable Long id){
         return ResponseEntity.ok(this.patientService.getAllEncountersByPatientId(id));
     }
@@ -123,6 +135,7 @@ public class PatientController {
     }*/
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('patient_delete')")
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
         return ResponseEntity.ok(this.patientService.delete(id));
     }

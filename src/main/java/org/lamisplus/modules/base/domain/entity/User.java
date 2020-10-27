@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -26,9 +28,11 @@ public class User implements Serializable {
     @NonNull
     private String password;
     @NonNull
-    private Integer active;
+    private Integer active = 1;
+    @CreationTimestamp
     private Date dateCreated;
     private String lastModifiedBy;
+    @UpdateTimestamp
     private Date dateLastModified;
     private String activationKey;
     private Date dateReset;

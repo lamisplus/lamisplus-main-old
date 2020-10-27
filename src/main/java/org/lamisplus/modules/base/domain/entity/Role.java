@@ -1,7 +1,12 @@
 package org.lamisplus.modules.base.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Set;
 
 @Entity
@@ -18,6 +23,18 @@ public class Role {
     @Getter
     @Setter
     private String name;
+
+    @Basic
+    @Column(name = "date_created")
+    @JsonIgnore
+    @CreationTimestamp
+    private Timestamp dateCreated;
+
+    @Basic
+    @Column(name = "date_modified")
+    @JsonIgnore
+    @UpdateTimestamp
+    private Timestamp dateModified;
 
     @Getter
     @Setter

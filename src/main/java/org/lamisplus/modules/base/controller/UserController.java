@@ -9,6 +9,7 @@ import org.lamisplus.modules.base.repository.UserRepository;
 import org.lamisplus.modules.base.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,11 +25,13 @@ public class UserController {
     private final RoleRepository roleRepository;
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('user_read')")
     public ResponseEntity<UserDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok(userRepository.findById(id).map(UserDTO::new).get());
     }
 
     @PostMapping("/{id}/roles")
+    @PreAuthorize("hasAuthority('user_write')")
     public ResponseEntity<Object[]> updateRoles(@Valid @RequestBody List<Role> roles, @PathVariable Long id) {
         try {
             User user = userRepository.findById(id).get();

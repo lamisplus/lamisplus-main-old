@@ -53,6 +53,7 @@ public class AccountController {
     }
 
     @PostMapping("/register")
+    @PreAuthorize("hasAuthority('user_write')")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
         //Check Password Length
@@ -60,7 +61,7 @@ public class AccountController {
     }
 
     @GetMapping("/users")
-    @PreAuthorize("hasAuthority('WRITE')")
+    @PreAuthorize("hasAuthority('user_read')")
     public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {
         final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);

@@ -87,14 +87,43 @@ public class BaseApplication extends SpringBootServletInitializer implements Com
         List<String> Roles = RolesObject.stream()
                 .map(Role::getName)
                 .collect(Collectors.toList());
-        if (!Roles.contains(RolesConstants.ADMIN)) {
-            Role admin = new Role(RolesConstants.ADMIN);
+        if (!Roles.contains(RolesConstants.SUPER_ADMIN)) {
+            Role admin = new Role(RolesConstants.SUPER_ADMIN);
             admin.setPermissions(createdPermissions);
             em.persist(admin);
         }
-        if (!Roles.contains(RolesConstants.USER)) {
-            Role user = new Role(RolesConstants.USER);
-            em.persist(user);
+
+        if (!Roles.contains(RolesConstants.COUNTRY_ADMIN)) {
+            Role role = new Role(RolesConstants.COUNTRY_ADMIN);
+            em.persist(role);
+        }
+        if (!Roles.contains(RolesConstants.STATE_ADMIN)) {
+            Role role = new Role(RolesConstants.STATE_ADMIN);
+            em.persist(role);
+        }
+        if (!Roles.contains(RolesConstants.FACILITY_ADMIN)) {
+            Role role = new Role(RolesConstants.FACILITY_ADMIN);
+            em.persist(role);
+        }
+        if (!Roles.contains(RolesConstants.CLINICIAN)) {
+            Role role = new Role(RolesConstants.CLINICIAN);
+            em.persist(role);
+        }
+        if (!Roles.contains(RolesConstants.NURSE)) {
+            Role role = new Role(RolesConstants.NURSE);
+            em.persist(role);
+        }
+        if (!Roles.contains(RolesConstants.PHARMACIST)) {
+            Role role = new Role(RolesConstants.PHARMACIST);
+            em.persist(role);
+        }
+        if (!Roles.contains(RolesConstants.LABORATORY_SCIENTIST)) {
+            Role role = new Role(RolesConstants.LABORATORY_SCIENTIST);
+            em.persist(role);
+        }
+        if (!Roles.contains(RolesConstants.DATA_CLERK)) {
+            Role role = new Role(RolesConstants.DATA_CLERK);
+            em.persist(role);
         }
     }
 
