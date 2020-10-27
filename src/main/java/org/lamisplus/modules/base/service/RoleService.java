@@ -40,6 +40,15 @@ public class RoleService {
         if (!roleOptional.isPresent()) throw new EntityNotFoundException(Role.class, "Id", id + "");
         return roleOptional.get();
     }
+
+    public Role updateName(long id, String name) {
+        Optional<Role> roleOptional = roleRepository.findById(id);
+        if(!roleOptional.isPresent())throw new EntityNotFoundException(Role.class, "Id", id +"");
+        Role updatedRole = roleOptional.get();
+        updatedRole.setName(name);
+        return roleRepository.save(updatedRole);
+    }
+
     public Role updatePermissions(long id, List<Permission> permissions) {
         Optional<Role> roleOptional = roleRepository.findById(id);
         if(!roleOptional.isPresent())throw new EntityNotFoundException(Role.class, "Id", id +"");

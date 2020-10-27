@@ -1,7 +1,7 @@
 package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.lamisplus.modules.base.domain.entity.Permission;
+import org.lamisplus.modules.base.domain.dto.RoleDTO;
 import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.repository.RoleRepository;
 import org.lamisplus.modules.base.service.RoleService;
@@ -20,15 +20,26 @@ public class RoleController {
     private final RoleRepository roleRepository;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Role> get(@PathVariable Long id) {
+    public ResponseEntity<Role> getById(@PathVariable Long id) {
         return ResponseEntity.ok(roleRepository.findById(id).get());
     }
 
-    @PostMapping("/{id}/permissions")
-    public ResponseEntity<Role> updatePermissions(@Valid @RequestBody List<Permission> permissions, @PathVariable Long id) {
+    @GetMapping
+    public ResponseEntity<List<Role>> getAll() {
+        return ResponseEntity.ok(roleRepository.findAll());
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<Role> update(@Valid @RequestBody RoleDTO role, @PathVariable Long id) {
         try {
-            Role role = roleService.updatePermissions(id, permissions);
-            return ResponseEntity.ok(role);
+            Role updatedRole = new Role();
+            if (!role.getPermissions().isEmpty()){
+                updatedRole = roleService.updatePermissions(id, role.getPermissions());
+            }
+            if (role.getName() != null | !role.getName().isEmpty()){
+                updatedRole = roleService.updateName(id, role.getName());
+            }
+            return ResponseEntity.ok(updatedRole);
         } catch (Exception e) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST);
         }

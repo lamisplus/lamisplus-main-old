@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("/{id}/roles")
-    public ResponseEntity<Object[]> updateRoleByName(@Valid @RequestBody List<Role> roles, @PathVariable Long id) {
+    public ResponseEntity<Object[]> updateRoles(@Valid @RequestBody List<Role> roles, @PathVariable Long id) {
         try {
             User user = userRepository.findById(id).get();
             HashSet rolesSet = new HashSet<>();
