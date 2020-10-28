@@ -23,7 +23,7 @@ import { connect } from "react-redux";
 // React Notification
 import Title from "components/Title/CardTitle";
 import { register } from "../../actions/user";
-import { online as remoteUrl, url as baseUrl } from "../../api";
+import { url as baseUrl } from "../../api";
 import { initialfieldState_userRegistration } from "../../_helpers/initialFieldState_UserRegistration";
 import useForm from "../Functions/UseForm";
 import { Spinner } from "reactstrap";
@@ -92,7 +92,7 @@ const UserRegistration = (props) => {
   useEffect(() => {
     async function getCharacters() {
       axios
-        .get(`${remoteUrl}application-codesets/codesetGroup?codesetGroup=GENDER`)
+        .get(`${baseUrl}application-codesets/codesetGroup?codesetGroup=GENDER`)
         .then((response) => {
           console.log(Object.entries(response.data));
           setGender(
