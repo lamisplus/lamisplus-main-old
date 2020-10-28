@@ -10,7 +10,7 @@ import * as ACTION_TYPES from "./types";
  * @method POST => register() -> register a new User
 
  */
-export const register = (data) => (dispatch) => {
+export const register = (data, onSuccess, onError) => (dispatch) => {
   axios
     .post(`${baseUrl}register/`, data)
     .then((response) => {
@@ -19,7 +19,9 @@ export const register = (data) => (dispatch) => {
           type: ACTION_TYPES.REGISTER_SUCCESS,
           payload: response.data,
         });
+        onSuccess && onSuccess();
       } catch (err) {
+        onError();
         console.log(err);
       }
     })

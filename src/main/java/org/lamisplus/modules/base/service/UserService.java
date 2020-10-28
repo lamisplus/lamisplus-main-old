@@ -1,7 +1,9 @@
 package org.lamisplus.modules.base.service;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
+import org.lamisplus.modules.base.domain.entity.Permission;
 import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.domain.entity.User;
@@ -16,11 +18,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -80,14 +84,19 @@ public class UserService {
         newUser.setPassword(encryptedPassword);
         newUser.setPersonByPersonId(newPerson);
         newUser.setPersonId(newPerson.getId());
-        Set<Role> roles = new HashSet<>();
-        Role role = roleRepository.findAll().stream()
-                .filter(name -> RolesConstants.USER.equals(name.getName()))
-                .findAny()
-                .orElse(null);
-        if(role !=null)
-            roles.add(role);
-        newUser.setRoles(roles);
+        if (userDTO.getRoles() == null || userDTO.getRoles().isEmpty()) {
+            Set<Role> roles = new HashSet<>();
+            Role role = roleRepository.findAll().stream()
+                    .filter(name -> RolesConstants.USER.equals(name.getName()))
+                    .findAny()
+                    .orElse(null);
+            if(role !=null)
+                roles.add(role);
+            newUser.setRoles(roles);
+        } else {
+            newUser.setRoles(getRolesFromStringSet(userDTO.getRoles()));
+        }
+
         userRepository.save(newUser);
         log.debug("User Created: {}", newUser);
         return newUser;
@@ -103,6 +112,24 @@ public class UserService {
         if(!optionalUser.isPresent())throw new EntityNotFoundException(User.class, "Id", id +"");
         user.setId(id);
         return userRepository.save(user);
+    }
+
+    private HashSet<Role> getRolesFromStringSet(Set<String> roles) {
+        HashSet roleSet = new HashSet<>();
+        Role roleToAdd = new Role();
+        for(String r : roles){
+            // add roles by either id or name
+            if(null != r) {
+                roleToAdd = roleRepository.findByName(r).get();
+                if (null == roleToAdd && NumberUtils.isParsable(r))
+                    roleToAdd = roleRepository.findById(Long.valueOf(r)).get();
+            } else {
+                ResponseEntity.badRequest();
+                return null;
+            }
+            roleSet.add(roleToAdd);
+        }
+        return roleSet;
     }
 
 

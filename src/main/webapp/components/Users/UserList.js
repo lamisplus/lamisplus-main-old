@@ -31,17 +31,17 @@ const UserList = (props) => {
         title="User List"
         columns={[
           { title: "Name", field: "name" },
-          { title: "Username", field: "username", filtering: false },
+          { title: "Username", field: "userName", filtering: false },
           { title: "Gender", field: "gender", filtering: false },
-          { title: "Designation", field: "designation", filtering: false },
+          { title: "Roles", field: "roles", filtering: false },
           { title: "", field: "actions", filtering: false },
         ]}
         isLoading={loading}
         data={props.usersList.map((row) => ({
           name: row.firstName + " " + row.lastName,
-          username: row.userName,
+          userName: row.userName,
           gender: row.gender,
-          designation: row.designation,
+          roles: row.roles.toString(),
           actions: (
             <div>
               <Menu>
