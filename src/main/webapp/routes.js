@@ -105,6 +105,8 @@ const RadiologyTestDetailPage = React.lazy(() => import("components/Laboratory/R
 const UsersPage = React.lazy(() => import("components/Users/UserPage"))
 const UserRegistration = React.lazy(() => import("components/Users/UserRegistration"))
 
+const roles = React.lazy(() => import("components/Roles/RolesPage"))
+
 class Routes extends Component {
   render() {
     return (
@@ -197,6 +199,8 @@ class Routes extends Component {
               <PrivateRoute exact path="/users" component={UsersPage} />
 
               <PrivateRoute exact path="/user-registration" component={UserRegistration} />
+
+              <PrivateRoute exact path="/roles" component={roles} />
 
               <PrivateRoute exact path="/appointments" component={AppointmentPage} />
                 <PrivateRoute exact path="/admin" component={AdministrativeDashboard} />

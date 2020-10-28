@@ -18,6 +18,7 @@ import globalVariableReducer from "./globalVariableReducer";
 import internationalStandardReducer from "./internationalStandardReducer";
 import bootstrapModuleReducer from "./bootstrapReducer";
 import organizationalUnitReducer from './organizationalUnitReducer';
+import rolesReducer from './rolesReducer';
 
 export default combineReducers({
   patients: patientReducer,
@@ -38,6 +39,7 @@ export default combineReducers({
   globalVariables: globalVariableReducer,
   standards: internationalStandardReducer,
   boostrapmodule: bootstrapModuleReducer,
-  organizationalUnitReducer : organizationalUnitReducer
+  organizationalUnitReducer : organizationalUnitReducer,
+  roles: rolesReducer
 })
 

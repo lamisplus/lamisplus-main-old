@@ -31,7 +31,8 @@ public class RoleController {
 
     @GetMapping
     public ResponseEntity<List<Role>> getAll() {
-        return ResponseEntity.ok(roleRepository.findAll());
+        List<Role> roles = roleRepository.findAll();
+        return ResponseEntity.ok(roles);
     }
 
     @PostMapping

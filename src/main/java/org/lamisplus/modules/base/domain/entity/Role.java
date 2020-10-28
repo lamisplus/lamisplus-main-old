@@ -32,7 +32,6 @@ public class Role {
 
     @Basic
     @Column(name = "date_modified")
-    @JsonIgnore
     @UpdateTimestamp
     private Timestamp dateModified;
 
@@ -64,6 +63,11 @@ public class Role {
 
     @Override
     public String toString() {
-        return name;
+        return "Roles{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", dateModified='" + dateModified + '\'' +
+                ", permissions=" + permissions +
+                '}';
     }
 }
