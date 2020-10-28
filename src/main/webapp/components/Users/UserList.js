@@ -11,12 +11,10 @@ import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
 
 const UserList = (props) => {
-  const [loading, setLoading] = useState("");
-  const [users, setUsers] = useState();
+  const [loading, setLoading] = useState(true);
+  //const [users, setUsers] = useState();
 
   useEffect(() => {
-    console.log(props.usersList);
-    setLoading("true");
     const onSuccess = () => {
       setLoading(false);
     };
@@ -41,7 +39,7 @@ const UserList = (props) => {
         isLoading={loading}
         data={props.usersList.map((row) => ({
           name: row.firstName + " " + row.lastName,
-          username: row.username,
+          username: row.userName,
           gender: row.gender,
           designation: row.designation,
           actions: (
@@ -57,8 +55,7 @@ const UserList = (props) => {
                 >
                   Actions <span aria-hidden>▾</span>
                 </MenuButton>
-                <MenuList style={{ color: "#000 !important" }}>
-                </MenuList>
+                <MenuList style={{ color: "#000 !important" }}></MenuList>
               </Menu>
             </div>
           ),
@@ -88,7 +85,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapActionToProps = {
-  fetchAllUsers: fetchUsers
+  fetchAllUsers: fetchUsers,
 };
 
 export default connect(mapStateToProps, mapActionToProps)(UserList);

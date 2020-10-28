@@ -67,12 +67,16 @@ public class UserService {
         person.setUuid(UuidGenerator.getUuid());
         person.setFirstName(userDTO.getFirstName());
         person.setLastName(userDTO.getLastName());
+        person.setDob(userDTO.getDateOfBirth());
         Person newPerson = personRepository.save(person);
 
 
         User newUser = new User();
         String encryptedPassword = passwordEncoder.encode(password);
         newUser.setUserName(userDTO.getUserName());
+        newUser.setEmail(userDTO.getEmail());
+        newUser.setPhoneNumber(userDTO.getPhoneNumber());
+        newUser.setGender(userDTO.getGender());
         newUser.setPassword(encryptedPassword);
         newUser.setPersonByPersonId(newPerson);
         newUser.setPersonId(newPerson.getId());

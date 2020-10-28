@@ -22,6 +22,7 @@ import { connect } from "react-redux";
 // React Notification
 import Title from "components/Title/CardTitle";
 import { register } from "../../actions/user";
+import { online as baseUrl } from "../../api";
 import { initialfieldState_userRegistration } from "../../_helpers/initialFieldState_UserRegistration";
 import useForm from "../Functions/UseForm";
 import { Spinner } from "reactstrap";
@@ -91,7 +92,7 @@ const UserRegistration = (props) => {
     async function getCharacters() {
       try {
         const response = await fetch(
-          "http://lamisplus.org/base-module/api/application-codesets/codesetGroup?codesetGroup=GENDER"
+          `${baseUrl}application-codesets/codesetGroup?codesetGroup=GENDER`
         );
         const body = await response.json();
         setGender(
@@ -110,7 +111,7 @@ const UserRegistration = (props) => {
     async function getCharacters() {
       try {
         const response = await fetch(
-          "http://lamisplus.org/base-module/api/application-codesets/codesetGroup?codesetGroup=OCCUPATION"
+          `${baseUrl}application-codesets/codesetGroup?codesetGroup=OCCUPATION`
         );
         const body = await response.json();
         setDesignation(

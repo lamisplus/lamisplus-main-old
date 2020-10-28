@@ -125,6 +125,10 @@ public class BaseApplication extends SpringBootServletInitializer implements Com
             Role role = new Role(RolesConstants.DATA_CLERK);
             em.persist(role);
         }
+        if (!Roles.contains(RolesConstants.USER)) {
+            Role role = new Role(RolesConstants.USER);
+            em.persist(role);
+        }
     }
 
     /**

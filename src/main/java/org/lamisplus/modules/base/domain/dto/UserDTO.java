@@ -1,21 +1,28 @@
 package org.lamisplus.modules.base.domain.dto;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.domain.entity.User;
 
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
+@Getter
+@Setter
+@NoArgsConstructor
 public class UserDTO {
     private Long id;
     private String userName;
-    //private String password;
     private Set<String> roles;
     private String firstName;
     private String lastName;
-
-    public UserDTO(){}
+    private String email;
+    private String phoneNumber;
+    private String gender;
+    private LocalDate dateOfBirth;
 
     public UserDTO(User user) {
         this.id = user.getId();
@@ -23,40 +30,13 @@ public class UserDTO {
         this.roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
         this.firstName = user.getPersonByPersonId().getFirstName();
         this.lastName = user.getPersonByPersonId().getLastName();
+        this.email = user.getEmail();
+        this.phoneNumber = user.getPhoneNumber();
+        this.gender = user.getGender();
+        this.dateOfBirth = user.getPersonByPersonId().getDob();
+
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-
-    public Set<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<String> authorities) {
-        this.roles = authorities;
-    }
 
     @Override
     public String toString() {
@@ -65,6 +45,10 @@ public class UserDTO {
                 ", userName='" + userName + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", gender='" + gender + '\'' +
+                ", dateOfBirth='" + dateOfBirth + '\'' +
                 ", roles=" + roles +
                 '}';
     }

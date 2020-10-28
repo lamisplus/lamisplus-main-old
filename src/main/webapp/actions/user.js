@@ -32,20 +32,27 @@ export const register = (data) => (dispatch) => {
     });
 };
 
-
-export const fetchUsers = () => dispatch => {
+export const fetchUsers = (onSuccess, onError) => (dispatch) => {
   axios
     .get(`${baseUrl}users/`)
-    .then(response => {
+    .then((response) => {
+      if (onSuccess) {
+        onSuccess();
+      }
       dispatch({
         type: ACTION_TYPES.FETCH_USERS,
-        payload: response.data
+        payload: response.data,
       });
+      onSuccess();
     })
-    .catch(error =>
+    .catch((error) => {
+      if (onError) {
+        onError();
+      }
       dispatch({
         type: ACTION_TYPES.USERS_ERROR,
-        payload: "Something went wrong, please try again"
-      })
-    );
+        payload: "Something went wrong, please try again",
+      });
+      onError();
+    });
 };

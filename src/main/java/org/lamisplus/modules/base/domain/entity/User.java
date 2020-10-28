@@ -25,6 +25,9 @@ public class User implements Serializable {
     private Long id;
     @NonNull
     private String userName;
+    private String email;
+    private String phoneNumber;
+    private String gender;
     @NonNull
     private String password;
     @NonNull
