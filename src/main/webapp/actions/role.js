@@ -12,7 +12,7 @@ import * as ACTION_TYPES from "./types";
  */
 export const addRole = (data, onSuccess, onError) => (dispatch) => {
   axios
-    .post(`${baseUrl}role/`, data)
+    .post(`${baseUrl}roles/`, data)
     .then((response) => {
       try {
         dispatch({
