@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import MaterialTable from "material-table";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { fetchUsers } from "../../actions/user";
+import { fetchUsers, updateUserRole } from "../../actions/user";
 import "./UserList.css";
 import { Menu, MenuList, MenuButton, MenuItem } from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
@@ -45,8 +45,7 @@ const UserList = (props) => {
   const [saving, setSaving] = useState(false);
   const [userId, setUserId] = useState(0);
   const { values, setValues, handleInputChange, resetForm } = useForm({
-    userId: userId,
-    permissions: [],
+    name: "",
   });
 
   useEffect(() => {
@@ -106,13 +105,8 @@ const UserList = (props) => {
 
   const handleEdit = (e) => {
     e.preventDefault();
-    let roles = [];
-    selectedRoles.map((p) => {
-      const roles = { name: null };
-      roles.name = p;
-      roles.push(roles);
-    });
-    values["permissions"] = roles;
+    values["name"] = selectedRoles;
+    debugger;
     setSaving(true);
     const onSuccess = () => {
       setSaving(false);
@@ -245,6 +239,7 @@ const mapStateToProps = (state) => {
 
 const mapActionToProps = {
   fetchAllUsers: fetchUsers,
+  updateUserRole: updateUserRole,
 };
 
 export default connect(mapStateToProps, mapActionToProps)(UserList);

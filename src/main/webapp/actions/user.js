@@ -52,9 +52,34 @@ export const fetchUsers = (onSuccess, onError) => (dispatch) => {
         onError();
       }
       dispatch({
-        type: ACTION_TYPES.USERS_ERROR,
+        type: ACTION_TYPES.USER_ROLE_UPDATE,
         payload: "Something went wrong, please try again",
       });
       onError();
+    });
+};
+
+
+export const updateUserRole = (id, data, onSuccess, onError) => (dispatch) => {
+  axios
+    .post(`${baseUrl}users/${id}/roles`, data)
+    .then((response) => {
+      try {
+        dispatch({
+          type: ACTION_TYPES.USER_ROLE_UPDATE,
+          payload: response.data,
+        });
+        onSuccess && onSuccess();
+      } catch (err) {
+        onError();
+        console.log(err);
+      }
+    })
+    .catch((error) => {
+      dispatch({
+        type: ACTION_TYPES.USERS_ERROR,
+        payload: "Something went wrong, please try again",
+      });
+      console.log(error);
     });
 };
