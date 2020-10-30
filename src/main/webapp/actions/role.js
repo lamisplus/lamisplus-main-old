@@ -1,6 +1,7 @@
 import axios from "axios";
 import { url as baseUrl } from "../api";
 import * as ACTION_TYPES from "./types";
+import { toast } from "react-toastify";
 
 /**
  * @Actions
@@ -60,26 +61,45 @@ export const fetchRoles = (onSuccess, onError) => (dispatch) => {
 };
 
 export const fetchPermissions = (onSuccess, onError) => (dispatch) => {
-    axios
-      .get(`${baseUrl}permissions/`)
-      .then((response) => {
-        if (onSuccess) {
-          onSuccess();
-        }
-        dispatch({
-          type: ACTION_TYPES.FETCH_PERMISSIONS,
-          payload: response.data,
-        });
+  axios
+    .get(`${baseUrl}permissions/`)
+    .then((response) => {
+      if (onSuccess) {
         onSuccess();
-      })
-      .catch((error) => {
-        if (onError) {
-          onError();
-        }
-        dispatch({
-          type: ACTION_TYPES.PERMISSION_ERROR,
-          payload: "Something went wrong, please try again",
-        });
-        onError();
+      }
+      dispatch({
+        type: ACTION_TYPES.FETCH_PERMISSIONS,
+        payload: response.data,
       });
-  };
+      onSuccess();
+    })
+    .catch((error) => {
+      if (onError) {
+        onError();
+      }
+      dispatch({
+        type: ACTION_TYPES.PERMISSION_ERROR,
+        payload: "Something went wrong, please try again",
+      });
+      onError();
+    });
+};
+
+export const deleteRole = (id) => (dispatch) => {
+  axios
+    .delete(`${baseUrl}roles/${id}`)
+    .then((response) => {
+      dispatch({
+        type: ACTION_TYPES.ROLE_DELETE,
+        payload: id,
+      });
+      toast.success("Role deleted successfully!");
+    })
+    .catch((error) => {
+      dispatch({
+        type: ACTION_TYPES.ROLE_ERROR,
+        payload: error.response.data,
+      });
+      toast.error("Something went wrong");
+    });
+};

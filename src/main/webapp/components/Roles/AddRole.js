@@ -10,7 +10,6 @@ import {
   Label,
   Row,
   Alert,
-  FormFeedback,
 } from "reactstrap";
 import { makeStyles } from "@material-ui/core/styles";
 import { Card, CardContent } from "@material-ui/core";
@@ -104,7 +103,6 @@ const AddRole = (props) => {
   }, []);
 
   const onPermissionSelect = (selectedValues) => {
-    console.log(selectedValues);
     setselectedPermissions(selectedValues);
   };
 
@@ -120,7 +118,7 @@ const AddRole = (props) => {
     setSaving(true);
     const onSuccess = () => {
       setSaving(false);
-      toast.success("Role Added Successfully");
+      toast.success("Role Saved Successfully");
       resetForm();
     };
     const onError = () => {
@@ -193,9 +191,9 @@ const AddRole = (props) => {
                 disabled={saving}
               >
                 {!saving ? (
-                  <span style={{ textTransform: "capitalize" }}>Add</span>
+                  <span style={{ textTransform: "capitalize" }}>Save</span>
                 ) : (
-                  <span style={{ textTransform: "capitalize" }}>Adding...</span>
+                  <span style={{ textTransform: "capitalize" }}>Saving...</span>
                 )}
               </MatButton>
 

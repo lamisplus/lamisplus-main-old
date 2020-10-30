@@ -59,4 +59,14 @@ public class RoleController {
         }
         return null;
     }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteRole(@PathVariable Long id) throws Exception{
+        try {
+            roleRepository.deleteById(id);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }
