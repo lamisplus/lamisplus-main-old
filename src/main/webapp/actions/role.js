@@ -35,6 +35,30 @@ export const addRole = (data, onSuccess, onError) => (dispatch) => {
     });
 };
 
+export const updateRole = (id, data, onSuccess, onError) => (dispatch) => {
+  axios
+    .post(`${baseUrl}roles/${id}`, data)
+    .then((response) => {
+      try {
+        dispatch({
+          type: ACTION_TYPES.ADD_ROLE,
+          payload: response.data,
+        });
+        onSuccess && onSuccess();
+      } catch (err) {
+        onError();
+        console.log(err);
+      }
+    })
+    .catch((error) => {
+      dispatch({
+        type: ACTION_TYPES.ROLE_ERROR,
+        payload: "Something went wrong, please try again",
+      });
+      console.log(error);
+    });
+};
+
 export const fetchRoles = (onSuccess, onError) => (dispatch) => {
   axios
     .get(`${baseUrl}roles/`)

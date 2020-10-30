@@ -14,6 +14,9 @@ const roleReducer = (
     case USERTYPES.ADD_ROLE:
       return { ...state, role: action.payload };
 
+      case USERTYPES.UPDATE_ROLE:
+        return { ...state, role: action.payload };
+
     case USERTYPES.USERS_ERROR:
       return { ...state, errors: action.payload };
 

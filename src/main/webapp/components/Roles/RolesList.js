@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import MaterialTable from "material-table";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchRoles, deleteRole } from "../../actions/role";
+import { fetchRoles, deleteRole, updateRole } from "../../actions/role";
 import { makeStyles } from "@material-ui/core/styles";
 import "./RolesList.css";
 import { Menu, MenuList, MenuButton, MenuItem } from "@reach/menu-button";
@@ -12,6 +12,7 @@ import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import SaveIcon from "@material-ui/icons/Save";
 import CancelIcon from "@material-ui/icons/Cancel";
 import MatButton from "@material-ui/core/Button";
+import useForm from "../Functions/UseForm";
 import {
   Button,
   Form,
@@ -23,7 +24,7 @@ import {
   ModalHeader,
 } from "reactstrap";
 import "@reach/menu-button/styles.css";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import DualListBox from "react-dual-listbox";
 import "react-dual-listbox/lib/react-dual-listbox.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -42,6 +43,12 @@ const RoleList = (props) => {
   const [permissions, setPermissions] = useState([]);
   const [selectedPermissions, setselectedPermissions] = useState([]);
   const [saving, setSaving] = useState(false);
+  const [roleId, setRoleId] = useState(0);
+  const { values, setValues, handleInputChange, resetForm } = useForm({
+    roleId: roleId,
+    permissions: [],
+  });
+  
 
   useEffect(() => {
     const onSuccess = () => {
@@ -59,7 +66,6 @@ const RoleList = (props) => {
       axios
         .get(`${baseUrl}permissions`)
         .then((response) => {
-          console.log(Object.entries(response.data));
           setPermissions(
             Object.entries(response.data).map(([key, value]) => ({
               label: value.name,
@@ -83,12 +89,45 @@ const RoleList = (props) => {
       props.deleteRole(id);
   };
 
-  const toggleEditPermissions = () => {
+  const toggleEditPermissions = (id) => {
+    setRoleId(id);
     setModal(!modal);
+    if (!modal) {
+      axios
+        .get(`${baseUrl}roles/${id}`)
+        .then((response) => {
+          setselectedPermissions(
+            Object.entries(response.data.permissions).map(
+              ([key, value]) => value.name
+            )
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
-  const editPermissions = () => {
-    console.log("edit");
+  const handleEdit = (e) => {
+    e.preventDefault();
+    let permissions = [];
+    selectedPermissions.map((p) => {
+      const permission = { name: null };
+      permission.name = p;
+      permissions.push(permission);
+    });
+    values["permissions"] = permissions;
+    setSaving(true);
+    const onSuccess = () => {
+      setSaving(false);
+      toast.success("Role Updated Successfully");
+      resetForm();
+    };
+    const onError = () => {
+      setSaving(false);
+      toast.error("Something went wrong");
+    };
+    props.updateRole(roleId, values, onSuccess, onError);
   };
 
   return (
@@ -123,7 +162,7 @@ const RoleList = (props) => {
                     <Button
                       size="sm"
                       color="link"
-                      onClick={() => toggleEditPermissions()}
+                      onClick={() => toggleEditPermissions(row.id)}
                     >
                       <MdModeEdit size="15" />{" "}
                       <span style={{ color: "#000" }}>Edit Permissions </span>
@@ -154,10 +193,11 @@ const RoleList = (props) => {
           searchFieldAlignment: "left",
         }}
       />
+
       <Modal isOpen={modal} backdrop={true}>
-        <ModalHeader>Edit Permissions</ModalHeader>
-        <ModalBody>
-          <Form onSubmit={editPermissions}>
+        <Form onSubmit={handleEdit}>
+          <ModalHeader>Edit Permissions</ModalHeader>
+          <ModalBody>
             <FormGroup>
               <Label for="permissions">Permissions</Label>
               <DualListBox
@@ -166,33 +206,33 @@ const RoleList = (props) => {
                 selected={selectedPermissions}
               />
             </FormGroup>
-          </Form>
-        </ModalBody>
-        <ModalFooter>
-          <MatButton
-            type="submit"
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            startIcon={<SaveIcon />}
-            disabled={saving}
-            onClick={() => toggleEditPermissions()}
-          >
-            {!saving ? (
-              <span style={{ textTransform: "capitalize" }}>Save</span>
-            ) : (
-              <span style={{ textTransform: "capitalize" }}>Saving...</span>
-            )}
-          </MatButton>
-          <MatButton
-            variant="contained"
-            className={classes.button}
-            startIcon={<CancelIcon />}
-            onClick={() => toggleEditPermissions()}
-          >
-            <span style={{ textTransform: "capitalize" }}>Cancel</span>
-          </MatButton>
-        </ModalFooter>
+          </ModalBody>
+          <ModalFooter>
+            <MatButton
+              type="submit"
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              startIcon={<SaveIcon />}
+              disabled={saving}
+              onClick={() => toggleEditPermissions(0)}
+            >
+              {!saving ? (
+                <span style={{ textTransform: "capitalize" }}>Save</span>
+              ) : (
+                <span style={{ textTransform: "capitalize" }}>Saving...</span>
+              )}
+            </MatButton>
+            <MatButton
+              variant="contained"
+              className={classes.button}
+              startIcon={<CancelIcon />}
+              onClick={() => toggleEditPermissions(0)}
+            >
+              <span style={{ textTransform: "capitalize" }}>Cancel</span>
+            </MatButton>
+          </ModalFooter>
+        </Form>
       </Modal>
     </div>
   );
@@ -207,6 +247,7 @@ const mapStateToProps = (state) => {
 const mapActionToProps = {
   fetchAllRoles: fetchRoles,
   deleteRole: deleteRole,
+  updateRole: updateRole
 };
 
 export default connect(mapStateToProps, mapActionToProps)(RoleList);

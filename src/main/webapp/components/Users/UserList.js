@@ -1,3 +1,5 @@
+import axios from "axios";
+import { url as baseUrl } from "../../api";
 import React, { useEffect, useState } from "react";
 import MaterialTable from "material-table";
 import { Link } from "react-router-dom";
@@ -6,13 +8,46 @@ import { fetchUsers } from "../../actions/user";
 import "./UserList.css";
 import { Menu, MenuList, MenuButton, MenuItem } from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import SaveIcon from "@material-ui/icons/Save";
+import CancelIcon from "@material-ui/icons/Cancel";
+import MatButton from "@material-ui/core/Button";
+import {
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+} from "reactstrap";
+import { makeStyles } from "@material-ui/core/styles";
+import { MdModeEdit } from "react-icons/md";
+import useForm from "../Functions/UseForm";
+import DualListBox from "react-dual-listbox";
+import "react-dual-listbox/lib/react-dual-listbox.css";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
 
+const useStyles = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(1),
+  },
+}));
+
 const UserList = (props) => {
+  const classes = useStyles();
   const [loading, setLoading] = useState(true);
-  //const [users, setUsers] = useState();
+  const [modal, setModal] = useState(false);
+  const [roles, setRoles] = useState([]);
+  const [selectedRoles, setselectedRoles] = useState([]);
+  const [saving, setSaving] = useState(false);
+  const [userId, setUserId] = useState(0);
+  const { values, setValues, handleInputChange, resetForm } = useForm({
+    userId: userId,
+    permissions: [],
+  });
 
   useEffect(() => {
     const onSuccess = () => {
@@ -23,6 +58,73 @@ const UserList = (props) => {
     };
     props.fetchAllUsers(onSuccess, onError);
   }, []);
+
+  /* Get list of Roles from the server */
+  useEffect(() => {
+    async function getCharacters() {
+      axios
+        .get(`${baseUrl}roles`)
+        .then((response) => {
+          setRoles(
+            Object.entries(response.data).map(([key, value]) => ({
+              label: value.name,
+              value: value.name,
+            }))
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    getCharacters();
+  }, []);
+
+  const onRoleSelect = (selectedValues) => {
+    setselectedRoles(selectedValues);
+  };
+
+  const toggleEditRoles = (id) => {
+    setUserId(id);
+    setModal(!modal);
+    if (!modal) {
+      axios
+        .get(`${baseUrl}users/${id}`)
+        .then((response) => {
+          console.log(response.data.roles);
+          setselectedRoles(
+            Object.entries(response.data.roles).map(
+              ([key, value]) => value
+            )
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    console.log(selectedRoles);
+  };
+
+  const handleEdit = (e) => {
+    e.preventDefault();
+    let roles = [];
+    selectedRoles.map((p) => {
+      const roles = { name: null };
+      roles.name = p;
+      roles.push(roles);
+    });
+    values["permissions"] = roles;
+    setSaving(true);
+    const onSuccess = () => {
+      setSaving(false);
+      toast.success("User roles Updated Successfully");
+      resetForm();
+    };
+    const onError = () => {
+      setSaving(false);
+      toast.error("Something went wrong");
+    };
+    props.updateUserRole(userId, values, onSuccess, onError);
+  };
 
   return (
     <div>
@@ -55,8 +157,65 @@ const UserList = (props) => {
                 >
                   Actions <span aria-hidden>▾</span>
                 </MenuButton>
-                <MenuList style={{ color: "#000 !important" }}></MenuList>
+                <MenuList style={{ color: "#000 !important" }}>
+                  <MenuItem style={{ color: "#000 !important" }}>
+                    <Button
+                      size="sm"
+                      color="link"
+                      onClick={() => toggleEditRoles(row.id)}
+                    >
+                      <MdModeEdit size="15" />{" "}
+                      <span style={{ color: "#000" }}>Edit Roles </span>
+                    </Button>
+                  </MenuItem>
+                </MenuList>
               </Menu>
+              <Modal isOpen={modal} backdrop={true}>
+                <Form onSubmit={handleEdit}>
+                  <ModalHeader>Edit Roles</ModalHeader>
+                  <ModalBody>
+                    <FormGroup>
+                      <Label for="roles">Roles</Label>
+                      <DualListBox
+                        options={roles}
+                        onChange={onRoleSelect}
+                        selected={selectedRoles}
+                      />
+                    </FormGroup>
+                  </ModalBody>
+                  <ModalFooter>
+                    <MatButton
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                      startIcon={<SaveIcon />}
+                      disabled={saving}
+                      onClick={() => toggleEditRoles(0)}
+                    >
+                      {!saving ? (
+                        <span style={{ textTransform: "capitalize" }}>
+                          Save
+                        </span>
+                      ) : (
+                        <span style={{ textTransform: "capitalize" }}>
+                          Saving...
+                        </span>
+                      )}
+                    </MatButton>
+                    <MatButton
+                      variant="contained"
+                      className={classes.button}
+                      startIcon={<CancelIcon />}
+                      onClick={() => toggleEditRoles(0)}
+                    >
+                      <span style={{ textTransform: "capitalize" }}>
+                        Cancel
+                      </span>
+                    </MatButton>
+                  </ModalFooter>
+                </Form>
+              </Modal>
             </div>
           ),
         }))}

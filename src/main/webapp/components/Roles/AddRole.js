@@ -108,9 +108,9 @@ const AddRole = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const permission = { name: null };
     let permissions = [];
-    selectedPermissions.forEach((p) => {
+    selectedPermissions.map((p) => {
+      const permission = { name: null };
       permission.name = p;
       permissions.push(permission);
     });
