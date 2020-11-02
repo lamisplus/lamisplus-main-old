@@ -57,22 +57,6 @@ public class PatientController {
     public ResponseEntity<Boolean> exist(@PathVariable String hospitalNumber) {
         return ResponseEntity.ok(this.patientService.exist(hospitalNumber));
     }
-
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('patient_write')")
-    public ResponseEntity<Person> save(@RequestBody PatientDTO patientDTO) throws URISyntaxException {
-        Person person = this.patientService.save(patientDTO);
-        return ResponseEntity.created(new URI("/api/patients/" + person.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(person.getId()))).body(person);
-    }
-
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('patient_write')")
-    public Person update(@PathVariable Long id, @RequestBody PatientDTO patientDTO) {
-        return this.patientService.update(id, patientDTO);
-    }
   
     @GetMapping("/{id}/encounters/{formCode}")
     @PreAuthorize("hasAuthority('patient_read')")
@@ -144,6 +128,7 @@ public class PatientController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('patient_write')")
     public ResponseEntity<Person> save(@RequestBody PatientDTO patientDTO) throws URISyntaxException {
         Person person = this.patientService.save(patientDTO);
         return ResponseEntity.created(new URI("/api/patients/" + person.getId()))
@@ -151,6 +136,7 @@ public class PatientController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('patient_write')")
     public Person update(@PathVariable Long id, @RequestBody PatientDTO patientDTO) {
         return this.patientService.update(id, patientDTO);
     }
