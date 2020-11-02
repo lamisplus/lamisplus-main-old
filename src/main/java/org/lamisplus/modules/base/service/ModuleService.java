@@ -73,7 +73,7 @@ public class ModuleService {
     private final ConfigurableApplicationContext context;
     private static final String MODULE_CLASS_NAME = "module";
     private static final String DOT_CLASS = ".class";
-    private static final Class[] parameters = new Class[]{URL.class};
+    //private static final Class[] parameters = new Class[]{URL.class};
 
     //private final ConsoleConfigClassLoader consoleConfigClassLoader;
     //private HashSet<String> setJarFileNamesToClose = new HashSet<String>();
@@ -93,7 +93,7 @@ public class ModuleService {
 
     public List<Module> getAllModules(){
         Specification<Module> specification = genericSpecification.findAll(0);
-        return (List<Module>) this.moduleRepository.findAll(specification);
+        return this.moduleRepository.findAll(specification);
     }
 
     public List<Module> uploadAndUnzip(MultipartFile[] files) {

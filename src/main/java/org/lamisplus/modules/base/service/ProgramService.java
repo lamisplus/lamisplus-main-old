@@ -57,7 +57,7 @@ public class ProgramService {
 
     public List<Program> getAllPrograms(){
         Specification<Program> specification = genericSpecification.findAll(0);
-        return (List<Program>) this.moduleRepository.findAll(specification);
+        return this.programRepository.findAll(specification);
     }
 
     public List<Form> getFormByProgramId(Long programId){
@@ -73,7 +73,7 @@ public class ProgramService {
     public Integer delete(Long id) {
         Optional<Program> programOptional = this.programRepository.findById(id);
         if(!programOptional.isPresent() || programOptional.get().getArchived() == ARCHIVED) throw new EntityNotFoundException(Program.class, "Program Id", id + "");
-        programOptional.get().setArchived(1);
+        programOptional.get().setArchived(ARCHIVED);
         return programOptional.get().getArchived();
     }
 

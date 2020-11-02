@@ -59,7 +59,7 @@ const columns = (editConsultation, viewConsultation) => [
             <List.Item>
             <Label size="mini" color="blue">
               {x.condition || x.condition1} 
-              <Label.Detail> {x.certainty}</Label.Detail>
+              <Label.Detail> {JSON.stringify(x.certainty) || ''}</Label.Detail>
             </Label>
             </List.Item>
           ))}

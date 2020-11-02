@@ -48,49 +48,47 @@ const PatientSearch = (props) => {
   };
 
   return (
-    <div>
-      <ToastContainer autoClose={3000} hideProgressBar />
-      <MaterialTable
-        title="Find patients"
-        columns={[
-          {
-            title: "Patient Name",
-            field: "name",
-          },
-          { title: "Patient ID", field: "id" },
-          { title: "Age", field: "age", filtering: false },
-          { title: "Address", field: "address", filtering: false },
-          { title: "", field: "actions", filtering: false },
-        ]}
-        isLoading={loading}
-        data={props.patientsList.map((row) => ({
-          name: row.firstName + " " + row.lastName,
-          id: row.hospitalNumber,
-          age:
-            row.dob === 0 ||
-            row.dob === undefined ||
-            row.dob === null ||
-            row.dob === ""
-              ? 0
-              : calculate_age(row.dob),
-          address: row.street || "",
-          actions: (
-            <div>
-              <Menu>
-                <MenuButton
-                  style={{
-                    backgroundColor: "#3F51B5",
-                    color: "#fff",
-                    border: "2px solid #3F51B5",
-                    borderRadius: "4px",
-                  }}
-                >
-                  Actions <span aria-hidden>▾</span>
-                </MenuButton>
-                <MenuList style={{ color: "#000 !important" }}>
-                  {/*<MenuItem  style={{ color:"#000 !important"}} onClick={() => window.location.href = "/patient-dashboard?hospitalNumber="+row.hospitalNumber}>*/}
-                  {/*        <MdDashboard size="15" color="blue" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>*/}
-                  {/*  </MenuItem>*/}
+      <div>
+        <ToastContainer autoClose={3000} hideProgressBar />
+          <MaterialTable
+              title="Find patients"
+                  columns={[
+                      {
+                        title: "Patient Name",
+                        field: "name",
+                      },
+                      { title: "Patient ID", field: "id" },
+                      { title: "Age", field: "age", filtering: false },
+                      { title: "Address", field: "address", filtering: false },
+                      {title: "", field: "actions", filtering: false,},
+                  ]}
+                  isLoading={loading}
+                  data={props.patientsList.map((row) => ({
+                      name: <Link
+                          to={"/patient-dashboard?hospitalNumber="+row.hospitalNumber}
+                          target="_blank"
+                          title={"Click to view patient dashboard"}
+                      >{row.firstName}  { ' '}  {row.lastName}</Link>,
+                      id: row.hospitalNumber,
+                      age: (row.dob === 0 ||
+                      row.dob === undefined ||
+                      row.dob === null ||
+                      row.dob === "" )
+                        ? 0
+                        : calculate_age(row.dob),
+                      address: row.street || '',
+                      actions: 
+        <div>
+        
+          <Menu>
+              <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
+                Actions <span aria-hidden>▾</span>
+              </MenuButton>
+                  <MenuList style={{ color:"#000 !important"}} >
+
+                      {/*<MenuItem  style={{ color:"#000 !important"}} onClick={() => window.location.href = "/patient-dashboard?hospitalNumber="+row.hospitalNumber}>*/}
+                      {/*        <MdDashboard size="15" color="blue" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>*/}
+                      {/*  </MenuItem>*/}
 
                   <MenuItem style={{ color: "#000 !important" }}>
                     <Link
