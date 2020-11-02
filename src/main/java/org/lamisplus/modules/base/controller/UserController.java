@@ -32,7 +32,7 @@ public class UserController {
 
     @PostMapping("/{id}/roles")
     @PreAuthorize("hasAuthority('user_write')")
-    public ResponseEntity<Object[]> updateRoles(@Valid @RequestBody List<Role> roles, @PathVariable Long id) {
+    public ResponseEntity<Object[]> updateRoles(@Valid @RequestBody List<Role> roles, @PathVariable Long id) throws Exception {
         try {
             User user = userRepository.findById(id).get();
             HashSet rolesSet = new HashSet<>();
@@ -53,9 +53,8 @@ public class UserController {
             userService.update(id, user);
             return ResponseEntity.ok(user.getRoles().toArray());
         } catch (Exception e) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST);
+            throw e;
         }
-        return null;
     }
 
 

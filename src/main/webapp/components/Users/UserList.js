@@ -35,6 +35,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+let userId = 0;
+
 const UserList = (props) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
@@ -42,7 +44,7 @@ const UserList = (props) => {
   const [roles, setRoles] = useState([]);
   const [selectedRoles, setselectedRoles] = useState([]);
   const [saving, setSaving] = useState(false);
-  const [userId, setUserId] = useState(0);
+  
   let { values, setValues, handleInputChange, resetForm } = useForm({});
 
   useEffect(() => {
@@ -80,13 +82,12 @@ const UserList = (props) => {
   };
 
   const toggleEditRoles = (id) => {
-    setUserId(id);
+    userId = id;
     setModal(!modal);
     if (!modal) {
       axios
         .get(`${baseUrl}users/${id}`)
         .then((response) => {
-          console.log(response.data.roles);
           setselectedRoles(
             Object.entries(response.data.roles).map(
               ([key, value]) => value
@@ -97,7 +98,6 @@ const UserList = (props) => {
           console.log(error);
         });
     }
-    console.log(selectedRoles);
   };
 
   const handleEdit = (e) => {
@@ -187,7 +187,7 @@ const UserList = (props) => {
                       className={classes.button}
                       startIcon={<SaveIcon />}
                       disabled={saving}
-                      onClick={() => toggleEditRoles(0)}
+                      onClick={() => toggleEditRoles(userId)}
                     >
                       {!saving ? (
                         <span style={{ textTransform: "capitalize" }}>
@@ -203,7 +203,7 @@ const UserList = (props) => {
                       variant="contained"
                       className={classes.button}
                       startIcon={<CancelIcon />}
-                      onClick={() => toggleEditRoles(0)}
+                      onClick={() => toggleEditRoles(userId)}
                     >
                       <span style={{ textTransform: "capitalize" }}>
                         Cancel

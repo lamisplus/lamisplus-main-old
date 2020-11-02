@@ -89,9 +89,7 @@ const RoleList = (props) => {
   };
 
   const toggleEditPermissions = (id) => {
-    console.log(id);
     roleId = id;
-    console.log(roleId);
     setModal(!modal);
     if (!modal) {
       axios
@@ -110,7 +108,6 @@ const RoleList = (props) => {
   };
 
   const handleEdit = (e) => {
-    console.log(roleId);
     e.preventDefault();
     let permissions = [];
     selectedPermissions.map((p) => {
