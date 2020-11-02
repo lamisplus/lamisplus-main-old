@@ -6,6 +6,7 @@ import org.lamisplus.modules.base.domain.entity.Permission;
 import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.repository.RoleRepository;
 import org.lamisplus.modules.base.service.RoleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,10 +20,15 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("api/roles")
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class RoleController {
     private final RoleService roleService;
     private final RoleRepository roleRepository;
+
+    public RoleController(RoleService roleService, RoleRepository roleRepository) {
+        this.roleService = roleService;
+        this.roleRepository = roleRepository;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Role> getById(@PathVariable Long id) {
@@ -50,7 +56,7 @@ public class RoleController {
             if (!role.getPermissions().isEmpty()){
                 updatedRole = roleService.updatePermissions(id, role.getPermissions());
             }
-            if (role.getName() != null | !role.getName().isEmpty()){
+            if (role.getName() != null){
                 updatedRole = roleService.updateName(id, role.getName());
             }
             return ResponseEntity.ok(updatedRole);
@@ -60,7 +66,7 @@ public class RoleController {
         return null;
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteRole(@PathVariable Long id) throws Exception{
         try {

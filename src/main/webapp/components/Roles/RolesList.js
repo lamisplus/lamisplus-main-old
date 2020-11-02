@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
 }));
-
+let roleId = 0;
 const RoleList = (props) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
@@ -43,7 +43,6 @@ const RoleList = (props) => {
   const [permissions, setPermissions] = useState([]);
   const [selectedPermissions, setselectedPermissions] = useState([]);
   const [saving, setSaving] = useState(false);
-  const [roleId, setRoleId] = useState(0);
   const { values, setValues, handleInputChange, resetForm } = useForm({
     roleId: roleId,
     permissions: [],
@@ -90,7 +89,9 @@ const RoleList = (props) => {
   };
 
   const toggleEditPermissions = (id) => {
-    setRoleId(id);
+    console.log(id);
+    roleId = id;
+    console.log(roleId);
     setModal(!modal);
     if (!modal) {
       axios
@@ -109,6 +110,7 @@ const RoleList = (props) => {
   };
 
   const handleEdit = (e) => {
+    console.log(roleId);
     e.preventDefault();
     let permissions = [];
     selectedPermissions.map((p) => {
@@ -215,7 +217,7 @@ const RoleList = (props) => {
               className={classes.button}
               startIcon={<SaveIcon />}
               disabled={saving}
-              onClick={() => toggleEditPermissions(0)}
+              onClick={() => toggleEditPermissions(roleId)}
             >
               {!saving ? (
                 <span style={{ textTransform: "capitalize" }}>Save</span>
@@ -227,7 +229,7 @@ const RoleList = (props) => {
               variant="contained"
               className={classes.button}
               startIcon={<CancelIcon />}
-              onClick={() => toggleEditPermissions(0)}
+              onClick={() => toggleEditPermissions(roleId)}
             >
               <span style={{ textTransform: "capitalize" }}>Cancel</span>
             </MatButton>
