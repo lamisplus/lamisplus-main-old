@@ -9,17 +9,16 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import { MdDashboard, MdContacts } from 'react-icons/md';
 import {Card, CardBody, CardDeck, CardHeader} from 'reactstrap';
-import { Bar, Pie } from 'react-chartjs-2';
-import { getColor } from 'utils/colors';
-import { randomNum } from 'utils/demos';
-import UserProgressTable from 'components/UserProgressTable';
 import PatientSearch from './PatientSearch';
 import { fetchPrescriptions } from "../../actions/pharmacy";
 import { connect } from 'react-redux';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import {drugChart} from './DashBoard/Visualisation/DrugChart';
-import {basicColumn} from './DashBoard/Visualisation/DrugChartBar'
+import {basicColumn} from './DashBoard/Visualisation/DrugChartBar';
+import { url } from "../../api";
+import axios from 'axios';
+
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -155,24 +154,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const userProgressTableData = [
-    {
 
-        name: 'Tom Suliman'
-
-    },
-    {
-        name: 'Jenny Alex'
-    },
-    {
-        name: 'Simi Adedeji'
-    },
-    {
-
-        name: 'Christine Ada'
-    }
-
-];
 
 const ScrollableTabsButtonForce = (props) => {
     useEffect(() => {
@@ -184,7 +166,112 @@ const ScrollableTabsButtonForce = (props) => {
         setValue(newValue);
     };
 
-    
+    const [drugPieChart, setdrugPieChart] = useState({})
+    const [drugBarChart, setdrugBarChart] = useState({})
+
+    // APi request for Pie chart
+      useEffect(() => {
+          async function getCharacters() {
+              try {
+                  const response = await axios.get( url+ 'pharmacy-dashboard/pie');
+                  const body = response.data; 
+                  setdrugPieChart(body)                         
+              } catch (error) {}
+          }
+          getCharacters();
+      }, []); 
+     // APi request for Bar chart
+     useEffect(() => {
+      async function getCharacters() {
+          try {
+              const response = await axios.get( url+ 'pharmacy-dashboard/column');
+              const body2 = response.data; 
+              setdrugBarChart(body2)                         
+          } catch (error) {}
+      }
+      getCharacters();
+    }, []);
+    console.log(drugBarChart.categories)
+    /// This is for the Pie Chart
+    const drugChart = {
+          chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: 0,
+            plotShadow: false,
+            type: drugPieChart.type
+        },
+        title: {
+            text: 'Drug<br>Chart<br>',
+            align: 'center',
+            verticalAlign: 'middle',
+            y: 60
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                dataLabels: {
+                    enabled: true,
+                    distance: -50,
+                    style: {
+                        fontWeight: 'bold',
+                        color: 'white'
+                    }
+                },
+                startAngle: -90,
+                endAngle: 90,
+                center: ['50%', '75%'],
+                size: '110%'
+            }
+        },
+        series: [{
+            name: drugPieChart.name,
+            innerSize: '50%',
+            data: drugPieChart.data
+        }]
+        }
+    // This is for the BAR chart
+        const basicColumn = {
+          chart: {
+              type: drugBarChart.type
+          },
+          title: {
+              text: drugBarChart.text
+          },
+          subtitle: {
+              text: drugBarChart.subtitle
+          },
+          xAxis: drugBarChart.xAxis,
+          yAxis: {
+              min: 0,
+              title: {
+                  text: ' '
+              }
+          },
+          tooltip: {
+              headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+              pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                  '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+              footerFormat: '</table>',
+              shared: true,
+              useHTML: true
+          },
+          plotOptions: {
+              column: {
+                  pointPadding: 0.2,
+                  borderWidth: 0
+              }
+          },
+          series: drugBarChart.series
+        };
+        
+        
     return (
       <div className={classes.root}>
         <div className={classes.inforoot}>
@@ -246,30 +333,7 @@ const ScrollableTabsButtonForce = (props) => {
           <br />
           <br />
           <Grid container spacing={2}>
-            {/* <Grid item xs={6}>
-              <Card>
-                <CardHeader> Recent Dispensed Orders</CardHeader>
-
-                <CardBody>
-                  <UserProgressTable
-                    headers={["name"]}
-                    usersData={userProgressTableData}
-                  />
-                </CardBody>
-              </Card>
-            </Grid> */}
-            {/* <Grid item xs={6}>
-              <Card>
-                <CardHeader> Recent Pending Orders</CardHeader>
-
-                <CardBody>
-                  <UserProgressTable
-                    headers={["name"]}
-                    usersData={userProgressTableData}
-                  />
-                </CardBody>
-              </Card>
-            </Grid> */}
+        
           </Grid>
         </TabPanel>
         <TabPanel value={value} index={1}>

@@ -41,11 +41,11 @@ export const testOrders =  {
     }, {
         name: 'Result Avialable',
         data: [3, 4, 4, 2, 5,5],
-        stack: 'test'
+        stack: 'result'
     }, {
         name: 'Radiology Test Orders',
         data: [2, 5, 6, 2, 1,7],
-        stack: 'result'
+        stack: 'test'
     }, {
         name: 'Radiology Result Avialable',
         data: [3, 0, 4, 4, 3,8],

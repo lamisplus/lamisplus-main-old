@@ -32,9 +32,7 @@ export const testGroup = {
       colorByPoint: true,
       data: [{
           name: 'Chemistry',
-          y: 61.41,
-          sliced: true,
-          selected: true
+          y: 61.41
       }, {
           name: 'Biochemistry',
           y: 11.84
