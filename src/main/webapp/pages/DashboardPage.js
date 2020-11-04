@@ -30,6 +30,8 @@ const  DashboardPage = (props) => {
   const [combineChartData, setcombineChartData] = useState({})
   const [birthRateData, setbirthRateData] = useState({})
   const [birthSeries, setBirthSereies] = useState({})
+  const [deathRateData, setdeathRateData] = useState({})
+  const [deathSeries, setDeathSereies] = useState({})
   useEffect(() => {
     
             props.fetchAllGender();
@@ -64,9 +66,20 @@ useEffect(() => {
               const body2 = response.data;
               setbirthRateData(body2) 
               setBirthSereies(body2.series)
-              //console.log(body2.xAxis)
-              
-              
+        
+      } catch (error) {}
+    }
+    getCharacters();
+}, []); 
+// Death Rate chart 
+useEffect(() => {
+  async function getCharacters() {
+      try {
+          const response = await axios.get( url+ 'patient-dashboard/column/deathRate');
+              const body2 = response.data;
+              setdeathRateData(body2) 
+              setDeathSereies(body2.series)
+        
       } catch (error) {}
     }
     getCharacters();
@@ -184,6 +197,52 @@ const birthChart = {
   }]
   };
 /* End of BirthRate Chart */
+
+
+/* DEATH Rate Chart */
+const deathChart = {
+
+  chart: {
+    type: deathRateData.type,
+    options3d: {
+        enabled: true,
+        alpha: 10,
+        beta: 25,
+        depth: 70
+    }
+  },
+  title: {
+    text: deathRateData.text
+  },
+  subtitle: {
+    text: deathRateData.text
+  },
+  plotOptions: {
+    column: {
+        depth: 25
+    }
+  },
+  xAxis: {
+    categories: Highcharts.getOptions().lang.shortMonths,
+    labels: {
+        skew3d: true,
+        style: {
+            fontSize: '16px'
+        }
+    }
+  },
+  yAxis: {
+    title: {
+        text: null
+    }
+  },
+  
+  series: [{
+    name: deathSeries.name,
+    data: deathSeries.data
+  }]
+  };
+/* End of Death Rate Chart */
 
 
   return (
