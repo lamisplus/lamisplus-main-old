@@ -51,8 +51,7 @@ const useStyles = makeStyles({
         if(props.location.state.encounterId !="" ){         
                 setLoading(true);
                     const onSuccess = () => {
-                        setLoading(false)
-                        
+                        setLoading(false)  
                     }
                     const onError = () => {
                         setLoading(false)     

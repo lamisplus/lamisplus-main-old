@@ -51,7 +51,7 @@ const PatientSearch = (props) => {
           },
         ]}
         data={prescriptions.map((prescription) => ({
-          Id: prescription.patientId,
+          Id: prescription.hospitalNumber,
           name: prescription.firstName,
           date: prescription.dateEncounter,
           prescribedCount: prescription.formDataObj.length,

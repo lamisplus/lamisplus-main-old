@@ -37,6 +37,25 @@ export const fetchAllBootstrapModule = (onSuccess, onError) => dispatch => {
       console.log(error)
     });
 };
+export const fetchAllBootstrapModuleBYBatchNum = (status, batchNum,onSuccess, onError) => dispatch => {
+
+  axios
+    .get(`${baseUrl}modules/${status}/${batchNum}/`)
+    .then(response => {
+      dispatch({
+        type: ACTION_TYPES.FETCH_ALL_BOOTSTRAP_MODULE_BY_BATCH_NUM,
+        payload: response.data
+      })
+      onSuccess(response.data);
+    })
+    .catch(error => {
+      dispatch({
+        type: ACTION_TYPES.ERROR_FETCH_ALL_BOOTSTRAP_MODULE_BY_BATCH_NUM,
+        payload: 'Something went wrong, please try again'
+      })
+      onError();
+    });
+};
 
 export const installBootstrapModule = (id, onSuccess, onError)=> dispatch => {
   if(id){
@@ -49,7 +68,7 @@ export const installBootstrapModule = (id, onSuccess, onError)=> dispatch => {
         payload: response.data
       })
 
-      onSuccess && onSuccess();
+      onSuccess && onSuccess(response.data);
       toast.success("Module installed successfully!");
     })
     .catch(error => {

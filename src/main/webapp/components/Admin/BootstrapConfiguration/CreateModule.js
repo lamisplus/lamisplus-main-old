@@ -7,8 +7,7 @@ import { Link } from 'react-router-dom';
 import MatButton from '@material-ui/core/Button'
 import { TiArrowBack} from 'react-icons/ti';
 import 'react-widgets/dist/css/react-widgets.css'
-import { connect } from 'react-redux';
-//Date Picker
+import { connect, useDispatch } from 'react-redux';
 import Page from '../../Page'
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { DropzoneArea } from 'material-ui-dropzone';
@@ -25,7 +24,7 @@ import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import {  MdDelete, MdModeEdit } from "react-icons/md";
 import { createBootstrapModule, startBootstrapModule } from '../../../actions/bootstrapModule';
-import { installBootstrapModule } from '../../../actions/bootstrapModule';
+import { installBootstrapModule, fetchAllBootstrapModuleBYBatchNum } from '../../../actions/bootstrapModule';
 import Message from './Message';
 import Progress from './Progress';
 import axios from 'axios';
@@ -34,6 +33,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
 import { url } from "./../../../api";
+import { GiConsoleController } from 'react-icons/gi'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,19 +52,21 @@ const useStyles = makeStyles((theme) => ({
 td: { borderBottom :'#fff'}
 }));
 
-
 function getSteps() {
-  return ['Upload ', 'Install ', 'Start'];
+  return ['Upload', 'Install', 'Start'];
 }
 
 
 const CreateModule = (props) => {
 
     const classes = useStyles()
+    const apiURl = url + "module/";
+    const dispatch = useDispatch();
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
     const [fileToUpload, setFileToUpload] = useState({})
     const [uploadResponse, setUploadResponse] = React.useState({})
+    const [uploadModuleList, setUploadModuleList] = React.useState({})
     const [filename, setFilename] = useState('Choose File');
     const [uploadedFile, setUploadedFile] = useState({});
     const [message, setMessage] = useState('');
@@ -79,7 +81,29 @@ const CreateModule = (props) => {
     const [modal, setModal] = useState(false)//modal to View 
     const toggleModal = () => setModal(!modal)
     const [collectModal, setcollectModal] = useState([])//
+    const [disabledUploadButton, setDisabledUploadButton] = useState(false)
+    const [disabledNextButton, setDisabledNextButton] = useState(false)
+    const [moduleStatus, setModuleStatus] = useState() 
+    const [moduleBatchNum, setModuleBatchNum] = useState() 
 
+    useEffect(() => {
+      const onSuccess = (data) => {
+          //setUploadResponse(data)
+          setUploadModuleList(data)
+         }
+      const onError = () => {}
+        props.fetchAllBootstrapModuleBYBatchNum(moduleStatus,moduleBatchNum, onSuccess,onError)
+      
+     }, [moduleStatus,moduleBatchNum]); //componentDidMount
+    const handleModuleBatchList = (moduleStatus,moduleBatchNum) => {
+      const onSuccess = (data) => {
+            console.log(data)
+            setUploadResponse(data)
+            setActiveStep((prevActiveStep) => prevActiveStep + 1); //auotmatically move to the next phase of installation in the wizard
+      }
+      const onError = () => {}
+          props.fetchAllBootstrapModuleBYBatchNum(moduleStatus,moduleBatchNum, onSuccess,onError)
+    }
 
   const handleNext = async e => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -103,65 +127,75 @@ const CreateModule = (props) => {
   }
 
   const handleInstallModule = (id) => {
-    setInstallationOverlay(true)
-    setDisableNextButtonProcess(true)
-    const onSuccess = () => {
+      setDisabledNextButton(true)
+      setInstallationOverlay(true)
+      setDisableNextButtonProcess(true)
+      const onSuccess = (installResponse) => {
+      const installModuleDetail = installResponse
+      var foundIndex = uploadResponse.findIndex(x => x.batchNo == installModuleDetail.batchNo);
+      uploadResponse[foundIndex] = installModuleDetail
+      console.log(uploadResponse)
+      console.log(installResponse)
+      setDisabledNextButton(false)
       setInstallationOverlay(false) 
-      setDisableNextButtonProcess(false)
+      setDisableNextButtonProcess(false)    
     }
     const onError = () => {
+      setDisabledNextButton(false)
       setInstallationOverlay(false)
       setDisableNextButtonProcess(false) 
     }
     props.installBootstrapModule(id, onSuccess, onError);
   }
 
-  const handleUploadFile = async e => {
-      if(fileToUpload[0] !== null){
-        setDisableNextButtonProcess(true)
-        setInstallationMessage('Processing, please wait...')     
-        const form_Data = new FormData();
-        form_Data.append('file1', fileToUpload[0]); 
-        
-        try {
-          const res = await axios.post(url+'modules/upload', form_Data, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-            
-          onUploadProgress: progressEvent => {
-            setUploadPercentage(
-              parseInt(
-                Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              )
-            );
-
-                // Clear percentage
-                setTimeout(() => setUploadPercentage(0), 10000);
-              }
+  const handleUploadFile = async e => {  
+    if(fileToUpload[0]){
+      setDisabledUploadButton(true)
+      setDisableNextButtonProcess(true)
+      setInstallationMessage('Processing, please wait...')     
+      const form_Data = new FormData();
+      form_Data.append('file1', fileToUpload[0]);      
+      try {
+        const res = await axios.post(url+'modules/upload', form_Data, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
           
-            });
-            
-            const { fileName, filePath } = res.data;
-
-            setUploadedFile({ fileName, filePath });
-            setMessage('File Uploaded');
-            setUploadResponse(res.data===null ? {} :res.data)
-            setuploadButtonhidden(true)
-            setDisableNextButtonProcess(false) //Enable the next process button for the next stage 
-            setInstallationMessage('')
-            console.log(uploadResponse)
-            setActiveStep((prevActiveStep) => prevActiveStep + 1); //auotmatically move to the next phase of installation in the wizard
-          } catch (err) {
-            console.log(err.response)
-            if (err.response.status === 500) {
-              setMessage('There was a problem in uploading file! please try again');
-            } else if(err.response.status === 400){
-              setMessage('Module already exist');
-            }else{
-
+        onUploadProgress: progressEvent => {
+          setUploadPercentage(
+            parseInt(
+              Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            )
+          );
+              // Clear percentage
+              setTimeout(() => setUploadPercentage(0), 10000);
             }
+          });
+          
+          const { fileName, filePath } = res.data;
+          setUploadedFile({ fileName, filePath });
+          setMessage('File Uploaded');
+          setUploadResponse(res.data===null ? {} :res.data)
+          setuploadButtonhidden(true)
+          setDisableNextButtonProcess(false) //Enable the next process button for the next stage 
+          setInstallationMessage('')
+          setActiveStep((prevActiveStep) => prevActiveStep + 1); 
+      } catch (err) {
+          console.log(err)
+          if (err.response && err.response.status === 500) {
+            setDisabledUploadButton(false)
+            setMessage('There was a problem in uploading file! please try again...');
+          } else if(err.response && err.response.status === 400){
+            setDisabledUploadButton(false)
+            setMessage('Module already exist! please try again...');
+            //setActiveStep((prevActiveStep) => prevActiveStep + 1); 
+          }else{
+            setDisabledUploadButton(false)
+            setMessage('Something went wrong! please try again...');
           }
+        }
+      }else{
+        setMessage('Please upload a jar file');
       }
   }
 
@@ -195,21 +229,6 @@ const CreateModule = (props) => {
                                           
                 </MenuItem>
                 
-                <MenuItem style={{ color:"#000 !important"}}>
-                      <Link
-                          to={{
-                            pathname: "/admin/bootstrap-configuration/updated-module",
-                            currentId: {}
-                          }}
-                      >
-                      <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Update Module </span>                   
-                    </Link>
-                </MenuItem> 
-                <MenuItem  style={{ color:"#000 !important"}} >                      
-                
-                      <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Deactivate Module</span>
-                                          
-                </MenuItem>
                 <MenuItem  style={{ color:"#000 !important"}} >                      
                 
                       <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Delete Module</span>
@@ -220,6 +239,8 @@ const CreateModule = (props) => {
     </Menu>
       )
 }
+
+
 
   function getStepContent(stepIndex) {
     switch (stepIndex) {
@@ -236,7 +257,7 @@ const CreateModule = (props) => {
                                   <AlertTitle>Instructions to add new module</AlertTitle>
                                     <ul>
                                       <li>1. Add file  <strong>(only *.jar)</strong></li>
-                                      <li>2. Click proceed</li>
+                                      <li>2. Click Upload</li>
                                     </ul>
                                     <br/>
                                     <strong>NOTE:</strong> Adding, or uploading a module will restart the application, therefore all scheduled task and background processes will be interrupted. 
@@ -312,13 +333,14 @@ const CreateModule = (props) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {uploadResponse.map((row) => (
+                          {console.log(props.moduleLists)}
+                          {uploadResponse.map((row) => (
                           <tr key={row.id}>
                             <td>{row.name===""?" ":row.name}</td>
                             <td>{row.description===""?" ":row.description}</td>
-                            <td>{row.basePackage===""?" ":row.basePackage}</td>
+                            <td>{row.createdBy===""?" ":row.createdBy}</td>
                             <td>{row.version===""?" ":row.version}</td>
-                            <td><Badge  color="primary">{row.status===2 ? "Uploaded":"Unploaded"}</Badge></td>
+                            <td><Badge  color="primary">{row.status===1 ? "Uploaded":"Installed"}</Badge></td>
                             <td>{sampleAction(row.id)}</td>
                           </tr>
 
@@ -348,6 +370,34 @@ const CreateModule = (props) => {
             </Alert>
               <br/>
               <br/>
+              <Table striped>
+                        <thead style={{  backgroundColor:'#9F9FA5' }}>
+                        <tr>
+                          
+                          <th>Module Name</th>
+                          <th>Description</th>
+                          <th>Author</th>
+                          <th>Version</th>
+                          <th>Status</th>
+                          
+                        </tr>
+                      </thead>
+                      <tbody>
+                          {uploadResponse.map((row) => (
+                          <tr key={row.id}>
+                            <td>{row.name===""?" ":row.name}</td>
+                            <td>{row.description===""?" ":row.description}</td>
+                            <td>{row.createdBy===""?" ":row.createdBy}</td>
+                            <td>{row.version===""?" ":row.version}</td>
+                            <td><Badge  color="primary">{row.status===1 ? "Uploaded":"Installed"}</Badge></td>
+                           
+                          </tr>
+
+                          ))
+                        }
+                        
+                      </tbody>
+                    </Table>
           </>
         );
       default:
@@ -420,6 +470,7 @@ return (
                               color="primary" 
                               onClick={handleUploadFile}
                               hidden={uploadButtonhidden}
+                              disabled={disabledUploadButton}
                               >
                               Upload Module
                             </Button>
@@ -437,6 +488,7 @@ return (
                               variant="contained" 
                               color="primary" 
                               onClick={handleNext}
+                              disabled={disabledNextButton}
                               >
                               {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                             </Button>
@@ -455,6 +507,10 @@ return (
   )
   
 }
+const mapStateToProps = state => {
+  return {
+      moduleLists: state.boostrapmodule.moduleList
+  };
+}; 
 
-
-export default connect(null, { createBootstrapModule, installBootstrapModule, startBootstrapModule })(CreateModule);
+export default connect(mapStateToProps, { createBootstrapModule, installBootstrapModule, startBootstrapModule, fetchAllBootstrapModuleBYBatchNum})(CreateModule);
