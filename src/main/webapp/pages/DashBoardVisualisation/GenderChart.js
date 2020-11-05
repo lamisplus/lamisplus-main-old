@@ -1,6 +1,24 @@
-export const genderChart = {
+import React, {  useEffect } from "react";
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { url } from "../../api";
+const jsonFormat = [
+    {
+      "data": [
+        ['Male', 45.0],
+        ['Female', 26.8],
+        ['pediatric', 26.8]
+      ],
+      "name": "TOTAL REGISTERED PATIENTS (MALE AND FEMALE)",
+      "type": "pie",
+      "title": "TOTAL REGISTERED PATIENTS (MALE AND FEMALE)  In The Last 4 Months"
+    }
+  ]
+
+  
+  export const genderChart = {
     chart: {
-        type: 'pie',
+        type: jsonFormat[0].type,
         options3d: {
             enabled: true,
             alpha: 45,
@@ -30,12 +48,11 @@ export const genderChart = {
         }
     },
     series: [{
-        type: 'pie',
-        name: 'Gender share',
-        data: [
-            ['Male', 45.0],
-            ['Female', 26.8],
-            ['pediatric', 26.8],
-        ]
+        
+        name: jsonFormat[0].name,
+        data: jsonFormat[0].data
     }]
-};
+ }
+
+
+ 
