@@ -237,6 +237,7 @@ return (
                                             id='lab_number'
                                             value={labNumber!=="" ? labNumber : labNum.lab_number}
                                             onChange={handleLabNumber}
+                                            disabled={labNumber && labNum.lab_number ? 'true' : ''}
                                         />
                                         </FormGroup>                            
                                     </Col>
@@ -281,7 +282,7 @@ return (
             </Col>
         </Row>
       <ModalSample modalstatus={modal} togglestatus={toggleModal} datasample={collectModal}  labnumber={labNum}/>
-      <ModalSampleTransfer modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} labnumber={labNum}/>
+      <ModalSampleTransfer modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} labnumber={labNumber!=="" ? labNumber : labNum}/>
       <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />
     </Page>
   )  
