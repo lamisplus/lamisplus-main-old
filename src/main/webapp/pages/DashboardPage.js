@@ -41,7 +41,8 @@ const  DashboardPage = (props) => {
     async function getCharacters() {
         try {
             const response = await axios.get( url+ 'patient-dashboard/pie');
-                const body = response.data;
+                //const body = response.data;
+                const body = {};
                 setGenderData(body)   
         } catch (error) {}
       }
@@ -52,7 +53,8 @@ useEffect(() => {
   async function getCharacters() {
       try {
           const response = await axios.get( url+ 'patient-dashboard/column');
-              const body = response.data;
+              //const body = response.data;
+              const body = {};
               setcombineChartData(body)  
       } catch (error) {}
     }
@@ -63,9 +65,10 @@ useEffect(() => {
   async function getCharacters() {
       try {
           const response = await axios.get( url+ 'patient-dashboard/column/birthRate');
-              const body2 = response.data;
+              //const body2 = response.data;
+              const body2 = {};
               setbirthRateData(body2) 
-              setBirthSereies(body2.series)
+              //setBirthSereies(body2.series)
         
       } catch (error) {}
     }
@@ -76,9 +79,10 @@ useEffect(() => {
   async function getCharacters() {
       try {
           const response = await axios.get( url+ 'patient-dashboard/column/deathRate');
-              const body2 = response.data;
+              //const body2 = response.data;
+              const body2 = {};
               setdeathRateData(body2) 
-              setDeathSereies(body2.series)
+              //setDeathSereies(body2.series)
         
       } catch (error) {}
     }

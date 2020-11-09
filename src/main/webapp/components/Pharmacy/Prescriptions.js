@@ -187,7 +187,12 @@ const Prescriptions = (props) => {
                 <Card className="mb-12">
                   <CardHeader>
                     DRUG ORDER DETAILS
-                    <Link to="/pharmacy">
+                    <Link 
+                      to ={{ 
+                        pathname: "/pharmacy",  
+                        state: 'prescription'
+                      }}
+                    >
                       <MatButton
                         type="submit"
                         variant="contained"

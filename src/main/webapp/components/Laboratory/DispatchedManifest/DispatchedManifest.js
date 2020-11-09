@@ -171,6 +171,7 @@ useEffect(() => {
         options={{
             search: false,
             selection: true,
+            pageSize:100,
             headerStyle: {
                 backgroundColor: "#9F9FA5",
                 color: "#000",
@@ -178,17 +179,20 @@ useEffect(() => {
             },
          
         }}
-        actions={[         
-            {
-              tooltip: 'Dispatch All Selected Sample',
-              icon: 'add',
-              onClick: (evt, data) =>
-                //alert('You want to dispatch ' + evt + data),
-                getDispatch(evt, data)
+        // actions={[         
+        //     {
+        //       tooltip: 'Dispatch All Selected Sample',
+        //       icon: 'add' + 'Add Manifest',
+        //       label: 'Add Manifest',
+        //       onClick: (evt, data) =>
+        //         //alert('You want to dispatch ' + evt + data),
+        //         getDispatch(evt, data)
                 
             
-            }
-        ]}
+        //     }
+        // ]}
+        onSelectionChange={(rows) => alert('You selected ' + rows.length + ' rows')}
+       
       />
       <DispatchedModal modalstatus={modal3} togglestatus={togglemodal3} manifestSamples={collectmodal} />
 

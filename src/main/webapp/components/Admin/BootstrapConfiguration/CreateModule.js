@@ -22,7 +22,7 @@ import Typography from '@material-ui/core/Typography';
 import { Table } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
-import {  MdDelete, MdModeEdit } from "react-icons/md";
+import {  MdDelete } from "react-icons/md";
 import { createBootstrapModule, startBootstrapModule } from '../../../actions/bootstrapModule';
 import { installBootstrapModule, fetchAllBootstrapModuleBYBatchNum } from '../../../actions/bootstrapModule';
 import Message from './Message';
@@ -33,7 +33,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
 import { url } from "./../../../api";
-import { GiConsoleController } from 'react-icons/gi'
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -121,9 +121,15 @@ const CreateModule = (props) => {
     setActiveStep(0);
   };
 
-  const startModule = (e) => {  
-    setcollectModal({...collectModal, ...e});
-    setModal(!modal) 
+  const startModule = () => {  
+    
+      const onSuccess = () => {
+        setTimeout(() => {
+          props.history.push(`/admin/bootstrap-configuration`)
+      }, 1000)
+      }
+    const onError = () => {}
+    props.startBootstrapModule( onSuccess, onError); 
   }
 
   const handleInstallModule = (id) => {
@@ -487,10 +493,10 @@ return (
                               hidden={disableNextButtonProcess}
                               variant="contained" 
                               color="primary" 
-                              onClick={handleNext}
+                              onClick={activeStep === steps.length - 1 ? startModule : handleNext}
                               disabled={disabledNextButton}
                               >
-                              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                              {activeStep === steps.length - 1 ? 'Finish/Start Module' : 'Next'}
                             </Button>
                           </div>
                         </div>

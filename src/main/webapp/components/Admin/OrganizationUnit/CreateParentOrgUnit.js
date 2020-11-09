@@ -4,7 +4,7 @@ import { Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Input,FormFeedback,Labe
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert, AlertTitle } from '@material-ui/lab';
-import CreatOrgUnitByUpload from "./CreatOrgUnitByUpload";
+import CreateParentOrgUnitByUpload from "./CreateParentOrgUnitByUpload";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 
 
 
-const CreateOrgUnit = (props) => {
+const CreateParentOrgUnit = (props) => {
     const classes = useStyles()
     const datasample = props.datasample ? props.datasample : {};
     const [otherfields, setOtherFields] = useState({fileName:""});
@@ -72,7 +72,7 @@ const createUploadBatch = () => {
   return (      
       <div >
               <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
-                  <ModalHeader toggle={props.togglestatus}>Create Organization Unit</ModalHeader>
+                  <ModalHeader toggle={props.togglestatus}>Create Parent Organization Unit</ModalHeader>
                       <ModalBody>
                           <Card>
                             <CardBody>
@@ -138,10 +138,10 @@ const createUploadBatch = () => {
                 </Card>
           </ModalBody>
       </Modal>
-      <CreatOrgUnitByUpload modalstatus={modal3} togglestatus={toggleModal3}  />
+      <CreateParentOrgUnitByUpload modalstatus={modal3} togglestatus={toggleModal3}  />
  
     </div>
   );
 }
 
-export default CreateOrgUnit;
+export default CreateParentOrgUnit;

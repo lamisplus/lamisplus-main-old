@@ -17,8 +17,9 @@ import MaterialTable from 'material-table';
 import {  MdDelete, MdModeEdit, MdRemoveRedEye } from "react-icons/md";
 import DeleteModule from "./DeleteModule";
 import CreateOrganizationUnit from "./CreateOrganizationUnit";
+import CreatOrgUnitByUpload from "./CreatOrgUnitByUpload";
 import { useSelector, useDispatch } from 'react-redux';
-import {  fetchAllOrganizationalUnit } from '../../../actions/organizationalUnit';
+import {  fetchAllOrganizationalUnit, Delete } from '../../../actions/organizationalUnit';
 
 
 
@@ -42,6 +43,8 @@ const useStyles = makeStyles({
     const toggleModal = () => setModal(!modal)
     const [modal2, setModal2] = useState(false) //
     const toggleModal2 = () => setModal2(!modal2)
+    const [modal3, setModal3] = useState(false) //
+    const toggleModal3 = () => setModal3(!modal3)
     const classes = useStyles()
     const [loading, setLoading] = useState('')
     const dispatch = useDispatch();
@@ -58,16 +61,17 @@ const useStyles = makeStyles({
       }
         const fetchAllOrgUnit = dispatch(fetchAllOrganizationalUnit(onSuccess,onError ));
 
-  }, []); //componentDidMount
-    const deleteModule = (row) => {  
-      setcollectModal({...collectModal, ...row});
-      setModal(!modal) 
+    }, []); //componentDidMount
+
+    const deleteModule = (rowId) => {  
+      if (window.confirm(`Are you sure to delete this record? ${rowId}`))
+      dispatch(Delete(4444))
     }
 
     const createOrgUnit = () => {  
       setModal2(!modal2) 
     }
-console.log(listOfAllOrgUnit)
+  console.log(listOfAllOrgUnit)
     
 
 return (
@@ -117,24 +121,19 @@ return (
                                               Actions <span aria-hidden>▾</span>
                                             </MenuButton>
                                                 <MenuList style={{ color:"#000 !important"}} >
-                                                    <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule('module to delete')}>                      
+                                                    <MenuItem  style={{ color:"#000 !important"}} >                      
                                                       <Link
-                                                        to={{pathname: "/admin/parent-organization-unit", state: { parentOrganisationUnitId: row.parentOrganisationUnitId  }}}>    
+                                                        to={{pathname: "/admin/parent-organization-unit", state: { parentOrganisationUnitId: row.organisationUnitLevelId  }}}>    
                                                           <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>View Organ. Unit</span>
                                                        </Link>  
                                                       </MenuItem>
                                                       
                                                       <MenuItem style={{ color:"#000 !important"}}>
-                                                            <Link
-                                                                to={{
-                                                                  pathname: "/updated-module",
-                                                                  currentId: {}
-                                                                }}
-                                                            >
+                                                            
                                                               <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Org. Unit  </span>                   
-                                                            </Link>
+                                                           
                                                       </MenuItem> 
-                                                      <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule('module to delete')}>                      
+                                                      <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule(row.organisationUnitLevelId)}>                      
                                                       
                                                             <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Delete Org. Unit</span>
                                                                                 
@@ -162,7 +161,8 @@ return (
         </Row>
        <DeleteModule modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
        <CreateOrganizationUnit modalstatus={modal2} togglestatus={toggleModal2}  />
-
+       <CreatOrgUnitByUpload modalstatus={modal3} togglestatus={toggleModal3}  />
+                       
        
     </Page>
   )

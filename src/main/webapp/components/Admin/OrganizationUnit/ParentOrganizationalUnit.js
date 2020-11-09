@@ -16,7 +16,7 @@ import "@reach/menu-button/styles.css";
 import MaterialTable from 'material-table';
 import {  MdDelete, MdModeEdit, MdRemoveRedEye } from "react-icons/md";
 import DeleteModule from "./DeleteModule";
-import CreateOrganizationUnit from "./CreateOrganizationUnit";
+import CreateParentOrgUnit from "./CreateParentOrgUnit";
 import { useSelector, useDispatch } from 'react-redux';
 import {  fetchAllParentOrganizationalUnit } from '../../../actions/organizationalUnit';
 
@@ -65,7 +65,7 @@ const useStyles = makeStyles({
       setModal(!modal) 
     }
 
-    const createOrgUnit = () => {  
+    const createParentOrgUnit = () => {  
       setModal2(!modal2) 
     }
 console.log(props.location.state)
@@ -88,11 +88,21 @@ return (
                     color='primary'
                     className={classes.button}                        
                     className=" float-right mr-1"
-                    onClick={() => createOrgUnit()}
+                    
                   >
                     <TiArrowBack/>{" "} Back 
                   </MatButton>
                 </Link>
+                <MatButton
+                  type='submit'
+                  variant='contained'
+                  color='primary'
+                  className={classes.button}                        
+                  className=" float-right mr-1"
+                  onClick={() => createParentOrgUnit()}
+                >
+                  <TiPlus/>{" "} New 
+                </MatButton>
                 </h1>
                 <Card className="mb-12">
                 
@@ -126,10 +136,7 @@ return (
                                                 <MenuList style={{ color:"#000 !important"}} > 
                                                       <MenuItem style={{ color:"#000 !important"}}>
                                                             <Link
-                                                                to={{
-                                                                  pathname: "/updated-module",
-                                                                  currentId: {}
-                                                                }}
+                                                                
                                                             >
                                                               <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit  Unit  </span>                   
                                                             </Link>
@@ -161,7 +168,7 @@ return (
             </Col>
         </Row>
        <DeleteModule modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
-       <CreateOrganizationUnit modalstatus={modal2} togglestatus={toggleModal2}  />
+       <CreateParentOrgUnit modalstatus={modal2} togglestatus={toggleModal2}  />
 
        
     </Page>
