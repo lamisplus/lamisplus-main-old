@@ -15,7 +15,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PharmacyDashboardService {
     private final List<Map<String, Object>> series;
-    private final List<Object> data = new ArrayList<Object>();
     private final ChartUtil chartUtil;
     private Map<String, Object> yAxisTitle = new HashMap();
     private List<Object> columnSeries = new ArrayList<>();
@@ -27,6 +26,7 @@ public class PharmacyDashboardService {
         String chartTitle = "TOTAL PRESCRIPTIONS AND DISPENSED DRUGS IN LAST 7 DAYS";
         String name = "FOR FACILITY";
         List prescribed = new ArrayList<>();
+        List<Object> data = new ArrayList<Object>();
         prescribed.add("Prescribed");
         prescribed.add(48);
 
@@ -45,23 +45,25 @@ public class PharmacyDashboardService {
         String type = "column";
         String chartTitle = "MONTHLY AVERAGE DRUG";
         String subTitle = "For Facilities";
+        List<Object> prescribedData = new ArrayList<Object>();
 
-        data.add(10);
-        data.add(15);
-        data.add(23);
-        data.add(50);
-        data.add(23);
-        data.add(89);
-        columnSeries.add(chartUtil.getMainMap(data, "Prescribed", null, null, null));
-        data.clear();
+        prescribedData.add(10);
+        prescribedData.add(15);
+        prescribedData.add(23);
+        prescribedData.add(50);
+        prescribedData.add(23);
+        prescribedData.add(89);
+        columnSeries.add(chartUtil.getMainMap(prescribedData, "Prescribed", null, null, null));
 
-        data.add(45);
-        data.add(479);
-        data.add(23);
-        data.add(45);
-        data.add(23);
-        data.add(45);
-        columnSeries.add(chartUtil.getMainMap(data, "Dispensed", null, null, null));
+        List<Object> dispensedData = new ArrayList<Object>();
+
+        dispensedData.add(45);
+        dispensedData.add(479);
+        dispensedData.add(23);
+        dispensedData.add(45);
+        dispensedData.add(23);
+        dispensedData.add(45);
+        columnSeries.add(chartUtil.getMainMap(dispensedData, "Dispensed", null, null, null));
 
         return chartUtil.buildMainMap(type, chartTitle, subTitle, chartUtil.getXAxis(),
                 chartUtil.getYAxis(), columnSeries, null);
@@ -69,10 +71,6 @@ public class PharmacyDashboardService {
 
     private void clearChartList() {
         series.clear();
-        data.clear();
-        data.clear();
-        /*xAxis.clear();
-        yAxis.clear();*/
         yAxisTitle.clear();
         columnSeries.clear();
     }

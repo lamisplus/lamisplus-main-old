@@ -15,23 +15,20 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PatientDashboardService {
     private final List<Map<String, Object>> series;
-    private final List<Object> data = new ArrayList<Object>();
     private final ChartUtil chartUtil;
     private Map<String, List> xAxis = new HashMap();
-    private List categories;
     private Map<String, Object> yAxis = new HashMap();
     private Map<String, Object> yAxisTitle = new HashMap();
-    private List<Object> columnSeries = new ArrayList<>();
 
 
     public Object getPieChart() {
         clearChartList();
-        Map<String, Object> map = new HashMap<>();
 
         String type = "pie";
         String chartTitle = "TOTAL REGISTERED PATIENTS (MALE AND FEMALE)  In The Last 4 Months";
         String name = "TOTAL REGISTERED PATIENTS (MALE AND FEMALE)";
         List<Object> pediatrics = new ArrayList<>();
+        List<Object> data = new ArrayList<Object>();
         pediatrics.add("pediatrics");
         pediatrics.add(48);
 
@@ -55,31 +52,33 @@ public class PatientDashboardService {
         String type = "column";
         String chartTitle = "Total Appointment | Attendance | Emergencies";
         String subTitle = "For Facilities";
-        data.add(23);
-        data.add(45);
-        data.add(23);
-        data.add(50);
-        data.add(23);
-        data.add(89);
-        columnSeries.add(chartUtil.getMainMap(data, "Appointment", null, null, null));
-        data.clear();
+        List<Object> columnSeries = new ArrayList<>();
+        List<Object> appointmentData = new ArrayList<Object>();
+        appointmentData.add(23);
+        appointmentData.add(45);
+        appointmentData.add(23);
+        appointmentData.add(50);
+        appointmentData.add(23);
+        appointmentData.add(89);
+        columnSeries.add(chartUtil.getMainMap(appointmentData, "Appointment", null, null, null));
 
-        data.add(5);
-        data.add(9);
-        data.add(30);
-        data.add(5);
-        data.add(23);
-        data.add(45);
-        columnSeries.add(chartUtil.getMainMap(data, "Attendance", null, null, null));
-        data.clear();
+        List<Object> attendanceData = new ArrayList<Object>();
+        attendanceData.add(5);
+        attendanceData.add(9);
+        attendanceData.add(30);
+        attendanceData.add(5);
+        attendanceData.add(23);
+        attendanceData.add(45);
+        columnSeries.add(chartUtil.getMainMap(attendanceData, "Attendance", null, null, null));
 
-        data.add(60);
-        data.add(19);
-        data.add(23);
-        data.add(45);
-        data.add(23);
-        data.add(45);
-        columnSeries.add(chartUtil.getMainMap(data, "Emergencies", null, null, null));
+        List<Object> emergenciesData = new ArrayList<Object>();
+        emergenciesData.add(60);
+        emergenciesData.add(19);
+        emergenciesData.add(23);
+        emergenciesData.add(45);
+        emergenciesData.add(23);
+        emergenciesData.add(45);
+        columnSeries.add(chartUtil.getMainMap(emergenciesData, "Emergencies", null, null, null));
 
         return chartUtil.buildMainMap(type, chartTitle, subTitle, chartUtil.getXAxis(),
                 chartUtil.getYAxis(), columnSeries, null);
@@ -90,6 +89,7 @@ public class PatientDashboardService {
         String type = "column";
         String chartTitle = "Total Birth Rate for the pass 6 months";
         String subTitle = "For Facilities";
+        List<Object> data = new ArrayList<Object>();
         data.add(8);
         data.add(10);
         data.add(23);
@@ -108,6 +108,7 @@ public class PatientDashboardService {
         String type = "column";
         String chartTitle = "Total Death Rate for the pass 6 months";
         String subTitle = "For Facilities";
+        List<Object> data = new ArrayList<Object>();
 
         data.add(18);
         data.add(30);
@@ -127,11 +128,8 @@ public class PatientDashboardService {
 
     private void clearChartList() {
         series.clear();
-        data.clear();
-        data.clear();
         xAxis.clear();
         yAxis.clear();
         yAxisTitle.clear();
-        columnSeries.clear();
     }
 }

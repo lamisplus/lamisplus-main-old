@@ -15,12 +15,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class LaboratoryDashboardService {
     private final List<Map<String, Object>> series;
-    private final List<Object> data = new ArrayList<Object>();
     private final ChartUtil chartUtil;
     private Map<String, List> xAxis = new HashMap();
     private Map<String, Object> yAxis = new HashMap();
     private Map<String, Object> yAxisTitle = new HashMap();
     private List<Object> columnSeries = new ArrayList<>();
+    private final List<Object> data = new ArrayList<Object>();
+
 
     public Object getLaboratoryPieChart() {
         clearChartList();
@@ -28,12 +29,13 @@ public class LaboratoryDashboardService {
         String chartTitle = "LABORATORY TEST GROUP ANALYSIS";
         String name = "FOR FACILITY";
         List chemistry = new ArrayList();
+        List<Object> data = new ArrayList<Object>();
         chemistry.add("Chemistry");
-        chemistry.add(10);
+        chemistry.add(8);
 
         List biochemistry = new ArrayList();
         biochemistry.add("Biochemistry");
-        biochemistry.add(10);
+        biochemistry.add(11);
 
         List haematology = new ArrayList();
         haematology.add("Haematology");
@@ -45,11 +47,11 @@ public class LaboratoryDashboardService {
 
         List virology = new ArrayList();
         virology.add("Virology");
-        virology.add(10);
+        virology.add(7);
 
-        Map<String, Object> others = new HashMap();
-        others.put("name", "Others");
-        others.put("y", 10);
+        List others = new ArrayList();
+        others.add("Others");
+        others.add(4);
 
         data.add(chemistry);
         data.add(biochemistry);
@@ -66,77 +68,79 @@ public class LaboratoryDashboardService {
         String type = "column";
         String chartTitle = "LIMS CHART ANALYSIS";
         String subTitle = "For Facilities";
+        List<Object> sampleRejectedData = new ArrayList<Object>();
+        List<Object> sampleDispatchedData = new ArrayList<Object>();
+        List<Object> resultAvailableData = new ArrayList<Object>();
 
-        data.add(10);
-        data.add(15);
-        data.add(23);
-        data.add(50);
-        data.add(23);
-        data.add(89);
-        columnSeries.add(chartUtil.getMainMap(data, "Samples Rejected", null, null, null));
-        data.clear();
 
-        data.add(45);
-        data.add(49);
-        data.add(23);
-        data.add(15);
-        data.add(23);
-        data.add(45);
-        columnSeries.add(chartUtil.getMainMap(data, "Samples Dispatched", null, null, null));
-        data.clear();
+        sampleRejectedData.add(5);
+        sampleRejectedData.add(15);
+        sampleRejectedData.add(23);
+        sampleRejectedData.add(50);
+        sampleRejectedData.add(23);
+        sampleRejectedData.add(89);
+        columnSeries.add(chartUtil.getMainMap(sampleRejectedData, "Samples Rejected", null, null, null));
 
-        data.add(60);
-        data.add(19);
-        data.add(23);
-        data.add(45);
-        data.add(23);
-        data.add(45);
-        columnSeries.add(chartUtil.getMainMap(data, "Results Available", null, null, null));
+        sampleDispatchedData.add(45);
+        sampleDispatchedData.add(49);
+        sampleDispatchedData.add(23);
+        sampleDispatchedData.add(15);
+        sampleDispatchedData.add(23);
+        sampleDispatchedData.add(45);
+        columnSeries.add(chartUtil.getMainMap(sampleDispatchedData, "Samples Dispatched", null, null, null));
+
+        resultAvailableData.add(60);
+        resultAvailableData.add(19);
+        resultAvailableData.add(23);
+        resultAvailableData.add(45);
+        resultAvailableData.add(23);
+        resultAvailableData.add(45);
+        columnSeries.add(chartUtil.getMainMap(resultAvailableData, "Results Available", null, null, null));
 
         return chartUtil.buildMainMap(type, chartTitle, subTitle, chartUtil.getXAxis(),
                 chartUtil.getYAxis(), columnSeries, null);
     }
 
     public Object getLaboratoryTestOrderStackedColumnChart() {
-        clearChartList();
+        List<Object> testOrderedData = new ArrayList<Object>();
+        List<Object> resultAvailableData = new ArrayList<Object>();
+        List<Object> radiologyTestOrderedData = new ArrayList<Object>();
+        List<Object> radiologyResultAvailableData = new ArrayList<Object>();
         String type = "column";
         String chartTitle = "LABORATORY TEST ORDER/ RESULT";
         String subTitle = "For Facilities";
 
-        data.add(10);
-        data.add(15);
-        data.add(3);
-        data.add(5);
-        data.add(2);
-        data.add(9);
-        columnSeries.add(chartUtil.getMainMap(data, "Test Ordered", "test", null, null));
-        data.clear();
+        testOrderedData.add(10);
+        testOrderedData.add(15);
+        testOrderedData.add(3);
+        testOrderedData.add(5);
+        testOrderedData.add(2);
+        testOrderedData.add(9);
+        columnSeries.add(chartUtil.getMainMap(testOrderedData, "Test Ordered", "test", null, null));
 
-        data.add(45);
-        data.add(479);
-        data.add(23);
-        data.add(45);
-        data.add(23);
-        data.add(45);
-        columnSeries.add(chartUtil.getMainMap(data, "Result Available", "result", null, null));
-        data.clear();
+        resultAvailableData.add(45);
+        resultAvailableData.add(479);
+        resultAvailableData.add(23);
+        resultAvailableData.add(45);
+        resultAvailableData.add(23);
+        resultAvailableData.add(45);
+        columnSeries.add(chartUtil.getMainMap(resultAvailableData, "Result Available", "result", null, null));
 
-        data.add(45);
-        data.add(7);
-        data.add(23);
-        data.add(4);
-        data.add(3);
-        data.add(4);
-        columnSeries.add(chartUtil.getMainMap(data, "Radiology Test Orders", "test", null, null));
-        data.clear();
+        radiologyTestOrderedData.add(45);
+        radiologyTestOrderedData.add(7);
+        radiologyTestOrderedData.add(23);
+        radiologyTestOrderedData.add(4);
+        radiologyTestOrderedData.add(3);
+        radiologyTestOrderedData.add(4);
+        columnSeries.add(chartUtil.getMainMap(radiologyTestOrderedData, "Radiology Test Orders", "test", null, null));
 
-        data.add(60);
-        data.add(19);
-        data.add(23);
-        data.add(45);
-        data.add(23);
-        data.add(45);
-        columnSeries.add(chartUtil.getMainMap(data, "Radiology Test Available", "result", null, null));
+        radiologyResultAvailableData.add(60);
+        radiologyResultAvailableData.add(19);
+        radiologyResultAvailableData.add(23);
+        radiologyResultAvailableData.add(45);
+        radiologyResultAvailableData.add(23);
+        radiologyResultAvailableData.add(45);
+        columnSeries.add(chartUtil.getMainMap(radiologyResultAvailableData, "Radiology Test Available", "result", null, null));
 
         return chartUtil.buildMainMap(type, chartTitle, subTitle, chartUtil.getXAxis(),
                 chartUtil.getYAxis(), columnSeries, null);
