@@ -3,8 +3,9 @@ import { Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Input,FormFeedback,Labe
 } from 'reactstrap';
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import CancelIcon from '@material-ui/icons/Cancel';
+import { DropzoneArea } from 'material-ui-dropzone';
 import { Alert, AlertTitle } from '@material-ui/lab';
-import CreatOrgUnitByUpload from "./CreatOrgUnitByUpload";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -43,13 +44,11 @@ const useStyles = makeStyles(theme => ({
 
 
 
-const CreateOrgUnit = (props) => {
+const CreatOrgUnitByUpload = (props) => {
     const classes = useStyles()
     const datasample = props.datasample ? props.datasample : {};
     const [otherfields, setOtherFields] = useState({fileName:""});
     const [errors, setErrors] = useState({});
-    const [modal3, setModal3] = useState(false) //
-    const toggleModal3 = () => setModal3(!modal3)
     const handleOtherFieldInputChange = e => {
       setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
       //console.log(otherfields)
@@ -63,11 +62,6 @@ const CreateOrgUnit = (props) => {
       return Object.values(temp).every(x => x == "")
 }
 
-const createUploadBatch = () => {
-    console.log('code get here good')
-    props.togglestatus();
-    setModal3(!modal3)
-}
 
   return (      
       <div >
@@ -80,17 +74,16 @@ const createUploadBatch = () => {
                               <Row>
                                   <Col>
                                   <Alert severity="info">
-                                    <AlertTitle>Instructions to Batch in more than one record please click the link below</AlertTitle>
+                                    <AlertTitle>Please click here to download template</AlertTitle>
                                       <ul>
-                                       <a style={{ cursor: 'pointer'}}><li onClick={() => createUploadBatch()}>* Download the template and upload  <strong>(only *.csv)</strong></li></a> 
-                                       
+                                        
                                       </ul>
                                       
                                   </Alert>
                                 </Col>
                               </Row>
                                 <Row>
-                                  <Col md={6}>
+                                  {/* <Col md={6}>
                                     <FormGroup>
                                         <Label for="">Parent name</Label>
                                               <Input
@@ -105,8 +98,18 @@ const createUploadBatch = () => {
                                               />
                                                 <FormFeedback>{errors.fileName}</FormFeedback>
                                       </FormGroup>
+                                  </Col> */}
+                                  <Col md={12}>
+                                    <FormGroup>
+                                        <Label for="">Import Children</Label>
+                                      <DropzoneArea
+                                          onChange={(files) => console.log('Files:', files)}
+                                          showFileNames="true"
+                                          acceptedFiles={['pdf']}
+                                        />
+                                      </FormGroup>
                                   </Col>
-                                
+                                     
                                 </Row>
                             <br/>
                             <Row>
@@ -138,10 +141,8 @@ const createUploadBatch = () => {
                 </Card>
           </ModalBody>
       </Modal>
-      <CreatOrgUnitByUpload modalstatus={modal3} togglestatus={toggleModal3}  />
- 
     </div>
   );
 }
 
-export default CreateOrgUnit;
+export default CreatOrgUnitByUpload;

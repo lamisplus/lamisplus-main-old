@@ -183,7 +183,8 @@ return (
                             to ={{ 
                               pathname: "/laboratory",  
                               state: 'collect-sample'
-                            }} >
+                            }} 
+                        >
                                 
                             <MatButton
                                 type='submit'
