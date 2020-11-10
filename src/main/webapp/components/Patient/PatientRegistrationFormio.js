@@ -6,6 +6,8 @@ import FormRenderer from "components/FormManager/FormRenderer";
 //import "./consultation.css"
 import { ToastContainer, toast } from "react-toastify";
 import {create} from "../../actions/patients";
+import moment from "moment";
+import {initialRelative} from "./InitialRealative";
 
 function PatientRegistrationFormio(props) {
     const [errorMsg, setErrorMsg] = React.useState("");
@@ -29,7 +31,25 @@ function PatientRegistrationFormio(props) {
     };
 
     const registerPatient = (formData) => {
-        console.log(formData);
+        const data = formData.data;
+        data['authHeader'] = null;
+        if(data.dateOfRegistration) {
+            data['dateRegistration'] = moment(data.dateOfRegistration).format("DD-MM-YYYY");
+        }
+        if(data.dateOfBirth) {
+            data['dob'] = moment(data.dateOfBirth).format("DD-MM-YYYY");
+        }
+        const onSuccess = () => {
+            toast.success("Patient saved successfully!");
+            setTimeout(() => {
+                props.history.push(`/patients`)
+            }, 1000)
+        }
+        const onError = () => {
+            toast.error("An error occurred, could not save patient information");
+        }
+        props.create(data, onSuccess, onError);
+
     }
     return (
         <React.Fragment>
