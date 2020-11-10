@@ -41,8 +41,8 @@ const  DashboardPage = (props) => {
     async function getCharacters() {
         try {
             const response = await axios.get( url+ 'patient-dashboard/pie');
-                //const body = response.data;
-                const body = {};
+                const body = response.data && response.data!==null ? response.data : {};
+                
                 setGenderData(body)   
         } catch (error) {}
       }
@@ -53,8 +53,7 @@ useEffect(() => {
   async function getCharacters() {
       try {
           const response = await axios.get( url+ 'patient-dashboard/column');
-              //const body = response.data;
-              const body = {};
+              const body = response.data && response.data!==null ? response.data : {};
               setcombineChartData(body)  
       } catch (error) {}
     }
@@ -65,10 +64,9 @@ useEffect(() => {
   async function getCharacters() {
       try {
           const response = await axios.get( url+ 'patient-dashboard/column/birthRate');
-              //const body2 = response.data;
-              const body2 = {};
+              const body2 = response.data && response.data!==null ? response.data : {};
               setbirthRateData(body2) 
-              //setBirthSereies(body2.series)
+              setBirthSereies(body2.series && body2.series!==null ? body2.series : {})
         
       } catch (error) {}
     }
@@ -79,10 +77,9 @@ useEffect(() => {
   async function getCharacters() {
       try {
           const response = await axios.get( url+ 'patient-dashboard/column/deathRate');
-              //const body2 = response.data;
-              const body2 = {};
+              const body2 = response.data && response.data!==null ? response.data : {};
               setdeathRateData(body2) 
-              //setDeathSereies(body2.series)
+              setDeathSereies(body2.series && body2.series!==null ? body2.series : {})
         
       } catch (error) {}
     }
