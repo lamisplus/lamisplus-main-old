@@ -9,6 +9,9 @@ import {fetchByHospitalNumber} from '../../actions/patients'
 import MatButton from '@material-ui/core/Button';
 import { TiArrowBack } from "react-icons/ti";
 import { authHeader } from '_helpers/auth-header';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "react-widgets/dist/css/react-widgets.css";
 import {
     FormGroup,
     Input,
@@ -18,6 +21,7 @@ import {
     Button
 } from 'reactstrap';
 import {Link} from 'react-router-dom';
+
 
 const useStyles = makeStyles(theme => ({
     root2: {
@@ -48,12 +52,14 @@ const Update = props => {
         props.fetchPatientByHospitalNumber('6768595', null, null)
     }, [])
 
-    const handleSubmit = () => {
+    const handleSubmit = e =>  {
+
         props.updateForm(form2.id, form2);
     }
 
     return (
         <Page title="Form Renderer" >
+            <ToastContainer autoClose={3000} hideProgressBar />
             <Card >
                 <CardContent>
                     <Link to="/admin">

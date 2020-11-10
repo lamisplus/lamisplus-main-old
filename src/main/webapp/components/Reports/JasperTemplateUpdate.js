@@ -1,10 +1,12 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import Page from 'components/Page';
 import { connect } from 'react-redux';
 import {Card,CardContent,} from '@material-ui/core';
 import {FormBuilder } from 'react-formio';
 import {fetchService} from '../../actions/formBuilder'
 import {creatReport, update, fetchAll} from '../../actions/report'
+
+
 import {
     FormGroup,
     Input,
@@ -17,12 +19,8 @@ import {Link} from 'react-router-dom';
 import MatButton from '@material-ui/core/Button';
 import { TiArrowBack } from "react-icons/ti";
 
-const CreateReports = props => {
-    const datanew = {
-        parameterResourceObject: "",
-        programCode: "",
-    }
-    const [newdata2] = React.useState(datanew);
+const UpdateReports = props => {
+    // const [newData] = React.useState(formData);
     const [programCode, setprogramCode] = React.useState("");
     const [name, setname] = React.useState();
     const [description, setdescription] = React.useState("");
@@ -42,14 +40,27 @@ const CreateReports = props => {
     }, [])
 
     useEffect (() => {
-        setformCode(row.code);
+        setformCode(row);
+        settemplate(row);
+        setdataSource(row);
+        setdescription(row);
+        setDisplayType(row);
+        setname(row);
         console.log(row);
 
-        setform2(row)
+        setform2(row);
+        settemplate(row.template);
+        setdescription(row.description);
+        setname(row.name);
+        setdataSource(row.dataSource);
+        setDisplayType(row.displayType);
+
 
     }, [])
 
-    const handleSubmit = () => {
+    const handleSubmit = e => {
+
+        e.preventDefault();
         props.update(form2.id, form2);
     }
 
@@ -83,22 +94,32 @@ const CreateReports = props => {
 
                                 <Col md={4}> <FormGroup>
                                     <Label class="sr-only">Report Name</Label>
-                                    <Input type="text" class="form-control" id="name" name="name" value={name}   onChange={e => setname(e.target.value)} required/>
+                                    <Input type="text" class="form-control"
+                                           id="name"
+                                           name="name"
+                                           value={name}
+                                           onChange={e => setname(e.target.value)}/>
                                 </FormGroup> </Col>
 
                                 <Col md={4}> <FormGroup>
                                     <Label class="sr-only">Description</Label>
-                                    <Input type="text" class="form-control" id="description" name="description" value={description}   onChange={e => setdescription(e.target.value)} required/>
+                                    <Input type="text" class="form-control"
+                                           id="description"
+                                           name="description" value={description}
+                                           onChange={e => setdescription(e.target.value)}/>
                                 </FormGroup></Col>
                             </Row>
+
                             <Row>
                                 <Col md={4}> <FormGroup>
                                     <Label class="sr-only">Date Source</Label>
-                                    <Input type="select"  id="dataSource" value={dataSource} onChange={e => setdataSource(e.target.value)}>
+                                    <Input type="select"  id="dataSource"
+                                           value={dataSource} onChange={e => setdataSource(e.target.value)}>
                                         <option></option>
                                         <option value="0">XML</option>
                                         <option value="1">JSON</option></Input>
                                 </FormGroup></Col>
+
                                 <Col md={4}> <FormGroup>
                                     <Label class="sr-only">Display Type</Label>
                                     <Input type="select"  id="displayType" value={displayType} onChange={e => setDisplayType(e.target.value)}>
@@ -113,7 +134,9 @@ const CreateReports = props => {
                             <Row>
                                 <Col md={12}> <FormGroup>
                                     <Label class="sr-only">Template(Paste XML or JSON Template)</Label>
-                                    <Input type="textarea" name="text" id="template" value={template} rows="10" onChange={e => settemplate(e.target.value)}/>
+                                    <Input type="textarea" name="text"
+                                           id="template" value={template}
+                                           rows="10" oonChange={e => settemplate(e.target.value)}/>
                                 </FormGroup></Col>
                             </Row>
                         </Form>
@@ -136,9 +159,7 @@ const CreateReports = props => {
                     <CardContent>
                         <h4>Json Form</h4>
                         <div >
-                            <textarea cols="50"
-                                      ref={textAreaRef}
-                                      value={res}/>
+                            <textarea cols="50" ref={textAreaRef} value={res}/>
                         </div>
                     </CardContent>
                 </Card>
@@ -160,4 +181,5 @@ const mapActionsToProps = ({
     fetchAll:fetchAll
 })
 
-export default connect(mapStateToProps, mapActionsToProps)(CreateReports)
+export default connect(mapStateToProps, mapActionsToProps)(UpdateReports)
+

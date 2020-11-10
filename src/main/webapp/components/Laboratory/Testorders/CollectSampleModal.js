@@ -156,8 +156,7 @@ const ModalSample = (props) => {
                 props.togglestatus();
             };
             datasample["lab_number"] = lab_number;
-            datasample.data["sample_collected_by"] =
-                otherfields["sample_collected_by"];
+            datasample.data["sample_collected_by"] = otherfields["sample_collected_by"];
             datasample.data["sample_ordered_by"] = otherfields["sample_ordered_by"];
             datasample.data["sample_priority"] = "Normal";
             datasample.data["lab_number"] = lab_number;

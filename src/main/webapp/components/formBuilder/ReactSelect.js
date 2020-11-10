@@ -62,7 +62,7 @@ const Create = props => {
 
 
                 setform(
-                    body.map(({ name, code }) => ({ name: name, code: code }))
+                    body.map(({ name, code }) => ({ title: name, value: code }))
                 );
                 body !==null ? setdisabledCheckBox(false) : setdisabledCheckBox(true)
 
@@ -87,22 +87,20 @@ const Create = props => {
         newdata2['version']=version;
         newdata2['usageCode']=usageCode;
         newdata2['usageOrder']=usageOrder;
-        newdata2['formPrecedence']=formPrecedence;
-        console.log('formPrecedence'+JSON.stringify(formPrecedence));
 
+        // console.log('formPrecedence'+JSON.stringify(formPrecedence));
+        //
         // if (formPrecedence.code.length > 0) {
         //     const arr = [];
         //     formPrecedence.code.forEach(function (code, index, array) {
-        //         arr.push(code["code"]);
+        //         arr.push(value["code"]);
         //     });
-        //     //const formPrecedenceString = arr.toString();
-        //     console.log("Array"+arr);
-        //     newdata2['formPrecedence']=arr;
+        //     const formPrecedenceString = arr.toString();
+        //     newdata2['formPrecedence']=formPrecedenceString;
         //
         // } else {
         //     //datasample.data.sample_type = datasample.data.sample_type;
         // }
-
 
         e.preventDefault()
         props.createForm(newdata2);
@@ -171,9 +169,9 @@ const Create = props => {
                                     size="small"
                                     options={form !==null ? form : "LOADING"}
                                     disableCloseOnSelect
-                                    getOptionLabel={(option) => option.name}
+                                    getOptionLabel={(option) => option.title}
                                     onChange={(e, i) => {
-                                        setformPrecedence({ ...formPrecedence, formPrecedence: i });
+                                        setformPrecedence({ ...formPrecedence, code: i });
                                     }}
                                     renderOption={(option, { selected }) => (
                                         <React.Fragment>
@@ -186,7 +184,7 @@ const Create = props => {
                                                 />
                                                 : ""
                                             }
-                                            {option.name}
+                                            {option.title}
                                         </React.Fragment>
                                     )}
                                     style={{ width: "auto"}}

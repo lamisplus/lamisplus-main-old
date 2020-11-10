@@ -76,8 +76,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-
-
 const PatientRegistration = props => {
     if(props.location.currentId){
         const intialRelativesValues = props.location.currentId.personRelativeDTOs !== null ? props.location.currentId.personRelativeDTOs : []
@@ -600,7 +598,6 @@ const validate = () => {
                                                                                 type="text"
                                                                                 name="mobilePhoneNumber"
                                                                                 id="mobilePhoneNumber"
-                                                                              
                                                                                 value={values.mobilePhoneNumber}
                                                                                 onChange={handleInputChange}
                                                                                 
@@ -615,7 +612,6 @@ const validate = () => {
                                                                                 type="text"
                                                                                 name="alternatePhoneNumber"
                                                                                 id="alternatePhoneNumber"
-                                                                              
                                                                                 value={values.alternatePhoneNumber}
                                                                                 onChange={handleInputChange}
                                                                             />
@@ -628,7 +624,6 @@ const validate = () => {
                                                                                 type="email"
                                                                                 name="email"
                                                                                 id="email"
-                                                                              
                                                                                 value={values.email}
                                                                                 onChange={handleInputChange}
                                                                             />
@@ -644,8 +639,7 @@ const validate = () => {
                                                                                 name="countryId"
                                                                                 id="countryId"
                                                                                 value={values.countryId}
-                                                                                onChange={getStates}
-                                                                            >
+                                                                                onChange={getStates}>
                                                                                 {countries.map(({ label, value }) => (
                                                                                     <option key={value} value={value}>
                                                                                         {label}
