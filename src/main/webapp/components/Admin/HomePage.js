@@ -23,7 +23,7 @@ import AdminSubMenu from "components/Admin/AdminSubMenu";
 import * as actions from "actions/patients";
 import { connect } from "react-redux";
 import UserPage from "../Users/UserPage";
-import DatabaseManagement from "../AdministrativeModule/DatabaseManagement/Index";
+import DatabaseManagement from "../Admin/DatabaseManagement/Index";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -148,7 +148,6 @@ function HomePage(props) {
                         icon={<GiFiles />}
                         {...a11yProps(3)}
                     />
-
 
                     <Tab
                         className={classes.title}

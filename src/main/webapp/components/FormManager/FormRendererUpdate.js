@@ -8,7 +8,7 @@ import momentLocalizer from 'react-widgets-moment'
 import { toast } from 'react-toastify'
 import { Card, Alert, CardBody, Spinner } from 'reactstrap'
 import { formRendererService } from "_services/form-renderer";
-
+import _ from "lodash";
 
 Moment.locale('en')
 momentLocalizer()
@@ -87,6 +87,8 @@ const FormRenderer = props => {
         setShowErrorMsg(true)
         setShowLoading(false)
       }
+      _.omit(submission.data, 'patient');
+      _.omit(submission.data, 'authHeader');
       const data = {
           data: submission.data,
       }

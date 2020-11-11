@@ -32,7 +32,7 @@ public class WardService {
     public List<WardDTO> getAllWards(){
         List<WardDTO> wardDTOS = new ArrayList<>();
         GenericSpecification<Ward> genericSpecification = new GenericSpecification<Ward>();
-        Specification<Ward> specification = genericSpecification.findAll();
+        Specification<Ward> specification = genericSpecification.findAll(0);
         List<Ward> wardList = wardRepository.findAll(specification);
 
         wardList.forEach(ward->{

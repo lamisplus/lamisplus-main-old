@@ -43,7 +43,7 @@ public class RadiologyController {
                 newName = newName + format;
             }
 
-            Path path = storageService.store(file.getOriginalFilename(), file, overrideExistFile, newName);
+            Path path = storageService.store(file.getOriginalFilename(), file, newName);
             String url = MvcUriComponentsBuilder
                     .fromMethodName(FileController.class, "getFile", path.getFileName().toString()).build().toString();
             urlList.add(url);

@@ -184,7 +184,7 @@ return (
                         <Link 
                             to ={{ 
                               pathname: "/laboratory",  
-                              activetab: 1
+                              state: 'test-result'
                             }} >
                     
                             <MatButton

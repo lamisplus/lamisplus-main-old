@@ -14,6 +14,7 @@ import org.lamisplus.modules.base.repository.*;
 import org.lamisplus.modules.base.util.GenericSpecification;
 import org.lamisplus.modules.base.util.UuidGenerator;
 
+import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
@@ -48,7 +49,9 @@ public class PatientService {
     private final EncounterMapper encounterMapper;
     private final VisitMapper visitMapper;
     private final UserService userService;
+    private final ProgramRepository programRepository;
     private final Integer archived = 1;
+    private final FormRepository formRepository;
 
 
     public Person save(PatientDTO patientDTO) {
@@ -86,7 +89,7 @@ public class PatientService {
 
     public List<PatientDTO> getAllPatients() {
         GenericSpecification<Patient> genericSpecification = new GenericSpecification<Patient>();
-        Specification<Patient> specification = genericSpecification.findAll();
+        Specification<Patient> specification = genericSpecification.findAll(0);
 
         List<Patient> patients = patientRepository.findAll(specification);
         List<PatientDTO> patientDTOs = new ArrayList<>();
@@ -404,6 +407,48 @@ public class PatientService {
         });
 
         return encounters;
+    }
+
+    //TODO: In progress...
+    public List<Form> getAllFormsByPatientIdAndPrecedence(Long patientId, String programCode) {
+        ArrayList<EncounterDistinctDTO> encounterDistinctDTOS = new ArrayList<>();
+        Optional<Program> optionalProgram = programRepository.findProgramByCode(programCode);
+        if(!optionalProgram.isPresent() || optionalProgram.get().getArchived() == 1){
+            throw new EntityNotFoundException(Program.class, "programCode", programCode+"");
+        }
+        Program program = optionalProgram.get();
+        HashSet <Form> forms = new HashSet<>();
+
+        encounterRepository.findDistinctPatientIdAndFormCode(patientId, programCode).forEach(encounterDistinctDTO -> {
+            encounterDistinctDTOS.add(encounterDistinctDTO);
+        });
+
+        if(encounterDistinctDTOS.size() > 0) {
+                program.getFormsByProgram().forEach(form -> {
+                    List formPrecedenceList = new ArrayList();
+                    if(form.getFormPrecedence() != null) {
+                        formPrecedenceList = (List) form.getFormPrecedence();
+                    }
+                    formPrecedenceList.forEach(formCode ->{
+                        encounterDistinctDTOS.forEach(encounterDistinctDTO -> {
+                            if(encounterDistinctDTO.getFormCode() == formCode){
+                                return;
+                            }
+                        });
+
+                    });
+                });
+        }else {
+            program.getFormsByProgram().forEach(form -> {
+                if(form.getFormPrecedence() == null){
+                    forms.add(form);
+                }
+            });
+
+        }
+
+
+        return null;
     }
 
     //TOdo add a method to get patient Relative - to avoid duplicate codes

@@ -73,21 +73,7 @@ useEffect(() => {
     
     <div>
       <br/>
-      {/* <Link to={{ 
-                  pathname: "/print-sample",  
-                  name: "testing"
-              }}>
-        <Button
-          variant="contained"
-          color="primary"
-          className=" float-right mr-1"
-          size="large"
-        >
-          {<GiFiles />} { " "}
-          <span style={{textTransform: 'capitalize'}}>Print Manifest  </span>
-                          
-        </Button>
-      </Link> */}
+
       <Link to="/dispatched-sample">
         {/* <Link to="/dispatched-sample"> */}
             <Button
@@ -137,20 +123,17 @@ useEffect(() => {
             title: "Time Sample Collected",
             field: "timeSampleCollected",
           },
-
           { 
             title: "Sample Ordered By", 
             field: "sampleOrderedBy"
           },   
           { 
             title: "Sample Transferred By", 
-            field: "sampleTransferredBy",
-            
+            field: "sampleTransferredBy",            
           },    
           { 
             title: "Date Sample Transferred", 
-            field: "dateSampleTransferred",hidden: true 
-            
+            field: "dateSampleTransferred",hidden: true             
           },
           
           {

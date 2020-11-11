@@ -53,7 +53,7 @@ const CreateReports = props => {
     return (
         <div className="PivotTable">
             <Page title="Report Builder " >
-                <Card style={{ width: '80rem' }} >
+                <Card style={{ width: '80rem' }}>
                     <CardContent>
                         <Link to="/admin">
                             <MatButton
@@ -78,7 +78,7 @@ const CreateReports = props => {
                                         </Input>}
                                         </FormGroup></Col>
 
-                                <Col md={4}> <FormGroup>
+                                <Col md={4}><FormGroup>
                                     <Label class="sr-only">Report Name</Label>
                                     <Input type="text" class="form-control" id="name" name="name" value={name}   onChange={e => setname(e.target.value)} required/>
                                 </FormGroup> </Col>
@@ -144,9 +144,7 @@ const CreateReports = props => {
 }
 
     const mapStateToProps = (state) => {
-        // console.log(state.template)
         return {
-            // modules: state.forms.modules,
             services: state.formReducers.services
         }}
 

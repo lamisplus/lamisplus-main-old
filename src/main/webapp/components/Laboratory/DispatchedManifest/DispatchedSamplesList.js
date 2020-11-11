@@ -50,7 +50,7 @@ const PatientSearch = (props) => {
       <Link 
         to ={{ 
             pathname: "/laboratory",  
-            activetab: 1
+            state: 'dispatched-sample-list'
         }} >
 
         <MatButton

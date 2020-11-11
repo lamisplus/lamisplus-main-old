@@ -75,8 +75,5 @@ public class Province implements Serializable {
     @ToString.Exclude
     public List<PersonContact> personContactsByProvince;
 
-    @OneToMany(mappedBy = "provinceByProvinceId")
-    @JsonIgnore
-    @ToString.Exclude
-    private List<Organisation> organizationsByProvince;
+;
 }

@@ -42,6 +42,10 @@ public class Module implements Serializable {
     private String name;
 
     @Basic
+    @Column(name = "batch_no")
+    private String batchNo;
+
+    @Basic
     @Column(name = "version")
     private String version;
 

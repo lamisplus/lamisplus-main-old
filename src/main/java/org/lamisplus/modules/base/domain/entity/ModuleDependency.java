@@ -21,11 +21,15 @@ public class ModuleDependency implements Serializable {
 
     @Basic
     @Column(name = "artifact_id")
-    private String artifact_id;
+    private String artifactId;
 
     @Basic
     @Column(name = "module_id")
     private Long moduleId;
+
+    @Basic
+    @Column(name = "archived")
+    private Integer archived = 0;
 
     @ManyToOne
     @JoinColumn(name = "module_id", referencedColumnName = "id", insertable = false, updatable = false)

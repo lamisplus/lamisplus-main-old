@@ -13,6 +13,10 @@ import PropTypes from "prop-types";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import NewAppointment from "./NewAppointment";
+import { fetchAllAppointments } from "actions/appointments";
+import FormRendererModal from "components/FormManager/FormRendererModal";
+import * as CODES from "api/codes";
+import { ToastContainer, toast } from "react-toastify";
 
 //Dtate Picker package
 Moment.locale("en");
@@ -61,11 +65,69 @@ function a11yProps(index) {
 function HomePage(props) {
   const classes = useStyles();
   const [value, setValue] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const fetchAppointments = () => {
+    setLoading(true);
+    const onSuccess = () => {
+      setLoading(false);
+    };
+    const onError = () => {
+      setLoading(false);
+      // setErrorMsg("Could not fetch previous medications, try again later");
+    };
+    props.fetchAllAppointments(onSuccess, onError);
+  }
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  const [showCurrentForm, setShowCurrentForm] = useState(false);
+  const [currentForm, setCurrentForm] = useState(false);
+
+  const onSuccess = () => {
+    toast.success("Form saved successfully!", { appearance: "success" });
+    fetchAppointments();
+    setShowCurrentForm(false);
+
+  };
+
+  const onError = () => {
+    toast.error("Something went wrong, request failed.");
+    setShowCurrentForm(false);
+  };
+
+  const editAppointment = (patientId, visitId, encounterId) => {
+    setCurrentForm({
+      code: CODES.APPOINTMENT_FORM,
+      programCode: CODES.GENERAL_SERVICE,
+      formName: "PATIENT APPOINTMENT",
+      patientId: patientId,
+      visitId: visitId,
+      encounterId: encounterId,
+      type: "EDIT",
+      options: {
+        modalSize: "modal-lg",
+      },
+    });
+    setShowCurrentForm(true);
+  };
+
+  const viewAppointment = (patientId, visitId, encounterId) => {
+    setCurrentForm({
+      code: CODES.APPOINTMENT_FORM,
+      programCode: CODES.GENERAL_SERVICE,
+      formName: "PATIENT APPOINTMENT",
+      patientId: patientId,
+      visitId: visitId,
+      encounterId: encounterId,
+      type: "VIEW",
+      options: {
+        modalSize: "modal-lg",
+      },
+    });
+    setShowCurrentForm(true);
+  };
   return (
     <React.Fragment>
       <AppBar position="static">
@@ -101,14 +163,28 @@ function HomePage(props) {
       </AppBar>
 
       <TabPanel value={value} index={0}>
-        <ListViewPage />
+        <ListViewPage loading={loading} fetchAppointments={fetchAppointments}
+                      editAppointment={editAppointment} viewAppointment={viewAppointment}/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <CalendarViewPage />
+        <CalendarViewPage fetchAppointments={fetchAppointments}
+                          editAppointment={editAppointment} viewAppointment={viewAppointment} />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <NewAppointment />
       </TabPanel>
+
+      <ToastContainer />
+      <FormRendererModal
+          patientId={currentForm.patientId}
+          visitId={currentForm.visitId}
+          showModal={showCurrentForm}
+          setShowModal={setShowCurrentForm}
+          currentForm={currentForm}
+          onSuccess={onSuccess}
+          onError={onError}
+          options={currentForm.options}
+      />
     </React.Fragment>
   );
 }
@@ -116,9 +192,12 @@ function HomePage(props) {
 const mapStateToProps = (state, ownProps) => {
   return {
     hospitalNumber: ownProps.match.params.hospitalNumber,
+    appointments: state.appointments.list,
   };
 };
 
-const mapActionToProps = {};
+const mapActionToProps = {
+  fetchAllAppointments: fetchAllAppointments,
+};
 
 export default connect(mapStateToProps, mapActionToProps)(HomePage);
