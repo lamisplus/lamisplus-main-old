@@ -169,10 +169,8 @@ const ModalSample = (props) => {
         }
     };
 
-    function checklanumber(lab_num) {
-        
+    function checklanumber(lab_num) {       
         if (lab_num === "" || lab_num===null) {
-            console.log('the code get here')
             return (
                 <Alert color="danger" isOpen={visible} toggle={onDismiss}>
                     Please make sure you enter a lab number
@@ -339,7 +337,7 @@ const ModalSample = (props) => {
                                             </Col>
                                         </Row>
                                         {console.log(lab_number)}
-                                        {lab_number !== "" || lab_number !== null ? (
+                                        {lab_number && lab_number !== null ? (
                                             <MatButton
                                                 type="submit"
                                                 variant="contained"
