@@ -42,7 +42,6 @@ const useStyles = makeStyles({
     const [loading, setLoading] = useState('')
     const [fetchTestOrders, setFetchTestOrders] = useState(testOrders)
     const classes = useStyles()
-    console.log(sampleCollections)
 
     useEffect(() => {
         
@@ -64,18 +63,14 @@ const useStyles = makeStyles({
     
     testOrders.forEach(function(value, index, array) {
         const getList = value['formDataObj']!==null && value['formDataObj'].find(x => { 
-            console.log(value)
+
             if(x.data && x.data!==null && x.data.manifest_status===1){
-                console.log(value);
-            //return console.log(x)
             labTestType.push(x);
             }
-        // return console.log(x)
         
         })         
     });
 
-    console.log(labTestType)
     //This is function to check for the status of each collection to display on the tablist below 
     const sampleStatus = e =>{
          if(e===2){
@@ -142,7 +137,6 @@ return (
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {console.log(fetchTestOrders)}
                                                 {!loading ? labTestType.map((row) => (
                                                     row.data!==null?
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>

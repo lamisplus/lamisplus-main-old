@@ -64,7 +64,6 @@ function a11yProps(index) {
   };
 }
 function HomePage(props) {
-  console.log(props)
   const classes = useStyles();
   const [value, setValue] = useState(null);
   const urlIndex = getQueryParams("tab", props.location.search); 

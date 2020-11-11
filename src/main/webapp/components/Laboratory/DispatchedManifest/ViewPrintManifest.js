@@ -57,7 +57,6 @@ const useStyles = makeStyles({
         }
     }, []); //componentDidMount 
 
-   console.log(sampleManifestList)
     //This is function to check for the status of each collection to display on the tablist below 
     const sampleStatus = e =>{
          if(e===null || e===""){

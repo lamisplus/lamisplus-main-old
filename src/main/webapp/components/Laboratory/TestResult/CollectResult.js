@@ -118,11 +118,9 @@ const ResultReporting = (props) => {
         const getValue =e.target.value;
         if(getValue!=='All' || getValue ===null)
         {
-            console.log(getValue)
             //const testOrders = fetchTestOrders.length >0 ? fetchTestOrders:{}
             const getNewTestOrder = testOrders.find(x => x.data.lab_test_group === getValue)
             setFetchTestOrders([getNewTestOrder]) 
-            console.log(fetchTestOrders)
         }else{
             setFetchTestOrders([...newSample])
         }
@@ -201,7 +199,7 @@ return (
                   </CardHeader>
                 <CardBody>
                     <Alert color="primary">
-                        Please make sure you enter Lab number before collecting sample {console.log(labNum)}
+                        Please make sure you enter Lab number before collecting sample 
                     </Alert>
                 <br />
                     <Row>

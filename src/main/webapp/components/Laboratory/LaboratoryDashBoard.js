@@ -171,7 +171,6 @@ export default function LaboratoryDashBoard(props) {
         }
         getCharacters();
     }, []); 
-console.log(testOrdersStackChart)
 
 // Test Group Pie Chart 
 

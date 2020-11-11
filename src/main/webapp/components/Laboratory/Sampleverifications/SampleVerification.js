@@ -99,7 +99,6 @@ const SampleVerification = (props) => {
                 if(value['data']!==null &&  value['data'].hasOwnProperty("lab_number")){
                     labNumber = value['data'].lab_number
                 } 
-                //console.log(value['data']) 
               
             });
           
@@ -211,7 +210,7 @@ return (
                   </CardHeader>
                 <CardBody>
                     <Alert color="primary">
-                        Please make sure you enter Lab number before collecting sample {console.log(labNum)}
+                        Please make sure you enter Lab number before collecting sample 
                     </Alert>
                 <br />
                     <Row>

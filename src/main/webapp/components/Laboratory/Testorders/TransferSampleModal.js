@@ -90,7 +90,6 @@ const ModalSampleTransfer = (props) => {
 
     const handleOtherFieldInputChange = e => {
         setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
-        console.log(otherfields)
     }
 
 
@@ -168,7 +167,6 @@ const ModalSampleTransfer = (props) => {
                                         </Alert>
                                     </Col>
                                     <Col md={6}>
-                                        {/* <p>Sample Type {datasample.data.description}  </p> */}
                                           <FormGroup>
                                               <Label for='maritalStatus'>Date Transfer</Label>
                                           

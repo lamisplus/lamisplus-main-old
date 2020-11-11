@@ -22,9 +22,7 @@ const PatientSearch = (props) => {
         }
             props.fetchAllLabTestOrderToday(onSuccess, onError);
     }, []); //componentDidMount
-    console.log(props.patientsTestOrderList)
 function totalSampleConllected (test){
-        console.log(test)
         const  maxVal = []
           for(var i=0; i<test.length; i++){
               for (var key in test[i]) {
