@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface ModuleDependencyRepository extends JpaRepository<ModuleDependency, Long>, JpaSpecificationExecutor {
     Optional<ModuleDependency> findByModuleId(Long moduleId);
+    Optional<ModuleDependency> findByModuleIdAndArtifactId(Long moduleId, String artifactId);
 }

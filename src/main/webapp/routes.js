@@ -18,7 +18,10 @@ const DashboardPage = React.lazy(() => import("pages/DashboardPage"));
 const AdministrativeDashboard = React.lazy(() => import("components/Admin/HomePage"));
 /* New Page loading using easy loading */
 const PateintRegistationPage = React.lazy(() =>
-  import("components/Patient/PateintRegistationPage")
+    import("components/Patient/PateintRegistationPage")
+);
+const PatientRegistrationFormio = React.lazy(() =>
+    import("components/Patient/PatientRegistrationFormio")
 );
 const PateintUpdate= React.lazy(() => import("components/Patient/EditPatient"));
 const CheckInPage = React.lazy(() => import("components/CheckIn/CheckInPage"));
@@ -43,15 +46,17 @@ const PrintManifest = React.lazy(() => import("components/Laboratory/DispatchedM
 const ViewSampleDispatched = React.lazy(() => import("components/Laboratory/DispatchedManifest/ViewPrintManifest"));
 
 /* Bootstrap configuration */
-const BootStrapConfiguration = React.lazy(() => import("components/AdministrativeModule/BootstrapConfiguration/Index"));
-const CreateModule = React.lazy(() => import("components/AdministrativeModule/BootstrapConfiguration/CreateModule"));
-const UpdateModule = React.lazy(() => import("components/AdministrativeModule/BootstrapConfiguration/UpdateModule"));
-const UpdatedModule = React.lazy(() => import("components/AdministrativeModule/BootstrapConfiguration/UpdatedModule"));
+const BootStrapConfiguration = React.lazy(() => import("components/Admin/BootstrapConfiguration/Index"));
+const CreateModule = React.lazy(() => import("components/Admin/BootstrapConfiguration/CreateModule"));
+const UpdateModule = React.lazy(() => import("components/Admin/BootstrapConfiguration/UpdateModule"));
+const UpdatedModule = React.lazy(() => import("components/Admin/BootstrapConfiguration/UpdatedModule"));
 
 /* Datasase Management configuration */
-const DataBaseManagement = React.lazy(() => import("components/AdministrativeModule/DatabaseManagement/Index"));
+const DataBaseManagement = React.lazy(() => import("components/Admin/DatabaseManagement/Index"));
+const DataBaseSync = React.lazy(() => import("components/Admin/DatabaseManagement/DatabaseSync"));
 /* Organization Unit Manager configuration */
 const OrganizationUnit = React.lazy(() => import("components/Admin/OrganizationUnit/Index"));
+const ParentOrganizationUnit = React.lazy(() => import("components/Admin/OrganizationUnit/ParentOrganizationalUnit"));
 
 /* End of Bootstrap configuration */
 const formDashboard = React.lazy(() => import('components/formBuilder/formDashboard'));
@@ -121,6 +126,10 @@ class Routes extends Component {
                 exact
                 path="/patient-registration"
                 component={PateintRegistationPage}/>
+                <PrivateRoute
+                    exact
+                    path="/patient-registration-formio"
+                    component={PatientRegistrationFormio}/>
               <PrivateRoute
                 exact
                 path="/patient-update"
@@ -155,9 +164,10 @@ class Routes extends Component {
               <PrivateRoute exact path="/updated-module" component={UpdatedModule} />
               {/* DataBaseManagement Link */}
               <PrivateRoute exact path="/database-management" component={DataBaseManagement} />
+              <PrivateRoute exact path="/database-sync" component={DataBaseSync} />
               {/* OrganizationUnit */}
-              <PrivateRoute exact path="/organization-unit" component={OrganizationUnit} />
-              
+              <PrivateRoute exact path="/admin/organization-unit" component={OrganizationUnit} />
+              <PrivateRoute exact path="/admin/parent-organization-unit" component={ParentOrganizationUnit} />
               {/* Pharmacy Links */}
               <PrivateRoute exact path="/pharmacy" component={PharmacyDashboard} />
               

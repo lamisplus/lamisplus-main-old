@@ -97,5 +97,31 @@ const options = {
   
 };
 
+export const startBootstrapModule = (onSuccess, onError)=> dispatch => {
+
+  axios
+    .post(`${baseUrl}modules/start/all`)
+    .then(response => {
+       console.log(response)
+      dispatch({
+        type: ACTION_TYPES.START_BOOSTRAP_MODULE,
+        payload: response.data
+      })
+
+      onSuccess && onSuccess();
+      toast.success("Module Restarted successfully!");
+    })
+    .catch(error => {
+      console.log(error)
+      dispatch({
+        type: ACTION_TYPES.ERROR_START_BOOSTRAP_MODULE,
+        payload: error
+      })
+      onError && onError();
+      toast.error("Something went wrong! please try again..");
+    }
+    );
+
+};
 
 

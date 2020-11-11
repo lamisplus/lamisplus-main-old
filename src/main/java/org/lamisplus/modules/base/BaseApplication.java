@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 public class BaseApplication extends SpringBootServletInitializer {
 	private static ConfigurableApplicationContext context;
+
 	private static Boolean isStartUp = true;
 
 	@Override
@@ -25,7 +26,11 @@ public class BaseApplication extends SpringBootServletInitializer {
 		moduleService.startModule(isStartUp);
 	}
 
-	public static void restart(Class [] clz) {
+	public static void restart(Class [] clz, ConfigurableApplicationContext configurableApplicationContext) {
+		if (context == null) {
+			context = configurableApplicationContext;
+		}
+
 		ApplicationArguments args = context.getBean(ApplicationArguments.class);
 
 		Thread thread = new Thread(() -> {
@@ -41,5 +46,16 @@ public class BaseApplication extends SpringBootServletInitializer {
 		return context;
 	}
 
+	/**
+	 * Refresh the given application context, if necessary.
+	 */
+	/*protected void refreshApplicationContext(ApplicationContext applicationContext) {
+		if (applicationContext instanceof ConfigurableApplicationContext) {
+			ConfigurableApplicationContext cac = (ConfigurableApplicationContext) applicationContext;
+			if (!cac.isActive()) {
+				cac.refresh();
+			}
+		}
+	}*/
 }
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import {Card, CardBody,CardHeader,Col,Row} from 'reactstrap'
-import { useState} from 'react'
+import { useState, useEffect} from 'react'
 import { TiPlus } from 'react-icons/ti'
 import MatButton from '@material-ui/core/Button'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -17,6 +17,9 @@ import MaterialTable from 'material-table';
 import {  MdDelete, MdModeEdit, MdRemoveRedEye } from "react-icons/md";
 import DeleteModule from "./DeleteModule";
 import CreateOrganizationUnit from "./CreateOrganizationUnit";
+import { useSelector, useDispatch } from 'react-redux';
+import {  fetchAllOrganizationalUnit } from '../../../actions/organizationalUnit';
+
 
 
 const useStyles = makeStyles({
@@ -40,7 +43,22 @@ const useStyles = makeStyles({
     const [modal2, setModal2] = useState(false) //
     const toggleModal2 = () => setModal2(!modal2)
     const classes = useStyles()
+    const [loading, setLoading] = useState('')
+    const dispatch = useDispatch();
+    const listOfAllOrgUnit = useSelector(state => state.organizationalUnitReducer.list);
 
+    useEffect(() => {
+      setLoading(true);
+      const onSuccess = () => {
+          setLoading(false)
+          
+      }
+      const onError = () => {
+          setLoading(false)     
+      }
+        const fetchAllOrgUnit = dispatch(fetchAllOrganizationalUnit(onSuccess,onError ));
+
+  }, []); //componentDidMount
     const deleteModule = (row) => {  
       setcollectModal({...collectModal, ...row});
       setModal(!modal) 
@@ -49,8 +67,7 @@ const useStyles = makeStyles({
     const createOrgUnit = () => {  
       setModal2(!modal2) 
     }
-
-
+console.log(listOfAllOrgUnit)
     
 
 return (
@@ -84,14 +101,14 @@ return (
                               title="Parent Org. Unit"
                               columns={[
                                 { title: 'Parent Name', field: 'name' },
-                                { title: 'Total Children', field: 'children' },
+                                { title: 'Description', field: 'description' },
                                 
                                 { title: 'Action', field: 'actions'},
                               ]}
-                              data={[
-                                  { 
-                                    name: 'Countries', 
-                                    children: 30, 
+                              isLoading={loading}
+                                data={listOfAllOrgUnit.map((row) => ({
+                                      name: row.name,  
+                                      description: row. description,
                                     
                                     actions: 
                                       <div>
@@ -101,9 +118,10 @@ return (
                                             </MenuButton>
                                                 <MenuList style={{ color:"#000 !important"}} >
                                                     <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule('module to delete')}>                      
-                                                      
-                                                            <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>View Organ. Unit</span>
-                                                                                
+                                                      <Link
+                                                        to={{pathname: "/admin/parent-organization-unit", state: { parentOrganisationUnitId: row.parentOrganisationUnitId  }}}>    
+                                                          <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>View Organ. Unit</span>
+                                                       </Link>  
                                                       </MenuItem>
                                                       
                                                       <MenuItem style={{ color:"#000 !important"}}>
@@ -125,9 +143,7 @@ return (
                                               </MenuList>
                                         </Menu>
                                   </div>        
-                                  },
-                                
-                              ]}        
+                                }))}
                               options={{
                                 headerStyle: {
                                   backgroundColor: "#9F9FA5",

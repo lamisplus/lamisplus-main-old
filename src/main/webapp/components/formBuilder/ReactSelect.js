@@ -87,7 +87,7 @@ const Create = props => {
         newdata2['version']=version;
         newdata2['usageCode']=usageCode;
         newdata2['usageOrder']=usageOrder;
-
+        newdata2['formPrecedence']=formPrecedence;
         // console.log('formPrecedence'+JSON.stringify(formPrecedence));
         //
         // if (formPrecedence.code.length > 0) {

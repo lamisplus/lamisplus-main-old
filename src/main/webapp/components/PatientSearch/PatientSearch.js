@@ -70,7 +70,11 @@ const PatientSearch = (props) => {
                   ]}
                   isLoading={loading}
                   data={props.patientsList.map((row) => ({
-                      name: row.firstName +  ' ' + row.lastName,
+                      name: <Link
+                          to={"/patient-dashboard?hospitalNumber="+row.hospitalNumber}
+                          target="_blank"
+                          title={"Click to view patient dashboard"}
+                      >{row.firstName}  { ' '}  {row.lastName}</Link>,
                       id: row.hospitalNumber,
                       age: (row.dob === 0 ||
                       row.dob === undefined ||

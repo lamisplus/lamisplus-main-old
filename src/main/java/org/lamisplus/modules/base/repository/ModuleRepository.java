@@ -15,4 +15,8 @@ public interface ModuleRepository extends JpaRepository<Module, Long> , JpaSpeci
     Optional<Module> findByName(String name);
     //List<ModuleDependency> findByModuleDependencyByModule();
     //List<Program> findByModuleByModuleId(Long programId);
+    List<Module>findAllByStatusAndBatchNo(int status, String BatchNo);
+    List<Module> findAllByStatus(int status);
+    List<Module> findAllByBatchNo(String batchNo);
+    List<Module> findAllByModuleType(int moduleType);
 }
