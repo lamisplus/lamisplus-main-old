@@ -52,6 +52,7 @@ public class PatientService {
     private final ProgramRepository programRepository;
     private final Integer archived = 1;
     private final FormRepository formRepository;
+    public static final String FORM_CODE = "formCode";
 
 
     public Person save(PatientDTO patientDTO) {
@@ -410,45 +411,91 @@ public class PatientService {
     }
 
     //TODO: In progress...
-    public List<Form> getAllFormsByPatientIdAndPrecedence(Long patientId, String programCode) {
+    public List<Form> getAllFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
         ArrayList<EncounterDistinctDTO> encounterDistinctDTOS = new ArrayList<>();
         Optional<Program> optionalProgram = programRepository.findProgramByCode(programCode);
         if(!optionalProgram.isPresent() || optionalProgram.get().getArchived() == 1){
             throw new EntityNotFoundException(Program.class, "programCode", programCode+"");
         }
         Program program = optionalProgram.get();
-        HashSet <Form> forms = new HashSet<>();
+        List <Form> forms = new ArrayList<>();
+        HashSet <String>formCodeSet = new HashSet<>();
 
-        encounterRepository.findDistinctPatientIdAndFormCode(patientId, programCode).forEach(encounterDistinctDTO -> {
-            encounterDistinctDTOS.add(encounterDistinctDTO);
+        //Check for filled forms by the patient in that program
+        encounterRepository.findDistinctPatientIdAndProgramCode(patientId, programCode).forEach(encounterDistinctDTO -> {
+            //encounterDistinctDTOS.add(encounterDistinctDTO);
+            formCodeSet.add(encounterDistinctDTO.getFormCode());
         });
 
-        if(encounterDistinctDTOS.size() > 0) {
-                program.getFormsByProgram().forEach(form -> {
-                    List formPrecedenceList = new ArrayList();
-                    if(form.getFormPrecedence() != null) {
-                        formPrecedenceList = (List) form.getFormPrecedence();
-                    }
-                    formPrecedenceList.forEach(formCode ->{
-                        encounterDistinctDTOS.forEach(encounterDistinctDTO -> {
-                            if(encounterDistinctDTO.getFormCode() == formCode){
+        if(formCodeSet.size() > 0) {
+            program.getFormsByProgram().forEach(form -> {
+                //if form has been filled
+                if (formCodeSet.remove(form.getCode())) {
+                    formCodeSet.add(form.getCode());
+                    return;
+                }else {
+                    //Check for formPrecedence
+                    if (form.getFormPrecedence() != null) {
+                        getFormPrecedence(form).forEach(formPrecedenceCode -> {
+                            //if precedence form has been filled
+                            if (formCodeSet.remove(formPrecedenceCode)) {
+                                formCodeSet.add(formPrecedenceCode);
                                 return;
+                            }else{
+                                formCodeSet.add(formPrecedenceCode);
                             }
                         });
+                    } else {
+                        formCodeSet.add(form.getCode());
+                    }
+                }
+            });
 
-                    });
-                });
+            formCodeSet.forEach(formCode ->{
+                forms.add(formRepository.findByCode(formCode).get());
+            });
+
         }else {
             program.getFormsByProgram().forEach(form -> {
                 if(form.getFormPrecedence() == null){
                     forms.add(form);
                 }
             });
+        }
+        return forms;
+    }
 
+    public List<Form> getFilledFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
+        List<Form> forms = new ArrayList<>();
+        //Check for filled forms by the patient in that program
+        encounterRepository.findDistinctPatientIdAndProgramCode(patientId, programCode).forEach(encounterDistinctDTO -> {
+            forms.add(formRepository.findByCode(encounterDistinctDTO.getFormCode()).get());
+        });
+        return forms;
+    }
+
+    private Set<String> getFormPrecedence(Form form) {
+        JSONArray jsonArray = new JSONArray();
+        HashSet<String> formPrecedenceSet = new HashSet<>();
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String formPrecedenceJson = mapper.writeValueAsString(form.getFormPrecedence());
+            JSONObject jsonObject = new JSONObject(formPrecedenceJson);
+
+            if (jsonObject.has(FORM_CODE)) {
+                jsonArray = jsonObject.getJSONArray(FORM_CODE);
+            }
+            if (jsonArray.length() > 0) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    formPrecedenceSet.add(jsonArray.getString(i));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-
-        return null;
+        return formPrecedenceSet;
     }
 
     //TOdo add a method to get patient Relative - to avoid duplicate codes
