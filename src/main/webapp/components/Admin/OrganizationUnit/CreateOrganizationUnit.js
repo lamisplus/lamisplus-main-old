@@ -3,9 +3,8 @@ import { Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Input,FormFeedback,Labe
 } from 'reactstrap';
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import CancelIcon from '@material-ui/icons/Cancel';
-import { DropzoneArea } from 'material-ui-dropzone';
 import { Alert, AlertTitle } from '@material-ui/lab';
+import CreatOrgUnitByUpload from "./CreatOrgUnitByUpload";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -49,6 +48,8 @@ const CreateOrgUnit = (props) => {
     const datasample = props.datasample ? props.datasample : {};
     const [otherfields, setOtherFields] = useState({fileName:""});
     const [errors, setErrors] = useState({});
+    const [modal3, setModal3] = useState(false) //
+    const toggleModal3 = () => setModal3(!modal3)
     const handleOtherFieldInputChange = e => {
       setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
       //console.log(otherfields)
@@ -62,6 +63,11 @@ const CreateOrgUnit = (props) => {
       return Object.values(temp).every(x => x == "")
 }
 
+const createUploadBatch = () => {
+    console.log('code get here good')
+    props.togglestatus();
+    setModal3(!modal3)
+}
 
   return (      
       <div >
@@ -74,9 +80,9 @@ const CreateOrgUnit = (props) => {
                               <Row>
                                   <Col>
                                   <Alert severity="info">
-                                    <AlertTitle>Instructions to add new module</AlertTitle>
+                                    <AlertTitle>Instructions to Batch in more than one record please click the link below</AlertTitle>
                                       <ul>
-                                        <li>1. Add file  <strong>(only *.jar)</strong></li>
+                                       <a style={{ cursor: 'pointer'}}><li onClick={() => createUploadBatch()}>* Download the template and upload  <strong>(only *.csv)</strong></li></a> 
                                        
                                       </ul>
                                       
@@ -100,17 +106,7 @@ const CreateOrgUnit = (props) => {
                                                 <FormFeedback>{errors.fileName}</FormFeedback>
                                       </FormGroup>
                                   </Col>
-                                  <Col md={12}>
-                                    <FormGroup>
-                                        <Label for="">Import Children</Label>
-                                      <DropzoneArea
-                                          onChange={(files) => console.log('Files:', files)}
-                                          showFileNames="true"
-                                          acceptedFiles={['pdf']}
-                                        />
-                                      </FormGroup>
-                                  </Col>
-                                     
+                                
                                 </Row>
                             <br/>
                             <Row>
@@ -142,6 +138,8 @@ const CreateOrgUnit = (props) => {
                 </Card>
           </ModalBody>
       </Modal>
+      <CreatOrgUnitByUpload modalstatus={modal3} togglestatus={toggleModal3}  />
+ 
     </div>
   );
 }

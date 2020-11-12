@@ -68,7 +68,6 @@ function HomePage(props) {
   const classes = useStyles();
   const [value, setValue] = useState(null);
   const urlIndex = getQueryParams("tab", props.location.search); 
-  console.log(urlIndex)
   const urlTabs = urlIndex !== null ? urlIndex : props.location.state ;
   useEffect ( () => {
     switch(urlTabs){  

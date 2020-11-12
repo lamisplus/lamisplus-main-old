@@ -213,7 +213,9 @@ class Routes extends Component {
                 <PrivateRoute exact path={"/admin/wards"} component={WardManagerPage} />
                 <PrivateRoute exact path={"/radiology"} component={RadiologyTestDetailPage} />
               {/* The route to Appointment*/}
-              
+              {/* The route to Visualization*/}
+                <PrivateRoute exact path={"/visual"} component={TestPage} />
+              {/* The route to Visualization*/}
             </React.Suspense>
           </MainLayout>
           

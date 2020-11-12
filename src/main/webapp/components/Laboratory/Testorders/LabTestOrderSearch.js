@@ -12,7 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 const PatientSearch = (props) => {
     const [loading, setLoading] = useState('')
-useEffect(() => {
+    useEffect(() => {
     setLoading('true');
         const onSuccess = () => {
             setLoading(false)
@@ -21,7 +21,7 @@ useEffect(() => {
             setLoading(false)     
         }
             props.fetchAllLabTestOrderToday(onSuccess, onError);
-}, []); //componentDidMount
+    }, []); //componentDidMount
     console.log(props.patientsTestOrderList)
 function totalSampleConllected (test){
         console.log(test)
@@ -86,6 +86,8 @@ function totalSampleConllected (test){
 
               }))}
               options={{
+                  pageSize:100,
+                  pageSizeOptions: [50,100,150,200],
                   headerStyle: {
                   backgroundColor: "#9F9FA5",
                   color: "#000",

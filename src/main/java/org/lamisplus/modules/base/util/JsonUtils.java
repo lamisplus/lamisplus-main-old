@@ -1,8 +1,14 @@
 package org.lamisplus.modules.base.util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
+import com.fasterxml.jackson.databind.type.CollectionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,8 +56,27 @@ public class JsonUtils {
     }
 
     private static String concatenate(String fileName) {
-        return "src/main/resources/test/"+fileName;
+        Path path = Paths.get("src","main", "resources", "test", fileName);
+        return path.toString();
     }
 
+    public static List readJsonFile(Object obj, String jsonFile){
+        ObjectMapper objectMapper = new ObjectMapper();
+        List entityObject = null;
+        InputStream input;
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
+        try {
+            input = new FileInputStream(jsonFile);
+
+            CollectionType javaType = objectMapper.getTypeFactory()
+                    .constructCollectionType(List.class, obj.getClass());
+
+            entityObject = objectMapper.readValue(input, javaType);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return entityObject;
+    }
 }
