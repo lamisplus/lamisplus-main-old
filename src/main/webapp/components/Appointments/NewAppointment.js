@@ -20,6 +20,7 @@ function NewAppointmentPage(props) {
         toast.error("Something went wrong, request failed.");
         setShowAppointmentForm(false);
       };
+
   const actionButton = {
     Action: (props) => (
       <IconButton
