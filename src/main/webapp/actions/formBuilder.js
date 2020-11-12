@@ -43,7 +43,7 @@ export const fetchAllForms = (onSuccess) => dispatch => {
 }
 
 
-export const createForm = (data) => dispatch => {
+export const createForm = (data, onSuccess, onError) => dispatch => {
     console.log(data)
     axios
         .post(`${url}forms/`, data)
@@ -63,33 +63,6 @@ export const createForm = (data) => dispatch => {
         });
 };
 
-
-export const Delete = (id) => dispatch => {
-    console.log(`${url}forms/${id}`);
-    axios
-        .delete(`${url}forms/${id}`)
-        .then(response => {
-
-            dispatch({
-                type: FORMTYPES.FORMTYPES_DELETE,
-                payload: id
-            });
-            toast.success("Form was deleted successfully!");
-        })
-        .catch(error => {
-            dispatch({
-                type: FORMTYPES.FORMTYPES_ERROR,
-                payload:error.response.data
-            });
-            if(error.response.data.apierror.message===null || error.response.data.apierror.message===""){
-                toast.error("Something went wrong");
-            }else{
-                toast.error(error.response.data.apierror.message);
-            }
-        });
-};
-
-
 export const updateForm = (id, data) => dispatch => {
     axios
         .put(`${url}forms/${id}`, data)
@@ -98,7 +71,7 @@ export const updateForm = (id, data) => dispatch => {
                 type: FORMTYPES.FORMTYPES_UPDATE,
                 payload: response.data
             });
-            toast.success("Form was updated successfully!");
+            toast.success("Form was saved successfully!");
             console.log(response)
         })
         .catch(error => {
@@ -177,3 +150,27 @@ export const fetchForms = () => dispatch => {
 }
 
 
+export const Delete = (id) => dispatch => {
+    console.log(`${url}forms/${id}`);
+    axios
+        .delete(`${url}forms/${id}`)
+        .then(response => {
+
+            dispatch({
+                type: FORMTYPES.FORMTYPES_DELETE,
+                payload: id
+            });
+            toast.success("Form was deleted successfully!");
+        })
+        .catch(error => {
+            dispatch({
+                type: FORMTYPES.FORMTYPES_ERROR,
+                payload:error.response.data
+            });
+            if(error.response.data.apierror.message===null || error.response.data.apierror.message===""){
+                toast.error("Something went wrong");
+            }else{
+                toast.error(error.response.data.apierror.message);
+            }
+        });
+};

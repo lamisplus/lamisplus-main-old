@@ -1,99 +1,204 @@
-import React, { Fragment, useState } from 'react';
-import Message from './Message';
-import Progress from './Progress';
-import axios from 'axios';
+import Page from 'components/Page';
+import React from 'react';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import {basicColumn} from '../components/Highcharts/BasicColumn';
+import {columnDrillDown} from './../components/Highcharts/ColumnDrillDown';
+import {columnPlacement} from './../components/Highcharts/ColumnPlacement';
+import {pieChart} from './../components/Highcharts/PieChart';
+import {pieChartWithLegend} from './../components/Highcharts/PieChartWithLegend';
+import {dualAxisLineColumn} from './../components/Highcharts/DualAxisLineColumn'
+import {barColumnDualAxis} from './../components/Highcharts/BarColumnDualAxis'
+import {NigeriaMaps} from './../components/Highcharts/CountryMaps';
+import CustomHighMap from './map'
 
-const FileUpload = () => {
-  const [file, setFile] = useState('');
-  const [filename, setFilename] = useState('Choose File');
-  const [uploadedFile, setUploadedFile] = useState({});
-  const [message, setMessage] = useState('');
-  const [uploadPercentage, setUploadPercentage] = useState(0);
-  //const [formData, updateFormData] = useState();
-
-  const onChange = e => {
-    setFile(e.target.files[0]);
-    setFilename(e.target.files[0].name);
-    
-
-  };
-
-  const onSubmit = async e => {
-    e.preventDefault();   
-    console.log(file)
-    const form_Data = new FormData();
-    form_Data.append('file1', file);
-    //console.log(getFiledetails)
-
-    const token ='eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmNAbWFpbC5jb20iLCJhdXRoIjoiUk9MRV9BRE1JTiIsImV4cCI6MTYwMDEyNzY5Mn0.a-SMbK3ucT15Kyk9nM_NU1gJveSWnn3OzC4iaVzT8UdKIh6rMvrFuMxdfbGLR5arCCikOCi-PXfdjF5pjQ11Mg'
-     
-    try {
-      const res = await axios.post('https://lp-base.herokuapp.com/api/modules/upload', form_Data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}` 
-        },
-        onUploadProgress: progressEvent => {
-          setUploadPercentage(
-            parseInt(
-              Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            )
-          );
-
-          // Clear percentage
-          setTimeout(() => setUploadPercentage(0), 10000);
-        }
-      });
-      console.log(res)
-      const { fileName, filePath } = res.data;
-
-      setUploadedFile({ fileName, filePath });
-
-      setMessage('File Uploaded');
-    } catch (err) {
-      console.log(err)
-      if (err.response.status === 500) {
-        setMessage('There was a problem with the server');
-      } else {
-        setMessage(err.response.data.msg);
-      }
-    }
-  };
-
-  return (
-    <Fragment>
-      {message ? <Message msg={message} /> : null}
-      <form onSubmit={onSubmit}>
-        <div className='custom-file mb-4'>
-          <input
-            type='file'
-            className='custom-file-input'
-            id='customFile'
-            onChange={onChange}
-          />
-          <label className='custom-file-label' htmlFor='customFile'>
-            {filename}
-          </label>
-        </div>
-
-        <Progress percentage={uploadPercentage} />
-
-        <input
-          type='submit'
-          value='Upload'
-          className='btn btn-primary btn-block mt-4'
-        />
-      </form>
-      {uploadedFile ? (
-        <div className='row mt-5'>
-          <div className='col-md-6 m-auto'>
-            <h3 className='text-center'>{uploadedFile.fileName}</h3>
-            <img style={{ width: '100%' }} src={uploadedFile.filePath} alt='' />
-          </div>
-        </div>
-      ) : null}
-    </Fragment>
-  );
+const cardStyle = {
+  borderColor: '#fff',
 };
 
-export default FileUpload;
+const options = {
+  title: {
+    text: 'My chart'
+  },
+  series: [{
+    data: [1, 10, 3, 10]
+  }]
+}
+
+
+var config = {
+  chart: {
+      type: 'column'
+  },
+  title: {
+      text: 'World\'s largest cities per 2014'
+  },
+  subtitle: {
+      text: 'Source: <a href="http://en.wikipedia.org/wiki/List_of_cities_proper_by_population">Wikipedia</a>'
+  },
+  xAxis: {
+      type: 'category',
+      labels: {
+          rotation: -45,
+          style: {
+              fontSize: '13px',
+              fontFamily: 'Verdana, sans-serif'
+          }
+      }
+  },
+  yAxis: {
+      min: 0,
+      title: {
+          text: 'Population (millions)'
+      }
+  },
+  legend: {
+      enabled: false
+  },
+  tooltip: {
+      pointFormat: 'Population in 2008: <b>{point.y:.1f} millions</b>'
+  },
+  series: [{
+      name: 'Population',
+      data: [
+          ['Shanghai', 23.7],
+          ['Lagos', 16.1],
+          ['Istanbul', 14.2],
+          ['Karachi', 14.0],
+          ['Mumbai', 12.5],
+          ['Moscow', 12.1],
+          ['São Paulo', 11.8],
+          ['Beijing', 11.7],
+          ['Guangzhou', 11.1],
+          ['Delhi', 11.1],
+          ['Shenzhen', 10.5],
+          ['Seoul', 10.4],
+          ['Jakarta', 10.0],
+          ['Kinshasa', 9.3],
+          ['Tianjin', 9.3],
+          ['Tokyo', 9.0],
+          ['Cairo', 8.9],
+          ['Dhaka', 8.9],
+          ['Mexico City', 8.9],
+          ['Lima', 8.9]
+      ],
+     
+  }]
+};
+
+var stackBar = {
+
+  chart: {
+      type: 'column'
+  },
+
+  title: {
+      text: 'Test Orders'
+  },
+
+  xAxis: {
+      categories: ['Jan.', 'Feburary', 'March', 'April', 'May', 'June']
+  },
+
+  yAxis: {
+      allowDecimals: false,
+      min: 0,
+      title: {
+          text: 'Tests Ordered'
+      }
+  },
+
+  tooltip: {
+      formatter: function () {
+          return '<b>' + this.x + '</b><br/>' +
+              this.series.name + ': ' + this.y + '<br/>' +
+              'Total: ' + this.point.stackTotal;
+      }
+  },
+
+  plotOptions: {
+      column: {
+          stacking: 'normal'
+      }
+  },
+
+  series: [{
+      name: 'Test Ordered',
+      data: [5, 3, 4, 7, 2,6],
+      stack: 'test'
+  }, {
+      name: 'Result Avilable',
+      data: [3, 4, 4, 2, 5,5],
+      stack: 'test'
+  }, {
+      name: 'Radiology Test Orders',
+      data: [2, 5, 6, 2, 1,7],
+      stack: 'result'
+  }, {
+      name: 'Radiology Result Avialable',
+      data: [3, 0, 4, 4, 3,8],
+      stack: 'result'
+  }]
+
+};
+
+class DashboardPage extends React.Component {
+  componentDidMount() {
+    // this is needed, because InfiniteCalendar forces window scroll
+    window.scrollTo(0, 0);
+  }
+
+  render() {
+
+    return (
+      <Page
+        className="DashboardPage p-5"
+        title="Visualization Page "
+      > 
+
+      <div>
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={options}
+        />
+      </div>
+      <div>
+        <HighchartsReact options={config} />
+      </div>
+      <div>
+        <HighchartsReact options={stackBar} />
+      </div>
+      <div>
+        <HighchartsReact options={basicColumn} />
+      </div>
+      <div>
+        <HighchartsReact options={columnDrillDown} />
+      </div>
+      <div>
+        <HighchartsReact options={columnPlacement} />
+      </div>
+      <div>
+        <HighchartsReact options={pieChart} />
+      </div>
+      <div>
+        <HighchartsReact options={pieChartWithLegend} />
+      </div>
+      <div>
+        <HighchartsReact options={dualAxisLineColumn} />
+      </div>
+      <div>
+        <HighchartsReact options={barColumnDualAxis} />
+      </div>
+     
+      <div>
+        <HighchartsReact options={NigeriaMaps} />
+      </div>
+      <>
+      <CustomHighMap />
+      </>
+      
+      </Page>
+    );
+  }
+}
+export default DashboardPage;
