@@ -191,7 +191,7 @@ export const fetchPatientAllergies = (id, onSuccess, onError) => dispatch => {
 
 export const fetchPatientLatestVitalSigns = (id, onSuccess, onError) => dispatch => {
   axios
-    .get(`${baseUrl}patients/${id}/encounters/${CODES.VITAL_SIGNS_FORM}`, {limit: 1, sortField: "dateEncounter", sortOrder: "desc"} )
+    .get(`${baseUrl}patients/${id}/encounters/${CODES.VITAL_SIGNS_FORM}?limit=1&sortField=dateEncounter&sortOrder=desc` )
     .then(response => {
       if(onSuccess){
         onSuccess();
