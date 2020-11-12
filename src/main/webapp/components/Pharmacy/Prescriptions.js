@@ -28,12 +28,6 @@ momentLocalizer();
 
 const useStyles = makeStyles((theme) => ({
 
-  // root: {
-  //   width: "100%",
-  // },
-  // container: {
-  //   maxHeight: 440,
-  // },
   card: {
     margin: theme.spacing(20),
     display: "flex",
@@ -70,12 +64,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Prescriptions = (props) => {
-
+  console.log(props)
   const getId = () => {
     let Id
-    if (props.location.form) {
-      localStorage.setItem("Id", props.location.form.formDataObj.length);
-      Id = props.location.form.formDataObj.length;
+    if (props.location.state) {
+      localStorage.setItem("Id", props.location.state.formDataObj.length);
+      Id = props.location.state.formDataObj.length;
     } else {
       Id = localStorage.getItem(Id);
     }
@@ -121,7 +115,7 @@ const Prescriptions = (props) => {
      </button>
    );
 
-  const formData = props.location.form ? props.location.form.formDataObj : null 
+  const formData = props.location.state ? props.location.state.formDataObj : null 
 
  const Actions = (form) => {
    return (
@@ -182,7 +176,7 @@ const Prescriptions = (props) => {
           <div>
             {formData ? (
               <Fragment>
-                <PatientDetailCard getpatientdetails={props.location.form} />
+                <PatientDetailCard getpatientdetails={props.location.state} />
                 <br />
                 <Card className="mb-12">
                   <CardHeader>

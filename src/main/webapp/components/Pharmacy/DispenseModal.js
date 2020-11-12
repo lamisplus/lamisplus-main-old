@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {  Modal, ModalHeader, ModalBody, ModalFooter, Button,
+import React, {useState} from 'react';
+import {  Modal, ModalHeader, ModalBody,
     Form,
     Row,
     Col,Input,
@@ -71,14 +71,11 @@ const DispenseModal = (props) => {
     const modal = props.isOpen
     const closeBtn = props.close
     const classes = useStyles();
-    console.log(props);
     const formData = props.formData ? props.formData : {}
     const [formValues, setFormValues] = useState({})
 
     const handleInputChange = (e) => {
         setFormValues ({ ...formValues, [e.target.name]: e.target.value });
-
-        console.log(formValues)
     }
 
     const handleDispense = (e) => {
@@ -90,6 +87,7 @@ const DispenseModal = (props) => {
         formData.data.quantity_dispensed = formValues.qtyDispensed
         formData.data.prescription_status = 1
         formData.data.date_dispensed = date_dispensed
+        formData.data.comment = formValues.comment
         const data = { ...formData };
         props.updatePrescriptionStatus(formData.id, data);
 
@@ -124,16 +122,16 @@ const DispenseModal = (props) => {
                                 >
                                     Drug Prescribed:{" "}
                                     <span>
-                    <b>{formData.data.generic_name}</b>
-                  </span>
+                                        <b>{formData.data.generic_name}</b>
+                                    </span>
                                     &nbsp;&nbsp; Quantity Prescribed:&nbsp;
                                     <span>
-                    <b>2 packs</b>
-                  </span>
+                                        <b>2 packs</b>
+                                    </span>
                                     &nbsp;&nbsp; Stock Balance: &nbsp;
                                     <span style={{ color: "#19FF32" }}>
-                    <b>400 packs</b>
-                  </span>
+                                        <b>400 packs</b>
+                                    </span>
                                 </div>
                             </Row>
                             <Form onSubmit={handleDispense}>
