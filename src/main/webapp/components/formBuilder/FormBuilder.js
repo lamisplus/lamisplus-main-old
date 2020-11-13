@@ -11,7 +11,7 @@ import {
     Label,
     Col,
     Row,
-    Form, FormFeedback, Spinner, CardBody
+    Form
 } from 'reactstrap';
 import MatButton from '@material-ui/core/Button';
 import { TiArrowBack } from "react-icons/ti";
@@ -40,39 +40,18 @@ const Create = props => {
     const [usageCode, setusageCode] = React.useState("");
     const [usageOrder, setusageOrder] = React.useState("");
     const [version, setversion] = React.useState();
-    const [queryOption, setqueryOption]= useState({});
-    const [useFor, setuseFor] = useState([{title: 'Loading', value: ''}]);
     const textAreaRef = useRef(null);
     const [form, setform] = useState([{title: 'Loading', value: ''}]);
+    const [useFor, setuseFor] = useState([{title: 'Loading', value: ''}]);
     const [disabledCheckBox, setdisabledCheckBox] = useState(true)
     const [formPrecedence, setformPrecedence] = useState({});
+    const [queryOption, setqueryOption] = useState({});
+
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 
     let myform;
-
-    useEffect(() => {
-        async function getCharacters() {
-            try {
-
-                const response = await axios(
-                    url + "application-codesets/codesetGroup?codesetGroup=USE_FOR"
-                );
-                const body = response.data;
-
-                setuseFor(
-                    body.map(({ display, id }) => ({ title: display, value: id }))
-                );
-                body !==null ? setdisabledCheckBox(false) : setdisabledCheckBox(true)
-
-                console.log(response)
-            } catch (error) {
-            }
-        }
-        getCharacters();
-    }, []);
-
 
     useEffect(() => {
         async function getCharacters() {
@@ -86,6 +65,28 @@ const Create = props => {
 
                 setform(
                     body.map(({ name, code }) => ({ title: name, value: code }))
+                );
+                body !==null ? setdisabledCheckBox(false) : setdisabledCheckBox(true)
+
+                console.log(response)
+            } catch (error) {
+            }
+        }
+        getCharacters();
+    }, []);
+
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+
+                const response = await axios(
+                    url + "application-codesets/codesetGroup?codesetGroup=USE_FOR"
+                );
+                const body = response.data;
+
+
+                setuseFor(
+                    body.map(({ display, id }) => ({ title: display, value: id }))
                 );
                 body !==null ? setdisabledCheckBox(false) : setdisabledCheckBox(true)
 
@@ -110,8 +111,8 @@ const Create = props => {
         newdata2['version']=version;
         newdata2['usageCode']=usageCode;
         newdata2['usageOrder']=usageOrder;
-        newdata2['useFor']=useFor;
         newdata2['formPrecedence']=formPrecedence;
+        newdata2['queryOption']=queryOption;
         // console.log('formPrecedence'+JSON.stringify(formPrecedence));
         //
         // if (formPrecedence.code.length > 0) {
@@ -171,7 +172,6 @@ const Create = props => {
                                 <Input type="text" class="form-control" id="name" name="name" value={name}   onChange={e => setname(e.target.value)} required/>
                             </FormGroup> </Col>
                         </Row>
-
                         <Row>
                             <Col md={4}> <FormGroup>
                                 <Label class="sr-only">Version</Label>
@@ -187,16 +187,16 @@ const Create = props => {
                             </FormGroup></Col>
 
                             <Col md={4}> <FormGroup>
-                                <Label for="useFor">Use For</Label>
+                                <Label for="queryOption">Use For</Label>
                                 <Autocomplete
                                     multiple
                                     id="useFor"
                                     size="small"
-                                    options={useFor !==null ? useFor : "ISLOADING"}
+                                    options={useFor !==null ? useFor : "LOADING"}
                                     disableCloseOnSelect
                                     getOptionLabel={(option) => option.title}
                                     onChange={(e, i) => {
-                                        setuseFor({ ...useFor, id: i });
+                                        setqueryOption({ ...queryOption, id: i });
                                     }}
                                     renderOption={(option, { selected }) => (
                                         <React.Fragment>
@@ -218,9 +218,10 @@ const Create = props => {
                                     )}
                                 />
                             </FormGroup></Col>
+
                         </Row>
 
-                            <Row>
+                        <Row>
                             <Col md={4}> <FormGroup>
                                 <Label for="formPrecedence">Form Precedence</Label>
                                 <Autocomplete
