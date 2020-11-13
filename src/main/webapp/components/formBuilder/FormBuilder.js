@@ -11,7 +11,7 @@ import {
     Label,
     Col,
     Row,
-    Form
+    Form, FormFeedback, Spinner, CardBody
 } from 'reactstrap';
 import MatButton from '@material-ui/core/Button';
 import { TiArrowBack } from "react-icons/ti";
@@ -40,16 +40,39 @@ const Create = props => {
     const [usageCode, setusageCode] = React.useState("");
     const [usageOrder, setusageOrder] = React.useState("");
     const [version, setversion] = React.useState();
+    const [queryOption, setqueryOption]= useState({});
+    const [useFor, setuseFor] = useState([{title: 'Loading', value: ''}]);
     const textAreaRef = useRef(null);
     const [form, setform] = useState([{title: 'Loading', value: ''}]);
     const [disabledCheckBox, setdisabledCheckBox] = useState(true)
     const [formPrecedence, setformPrecedence] = useState({});
-
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 
     let myform;
+
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+
+                const response = await axios(
+                    url + "application-codesets/codesetGroup?codesetGroup=USE_FOR"
+                );
+                const body = response.data;
+
+                setuseFor(
+                    body.map(({ display, id }) => ({ title: display, value: id }))
+                );
+                body !==null ? setdisabledCheckBox(false) : setdisabledCheckBox(true)
+
+                console.log(response)
+            } catch (error) {
+            }
+        }
+        getCharacters();
+    }, []);
+
 
     useEffect(() => {
         async function getCharacters() {
@@ -87,6 +110,7 @@ const Create = props => {
         newdata2['version']=version;
         newdata2['usageCode']=usageCode;
         newdata2['usageOrder']=usageOrder;
+        newdata2['useFor']=useFor;
         newdata2['formPrecedence']=formPrecedence;
         // console.log('formPrecedence'+JSON.stringify(formPrecedence));
         //
@@ -147,6 +171,7 @@ const Create = props => {
                                 <Input type="text" class="form-control" id="name" name="name" value={name}   onChange={e => setname(e.target.value)} required/>
                             </FormGroup> </Col>
                         </Row>
+
                         <Row>
                             <Col md={4}> <FormGroup>
                                 <Label class="sr-only">Version</Label>
@@ -161,6 +186,41 @@ const Create = props => {
                                     <option value="1">Periodically</option></Input>
                             </FormGroup></Col>
 
+                            <Col md={4}> <FormGroup>
+                                <Label for="useFor">Use For</Label>
+                                <Autocomplete
+                                    multiple
+                                    id="useFor"
+                                    size="small"
+                                    options={useFor !==null ? useFor : "ISLOADING"}
+                                    disableCloseOnSelect
+                                    getOptionLabel={(option) => option.title}
+                                    onChange={(e, i) => {
+                                        setuseFor({ ...useFor, id: i });
+                                    }}
+                                    renderOption={(option, { selected }) => (
+                                        <React.Fragment>
+                                            { disabledCheckBox===false ?
+                                                <Checkbox
+                                                    icon={icon}
+                                                    checkedIcon={checkedIcon}
+                                                    style={{marginRight: 8}}
+                                                    checked={selected}
+                                                />
+                                                : ""
+                                            }
+                                            {option.title}
+                                        </React.Fragment>
+                                    )}
+                                    style={{ width: "auto"}}
+                                    renderInput={(params) => (
+                                        <TextField {...params} variant="outlined" label="Use For" placeholder="Use For" />
+                                    )}
+                                />
+                            </FormGroup></Col>
+                        </Row>
+
+                            <Row>
                             <Col md={4}> <FormGroup>
                                 <Label for="formPrecedence">Form Precedence</Label>
                                 <Autocomplete
