@@ -5,7 +5,7 @@ import {Card,CardContent,} from '@material-ui/core';
 import {FormBuilder } from 'react-formio';
 import {fetchService} from '../../actions/formBuilder'
 import {creatReport, update, fetchAll} from '../../actions/report'
-
+import useForm from "../Functions/UseForm";
 
 import {
     FormGroup,
@@ -83,7 +83,7 @@ const UpdateReports = props => {
             try {
                 const response = await axios.get(url +'jasper-reports');
                 const body =  response.data;
-                setDisplayType(body.map(({ display, id }) => ({ label: display, value: id })));
+                setprogramCode(body.map(({ display, id }) => ({ label: display, value: id })));
             } catch (error) {}
         }
         getCharacters();
@@ -95,6 +95,17 @@ const UpdateReports = props => {
                 const response = await axios.get(url +'jasper-reports');
                 const body =  response.data;
                 setDisplayType(body.map(({ display, id }) => ({ label: display, value: id })));
+            } catch (error) {}
+        }
+        getCharacters();
+    }, []);
+
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+                const response = await axios.get(url +'jasper-reports');
+                const body =  response.data;
+                setdataSource(body.map(({ display, id }) => ({ label: display, value: id })));
             } catch (error) {}
         }
         getCharacters();

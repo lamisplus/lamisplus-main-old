@@ -375,7 +375,6 @@ const validate = () => {
                                                             type="text"
                                                             name="hospitalNumber"
                                                             id="hospitalNumber"
-                                                            
                                                             value={values.hospitalNumber}
                                                             onChange={handleInputChange}
                                                             {...(errors.hospitalNumber && { invalid: true})}
