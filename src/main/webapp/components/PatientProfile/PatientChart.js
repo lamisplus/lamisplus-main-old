@@ -113,9 +113,9 @@ function PatientChart(props) {
           <Line
             data={Weight(
               data
-                .filter((x) => x.bodyWeight !== "")
+                .filter((x) => x.body_weight !== "")
                 .map((x) => x.dateEncounter),
-              data.filter((x) => x.bodyWeight !== "").map((x) => x.bodyWeight),
+              data.filter((x) => x.body_weight !== "").map((x) => x.body_weight),
               { fill: false }
             )}
             height={70}

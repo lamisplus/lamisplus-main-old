@@ -24,6 +24,7 @@ const navItems = [
   { to: '/report', name: 'Reports', exact: false, Icon: FaListUl },
   { to: '/visual', name: 'Visualization', exact: false, Icon: MdGraphicEq },
   { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog },
+  { to: '/select', name: 'React Select', exact: false, Icon: FaUserCog },
 
   //{ to: '/admin-dashboard', name: 'Administration Module', exact: false, Icon: FaUserCog },
   
