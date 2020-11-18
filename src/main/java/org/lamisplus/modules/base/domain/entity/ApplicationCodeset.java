@@ -29,20 +29,12 @@ public class ApplicationCodeset implements Serializable {
     private String codesetGroup;
 
     @Basic
-    @Column(name = "version")
-    private String version;
-
-    @Basic
     @Column(name = "language")
     private String language;
 
     @Basic
     @Column(name = "display")
     private String display;
-
-    @Basic
-    @Column(name = "active")
-    private Integer active;
 
     @Basic
     @Column(name = "code")
