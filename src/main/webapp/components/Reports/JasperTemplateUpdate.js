@@ -5,7 +5,7 @@ import {Card,CardContent,} from '@material-ui/core';
 import {FormBuilder } from 'react-formio';
 import {fetchService} from '../../actions/formBuilder'
 import {creatReport, update, fetchAll} from '../../actions/report'
-
+import useForm from "../Functions/UseForm";
 
 import {
     FormGroup,
@@ -18,6 +18,8 @@ import {
 import {Link} from 'react-router-dom';
 import MatButton from '@material-ui/core/Button';
 import { TiArrowBack } from "react-icons/ti";
+import axios from 'axios';
+import {url} from '../../api';
 
 const UpdateReports = props => {
     // const [newData] = React.useState(formData);
@@ -40,23 +42,74 @@ const UpdateReports = props => {
     }, [])
 
     useEffect (() => {
-        setformCode(row);
-        settemplate(row);
-        setdataSource(row);
-        setdescription(row);
-        setDisplayType(row);
-        setname(row);
-        console.log(row);
-
         setform2(row);
-        settemplate(row.template);
-        setdescription(row.description);
-        setname(row.name);
-        setdataSource(row.dataSource);
-        setDisplayType(row.displayType);
-
-
     }, [])
+
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+                const response = await axios.get(url +'jasper-reports');
+                const body =  response.data;
+                settemplate(body.map(({ display, id }) => ({ label: display, value: id })));
+            } catch (error) {}
+        }
+        getCharacters();
+    }, []);
+
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+                const response = await axios.get(url +'jasper-reports');
+                const body =  response.data;
+                setdescription(body.map(({ display, id }) => ({ label: display, value: id })));
+            } catch (error) {}
+        }
+        getCharacters();
+    }, []);
+
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+                const response = await axios.get(url +'jasper-reports');
+                const body =  response.data;
+                setname(body.map(({ display, id }) => ({ label: display, value: id })));
+            } catch (error) {}
+        }
+        getCharacters();
+    }, []);
+
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+                const response = await axios.get(url +'jasper-reports');
+                const body =  response.data;
+                setprogramCode(body.map(({ display, id }) => ({ label: display, value: id })));
+            } catch (error) {}
+        }
+        getCharacters();
+    }, []);
+
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+                const response = await axios.get(url +'jasper-reports');
+                const body =  response.data;
+                setDisplayType(body.map(({ display, id }) => ({ label: display, value: id })));
+            } catch (error) {}
+        }
+        getCharacters();
+    }, []);
+
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+                const response = await axios.get(url +'jasper-reports');
+                const body =  response.data;
+                setdataSource(body.map(({ display, id }) => ({ label: display, value: id })));
+            } catch (error) {}
+        }
+        getCharacters();
+    }, []);
 
     const handleSubmit = e => {
 
