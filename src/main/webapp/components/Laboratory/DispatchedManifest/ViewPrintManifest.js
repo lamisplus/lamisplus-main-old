@@ -41,8 +41,7 @@ const useStyles = makeStyles({
 
     const classes = useStyles()
 
-    useEffect(() => {
-        
+    useEffect(() => {        
         if(manifestId){         
                 setLoading(true);
                     const onSuccess = () => {
@@ -121,10 +120,11 @@ return (
                         <Row>
                           <Col sm={12} className=" float-right mr-1">
                             <Link
-                                to={{
-                                  pathname: "/print-dispatched-manifest",
-                                  ManifestDetail: {samplesDispatched}
-                                }}
+                                // to={{
+                                //   pathname: "/print-dispatched-manifest",
+                                //   ManifestDetail: {samplesDispatched}
+                                // }}
+                                to ={"/print-dispatched-manifest?maniFest="+manifestId}
                             >
                               <MatButton
                                 type='submit'

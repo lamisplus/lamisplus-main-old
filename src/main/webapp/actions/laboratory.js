@@ -178,7 +178,27 @@ export const sampleDispatched = (onSuccess, onError) => dispatch => {
     });
 
 };
+// Sample Dispatched Detail by a particular ID MANIFEST_DETAIL_BY_ID
+export const sampleDispatchedByManifestID = (manifestId, onSuccess, onError) => dispatch => {
 
+  axios
+    .get(`${baseUrl}sample-manifests/dispatched-manifest/true`)
+    .then(response => {
+      dispatch({
+        type: ACTION_TYPES.MANIFEST_DETAIL_BY_ID,
+        payload: response.data.filter((x) => x.manifestId === manifestId)
+      })
+      onSuccess();
+    })
+    .catch(error => {
+      dispatch({
+        type: ACTION_TYPES.ERROR_MANIFEST_DETAIL_BY_ID,
+        payload: 'Something went wrong, please try again'
+      })
+      onError();
+    });
+
+};
 //Get list of samples Manifest by ID 
 export const samplesManifestById = (id,onSuccess, onError) => dispatch => {
   if(id){

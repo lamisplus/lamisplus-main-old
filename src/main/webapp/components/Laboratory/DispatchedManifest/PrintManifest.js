@@ -9,13 +9,12 @@ import { Dialog } from '@material-ui/core';
 import 'react-widgets/dist/css/react-widgets.css'
 //Date Picker
 import Page from './../../Page'
-import {  fetchAllLabTestOrder } from '../../../actions/laboratory'
+import {  fetchAllLabTestOrder, samplesManifestById } from '../../../actions/laboratory'
 import { useSelector, useDispatch } from 'react-redux';
 import LabManifestDetails from 'components/Functions/LabManifestDetails';
 import { Spinner } from 'reactstrap';
 import { Badge } from 'reactstrap';
-
-
+import {getQueryParams} from "components/Utils/PageUtils";
 
 
 const useStyles = makeStyles({
@@ -29,10 +28,9 @@ const useStyles = makeStyles({
 })
 
 
-
-
-
-  const CollectSample = (props) => {
+  const PrintManiFest = (props) => {
+    const manifestId = getQueryParams("maniFest", props.location.search);
+    console.log(props);
     const sampleCollections = props.location.state && props.location.state.formDataObj  ? props.location.state.formDataObj : {};
     const encounterDate = props.location.state && props.location.state.dateEncounter ? props.location.state.dateEncounter : null ;
     const hospitalNumber = props.location.state && props.location.state.hospitalNumber ? props.location.state.hospitalNumber: null;
@@ -55,6 +53,21 @@ const useStyles = makeStyles({
                         setLoading(false)     
                     }
             dispatch(fetchAllLabTestOrder(onSuccess,onError ));
+           
+        }
+    }, []); //componentDidMount 
+
+    useEffect(() => {        
+        if(manifestId){         
+                setLoading(true);
+                    const onSuccess = () => {
+                        setLoading(false)
+                        
+                    }
+                    const onError = () => {
+                        setLoading(false)     
+                    }
+                dispatch(samplesManifestById(manifestId,onSuccess,onError));
            
         }
     }, []); //componentDidMount 
@@ -173,4 +186,4 @@ return (
 }
 
 
-export default CollectSample
+export default PrintManiFest
