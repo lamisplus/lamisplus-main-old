@@ -92,7 +92,7 @@ export const createCollectedSample = (data, lab_id, onSuccess, onError ) => disp
         payload: response.data
       });
       onSuccess()
-      //toast.success("Sample Collection was successful");
+      toast.success("Sample Collection successful");
     })
     .catch(error =>{
       
@@ -101,7 +101,7 @@ export const createCollectedSample = (data, lab_id, onSuccess, onError ) => disp
         payload: error
       })
       onError()
-      //toast.error("Something went wrong, please try again");
+      toast.error("Something went wrong, please try again");
       
     });
   }else{
@@ -213,7 +213,7 @@ export const sampleVerification = (data, lab_id, onSuccess, onError ) => dispatc
         payload: response.data
       });
       onSuccess()
-      //toast.success("Sample verified successful");
+      toast.success("Sample verified successful");
       //setInterval(window.location.reload(false), 80000);
     })
     .catch(error =>{
@@ -242,7 +242,7 @@ export const transferSample = (samples, lab_id) => dispatch => {
         type: ACTION_TYPES.TRANSFER_SAMPLE,
         payload: response.data
       });
-      //toast.success("Sample Transfer was successful");
+      toast.success("Sample Transfer  successful");
     })
     .catch(error =>{
       

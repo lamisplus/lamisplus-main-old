@@ -8,7 +8,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
 import {FaPlusSquare, FaRegEye} from 'react-icons/fa';
 import {GoChecklist} from 'react-icons/go';
-import 'react-widgets/dist/css/react-widgets.css'
+import 'react-widgets/dist/css/react-widgets.css';
+import { ToastContainer } from "react-toastify";
 //Date Picker
 import Page from './../../Page'
 import {  fetchById } from '../../../actions/patients'
@@ -177,6 +178,7 @@ const SampleVerification = (props) => {
 
 return (
     <Page title='Sample Verification'>
+        <ToastContainer autoClose={2000} />
       <br/>
         <Row>
             <Col>
@@ -247,7 +249,7 @@ return (
                                             name='lab_number'
                                             id='lab_number'
                                             value={labNumber!=="" ? labNumber : labNum.lab_number}
-                                            
+                                            disabled='true'
                                             onChange={handleLabNumber}
                                         />
                                         </FormGroup>                            
@@ -266,7 +268,7 @@ return (
                                             </thead>
                                             <tbody>
                                                
-                                                {!loading ? fetchTestOrders.map((row) => (
+                                                {!loading ? testOrders.map((row) => (
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>
                                                       <th className={classes.td}>{row.data.description===""?" ":row.data.description}</th>
                                                       <td className={classes.td}>{row.data.sample_type==="" ? " ":row.data.sample_type}</td>

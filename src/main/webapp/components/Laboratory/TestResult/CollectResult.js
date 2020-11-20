@@ -68,9 +68,6 @@ const ResultReporting = (props) => {
         }
     }, []); //componentDidMount 
 
-       
-        
-
         //Get list of test type
         const labTestType = [];
             if(sampleCollections !== null || sampleCollections ===""){
@@ -236,7 +233,7 @@ return (
                                             name='lab_number'
                                             id='lab_number'
                                             value={labNumber!=="" ? labNumber : labNum.lab_number}
-                                            
+                                            disabled='true'
                                             onChange={handleLabNumber}
                                         />
                                         </FormGroup>                            
@@ -255,7 +252,7 @@ return (
                                             </thead>
                                             <tbody>
                                                
-                                                {!loading ? fetchTestOrders.map((row) => (
+                                                {!loading ? testOrders.map((row) => (
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>
                                                       <th className={classes.td}>{row.data.description===""?" ":row.data.description}</th>
                                                       <td className={classes.td}>{row.data.sample_type==="" ? " ":row.data.sample_type}</td>

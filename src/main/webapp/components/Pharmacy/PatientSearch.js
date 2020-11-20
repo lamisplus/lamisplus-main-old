@@ -74,7 +74,6 @@ const PatientSearch = (props) => {
           ),
         }))}
         options={{
-          pageSize:50,
           pageSizeOptions: [50,100,150,200],
           actionsColumnIndex: -1,
           headerStyle: {
