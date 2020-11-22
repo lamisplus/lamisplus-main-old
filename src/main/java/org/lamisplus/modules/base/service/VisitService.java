@@ -93,5 +93,9 @@ public class VisitService {
         visitOptional.get().setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
         return visitOptional.get().getArchived();
     }
-    //TODO:
+
+    public int getVisitType(Long visitTypeId){
+        List<Visit> visits = visitRepository.findAllByVisitTypeIdAndArchived(visitTypeId, 0);
+        return visits.size();
+    }
 }

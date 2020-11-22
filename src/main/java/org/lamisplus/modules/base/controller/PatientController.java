@@ -34,12 +34,23 @@ public class PatientController {
     private final String ENTITY_NAME = "Patient";
     private final PatientService patientService;
 
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<List<PatientDTO>> getAllPatients(@PageableDefault(value = 100) Pageable pageable) {
         Page<PatientDTO> page = patientService.findPage(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(patientService.getAllPatients(page), headers, HttpStatus.OK);
+    }*/
+
+    @GetMapping
+    public ResponseEntity<List<PatientDTO>> getAllPatients() {
+        return ResponseEntity.ok(this.patientService.getAllPatients());
     }
+
+    @GetMapping("/totalCount")
+    public ResponseEntity<Long> getTotalCount() {
+        return ResponseEntity.ok(this.patientService.getTotalCount());
+    }
+
 
     @GetMapping("/hospitalNumber")
     public ResponseEntity<PatientDTO> getPatientByHospitalNumber(@RequestParam String hospitalNumber) {
@@ -79,16 +90,16 @@ public class PatientController {
         return ResponseEntity.ok(this.patientService.getEncountersByPatientIdAndProgramCodeExclusionList(id, programCodeExclusionList));
     }
 
-    @ApiOperation(value="getVisitByPatientIdAndVisitDate", notes = "patientId= required, dateStart=optional, dateEnd=optional\n\n" +
-            "Example - /api/patient/20/visits?dateStart=02-03-2020")
+    /*@ApiOperation(value="getVisitByPatientIdAndVisitDate", notes = "patientId= required, dateStart=optional, dateEnd=optional\n\n" +
+            "Example - /api/patient/20/visits?dateStart=02-03-2020")*/
     @GetMapping("/{id}/visits/{dateStart}/{dateEnd}")
     public ResponseEntity<List<VisitDTO>> getVisitByPatientIdAndVisitDate(@PathVariable Optional<Long> id, @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional<String> dateStart,
                                                                           @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional <String> dateEnd) {
         return ResponseEntity.ok(patientService.getVisitByPatientIdAndVisitDate(id,dateStart,dateEnd));
     }
 
-    @ApiOperation(value="getEncountersByPatientIdAndDateEncounter", notes = " programCode= required, formCode=required, dateStart=optional, dateEnd=optional\n\n" +
-            "Example - api/encounters/{programCode}/{formCode}?dateStart=01-01-2020&dateEnd=01-04-2020")
+    /*@ApiOperation(value="getEncountersByPatientIdAndDateEncounter", notes = " programCode= required, formCode=required, dateStart=optional, dateEnd=optional\n\n" +
+            "Example - api/encounters/{programCode}/{formCode}?dateStart=01-01-2020&dateEnd=01-04-2020")*/
     @GetMapping("/{id}/encounters/{formCode}/{dateStart}/{dateEnd}")
     public List getEncountersByPatientIdAndDateEncounter(@PathVariable Long id, @PathVariable String formCode,
                                                          @ApiParam(defaultValue = "") @PathVariable(required = false) Optional<String> dateStart,
@@ -96,8 +107,8 @@ public class PatientController {
         return patientService.getEncountersByPatientIdAndDateEncounter(id, formCode, dateStart, dateEnd);
     }
 
-    @ApiOperation(value="getAllEncountersByPatientId", notes = " id=required\n\n" +
-            "Example - /api/encounters/20")
+    /*@ApiOperation(value="getAllEncountersByPatientId", notes = " id=required\n\n" +
+            "Example - /api/encounters/20")*/
     @GetMapping("/{id}/encounters")
     public ResponseEntity<List> getAllEncounterByPatientId(@PathVariable Long id){
         return ResponseEntity.ok(this.patientService.getAllEncountersByPatientId(id));
@@ -146,8 +157,6 @@ public class PatientController {
     public Person update(@PathVariable Long id, @RequestBody PatientDTO patientDTO) {
         return this.patientService.update(id, patientDTO);
     }
-
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> delete(@PathVariable Long id) {

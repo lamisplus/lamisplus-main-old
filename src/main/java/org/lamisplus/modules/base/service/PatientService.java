@@ -112,6 +112,37 @@ public class PatientService {
         this.page = page;
     }
 
+
+    public List<PatientDTO> getAllPatients() {
+        GenericSpecification<Patient> genericSpecification = new GenericSpecification<Patient>();
+        Specification<Patient> specification = genericSpecification.findAll(0);
+
+        List<Patient> patients = patientRepository.findAll(specification);
+        List<PatientDTO> patientDTOs = new ArrayList<>();
+        patients.forEach(patient -> {
+            Person person = patient.getPersonByPersonId();
+            PersonContact personContact = person.getPersonContactsByPerson();
+
+            Optional<Visit> visitOptional = visitRepository.findTopByPatientIdAndDateVisitEndIsNullOrderByDateVisitStartDesc(patient.getId());
+            PatientDTO patientDTO = visitOptional.isPresent() ? patientMapper.toPatientDTO(person, visitOptional.get(), personContact, patient) : patientMapper.toPatientDTO(person, personContact, patient);
+
+            List<PersonRelative> personRelatives = person.getPersonRelativesByPerson();//personRelativeRepository.findByPersonId(person.getId());
+            List<PersonRelativesDTO> personRelativeDTOs = new ArrayList<>();
+
+            if (personRelatives.size() > 0) {
+                personRelatives.forEach(personRelative -> {
+                    if(personRelative.getArchived() == archived) return;
+                    PersonRelativesDTO personRelativesDTO = personRelativeMapper.toPersonRelativeDTO(personRelative);
+                    personRelativeDTOs.add(personRelativesDTO);
+                });
+                patientDTO.setPersonRelativeDTOs(personRelativeDTOs);
+            }
+            patientDTOs.add(patientDTO);
+        });
+        return patientDTOs;
+    }
+
+
     public List<PatientDTO> getAllPatients(Page page) {
 /*
         GenericSpecification<Patient> genericSpecification = new GenericSpecification<Patient>();
@@ -526,6 +557,10 @@ public class PatientService {
 
     public List getAllProgramEnrolled(Long id) {
         return null;
+    }
+
+    public Long getTotalCount(){
+        return patientRepository.count();
     }
 
     //TOdo add a method to get patient Relative - to avoid duplicate codes
