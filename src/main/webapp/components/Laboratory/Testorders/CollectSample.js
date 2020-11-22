@@ -41,12 +41,9 @@ const useStyles = makeStyles({
   const CollectSample = (props) => {
     const testOrders = useSelector(state => state.laboratory.testorder);
     const sampleCollections = props.location.state && props.location.state.formDataObj  ? props.location.state.formDataObj : {};
-    console.log(sampleCollections)
     const encounterDate = props.location.state && props.location.state.dateEncounter ? props.location.state.dateEncounter : null ;
     const hospitalNumber = props.location.state && props.location.state.hospitalNumber ? props.location.state.hospitalNumber: null;
-
     const dispatch = useDispatch();
-    console.log(testOrders)
     const [loading, setLoading] = useState('')
     const [fetchTestOrders, setFetchTestOrders] = useState(sampleCollections)
     const classes = useStyles()

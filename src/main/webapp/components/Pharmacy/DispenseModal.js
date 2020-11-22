@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {  Modal, ModalHeader, ModalBody,
     Form,
     Row,
@@ -27,6 +27,9 @@ import moment from "moment";
 import { Spinner } from 'reactstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import './modal.css';
+import { url } from "./../../api";
+import axios from "axios";
+
 
 Moment.locale('en');
 momentLocalizer();
@@ -71,12 +74,30 @@ const DispenseModal = (props) => {
     const modal = props.isOpen
     const closeBtn = props.close
     const classes = useStyles();
+    const [optionsample, setOptionsample] = useState([]);
     const formData = props.formData ? props.formData : {}
     const [formValues, setFormValues] = useState({})
-
+    console.log(props.formData)
     const handleInputChange = (e) => {
         setFormValues ({ ...formValues, [e.target.name]: e.target.value });
     }
+
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+                const response = await axios(
+                    url + "drugs"
+                );
+                const body = response.data;
+                console.log(body)
+                setOptionsample(
+                    body.map(({ genericName, id }) => ({ title: genericName, value: id }))
+                );
+            } catch (error) {
+            }
+        }
+        getCharacters();
+    }, []);
 
     const handleDispense = (e) => {
         e.preventDefault()
@@ -156,13 +177,46 @@ const DispenseModal = (props) => {
                                     <Col md={6}>
                                         <FormGroup>
                                             <Label for="exampleNumber">Drug Name (Brand name)</Label>
-                                            <Input
+                                            {/* <Input
                                                 type="text"
                                                 name="brandName"
                                                 value={formValues.brandName}
                                                 id="drugDispensed"
                                                 placeholder="brand name"
                                                 onChange={handleInputChange}
+                                            /> */}
+
+                                            <Autocomplete
+                                                multiple="true"
+                                                id="drugDispensed"
+                                                size="small"
+                                                options={optionsample}
+                                                //loading="true"
+                                                //value={formValues.generic_name}
+                                                getOptionLabel={(option) => option.title}
+                                                //defaultValue={}
+                                                onChange={(e, i) => {
+                                                    setFormValues({ ...formValues, brandName: i });
+                                                }}
+                                                renderTags={(value, getTagProps) =>
+                                                    value.map((option, index) => (
+                                                        <Chip
+                                                            label={option.title}
+                                                            {...getTagProps({ index })}
+                                                            disabled={index === 0}
+                                                        />
+                                                    ))
+                                                }
+                                                style={{ width: "auto", marginTop: "-1rem" }}
+                                                s
+                                                renderInput={(params) => (
+                                                    <TextField
+                                                        {...params}
+                                                        variant="outlined"
+                                                        margin="normal"
+                                                    />
+                                                )}
+                                                required
                                             />
                                         </FormGroup>
                                     </Col>

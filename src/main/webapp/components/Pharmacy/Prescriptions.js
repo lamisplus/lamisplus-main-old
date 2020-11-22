@@ -13,7 +13,7 @@ import DispenseModal from './DispenseModal'
 import ViewModal from './ViewModal'
 import { Menu, MenuList, MenuButton, MenuItem } from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
-
+import { Spinner } from 'reactstrap';
 import {
   Alert,
   Card,
@@ -22,7 +22,9 @@ import {
   Col,
   Row,
 } from "reactstrap";
-
+import { useSelector, useDispatch } from 'react-redux';
+import {  fetchPatientPrescriptionsByEncounter } from './../../actions/pharmacy'
+//
 Moment.locale("en");
 momentLocalizer();
 
@@ -64,29 +66,26 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Prescriptions = (props) => {
-  console.log(props)
-  const getId = () => {
-    let Id
-    if (props.location.state) {
-      localStorage.setItem("Id", props.location.state.formDataObj.length);
-      Id = props.location.state.formDataObj.length;
-    } else {
-      Id = localStorage.getItem(Id);
-    }
-    console.log(Id)
-    return Id;
-    
-  }
-
+  const dispatch = useDispatch();
+  const prescriptionOrder = useSelector(state => state.pharmacy.list);
+ 
   useEffect(() => {
-    // console.log(props.location.form.formDataObj);
-    getId()
-  }, [])
+        
+    if(props.location.state.encounterId !="" ){         
+            setLoading(true);
+                const onSuccess = () => {
+                    setLoading(false) 
 
-
+                }
+                const onError = () => {
+                    setLoading(false)     
+                }
+        dispatch(fetchPatientPrescriptionsByEncounter(props.location.state.encounterId,onSuccess,onError ));
+    }
+}, [props.location.state.encounterId]); //componentDidMount 
   const classes = useStyles();
   const { buttonLabel, className } = props;
-
+  const [loading, setLoading] = useState('')
   const [modal, setModal] = useState(false);
   const [modal1, setModal1] = useState(false);
   const [drugDetails, setDrugDetails] = useState({})
@@ -115,7 +114,7 @@ const Prescriptions = (props) => {
      </button>
    );
 
-  const formData = props.location.state ? props.location.state.formDataObj : null 
+  const formData = props.location.state ? prescriptionOrder : null 
 
  const Actions = (form) => {
    return (
@@ -176,7 +175,12 @@ const Prescriptions = (props) => {
           <div>
             {formData ? (
               <Fragment>
-                <PatientDetailCard getpatientdetails={props.location.state} />
+                {!loading ?
+                        <PatientDetailCard getpatientdetails={ props.location.state }/>  
+                    :
+                        <p> <Spinner color="primary" /> Loading Please Wait..</p>
+                    }
+                
                 <br />
                 <Card className="mb-12">
                   <CardHeader>
@@ -202,19 +206,8 @@ const Prescriptions = (props) => {
                     <Row>
                       <Col>
                         <Card body>
-                            <Table
-                              style={{
-                                fontWeight: "bolder",
-                                borderColor: "#000",
-                              }}
-                              responsive
-                            >
-                              <thead
-                                style={{
-                                  backgroundColor: "#9F9FA5",
-                                  color: "#000",
-                                }}
-                              >
+                            <Table striped responsive >
+                              <thead style={{backgroundColor: "#9F9FA5",color: "#000",}}>
                                 <tr>
                                   <th>Name</th>
                                   <th>Dosage</th>
@@ -223,10 +216,12 @@ const Prescriptions = (props) => {
                                   <th></th>
                                 </tr>
                               </thead>
-
-                              {formData.map((form) => (
-                                <tbody key={form.id}>
-                                  <tr>
+                              
+                              
+                                <tbody >
+                                {!loading ? formData.map((form) => (
+                                  form.data!==null?
+                                  <tr key={form.id}>
                                     <td>
                                       <b>{form.data.generic_name}</b>
                                     </td>
@@ -235,8 +230,13 @@ const Prescriptions = (props) => {
                                     <td>{form.data.date_dispensed}</td>
                                     <td>{Actions(form)}</td>
                                   </tr>
+                                  :
+                                   <tr></tr>
+                                  ))
+                                  :<p> <Spinner color="primary" /> Loading Please Wait</p>
+                                } 
                                 </tbody>
-                              ))}
+                               
                             </Table>
                             <br />
                         </Card>
