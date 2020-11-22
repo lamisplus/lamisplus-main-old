@@ -36,23 +36,19 @@ useEffect(() => {
           const getList = value['formDataObj'].find(x => { 
 
             if(x.data && x.data!==null && x.data.lab_test_order_status===2 && x.data.manifest_status==null){
-              console.log(x)
               labTestType.push(x);
             }
-           // return console.log(x)
           
           })         
      });
 
      function getDispatch (evt, data){
-        console.log( data)
         setcollectmodal({...collectmodal, ...data});
         setModal3(!modal3) 
      }
      
          //This is function to check for the status of each collection to display on the tablist below 
     const sampleStatus = e =>{
-      console.log(e)
       if(e===1){
           return (<p><Badge  color="light">Sample Collected</Badge></p>)
       }else if(e===2){
@@ -171,6 +167,7 @@ useEffect(() => {
         options={{
             search: false,
             selection: true,
+            pageSizeOptions: [5,10,50,100,150,200],
             headerStyle: {
                 backgroundColor: "#9F9FA5",
                 color: "#000",
@@ -181,14 +178,16 @@ useEffect(() => {
         actions={[         
             {
               tooltip: 'Dispatch All Selected Sample',
-              icon: 'add',
+              icon: 'add' ,
+              label: 'Add Manifest',
               onClick: (evt, data) =>
                 //alert('You want to dispatch ' + evt + data),
-                getDispatch(evt, data)
-                
+                getDispatch(evt, data)   
             
             }
         ]}
+
+       
       />
       <DispatchedModal modalstatus={modal3} togglestatus={togglemodal3} manifestSamples={collectmodal} />
 

@@ -140,8 +140,7 @@ export default function LaboratoryDashBoard(props) {
             async function getCharacters() {
                 try {
                     const response = await axios.get( url+ 'laboratory-dashboard/pie');
-                    const body = response.data;
-                    //setbirthRateData(body2) 
+                    const body = response.data && response.data!==null ? response.data : {}; 
                     settestOrderGroupData(body)
                         
                 } catch (error) {}
@@ -153,8 +152,7 @@ export default function LaboratoryDashBoard(props) {
             async function getCharacters() {
                 try {
                     const response = await axios.get( url+ 'laboratory-dashboard/column/testOrders');
-                    const body = response.data;
-                    //setbirthRateData(body2) 
+                    const body = response.data && response.data!==null ? response.data : {}; 
                     settestOrdersStackChart(body)
                         
                 } catch (error) {}
@@ -166,15 +164,13 @@ export default function LaboratoryDashBoard(props) {
         async function getCharacters() {
             try {
                 const response = await axios.get( url+ 'laboratory-dashboard/column/lims');
-                const body = response.data;
-                //setbirthRateData(body2) 
+                const body = response.data && response.data!==null ? response.data : {}; 
                 setlimsBarChart(body)
                     
             } catch (error) {}
         }
         getCharacters();
     }, []); 
-console.log(limsBarChart)
 
 // Test Group Pie Chart 
 

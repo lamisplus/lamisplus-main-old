@@ -14,11 +14,11 @@ import { fetchPrescriptions } from "../../actions/pharmacy";
 import { connect } from 'react-redux';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import {drugChart} from './DashBoard/Visualisation/DrugChart';
-import {basicColumn} from './DashBoard/Visualisation/DrugChartBar';
+//import {drugChart} from './DashBoard/Visualisation/DrugChart';
+//import {basicColumn} from './DashBoard/Visualisation/DrugChartBar';
 import { url } from "../../api";
 import axios from 'axios';
-
+import {getQueryParams} from "components/Utils/PageUtils";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -162,6 +162,14 @@ const ScrollableTabsButtonForce = (props) => {
     }, []);
     const classes = useStyles();
     const [value, setValue] = useState(0);
+    const urlIndex = getQueryParams("tab", props.location.search); 
+  const urlTabs = urlIndex !== null ? urlIndex : props.location.state ;
+  useEffect ( () => {
+    switch(urlTabs){  
+      case "prescription": return setValue(1)
+      default: return setValue(0)
+    }
+  }, [urlIndex]);
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -174,7 +182,7 @@ const ScrollableTabsButtonForce = (props) => {
           async function getCharacters() {
               try {
                   const response = await axios.get( url+ 'pharmacy-dashboard/pie');
-                  const body = response.data; 
+                  const body = response.data && response.data!==null ? response.data : {}; 
                   setdrugPieChart(body)                         
               } catch (error) {}
           }
@@ -185,7 +193,7 @@ const ScrollableTabsButtonForce = (props) => {
       async function getCharacters() {
           try {
               const response = await axios.get( url+ 'pharmacy-dashboard/column');
-              const body2 = response.data; 
+              const body2 = response.data && response.data!==null ? response.data : {}; 
               setdrugBarChart(body2)                         
           } catch (error) {}
       }
@@ -300,12 +308,6 @@ const ScrollableTabsButtonForce = (props) => {
               icon={<MdContacts />}
               {...a11yProps(1)}
             />
-            {/* <Tab
-              className={classes.title}
-              label="Dispensed Prescription"
-              icon={<FaBriefcaseMedical />}
-              {...a11yProps(2)}
-            /> */}
           </Tabs>
           <div></div>
         </AppBar>
@@ -332,84 +334,12 @@ const ScrollableTabsButtonForce = (props) => {
           </CardDeck>
           <br />
           <br />
-          <Grid container spacing={2}>
-        
-          </Grid>
+
         </TabPanel>
         <TabPanel value={value} index={1}>
           <PatientSearch />
         </TabPanel>
 
-        <TabPanel value={value} index={3}></TabPanel>
-        <TabPanel value={value} index={4}></TabPanel>
-        <TabPanel value={value} index={5}>
-          <Grid container spacing={7}>
-            <Grid item xs="7">
-              <Card>
-                <CardBody>
-                  <Typography
-                    className={classes.title}
-                    color="primary"
-                    gutterBottom
-                  ></Typography>
-                  <Grid>
-                    <Grid item xs={6}>
-                      <Typography className={classes.pos} color="textSecondary">
-                        Pulse : <span style={{ fontSize: "bold" }}>56pm</span>
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </CardBody>
-              </Card>
-            </Grid>
-
-            <Grid item xs="5">
-              <Card>
-                <CardBody>
-                  <Typography
-                    className={classes.title}
-                    color="primary"
-                    gutterBottom
-                  >
-                    Drug Order
-                  </Typography>
-                  <Grid container>
-                    <Grid item>
-                      <Typography className={classes.pos} color="textSecondary">
-                        Pulse : <span style={{ fontSize: "bold" }}>56pm</span>
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </CardBody>
-              </Card>
-            </Grid>
-            <br />
-            <Grid item xs="7">
-              <Card>
-                <CardBody>
-                  <Typography
-                    className={classes.title}
-                    color="primary"
-                    gutterBottom
-                  >
-                    Drug Order
-                  </Typography>
-                  <Grid container>
-                    <Grid item>
-                      <Typography className={classes.pos} color="textSecondary">
-                        Pulse : <span style={{ fontSize: "bold" }}>56pm</span>
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </CardBody>
-              </Card>
-            </Grid>
-          </Grid>
-        </TabPanel>
-
-        <TabPanel value={value} index={6}>
-          Item Seven
-        </TabPanel>
       </div>
     );
 }

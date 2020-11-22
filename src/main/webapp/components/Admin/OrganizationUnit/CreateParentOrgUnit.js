@@ -1,13 +1,10 @@
 import React, { useState }   from 'react';
-import { Form,Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Input,FormFeedback,Label,Card,CardBody
+import { Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Input,FormFeedback,Label,Card,CardBody
 } from 'reactstrap';
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert, AlertTitle } from '@material-ui/lab';
-import CreatOrgUnitByUpload from "./CreatOrgUnitByUpload";
-import {createOrganisationUnit} from './../../../actions/organizationalUnit'
-import { connect } from "react-redux";
-
+import CreateParentOrgUnitByUpload from "./CreateParentOrgUnitByUpload";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -46,11 +43,11 @@ const useStyles = makeStyles(theme => ({
 
 
 
-const CreateOrgUnit = (props) => {
+const CreateParentOrgUnit = (props) => {
     const classes = useStyles()
-    const [otherfields, setOtherFields] = useState({name:""});
+    const datasample = props.datasample ? props.datasample : {};
+    const [otherfields, setOtherFields] = useState({fileName:""});
     const [errors, setErrors] = useState({});
-    const [loading, setLoading] = useState(false)
     const [modal3, setModal3] = useState(false) //
     const toggleModal3 = () => setModal3(!modal3)
     const handleOtherFieldInputChange = e => {
@@ -59,7 +56,7 @@ const CreateOrgUnit = (props) => {
   }
   const validate = () => {
       let temp = { ...errors }
-      temp.name = otherfields.name ? "" : "This field is required"
+      temp.fileName = otherfields.fileName ? "" : "This field is required"
       setErrors({
           ...temp
           })    
@@ -71,28 +68,11 @@ const createUploadBatch = () => {
     props.togglestatus();
     setModal3(!modal3)
 }
-const saveOrgName = (e) => {
-    e.preventDefault();
-    if (validate()) {
-        setLoading(true);        
-        const onSuccess = () => {
-            setLoading(false);
-            props.togglestatus();
-        };
-        const onError = () => {
-            setLoading(false);
-            props.togglestatus();
-        };
-       
-        props.createOrganisationUnit(otherfields.name, onSuccess, onError);
-    }
-};
 
   return (      
       <div >
               <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
-              <Form onSubmit={saveOrgName}> 
-                  <ModalHeader toggle={props.togglestatus}>Create Organization Unit</ModalHeader>
+                  <ModalHeader toggle={props.togglestatus}>Create Parent Organization Unit</ModalHeader>
                       <ModalBody>
                           <Card>
                             <CardBody>
@@ -115,15 +95,15 @@ const saveOrgName = (e) => {
                                         <Label for="">Parent name</Label>
                                               <Input
                                                   type="text"
-                                                  name="name"
-                                                  id="name"
+                                                  name="fileName"
+                                                  id="fileName"
                                                   
-                                                  value={otherfields.name}
+                                                  value={otherfields.fileName}
                                                   onChange={handleOtherFieldInputChange}
-                                                  {...(errors.name && { invalid: true})}
+                                                  {...(errors.fileName && { invalid: true})}
                                                   
                                               />
-                                                <FormFeedback>{errors.name}</FormFeedback>
+                                                <FormFeedback>{errors.fileName}</FormFeedback>
                                       </FormGroup>
                                   </Col>
                                 
@@ -157,14 +137,11 @@ const saveOrgName = (e) => {
                       </CardBody>
                 </Card>
           </ModalBody>
-          </Form>
       </Modal>
-      <CreatOrgUnitByUpload modalstatus={modal3} togglestatus={toggleModal3}  />
+      <CreateParentOrgUnitByUpload modalstatus={modal3} togglestatus={toggleModal3}  />
  
     </div>
   );
 }
-export default connect(null, { createOrganisationUnit })(
-    CreateOrgUnit
-);
 
+export default CreateParentOrgUnit;

@@ -61,64 +61,58 @@ export const fetchAllParentOrganizationalUnit = (id, onSuccess, onError)=> dispa
     );
     }
 };
-export const createBootstrapModule = (data) => dispatch => {
+export const createOrganisationUnit = (data, onSuccess,onError) => dispatch => {
 console.log(data)
 
-const options = {
-  headers: {
-      'Content-Type': ' multipart/form-data',
-  }
-};
   axios
-    .post(`${baseUrl}modules/upload`, data,options)
+    .post(`${baseUrl}organisation-units`, data)
     .then(response => {
-      console.log(response)
       dispatch({
-        type: ACTION_TYPES.CREATE_BOOTSTRAP_MODULE,
+        type: ACTION_TYPES.CREATE_ORGANISATION_UNIT,
         payload: response.data
       });
-      //onSuccess()
-      toast.success("Module Uploaded Successfully");
+      onSuccess()
+      toast.success("Organisational Unit Created Successfully");
     })
     .catch(error =>{
       
       dispatch({
-        type: ACTION_TYPES.ERROR_CREATE_BOOTSTRAP_MODULE,
+        type: ACTION_TYPES.ERROR_CREATE_ORGANISATION_UNIT,
         payload: error
       })
-      //onError()
-      console.log(error)
+      onError()
       toast.error("Something went wrong, please try again");
       
     });
   
 };
 
-export const startBootstrapModule = (onSuccess, onError)=> dispatch => {
 
+export const Delete = (id) => dispatch => {
+  console.log(`${baseUrl}patients/${id}`);
   axios
-    .post(`${baseUrl}modules/start/all`)
-    .then(response => {
-       console.log(response)
-      dispatch({
-        type: ACTION_TYPES.START_BOOSTRAP_MODULE,
-        payload: response.data
-      })
+  .delete(`${baseUrl}organisation-units/${id}`)
+  .then(response => {
 
-      onSuccess && onSuccess();
-      toast.success("Module Restarted successfully!");
-    })
-    .catch(error => {
-      console.log(error)
-      dispatch({
-        type: ACTION_TYPES.ERROR_START_BOOSTRAP_MODULE,
-        payload: error
-      })
-      onError && onError();
-      toast.error("Something went wrong! please try again..");
-    }
-    );
-
+    dispatch({
+      type: ACTION_TYPES.DELETE_ORGANISATION_UNIT,
+      payload: id
+    });
+    
+    toast.success("Organisational Unit record was deleted successfully!");
+  })
+  .catch(error => {
+    dispatch({
+      type: ACTION_TYPES.DELETE_ORGANISATION_UNIT_ERROR,
+      payload:error.response
+    });
+    console.log(error)
+    
+    // if(error.response.data.apierror.message===null || error.response.data.apierror.message===""){
+    //   toast.error("Something went wrong");
+    // }else{
+    //   toast.error(error.response.data.apierror.message);
+    // }
+   //console.log(error.response.data.apierror.message);
+  });
 };
-
-

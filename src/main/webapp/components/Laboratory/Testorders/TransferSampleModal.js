@@ -90,7 +90,6 @@ const ModalSampleTransfer = (props) => {
 
     const handleOtherFieldInputChange = e => {
         setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
-        console.log(otherfields)
     }
 
 
@@ -156,19 +155,18 @@ const ModalSampleTransfer = (props) => {
                                     <Col md={12} >
                                         <Alert color="dark" style={{backgroundColor:'#9F9FA5', color:"#000" , fontWeight: 'bolder', fontSize:'14px'}}>
                                             <p style={{marginTop: '.7rem' }}>Lab Test Group : <span style={{ fontWeight: 'bolder'}}> {' '} {lab_test_group}</span> 
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Lab Test Ordered : 
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Lab Test Ordered : 
                                                 <span style={{ fontWeight: 'bolder'}}>{' '}  {description}</span>
-                                                    &nbsp;&nbsp;&nbsp; Lab Number : &nbsp;&nbsp;
-                                                <span style={{ fontWeight: 'bolder'}}>{props.labnumber['lab_number']===""?" ---":props.labnumber['lab_number']}</span>
-                                                    Order by : &nbsp;&nbsp;
+                                                    &nbsp;&nbsp; Lab Number : &nbsp;&nbsp;
+                                                <span style={{ fontWeight: 'bolder'}}>{props.labnumber===""?" ---":props.labnumber}</span>
+                                                &nbsp;&nbsp; Order by : &nbsp;&nbsp;
                                                 <span style={{ fontWeight: 'bolder'}}>{ "Debora"}</span>
-                                                    &nbsp;&nbsp;&nbsp; Priority : &nbsp;&nbsp;
+                                                    &nbsp;&nbsp; Priority : &nbsp;&nbsp;
                                                 <span style={{ fontWeight: 'bolder'}}>{ "Normal"}</span>
                                             </p>        
                                         </Alert>
                                     </Col>
                                     <Col md={6}>
-                                        {/* <p>Sample Type {datasample.data.description}  </p> */}
                                           <FormGroup>
                                               <Label for='maritalStatus'>Date Transfer</Label>
                                           

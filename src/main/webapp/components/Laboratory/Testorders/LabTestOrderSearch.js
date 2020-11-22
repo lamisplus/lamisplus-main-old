@@ -22,9 +22,7 @@ const PatientSearch = (props) => {
         }
             props.fetchAllLabTestOrderToday(onSuccess, onError);
     }, []); //componentDidMount
-    console.log(props.patientsTestOrderList)
 function totalSampleConllected (test){
-        console.log(test)
         const  maxVal = []
           for(var i=0; i<test.length; i++){
               for (var key in test[i]) {
@@ -86,6 +84,8 @@ function totalSampleConllected (test){
 
               }))}
               options={{
+                  
+                  pageSizeOptions: [5,10,50,100,150,200],
                   headerStyle: {
                   backgroundColor: "#9F9FA5",
                   color: "#000",
