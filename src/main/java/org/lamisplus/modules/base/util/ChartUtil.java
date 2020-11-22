@@ -74,7 +74,6 @@ public class ChartUtil {
                                             Map<String, List> xAxis, Map<String, Object> yAxis,
                                             List<Object> columnSeries, Map<String, Object> mapColumnSeries){
         Map<String, Object> mainMap = new HashMap<>();
-
         mainMap.put("type", type);
         mainMap.put("text", chartTitle);
         mainMap.put("subTitle", subTitle);
@@ -85,9 +84,7 @@ public class ChartUtil {
         } else if(mapColumnSeries != null && columnSeries == null) {
             mainMap.put("series", mapColumnSeries);
         }
-
         return mainMap;
-
     }
 
     private void clearChartList() {
