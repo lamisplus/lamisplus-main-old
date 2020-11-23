@@ -68,9 +68,6 @@ const ResultReporting = (props) => {
         }
     }, []); //componentDidMount 
 
-       
-        
-
         //Get list of test type
         const labTestType = [];
             if(sampleCollections !== null || sampleCollections ===""){
@@ -118,11 +115,9 @@ const ResultReporting = (props) => {
         const getValue =e.target.value;
         if(getValue!=='All' || getValue ===null)
         {
-            console.log(getValue)
             //const testOrders = fetchTestOrders.length >0 ? fetchTestOrders:{}
             const getNewTestOrder = testOrders.find(x => x.data.lab_test_group === getValue)
             setFetchTestOrders([getNewTestOrder]) 
-            console.log(fetchTestOrders)
         }else{
             setFetchTestOrders([...newSample])
         }
@@ -201,7 +196,7 @@ return (
                   </CardHeader>
                 <CardBody>
                     <Alert color="primary">
-                        Please make sure you enter Lab number before collecting sample {console.log(labNum)}
+                        Please make sure you enter Lab number before collecting sample 
                     </Alert>
                 <br />
                     <Row>
@@ -238,7 +233,7 @@ return (
                                             name='lab_number'
                                             id='lab_number'
                                             value={labNumber!=="" ? labNumber : labNum.lab_number}
-                                            
+                                            disabled='true'
                                             onChange={handleLabNumber}
                                         />
                                         </FormGroup>                            
@@ -257,7 +252,7 @@ return (
                                             </thead>
                                             <tbody>
                                                
-                                                {!loading ? fetchTestOrders.map((row) => (
+                                                {!loading ? testOrders.map((row) => (
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>
                                                       <th className={classes.td}>{row.data.description===""?" ":row.data.description}</th>
                                                       <td className={classes.td}>{row.data.sample_type==="" ? " ":row.data.sample_type}</td>

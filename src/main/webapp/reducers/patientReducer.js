@@ -15,6 +15,7 @@ const initialState = {
   consultationHistory: [],
   appointments: [],
   previousRadiologyOrders: [],
+  patientCount: []
 };
 
 const patientReducer = (state = initialState, action) => {
@@ -82,7 +83,9 @@ const patientReducer = (state = initialState, action) => {
 
     case ACTION_TYPES.PATIENT_RADIOLOGY_ORDERS:
       return { ...state, previousRadiologyOrders: action.payload };
-
+    
+    case ACTION_TYPES.TOTAL_PATIENTS:
+      return { ...state, patientCount: action.payload };
     default:
       return state;
   }
