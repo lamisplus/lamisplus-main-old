@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
 
 
 
-const BackupDatabase = (props) => {
+const CreateParentOrgUnitByUpload = (props) => {
     const classes = useStyles()
     const datasample = props.datasample ? props.datasample : {};
     const [otherfields, setOtherFields] = useState({fileName:""});
@@ -66,26 +66,26 @@ const BackupDatabase = (props) => {
   return (      
       <div >
               <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
-                  <ModalHeader toggle={props.togglestatus}>Backup Database : LamisPlus</ModalHeader>
+                  <ModalHeader toggle={props.togglestatus}>Create Organization Unit</ModalHeader>
                       <ModalBody>
                           <Card>
                             <CardBody>
-                                <Row style={{ marginTop: '20px'}}>
-                                    <Col sm={12}>
-                                        <Alert severity="info">
-                                            <AlertTitle>Instructions to add new module</AlertTitle>
-                                            
-                                            <br/>
-                                            <strong>NOTE:</strong> The following format is allow .csv, .zip  
-                                        </Alert>
-                                    </Col>
-
-                                </Row>
-                                <br/><br/><br/>
+                              <br />
+                              <Row>
+                                  <Col>
+                                  <Alert severity="info">
+                                    <AlertTitle>Please click here to download template</AlertTitle>
+                                      <ul>
+                                        
+                                      </ul>
+                                      
+                                  </Alert>
+                                </Col>
+                              </Row>
                                 <Row>
-                                <Col md={6}>
+                                  {/* <Col md={6}>
                                     <FormGroup>
-                                        <Label for="">File Name</Label>
+                                        <Label for="">Parent name</Label>
                                               <Input
                                                   type="text"
                                                   name="fileName"
@@ -97,8 +97,18 @@ const BackupDatabase = (props) => {
                                                   
                                               />
                                                 <FormFeedback>{errors.fileName}</FormFeedback>
-                                    </FormGroup>
-                                      </Col>
+                                      </FormGroup>
+                                  </Col> */}
+                                  <Col md={12}>
+                                    <FormGroup>
+                                        <Label for="">Import Children</Label>
+                                      <DropzoneArea
+                                          onChange={(files) => console.log('Files:', files)}
+                                          showFileNames="true"
+                                          acceptedFiles={['pdf']}
+                                        />
+                                      </FormGroup>
+                                  </Col>
                                      
                                 </Row>
                             <br/>
@@ -135,4 +145,4 @@ const BackupDatabase = (props) => {
   );
 }
 
-export default BackupDatabase;
+export default CreateParentOrgUnitByUpload;

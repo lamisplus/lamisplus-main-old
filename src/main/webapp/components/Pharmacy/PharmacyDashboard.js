@@ -9,13 +9,16 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import { MdDashboard, MdContacts } from 'react-icons/md';
 import {Card, CardBody, CardDeck, CardHeader} from 'reactstrap';
-import { Bar, Pie } from 'react-chartjs-2';
-import { getColor } from 'utils/colors';
-import { randomNum } from 'utils/demos';
-import UserProgressTable from 'components/UserProgressTable';
 import PatientSearch from './PatientSearch';
 import { fetchPrescriptions } from "../../actions/pharmacy";
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+//import {drugChart} from './DashBoard/Visualisation/DrugChart';
+//import {basicColumn} from './DashBoard/Visualisation/DrugChartBar';
+import { url } from "../../api";
+import axios from 'axios';
+import {getQueryParams} from "components/Utils/PageUtils";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -151,85 +154,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const genPieData = () => {
-  
-    return {
-        datasets: [
-            {
-                data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
-                backgroundColor: [
-                    getColor('primary'),
-                    getColor('secondary'),
-                    getColor('success'),
-                    getColor('info'),
-                    getColor('danger'),
-                ],
-                label: 'Test Order',
-            },
-        ],
-        labels: ['Paracetamol', 'Chloroquine', 'Panadol', 'Ampiclox', 'Flagyl'],
-    };
-};
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
 
-const genLineData = (moreData = {}, moreData2 = {}) => {
-    return {
-        labels: MONTHS,
-        datasets: [
-            {
-                label: 'Pending',
-                backgroundColor: getColor('primary'),
-                borderColor: getColor('primary'),
-                borderWidth: 1,
-                data: [
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                ],
-                ...moreData,
-            },
-            {
-                label: 'Dispensed',
-                backgroundColor: getColor('secondary'),
-                borderColor: getColor('secondary'),
-                borderWidth: 1,
-                data: [
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                ],
-                ...moreData2,
-            },
-        ],
-    };
-};
-
-const userProgressTableData = [
-    {
-
-        name: 'Tom Suliman'
-
-    },
-    {
-        name: 'Jenny Alex'
-    },
-    {
-        name: 'Simi Adedeji'
-    },
-    {
-
-        name: 'Christine Ada'
-    }
-
-];
 
 const ScrollableTabsButtonForce = (props) => {
     useEffect(() => {
@@ -237,11 +162,124 @@ const ScrollableTabsButtonForce = (props) => {
     }, []);
     const classes = useStyles();
     const [value, setValue] = useState(0);
+    const urlIndex = getQueryParams("tab", props.location.search); 
+  const urlTabs = urlIndex !== null ? urlIndex : props.location.state ;
+  useEffect ( () => {
+    switch(urlTabs){  
+      case "prescription": return setValue(1)
+      default: return setValue(0)
+    }
+  }, [urlIndex]);
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-    
+    const [drugPieChart, setdrugPieChart] = useState({})
+    const [drugBarChart, setdrugBarChart] = useState({})
+
+    // APi request for Pie chart
+      useEffect(() => {
+          async function getCharacters() {
+              try {
+                  const response = await axios.get( url+ 'pharmacy-dashboard/pie');
+                  const body = response.data && response.data!==null ? response.data : {}; 
+                  setdrugPieChart(body)                         
+              } catch (error) {}
+          }
+          getCharacters();
+      }, []); 
+     // APi request for Bar chart
+     useEffect(() => {
+      async function getCharacters() {
+          try {
+              const response = await axios.get( url+ 'pharmacy-dashboard/column');
+              const body2 = response.data && response.data!==null ? response.data : {}; 
+              setdrugBarChart(body2)                         
+          } catch (error) {}
+      }
+      getCharacters();
+    }, []);
+    console.log(drugBarChart.categories)
+    /// This is for the Pie Chart
+    const drugChart = {
+          chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: 0,
+            plotShadow: false,
+            type: drugPieChart.type
+        },
+        title: {
+            text: 'Drug<br>Chart<br>',
+            align: 'center',
+            verticalAlign: 'middle',
+            y: 60
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        accessibility: {
+            point: {
+                valueSuffix: '%'
+            }
+        },
+        plotOptions: {
+            pie: {
+                dataLabels: {
+                    enabled: true,
+                    distance: -50,
+                    style: {
+                        fontWeight: 'bold',
+                        color: 'white'
+                    }
+                },
+                startAngle: -90,
+                endAngle: 90,
+                center: ['50%', '75%'],
+                size: '110%'
+            }
+        },
+        series: [{
+            name: drugPieChart.name,
+            innerSize: '50%',
+            data: drugPieChart.data
+        }]
+        }
+    // This is for the BAR chart
+        const basicColumn = {
+          chart: {
+              type: drugBarChart.type
+          },
+          title: {
+              text: drugBarChart.text
+          },
+          subtitle: {
+              text: drugBarChart.subtitle
+          },
+          xAxis: drugBarChart.xAxis,
+          yAxis: {
+              min: 0,
+              title: {
+                  text: ' '
+              }
+          },
+          tooltip: {
+              headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+              pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                  '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+              footerFormat: '</table>',
+              shared: true,
+              useHTML: true
+          },
+          plotOptions: {
+              column: {
+                  pointPadding: 0.2,
+                  borderWidth: 0
+              }
+          },
+          series: drugBarChart.series
+        };
+        
+        
     return (
       <div className={classes.root}>
         <div className={classes.inforoot}>
@@ -270,12 +308,6 @@ const ScrollableTabsButtonForce = (props) => {
               icon={<MdContacts />}
               {...a11yProps(1)}
             />
-            {/* <Tab
-              className={classes.title}
-              label="Dispensed Prescription"
-              icon={<FaBriefcaseMedical />}
-              {...a11yProps(2)}
-            /> */}
           </Tabs>
           <div></div>
         </AppBar>
@@ -283,121 +315,31 @@ const ScrollableTabsButtonForce = (props) => {
         <TabPanel value={value} index={0}>
           <CardDeck>
             <Card>
-              <CardHeader> Most Commonly Prescribed Drugs</CardHeader>
+              <CardHeader> Total Prescriptions and Dispensed Drugs in last 7days</CardHeader>
               <CardBody>
-                <Pie data={genPieData()} />
+                <div>
+                    <HighchartsReact options={drugChart} />
+                </div> 
               </CardBody>
             </Card>
             <Card>
-              <CardHeader> Total Monthly Prescriptions</CardHeader>
+              <CardHeader> Total Drug Prescriptions and Dispensed</CardHeader>
               <CardBody>
-                <Bar data={genLineData()} />
+                <div>
+                    <HighchartsReact options={basicColumn} />
+                </div> 
+              
               </CardBody>
             </Card>
           </CardDeck>
           <br />
           <br />
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Card>
-                <CardHeader> Recent Dispensed Orders</CardHeader>
 
-                <CardBody>
-                  <UserProgressTable
-                    headers={["name"]}
-                    usersData={userProgressTableData}
-                  />
-                </CardBody>
-              </Card>
-            </Grid>
-            <Grid item xs={6}>
-              <Card>
-                <CardHeader> Recent Pending Orders</CardHeader>
-
-                <CardBody>
-                  <UserProgressTable
-                    headers={["name"]}
-                    usersData={userProgressTableData}
-                  />
-                </CardBody>
-              </Card>
-            </Grid>
-          </Grid>
         </TabPanel>
         <TabPanel value={value} index={1}>
           <PatientSearch />
         </TabPanel>
 
-        <TabPanel value={value} index={3}></TabPanel>
-        <TabPanel value={value} index={4}></TabPanel>
-        <TabPanel value={value} index={5}>
-          <Grid container spacing={7}>
-            <Grid item xs="7">
-              <Card>
-                <CardBody>
-                  <Typography
-                    className={classes.title}
-                    color="primary"
-                    gutterBottom
-                  ></Typography>
-                  <Grid>
-                    <Grid item xs={6}>
-                      <Typography className={classes.pos} color="textSecondary">
-                        Pulse : <span style={{ fontSize: "bold" }}>56pm</span>
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </CardBody>
-              </Card>
-            </Grid>
-
-            <Grid item xs="5">
-              <Card>
-                <CardBody>
-                  <Typography
-                    className={classes.title}
-                    color="primary"
-                    gutterBottom
-                  >
-                    Drug Order
-                  </Typography>
-                  <Grid container>
-                    <Grid item>
-                      <Typography className={classes.pos} color="textSecondary">
-                        Pulse : <span style={{ fontSize: "bold" }}>56pm</span>
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </CardBody>
-              </Card>
-            </Grid>
-            <br />
-            <Grid item xs="7">
-              <Card>
-                <CardBody>
-                  <Typography
-                    className={classes.title}
-                    color="primary"
-                    gutterBottom
-                  >
-                    Drug Order
-                  </Typography>
-                  <Grid container>
-                    <Grid item>
-                      <Typography className={classes.pos} color="textSecondary">
-                        Pulse : <span style={{ fontSize: "bold" }}>56pm</span>
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </CardBody>
-              </Card>
-            </Grid>
-          </Grid>
-        </TabPanel>
-
-        <TabPanel value={value} index={6}>
-          Item Seven
-        </TabPanel>
       </div>
     );
 }

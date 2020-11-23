@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import {FaPlusSquare, FaRegEye} from 'react-icons/fa';
 import {TiArrowForward} from 'react-icons/ti';
 import 'react-widgets/dist/css/react-widgets.css'
+import { ToastContainer } from "react-toastify";
 //Date Picker
 import Page from './../../Page'
 import {  fetchById } from '../../../actions/patients'
@@ -25,6 +26,7 @@ import ModalViewResult from './../TestResult/ViewResult';
 
 
 
+
 const useStyles = makeStyles({
     root: {
         width: '100%'
@@ -36,15 +38,11 @@ const useStyles = makeStyles({
 })
 
 
-
-
-
   const CollectSample = (props) => {
+    const testOrders = useSelector(state => state.laboratory.testorder);
     const sampleCollections = props.location.state && props.location.state.formDataObj  ? props.location.state.formDataObj : {};
     const encounterDate = props.location.state && props.location.state.dateEncounter ? props.location.state.dateEncounter : null ;
     const hospitalNumber = props.location.state && props.location.state.hospitalNumber ? props.location.state.hospitalNumber: null;
-    console.log()
-    const testOrders = useSelector(state => state.laboratory.testorder);
     const dispatch = useDispatch();
     const [loading, setLoading] = useState('')
     const [fetchTestOrders, setFetchTestOrders] = useState(sampleCollections)
@@ -55,8 +53,8 @@ const useStyles = makeStyles({
         if(props.location.state.encounterId !="" ){         
                 setLoading(true);
                     const onSuccess = () => {
-                        setLoading(false)
-                        
+                        setLoading(false) 
+ 
                     }
                     const onError = () => {
                         setLoading(false)     
@@ -64,7 +62,7 @@ const useStyles = makeStyles({
             dispatch(fetchAllLabTestOrderOfPatient(props.location.state.encounterId,onSuccess,onError ));
             dispatch(fetchById(hospitalNumber,onSuccess,onError));
         }
-    }, []); //componentDidMount 
+    }, [props.location.state.encounterId]); //componentDidMount 
 
         //Get list of test type
         const labTestType = [];
@@ -91,12 +89,9 @@ const useStyles = makeStyles({
             testOrders.forEach(function(value, index, array) {
                 if(value['data']!==null && value['data'].hasOwnProperty("lab_number")){
                     labNumber = value['data'].lab_number
-                } 
-                //console.log(value['data']) 
-              
+                }               
             });
           
-
     const handleLabNumber = e => {
         e.preventDefault();   
             setlabNum({ ...labNum, [e.target.name]: e.target.value })
@@ -105,7 +100,6 @@ const useStyles = makeStyles({
     const handleSample = (row,dateEncounter) => { 
         setcollectModal({...collectModal, ...row, dateEncounter, hospitalNumber});
         setModal(!modal) 
-        console.log()
     }
 
     const transferSample = (row) => {
@@ -121,12 +115,10 @@ const useStyles = makeStyles({
     const getGroup = e => {
         const getValue =e.target.value;
         if(getValue!=='All' || getValue ===null)
-        {
-            console.log(getValue)
+        { 
             //const testOrders = fetchTestOrders.length >0 ? fetchTestOrders:{}
             const getNewTestOrder = testOrders.find(x => x.data!==null && x.data.lab_test_group === getValue)
             setFetchTestOrders([getNewTestOrder]) 
-            console.log(fetchTestOrders)
         }else{
             setFetchTestOrders([...sampleCollections])
         }
@@ -177,6 +169,7 @@ const useStyles = makeStyles({
 
 return (
     <Page title='Collect Sample'>
+        <ToastContainer autoClose={2000} />
         <br/>
         <Row>
             <Col>
@@ -193,9 +186,10 @@ return (
                         <Link 
                             to ={{ 
                               pathname: "/laboratory",  
-                              activetab: 1
-                            }} >
-                    
+                              state: 'collect-sample'
+                            }} 
+                        >
+                                
                             <MatButton
                                 type='submit'
                                 variant='contained'
@@ -210,7 +204,7 @@ return (
                   </CardHeader>
                 <CardBody>
                     <Alert color="primary">
-                        Please make sure you enter Lab number before collecting sample {console.log(labNum)}
+                        Please make sure you enter Lab number before collecting sample 
                     </Alert>
                 <br />
                     <Row>
@@ -248,6 +242,7 @@ return (
                                             id='lab_number'
                                             value={labNumber!=="" ? labNumber : labNum.lab_number}
                                             onChange={handleLabNumber}
+                                            disabled={labNumber && labNum.lab_number ? 'true' : ''}
                                         />
                                         </FormGroup>                            
                                     </Col>
@@ -264,8 +259,7 @@ return (
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {console.log(fetchTestOrders)}
-                                                {!loading ? fetchTestOrders.map((row) => (
+                                                {!loading ? testOrders.map((row) => (
                                                     row.data!==null?
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>
                                                       <th className={classes.td}>{row.data.description===""?" ":row.data.description}</th>
@@ -293,13 +287,10 @@ return (
             </Col>
         </Row>
       <ModalSample modalstatus={modal} togglestatus={toggleModal} datasample={collectModal}  labnumber={labNum}/>
-      <ModalSampleTransfer modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} labnumber={labNum}/>
+      <ModalSampleTransfer modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} labnumber={labNumber!=="" ? labNumber : labNum}/>
       <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />
-
     </Page>
-  )
-  
+  )  
 }
-
 
 export default CollectSample

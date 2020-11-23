@@ -65,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ModalSample = (props) => {
     const classes = useStyles()
+    console.log(props.datasample)
     const datasample = props.datasample && props.datasample!==null ? props.datasample : {};
     const order_priority = datasample.data && datasample.data.order_priority && datasample.data.order_priority.display   ? datasample.data.order_priority.display : null;
     const lab_test_group = datasample.data ? datasample.data.lab_test_group : null ;
@@ -77,6 +78,7 @@ const ModalSample = (props) => {
     const onDismiss = () => setVisible(false);
     const [samples, setSamples] = useState({});
     const [optionsample, setOptionsample] = useState([]);
+    const [saveButtonStatus, setSaveButtonStatus] = useState(false);
     const [otherfields, setOtherFields] = useState({sample_collected_by:"",sample_ordered_by:"",sample_priority:"",time_sample_collected:"", comment_sample_collected:""});
     //This is to get SAMPLE TYPE from application Codeset
     const [errors, setErrors] = useState({});
@@ -156,23 +158,19 @@ const ModalSample = (props) => {
                 props.togglestatus();
             };
             datasample["lab_number"] = lab_number;
-            datasample.data["sample_collected_by"] =
-                otherfields["sample_collected_by"];
+            datasample.data["sample_collected_by"] =otherfields["sample_collected_by"];
             datasample.data["sample_ordered_by"] = otherfields["sample_ordered_by"];
             datasample.data["sample_priority"] = "Normal";
             datasample.data["lab_number"] = lab_number;
             datasample.data["time_sample_collected"] = newTimeSampleCollected;
             datasample.data["comment_sample_collected"] = samples["comment"];
             datasample.data["date_sample_ordered"] = datasample.dateEncounter;
-            console.log(datasample)
             props.createCollectedSample(datasample, labId, onSuccess, onError);
         }
     };
 
-    function checklanumber(lab_num) {
-        
+    function checklanumber(lab_num) {       
         if (lab_num === "" || lab_num===null) {
-            console.log('the code get here')
             return (
                 <Alert color="danger" isOpen={visible} toggle={onDismiss}>
                     Please make sure you enter a lab number
@@ -338,8 +336,7 @@ const ModalSample = (props) => {
                                                 )}
                                             </Col>
                                         </Row>
-
-                                        {lab_number !== "" ? (
+                                        {lab_number && lab_number !== null ? (
                                             <MatButton
                                                 type="submit"
                                                 variant="contained"

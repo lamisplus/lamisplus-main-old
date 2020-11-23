@@ -22,9 +22,7 @@ const PatientSearch = (props) => {
     useEffect(() => {
         console.log(props.patientsList)
         setLoading('true');
-        const onSuccess = () => {
-            
-        
+        const onSuccess = () => {      
         setLoading(false)
       }
         const onError = () => {
@@ -81,60 +79,60 @@ const PatientSearch = (props) => {
                         row.dob === "" )
                           ? 0
                           : calculate_age(row.dob),
-                        address: row.street || '',
+                        address: row.city,
                         actions: 
-          <div>
-            <Menu>
-                <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
-                  Actions <span aria-hidden>▾</span>
-                </MenuButton>
-                    <MenuList style={{ color:"#000 !important"}} >
-                        <MenuItem  style={{ color:"#000 !important"}}>                      
-                            <Link
-                                to={{pathname: "/patient-dashboard", state: { hospitalNumber: row.hospitalNumber  }}}>
-                                <MdDashboard size="15" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>
-                          </Link>                               
-                          </MenuItem>
-                          <MenuItem style={{ color:"#000 !important"}}>
-                                <Link
-                                    to={{
-                                      pathname: "/patient-update",
-                                      currentId: row
-                                    }}>
-                                <MdModeEdit size="15" />{" "}<span style={{color: '#000'}}>Edit Patient </span>                   
-                              </Link>
-                          </MenuItem>                                      
-                          <MenuItem style={{ color:"#000 !important"}}>
-                              <Link
-                                  onClick={() => onDelete(row.patientId)}
-                              >
-                                <MdDeleteForever size="15"  />{" "}
-                                <span style={{color: '#000'}}>Delete Patient</span>
-                            </Link>                                  
-                          </MenuItem>
-                  </MenuList>
-            </Menu>
-          </div>
-          }))}
-          
-          options={{
-              headerStyle: {
-                  backgroundColor: "#9F9FA5",
-                  color: "#000",
-              },
-              searchFieldStyle: {
-                  width : '300%',
-                  margingLeft: '250px',
-              },
-              filtering: true,
-              exportButton: false,
-              searchFieldAlignment: 'left',
+                                <div>
+                                  <Menu>
+                                      <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
+                                        Actions <span aria-hidden>▾</span>
+                                      </MenuButton>
+                                          <MenuList style={{ color:"#000 !important"}} >
+                                              <MenuItem  style={{ color:"#000 !important"}}>                      
+                                                  <Link
+                                                      to={{pathname: "/patient-dashboard", state: { hospitalNumber: row.hospitalNumber  }}}>
+                                                      <MdDashboard size="15" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>
+                                                </Link>                               
+                                                </MenuItem>
+                                                <MenuItem style={{ color:"#000 !important"}}>
+                                                      <Link
+                                                          to={{
+                                                            pathname: "/patient-update",
+                                                            currentId: row
+                                                          }}>
+                                                      <MdModeEdit size="15" />{" "}<span style={{color: '#000'}}>Edit Patient </span>                   
+                                                    </Link>
+                                                </MenuItem>                                      
+                                                <MenuItem style={{ color:"#000 !important"}}>
+                                                    <Link
+                                                        onClick={() => onDelete(row.patientId)}
+                                                    >
+                                                      <MdDeleteForever size="15"  />{" "}
+                                                      <span style={{color: '#000'}}>Delete Patient</span>
+                                                  </Link>                                  
+                                                </MenuItem>
+                                        </MenuList>
+                                  </Menu>
+                                </div>
+                                }))}
+                                
+                                options={{
+                                    headerStyle: {
+                                        backgroundColor: "#9F9FA5",
+                                        color: "#000",
+                                    },
+                                    searchFieldStyle: {
+                                        width : '300%',
+                                        margingLeft: '250px',
+                                    },
+                                    filtering: true,
+                                    exportButton: false,
+                                    searchFieldAlignment: 'left',
 
-          }}
-        />
-      </div>
-    );
-  }
+                                }}
+                              />
+                            </div>
+                          );
+                        }
 
     const mapStateToProps = state => {
       return {

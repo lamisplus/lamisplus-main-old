@@ -66,14 +66,20 @@ function a11yProps(index) {
 function HomePage(props) {
   const classes = useStyles();
   const [value, setValue] = useState(null);
-  const urlIndex = getQueryParams("tab", props.location.search) || "0";
+  const urlIndex = getQueryParams("tab", props.location.search); 
+  const urlTabs = urlIndex !== null ? urlIndex : props.location.state ;
   useEffect ( () => {
-    switch(urlIndex){
+    switch(urlTabs){  
+      case "collect-sample": return setValue(1)
+      case "sample-verification": return setValue(2)
+      case "test-result": return setValue(3)
       case "radiology": return setValue(4)
-      case "lab_test_result": return setValue(3)
+      case "dispatched-sample-list" : return setValue(5)
+
       default: return setValue(0)
     }
   }, [urlIndex]);
+  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };

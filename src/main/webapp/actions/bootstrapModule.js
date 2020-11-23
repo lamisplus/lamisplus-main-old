@@ -37,6 +37,25 @@ export const fetchAllBootstrapModule = (onSuccess, onError) => dispatch => {
       console.log(error)
     });
 };
+export const fetchAllBootstrapModuleBYBatchNum = (status, batchNum,onSuccess, onError) => dispatch => {
+
+  axios
+    .get(`${baseUrl}modules/${status}/${batchNum}/`)
+    .then(response => {
+      dispatch({
+        type: ACTION_TYPES.FETCH_ALL_BOOTSTRAP_MODULE_BY_BATCH_NUM,
+        payload: response.data
+      })
+      onSuccess(response.data);
+    })
+    .catch(error => {
+      dispatch({
+        type: ACTION_TYPES.ERROR_FETCH_ALL_BOOTSTRAP_MODULE_BY_BATCH_NUM,
+        payload: 'Something went wrong, please try again'
+      })
+      onError();
+    });
+};
 
 export const installBootstrapModule = (id, onSuccess, onError)=> dispatch => {
   if(id){
@@ -49,7 +68,7 @@ export const installBootstrapModule = (id, onSuccess, onError)=> dispatch => {
         payload: response.data
       })
 
-      onSuccess && onSuccess();
+      onSuccess && onSuccess(response.data);
       toast.success("Module installed successfully!");
     })
     .catch(error => {
@@ -73,6 +92,7 @@ const options = {
   }
 };
   axios
+  
     .post(`${baseUrl}modules/upload`, data,options)
     .then(response => {
       console.log(response)
@@ -97,5 +117,31 @@ const options = {
   
 };
 
+export const startBootstrapModule = (onSuccess, onError)=> dispatch => {
+
+  axios
+    .post(`${baseUrl}modules/start/all`)
+    .then(response => {
+       console.log(response)
+      dispatch({
+        type: ACTION_TYPES.START_BOOSTRAP_MODULE,
+        payload: response.data
+      })
+
+      onSuccess && onSuccess();
+      toast.success("Module Restarted successfully!");
+    })
+    .catch(error => {
+      console.log(error)
+      dispatch({
+        type: ACTION_TYPES.ERROR_START_BOOSTRAP_MODULE,
+        payload: error
+      })
+      onError && onError();
+      toast.error("Something went wrong! please try again..");
+    }
+    );
+
+};
 
 

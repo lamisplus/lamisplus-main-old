@@ -5,9 +5,9 @@ const initialState = {
 
 }
 
-const bootstrapModuleReducer = (state = initialState, action) => {
+const generalUsersDashboardModuleReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ACTION_TYPES.FETCH_ALL_BOOTSTRAP_MODULE:
+    case ACTION_TYPES.FETCH_ALL_REGISTERED_PATIENTS:
       return { ...state, list: [...action.payload] }
 
     default:
@@ -15,6 +15,4 @@ const bootstrapModuleReducer = (state = initialState, action) => {
   }
 }
 
-export default bootstrapModuleReducer
-
-
+export default generalUsersDashboardModuleReducer

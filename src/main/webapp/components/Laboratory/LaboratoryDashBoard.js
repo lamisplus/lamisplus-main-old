@@ -1,22 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-// {/* Auto textfield complete */}
-import {MdDashboard,MdContacts} from 'react-icons/md';
-import {GiFiles} from 'react-icons/gi';  
 import {Card, CardBody, CardDeck, CardHeader } from 'reactstrap';
-import { Bar, Pie } from 'react-chartjs-2';
-import { getColor } from 'utils/colors';
-import { randomNum } from 'utils/demos';
 import UserProgressTable from 'components/UserProgressTable';
-
-
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import { url } from "../../api";
 
 
 const useStyles = makeStyles(theme => ({
@@ -130,77 +120,159 @@ const useStyles = makeStyles(theme => ({
     };
   
 
-  const genPieData = () => {
-      return {
-          datasets: [
-              {
-                  data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
-                  backgroundColor: [
-                      getColor('primary'),
-                      getColor('secondary'),
-                      getColor('success'),
-                      getColor('info'),
-                      getColor('danger'),
-                  ],
-                  label: 'Test Order',
-              },
-          ],
-          labels: ['Chemistry', 'Haematology', 'Microbiology', 'Virology', 'Biochemistry'],
-      };
-  };
-  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
-  const genLineData = (moreData = {}, moreData2 = {}) => {
-      return {
-          labels: MONTHS,
-          datasets: [
-              {
-                  label: 'Test Order',
-                  backgroundColor: getColor('primary'),
-                  borderColor: getColor('primary'),
-                  borderWidth: 1,
-                  data: [
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                    randomNum(),
-                  ],
-                  ...moreData,
-              },
-              {
-                  label: 'Test Result',
-                  backgroundColor: getColor('secondary'),
-                  borderColor: getColor('secondary'),
-                  borderWidth: 1,
-                  data: [
-                      randomNum(),
-                      randomNum(),
-                      randomNum(),
-                      randomNum(),
-                      randomNum(),
-                      randomNum(),
-                      randomNum(),
-                  ],
-                  ...moreData2,
-              },
-        ],
-      };
-  };
 
   const userProgressTableData = 
       [
-          {name: 'Tom Suliman'},
-          {name: 'Jenny Alex'},
-          {name: 'Simi Adedeji'},
-          {name: 'Christine Ada'}
+  
+          {name: 'Total Sample Dispatached'},
+          {name: 'Total Sample Results'},
+          {name: 'Total Sample Rejected'}
   
       ];
 
 export default function LaboratoryDashBoard(props) {
     const classes = useStyles();
+    const [testOrderGroupData, settestOrderGroupData] = useState({})
+    const [testOrdersStackChart, settestOrdersStackChart] = useState({})
+    const [limsBarChart, setlimsBarChart] = useState({})
+    // APi request for Pie chart
+        useEffect(() => {
+            async function getCharacters() {
+                try {
+                    const response = await axios.get( url+ 'laboratory-dashboard/pie');
+                    const body = response.data && response.data!==null ? response.data : {}; 
+                    settestOrderGroupData(body)
+                        
+                } catch (error) {}
+            }
+            getCharacters();
+        }, []);  
+    // API request for stack bar chart    
+        useEffect(() => {
+            async function getCharacters() {
+                try {
+                    const response = await axios.get( url+ 'laboratory-dashboard/column/testOrders');
+                    const body = response.data && response.data!==null ? response.data : {}; 
+                    settestOrdersStackChart(body)
+                        
+                } catch (error) {}
+            }
+            getCharacters();
+        }, []); 
+    // API request for LIMS BAR CHART   
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+                const response = await axios.get( url+ 'laboratory-dashboard/column/lims');
+                const body = response.data && response.data!==null ? response.data : {}; 
+                setlimsBarChart(body)
+                    
+            } catch (error) {}
+        }
+        getCharacters();
+    }, []); 
+
+// Test Group Pie Chart 
+
+const testGroup = {
+
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: testOrderGroupData.type
+    },
+    title: {
+        text: 'LABORATORY TEST GROUP ANALYSIS'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: false
+            },
+            showInLegend: true
+        }
+    },
+    series: [{
+        name: 'Test Group',
+        colorByPoint: true,
+        data: testOrderGroupData.data
+    }]
+   
+  }
+
+
+  const testOrders =  {
+
+    chart: {
+        type: testOrdersStackChart.type
+    },
+  
+    title: {
+        text: testOrdersStackChart.subTitle
+    },
+  
+    xAxis: testOrdersStackChart.xAxis,
+  
+    yAxis: {
+        allowDecimals: false,
+        min: 0,
+        title: {
+            text: testOrdersStackChart.text
+        }
+    },
+  
+    tooltip: {
+        formatter: function () {
+            return '<b>' + this.x + '</b><br/>' +
+                this.series.name + ': ' + this.y + '<br/>' +
+                'Total: ' + this.point.stackTotal;
+        }
+    },
+  
+    plotOptions: {
+        column: {
+            stacking: 'normal'
+        }
+    },
+  
+    series: testOrdersStackChart.series
+  
+  };
+
+  const lamisChart = {
+    chart: {
+        type: limsBarChart.type
+    },
+    title: {
+        text: limsBarChart.text
+    },
+    xAxis: limsBarChart.xAxis,
+    labels: {
+        items: [{
+            html: '',
+            style: {
+                left: '50px',
+                top: '18px',
+                color: ( // theme
+                    Highcharts.defaultOptions.title.style &&
+                    Highcharts.defaultOptions.title.style.color
+                ) || 'black'
+            }
+        }]
+    },
+    series: limsBarChart.series
+}
 
     return (
         <div className={classes.root}>
@@ -209,35 +281,39 @@ export default function LaboratoryDashBoard(props) {
                     <Card >
                         <CardHeader> Laboratory Test Group Analysis</CardHeader>
                             <CardBody>
-                                <Pie data={genPieData()} />                      
+                                <div>
+                                    <HighchartsReact options={testGroup} />
+                                </div>                     
                             </CardBody>                      
                     </Card>
                     <Card >
                         <CardHeader> Laboratory Test Order/ Result</CardHeader>
                             <CardBody>
-                                <Bar data={genLineData()} />                     
+                                <div>
+                                    <HighchartsReact options={testOrders} />
+                                </div>                       
                             </CardBody>                      
                     </Card>
                 </CardDeck>
                     <br/><br/>
                 <Grid container spacing={2}>
-                    <Grid item xs='6' >                    
+                    <Grid item xs='8' >                    
                         <Card  >
-                            <CardHeader> Recent Lab. Test Order</CardHeader>
+                            <CardHeader> LIMS Chart Analysis</CardHeader>
                                 <CardBody>
-                                    <UserProgressTable
-                                        headers={['name'  ]}
-                                        usersData={userProgressTableData}
-                                    />
+                                    <div>
+                                        <HighchartsReact options={lamisChart} />
+                                    </div> 
+                                    
                                 </CardBody>                      
                         </Card>   
                     </Grid>
-                  <Grid item xs='6'>
+                  <Grid item xs='4'>
                       <Card  >
-                          <CardHeader> Recent Lab. Test Result</CardHeader>
+                          <CardHeader> Recent LIMS Analysis for the past 7days</CardHeader>
                               <CardBody>
                                   <UserProgressTable
-                                      headers={['name' ]}
+                                      headers={['' ]}
                                       usersData={userProgressTableData}
                                   />
                               </CardBody>                      

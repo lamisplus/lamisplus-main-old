@@ -6,7 +6,6 @@ import MatButton from '@material-ui/core/Button'
 import 'react-datepicker/dist/react-datepicker.css'
 import { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
-import { TiArrowBack} from 'react-icons/ti';
 import 'react-widgets/dist/css/react-widgets.css'
 //Date Picker
 import Page from '../../Page'
@@ -21,6 +20,9 @@ import {  fetchAllBootstrapModule } from '../../../actions/bootstrapModule';
 import { Badge } from 'reactstrap';
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Typography from "@material-ui/core/Typography";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "react-widgets/dist/css/react-widgets.css";
 
 
 const useStyles = makeStyles({
@@ -79,16 +81,7 @@ const useStyles = makeStyles({
       </MenuButton>
         
           <MenuList style={{ color:"#000 !important"}} >
-            {e.status === 2 ?
-              
-                <MenuItem  style={{ color:"#000 !important"}} onSelect={() => installModule('id')}>                      
-                
-                    <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Install</span>
-                                    
-                </MenuItem> 
-                
-              : ""
-             }
+           
              {e.status === 2 ?
               <>
                 <MenuItem style={{ color:"#000 !important"}}>
@@ -129,67 +122,68 @@ const moduleStatus = e =>{
 }   
 
 return (
-<React.Fragment>
+    <React.Fragment>
+       <ToastContainer autoClose={3000} hideProgressBar />
+          <Card body>
+              <Breadcrumbs aria-label="breadcrumb">
+                  <Link color="inherit" to ={{
+                      pathname: "/admin",
+                      activetab: 1
+                  }}  >
+                      Admin
+                  </Link>
+                  <Typography color="textPrimary">Bootstrap Configuration</Typography>
+              </Breadcrumbs>
 
-                            <Card body>
-                                <Breadcrumbs aria-label="breadcrumb">
-                                    <Link color="inherit" to ={{
-                                        pathname: "/admin",
-                                        activetab: 1
-                                    }}  >
-                                        Admin
-                                    </Link>
-                                    <Typography color="textPrimary">Bootstrap Configuration</Typography>
-                                </Breadcrumbs>
-
-                            <Link 
-                                to ={{ 
-                                pathname: "/admin/bootstrap-configuration/create-module",
-                                activetab: 1
-                                }} 
-                              >
-                                <MatButton
-                                  type='submit'
-                                  variant='contained'
-                                  color='primary'
-                                  className={classes.button}                        
-                                  className=" float-right mr-1"
-                                >
-                                  <TiPlus/>{" "} New Module
-                                </MatButton>
-                            </Link>
-                          
-                            <MaterialTable
-                              title="List Of Bootstrap Module"
-                              columns={[
-                                { title: 'Module Name', field: 'name' },
-                                { title: 'Description', field: 'description' },
-                                { title: 'Author', field: 'author' },
-                                {title: 'Version',field: 'version', type: 'numeric'},
-                                { title: 'Date Created', field: 'date', type: 'date' },
-                                { title: 'Status', field: 'status'},
-                                { title: 'Action', field: 'actions'},
-                              ]}
-                              data={listOfAllModule.map((row) => ({
-                                    name: row.name, 
-                                    description: row.description, 
-                                    author: row.createdBy, 
-                                    version: row.version,
-                                    date: row.dateCreated, 
-                                    status:moduleStatus(row.status),
-                                    actions: actionOnModules(row)   
-                              }))}      
-                              options={{
-                                headerStyle: {
-                                  backgroundColor: "#9F9FA5",
-                                  color: "#000",
-                                  margin: "auto"
-                                  },
-                                filtering: true
-                              }}
-                            /> 
-                           
-                            </Card>
+          <Link 
+              to ={{ 
+              pathname: "/admin/bootstrap-configuration/create-module",
+              activetab: 1
+              }} 
+            >
+              <MatButton
+                type='submit'
+                variant='contained'
+                color='primary'
+                className={classes.button}                        
+                className=" float-right mr-1"
+              >
+                <TiPlus/>{" "} New Module
+              </MatButton>
+          </Link>
+        
+          <MaterialTable
+            title="List Of Bootstrap Module"
+            columns={[
+              { title: 'Module Name', field: 'name' },
+              { title: 'Description', field: 'description' },
+              { title: 'Author', field: 'author' },
+              {title: 'Version',field: 'version', type: 'numeric'},
+              { title: 'Date Created', field: 'date', type: 'date' },
+              { title: 'Status', field: 'status'},
+              { title: 'Action', field: 'actions'},
+            ]}
+            isLoading={loading}
+            data={listOfAllModule.map((row) => ({
+                  name: row.name, 
+                  description: row.description, 
+                  author: row.createdBy, 
+                  version: row.version,
+                  date: row.dateCreated, 
+                  status:moduleStatus(row.status),
+                  actions: actionOnModules(row)   
+            }))}      
+            options={{
+              headerStyle: {
+                backgroundColor: "#9F9FA5",
+                color: "#000",
+                margin: "auto"
+                },
+              filtering: true
+            }}
+          /> 
+          
+          </Card>
 
        <DeleteModule modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
 

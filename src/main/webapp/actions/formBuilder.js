@@ -60,15 +60,8 @@ export const createForm = (data, onSuccess, onError) => dispatch => {
                 type: FORMTYPES.FORMTYPES_ERROR,
                 payload: "Something went wrong"
             });
-            onError()
-            if(error.response.data.apierror.message===null || error.response.data.apierror.message===""){
-                toast.error("Something went wrong");
-            }else{
-                toast.error(error.response.data.apierror.message);
-            }
         });
 };
-
 
 export const updateForm = (id, data) => dispatch => {
     axios

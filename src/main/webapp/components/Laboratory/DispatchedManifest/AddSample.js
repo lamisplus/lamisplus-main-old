@@ -59,7 +59,6 @@ const AddSamplesManifest = (props) => {
     const [samplesManifest, setSamplesManifest] = useState()
     const samplesManifestId = manifestSamples.manifestId ;
     const [sampleManifest, setSampleManifest] = useState({sampleManifests: []})
-    console.log(manifestSamples.dateSampleDispatched)
     const newDatenow = moment(manifestSamples.dateSampleDispatched).format(
       "DD-MM-YYYY"
   );
@@ -72,14 +71,12 @@ const AddSamplesManifest = (props) => {
               );
               const body = response.data;
               setSamplesManifest(body);
-              console.log(body)
           } catch (error) {
             setSamplesManifest(null);
           }
       }
       getCharacters(samplesManifest);
   }, []);
-  console.log(props)
   //
     useEffect(() => {
   
@@ -99,10 +96,8 @@ const AddSamplesManifest = (props) => {
             const getList = value['formDataObj'].find(x => { 
   
               if(x.data && x.data!==null && x.data.lab_test_order_status===2 && x.data.manifest_status==null){
-                console.log(x)
                 labTestType.push(x);
               }
-             // return console.log(x)
             
             })         
        });
@@ -156,11 +151,9 @@ const AddSamplesManifest = (props) => {
             
             return item;
         })
-        console.log( modifyManifestSample) 
         
           //Updating the FormDataObj informations
             modifyFormDataObj.forEach(function(value, index, array) {
-              console.log(value);
               props.updateFormDataObj(value.formDataObj, value.formDataObj.id)
           });
           
@@ -171,13 +164,10 @@ const AddSamplesManifest = (props) => {
 
           //Process the Samples to be dispatched 
           sampleManifest['sampleManifests'] = modifyManifestSample;
-          console.log(sampleManifest)
-          props.dispatchedManifestSamples(sampleManifest)
-                            
+          props.dispatchedManifestSamples(sampleManifest)                            
           //Closing of the modal 
           //props.togglestatus2();
           history.go(-1)
-          //console.log(history.push)
         }
 
 
