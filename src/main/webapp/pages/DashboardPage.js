@@ -32,7 +32,7 @@ const  DashboardPage = (props) => {
   const [birthSeries, setBirthSereies] = useState({})
   const [deathRateData, setdeathRateData] = useState({})
   const [deathSeries, setDeathSereies] = useState({})
-  const [totalPatients,setTotalPatients] = useState(122)
+  const [totalPatients,setTotalPatients] = useState()
   const [totalAppointment,setTotalAppointment] = useState(21)
   useEffect(() => {
     
@@ -110,7 +110,6 @@ useEffect(() => {
     }
     getCharacters();
 }, []);  
-console.log(totalPatients)
 
 /* Gender Pie Chart */
 const genderChart = {
