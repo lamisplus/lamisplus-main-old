@@ -73,9 +73,9 @@ public class ApplicationCodeset implements Serializable {
     @JsonIgnore
     private List<Visit> visitsByApplicationCodeset;*/
 
-    @ToString.Exclude
+    /*@ToString.Exclude
     @JsonIgnore
     @OneToMany(mappedBy = "applicationCodesetByApplicationCodesetId")
-    private List<ApplicationCodesetStandardCodeset> applicationCodesetStandardCodesetsById;
+    private List<ApplicationCodesetStandardCodeset> applicationCodesetStandardCodesetsById;*/
 
 }
