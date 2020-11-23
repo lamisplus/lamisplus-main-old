@@ -66,7 +66,7 @@ public class FormService {
         }
         Form form = formMapper.toFormDTO(formDTO);
         form.setArchived(UN_ARCHIVED);
-        form.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
+        form.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         return formRepository.save(form);
     }
 
@@ -98,7 +98,7 @@ public class FormService {
 
         Form form = formMapper.toFormDTO(formDTO);
         form.setId(id);
-        form.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        form.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return formRepository.save(form);
     }
 
@@ -106,7 +106,7 @@ public class FormService {
         Optional<Form> formOptional = formRepository.findById(id);
         if(!formOptional.isPresent() || formOptional.get().getArchived() == 1)throw new EntityNotFoundException(Form.class, "Id", id +"");
         formOptional.get().setArchived(1);
-        formOptional.get().setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        formOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return formOptional.get().getArchived();
     }
 

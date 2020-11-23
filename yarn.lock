@@ -16157,7 +16157,7 @@ nanoid@3.1.12:
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.12.tgz#6f7736c62e8d39421601e4a0c77623a97ea69654"
   integrity sha512-1qstj9z5+x491jfiC4Nelk+f8XBad7LN20PmyWINJEMRSf3wcAjAWysw1qaA8z6NSKe2sjq1hRSDpBH5paCb6A==
 
-nanoid@^2.1.0:
+nanoid@^2.0.0, nanoid@^2.1.0:
   version "2.1.11"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-2.1.11.tgz#ec24b8a758d591561531b4176a01e3ab4f0f0280"
   integrity sha512-s/snB+WGm6uwi0WjsZdaVcuf3KJXlfGl2LcxgwkEwJF0D/BWzVWAZW/XY4bFaiR7s0Jk3FPvlnepg1H1b1UwlA==
@@ -19838,6 +19838,16 @@ react-dropzone@^10.2.1:
     attr-accept "^2.0.0"
     file-selector "^0.1.12"
     prop-types "^15.7.2"
+
+react-dual-listbox@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-dual-listbox/-/react-dual-listbox-2.0.0.tgz#e680b62af6b9148f67ed159cc91ec901de6b999a"
+  integrity sha512-GHczGX5BVBURILlfqAoBvx6Hn3EKvp2ubp5HvUljtBTXDNz3MCoG0Wf0Vd2UKtyo4I/yKhuVW+H4dixgwDObSQ==
+  dependencies:
+    classnames "^2.2.5"
+    lodash "^4.17.5"
+    nanoid "^2.0.0"
+    prop-types "^15.5.8"
 
 react-error-overlay@^5.1.4:
   version "5.1.6"

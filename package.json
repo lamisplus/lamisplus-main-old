@@ -67,6 +67,7 @@
     "react-datepicker": "^2.14.1",
     "react-datetime-bootstrap": "^1.4.7",
     "react-dom": "^16.13.1",
+    "react-dual-listbox": "^2.0.0",
     "react-flexmonster": "^2.8.9",
     "react-formio": "^4.2.5",
     "react-ga": "^2.5.7",
