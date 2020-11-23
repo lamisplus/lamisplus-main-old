@@ -98,8 +98,10 @@ function FormSearch(props) {
                                             <Link
                                                 to={{
                                                     pathname: "/view-form",
-                                                    row: row
-                                                }}>
+                                                    state: {row:row}
+                                                }}
+
+                                            >
                                                 <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Form </span>
                                             </Link>
                                         </MenuItem>

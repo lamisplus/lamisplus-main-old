@@ -94,8 +94,8 @@ function ClinicalHistory(props) {
         </TabPanel>
         <TabPanel value={value} index="five">
             <CardDeck>
-                <ArtCommencement/>
-                <ArtCommencement/>
+                <ArtCommencement patientId={props.patient.patientId}/>
+
             </CardDeck>
 
         </TabPanel>
