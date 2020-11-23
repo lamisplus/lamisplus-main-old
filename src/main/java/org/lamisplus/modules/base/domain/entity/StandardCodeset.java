@@ -1,45 +1,46 @@
 package org.lamisplus.modules.base.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
+@Data
 @Entity
-@Getter
-@Setter
 @EqualsAndHashCode
-@Table(name = "application_codeset", schema = "public", catalog = "lamisplus-old-jwt")
-public class ApplicationCodeset implements Serializable {
+@Table(name = "standard_codeset")
+public class StandardCodeset {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Basic
-    @Column(name = "codeset_group")
-    private String codesetGroup;
-
-    @Basic
-    @Column(name = "language")
-    private String language;
-
-    @Basic
-    @Column(name = "display")
-    private String display;
-
-    @Basic
     @Column(name = "code")
     private String code;
+
+    @Basic
+    @Column(name = "description")
+    private String description;
+
+    @Basic
+    @Column(name = "standard_codeset_source_id")
+    private Long standardCodesetSourceId;
+
+    @OneToMany(mappedBy = "standardCodesetByStandardCodesetId")
+    @JsonIgnore
+    private List<ApplicationCodesetStandardCodeset> applicationCodesetStandardCodesetsById;
+
+    @ManyToOne
+    @JoinColumn(name = "standard_codeset_source_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private StandardCodesetSource standardCodesetSourceByStandardCodesetSourceId;
 
     @Basic
     @Column(name = "date_created")
@@ -54,8 +55,8 @@ public class ApplicationCodeset implements Serializable {
 
     @Basic
     @Column(name = "date_modified")
-    @UpdateTimestamp
     @JsonIgnore
+    @UpdateTimestamp
     private Timestamp dateModified;
 
     @Basic
@@ -66,16 +67,6 @@ public class ApplicationCodeset implements Serializable {
     @Basic
     @Column(name = "archived")
     @JsonIgnore
-    private Integer archived = 0;
-
-    /*@OneToMany(mappedBy = "visit_Type")
-    @ToString.Exclude
-    @JsonIgnore
-    private List<Visit> visitsByApplicationCodeset;*/
-
-    @ToString.Exclude
-    @JsonIgnore
-    @OneToMany(mappedBy = "applicationCodesetByApplicationCodesetId")
-    private List<ApplicationCodesetStandardCodeset> applicationCodesetStandardCodesetsById;
+    private Integer archived;
 
 }

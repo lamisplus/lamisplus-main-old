@@ -22,7 +22,7 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
     List <Encounter> findAllByPatientIdAndFormCode(Long patientId, String FormCode, Pageable pageable);
 
     //New
-    Page<Encounter> findAllByPatientIdAndFormCode(Pageable pageable, Long patientId, String FormCode);
+    Page<Encounter> findAllByPatientIdAndFormCodeAndArchived(Pageable pageable, Long patientId, String FormCode, int Archived);
 
 
     Optional<Encounter> findByPatientIdAndProgramCodeAndFormCodeAndDateEncounter(Long patientId, String ProgramCode, String FormCode, LocalDate dateFncounter);

@@ -46,20 +46,16 @@ public class ApplicationCodeSetServiceTest {
         applicationCodeset.setId(1L);
         applicationCodeset.setDisplay("FEMALE");
         applicationCodeset.setCodesetGroup("GENDER");
-        applicationCodeset.setVersion("1");
         applicationCodeset.setLanguage("en");
         applicationCodeset.setDisplay("Male-male");
-        applicationCodeset.setActive(1);
         applicationCodeset.setCode("34792968-e3df-4954-bd97-2f60d8fc1393");
 
         ApplicationCodeset applicationCodeset1= new ApplicationCodeset();
         applicationCodeset1.setId(2L);
         applicationCodeset1.setDisplay("MALE");
         applicationCodeset1.setCodesetGroup("GENDER");
-        applicationCodeset1.setVersion("1");
         applicationCodeset1.setLanguage("en");
         applicationCodeset1.setDisplay("Male-test");
-        applicationCodeset1.setActive(1);
         applicationCodeset1.setCode("34792968-e3df-4954-bd97-2f60d8fc1393");
 
 

@@ -186,7 +186,7 @@ class PatientServiceTest {
 
         System.out.println("patientListFromRepo: " + patientListFromRepo);
 
-        Mockito.when(patientService.getAllPatients()).thenReturn(patientDTOList);
+        //Mockito.when(patientService.getAllPatients()).thenReturn(patientDTOList);
         assertEquals(patientList.size(), patientDTOList.size());
     }
 

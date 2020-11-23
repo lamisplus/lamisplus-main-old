@@ -221,7 +221,7 @@ const Create = props => {
 
                         </Row>
 
-                        <Row>
+                            <Row>
                             <Col md={4}> <FormGroup>
                                 <Label for="formPrecedence">Form Precedence</Label>
                                 <Autocomplete
