@@ -3,7 +3,7 @@ import MaterialTable from 'material-table';
 import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
 import { fetchAll, Delete as Del } from "../../actions/patients";
-import "./Patient.css";
+import "./PatientSearch.css";
 import { MdDashboard, MdDeleteForever, MdModeEdit } from "react-icons/md";
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";

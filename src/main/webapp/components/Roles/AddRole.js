@@ -156,7 +156,7 @@ const AddRole = (props) => {
               <Title>Add Role</Title>
               <br />
               <Row form>
-                <Col md={6}>
+                <Col md={12}>
                   <FormGroup>
                     <Label for="name">Name *</Label>
                     <Input
@@ -169,7 +169,7 @@ const AddRole = (props) => {
                     />
                   </FormGroup>
                 </Col>
-                <Col md={6}>
+                <Col md={12}>
                   <FormGroup>
                     <Label for="permissions">Permissions</Label>
                     <DualListBox
