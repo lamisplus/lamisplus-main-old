@@ -344,7 +344,7 @@ const deathChart = {
                     <CardBody>
                       <Row>
                         <Link
-                        to={{pathname: "/"}}
+                        to={{pathname: "/patients"}}
                         style={{ cursor: "pointer",  }}>
                         <div className="col">
                           <CardTitle
