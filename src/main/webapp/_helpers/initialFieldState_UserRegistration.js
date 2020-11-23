@@ -4,9 +4,9 @@ export const initialfieldState_userRegistration = {
     username: '',
     email: '',
     phone: '',
-    designationId: '',
-    genderId: '',
-    dob: new Date(),
+    role: '',
+    gender: '',
+    dateOfBirth: new Date(),
     password: '',
     adminRegistration: true
   }

@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.entity.Drug;
-import org.lamisplus.modules.base.repository.DrugGroupRepository;
 import org.lamisplus.modules.base.repository.DrugRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +28,7 @@ public class DrugService {
     public Drug save(Drug drug) {
         Optional<Drug> DrugOptional = drugRepository.findByBrandName(drug.getBrandName());
         if (DrugOptional.isPresent()) throw new RecordExistException(Drug.class, "Brand Name", drug.getBrandName());
-        drug.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
+        drug.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         return drugRepository.save(drug);
     }
 
@@ -43,7 +42,7 @@ public class DrugService {
         Optional<Drug> drugOptional = drugRepository.findById(id);
         if(!drugOptional.isPresent())throw new EntityNotFoundException(Drug.class, "Id", id +"");
         drug.setId(id);
-        drug.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        drug.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return drugRepository.save(drug);
     }
 
@@ -51,7 +50,7 @@ public class DrugService {
         Optional<Drug> drugOptional = drugRepository.findById(id);
         if(!drugOptional.isPresent()) throw new EntityNotFoundException(Drug.class,"Display:",id+"");
         drugOptional.get().setArchived(1);
-        drugOptional.get().setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        drugOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return drugOptional.get().getArchived();
     }
 

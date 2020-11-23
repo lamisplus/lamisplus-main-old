@@ -22,12 +22,9 @@ import org.lamisplus.modules.base.util.GenericSpecification;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -85,7 +82,7 @@ public class ModuleService {
         if(moduleOptional.isPresent()) throw new RecordExistException(Module.class, MODULE_CLASS_NAME, moduleDTO.getName());
 
         final Module module = this.moduleMapper.toModuleDTO(moduleDTO);
-        module.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
+        module.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         if(module.getDateCreated() == null){
             module.setDateCreated(ts);
         }
@@ -452,7 +449,7 @@ public class ModuleService {
                     module.setStatus(STATUS_STARTED);
                     module.setActive(ACTIVE);
                     module.setArchived(UN_ARCHIVED);
-                    module.setInstalledBy(userService.getUserWithAuthorities().get().getUserName());
+                    module.setInstalledBy(userService.getUserWithRoles().get().getUserName());
                     moduleRepository.save(module);
 
                     module.getModuleDependencyByModule().forEach(moduleDependency -> {
