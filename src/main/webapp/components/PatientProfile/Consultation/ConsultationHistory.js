@@ -28,7 +28,7 @@ const columns = (editConsultation, viewConsultation) => [
     cell: (row) => 
     <div>
     <span>{(row.visitNote && row.visitNote.length > 100) ? row.visitNote.slice(0, 100) + '...' : row.visitNote}</span>
-    <span>{(row.consulationNotes && row.consulationNotes.length > 100) ? row.consulationNotes.slice(0, 100) + '...' : row.consulationNotes}</span>
+    <span>{(row.visit_note && row.visit_note.length > 100) ? row.visit_note.slice(0, 100) + '...' : row.visit_note}</span>
     </div>
   },
   {
@@ -41,7 +41,7 @@ const columns = (editConsultation, viewConsultation) => [
         <Label.Group size="mini" color="pink">
           {row.presentingComplaints.map((presentingComplaint) => (
             <span>
-              {presentingComplaint.complaint} {", "}
+              <span dangerouslySetInnerHTML={{__html: JSON.stringify(presentingComplaint.complaint)}} /> {"; "}
             </span>
           ))}
         </Label.Group>
@@ -58,7 +58,7 @@ const columns = (editConsultation, viewConsultation) => [
           {row.diagnosis && row.diagnosis.map((x) => (
             <List.Item>
             <Label size="mini" color="blue">
-              {x.condition || x.condition1} 
+              <span dangerouslySetInnerHTML={{__html: JSON.stringify(x.condition)}} />
               <Label.Detail> {JSON.stringify(x.certainty) || ''}</Label.Detail>
             </Label>
             </List.Item>

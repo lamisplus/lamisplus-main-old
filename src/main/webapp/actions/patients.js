@@ -191,7 +191,7 @@ export const fetchPatientAllergies = (id, onSuccess, onError) => dispatch => {
 
 export const fetchPatientLatestVitalSigns = (id, onSuccess, onError) => dispatch => {
   axios
-    .get(`${baseUrl}patients/${id}/encounters/${CODES.VITAL_SIGNS_FORM}?limit=1&sortField=dateEncounter&sortOrder=desc` )
+    .get(`${baseUrl}patients/${id}/encounters/${CODES.VITAL_SIGNS_FORM}?limit=1&sortField=id&sortOrder=desc` )
     .then(response => {
       if(onSuccess){
         onSuccess();
@@ -241,7 +241,7 @@ export const fetchPatientVitalSigns = (id, onSuccess, onError) => dispatch => {
  export const fetchPatientTestOrders = (id, onSuccess, onError) => dispatch => {
   if(id){
    axios
-     .get(`${baseUrl}patients/${id}/encounters/${CODES.LAB_TEST_ORDER_FORM}`, {limit: 5, sortField: "dateEncounter", sortOrder: "desc"})
+     .get(`${baseUrl}patients/${id}/encounters/${CODES.LAB_TEST_ORDER_FORM}`, {limit: 5, sortField: "id", sortOrder: "desc"})
      .then(response => {
        dispatch({
          type: ACTION_TYPES.PATIENT_LAB_ORDERS,
@@ -266,7 +266,7 @@ export const fetchPatientVitalSigns = (id, onSuccess, onError) => dispatch => {
  export const fetchPatientLatestMedicationOrder = (id, onSuccess, onError) => dispatch => {
   if(id){
    axios
-     .get(`${baseUrl}patients/${id}/encounters/${CODES.DRUG_PRESCRIPTION_FORM}`, {limit: 5, sortField: "dateEncounter", sortOrder: "desc"} )
+     .get(`${baseUrl}patients/${id}/encounters/${CODES.DRUG_PRESCRIPTION_FORM}`, {limit: 5, sortField: "id", sortOrder: "desc"} )
      .then(response => {
       onSuccess && onSuccess() ;
        dispatch({
@@ -449,7 +449,7 @@ export const fetchPatientAppointments = (id, onSuccess, onError) => dispatch => 
 export const fetchPatientRadiologyTestOrder = (id, onSuccess, onError) => dispatch => {
     if(id){
         axios
-            .get(`${baseUrl}patients/${id}/encounters/${CODES.RADIOLOGY_TEST_ORDER}`, {limit: 5, sortField: "dateEncounter", sortOrder: "desc"})
+            .get(`${baseUrl}patients/${id}/encounters/${CODES.RADIOLOGY_TEST_ORDER}`, {limit: 5, sortField: "id", sortOrder: "desc"})
             .then(response => {
                 dispatch({
                     type: ACTION_TYPES.PATIENT_RADIOLOGY_ORDERS,
