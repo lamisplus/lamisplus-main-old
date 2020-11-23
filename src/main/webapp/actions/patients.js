@@ -473,23 +473,3 @@ export const fetchPatientRadiologyTestOrder = (id, onSuccess, onError) => dispat
 }
 
 
-// export const totalPatientCount = () => dispatch => {
-//    axios
-//      .get(`${baseUrl}patients/totalCount`)
-//      .then(response => {
-//        dispatch({
-//          type: TOTAL_PATIENTS,
-//          payload: response.data
-//        })
-
-//      })
-//      .catch(error => {
-//        dispatch({
-//          type: TOTAL_PATIENTS_ERROR,
-//          payload: 'Something went wrong, please try again'
-//        })
-
-//       }
-//      )
-      
-//  }

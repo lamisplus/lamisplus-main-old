@@ -32,11 +32,36 @@ const  DashboardPage = (props) => {
   const [birthSeries, setBirthSereies] = useState({})
   const [deathRateData, setdeathRateData] = useState({})
   const [deathSeries, setDeathSereies] = useState({})
+  const [totalPatients,setTotalPatients] = useState(122)
+  const [totalAppointment,setTotalAppointment] = useState(21)
   useEffect(() => {
     
             props.fetchAllGender();
     }, []); //componentDidMount
-
+  //Total Patients
+  useEffect(() => {
+    async function getCharacters() {
+        try {
+            const response = await axios.get( url+ 'patients/totalCount');
+                const body2 = response.data && response.data!==null ? response.data :0.00;
+                setTotalPatients(body2) 
+                
+        } catch (error) {}
+      }
+      getCharacters();
+  }, []);
+    //Total Appointment
+    useEffect(() => {
+      async function getCharacters() {
+          try {
+              const response = await axios.get( url+ 'visits/totalCount/');
+                  const body2 = response.data && response.data!==null ? response.data :0.00;
+                  setTotalAppointment(body2) 
+                  
+          } catch (error) {}
+        }
+        getCharacters();
+    }, []);
   useEffect(() => {
     async function getCharacters() {
         try {
@@ -85,7 +110,7 @@ useEffect(() => {
     }
     getCharacters();
 }, []);  
-console.log(birthSeries.data)
+console.log(totalPatients)
 
 /* Gender Pie Chart */
 const genderChart = {
@@ -265,7 +290,7 @@ const deathChart = {
                              Patients
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
-                            100
+                            {totalPatients}
                           </span>
                         </div>
                         <Col className="col-auto">
@@ -359,7 +384,7 @@ const deathChart = {
                             Appointments
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
-                            49
+                            {totalAppointment}
                           </span>
                         </div>
                         <Col className="col-auto">
