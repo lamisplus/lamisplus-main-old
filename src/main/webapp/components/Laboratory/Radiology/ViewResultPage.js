@@ -17,6 +17,9 @@ import {Carousel} from "react-bootstrap";
 import "./Radiology.css";
 
 import ModalImage from "react-modal-image";
+
+import 'react-widgets/dist/css/react-widgets.css'
+import { ToastContainer } from "react-toastify";
 //Dtate Picker package
 Moment.locale("en");
 momentLocalizer();

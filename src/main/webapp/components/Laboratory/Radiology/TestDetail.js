@@ -17,6 +17,8 @@ import moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import UploadResultPage from "./UploadResultPage";
 import ViewResultPage from "./ViewResultPage";
+import 'react-widgets/dist/css/react-widgets.css'
+import { ToastContainer } from "react-toastify";
 //Dtate Picker package
 Moment.locale("en");
 momentLocalizer();
@@ -93,11 +95,10 @@ const GlobalVariableSearch = (props) => {
 
     return (
         <React.Fragment>
-
+        <ToastContainer autoClose={2000} />
             <PatientDetailCard />
             <br />
-
-        <Card>
+            <Card>
             <CardHeader>Test Order Details
                 <Link
                     href = "/laboratory?tab=radiology" >

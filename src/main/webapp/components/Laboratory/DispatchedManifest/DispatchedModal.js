@@ -96,9 +96,9 @@ const ModalViewResult = (props) => {
         async function getCharacters() {
             try {
                 const response = await axios(
-                    url + "sample-manifests/pcrlab"
+                    url + "organisation-units/organisation-unit-level/7"
                 );
-                const body = response.data;
+                const body = response.data && response.data !==null ? response.data : {};
                 setOptionPcr(
                      body.map(({ name, id }) => ({ title: name, value: id }))
                  );

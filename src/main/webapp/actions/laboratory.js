@@ -435,11 +435,13 @@ export const updateRadiologyByFormId = (data, id, onSuccess, onError ) => dispat
             .then(response => {
                 if(onSuccess){
                     onSuccess()
+                   
                 }
             })
             .catch(error =>{
                 if(onError){
                     onError()
+                    
                 }
             });
 };
