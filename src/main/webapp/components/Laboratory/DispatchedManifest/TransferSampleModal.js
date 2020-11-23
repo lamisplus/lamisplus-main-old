@@ -63,7 +63,7 @@ const ModalSampleTransfer = (props) => {
     //console.log(datasample)
     const lab_test_group = datasample.data ? datasample.data.lab_test_group : null ;
     const description = datasample.data ? datasample.data.description : null ;
-    console.log(lab_test_group)
+    console.log(props.labnumber['lab_number'])
     const labId = datasample.id
     const [loading, setLoading] = useState(false)
     const [visible, setVisible] = useState(true);

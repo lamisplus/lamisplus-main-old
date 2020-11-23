@@ -33,8 +33,6 @@ public class AccountController {
         }
     }
 
-    private final Logger log = LoggerFactory.getLogger(AccountController.class);
-
     private final UserRepository userRepository;
 
     private final UserService userService;

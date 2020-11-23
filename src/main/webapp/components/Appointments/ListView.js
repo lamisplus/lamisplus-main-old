@@ -2,75 +2,20 @@ import React, { useState } from "react";
 import MaterialTable from "material-table";
 import * as _ from "lodash";
 import { connect } from "react-redux";
-import { fetchAllAppointments } from "actions/appointments";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import { DateTimePicker } from "react-widgets";
 import "react-widgets/dist/css/react-widgets.css";
-import FormRendererModal from "components/FormManager/FormRendererModal";
-import * as CODES from "api/codes";
-import { ToastContainer, toast } from "react-toastify";
+
 
 //Dtate Picker package
 Moment.locale("en");
 momentLocalizer();
 
 function ListViewPage(props) {
-  const [loading, setLoading] = useState(false);
-  const [showCurrentForm, setShowCurrentForm] = useState(false);
-  const [currentForm, setCurrentForm] = useState(false);
-
-  const onSuccess = () => {
-    toast.success("Form saved successfully!", { appearance: "success" });
-    setShowCurrentForm(false);
-  };
-
-  const onError = () => {
-    toast.error("Something went wrong, request failed.");
-    setShowCurrentForm(false);
-  };
-
-  const editAppointment = (patientId, visitId) => {
-    setCurrentForm({
-      code: CODES.APPOINTMENT_FORM,
-      programCode: CODES.GENERAL_SERVICE,
-      formName: "PATIENT APPOINTMENT",
-      patientId: patientId,
-      visitId: visitId,
-      type: "EDIT",
-      options: {
-        modalSize: "modal-lg",
-      },
-    });
-    setShowCurrentForm(true);
-  };
-
-  const viewAppointment = (patientId, visitId, encounterId) => {
-    setCurrentForm({
-      code: CODES.APPOINTMENT_FORM,
-      programCode: CODES.GENERAL_SERVICE,
-      formName: "PATIENT APPOINTMENT",
-      patientId: patientId,
-      visitId: visitId,
-      encounterId: encounterId,
-      type: "VIEW",
-      options: {
-        modalSize: "modal-lg",
-      },
-    });
-    setShowCurrentForm(true);
-  };
 
   React.useEffect(() => {
-    setLoading(true);
-    const onSuccess = () => {
-      setLoading(false);
-    };
-    const onError = () => {
-      setLoading(false);
-      // setErrorMsg("Could not fetch previous medications, try again later");
-    };
-    props.fetchAllAppointments(onSuccess, onError);
+    props.fetchAppointments();
   }, []);
 
   //custom filter for appointment date on the table
@@ -103,7 +48,7 @@ function ListViewPage(props) {
             field: "name",
             filtering: true,
           },
-          { title: "Phone Number", field: "phoneNumber", filtering: true },
+
           {
             title: "Appointment Date",
             field: "appointmentDate",
@@ -117,15 +62,17 @@ function ListViewPage(props) {
             type: "time",
           },
           { title: "Service", field: "service", filtering: true },
+            { title: "Service Provider", field: "serviceProvider", filtering: true },
         ]}
-        isLoading={loading}
+        isLoading={props.loading}
         data={props.appointments.map((row) => ({
           name: row.firstName + " " + row.lastName,
           id: row.hospitalNumber,
           phoneNumber: row.phoneNumber,
-          service: row.service || "",
-          appointmentDate: row.formDataObj[0].data.appointmentDate,
-          appointmentTime: row.formDataObj[0].data.appointmentTime,
+          service: row.formDataObj[0].data.service && row.formDataObj[0].data.service.name ? row.formDataObj[0].data.service.name : '',
+            serviceProvider: row.formDataObj[0].data.service_provider || '',
+          appointmentDate: row.formDataObj[0].data.appointment_date ,
+          appointmentTime: row.formDataObj[0].data.appointment_time ,
           patientId: row.patientId,
           visitId: row.visitId,
           encounterId: row.encounterId,
@@ -136,11 +83,22 @@ function ListViewPage(props) {
             iconProps: { color: "primary" },
             tooltip: "View Appointment",
             onClick: (event, rowData) =>
-              viewAppointment(
+              props.viewAppointment(
                 rowData.patientId,
                 rowData.visitId,
                 rowData.encounterId
               ),
+          },
+          {
+            icon: "edit",
+            iconProps: { color: "primary" },
+            tooltip: "Edit Appointment",
+            onClick: (event, rowData) =>
+                props.editAppointment(
+                    rowData.patientId,
+                    rowData.visitId,
+                    rowData.encounterId
+                ),
           },
         ]}
         options={{
@@ -158,17 +116,7 @@ function ListViewPage(props) {
           actionsColumnIndex: -1,
         }}
       />
-      <ToastContainer />
-      <FormRendererModal
-        patientId={currentForm.patientId}
-        visitId={currentForm.visitId}
-        showModal={showCurrentForm}
-        setShowModal={setShowCurrentForm}
-        currentForm={currentForm}
-        onSuccess={onSuccess}
-        onError={onError}
-        options={currentForm.options}
-      />
+
     </React.Fragment>
   );
 }
@@ -184,7 +132,6 @@ function FilterDateBetween({ columnDef, onFilterChanged }) {
         onChange={(event) => {
           const value = { ...columnDef.tableData.filterValue };
           value.from = event;
-          console.log(value);
           onFilterChanged(columnDef.tableData.id, value);
         }}
       />
@@ -197,7 +144,6 @@ function FilterDateBetween({ columnDef, onFilterChanged }) {
         onChange={(event) => {
           const value = { ...columnDef.tableData.filterValue };
           value.to = event;
-          console.log(value);
           onFilterChanged(columnDef.tableData.id, value);
         }}
       />
@@ -249,7 +195,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapActionToProps = {
-  fetchAllAppointments: fetchAllAppointments,
+
 };
 
 export default connect(mapStateToProps, mapActionToProps)(ListViewPage);

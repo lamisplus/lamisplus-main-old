@@ -35,7 +35,7 @@ public class ApplicationCodesetController {
     @GetMapping
     public ResponseEntity<List<ApplicationCodesetDTO>> getAllApplicationCodesets() {
 
-        return ResponseEntity.ok(this.applicationCodesetService.getAllApplicationCodeset(1));
+        return ResponseEntity.ok(this.applicationCodesetService.getAllApplicationCodeset(0));
     }
 
     @PostMapping

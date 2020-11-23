@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -36,4 +37,14 @@ public class GenericSpecification<T>  {
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
     }
+
+    /*public Specification<T> findAll(HashMap<String, Object> queryValue) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), UN_ARCHIVED)));
+            predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("pate"), ACTIVE)));
+            criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+        };
+    }*/
 }

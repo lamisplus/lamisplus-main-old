@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,11 +35,24 @@ public class PatientController {
     private final String ENTITY_NAME = "Patient";
     private final PatientService patientService;
 
+    /*@GetMapping
+    public ResponseEntity<List<PatientDTO>> getAllPatients(@PageableDefault(value = 100) Pageable pageable) {
+        Page<PatientDTO> page = patientService.findPage(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(patientService.getAllPatients(page), headers, HttpStatus.OK);
+    }*/
+
     @GetMapping
     @PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List<PatientDTO>> getAllPatients() {
         return ResponseEntity.ok(this.patientService.getAllPatients());
     }
+
+    @GetMapping("/totalCount")
+    public ResponseEntity<Long> getTotalCount() {
+        return ResponseEntity.ok(this.patientService.getTotalCount());
+    }
+
 
     @GetMapping("/hospitalNumber")
     @PreAuthorize("hasAuthority('patient_read')")
@@ -62,14 +76,17 @@ public class PatientController {
     @PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List> getEncountersByPatientIdAndFormCode(@PathVariable Long id,
                                                                     @PathVariable String formCode, @RequestParam(required = false) String sortOrder,
-                                                                    @RequestParam (required = false) String sortField, @RequestParam(required = false) Integer limit){
-        return ResponseEntity.ok(this.patientService.getEncountersByPatientIdAndFormCode(id, formCode, sortField, sortOrder, limit));
+                                                                    @RequestParam (required = false) String sortField, @RequestParam(required = false) Integer limit,
+                                                                    @PageableDefault(value = 100) Pageable pageable){
+        return ResponseEntity.ok(this.patientService.getEncountersByPatientIdAndFormCode(pageable, id, formCode, sortField, sortOrder, limit));
     }
 
-    /*@GetMapping("/{id}/encounters/{fCode}")
+    /*@GetMapping("/{id}/encounters/test/{fCode}")
     public ResponseEntity<List> getEncountersByPatientIdAndFCode(@PathVariable Long id,
-                                                                    @PathVariable String fCode,Pageable pageable) {
-        final Page<Encounter> page = patientService.getEncountersByPatientIdAndFCode(pageable, id, fCode);
+                                                                 @PathVariable String fCode, @RequestParam (required = false) String sortField,
+                                                                 @RequestParam(required = false) String sortOrder, @RequestParam(required = false) Integer limit,
+                                                                 @PageableDefault(value = 100) Pageable pageable) {
+        final Page<Encounter> page = patientService.getEncountersByPatientIdAndFCode(pageable, id, fCode,sortField, sortOrder, limit);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }*/
@@ -80,8 +97,8 @@ public class PatientController {
         return ResponseEntity.ok(this.patientService.getEncountersByPatientIdAndProgramCodeExclusionList(id, programCodeExclusionList));
     }
 
-    @ApiOperation(value="getVisitByPatientIdAndVisitDate", notes = "patientId= required, dateStart=optional, dateEnd=optional\n\n" +
-            "Example - /api/patient/20/visits?dateStart=02-03-2020")
+    /*@ApiOperation(value="getVisitByPatientIdAndVisitDate", notes = "patientId= required, dateStart=optional, dateEnd=optional\n\n" +
+            "Example - /api/patient/20/visits?dateStart=02-03-2020")*/
     @GetMapping("/{id}/visits/{dateStart}/{dateEnd}")
     @PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List<VisitDTO>> getVisitByPatientIdAndVisitDate(@PathVariable Optional<Long> id, @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional<String> dateStart,
@@ -89,8 +106,8 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getVisitByPatientIdAndVisitDate(id,dateStart,dateEnd));
     }
 
-    @ApiOperation(value="getEncountersByPatientIdAndDateEncounter", notes = " programCode= required, formCode=required, dateStart=optional, dateEnd=optional\n\n" +
-            "Example - api/encounters/{programCode}/{formCode}?dateStart=01-01-2020&dateEnd=01-04-2020")
+    /*@ApiOperation(value="getEncountersByPatientIdAndDateEncounter", notes = " programCode= required, formCode=required, dateStart=optional, dateEnd=optional\n\n" +
+            "Example - api/encounters/{programCode}/{formCode}?dateStart=01-01-2020&dateEnd=01-04-2020")*/
     @GetMapping("/{id}/encounters/{formCode}/{dateStart}/{dateEnd}")
     @PreAuthorize("hasAuthority('patient_read')")
     public List getEncountersByPatientIdAndDateEncounter(@PathVariable Long id, @PathVariable String formCode,
@@ -99,8 +116,8 @@ public class PatientController {
         return patientService.getEncountersByPatientIdAndDateEncounter(id, formCode, dateStart, dateEnd);
     }
 
-    @ApiOperation(value="getAllEncountersByPatientId", notes = " id=required\n\n" +
-            "Example - /api/encounters/20")
+    /*@ApiOperation(value="getAllEncountersByPatientId", notes = " id=required\n\n" +
+            "Example - /api/encounters/20")*/
     @GetMapping("/{id}/encounters")
     @PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List> getAllEncounterByPatientId(@PathVariable Long id){
@@ -109,8 +126,20 @@ public class PatientController {
 
     //TODO: in progress...
     @GetMapping("/{id}/{programCode}/form")
-    public ResponseEntity<List<Form>> getAllFormsByPatientIdAndPrecedence(@PathVariable Long patientId, @PathVariable String programCode){
-        return ResponseEntity.ok(this.patientService.getAllFormsByPatientIdAndPrecedence(patientId, programCode));
+    public ResponseEntity<List<Form>> getAllFormsByPatientIdAndProgramCode(@PathVariable Long id, @PathVariable String programCode){
+        return ResponseEntity.ok(this.patientService.getAllFormsByPatientIdAndProgramCode(id, programCode));
+    }
+
+    //TODO: in progress...
+    @GetMapping("/{id}/{programCode}/filledForms")
+    public ResponseEntity<List<Form>> getFilledFormsByPatientIdAndProgramCode(@PathVariable Long id, @PathVariable String programCode){
+        return ResponseEntity.ok(this.patientService.getFilledFormsByPatientIdAndProgramCode(id, programCode));
+    }
+
+    //TODO: in progress...
+    @GetMapping("/{id}/programEnrolled")
+    public ResponseEntity<List> getAllProgramEnrolled(@PathVariable Long id){
+        return ResponseEntity.ok(this.patientService.getAllProgramEnrolled(id));
     }
 
 /*    @ApiOperation(value="getFormsByPatientId", notes = " id=required, formCode=required\n\n")
@@ -140,8 +169,6 @@ public class PatientController {
     public Person update(@PathVariable Long id, @RequestBody PatientDTO patientDTO) {
         return this.patientService.update(id, patientDTO);
     }
-
-
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('patient_delete')")
