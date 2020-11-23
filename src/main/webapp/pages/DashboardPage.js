@@ -13,7 +13,7 @@ import {Card,CardBody,CardHeader,CardTitle,Col,Row,} from 'reactstrap';
 //import {combineChart} from './DashBoardVisualisation/CombineChart'
 import CustomHighMap from './map';
 import {deathChart} from './DashBoardVisualisation/DeathChart';
-
+import { Link } from 'react-router-dom'
 import { fetchAllRegisteredPatients } from "./../actions/generalUserDashboard";
 import { url } from "../api";
 
@@ -254,6 +254,9 @@ const deathChart = {
                   <Card  style={cardStyle} className="card-stats mb-4 mb-xl-0 p-3">
                     <CardBody>
                       <Row>
+                      <Link
+                        to={{pathname: "/patients"}}
+                        style={{ cursor: "pointer",  }}>
                         <div className="col">
                           <CardTitle
                            tag="h6"
@@ -270,6 +273,7 @@ const deathChart = {
                             <FaUserPlus size={30} />
                           </div>
                         </Col>
+                        </Link>
                       </Row>
                       <p className="mt-3 mb-0 text-muted text-sm">
                         
@@ -336,6 +340,9 @@ const deathChart = {
                   <Card style={cardStyle} className="card-stats mb-4 mb-xl-0 p-3 ">
                     <CardBody>
                       <Row>
+                      <Link
+                        to={{pathname: "/appointments"}}
+                        style={{ cursor: "pointer",  }}>
                         <div className="col">
                           <CardTitle
                             tag="h6"
@@ -352,6 +359,7 @@ const deathChart = {
                           <FaCalendarAlt size={30} />
                           </div>
                         </Col>
+                        </Link>
                       </Row>
                       <p className="mt-3 mb-0 text-muted text-sm">
                         {" "}
