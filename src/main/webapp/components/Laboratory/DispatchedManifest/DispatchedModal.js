@@ -235,8 +235,7 @@ const ModalViewResult = (props) => {
                                                       onChange={date_transfered =>
                                                         setOtherFields({ ...otherfields, dateSampleDispatched: moment(date_transfered).format("DD-MM-YYYY") })
                                                       }
-                                                      required
-                                                  /> 
+                                                      required/>
                                                       {errors.dateSampleDispatched !="" ? (
                                                           <span className={classes.error}>{errors.dateSampleDispatched}</span>
                                                       ) : "" }
@@ -251,8 +250,7 @@ const ModalViewResult = (props) => {
                                                       id="timeSampleDispatched"
                                                       onChange={value1 =>
                                                         setOtherFields({ ...otherfields, timeSampleDispatched: moment(value1).format("LT") })
-                                                      }
-                                                  />
+                                                      }/>
                                                       {errors.timeSampleDispatched !="" ? (
                                                         <span className={classes.error}>{errors.timeSampleDispatched}</span>
                                                       ) : "" }      
@@ -329,7 +327,6 @@ const ModalViewResult = (props) => {
                                       <Col md={6}>
                                           <FormGroup>
                                               <Label for="occupation">Receiving Lab Name </Label>
-
                                               <Input type="select" name="receivingLabName" id="receivingLabName" 
                                                     vaule={otherfields.receivingLabName}
                                                     onChange={handleOtherFieldInputChange}

@@ -71,11 +71,13 @@ const UploadResultPage = (props) => {
     }
     return (
 
-    <React.Fragment>
-        <ToastContainer/>
+    <>
+
 
         <Modal isOpen={props.showModal} toggle={props.toggleModal} size="xl">
+            <ToastContainer/>
                 <Form onSubmit={uploadResult}>
+
                     <ModalHeader toggle={props.toggleModal}> Upload Result </ModalHeader>
                     <ModalBody>
 
@@ -137,8 +139,8 @@ const UploadResultPage = (props) => {
                                         <DateTimePicker
                                             name="encounterDate"
                                             id="encounterDate"
-                                            defaultValue={props.formData && props.formData.data && props.formData.data.result_date ? moment(props.formData.data.result_date + " " + props.formData.data.result_time, "DD-MM-YYYY LT").toDate() : new Date()}
-                                            min={moment(testOrder.data.order_date + " " + testOrder.data.order_time, "DD-MM-YYYY LT").toDate()}
+                                            defaultValue={props.formData && props.formData.data && props.formData.data.result_date ? moment(props.formData.data.result_date + " " + props.formData.data.result_time, "DD-MM-YYYY LT").toDate() : null}
+                                            //min={moment(testOrder.data.order_date + " " + testOrder.data.order_time, "DD-MM-YYYY LT").toDate()}
                                             max={new Date()}
                                             required
                                             onChange={(e) => {
@@ -183,7 +185,7 @@ const UploadResultPage = (props) => {
                 </Form>
         </Modal>
 
-    </React.Fragment>
+    </>
 
     );
 }

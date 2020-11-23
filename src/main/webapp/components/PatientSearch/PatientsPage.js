@@ -26,17 +26,27 @@ const GeneralPatientSearch = props => {
       <Card className={classes.cardBottom}>
         <CardContent>
           <Title>
-            <Link to="/patient-registration">
+            {/*<Link to="/patient-registration">*/}
+            {/*  <Button*/}
+            {/*    variant="contained"*/}
+            {/*    color="primary"*/}
+            {/*    className=" float-right mr-1"*/}
+            {/*    startIcon={<FaUserPlus />}*/}
+            {/*  >*/}
+            {/*    <span style={{textTransform: 'capitalize'}}>Add </span>*/}
+            {/*    &nbsp;&nbsp;*/}
+            {/*    <span style={{textTransform: 'lowercase'}}>Patient </span>*/}
+            {/*    */}
+            {/*  </Button>*/}
+            {/*</Link>*/}
+            <Link to="/patient-registration-formio">
               <Button
-                variant="contained"
-                color="primary"
-                className=" float-right mr-1"
-                startIcon={<FaUserPlus />}
+                  variant="contained"
+                  color="primary"
+                  className=" float-right mr-1"
+                  startIcon={<FaUserPlus />}
               >
-                <span style={{textTransform: 'capitalize'}}>Add </span>
-                &nbsp;&nbsp;
-                <span style={{textTransform: 'lowercase'}}>Patient </span>
-                
+                <span style={{textTransform: 'capitalize'}}>Add Patient</span>
               </Button>
             </Link>
             <br />

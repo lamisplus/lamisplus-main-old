@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.bootstrap;
 
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.entity.Module;
 import org.springframework.stereotype.Component;
@@ -10,74 +11,33 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.sql.Timestamp;
 import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ModuleUtil {
-    private static List<String> classNames = new ArrayList<String>();
+    private static final String APPLICATION_PROPERTIES = "application.properties";
     private static List<Module> moduleConfigs = new ArrayList<Module>();
     private static List<File> jsonFiles = new ArrayList<File>();
-
-
-    public List<String> readZipFileRecursive(final InputStream zipFile, String jarName, boolean install) {
-        try (final InputStream zipFileStream = zipFile) {
-            classNames.clear();
-            classNames = this.readZipFileStream(zipFileStream);
-        } catch (IOException e) {
-            log.error("error reading zip file %s!", zipFile, e);
-        }
-        return classNames;
-    }
-
-    private List<String> readZipFileStream(final InputStream zipFileStream) {
-        String classWordLength = ".class";
-        int length = classWordLength.length();
-        final ZipInputStream zipInputStream = new ZipInputStream(zipFileStream);
-        ZipEntry zipEntry;
-        try {
-            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-                log.info("name of zip entry: {}", zipEntry.getName());
-                if(!zipEntry.getName().endsWith("/")){
-                    String entryName = zipEntry.getName();
-                    entryName = entryName.replace("/",".");
-
-                    //Checking if file is a class file
-                    if(entryName.endsWith(".class")) {
-                        try {
-                                log.info("name of class: {}", entryName);
-                                entryName = entryName.substring(0,entryName.length() - length);
-                                classNames.add(entryName.trim());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".jar")) {
-                    this.readZipFileStream(zipInputStream); // recursion
-                }
-            }
-        } catch (IOException e) {
-            log.error("error reading zip file stream", e);
-        }
-        return classNames;
-    }
+    private static final String YML_FILE = ".yml";
+    private static final String JSON_FILE = ".json";
+    private static Timestamp ts = new Timestamp(System.currentTimeMillis());
 
     public static void copyPathFromJar(final URL jarPath, final String path, final Path target) throws Exception {
         Map<String, String> env = new HashMap<>();
         String absPath = jarPath.toString();
         URI uri = URI.create("jar:" + absPath);
-        try (FileSystem zipfs = FileSystems.newFileSystem(uri, env)) {
-            Path pathInZipfile = zipfs.getPath(path);
-            Files.walkFileTree(pathInZipfile, new SimpleFileVisitor<Path>() {
+        try (FileSystem zipFiles = FileSystems.newFileSystem(uri, env)) {
+            Path pathInZipFile = zipFiles.getPath(path);
+            Files.walkFileTree(pathInZipFile, new SimpleFileVisitor<Path>() {
 
                 private Path currentTarget;
 
                 @Override
                 public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) throws IOException {
-                    currentTarget = target.resolve(pathInZipfile.relativize(dir)
+                    currentTarget = target.resolve(pathInZipFile.relativize(dir)
                             .toString());
                     if (!Files.exists(currentTarget)) {
                         Files.createDirectories(currentTarget);
@@ -87,28 +47,34 @@ public class ModuleUtil {
 
                 @Override
                 public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
-                    Path path = Files.copy(file, target.resolve(pathInZipfile.relativize(file)
+                    Path path = Files.copy(file, target.resolve(pathInZipFile.relativize(file)
                             .toString()), StandardCopyOption.REPLACE_EXISTING);
                     File theFile = new File(path.toString());
                     //Checking for module.yml i.e. config file
-                    if (theFile.getName().endsWith(".yml")) {
+                    if (theFile.getName().endsWith(YML_FILE)) {
                         readModuleYml(theFile);
-                    }
-                    if (theFile.getName().endsWith(".json")) {
+                    } else if (theFile.getName().endsWith(JSON_FILE)) {
                         getJson(theFile);
+                    } else if (theFile.getName().contains(APPLICATION_PROPERTIES)) {
+                        theFile.delete();
                     }
                     return FileVisitResult.CONTINUE;
                 }
             });
+        }catch (FileSystemNotFoundException fef){
+            fef.printStackTrace();
         }
     }
 
-    private static void readModuleYml(File ymlFile){
+    private static void readModuleYml(File ymlFile) throws IOException {
+        BufferedReader in = null;
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(
+            in = new BufferedReader(new InputStreamReader(
                     new FileInputStream(ymlFile.getAbsolutePath())));
             Yaml yaml = new Yaml();
             Module module = yaml.loadAs(in, Module.class);
+            module.setBatchNo(getTimeStamp());
+
             if(module != null){
                 moduleConfigs.add(module);
             }
@@ -116,6 +82,8 @@ public class ModuleUtil {
         } catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException("Error: " + e.getMessage());
+        }finally {
+            if (in != null) {in.close(); }
         }
     }
 
@@ -132,6 +100,17 @@ public class ModuleUtil {
     }
 
     public static void setModuleConfigs(){
-        moduleConfigs = new ArrayList<Module>();
+        if(moduleConfigs == null) {
+            moduleConfigs = new ArrayList<Module>();
+        }else moduleConfigs.clear();
+    }
+
+    public static void addModuleConfigs(Module module){
+        moduleConfigs.add(module);
+    }
+
+    private static String getTimeStamp() {
+        return ts.toString().replace(":", "").replace("-", "").
+                replace(".","").replace(" ", "");
     }
 }

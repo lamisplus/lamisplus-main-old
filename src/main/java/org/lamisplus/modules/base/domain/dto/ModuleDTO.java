@@ -22,7 +22,7 @@ public class ModuleDTO {
 
     private String version;
 
-    private UUID uuid;
+    private String uuid;
 
     private Timestamp dateCreated;
 

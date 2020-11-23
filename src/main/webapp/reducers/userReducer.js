@@ -3,7 +3,7 @@ import * as USERTYPES from '../actions/types'
 const userReducer = (state = { list:[] ,status: 0, user: {} }, action) => {
     switch(action.type){
         case USERTYPES.FETCH_USERS:
-            return {...state, user:action.payload}
+            return {...state, list:action.payload}
 
         case USERTYPES.REGISTER_REQUEST:
 

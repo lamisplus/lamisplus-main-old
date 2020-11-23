@@ -6,6 +6,7 @@ import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.entity.LabTest;
 import org.lamisplus.modules.base.service.LabTestService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -21,16 +22,19 @@ public class LabTestController {
     private final String ENTITY_NAME = "LabTest";
 
     @GetMapping
+    @PreAuthorize("hasAuthority('laboratory_read')")
     public ResponseEntity<List<LabTest>> getAllLabTests() {
         return ResponseEntity.ok(this.labTestService.getAllLabTests());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('laboratory_read')")
     public ResponseEntity<LabTest> getLabTest(@PathVariable Long id) {
         return ResponseEntity.ok(labTestService.getLabTest(id));
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('laboratory_write')")
     public ResponseEntity<LabTest> save(@RequestBody LabTest labTest) throws URISyntaxException {
         LabTest result = labTestService.save(labTest);
         return ResponseEntity.created(new URI("/api/lab-test-groups/" + result.getId()))
@@ -38,6 +42,7 @@ public class LabTestController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('laboratory_write')")
     public ResponseEntity<LabTest> update(@PathVariable Long id, @RequestBody LabTest labTest) throws URISyntaxException {
         LabTest result = labTestService.update(id, labTest);
         return ResponseEntity.created(new URI("/api/lab-test-groups/" + id))
@@ -46,6 +51,7 @@ public class LabTestController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('laboratory_delete')")
     public ResponseEntity<Integer> delete(@PathVariable Long id){
         return ResponseEntity.ok(this.labTestService.delete(id));
     }

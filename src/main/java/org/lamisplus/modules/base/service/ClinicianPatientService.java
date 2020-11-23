@@ -6,15 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ClinicianPatientDTO;
-import org.lamisplus.modules.base.domain.entity.ApplicationCodeset;
 import org.lamisplus.modules.base.domain.entity.ClinicianPatient;
-import org.lamisplus.modules.base.domain.entity.Patient;
-import org.lamisplus.modules.base.domain.entity.Visit;
 import org.lamisplus.modules.base.domain.mapper.ClinicianPatientMapper;
-import org.lamisplus.modules.base.repository.ApplicationCodesetRepository;
 import org.lamisplus.modules.base.repository.ClinicianPatientRepository;
-import org.lamisplus.modules.base.repository.PatientRepository;
-import org.lamisplus.modules.base.repository.VisitRepository;
 import org.lamisplus.modules.base.util.GenericSpecification;
 import org.lamisplus.modules.base.util.UuidGenerator;
 import org.springframework.data.jpa.domain.Specification;
@@ -43,7 +37,7 @@ public class ClinicianPatientService {
                     ", Patient Id=" + clinicianPatientDTO.getPatientId() +", Visit Id=" + clinicianPatientDTO.getVisitId());
         }
         final ClinicianPatient clinicianPatient = clinicianPatientMapper.toClinicianPatient(clinicianPatientDTO);
-        clinicianPatient.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
+        clinicianPatient.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         clinicianPatient.setUuid(UuidGenerator.getUuid());
         clinicianPatient.setArchived(0);
 
@@ -52,7 +46,7 @@ public class ClinicianPatientService {
 
     public List getAllClinicianPatients() {
         GenericSpecification<ClinicianPatient> genericSpecification = new GenericSpecification<ClinicianPatient>();
-        Specification<ClinicianPatient> specification = genericSpecification.findAll();
+        Specification<ClinicianPatient> specification = genericSpecification.findAll(0);
         return clinicianPatientRepository.findAll(specification);
     }
 
@@ -61,7 +55,7 @@ public class ClinicianPatientService {
         if(!clinicianPatientOptional.isPresent())throw new EntityNotFoundException(ClinicianPatient.class, "Id", "Not Found");
         final ClinicianPatient clinicianPatient = clinicianPatientMapper.toClinicianPatient(clinicianPatientDTO);
         clinicianPatient.setId(id);
-        clinicianPatient.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        clinicianPatient.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return clinicianPatientRepository.save(clinicianPatient);
     }
 
@@ -76,7 +70,7 @@ public class ClinicianPatientService {
         Optional<ClinicianPatient> clinicianPatientOptional = clinicianPatientRepository.findById(id);
         if(!clinicianPatientOptional.isPresent() || clinicianPatientOptional.get().getArchived() == 1) throw new EntityNotFoundException(ClinicianPatient.class,"Display:",id+"");
         clinicianPatientOptional.get().setArchived(1);
-        clinicianPatientOptional.get().setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        clinicianPatientOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
 
         return clinicianPatientOptional.get().getArchived();
     }

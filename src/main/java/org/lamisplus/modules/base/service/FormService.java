@@ -24,23 +24,22 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class FormService {
+    public static final int UN_ARCHIVED = 0;
     private final FormRepository formRepository;
     private final ProgramRepository programRepository;
     private final FormMapper formMapper;
     private final UserService userService;
-    private static final int UN_ARCHIVED = 0;
     private static final int ARCHIVED = 1;
-    private GenericSpecification<Form> genericSpecification;
+    private final GenericSpecification<Form> genericSpecification;
 
     public List getAllForms() {
-
-        Specification<Form> specification = genericSpecification.findAll();
+        Specification<Form> specification = genericSpecification.findAll(0);
 
         List<Form> forms = this.formRepository.findAll(specification);
         List<FormDTO> formList = new ArrayList<>();
         forms.forEach(form -> {
             final FormDTO formDTO = formMapper.toForm(form);
-            Optional<Program>  program = this.programRepository.findProgramByUuid(formDTO.getProgramCode());
+            Optional<Program>  program = this.programRepository.findProgramByCode(formDTO.getProgramCode());
             program.ifPresent(value -> formDTO.setProgramName(value.getName()));
             formList.add(formDTO);
         });
@@ -61,13 +60,13 @@ public class FormService {
 
     public Form save(FormDTO formDTO) {
         formDTO.setCode(UuidGenerator.getUuid());
-        Optional<Form> formOptional = formRepository.findByCode(formDTO.getCode());
+        Optional<Form> formOptional = formRepository.findByNameAndProgramCodeAndArchived(formDTO.getName(), formDTO.getProgramCode(), UN_ARCHIVED);
         if (formOptional.isPresent()) {
-            throw new RecordExistException(Form.class, "Code", formDTO.getCode());
+            throw new RecordExistException(Form.class, "Name", formDTO.getName());
         }
         Form form = formMapper.toFormDTO(formDTO);
-        form.setArchived(0);
-        form.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
+        form.setArchived(UN_ARCHIVED);
+        form.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         return formRepository.save(form);
     }
 
@@ -88,7 +87,6 @@ public class FormService {
     }
 
     public List getFormsByUsageStatus(Integer usageStatus) {
-        //TODO: Emeka add findAllByUsageCodeAndArchived(usageStatus, 0);
         List<Form> formList = formRepository.findAllByUsageCodeAndArchived(usageStatus, UN_ARCHIVED);
         return formList;
     }
@@ -97,11 +95,10 @@ public class FormService {
         Optional<Form> formOptional = formRepository.findById(id);
         log.info("form optional  is" + formOptional.get());
         if(!formOptional.isPresent() || formOptional.get().getArchived() == ARCHIVED)throw new EntityNotFoundException(Form.class, "Id", id +"");
-        //TODO: Emeka form object should set id instead of formDTO
-        formDTO.setId(id);
 
         Form form = formMapper.toFormDTO(formDTO);
-        form.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        form.setId(id);
+        form.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return formRepository.save(form);
     }
 
@@ -109,7 +106,7 @@ public class FormService {
         Optional<Form> formOptional = formRepository.findById(id);
         if(!formOptional.isPresent() || formOptional.get().getArchived() == 1)throw new EntityNotFoundException(Form.class, "Id", id +"");
         formOptional.get().setArchived(1);
-        formOptional.get().setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        formOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return formOptional.get().getArchived();
     }
 

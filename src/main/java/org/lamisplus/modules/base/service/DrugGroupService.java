@@ -7,7 +7,6 @@ import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.entity.Drug;
 import org.lamisplus.modules.base.domain.entity.DrugGroup;
 import org.lamisplus.modules.base.repository.DrugGroupRepository;
-import org.lamisplus.modules.base.repository.DrugRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +28,7 @@ public class DrugGroupService {
     public DrugGroup save(DrugGroup drugGroup) {
         Optional<DrugGroup> drugGroupOptional = drugGroupRepository.findById(drugGroup.getId());
         if (drugGroupOptional.isPresent()) throw new RecordExistException(DrugGroup.class, "Id", drugGroup.getId() + "");
-        drugGroup.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
+        drugGroup.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         return drugGroupRepository.save(drugGroup);
     }
 
@@ -43,7 +42,7 @@ public class DrugGroupService {
         Optional<DrugGroup> drugGroupOptional = drugGroupRepository.findById(id);
         if(!drugGroupOptional.isPresent())throw new EntityNotFoundException(DrugGroup.class, "Id", id +"");
         drugGroup.setId(id);
-        drugGroup.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        drugGroup.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return drugGroupRepository.save(drugGroup);
     }
 
@@ -58,7 +57,7 @@ public class DrugGroupService {
         Optional<DrugGroup> drugGroupOptional = drugGroupRepository.findById(id);
         if(!drugGroupOptional.isPresent())throw new EntityNotFoundException(DrugGroup.class, "Id", id +"");
         drugGroupOptional.get().setArchived(1);
-        drugGroupOptional.get().setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        drugGroupOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
 
         return drugGroupOptional.get().getArchived();
     }

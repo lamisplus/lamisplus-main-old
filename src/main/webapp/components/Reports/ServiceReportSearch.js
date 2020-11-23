@@ -51,14 +51,14 @@ function ReportSearch(props) {
                 <MaterialTable
                     title="Find By Report Name"
                     columns={[
-                        {title: "Program Area", field: "programCode"},
+                        {title: "Program Area", field: "programName"},
                         { title: "Report Name", field: "name" },
                         { title: "Report Description", field: "description" },
                         {title: "Action", field: "actions", filtering: false,},
                     ]}
                     isLoading={loading}
                     data={props.reportList.map((row) => ({
-                        programCode: row.programCode,
+                        programName: row.programName,
                         name: row.name,
                         description: row.description,
                         parameterResourceObject: row.parameterResourceObject,

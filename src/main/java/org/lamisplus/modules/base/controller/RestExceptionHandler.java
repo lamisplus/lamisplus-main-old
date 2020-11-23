@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.lamisplus.modules.base.controller.apierror.ApiError;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
+import org.lamisplus.modules.base.controller.apierror.IllegalTypeException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -134,8 +135,20 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * Handles EntityNotFoundException. Created to encapsulate errors with more detail than javax.persistence.EntityNotFoundException.
+     * Handles IllegalTypeException.
      *
+     * @param ex the IllegalTypeException
+     * @return the ApiError object
+     */
+    @ExceptionHandler(IllegalTypeException.class)
+    protected ResponseEntity<Object> handleIllegalTypeException(IllegalTypeException ex) {
+        ApiError apiError = new ApiError(BAD_REQUEST);
+        apiError.setStatusCode(BAD_REQUEST.value());
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+     /* Handles EntityNotFoundException. Created to encapsulate errors with more detail than javax.persistence.EntityNotFoundException.
      * @param ex the EntityNotFoundException
      * @return the ApiError object
      */

@@ -55,6 +55,11 @@ public class Form extends JsonBEntity implements Serializable {
     @Column(name = "name")
     private String name;
 
+    @Type(type = "jsonb")
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "form_precedence", nullable = false, columnDefinition = "jsonb")
+    private Object formPrecedence;
+
     @Basic
     @Column(name = "date_created")
     @JsonIgnore
@@ -83,7 +88,7 @@ public class Form extends JsonBEntity implements Serializable {
     private Integer archived = 0;
 
     @ManyToOne
-    @JoinColumn(name = "program_code", referencedColumnName = "uuid", insertable = false, updatable = false)
+    @JoinColumn(name = "program_code", referencedColumnName = "code", insertable = false, updatable = false)
     @JsonIgnore
     private Program programByProgramCode;
 
