@@ -63,7 +63,7 @@ const ActivePatientSearch = (props) => {
             : calculate_age(row.dob),
           address: row.street || ''  ,
           patientId: row.patientId,
-          visitId: row.id,
+          visitId: row.visitId,
           checkIn: row.dateVisitStart + ' ' + (row.timeVisitStart ? row.timeVisitStart : '' ) 
         }))}
         
