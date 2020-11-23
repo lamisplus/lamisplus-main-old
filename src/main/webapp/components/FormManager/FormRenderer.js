@@ -12,6 +12,7 @@ import { url } from "api";
 import axios from "axios";
 import { formRendererService } from "_services/form-renderer";
 import { authHeader } from '_helpers/auth-header';
+import _ from 'lodash';
 
 Moment.locale("en");
 momentLocalizer();
@@ -93,19 +94,21 @@ const FormRenderer = (props) => {
       setShowErrorMsg(true);
       setShowLoading(false);
     };
+
     if(formId){
-      updateForm(onSuccess, onError);
+      updateForm(submission, onSuccess, onError);
     }else{
-      saveForm(onSuccess, onError);
+      saveForm(submission, onSuccess, onError);
     }
   };
 
-  const saveForm = (onSuccess, onError) => {
+  const saveForm = (submission, onSuccess, onError) => {
 
     const encounterDate = submission["dateEncounter"]
       ? submission["dateEncounter"]
       : new Date();
     const formatedDate = Moment(encounterDate).format("DD-MM-YYYY");
+
     let data = {
       data: [submission.data],
       patientId: props.patientId,
@@ -126,7 +129,7 @@ const FormRenderer = (props) => {
     );
   }
 
-  const updateForm = (onSuccess, onError) => {
+  const updateForm = (submission, onSuccess, onError) => {
     const data = {
       data: submission.data,
   }
@@ -161,7 +164,7 @@ const FormRenderer = (props) => {
             <>
             <h4 class="text-capitalize">
               {"New: "}
-              {props.title || form.name}
+              {props.title || (form && form.name ? form.name : '')}
             </h4>
             <hr />
             </>
@@ -177,6 +180,10 @@ const FormRenderer = (props) => {
               hideComponents={props.hideComponents}
               options={options}
               onSubmit={(submission) => {
+                delete submission.data.patient;
+                delete submission.data.authHeader;
+                delete submission.data.submit;
+
                 if (props.onSubmit) {
                   return props.onSubmit(submission);
                 }

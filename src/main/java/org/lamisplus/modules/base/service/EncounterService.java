@@ -126,7 +126,7 @@ public class EncounterService {
         */
 
         Optional<Visit> visitOptional = this.visitRepository.findById(encounterDTO.getVisitId());
-        if(!visitOptional.isPresent())throw new EntityNotFoundException(Visit.class,"Visit Id", encounterDTO.getVisitId().toString());
+        if(!visitOptional.isPresent())throw new EntityNotFoundException(Visit.class,"Visit Id", encounterDTO.getVisitId()+"");
 
         final Encounter encounter = encounterMapper.toEncounter(encounterDTO);
         encounter.setUuid(UuidGenerator.getUuid());

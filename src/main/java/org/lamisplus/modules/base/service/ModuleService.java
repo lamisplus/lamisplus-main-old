@@ -30,6 +30,8 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.sql.Timestamp;
 import java.util.*;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -73,13 +75,7 @@ public class ModuleService {
     private final ConfigurableApplicationContext context;
     private static final String MODULE_CLASS_NAME = "module";
     private static final String DOT_CLASS = ".class";
-    //private static final Class[] parameters = new Class[]{URL.class};
-
-    //private final ConsoleConfigClassLoader consoleConfigClassLoader;
-    //private HashSet<String> setJarFileNamesToClose = new HashSet<String>();
-    //private static final boolean IS_EXIST = true;
-    //private static final String CONTENT_TYPE = "application/java-archive";
-    //private static final int MODULE_EXIST = 4;
+    private Timestamp ts = new Timestamp(System.currentTimeMillis());
 
     public Module save(ModuleDTO moduleDTO) {
         Optional<Module> moduleOptional = this.moduleRepository.findByName(moduleDTO.getName());
@@ -87,6 +83,10 @@ public class ModuleService {
 
         final Module module = this.moduleMapper.toModuleDTO(moduleDTO);
         module.setCreatedBy(userService.getUserWithRoles().get().getUserName());
+        if(module.getDateCreated() == null){
+            module.setDateCreated(ts);
+        }
+        module.setArchived(UN_ARCHIVED);
 
         return this.moduleRepository.save(module);
     }
@@ -210,25 +210,17 @@ public class ModuleService {
 
             //Get program
             externalModule.getProgramsByModule().forEach(program -> {
+                Program program1 = null;
                 if(programRepository.findByModuleId(module.getId()).size() < 1){
                     if(program.getId() == null) {
                         program.setModuleId(module.getId());
                         program.setCode(UUID.randomUUID().toString());
                         program.setArchived(ARCHIVED);
+                        //Saving program...
+                        programRepository.save(program);
                     }
                     if(notArchived){
                         program.setArchived(UN_ARCHIVED);
-                    }
-                    //Saving program...
-                    final List<Program> programList = programRepository.findByModuleId(module.getId());
-                    Program program1 = null;
-                    if(programList.isEmpty() && programList.size() > 0) {
-                        program1 = programRepository.save(program);
-                        program.setId(program1.getId());
-                    }else{
-                        programList.forEach(program2 -> {
-                            program.setId(program2.getId());
-                        });
                     }
                     //final Program program1 = programRepository.save(program);
                     log.debug(program.getName() + " saved...");

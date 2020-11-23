@@ -16,7 +16,7 @@ import {
   import { Label } from 'semantic-ui-react';
 
  function PatientVitals(props) {
-    const [data, setData] = useState({pulse:'', height: '', systolic: '', diastolic: '', bodyWeight: ''}); 
+    const [data, setData] = useState({pulse:'', height: '', systolic: '', diastolic: '', body_weight: ''});
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [bmiStatus, setBMIStatus] = useState();
@@ -26,8 +26,8 @@ import {
    }
 
    const calculateBMI = () => {
-     if(props.vitalSigns.bodyWeight && props.vitalSigns.height){
-     const bmi = (props.vitalSigns.bodyWeight / props.vitalSigns.height / props.vitalSigns.height) * 10000;
+     if(props.vitalSigns.body_weight && props.vitalSigns.height){
+     const bmi = (props.vitalSigns.body_weight / props.vitalSigns.height / props.vitalSigns.height) * 10000;
      if(bmi <= 18.5){
       setBMIStatus('Underweight');
      } 
@@ -79,10 +79,10 @@ import {
                                 </Col>
                           
                                 <Col xs='6'>
-                                            Weight (kg): <span><b>{data.bodyWeight || 'N/A'}</b></span>                                 
+                                            Weight (kg): <span><b>{data.body_weight || 'N/A'}</b></span>                                 
                                             </Col>
                                 <Col xs='6'>
-                                            RR (bpm): <span><b>{data.respiratoryRate || 'N/A'}</b></span> 
+                                            RR (bpm): <span><b>{data.respiratory_rate || 'N/A'}</b></span> 
                                 </Col>
                                 <Col xs='6'>
                                             Height (cm): <span><b>{data.height || 'N/A'}</b></span>  
@@ -100,7 +100,7 @@ import {
                                             BMI Status: <span><b>{bmiStatus || 'N/A'}</b></span> 
                                 </Col>
                                 <Col xs='12'>
-  {props.vitalSigns ? <span>Updated on <b>{props.vitalSigns.dateEncounter || ""} {props.vitalSigns.timeCreated || ""}</b></span> : ""}
+  {props.vitalSigns ? <span>Updated on <b>{props.vitalSigns.date_encounter || ""} {props.vitalSigns.timeCreated || ""}</b></span> : ""}
                                 </Col>
                                 </Row>
  }

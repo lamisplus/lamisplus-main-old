@@ -67,11 +67,11 @@ function AddVitalsPage (props) {
   })
   const [formDataForVitals, setformDataForVitals] = useState({
     pulse: '',
-    respiratoryRate: '',
+    respiratory_rate: '',
     temperature: '',
     diastolic: '',
     systolic: '',
-    bodyWeight: '',
+    body_weight: '',
     height: ''
   })
   const [showLoading, setShowLoading] = useState(false)
@@ -85,8 +85,8 @@ function AddVitalsPage (props) {
    
     console.log(formDataForVitals);
     //check to see if at least a field was filled
-    if(!(formDataForVitals.pulse || formDataForVitals.respiratoryRate || formDataForVitals.temperature || formDataForVitals.diastolic
-      || formDataForVitals.systolic || formDataForVitals.bodyWeight || formDataForVitals.height)){
+    if(!(formDataForVitals.pulse || formDataForVitals.respiratory_rate || formDataForVitals.temperature || formDataForVitals.diastolic
+      || formDataForVitals.systolic || formDataForVitals.body_weight || formDataForVitals.height)){
         setErrorMsg("Fill at least a field");
         setShowErrorMsg(true);
         return;
@@ -94,7 +94,7 @@ function AddVitalsPage (props) {
     setShowLoading(true)
     const newDatenow = Moment(vitals.dateEncounter).format('DD-MM-YYYY')
     const encounterDateTime = Moment(vitals.dateEncounter).format('DD-MM-YYYY hh:mm A')
-    formDataForVitals['dateEncounter'] = encounterDateTime;
+    formDataForVitals['date_encounter'] = encounterDateTime;
     const data = {
       formCode: CODES.VITAL_SIGNS_FORM,
       patientId: props.patientId,
@@ -175,10 +175,10 @@ function AddVitalsPage (props) {
               <FormGroup>
                 <Label for='middleName'>Respiratory Rate (bpm)</Label>
                 <Input
-                  name='respiratoryRate'
-                  id='respiratoryRate'
+                  name='respiratory_rate'
+                  id='respiratory_rate'
                   placeholder=''
-                  value={formDataForVitals.respiratoryRate}
+                  value={formDataForVitals.respiratory_rate}
                   onChange={onChangeFormdata}
                   min={0} max={99} type="number"
                 />
@@ -233,10 +233,10 @@ function AddVitalsPage (props) {
                 <Label for='middleName'>Body Weight (Kg)</Label>
                 <Input
                   type="number"
-                  name='bodyWeight'
-                  id='bodyWeight'
+                  name='body_weight'
+                  id='body_weight'
                   placeholder=''
-                  value={formDataForVitals.bodyWeight}
+                  value={formDataForVitals.body_weight}
                   onChange={onChangeFormdata}
                 />
               </FormGroup>

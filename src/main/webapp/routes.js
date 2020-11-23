@@ -61,6 +61,7 @@ const ParentOrganizationUnit = React.lazy(() => import("components/Admin/Organiz
 /* End of Bootstrap configuration */
 const formDashboard = React.lazy(() => import('components/formBuilder/formDashboard'));
 const FormBuilder = React.lazy(() => import('components/formBuilder/FormBuilder'));
+const ReactSelect = React.lazy(() => import('components/formBuilder/ReactSelect'));
 const ViewForm = React.lazy(() => import('components/formBuilder/ViewForm'));
 const PivotTable = React.lazy(() => import('components/PivotTable/PivotTable'));
 const ReactPivot = React.lazy(() => import('components/PivotTable/ReactPivot'));
@@ -189,6 +190,7 @@ class Routes extends Component {
               />
               <PrivateRoute exact path="/form-dashboard" component={formDashboard} />
               <PrivateRoute exact path="/form-builder" component={FormBuilder} />
+                <PrivateRoute exact path="/select" component={ReactSelect} />
               <PrivateRoute exact path="/view-form" component={ViewForm} />
               <PrivateRoute exact path="/pivot" component={PivotTable} />
                 <PrivateRoute exact path="/react-pivot" component={ReactPivot} />
@@ -220,7 +222,9 @@ class Routes extends Component {
                 <PrivateRoute exact path={"/admin/wards"} component={WardManagerPage} />
                 <PrivateRoute exact path={"/radiology"} component={RadiologyTestDetailPage} />
               {/* The route to Appointment*/}
-              
+              {/* The route to Visualization*/}
+                <PrivateRoute exact path={"/visual"} component={TestPage} />
+              {/* The route to Visualization*/}
             </React.Suspense>
           </MainLayout>
           

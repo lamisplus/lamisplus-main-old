@@ -5,6 +5,7 @@ import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.security.PermissionConstants;
 import org.lamisplus.modules.base.security.RolesConstants;
 import org.lamisplus.modules.base.service.ModuleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

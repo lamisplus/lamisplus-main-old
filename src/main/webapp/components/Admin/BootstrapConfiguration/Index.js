@@ -6,7 +6,6 @@ import MatButton from '@material-ui/core/Button'
 import 'react-datepicker/dist/react-datepicker.css'
 import { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
-import { TiArrowBack} from 'react-icons/ti';
 import 'react-widgets/dist/css/react-widgets.css'
 //Date Picker
 import Page from '../../Page'
@@ -82,16 +81,7 @@ const useStyles = makeStyles({
       </MenuButton>
         
           <MenuList style={{ color:"#000 !important"}} >
-            {e.status === 2 ?
-              
-                <MenuItem  style={{ color:"#000 !important"}} onSelect={() => installModule('id')}>                      
-                
-                    <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Install</span>
-                                    
-                </MenuItem> 
-                
-              : ""
-             }
+           
              {e.status === 2 ?
               <>
                 <MenuItem style={{ color:"#000 !important"}}>
