@@ -13,7 +13,7 @@ import {Card,CardBody,CardHeader,CardTitle,Col,Row,} from 'reactstrap';
 //import {combineChart} from './DashBoardVisualisation/CombineChart'
 import CustomHighMap from './map';
 import {deathChart} from './DashBoardVisualisation/DeathChart';
-
+import { Link } from 'react-router-dom'
 import { fetchAllRegisteredPatients } from "./../actions/generalUserDashboard";
 import { url } from "../api";
 
@@ -32,11 +32,36 @@ const  DashboardPage = (props) => {
   const [birthSeries, setBirthSereies] = useState({})
   const [deathRateData, setdeathRateData] = useState({})
   const [deathSeries, setDeathSereies] = useState({})
+  const [totalPatients,setTotalPatients] = useState(122)
+  const [totalAppointment,setTotalAppointment] = useState(21)
   useEffect(() => {
     
             props.fetchAllGender();
     }, []); //componentDidMount
-
+  //Total Patients
+  useEffect(() => {
+    async function getCharacters() {
+        try {
+            const response = await axios.get( url+ 'patients/totalCount');
+                const body2 = response.data && response.data!==null ? response.data :0.00;
+                setTotalPatients(body2) 
+                
+        } catch (error) {}
+      }
+      getCharacters();
+  }, []);
+    //Total Appointment
+    useEffect(() => {
+      async function getCharacters() {
+          try {
+              const response = await axios.get( url+ 'visits/totalCount/');
+                  const body2 = response.data && response.data!==null ? response.data :0.00;
+                  setTotalAppointment(body2) 
+                  
+          } catch (error) {}
+        }
+        getCharacters();
+    }, []);
   useEffect(() => {
     async function getCharacters() {
         try {
@@ -85,7 +110,7 @@ useEffect(() => {
     }
     getCharacters();
 }, []);  
-console.log(birthSeries.data)
+console.log(totalPatients)
 
 /* Gender Pie Chart */
 const genderChart = {
@@ -254,15 +279,18 @@ const deathChart = {
                   <Card  style={cardStyle} className="card-stats mb-4 mb-xl-0 p-3">
                     <CardBody>
                       <Row>
+                      <Link
+                        to={{pathname: "/patients"}}
+                        style={{ cursor: "pointer",  }}>
                         <div className="col">
                           <CardTitle
                            tag="h6"
                             className=" text-uppercase text-muted mb-0" 
                           >
-                            Total Patient
+                             Patients
                           </CardTitle>
-                          <span className="h3 font-weight-bold mb-5">
-                            350,897
+                          <span className="h2 font-weight-bold mb-0">
+                            {totalPatients}
                           </span>
                         </div>
                         <Col className="col-auto">
@@ -270,6 +298,7 @@ const deathChart = {
                             <FaUserPlus size={30} />
                           </div>
                         </Col>
+                        </Link>
                       </Row>
                       <p className="mt-3 mb-0 text-muted text-sm">
                         
@@ -282,6 +311,9 @@ const deathChart = {
                   <Card style={cardStyle} className="card-stats mb-4 mb-xl-0 p-3">
                     <CardBody>
                       <Row>
+                        <Link
+                          to={{pathname: "/"}}
+                          style={{ cursor: "pointer",  }}>
                         <div className="col">
                           <CardTitle
                             tag="h6"
@@ -294,10 +326,11 @@ const deathChart = {
                           </span>
                         </div>
                         <Col className="col-auto">
-                          <div className="icon icon-shape bg-danger text-white rounded-circle shadow">
+                          <div className="icon icon-shape  text-danger">
                           <MdAirlineSeatIndividualSuite size={30} />
                           </div>
                         </Col>
+                        </Link>
                       </Row>
                       <p className="mt-3 mb-0 text-muted text-sm">
                        {" "}
@@ -310,6 +343,9 @@ const deathChart = {
                   <Card style={cardStyle} className="card-stats mb-4 mb-xl-0 p-3">
                     <CardBody>
                       <Row>
+                        <Link
+                        to={{pathname: "/patients"}}
+                        style={{ cursor: "pointer",  }}>
                         <div className="col">
                           <CardTitle
                             tag="h6"
@@ -320,10 +356,11 @@ const deathChart = {
                           <span className="h2 font-weight-bold mb-0">924</span>
                         </div>
                         <Col className="col-auto">
-                          <div className="icon icon-shape bg-yellow text-black rounded-circle shadow">
+                          <div className="icon icon-shape text-black ">
                             <FaUserCheck size={30} />
                           </div>
                         </Col>
+                        </Link>
                       </Row>
                       <p className="mt-3 mb-0 text-muted text-sm">
                         {" "}
@@ -336,6 +373,9 @@ const deathChart = {
                   <Card style={cardStyle} className="card-stats mb-4 mb-xl-0 p-3 ">
                     <CardBody>
                       <Row>
+                      <Link
+                        to={{pathname: "/appointments"}}
+                        style={{ cursor: "pointer",  }}>
                         <div className="col">
                           <CardTitle
                             tag="h6"
@@ -344,14 +384,15 @@ const deathChart = {
                             Appointments
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
-                            49
+                            {totalAppointment}
                           </span>
                         </div>
                         <Col className="col-auto">
-                          <div className="icon icon-shape bg-info text-white rounded-circle shadow">
+                          <div className="icon icon-shape text-warning">
                           <FaCalendarAlt size={30} />
                           </div>
                         </Col>
+                        </Link>
                       </Row>
                       <p className="mt-3 mb-0 text-muted text-sm">
                         {" "}
