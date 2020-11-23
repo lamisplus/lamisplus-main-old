@@ -262,10 +262,10 @@ const deathChart = {
                            tag="h6"
                             className=" text-uppercase text-muted mb-0" 
                           >
-                            Total Patient
+                             Patients
                           </CardTitle>
-                          <span className="h3 font-weight-bold mb-5">
-                            350,897
+                          <span className="h2 font-weight-bold mb-0">
+                            100
                           </span>
                         </div>
                         <Col className="col-auto">
@@ -286,6 +286,9 @@ const deathChart = {
                   <Card style={cardStyle} className="card-stats mb-4 mb-xl-0 p-3">
                     <CardBody>
                       <Row>
+                        <Link
+                          to={{pathname: "/"}}
+                          style={{ cursor: "pointer",  }}>
                         <div className="col">
                           <CardTitle
                             tag="h6"
@@ -298,10 +301,11 @@ const deathChart = {
                           </span>
                         </div>
                         <Col className="col-auto">
-                          <div className="icon icon-shape bg-danger text-white rounded-circle shadow">
+                          <div className="icon icon-shape  text-danger">
                           <MdAirlineSeatIndividualSuite size={30} />
                           </div>
                         </Col>
+                        </Link>
                       </Row>
                       <p className="mt-3 mb-0 text-muted text-sm">
                        {" "}
@@ -314,6 +318,9 @@ const deathChart = {
                   <Card style={cardStyle} className="card-stats mb-4 mb-xl-0 p-3">
                     <CardBody>
                       <Row>
+                        <Link
+                        to={{pathname: "/"}}
+                        style={{ cursor: "pointer",  }}>
                         <div className="col">
                           <CardTitle
                             tag="h6"
@@ -324,10 +331,11 @@ const deathChart = {
                           <span className="h2 font-weight-bold mb-0">924</span>
                         </div>
                         <Col className="col-auto">
-                          <div className="icon icon-shape bg-yellow text-black rounded-circle shadow">
+                          <div className="icon icon-shape text-black ">
                             <FaUserCheck size={30} />
                           </div>
                         </Col>
+                        </Link>
                       </Row>
                       <p className="mt-3 mb-0 text-muted text-sm">
                         {" "}
@@ -355,7 +363,7 @@ const deathChart = {
                           </span>
                         </div>
                         <Col className="col-auto">
-                          <div className="icon icon-shape bg-info text-white rounded-circle shadow">
+                          <div className="icon icon-shape text-warning">
                           <FaCalendarAlt size={30} />
                           </div>
                         </Col>
