@@ -84,12 +84,11 @@ const ViewModal = (props) => {
   const closeBtn = props.close;
   const classes = useStyles();
   const form= props.formData ? props.formData : {};
+  console.log(form)
   const [formValues, setFormValues] = useState({});
 
   const handleInputChange = (e) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
-
-    console.log(formValues);
   };
 
 

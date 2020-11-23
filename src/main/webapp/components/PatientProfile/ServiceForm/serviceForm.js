@@ -30,7 +30,9 @@ import EditIcon from "@material-ui/icons/Edit";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import Select from "react-select";
 import CheckedInValidation from "components/Utils/CheckedInValidation";
-import { fetchById} from 'actions/formBuilder'
+import axios from 'axios';
+import { url } from "../../../api";
+
 
 const cardStyle = {
   borderColor: "#fff",
@@ -45,7 +47,7 @@ function ServiceFormPage(props) {
   const [showEncounterLoading, setShowEncounterLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [encounterMessage, setEncounterMessage] = useState("");
-  const [serviceForms, setServiceForms] = useState([]);
+  const [serviceList, setServiceList] = useState([]);
   const [programs, setPrograms] = useState([]);
   const [efilterText, setEFilterText] = React.useState("");
   const [eresetPaginationToggle, setEResetPaginationToggle] = React.useState(
@@ -236,20 +238,23 @@ function ServiceFormPage(props) {
   }, [efilterText, eresetPaginationToggle]);
 
   const handleProgramChange = (newValue, actionMeta) => {
-    setShowServiceFormLoading(true);
-    const onSuccess = () => {
-      setShowServiceFormLoading(false);
-    }
-
-    const onError = () => {
-      setShowServiceFormLoading(false);
-    }
-    props.fetchServiceByProgram(newValue.id, onSuccess, onError);
-
-    //setFilteredForms(
-      //serviceForms.filter((x) => x.programCode === newValue.value)
-    //);
+    fetchPatientServiceByProgram(props.patient.patientId, newValue.code);
   };
+
+  async function fetchPatientServiceByProgram(patientId, programCode) {
+      setShowServiceFormLoading(true);
+      await axios.get( url+ `patients/${patientId}/${programCode}/form`)
+          .then(response => {
+        setShowServiceFormLoading(false);
+        setServiceList(response.data);
+      })
+          .catch(error => {
+            setShowServiceFormLoading(false);
+            setServiceList([]);
+              }
+          );
+  }
+
   const handleChange = (newValue, actionMeta) => {
     setCurrentForm({ ...newValue, type: "NEW" });
   };
@@ -287,7 +292,7 @@ function ServiceFormPage(props) {
                         isMulti={false}
                         onChange={handleChange}
                         isLoading={showServiceFormLoading}
-                        options={props.serviceList.map((x) => ({
+                        options={serviceList.map((x) => ({
                           ...x,
                           label: x.name,
                           value: x.id,
@@ -444,7 +449,6 @@ const mapActionToProps = {
   fetchPatientEncounters:
     patientActions.fetchPatientEncounterProgramCodeExclusionList,
   fetchEncounterInfo: encounterAction.fetchById,
-  fetchServiceByProgram: fetchById
 };
 
 export default connect(mapStateToProps, mapActionToProps)(ServiceFormPage);
