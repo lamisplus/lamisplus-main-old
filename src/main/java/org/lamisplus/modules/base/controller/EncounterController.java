@@ -56,6 +56,12 @@ public class EncounterController {
         return ResponseEntity.ok(this.encounterService.getFormDataByEncounterId(id));
     }
 
+    @GetMapping("/{programCode}/totalCount")
+    public ResponseEntity<Long> getTotalCount(@PathVariable String programCode) {
+        return ResponseEntity.ok(this.encounterService.getTotalCount(programCode));
+    }
+
+
     @PutMapping("/{id}")
     public ResponseEntity<Encounter> update(@PathVariable Long id, @RequestBody EncounterDTO encounterDTO) throws URISyntaxException {
         Encounter encounter1 = this.encounterService.update(id, encounterDTO);

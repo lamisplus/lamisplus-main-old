@@ -209,4 +209,8 @@ public class EncounterService {
         List<FormData> formDataList = encounterOptional.get().getFormDataByEncounter();
         return formDataList;
     }
+
+    public Long getTotalCount(String programCode) {
+        return encounterRepository.countByProgramCodeAndArchived(programCode, 0);
+    }
 }

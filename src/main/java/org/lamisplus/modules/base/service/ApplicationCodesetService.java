@@ -34,17 +34,6 @@ public class ApplicationCodesetService {
     private static final int UN_ARCHIVED = 0;
     private final GenericSpecification<ApplicationCodeset> genericSpecification;
 
-
-    /*public Page getPage(Pageable pageable){
-        GenericSpecification<ApplicationCodeset> genericSpecification = new GenericSpecification<ApplicationCodeset>();
-        Specification<ApplicationCodeset> specification = genericSpecification.findAll(0);
-
-        Page<ApplicationCodeset> page = applicationCodesetRepository.findAll(specification, pageable);
-        //HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-
-        return page;
-    }*/
-
     public List<ApplicationCodesetDTO> getAllApplicationCodeset(int active){
         Specification<ApplicationCodeset> applicationCodesetSpecification = genericSpecification.findAll(active);
         List<ApplicationCodeset> applicationCodesets = applicationCodesetRepository.findAll(applicationCodesetSpecification);
@@ -67,6 +56,7 @@ public class ApplicationCodesetService {
         final ApplicationCodeset applicationCodeset = applicationCodesetMapper.toApplicationCodeset(applicationCodesetDTO);
         applicationCodeset.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         applicationCodeset.setCode(UuidGenerator.getUuid());
+        applicationCodeset.setArchived(UN_ARCHIVED);
         return applicationCodesetRepository.save(applicationCodeset);
     }
 
@@ -95,7 +85,6 @@ public class ApplicationCodesetService {
         final ApplicationCodeset applicationCodeset = applicationCodesetMapper.toApplicationCodeset(applicationCodesetDTO);
         applicationCodeset.setId(id);
         applicationCodeset.setArchived(UN_ARCHIVED);
-        //applicationCodeset.setActive(ACTIVE);
         applicationCodeset.setModifiedBy(userService.getUserWithRoles().get().getUserName());
 
         return applicationCodesetRepository.save(applicationCodeset);
@@ -105,7 +94,6 @@ public class ApplicationCodesetService {
         Optional<ApplicationCodeset> applicationCodesetOptional = applicationCodesetRepository.findByIdAndAndArchived(id, UN_ARCHIVED);
         if(!applicationCodesetOptional.isPresent()) throw new EntityNotFoundException(ApplicationCodeset.class,"Display:",id+"");
         applicationCodesetOptional.get().setArchived(ARCHIVED);
-        //applicationCodesetOptional.get().setActive(IN_ACTIVE);
         applicationCodesetOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
 
         return applicationCodesetOptional.get().getArchived();
