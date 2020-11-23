@@ -95,7 +95,7 @@ public class ApplicationCodesetService {
         final ApplicationCodeset applicationCodeset = applicationCodesetMapper.toApplicationCodeset(applicationCodesetDTO);
         applicationCodeset.setId(id);
         applicationCodeset.setArchived(UN_ARCHIVED);
-        applicationCodeset.setActive(ACTIVE);
+        //applicationCodeset.setActive(ACTIVE);
         applicationCodeset.setModifiedBy(userService.getUserWithRoles().get().getUserName());
 
         return applicationCodesetRepository.save(applicationCodeset);
@@ -105,7 +105,7 @@ public class ApplicationCodesetService {
         Optional<ApplicationCodeset> applicationCodesetOptional = applicationCodesetRepository.findByIdAndAndArchived(id, UN_ARCHIVED);
         if(!applicationCodesetOptional.isPresent()) throw new EntityNotFoundException(ApplicationCodeset.class,"Display:",id+"");
         applicationCodesetOptional.get().setArchived(ARCHIVED);
-        applicationCodesetOptional.get().setActive(IN_ACTIVE);
+        //applicationCodesetOptional.get().setActive(IN_ACTIVE);
         applicationCodesetOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
 
         return applicationCodesetOptional.get().getArchived();
