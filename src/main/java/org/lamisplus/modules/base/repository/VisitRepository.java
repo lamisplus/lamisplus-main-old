@@ -21,5 +21,7 @@ public interface VisitRepository extends JpaRepository<Visit, Long>, JpaSpecific
 
     Optional<Visit> findTopByPatientIdAndDateVisitEndGreaterThanEqualOrderByDateVisitStartDesc(Long Patient_id, LocalDate Date);
 
+    List<Visit> findAllByVisitTypeIdAndArchived(Long visitTypeId, int archive);
+
     //Date Visit End Less than or equal to today
 }

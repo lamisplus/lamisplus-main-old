@@ -18,7 +18,10 @@ const DashboardPage = React.lazy(() => import("pages/DashboardPage"));
 const AdministrativeDashboard = React.lazy(() => import("components/Admin/HomePage"));
 /* New Page loading using easy loading */
 const PateintRegistationPage = React.lazy(() =>
-  import("components/Patient/PateintRegistationPage")
+    import("components/Patient/PateintRegistationPage")
+);
+const PatientRegistrationFormio = React.lazy(() =>
+    import("components/Patient/PatientRegistrationFormio")
 );
 const PateintUpdate= React.lazy(() => import("components/Patient/EditPatient"));
 const CheckInPage = React.lazy(() => import("components/CheckIn/CheckInPage"));
@@ -58,6 +61,7 @@ const ParentOrganizationUnit = React.lazy(() => import("components/Admin/Organiz
 /* End of Bootstrap configuration */
 const formDashboard = React.lazy(() => import('components/formBuilder/formDashboard'));
 const FormBuilder = React.lazy(() => import('components/formBuilder/FormBuilder'));
+const ReactSelect = React.lazy(() => import('components/formBuilder/ReactSelect'));
 const ViewForm = React.lazy(() => import('components/formBuilder/ViewForm'));
 const PivotTable = React.lazy(() => import('components/PivotTable/PivotTable'));
 const ReactPivot = React.lazy(() => import('components/PivotTable/ReactPivot'));
@@ -105,6 +109,9 @@ const RadiologyTestDetailPage = React.lazy(() => import("components/Laboratory/R
 const UsersPage = React.lazy(() => import("components/Users/UserPage"))
 const UserRegistration = React.lazy(() => import("components/Users/UserRegistration"))
 
+const roles = React.lazy(() => import("components/Roles/RolesPage"))
+const addRole = React.lazy(() => import("components/Roles/AddRole"))
+
 class Routes extends Component {
   render() {
     return (
@@ -122,6 +129,10 @@ class Routes extends Component {
                 exact
                 path="/patient-registration"
                 component={PateintRegistationPage}/>
+                <PrivateRoute
+                    exact
+                    path="/patient-registration-formio"
+                    component={PatientRegistrationFormio}/>
               <PrivateRoute
                 exact
                 path="/patient-update"
@@ -179,6 +190,7 @@ class Routes extends Component {
               />
               <PrivateRoute exact path="/form-dashboard" component={formDashboard} />
               <PrivateRoute exact path="/form-builder" component={FormBuilder} />
+                <PrivateRoute exact path="/select" component={ReactSelect} />
               <PrivateRoute exact path="/view-form" component={ViewForm} />
               <PrivateRoute exact path="/pivot" component={PivotTable} />
                 <PrivateRoute exact path="/react-pivot" component={ReactPivot} />
@@ -197,6 +209,10 @@ class Routes extends Component {
               <PrivateRoute exact path="/users" component={UsersPage} />
 
               <PrivateRoute exact path="/user-registration" component={UserRegistration} />
+
+              <PrivateRoute exact path="/roles" component={roles} />
+
+              <PrivateRoute exact path="/add-role" component={addRole} />
 
               <PrivateRoute exact path="/appointments" component={AppointmentPage} />
                 <PrivateRoute exact path="/admin" component={AdministrativeDashboard} />

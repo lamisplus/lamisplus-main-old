@@ -4,7 +4,8 @@ import org.lamisplus.modules.base.controller.vm.ManagedUserVM;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.domain.entity.User;
 import org.lamisplus.modules.base.repository.UserRepository;
-import org.lamisplus.modules.base.security.AuthoritiesConstants;
+import org.lamisplus.modules.base.security.RolesConstants;
+import org.lamisplus.modules.base.security.UserPrincipal;
 import org.lamisplus.modules.base.service.UserService;
 import org.lamisplus.modules.base.util.PaginationUtil;
 import org.slf4j.Logger;
@@ -15,10 +16,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -30,8 +33,6 @@ public class AccountController {
         }
     }
 
-    private final Logger log = LoggerFactory.getLogger(AccountController.class);
-
     private final UserRepository userRepository;
 
     private final UserService userService;
@@ -42,14 +43,15 @@ public class AccountController {
     }
 
     @GetMapping("/account")
-    public UserDTO getAccount(){
+    public UserDTO getAccount(Principal principal){
         return userService
-                .getUserWithAuthorities()
+                .getUserWithRoles()
                 .map(UserDTO::new)
                 .orElseThrow(() -> new AccountResourceException("User could not be found"));
     }
 
     @PostMapping("/register")
+    @PreAuthorize("hasAuthority('user_write')")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
         //Check Password Length
@@ -57,7 +59,7 @@ public class AccountController {
     }
 
     @GetMapping("/users")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasAuthority('user_read')")
     public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {
         final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);

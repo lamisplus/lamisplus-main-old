@@ -48,7 +48,7 @@ public class EncounterService {
 
 
     public List<EncounterDTO> getAllEncounters() {
-        Specification<Encounter> specification = genericSpecification.findAll();
+        Specification<Encounter> specification = genericSpecification.findAll(0);
         List<EncounterDTO> encounterDTOS = new ArrayList();
 
         List <Encounter> encounters = encounterRepository.findAll(specification);
@@ -100,7 +100,7 @@ public class EncounterService {
         }
         Encounter encounter = encounterMapper.toEncounter(encounterDTO);
         encounter.setId(id);
-        encounter.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        encounter.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         this.encounterRepository.save(encounter);
         return encounter;
     }
@@ -126,11 +126,11 @@ public class EncounterService {
         */
 
         Optional<Visit> visitOptional = this.visitRepository.findById(encounterDTO.getVisitId());
-        if(!visitOptional.isPresent())throw new EntityNotFoundException(Visit.class,"Visit Id", encounterDTO.getVisitId().toString());
+        if(!visitOptional.isPresent())throw new EntityNotFoundException(Visit.class,"Visit Id", encounterDTO.getVisitId()+"");
 
         final Encounter encounter = encounterMapper.toEncounter(encounterDTO);
         encounter.setUuid(UuidGenerator.getUuid());
-        encounter.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
+        encounter.setCreatedBy(userService.getUserWithRoles().get().getUserName());
 
         Encounter savedEncounter = this.encounterRepository.save(encounter);
 
@@ -157,7 +157,7 @@ public class EncounterService {
             throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
         }
         encounterOptional.get().setArchived(1);
-        encounterOptional.get().setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        encounterOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
 
         return encounterOptional.get().getArchived();
     }

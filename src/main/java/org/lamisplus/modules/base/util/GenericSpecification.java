@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -13,20 +14,14 @@ public class GenericSpecification<T>  {
     private static final int UN_ARCHIVED = 0;
     private static final int ACTIVE = 1;
 
-    public Specification<T> findAll() {
+    public Specification<T> findAll(int active) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
-            predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), 0)));
+            predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), UN_ARCHIVED)));
+            if(active != 0){
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("active"), ACTIVE)));
+            }
             criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
-            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
-        };
-    }
-
-    public Specification<T> findAllDistinctBy(String attributeName) {
-        return (root, criteriaQuery, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            //predicates.add(criteriaBuilder.equal(root.get("archived"), UN_ARCHIVED));
-            criteriaBuilder.createQuery().select(root.get(attributeName)).distinct(true);
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
     }
@@ -35,19 +30,21 @@ public class GenericSpecification<T>  {
         return (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("moduleType"), moduleType)));
-            predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), status)));
+            if(status > 0) {
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), status)));
+            }
             criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
     }
 
-    public Specification<T> findAllApplicationCodeset() {
+    /*public Specification<T> findAll(HashMap<String, Object> queryValue) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), UN_ARCHIVED)));
-            predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("active"), ACTIVE)));
+            predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("pate"), ACTIVE)));
             criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
-    }
+    }*/
 }

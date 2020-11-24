@@ -72,6 +72,13 @@ const ModalSample = (props) => {
     const sample_ordered_by = datasample.data ? datasample.data.sample_ordered_by : null ;
     const description = datasample.data ? datasample.data.description : null ;
     const lab_number = props.labnumber && props.labnumber["lab_number"]  ? props.labnumber["lab_number"] : null;
+    if(props.labnumber){
+        const lab_num = props.labnumber["lab_number"]
+    }else if(props.labnumber["lab_number"]){
+        const lab_num = props.labnumber["lab_number"]
+    }else{
+        const lab_num = null
+    }
     const labId = datasample.id
     const [loading, setLoading] = useState(false)
     const [visible, setVisible] = useState(true);

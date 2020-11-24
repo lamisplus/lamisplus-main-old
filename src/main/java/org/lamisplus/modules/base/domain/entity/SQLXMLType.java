@@ -9,7 +9,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+/**
+ * Store and retrieve a PostgreSQL "xml" column as a Java string.
+ */
 public class SQLXMLType implements org.hibernate.usertype.UserType {
+
     private final int[] sqlTypesSupported = new int[] { Types.VARCHAR };
 
     @Override
@@ -38,11 +42,18 @@ public class SQLXMLType implements org.hibernate.usertype.UserType {
 
     @Override
     public Object nullSafeGet(ResultSet resultSet, String[] strings, SharedSessionContractImplementor sharedSessionContractImplementor, Object o) throws HibernateException, SQLException {
-        return null;
+        assert(strings.length == 1);
+        String xmldoc = resultSet.getString( strings[0] );
+        return resultSet.wasNull() ? null : xmldoc;
     }
 
     @Override
     public void nullSafeSet(PreparedStatement preparedStatement, Object o, int i, SharedSessionContractImplementor sharedSessionContractImplementor) throws HibernateException, SQLException {
+        if (o == null) {
+            preparedStatement.setNull(i, Types.OTHER);
+        } else {
+            preparedStatement.setObject(i, o, Types.OTHER);
+        }
 
     }
 
@@ -64,8 +75,8 @@ public class SQLXMLType implements org.hibernate.usertype.UserType {
     }
 
     @Override
-    public Object assemble(Serializable serializable, Object o) throws HibernateException {
-        return null;
+    public Object assemble(Serializable cached, Object owner) throws HibernateException {
+        return (String) cached;
     }
 
     @Override

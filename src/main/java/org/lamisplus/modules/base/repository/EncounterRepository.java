@@ -1,5 +1,6 @@
 package org.lamisplus.modules.base.repository;
 
+import org.lamisplus.modules.base.domain.dto.EncounterDistinctDTO;
 import org.lamisplus.modules.base.domain.entity.Encounter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,12 +22,17 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
     List <Encounter> findAllByPatientIdAndFormCode(Long patientId, String FormCode, Pageable pageable);
 
     //New
-    Page<Encounter> findAllByPatientIdAndFormCode(Pageable pageable, Long patientId, String FormCode);
+    Page<Encounter> findAllByPatientIdAndFormCodeAndArchived(Pageable pageable, Long patientId, String FormCode, int Archived);
 
 
     Optional<Encounter> findByPatientIdAndProgramCodeAndFormCodeAndDateEncounter(Long patientId, String ProgramCode, String FormCode, LocalDate dateFncounter);
 
     List<Encounter> findByPatientId(Long PatientId);
+
+    //TODO: in progress...
+    @Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.EncounterDistinctDTO" +
+            "(e.patientId, e.formCode, e.programCode) FROM Encounter e WHERE e.patientId = ?1 and e.programCode = ?2")
+    List<EncounterDistinctDTO> findDistinctPatientIdAndProgramCode(Long patientId, String programCode);
 
     //List<PatientObservation> findByPatientAndFormCodeTitle(Patient patient, Long formCode, String title);
     Optional<Encounter> findFirstByPatientIdAndProgramCodeAndFormCodeOrderByDateEncounterDesc(Long patientId, String ProgramCode, String FormCode);

@@ -15,5 +15,11 @@ public interface FormRepository extends JpaRepository<Form, Long> , JpaSpecifica
     Optional<Form> findByIdAndProgramCode(Long formId, String programCode);
 
     List<Form> findAllByUsageCodeAndArchived(Integer usageCode, Integer archived);
+
+    //Optional<Form> findByName(String formName);
+
+   // Optional<Form> findByNameAndProgramCode(String name, String programCode);
+
+    Optional<Form> findByNameAndProgramCodeAndArchived(String name, String programCode, int unArchived);
 }
 

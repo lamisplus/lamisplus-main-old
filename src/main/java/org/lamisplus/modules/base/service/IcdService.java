@@ -49,7 +49,7 @@ public class IcdService {
     }
 
     public List<IcdDTO> getAllIcd() {
-        Specification<Icd> specification = genericSpecification.findAll();
+        Specification<Icd> specification = genericSpecification.findAll(0);
         List<IcdDTO> icdDTOList = new ArrayList();
         List <Icd> icdList = icdRepository.findAll(specification);
 

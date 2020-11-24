@@ -32,7 +32,7 @@ public class WardService {
     public List<WardDTO> getAllWards(){
         List<WardDTO> wardDTOS = new ArrayList<>();
         GenericSpecification<Ward> genericSpecification = new GenericSpecification<Ward>();
-        Specification<Ward> specification = genericSpecification.findAll();
+        Specification<Ward> specification = genericSpecification.findAll(0);
         List<Ward> wardList = wardRepository.findAll(specification);
 
         wardList.forEach(ward->{
@@ -48,7 +48,7 @@ public class WardService {
         if (wardOptional.isPresent()) throw new RecordExistException(Ward.class,"Name:",wardDTO.getName());
         final Ward ward = wardMapper.toWard(wardDTO);
         log.info("ward is.. "+ward);
-        ward.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
+        ward.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         return wardRepository.save(ward);
     }
 
@@ -66,7 +66,7 @@ public class WardService {
         final Ward ward = wardMapper.toWard(wardDTO);
         ward.setId(id);
         ward.setUuid(wardOptional.get().getUuid());
-        ward.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        ward.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return wardRepository.save(ward);
     }
 
@@ -74,7 +74,7 @@ public class WardService {
         Optional<Ward> wardOptional = wardRepository.findById(id);
         if(!wardOptional.isPresent() || wardOptional.get().getArchived() == 1) throw new EntityNotFoundException(Ward.class,"Id:",id+"");
         wardOptional.get().setArchived(1);
-        wardOptional.get().setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        wardOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return wardOptional.get().getArchived();
     }
 

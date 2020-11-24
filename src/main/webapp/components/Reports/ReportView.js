@@ -1,6 +1,6 @@
 import React, {useRef, useEffect, useState} from 'react';
 import Page from 'components/Page';
-import {Errors, Form } from 'react-formio';
+import {Form } from 'react-formio';
 import {Card,CardContent,} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
@@ -8,13 +8,6 @@ import {fetchService} from '../../actions/formBuilder'
 import {fetchAll, generateReport} from '../../actions/report';
 import MatButton from '@material-ui/core/Button';
 import { TiArrowBack } from "react-icons/ti";
-import {
-    FormGroup,
-    Input,
-    Label,
-    Col,
-    Row,
-} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import _ from 'lodash';
 
@@ -56,6 +49,9 @@ const GenerateReport = props => {
         let formattedData = [];
         _.forOwn(data, function(value, key) {
             if(key !== "submit") {
+                if(key == "reportType") {
+                    newdata2['reportType']=value;
+                }
                 formattedData.push({name: key, value: value})
             }
         } );
@@ -78,7 +74,6 @@ const GenerateReport = props => {
                             <TiArrowBack /> &nbsp; back
                         </MatButton>
                     </Link>
-                    <h4>Query Parameter Form</h4>
                     { form2 ?
                         <Form form={row.parameterResourceObject} {...props} onSubmit={(submission) => {
                             return submitForm(submission);

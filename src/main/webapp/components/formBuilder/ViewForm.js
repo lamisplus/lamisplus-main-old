@@ -9,15 +9,25 @@ import {fetchByHospitalNumber} from '../../actions/patients'
 import MatButton from '@material-ui/core/Button';
 import { TiArrowBack } from "react-icons/ti";
 import { authHeader } from '_helpers/auth-header';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "react-widgets/dist/css/react-widgets.css";
 import {
     FormGroup,
     Input,
     Label,
     Col,
     Row,
-    Button
+     Spinner
 } from 'reactstrap';
 import {Link} from 'react-router-dom';
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import Checkbox from '@material-ui/core/Checkbox';
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import TextField from "@material-ui/core/TextField";
+import axios from 'axios';
+import {url} from '../../api';
 
 const useStyles = makeStyles(theme => ({
     root2: {
@@ -29,6 +39,12 @@ const useStyles = makeStyles(theme => ({
 
 const Update = props => {
     const [res, setRes] = React.useState("");
+    const [loading, setLoading] = React.useState(true);
+    const [formPrecedenceList, setFormPrecedenceList] = useState([{title: 'Loading', value: ''}]);
+    const [disabledCheckBox, setdisabledCheckBox] = useState(true)
+    const [formPrecedence, setformPrecedence] = useState([]);
+    const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+    const checkedIcon = <CheckBoxIcon fontSize="small" />;
     const [displayType, setDisplayType] = React.useState("");
     const [formCode, setformCode] = React.useState();
     const [form2, setform2] = React.useState();
@@ -37,7 +53,26 @@ const Update = props => {
     const submission = props.patient;
     const textAreaRef = useRef(null);
 
-    const row = props.location.row;
+    const row =  props.location.state && props.location.state.row ? props.location.state.row : "";
+
+    useEffect(() => {
+        async function fetchForms() {
+            try {
+                const response = await axios(url + "forms");
+                const body = response.data;
+                const data = body.map(({ name, code }) => ({ title: name, value: code }));
+                setFormPrecedenceList(data);
+                body !== null ? setdisabledCheckBox(false) : setdisabledCheckBox(true)
+                setLoading(false);
+                setformPrecedence(row.formPrecedence && row.formPrecedence.formCode ? row.formPrecedence.formCode.map(x =>data.filter(f => f.value === x)) : [])
+                console.log(row.formPrecedence && row.formPrecedence.formCode ? row.formPrecedence.formCode.map(x => data.filter(f => f.value === x)) : [])
+                console.log('formp')
+            } catch (error) {
+                setLoading(false);
+            }
+        }
+        fetchForms();
+    }, []);
 
     useEffect (() => {
         setformCode(row.code);
@@ -48,12 +83,25 @@ const Update = props => {
         props.fetchPatientByHospitalNumber('6768595', null, null)
     }, [])
 
-    const handleSubmit = () => {
+    const handleSubmit = e =>  {
+        if(formPrecedence.length > 0){
+            form2["formPrecedence"] = {formCode: formPrecedence.map(x => x.value) ? formPrecedence.map(x => x.value)  : []}
+        } else {
+            form2["formPrecedence"] = null;
+        }
         props.updateForm(form2.id, form2);
     }
 
+  //   if(loading){
+  //       return (<span className="text-center">
+  //   <Spinner style={{ width: "3rem", height: "3rem" }} type="grow" />{" "}
+  //           Loading form...
+  // </span>);
+  //   }
+
     return (
         <Page title="Form Renderer" >
+            <ToastContainer autoClose={3000} hideProgressBar />
             <Card >
                 <CardContent>
                     <Link to="/admin">
@@ -97,7 +145,7 @@ const Update = props => {
             <hr></hr>
             <Card >
                 <CardContent>
-                    <h4>Edit Form</h4>
+                    <h4>Edit Form - {row ? row.name : ""}</h4>
                     <Row>
                         <Col md={4}> <FormGroup>
                             <Label class="sr-only">Display Type</Label>
@@ -105,7 +153,40 @@ const Update = props => {
                                 <option value="form">Form</option>
                                 <option value="wizard">Wizard</option></Input>
                         </FormGroup></Col>
-
+                        <Col md={4}> <FormGroup>
+                            <Label for="formPrecedence">Form Precedence</Label>
+                            <Autocomplete
+                                multiple
+                                id="formCode"
+                                size="small"
+                                options={formPrecedenceList !==null ? formPrecedenceList : "LOADING"}
+                                disableCloseOnSelect
+                                //defaultValue={formPrecedence}
+                                defaultValue={formPrecedence}
+                                getOptionLabel={(option) => option.title}
+                                onChange={(e, i) => {
+                                    setformPrecedence(i);
+                                }}
+                                renderOption={(option, { selected }) => (
+                                    <React.Fragment>
+                                        { disabledCheckBox===false ?
+                                            <Checkbox
+                                                icon={icon}
+                                                checkedIcon={checkedIcon}
+                                                style={{marginRight: 8}}
+                                                checked={selected}
+                                            />
+                                            : ""
+                                        }
+                                        {option.title}
+                                    </React.Fragment>
+                                )}
+                                style={{ width: "auto"}}
+                                renderInput={(params) => (
+                                    <TextField {...params} variant="outlined" label="Form Order" placeholder="form order" />
+                                )}
+                            />
+                        </FormGroup></Col>
                         <Col md={2}> <FormGroup>
                             <label class="sr-only" ></label>
                             <button type="button"  class="form-control btn btn-primary mt-4" onClick={() => handleSubmit()}>Update Form</button>
