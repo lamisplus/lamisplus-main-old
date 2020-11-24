@@ -8,4 +8,8 @@ import java.util.Optional;
 
 public interface OrganisationUnitRepository extends JpaRepository<OrganisationUnit, Long> {
     List<OrganisationUnit> findOrganisationUnitByParentOrganisationUnitId(Long id);
+
+    List<OrganisationUnit> findAllByParentOrganisationUnitIdAndOrganisationUnitLevelId(Long parentOrgUnitId, Long orgUnitLevelId);
+
+    List<OrganisationUnit> findAllByOrganisationUnitLevelId(Long id);
 }

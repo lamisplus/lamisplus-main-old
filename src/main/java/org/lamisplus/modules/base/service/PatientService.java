@@ -477,35 +477,38 @@ public class PatientService {
         }
         Program program = optionalProgram.get();
         List <Form> forms = new ArrayList<>();
-        HashSet <String>formCodeSet = new HashSet<>();
+        HashSet <String> filledFormSet = new HashSet<>();
+        HashSet <String> formCodeSet = new HashSet<>();
 
         //Check for filled forms by the patient in that program
         encounterRepository.findDistinctPatientIdAndProgramCode(patientId, programCode).forEach(encounterDistinctDTO -> {
-            formCodeSet.add(encounterDistinctDTO.getFormCode());
+            filledFormSet.add(encounterDistinctDTO.getFormCode());
         });
 
-        if(formCodeSet.size() > 0) {
+        if(filledFormSet.size() > 0) {
             program.getFormsByProgram().forEach(form -> {
-                //if form has been filled
-                if (formCodeSet.remove(form.getCode())) {
+                //if form has been filled, then return
+                if (filledFormSet.contains(form.getCode())) {
+                   // filledFormSet.add(form.getCode());
                     formCodeSet.add(form.getCode());
                     return;
-                }else {
-                    //Check for formPrecedence
-                    if (form.getFormPrecedence() != null) {
-                        getFormPrecedence(form).forEach(formPrecedenceCode -> {
-                            //if precedence form has been filled
-                            if (formCodeSet.remove(formPrecedenceCode)) {
-                                formCodeSet.add(formPrecedenceCode);
-                                return;
-                            }else{
-                                formCodeSet.add(formPrecedenceCode);
-                            }
-                        });
-                    } else {
-                        formCodeSet.add(form.getCode());
-                    }
                 }
+                    //form not filled
+                    //Check for formPrecedence
+                if(form.getFormPrecedence() == null){
+                    //form doesnt have precedence, so return form
+                    formCodeSet.add(form.getCode());
+                    return;
+                }
+
+
+                Set<String> formPrecedence = getFormPrecedence(form);
+                //if all formPrecedence have been filled, return form.
+                if(filledFormSet.containsAll(formPrecedence)){
+                    formCodeSet.add(form.getCode());
+                    return;
+                }
+
             });
 
             formCodeSet.forEach(formCode ->{
