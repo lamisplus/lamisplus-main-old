@@ -118,9 +118,10 @@ const useStyles = makeStyles({
         { 
             //const testOrders = fetchTestOrders.length >0 ? fetchTestOrders:{}
             const getNewTestOrder = testOrders.find(x => x.data!==null && x.data.lab_test_group === getValue)
-            setFetchTestOrders([getNewTestOrder]) 
+            console.log(getNewTestOrder)
+            //testOrders =[...getNewTestOrder] 
         }else{
-            setFetchTestOrders([...sampleCollections])
+            //testOrders = testOrders
         }
     };
     //This is function to check for the status of each collection to display on the tablist below 
