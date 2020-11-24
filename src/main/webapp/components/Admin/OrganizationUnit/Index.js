@@ -6,7 +6,6 @@ import MatButton from '@material-ui/core/Button'
 import 'react-datepicker/dist/react-datepicker.css'
 import { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
-import { TiArrowBack} from 'react-icons/ti';
 import 'react-widgets/dist/css/react-widgets.css'
 //Date Picker
 import Page from '../../Page'
@@ -20,7 +19,9 @@ import CreateOrganizationUnit from "./CreateOrganizationUnit";
 import CreatOrgUnitByUpload from "./CreatOrgUnitByUpload";
 import { useSelector, useDispatch } from 'react-redux';
 import {  fetchAllOrganizationalUnit, Delete } from '../../../actions/organizationalUnit';
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "react-widgets/dist/css/react-widgets.css";
 
 
 const useStyles = makeStyles({
@@ -76,7 +77,7 @@ const useStyles = makeStyles({
 
 return (
     <Page >
-      
+      <ToastContainer autoClose={3000} hideProgressBar />
         <Row>
             <Col>
               <h1>Organization Unit Manager

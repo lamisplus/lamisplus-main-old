@@ -60,9 +60,8 @@ const PatientSearch = (props) => {
             <Link
               to={{
                 pathname: "/prescriptions",
-                form: prescription,
-                patientName:
-                  prescription.firstName + " " + prescription.lastName,
+                state: prescription,
+                patientName: prescription.firstName + " " + prescription.lastName,
                 encounterId: prescription.encounterId,
               }}
               style={{ cursor: "pointer", color: "blue", fontStyle: "bold" }}>
@@ -75,6 +74,7 @@ const PatientSearch = (props) => {
           ),
         }))}
         options={{
+          pageSizeOptions: [50,100,150,200],
           actionsColumnIndex: -1,
           headerStyle: {
             backgroundColor: "#9F9FA5",

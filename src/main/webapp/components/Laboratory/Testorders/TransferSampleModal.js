@@ -75,9 +75,9 @@ const ModalSampleTransfer = (props) => {
         async function getCharacters() {
             try {
                 const response = await axios(
-                    url + "sample-manifests/pcrlab"
+                    url + "organisation-units/organisation-unit-level/7"
                 );
-                const body = response.data;
+                const body = response.data && response.data !==null ? response.data : {};
                 
                 setOptionPcr(
                      body.map(({ name, id }) => ({ title: name, value: id }))
@@ -90,7 +90,6 @@ const ModalSampleTransfer = (props) => {
 
     const handleOtherFieldInputChange = e => {
         setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
-        console.log(otherfields)
     }
 
 
@@ -168,7 +167,6 @@ const ModalSampleTransfer = (props) => {
                                         </Alert>
                                     </Col>
                                     <Col md={6}>
-                                        {/* <p>Sample Type {datasample.data.description}  </p> */}
                                           <FormGroup>
                                               <Label for='maritalStatus'>Date Transfer</Label>
                                           
