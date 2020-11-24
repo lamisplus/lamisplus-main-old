@@ -92,8 +92,11 @@ public class VisitService {
         return visitOptional.get().getArchived();
     }
 
-    public int getVisitType(Long visitTypeId){
-        List<Visit> visits = visitRepository.findAllByVisitTypeIdAndArchived(visitTypeId, 0);
-        return visits.size();
+    public Long getVisitType(){
+        Long count = visitRepository.countByVisitTypeIdAndArchived(239L, 0);//Unbooked
+        count = count + visitRepository.countByVisitTypeIdAndArchived(238L, 0); //booked
+        count = count + visitRepository.countByVisitTypeIdAndArchived(373L, 0); //Emergency
+
+        return count;
     }
 }

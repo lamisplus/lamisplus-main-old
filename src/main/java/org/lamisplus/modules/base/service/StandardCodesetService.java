@@ -52,7 +52,7 @@ public class StandardCodesetService {
         if (standardCodesetOptional.isPresent()) throw new RecordExistException(StandardCodeset.class, "Id", standardCodesetDTO.getId() + "");
         final StandardCodeset standardCodeset = standardCodesetMapper.toStandardCodeset(standardCodesetDTO);
 
-        standardCodeset.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
+        //standardCodeset.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
         standardCodeset.setArchived(UN_ARCHIVED);
         return standardCodesetRepository.save(standardCodeset);
     }
@@ -98,7 +98,7 @@ public class StandardCodesetService {
         final StandardCodeset standardCodeset = standardCodesetMapper.toStandardCodeset(standardCodesetDTO);
 
         standardCodeset.setId(id);
-        standardCodeset.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        //standardCodeset.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
         standardCodeset.setArchived(UN_ARCHIVED);
         return standardCodesetRepository.save(standardCodeset);
     }
@@ -108,7 +108,7 @@ public class StandardCodesetService {
         if (!standardCodesetOptional.isPresent()) throw new EntityNotFoundException(StandardCodeset.class, "Id", id + "");
         StandardCodeset standardCodeset = standardCodesetOptional.get();
         standardCodeset.setArchived(ARCHIVED);
-        standardCodeset.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        //standardCodeset.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
         standardCodesetRepository.save(standardCodeset);
 
         return ARCHIVED;
