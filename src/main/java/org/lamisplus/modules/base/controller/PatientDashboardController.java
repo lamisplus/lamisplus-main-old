@@ -29,11 +29,12 @@ public class PatientDashboardController {
 
     @GetMapping("/{chartType}/{chartName}")
     public ResponseEntity<Object> generateColumnChart(@PathVariable String chartType, @PathVariable String chartName) {
-        if (chartName.equalsIgnoreCase("deathRate")) {
-            return ResponseEntity.ok(patientDashboardService.getDeathRateColumnChart());
-        } else if (chartName.equalsIgnoreCase("birthRate")) {
-            return ResponseEntity.ok(patientDashboardService.getBirthRateColumnChart());
-        }
-        else throw new RuntimeException("Not found");
+        if (chartType.equalsIgnoreCase("column")) {
+            if (chartName.equalsIgnoreCase("deathRate")) {
+                return ResponseEntity.ok(patientDashboardService.getDeathRateColumnChart());
+            } else if (chartName.equalsIgnoreCase("birthRate")) {
+                return ResponseEntity.ok(patientDashboardService.getBirthRateColumnChart());
+            } else throw new RuntimeException("Not found");
+        } else throw new RuntimeException("Not found");
     }
 }

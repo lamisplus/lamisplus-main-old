@@ -54,4 +54,11 @@ public class OrganisationUnitService {
         return organisationUnitRepository.findAll();
     }
 
+    public List<OrganisationUnit> getOrganisationUnitByParentOrganisationUnitIdAndOrganisationUnitLevelId(Long parentOrgUnitId, Long orgUnitLevelId) {
+        return organisationUnitRepository.findAllByParentOrganisationUnitIdAndOrganisationUnitLevelId(parentOrgUnitId, orgUnitLevelId);
+    }
+
+    public List<OrganisationUnit> getOrganisationUnitByOrganisationUnitLevelId(Long id) {
+        return organisationUnitRepository.findAllByOrganisationUnitLevelId(id);
+    }
 }

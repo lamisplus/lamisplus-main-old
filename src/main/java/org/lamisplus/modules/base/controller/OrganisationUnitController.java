@@ -51,6 +51,17 @@ public class OrganisationUnitController {
         return ResponseEntity.ok(this.organisationUnitService.getOrganisationUnitByParentOrganisationUnitId(id));
     }
 
+    @GetMapping ("/{parent-org-unit-id}/{org-unit-level-id}")
+    public  ResponseEntity<List<OrganisationUnit>>  getOrganisationUnitByParentOrganisationUnitIdAndOrganisationUnitLevelId(
+            @PathVariable Long parentOrgUnitId, @PathVariable Long orgUnitLevelId) {
+        return ResponseEntity.ok(this.organisationUnitService.getOrganisationUnitByParentOrganisationUnitIdAndOrganisationUnitLevelId(parentOrgUnitId, orgUnitLevelId));
+    }
+
+    @GetMapping ("/organisation-unit-level/{id}")
+    public  ResponseEntity<List<OrganisationUnit>>  getOrganisationUnitByOrganisationUnitLevelId(@PathVariable Long id) {
+        return ResponseEntity.ok(this.organisationUnitService.getOrganisationUnitByOrganisationUnitLevelId(id));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
         return ResponseEntity.ok(organisationUnitService.delete(id));

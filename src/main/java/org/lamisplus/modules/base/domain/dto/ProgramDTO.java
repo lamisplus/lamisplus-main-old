@@ -9,4 +9,6 @@ public class ProgramDTO {
 
     private String name;
 
+    private Integer archived;
+
 }
