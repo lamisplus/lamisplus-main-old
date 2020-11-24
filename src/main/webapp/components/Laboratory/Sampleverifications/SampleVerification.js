@@ -21,7 +21,7 @@ import { Spinner } from 'reactstrap';
 import { Badge } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
-import ModalSample from '../Testorders/CollectSampleModal';
+import ModalSample from './RecollectSample';
 
 
 
@@ -51,7 +51,7 @@ const SampleVerification = (props) => {
     const newSample =  sampleCollections.filter(function(sample) {
       return (sample.data!==null && sample.data.lab_test_order_status !==0);
     });
-
+    console.log(newSample[0].data.lab_number)
     const [fetchTestOrders, setFetchTestOrders] = useState(newSample)
 
     useEffect(() => {
@@ -94,6 +94,7 @@ const SampleVerification = (props) => {
         const toggleModal3 = () => setModal3(!modal3)
         const [collectModal, setcollectModal] = useState([])//to collect array of datas into the modal and pass it as props
         const [labNum, setlabNum] = useState({lab_number:""})
+        
         console.log(testOrders && testOrders[0]?testOrders[0].data.lab_number : "" )
         let  labNumber = "" //check if that key exist in the array
             testOrders.forEach(function(value, index, array) {
@@ -294,7 +295,7 @@ return (
             </Col>
         </Row>
       <ModalSampleVerify modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
-      <ModalSample modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal}  labnumber={labNumber!=="" ? labNumber : labNum.lab_number}/>
+      <ModalSample modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal}  labnumber={newSample[0].data.lab_number}/>
     </Page>
   )
   
