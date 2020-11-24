@@ -22,7 +22,7 @@ import { Badge } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import ModalSample from './RecollectSample';
-
+import ModalViewResult from './../TestResult/ViewResult'
 
 
 const useStyles = makeStyles({
@@ -172,6 +172,10 @@ const SampleVerification = (props) => {
                         <MenuItem onSelect={() => handleRecollectSample(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Re-collect Sample</MenuItem>
                           :""
                         } 
+                        { e.data.lab_test_order_status===5 ?
+                        <MenuItem onSelect={() => viewresult(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>
+                          :""
+                        }
                     </MenuList>
             </Menu>
           )
@@ -296,6 +300,7 @@ return (
         </Row>
       <ModalSampleVerify modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
       <ModalSample modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal}  labnumber={newSample[0].data.lab_number}/>
+      <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />    
     </Page>
   )
   
