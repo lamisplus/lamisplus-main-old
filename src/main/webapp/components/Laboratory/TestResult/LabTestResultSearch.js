@@ -26,7 +26,7 @@ const PatientSearch = (props) => {
         const dataSamples = value.formDataObj 
         for(var i=0; i<dataSamples.length; i++){
             for (var key in dataSamples[i]) {
-              if (dataSamples[i][key]!==null && dataSamples[i][key].lab_test_order_status >=3 )
+              if (dataSamples[i][key]!==null && (dataSamples[i][key].lab_test_order_status ==="3" || dataSamples[i][key].lab_test_order_status ===5) )
                 collectedSamples.push(value)
             }            
           }
