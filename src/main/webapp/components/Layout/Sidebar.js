@@ -19,6 +19,7 @@ const navItems = [
   { to: '/dashboard', name: 'Dashboard', exact: true, Icon: MdDashboard },
   { to: '/patients', name: 'Find Patient', exact: false, Icon: FaUserPlus },
   { to: '/laboratory', name: 'Laboratory', exact: false, Icon: GiTestTubes },
+  { to: '/radiology', name: 'Radiology', exact: false, Icon: GiTestTubes },
   { to: '/pharmacy', name: 'Pharmacy', exact: false, Icon: GiMedicines },
   { to: '/appointments', name: 'Appointments', exact: false, Icon: MdGraphicEq },
   { to: '/report', name: 'Reports', exact: false, Icon: FaListUl },
