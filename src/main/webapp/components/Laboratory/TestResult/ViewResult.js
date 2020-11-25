@@ -97,7 +97,7 @@ const ModalViewResult = (props) => {
                     
                                 </Row>
                             <br/>
-                            <MatButton
+                            {/* <MatButton
                                 type='submit'
                                 variant='contained'
                                 color='primary'
@@ -106,7 +106,7 @@ const ModalViewResult = (props) => {
                                 
                             >
                                 Print 
-                            </MatButton>
+                            </MatButton> */}
                             <MatButton
                               variant='contained'
                               color='default'

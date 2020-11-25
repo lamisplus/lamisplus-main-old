@@ -82,7 +82,7 @@ public class UserService {
         newUser.setPhoneNumber(userDTO.getPhoneNumber());
         newUser.setGender(userDTO.getGender());
         newUser.setPassword(encryptedPassword);
-        newUser.setPersonByPersonId(newPerson);
+        newUser.setPerson(newPerson);
         newUser.setPersonId(newPerson.getId());
         if (userDTO.getRoles() == null || userDTO.getRoles().isEmpty()) {
             Set<Role> roles = new HashSet<>();

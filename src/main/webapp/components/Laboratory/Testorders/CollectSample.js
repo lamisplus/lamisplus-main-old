@@ -23,6 +23,7 @@ import { Badge } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import ModalViewResult from './../TestResult/ViewResult';
+import {authentication} from '../../../_services/authentication';
 
 
 
@@ -118,9 +119,10 @@ const useStyles = makeStyles({
         { 
             //const testOrders = fetchTestOrders.length >0 ? fetchTestOrders:{}
             const getNewTestOrder = testOrders.find(x => x.data!==null && x.data.lab_test_group === getValue)
-            setFetchTestOrders([getNewTestOrder]) 
+            console.log(getNewTestOrder)
+            //testOrders =[...getNewTestOrder] 
         }else{
-            setFetchTestOrders([...sampleCollections])
+            //testOrders = testOrders
         }
     };
     //This is function to check for the status of each collection to display on the tablist below 
@@ -254,8 +256,8 @@ return (
                                                     <th>Test</th>
                                                     <th>Sample Type</th>
                                                     <th>Date Requested</th>
-                                                    <th>Status</th>
-                                                    <th></th>
+                                                    <th >Status</th>
+                                                    <th ></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -266,7 +268,7 @@ return (
                                                       <td className={classes.td}>{row.data.sample_type==="" ? " ":row.data.sample_type}</td>
                                                       <td className={classes.td}> {encounterDate} </td>
                                                       <td className={classes.td}>{sampleStatus(row.data.lab_test_order_status)}  </td>
-                                                      <td className={classes.td}>{sampleAction(row,encounterDate)}</td>
+                                                      <td className={classes.td} hidden={!authentication.userHasRole(["laboratory_write"])} >{sampleAction(row,encounterDate)}</td>
                                                     </tr>
                                                     :
                                                     <tr></tr>

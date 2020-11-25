@@ -42,9 +42,15 @@ public class User implements Serializable {
     private String resetKey;
     private Integer uploaded;
     private Time timeUploaded;
+
+    @Basic
+    @Column(name = "person_id")
     private Long personId;
+
     @OneToOne
-    private Person personByPersonId;
+    @JoinColumn(name = "person_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private Person person;
+
     @OneToMany(mappedBy = "clinicianByUserId")
     private List <ClinicianPatient> clinicianPatientByUser = new ArrayList<>();
 

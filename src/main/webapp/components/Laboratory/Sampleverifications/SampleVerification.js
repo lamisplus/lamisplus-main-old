@@ -21,8 +21,9 @@ import { Spinner } from 'reactstrap';
 import { Badge } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
-import ModalSample from '../Testorders/CollectSampleModal';
-
+import ModalSample from './RecollectSample';
+import ModalViewResult from './../TestResult/ViewResult'
+import {authentication} from '../../../_services/authentication';
 
 
 const useStyles = makeStyles({
@@ -51,7 +52,7 @@ const SampleVerification = (props) => {
     const newSample =  sampleCollections.filter(function(sample) {
       return (sample.data!==null && sample.data.lab_test_order_status !==0);
     });
-
+    console.log(newSample[0].data.lab_number)
     const [fetchTestOrders, setFetchTestOrders] = useState(newSample)
 
     useEffect(() => {
@@ -94,11 +95,13 @@ const SampleVerification = (props) => {
         const toggleModal3 = () => setModal3(!modal3)
         const [collectModal, setcollectModal] = useState([])//to collect array of datas into the modal and pass it as props
         const [labNum, setlabNum] = useState({lab_number:""})
-
+        
+        console.log(testOrders && testOrders[0]?testOrders[0].data.lab_number : "" )
         let  labNumber = "" //check if that key exist in the array
             testOrders.forEach(function(value, index, array) {
                 if(value['data']!==null &&  value['data'].hasOwnProperty("lab_number")){
                     labNumber = value['data'].lab_number
+                    //setlabNum()
                 } 
               
             });
@@ -166,10 +169,14 @@ const SampleVerification = (props) => {
                             <MenuItem onSelect={() => handleVerifySample(e)}><GoChecklist size="15" style={{color: '#3F51B5'}}/>{" "}Verify Sample</MenuItem>
                             :""
                         } 
-                        { e.data.lab_test_order_status==="3" ?
+                        { e.data.lab_test_order_status==="4" ?
                         <MenuItem onSelect={() => handleRecollectSample(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Re-collect Sample</MenuItem>
                           :""
                         } 
+                        { e.data.lab_test_order_status===5 ?
+                        <MenuItem onSelect={() => viewresult(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>
+                          :""
+                        }
                     </MenuList>
             </Menu>
           )
@@ -274,7 +281,7 @@ return (
                                                       <td className={classes.td}>{row.data.sample_type==="" ? " ":row.data.sample_type}</td>
                                                       <td className={classes.td}> {encounterDate} </td>
                                                       <td className={classes.td}>{sampleStatus(row.data.lab_test_order_status)} </td>
-                                                      <td className={classes.td}>{sampleAction(row)}</td>
+                                                      <td className={classes.td} hidden={!authentication.userHasRole(["laboratory_write"])}>{sampleAction(row)}</td>
                                                     </tr>
                                                   ))
                                                   :<p> <Spinner color="primary" /> Loading Please Wait</p>
@@ -293,7 +300,8 @@ return (
             </Col>
         </Row>
       <ModalSampleVerify modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
-      <ModalSample modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal}  labnumber={labNumber}/>
+      <ModalSample modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal}  labnumber={newSample[0].data.lab_number}/>
+      <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />    
     </Page>
   )
   

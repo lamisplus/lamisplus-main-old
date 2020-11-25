@@ -25,7 +25,10 @@ const RolePage = (props) => {
       <Card className={classes.cardBottom}>
         <CardContent>
           <Title>
-          <Link to="/admin">
+          <Link to ={{
+            pathname: "/admin",
+            state: 'users'
+          }}>
           <Button
             variant="contained"
             color="primary"
