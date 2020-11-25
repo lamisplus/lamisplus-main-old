@@ -1,7 +1,8 @@
-import React, {useEffect} from 'react';
+import React from 'react';
+import useEffect from 'react';
 import MaterialTable from 'material-table';
 import { connect } from "react-redux";
-import { fetchAll, deleteGlobalVariable} from "actions/globalVariable";
+import { fetchAll, deactivateProgram} from "actions/programManager";
 import {
     Card,
     CardBody, Modal, ModalBody, ModalFooter, ModalHeader, Spinner
@@ -11,27 +12,28 @@ import Typography from "@material-ui/core/Typography";
 import { Link } from 'react-router-dom';
 import Button from "@material-ui/core/Button";
 import { FaPlus } from "react-icons/fa";
-// import NewGlobalVariable from "./NewGlobalVariable";
+import NewProgramManager from "./NewProgramManager";
 import {toast} from "react-toastify";
 import SaveIcon from "@material-ui/icons/Delete";
 import CancelIcon from "@material-ui/icons/Cancel";
 import {makeStyles} from "@material-ui/core/styles";
+;
 
 const useStyles = makeStyles(theme => ({
     button: {
         margin: theme.spacing(1)
     }
 }))
-const GlobalVariableSearch = (props) => {
+const ProgramManagerSearch = (props) => {
     const [loading, setLoading] = React.useState(true);
     const [showModal, setShowModal] = React.useState(false);
     const [deleting, setDeleting] = React.useState(false);
-    const [currentGlobalVariable, setCurrentGlobalVariable] = React.useState(null);
+    const [currentCurrentProgram, setcurrentCurrentProgram] = React.useState(null);
     const [showDeleteModal, setShowDeleteModal] = React.useState(false);
     const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal)
     const toggleModal = () => setShowModal(!showModal)
     const classes = useStyles()
-    const loadGlobalVariable = () => {
+    const loadProgramManager = () => {
         const onSuccess = () => {
             setLoading(false);
         };
@@ -41,16 +43,16 @@ const GlobalVariableSearch = (props) => {
         props.fetchAll(onSuccess, onError);
     }
     useEffect(() => {
-        loadGlobalVariable()
+        loadProgramManager()
     }, []); //componentDidMount
 
     const openGlobalVariable = (row) => {
-        setCurrentGlobalVariable(row);
+        setcurrentCurrentProgram(row);
         toggleModal();
     }
 
-    const deleteGlobalVariable = (row) => {
-        setCurrentGlobalVariable(row);
+    const deactivateProgram = (row) => {
+        setcurrentCurrentProgram(row);
         toggleDeleteModal();
     }
 
@@ -60,7 +62,7 @@ const GlobalVariableSearch = (props) => {
             setDeleting(false);
             toggleDeleteModal();
             toast.success("Global variable deleted successfully!");
-            loadGlobalVariable();
+            loadProgramManager();
         };
         const onError = () => {
             setDeleting(false);
@@ -76,7 +78,7 @@ const GlobalVariableSearch = (props) => {
                     <Link color="inherit" to={{pathname: "/admin"}} >
                         Admin
                     </Link>
-                    <Typography color="textPrimary">Global Variable</Typography>
+                    <Typography color="textPrimary">Program Manager</Typography>
                 </Breadcrumbs>
                 <br/>
                 <div className={"d-flex justify-content-end pb-2"}>
@@ -84,9 +86,8 @@ const GlobalVariableSearch = (props) => {
                         variant="contained"
                         color="primary"
                         startIcon={<FaPlus />}
-                        onClick={() => openGlobalVariable(null)}
-                    >
-                        <span style={{textTransform: 'capitalize'}}>Add Global Variable</span>
+                        onClick={() => openGlobalVariable(null)}>
+                        <span style={{textTransform: 'capitalize'}}>Add New Program</span>
                     </Button>
 
                 </div>
@@ -114,7 +115,7 @@ const GlobalVariableSearch = (props) => {
                             icon: 'delete',
                             iconProps: {color: 'primary'},
                             tooltip: 'Delete Global Variable',
-                            onClick: (event, rowData) => deleteGlobalVariable(rowData)
+                            onClick: (event, rowData) => deactivateProgram(rowData)
                         }
                     ]}
                     //overriding action menu with props.actions
@@ -136,9 +137,9 @@ const GlobalVariableSearch = (props) => {
                 />
             </CardBody>
 
-            {/*<NewGlobalVariable toggleModal={toggleModal} showModal={showModal} loadGlobalVariable={loadGlobalVariable} formData={currentGlobalVariable}/>*/}
+            <NewProgramManager toggleModal={toggleModal} showModal={showModal} loadProgramManager={loadProgramManager} formData={currentCurrentProgram}/>
             <Modal isOpen={showDeleteModal} toggle={toggleDeleteModal} >
-                <ModalHeader toggle={toggleDeleteModal}> Delete Global Variable - {currentGlobalVariable && currentGlobalVariable.name ? currentGlobalVariable.name : ""} </ModalHeader>
+                <ModalHeader toggle={toggleDeleteModal}> Deactivate and Activate Program - {currentCurrentProgram && currentCurrentProgram.name ? currentCurrentProgram.name : ""} </ModalHeader>
                 <ModalBody>
                     <p>Are you sure you want to proceed ?</p>
                 </ModalBody>
@@ -150,16 +151,14 @@ const GlobalVariableSearch = (props) => {
                         className={classes.button}
                         startIcon={<SaveIcon />}
                         disabled={deleting}
-                        onClick={() => processDelete(currentGlobalVariable.id)}
-                    >
+                        onClick={() => processDelete(currentCurrentProgram.id)}>
                         Delete  {deleting ? <Spinner /> : ""}
                     </Button>
                     <Button
                         variant='contained'
                         color='default'
                         onClick={toggleDeleteModal}
-                        startIcon={<CancelIcon />}
-                    >
+                        startIcon={<CancelIcon />}>
                         Cancel
                     </Button>
                 </ModalFooter>
@@ -171,13 +170,13 @@ const GlobalVariableSearch = (props) => {
 const mapStateToProps = state => {
 
     return {
-        list: state.globalVariables.list
+        list: state.programManager.list
     };
 };
 
 const mapActionToProps = {
     fetchAll: fetchAll,
-    delete: deleteGlobalVariable
+    delete: deactivateProgram
 };
 
-export default connect(mapStateToProps, mapActionToProps)(GlobalVariableSearch);
+export default connect(mapStateToProps, mapActionToProps)(ProgramManagerSearch);
