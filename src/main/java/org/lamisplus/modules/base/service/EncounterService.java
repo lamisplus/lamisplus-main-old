@@ -100,7 +100,7 @@ public class EncounterService {
         }
         Encounter encounter = encounterMapper.toEncounter(encounterDTO);
         encounter.setId(id);
-        encounter.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        encounter.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         this.encounterRepository.save(encounter);
         return encounter;
     }
@@ -130,7 +130,7 @@ public class EncounterService {
 
         final Encounter encounter = encounterMapper.toEncounter(encounterDTO);
         encounter.setUuid(UuidGenerator.getUuid());
-        encounter.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
+        encounter.setCreatedBy(userService.getUserWithRoles().get().getUserName());
 
         Encounter savedEncounter = this.encounterRepository.save(encounter);
 
@@ -157,7 +157,7 @@ public class EncounterService {
             throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
         }
         encounterOptional.get().setArchived(1);
-        encounterOptional.get().setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        encounterOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
 
         return encounterOptional.get().getArchived();
     }
@@ -208,5 +208,9 @@ public class EncounterService {
         }
         List<FormData> formDataList = encounterOptional.get().getFormDataByEncounter();
         return formDataList;
+    }
+
+    public Long getTotalCount(String programCode) {
+        return encounterRepository.countByProgramCodeAndArchived(programCode, 0);
     }
 }

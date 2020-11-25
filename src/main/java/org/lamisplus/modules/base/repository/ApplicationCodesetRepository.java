@@ -19,5 +19,7 @@ public interface ApplicationCodesetRepository extends JpaRepository<ApplicationC
 
     Boolean existsByDisplayAndCodesetGroup(String display, String codesetGroup);
 
-    Optional<ApplicationCodeset> findByDisplayAndCodesetGroupAndActive(String display, String codesetGroup, Integer active);
+    Optional<ApplicationCodeset> findByDisplayAndCodesetGroupAndArchived(String display, String codesetGroup, Integer active);
+
+    Optional<ApplicationCodeset> findByIdAndAndArchived(Long id, int archive);
 }

@@ -8,7 +8,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
 import {FaPlusSquare, FaRegEye} from 'react-icons/fa';
 import {GoChecklist} from 'react-icons/go';
-import 'react-widgets/dist/css/react-widgets.css'
+import 'react-widgets/dist/css/react-widgets.css';
+import { ToastContainer } from "react-toastify";
 //Date Picker
 import Page from './../../Page'
 import {  fetchById } from '../../../actions/patients'
@@ -20,8 +21,8 @@ import { Spinner } from 'reactstrap';
 import { Badge } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
-import ModalSample from '../Testorders/CollectSampleModal';
-
+import ModalSample from './RecollectSample';
+import ModalViewResult from './../TestResult/ViewResult'
 
 
 const useStyles = makeStyles({
@@ -50,7 +51,7 @@ const SampleVerification = (props) => {
     const newSample =  sampleCollections.filter(function(sample) {
       return (sample.data!==null && sample.data.lab_test_order_status !==0);
     });
-
+    console.log(newSample[0].data.lab_number)
     const [fetchTestOrders, setFetchTestOrders] = useState(newSample)
 
     useEffect(() => {
@@ -93,13 +94,14 @@ const SampleVerification = (props) => {
         const toggleModal3 = () => setModal3(!modal3)
         const [collectModal, setcollectModal] = useState([])//to collect array of datas into the modal and pass it as props
         const [labNum, setlabNum] = useState({lab_number:""})
-
+        
+        console.log(testOrders && testOrders[0]?testOrders[0].data.lab_number : "" )
         let  labNumber = "" //check if that key exist in the array
             testOrders.forEach(function(value, index, array) {
                 if(value['data']!==null &&  value['data'].hasOwnProperty("lab_number")){
                     labNumber = value['data'].lab_number
+                    //setlabNum()
                 } 
-                //console.log(value['data']) 
               
             });
           
@@ -166,10 +168,14 @@ const SampleVerification = (props) => {
                             <MenuItem onSelect={() => handleVerifySample(e)}><GoChecklist size="15" style={{color: '#3F51B5'}}/>{" "}Verify Sample</MenuItem>
                             :""
                         } 
-                        { e.data.lab_test_order_status==="3" ?
+                        { e.data.lab_test_order_status==="4" ?
                         <MenuItem onSelect={() => handleRecollectSample(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Re-collect Sample</MenuItem>
                           :""
                         } 
+                        { e.data.lab_test_order_status===5 ?
+                        <MenuItem onSelect={() => viewresult(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>
+                          :""
+                        }
                     </MenuList>
             </Menu>
           )
@@ -178,6 +184,7 @@ const SampleVerification = (props) => {
 
 return (
     <Page title='Sample Verification'>
+        <ToastContainer autoClose={2000} />
       <br/>
         <Row>
             <Col>
@@ -211,7 +218,7 @@ return (
                   </CardHeader>
                 <CardBody>
                     <Alert color="primary">
-                        Please make sure you enter Lab number before collecting sample {console.log(labNum)}
+                        Please make sure you enter Lab number before collecting sample 
                     </Alert>
                 <br />
                     <Row>
@@ -248,7 +255,7 @@ return (
                                             name='lab_number'
                                             id='lab_number'
                                             value={labNumber!=="" ? labNumber : labNum.lab_number}
-                                            
+                                            disabled='true'
                                             onChange={handleLabNumber}
                                         />
                                         </FormGroup>                            
@@ -267,7 +274,7 @@ return (
                                             </thead>
                                             <tbody>
                                                
-                                                {!loading ? fetchTestOrders.map((row) => (
+                                                {!loading ? testOrders.map((row) => (
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>
                                                       <th className={classes.td}>{row.data.description===""?" ":row.data.description}</th>
                                                       <td className={classes.td}>{row.data.sample_type==="" ? " ":row.data.sample_type}</td>
@@ -292,7 +299,8 @@ return (
             </Col>
         </Row>
       <ModalSampleVerify modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
-      <ModalSample modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal}  labnumber={labNumber}/>
+      <ModalSample modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal}  labnumber={newSample[0].data.lab_number}/>
+      <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />    
     </Page>
   )
   

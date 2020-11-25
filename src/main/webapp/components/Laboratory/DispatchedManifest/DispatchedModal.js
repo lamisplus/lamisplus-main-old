@@ -64,7 +64,6 @@ const ModalViewResult = (props) => {
     const manifestSamples = props.manifestSamples && props.manifestSamples !==null ? props.manifestSamples : {};
     const manifestSample= Object.values(manifestSamples);
     const manifestSampleForUpDateFormDataObj= Object.values(manifestSamples);
-    console.log(manifestSampleForUpDateFormDataObj)
     const  totalSampleShipment = Object.keys(manifestSamples).length;
     const labId = manifestSamples.id
     const [loading, setLoading] = useState(false);
@@ -97,15 +96,13 @@ const ModalViewResult = (props) => {
         async function getCharacters() {
             try {
                 const response = await axios(
-                    url + "sample-manifests/pcrlab"
+                    url + "organisation-units/organisation-unit-level/7"
                 );
-                const body = response.data;
-                console.log(body)
+                const body = response.data && response.data !==null ? response.data : {};
                 setOptionPcr(
                      body.map(({ name, id }) => ({ title: name, value: id }))
                  );
             } catch (error) {
-                console.log(error);
             }
         }
         getCharacters();
@@ -113,7 +110,6 @@ const ModalViewResult = (props) => {
 
     const handleOtherFieldInputChange = e => {
         setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
-        //console.log(otherfields)
     }
     const validate = () => {
         let temp = { ...errors }
@@ -184,7 +180,6 @@ const ModalViewResult = (props) => {
                 if(validate()){
                     //Updating the FormDataObj informations
                     modifyFormDataObj.forEach(function(value, index, array) {
-                        console.log(value);
                         props.updateFormDataObj(value.formDataObj, value.formDataObj.id)
                     });
                     
@@ -281,7 +276,7 @@ const ModalViewResult = (props) => {
                                           <FormGroup>
                                               <Label for="exampleSelect">Dispatch Rider/Courier Phone Number</Label>
                                                     <Input
-                                                        type="text"
+                                                        type="number"
                                                         name="courierPhoneNumber"
                                                         id="courierPhoneNumber"
                                                         

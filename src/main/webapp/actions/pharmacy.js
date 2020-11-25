@@ -114,3 +114,27 @@ export const updatePrescriptionStatus = (formId, data) => (dispatch) => {
              toast.success("Failed to dispense drug, please try again");
            });
        };
+
+       export const fetchPatientPrescriptionsByEncounter = (id, onSuccess, onError )=> dispatch => {
+        if(id){
+        axios
+          .get(`${url}encounters/${id}/form-data`)
+          .then(response => {
+           
+            dispatch({
+              type: ACTION_TYPES.PHARMACY_PRESCRIPTION_FOR_PATIENT,
+              payload: response.data
+            })
+            onSuccess();
+            
+          })
+          .catch(error => {
+            dispatch({
+              type: ACTION_TYPES.ERROR_PHARMACY_PRESCRIPTION_FOR_PATIENT,
+              payload: error
+            })
+            onError();
+          }
+          );
+      }
+      };

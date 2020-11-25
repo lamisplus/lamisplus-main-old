@@ -10,8 +10,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 
 const PatientSearch = (props) => {
+  
     const [loading, setLoading] = useState('')
-useEffect(() => {
+    useEffect(() => {
     setLoading('true');
         const onSuccess = () => {
             setLoading(false)
@@ -21,7 +22,16 @@ useEffect(() => {
         }
             props.fetchAllLabTestOrderToday(onSuccess, onError);
     }, []); //componentDidMount
- 
+    const collectedSamples = []
+    props.patientsTestOrderList.forEach(function(value, index, array) {
+        const dataSamples = value.formDataObj 
+        for(var i=0; i<dataSamples.length; i++){
+            for (var key in dataSamples[i]) {
+              if (dataSamples[i][key]!==null && dataSamples[i][key].lab_test_order_status >=1 && dataSamples[i][key].lab_test_order_status !==5)
+                collectedSamples.push(value)
+            }            
+          }
+    });
     function totalSampleVerified (test){
       const  maxVal = []
       for(var i=0; i<test.length; i++){
@@ -65,7 +75,7 @@ useEffect(() => {
             },
           ]}
         isLoading={loading}
-        data={props.patientsTestOrderList.map((row) => ({
+        data={collectedSamples.map((row) => ({
             Id: row.hospitalNumber,
             name: row.firstName +  ' ' + row.lastName,
             date: row.dateEncounter,
@@ -88,9 +98,8 @@ useEffect(() => {
             })
         )}
             options={{
-                
-                pageSize:100,
-                pageSizeOptions: [50,100,150,200],
+
+                pageSizeOptions: [5,10,50,100,150,200],
                 headerStyle: {
                     backgroundColor: "#9F9FA5",
                     color: "#000",
@@ -112,6 +121,7 @@ useEffect(() => {
 
 const mapStateToProps = state => {
     return {
+        //state.list.filter((x) => x.patientId != action.payload
         patientsTestOrderList: state.laboratory.list
     };
   };

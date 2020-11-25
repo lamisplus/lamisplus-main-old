@@ -7,6 +7,7 @@ import org.lamisplus.modules.base.domain.entity.LabTest;
 import org.lamisplus.modules.base.domain.entity.LabTestGroup;
 import org.lamisplus.modules.base.service.LabTestGroupService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -22,21 +23,25 @@ public class LabTestGroupController {
     private final String ENTITY_NAME = "LabTestGroup";
 
     @GetMapping
+    @PreAuthorize("hasAuthority('laboratory_read')")
     public ResponseEntity<List<LabTestGroup>> getAllLabTestGroups() {
         return ResponseEntity.ok(this.labTestGroupService.getAllLabTestGroups());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('laboratory_read')")
     public ResponseEntity<LabTestGroup> getLabTestGroup(@PathVariable Long id) {
         return ResponseEntity.ok(labTestGroupService.getLabTestGroup(id));
     }
 
     @GetMapping("/{id}/lab-tests")
+    @PreAuthorize("hasAuthority('laboratory_read')")
     public ResponseEntity<List<LabTest>> getLabTestsByLabTestGroupId(@PathVariable Long id) {
         return ResponseEntity.ok(labTestGroupService.getLabTestsByLabTestGroupId(id));
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('laboratory_write')")
     public ResponseEntity<LabTestGroup> save(@RequestBody LabTestGroup labTestGroup) throws URISyntaxException {
         LabTestGroup result = labTestGroupService.save(labTestGroup);
         return ResponseEntity.created(new URI("/api/lab-test-groups/" + result.getId()))
@@ -44,6 +49,7 @@ public class LabTestGroupController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('laboratory_write')")
     public ResponseEntity<LabTestGroup> update(@PathVariable Long id, @RequestBody LabTestGroup labTestGroup) throws URISyntaxException {
         LabTestGroup result = labTestGroupService.update(id, labTestGroup);
         return ResponseEntity.created(new URI("/api/lab-test-groups/" + id))
@@ -52,6 +58,7 @@ public class LabTestGroupController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('laboratory_delete')")
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
         return ResponseEntity.ok(this.labTestGroupService.delete(id));
     }

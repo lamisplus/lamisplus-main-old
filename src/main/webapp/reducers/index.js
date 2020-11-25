@@ -18,6 +18,7 @@ import globalVariableReducer from "./globalVariableReducer";
 import internationalStandardReducer from "./internationalStandardReducer";
 import bootstrapModuleReducer from "./bootstrapReducer";
 import organizationalUnitReducer from './organizationalUnitReducer';
+import rolesReducer from './rolesReducer';
 import generalUsersDashboardModuleReducer from './generalUserDashboardReducer';
 import programManagerReducer from './programManagerReducer';
 
@@ -42,6 +43,7 @@ export default combineReducers({
   standards: internationalStandardReducer,
   boostrapmodule: bootstrapModuleReducer,
   organizationalUnitReducer : organizationalUnitReducer,
+  roles: rolesReducer,
   generalUsersDashboardModuleReducer : generalUsersDashboardModuleReducer
 })
 

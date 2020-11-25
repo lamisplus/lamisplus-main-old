@@ -45,6 +45,8 @@ const PrintSamples = React.lazy(() => import("components/Laboratory/DispatchedMa
 const PrintManifest = React.lazy(() => import("components/Laboratory/DispatchedManifest/PrintManifest"));
 const ViewSampleDispatched = React.lazy(() => import("components/Laboratory/DispatchedManifest/ViewPrintManifest"));
 
+/* Radiology */
+const RadiologyPage = React.lazy(() => import("components/Radiology/HomePage"));
 /* Bootstrap configuration */
 const BootStrapConfiguration = React.lazy(() => import("components/Admin/BootstrapConfiguration/Index"));
 const CreateModule = React.lazy(() => import("components/Admin/BootstrapConfiguration/CreateModule"));
@@ -67,8 +69,7 @@ const PivotTable = React.lazy(() => import('components/PivotTable/PivotTable'));
 const ReactPivot = React.lazy(() => import('components/PivotTable/ReactPivot'));
 const FormPage = React.lazy(() => import('components/Admin/FormPage'));
 const NewProgramManager = React.lazy(() => import('components/Admin/NewProgramManager'));
-const ProgramManagementPage = React.lazy(() => import('components/Admin/ProgramManagementPage'));
-const ProgramManagement = React.lazy(() => import('components/Admin/BootstrapConfiguration/Index'));
+const ProgramManagerPage = React.lazy(() => import('components/Admin/ProgramManager/ProgramManager'));
 
 /* Pharmacy page loading */
 const PharmacyDashboard = React.lazy(() => import("./components/Pharmacy/PharmacyDashboard"))
@@ -110,6 +111,9 @@ const RadiologyTestDetailPage = React.lazy(() => import("components/Laboratory/R
 
 const UsersPage = React.lazy(() => import("components/Users/UserPage"))
 const UserRegistration = React.lazy(() => import("components/Users/UserRegistration"))
+
+const roles = React.lazy(() => import("components/Roles/RolesPage"))
+const addRole = React.lazy(() => import("components/Roles/AddRole"))
 
 class Routes extends Component {
   render() {
@@ -159,6 +163,8 @@ class Routes extends Component {
               <PrivateRoute exact path="/print-sample" component={PrintSamples} />
               <PrivateRoute exact path="/view-sample-dispatched" component={ViewSampleDispatched} />
               
+              {/* Radiology Link*/}
+              <PrivateRoute exact path="/radiology-home" component={RadiologyPage} />
               {/* BootstrapConfiguration Link */}
               <PrivateRoute exact path="/admin/bootstrap-configuration" component={BootStrapConfiguration} />
               <PrivateRoute exact path="/admin/bootstrap-configuration/create-module" component={CreateModule} />
@@ -195,9 +201,9 @@ class Routes extends Component {
                 <PrivateRoute exact path="/react-pivot" component={ReactPivot} />
                 <PrivateRoute exact path="/form-home" component={FormPage} />
                 <PrivateRoute exact path="/new-program" component={NewProgramManager} />
-                <PrivateRoute exact path="/program-manager-home" component={ProgramManagementPage}/>
-                <PrivateRoute exact path="/programs-manager" component={ProgramManagement}/>
 
+                <PrivateRoute exact path="/admin/program-manager" component={ProgramManagerPage} />
+              
                 {/* The rout to that DataTabel */}
               <PrivateRoute exact path="/test-page" component={TestPage} />
               <PrivateRoute exact path="/form-renderer" component={FormRendererPage} />
@@ -210,6 +216,10 @@ class Routes extends Component {
               <PrivateRoute exact path="/users" component={UsersPage} />
 
               <PrivateRoute exact path="/user-registration" component={UserRegistration} />
+
+              <PrivateRoute exact path="/roles" component={roles} />
+
+              <PrivateRoute exact path="/add-role" component={addRole} />
 
               <PrivateRoute exact path="/appointments" component={AppointmentPage} />
                 <PrivateRoute exact path="/admin" component={AdministrativeDashboard} />

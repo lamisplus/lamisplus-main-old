@@ -2,7 +2,7 @@ import React from 'react';
 import useEffect from 'react';
 import MaterialTable from 'material-table';
 import { connect } from "react-redux";
-import { fetchAll, deactivateProgram} from "actions/programManager";
+import { fetchAll, deactivateProgram} from "./../../../actions/programManager";
 import {
     Card,
     CardBody, Modal, ModalBody, ModalFooter, ModalHeader, Spinner
@@ -42,9 +42,9 @@ const ProgramManagerSearch = (props) => {
         };
         props.fetchAll(onSuccess, onError);
     }
-    useEffect(() => {
-        loadProgramManager()
-    }, []); //componentDidMount
+    // useEffect(() => {
+    //     //loadProgramManager()
+    // }, []); //componentDidMount
 
     const openGlobalVariable = (row) => {
         setcurrentCurrentProgram(row);

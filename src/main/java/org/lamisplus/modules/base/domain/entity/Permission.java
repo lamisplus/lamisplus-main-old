@@ -1,32 +1,44 @@
 package org.lamisplus.modules.base.domain.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Collection;
 
-@Data
 @Entity
-@EqualsAndHashCode
-@Table(name = "permission")
-public class Permission implements Serializable {
-
+@NoArgsConstructor
+@RequiredArgsConstructor
+public class Permission {
     @Id
-    @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
+    @Setter
+    @GeneratedValue
     private Long id;
 
-    @Basic
-    @Column(name = "level", nullable = true, length = 255)
-    private String permissionLevel;
+    @NonNull
+    @Getter
+    @Setter
+    private String name;
 
-    @Basic
-    @Column(name = "menu_name")
-    private String menuName;
+    @Override
+    public int hashCode() {
+        if (id != null) {
+            return id.hashCode();
+        } else if (name != null) {
+            return name.hashCode();
+        }
 
-    @Basic
-    @Column(name = "description")
-    private String description;
+        return 0;
+    }
+
+    @Override
+    public boolean equals(Object another) {
+        if (another == null || !(another instanceof Permission))
+            return false;
+
+        Permission anotherPermission = (Permission) another;
+
+        return (anotherPermission.id != null && (anotherPermission.id == this.id))
+                || (anotherPermission.id == null && anotherPermission.name != null && (anotherPermission.name.equals(this.name)));
+    }
+
 }
