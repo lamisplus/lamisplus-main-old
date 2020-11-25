@@ -89,7 +89,7 @@ function AdminSubMenu(props) {
                   Global Variables
                   </Link>
                 </Dropdown.Item>
-                <Dropdown.Item >
+              {/*   <Dropdown.Item >
                   <Link
                       to={{
                         pathname: "/admin/standards"}}
@@ -104,7 +104,7 @@ function AdminSubMenu(props) {
                   >
                   Organization Unit setup
                   </Link>
-                </Dropdown.Item>
+                </Dropdown.Item>*/}
                 <Dropdown.Item >
                   <Link to={{
                         pathname: "/admin/wards"}}>
@@ -114,7 +114,7 @@ function AdminSubMenu(props) {
               </Dropdown.Menu>
           </Dropdown>
         <Menu.Item>  <Link to={{pathname: "/admin/bootstrap-configuration"}} >Bootstrap Configuration </Link></Menu.Item>
-        <Menu.Item>  <Link to={{pathname: "/admin/organization-unit"}} >Organization Unit </Link></Menu.Item>
+      {/*   <Menu.Item>  <Link to={{pathname: "/admin/organization-unit"}} >Organization Unit </Link></Menu.Item>*/}
       </Menu>
 
       <ToastContainer />
