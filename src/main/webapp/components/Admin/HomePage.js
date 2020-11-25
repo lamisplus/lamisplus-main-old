@@ -131,7 +131,7 @@ function HomePage(props) {
                     <Tab
                         className={classes.title}
                         label="Report Builder"
-                        disabled={!authentication.userHasRole(["report_builder_read", "report_builder_write", "report_builder_delete"])}
+                        disabled={!authentication.userHasRole(["admin_read", "report_builder_read", "report_builder_write", "report_builder_delete"])}
                         icon={<GiFiles />}
                         {...a11yProps(3)}/>
 

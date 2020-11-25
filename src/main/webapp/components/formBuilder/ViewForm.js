@@ -18,7 +18,7 @@ import {
     Label,
     Col,
     Row,
-     Spinner
+    Spinner, Modal, ModalBody, ModalHeader, CardBody, ModalFooter
 } from 'reactstrap';
 import {Link} from 'react-router-dom';
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
@@ -28,6 +28,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import axios from 'axios';
 import {url} from '../../api';
+import CancelIcon from "@material-ui/icons/Cancel";
 
 const useStyles = makeStyles(theme => ({
     root2: {
@@ -52,7 +53,8 @@ const Update = props => {
     let myform;
     const submission = props.patient;
     const textAreaRef = useRef(null);
-
+    const [showModal, setShowModal] = React.useState(false);
+    const toggleModal = () => setShowModal(!showModal)
     const row =  props.location.state && props.location.state.row ? props.location.state.row : "";
 
     useEffect(() => {
@@ -64,9 +66,9 @@ const Update = props => {
                 setFormPrecedenceList(data);
                 body !== null ? setdisabledCheckBox(false) : setdisabledCheckBox(true)
                 setLoading(false);
-                setformPrecedence(row.formPrecedence && row.formPrecedence.formCode ? row.formPrecedence.formCode.map(x =>data.filter(f => f.value === x)) : [])
-                console.log(row.formPrecedence && row.formPrecedence.formCode ? row.formPrecedence.formCode.map(x => data.filter(f => f.value === x)) : [])
-                console.log('formp')
+                // setformPrecedence(row.formPrecedence && row.formPrecedence.formCode ? row.formPrecedence.formCode.map(x =>data.filter(f => f.value === x)) : [])
+                // console.log(row.formPrecedence && row.formPrecedence.formCode ? row.formPrecedence.formCode.map(x => data.filter(f => f.value === x)) : [])
+                // console.log('formp')
             } catch (error) {
                 setLoading(false);
             }
@@ -86,9 +88,7 @@ const Update = props => {
     const handleSubmit = e =>  {
         if(formPrecedence.length > 0){
             form2["formPrecedence"] = {formCode: formPrecedence.map(x => x.value) ? formPrecedence.map(x => x.value)  : []}
-        } else {
-            form2["formPrecedence"] = null;
-        }
+        } 
         props.updateForm(form2.id, form2);
     }
 
@@ -100,55 +100,27 @@ const Update = props => {
   //   }
 
     return (
-        <Page title="Form Renderer" >
+        <Page title={`Edit Form - ${row ? row.name : ""}`} >
             <ToastContainer autoClose={3000} hideProgressBar />
+            <Row>
+                <Col md={12}>
+            <Link to ={{
+                pathname: "/admin",
+                state: 'form-builder'
+            }}>
+                <MatButton
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    className=" float-right mr-1">
+                    <TiArrowBack /> &nbsp; back
+                </MatButton>
+            </Link>
+                </Col>
+                <Col md={12}>
             <Card >
                 <CardContent>
-                    <Link to ={{
-                        pathname: "/admin",
-                        state: 'form-builder'
-                    }}>
-                        <MatButton
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            className=" float-right mr-1">
-                            <TiArrowBack /> &nbsp; back
-                        </MatButton>
-                    </Link>
-                    <h4>View Form</h4>
-                    <hr />
-                    <Errors errors={props.errors} />
-                    {!res ? "" : 
-                    <Form
-                        form={JSON.parse(res)}
-                        ref={form => myform = form}
-                        submission={{data : {patient: props.patient, authHeader: authHeader()}}}
-                        //src={url}
-                        hideComponents={props.hideComponents}
-                        //onSubmit={props.onSubmit}
-                        onSubmit={(submission) => {
-                            console.log(submission);
-                            return fetch('https://lp-base-app.herokuapp.com/api/', {
-                                body: JSON.stringify(submission),
-                                headers: {
-                                    'content-type': 'application/json'
-                                },
-                                method: 'POST',
-                                mode: 'cors',
-                            }).then(res => {
-                                console.log(res);
-                                myform.emit('submitDone', submission);
-                            })}}
-                    />
-                        }
-                    <br></br>
-                </CardContent>
-            </Card>
-            <hr></hr>
-            <Card >
-                <CardContent>
-                    <h4>Edit Form - {row ? row.name : ""}</h4>
+
                     <Row>
                         <Col md={4}> <FormGroup>
                             <Label class="sr-only">Display Type</Label>
@@ -190,10 +162,14 @@ const Update = props => {
                                 )}
                             />
                         </FormGroup></Col>
+
                         <Col md={2}> <FormGroup>
                             <label class="sr-only" ></label>
                             <button type="button"  class="form-control btn btn-primary mt-4" onClick={() => handleSubmit()}>Update Form</button>
                         </FormGroup></Col>
+                        <Col md={2}>
+                            <div onClick={toggleModal}  className="mt-5" style={{cursor:"pointer", color:"blue"}}>Preview Form</div>
+                        </Col>
                     </Row>
                     { form2 ?
                         <FormBuilder form={row.resourceObject} {...props} onChange={(schema) => {
@@ -205,6 +181,8 @@ const Update = props => {
                     <br></br>
                 </CardContent>
             </Card>
+                </Col>
+            </Row>
             <hr></hr>
             <Card >
                 <CardContent>
@@ -216,6 +194,54 @@ const Update = props => {
                     </div>
                 </CardContent>
             </Card>
+
+                <Modal isOpen={showModal} toggle={toggleModal} size="lg">
+                    <ModalHeader toggle={toggleModal}><h4>View Form</h4> </ModalHeader>
+                    <ModalBody>
+                        <Card>
+                            <CardContent>
+
+                                <hr />
+                                <Errors errors={props.errors} />
+                                {!res ? "" :
+                                    <Form
+                                        form={JSON.parse(res)}
+                                        ref={form => myform = form}
+                                        submission={{data : {patient: props.patient, authHeader: authHeader()}}}
+                                        //src={url}
+                                        hideComponents={props.hideComponents}
+                                        //onSubmit={props.onSubmit}
+                                        onSubmit={(submission) => {
+                                            console.log(submission);
+                                            return fetch('https://lp-base-app.herokuapp.com/api/', {
+                                                body: JSON.stringify(submission),
+                                                headers: {
+                                                    'content-type': 'application/json'
+                                                },
+                                                method: 'POST',
+                                                mode: 'cors',
+                                            }).then(res => {
+                                                console.log(res);
+                                                myform.emit('submitDone', submission);
+                                            })}}
+                                    />
+                                }
+                                <br></br>
+                            </CardContent>
+                        </Card>
+                    </ModalBody>
+                    <ModalFooter>
+                        <MatButton
+                            variant='contained'
+                            color='default'
+                            onClick={toggleModal}
+                            startIcon={<CancelIcon />}
+                        >
+                            Cancel
+                        </MatButton>
+                    </ModalFooter>
+                </Modal>
+                <hr></hr>
         </Page>
     );
 }
