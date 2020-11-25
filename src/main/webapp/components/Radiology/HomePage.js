@@ -4,6 +4,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import RadiologyDashBoard from "./RadiologyDashBoard";
+
 import Typography from "@material-ui/core/Typography";
 import { MdDashboard , MdFileUpload} from "react-icons/md";
 import { GiTestTubes,GiFiles, GiDrippingTube } from "react-icons/gi";
@@ -101,12 +102,11 @@ function HomePage(props) {
       <TabPanel value={value} index={0}>
           <RadiologyDashBoard />
       </TabPanel>
-     
+      
       <TabPanel value={value} index={4}>
           <RadiologyTestSearch />
       </TabPanel>
-     
-        
+      
      </div> 
     </>
   );

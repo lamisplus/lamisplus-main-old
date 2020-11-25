@@ -163,7 +163,7 @@ class Routes extends Component {
               <PrivateRoute exact path="/view-sample-dispatched" component={ViewSampleDispatched} />
               
               {/* Radiology Link*/}
-              <PrivateRoute exact path="/radiology" component={RadiologyPage} />
+              <PrivateRoute exact path="/radiology-home" component={RadiologyPage} />
               {/* BootstrapConfiguration Link */}
               <PrivateRoute exact path="/admin/bootstrap-configuration" component={BootStrapConfiguration} />
               <PrivateRoute exact path="/admin/bootstrap-configuration/create-module" component={CreateModule} />
