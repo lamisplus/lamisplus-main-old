@@ -68,7 +68,7 @@ const ViewForm = React.lazy(() => import('components/formBuilder/ViewForm'));
 const PivotTable = React.lazy(() => import('components/PivotTable/PivotTable'));
 const ReactPivot = React.lazy(() => import('components/PivotTable/ReactPivot'));
 const FormPage = React.lazy(() => import('components/Admin/FormPage'));
-
+const ProgramManagerPage = React.lazy(() => import('components/Admin/ProgramManager/ProgramManager'));
 
 /* Pharmacy page loading */
 const PharmacyDashboard = React.lazy(() => import("./components/Pharmacy/PharmacyDashboard"))
@@ -199,7 +199,7 @@ class Routes extends Component {
               <PrivateRoute exact path="/pivot" component={PivotTable} />
                 <PrivateRoute exact path="/react-pivot" component={ReactPivot} />
                 <PrivateRoute exact path="/form-home" component={FormPage} />
-
+                <PrivateRoute exact path="/admin/program-manager" component={ProgramManagerPage} />
               
                 {/* The rout to that DataTabel */}
               <PrivateRoute exact path="/test-page" component={TestPage} />
