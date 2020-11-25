@@ -4,6 +4,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import RadiologyDashBoard from "./RadiologyDashBoard";
+
 import Typography from "@material-ui/core/Typography";
 import { MdDashboard , MdFileUpload} from "react-icons/md";
 import { GiTestTubes,GiFiles, GiDrippingTube } from "react-icons/gi";
@@ -12,7 +13,7 @@ import Box from "@material-ui/core/Box";
 import PropTypes from "prop-types";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
-import RadiologyTestSearch from "./Radiology/RadiologyTestSearch";
+import RadiologyUpload from "./Radiology/RadiologyTestSearch";
 import {getQueryParams} from "components/Utils/PageUtils";
 
 //Dtate Picker package
@@ -94,19 +95,18 @@ function HomePage(props) {
           aria-label="scrollable force tabs example"
         >
           <Tab className={classes.title} label="Dashboard" icon={<MdDashboard />} {...a11yProps(0)} /> 
-          <Tab className={classes.title} label="Radiology Uploads" icon={<MdFileUpload />} {...a11yProps(4)} />
+          <Tab className={classes.title} label="Radiology Uploads" icon={<MdFileUpload />} {...a11yProps(1)} />
           </Tabs>
       </AppBar>
 
       <TabPanel value={value} index={0}>
           <RadiologyDashBoard />
       </TabPanel>
-     
-      <TabPanel value={value} index={4}>
-          <RadiologyTestSearch />
+      
+      <TabPanel value={value} index={1}>
+          <RadiologyUpload />
       </TabPanel>
-     
-        
+      
      </div> 
     </>
   );
