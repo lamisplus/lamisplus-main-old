@@ -45,6 +45,8 @@ const PrintSamples = React.lazy(() => import("components/Laboratory/DispatchedMa
 const PrintManifest = React.lazy(() => import("components/Laboratory/DispatchedManifest/PrintManifest"));
 const ViewSampleDispatched = React.lazy(() => import("components/Laboratory/DispatchedManifest/ViewPrintManifest"));
 
+/* Radiology */
+const RadiologyPage = React.lazy(() => import("components/Radiology/HomePage"));
 /* Bootstrap configuration */
 const BootStrapConfiguration = React.lazy(() => import("components/Admin/BootstrapConfiguration/Index"));
 const CreateModule = React.lazy(() => import("components/Admin/BootstrapConfiguration/CreateModule"));
@@ -160,6 +162,8 @@ class Routes extends Component {
               <PrivateRoute exact path="/print-sample" component={PrintSamples} />
               <PrivateRoute exact path="/view-sample-dispatched" component={ViewSampleDispatched} />
               
+              {/* Radiology Link*/}
+              <PrivateRoute exact path="/radiology" component={RadiologyPage} />
               {/* BootstrapConfiguration Link */}
               <PrivateRoute exact path="/admin/bootstrap-configuration" component={BootStrapConfiguration} />
               <PrivateRoute exact path="/admin/bootstrap-configuration/create-module" component={CreateModule} />
