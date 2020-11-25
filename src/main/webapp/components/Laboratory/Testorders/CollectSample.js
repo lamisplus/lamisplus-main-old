@@ -23,6 +23,7 @@ import { Badge } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import ModalViewResult from './../TestResult/ViewResult';
+import {authentication} from '../../../_services/authentication';
 
 
 
@@ -255,8 +256,8 @@ return (
                                                     <th>Test</th>
                                                     <th>Sample Type</th>
                                                     <th>Date Requested</th>
-                                                    <th>Status</th>
-                                                    <th></th>
+                                                    <th >Status</th>
+                                                    <th ></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -267,7 +268,7 @@ return (
                                                       <td className={classes.td}>{row.data.sample_type==="" ? " ":row.data.sample_type}</td>
                                                       <td className={classes.td}> {encounterDate} </td>
                                                       <td className={classes.td}>{sampleStatus(row.data.lab_test_order_status)}  </td>
-                                                      <td className={classes.td}>{sampleAction(row,encounterDate)}</td>
+                                                      <td className={classes.td} hidden={!authentication.userHasRole(["laboratory_write"])} >{sampleAction(row,encounterDate)}</td>
                                                     </tr>
                                                     :
                                                     <tr></tr>

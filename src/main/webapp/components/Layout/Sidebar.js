@@ -6,8 +6,9 @@ import { MdDashboard, MdGraphicEq, MdPerson, MdKeyboardArrowDown } from "react-i
 import { GiTestTubes, GiMedicines } from "react-icons/gi";
 import { FaUserPlus, FaListUl, FaUserCog, FaCogs, FaWpforms } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
-import { Collapse, Nav, Navbar, NavItem, NavLink as BSNavLink } from "reactstrap";
+import { Nav, Navbar, NavItem, NavLink as BSNavLink } from "reactstrap";
 import bn from "utils/bemnames";
+import { authentication } from '../../_services/authentication';
 
 const sidebarBackground = {
   backgroundImage: `url("${sidebarBgImage}")`,
@@ -17,13 +18,18 @@ const sidebarBackground = {
 
 const navItems = [
   { to: '/dashboard', name: 'Dashboard', exact: true, Icon: MdDashboard },
-  { to: '/patients', name: 'Find Patient', exact: false, Icon: FaUserPlus },
-  { to: '/laboratory', name: 'Laboratory', exact: false, Icon: GiTestTubes },
-  { to: '/pharmacy', name: 'Pharmacy', exact: false, Icon: GiMedicines },
-  { to: '/appointments', name: 'Appointments', exact: false, Icon: MdGraphicEq },
+  { to: '/patients', name: 'Find Patient', exact: false, Icon: FaUserPlus,
+  roles:["patient_read", "patient_write", "patient_delete"]},
+  { to: '/laboratory', name: 'Laboratory', exact: false, Icon: GiTestTubes,
+  roles:["laboratory_read", "laboratory_write", "laboratory_delete"]},
+  { to: '/pharmacy', name: 'Pharmacy', exact: false, Icon: GiMedicines,
+  roles: ["pharmacy_read", "pharmacy_write", "pharmacy_delete"]},
+  { to: '/appointments', name: 'Appointments', exact: false, Icon: MdGraphicEq,
+  roles: ["appointment_read", "appointment_write", "appointment_delete"]},
   { to: '/report', name: 'Reports', exact: false, Icon: FaListUl },
   { to: '/visual', name: 'Visualization', exact: false, Icon: MdGraphicEq },
-  { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog },
+  { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog,
+    roles: ["admin_read", "user_read"] },
   // { to: '/select', name: 'React Select', exact: false, Icon: FaUserCog },
 
   //{ to: '/admin-dashboard', name: 'Administration Module', exact: false, Icon: FaUserCog },
@@ -49,11 +55,13 @@ const adminItems = [
 ];
 
 const bem = bn.create("sidebar");
-
+const userRoles = authentication.getCurrentUserRole();
 class Sidebar extends React.Component {
   state = {
     isOpenComponents: false,
   };
+
+
 
   handleClick = (name) => () => {
     this.setState((prevState) => {
@@ -82,19 +90,25 @@ class Sidebar extends React.Component {
             </SourceLink>
           </Navbar>
           <Nav vertical>
-            {navItems.map(({ to, name, exact, Icon }, index) => (
-              <NavItem key={index} className={bem.e("nav-item")}>
-                <BSNavLink
-                  id={`navItem-${name}-${index}`}
-                  tag={NavLink}
-                  to={to}
-                  activeClassName="active"
-                  exact={exact}
-                >
-                  <Icon className={bem.e("nav-item-icon")} />
-                  <span className="">{name}</span>
-                </BSNavLink>
-              </NavItem>
+            {navItems.map(({ to, name, exact, Icon , roles}, index) => (
+
+                <>
+                  {!authentication.userHasRole(roles) ?
+                      <></> :
+                      <NavItem key={index} className={bem.e("nav-item")}>
+                        <BSNavLink
+                            id={`navItem-${name}-${index}`}
+                            tag={NavLink}
+                            to={to}
+                            activeClassName="active"
+                            exact={exact}
+                        >
+                          <Icon className={bem.e("nav-item-icon")}/>
+                          <span className="">{name}</span>
+                        </BSNavLink>
+                      </NavItem>
+                  }
+                </>
             ))}
             {/* The Pharmacy Menu  */}
 

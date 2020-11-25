@@ -24,6 +24,7 @@ import {
 } from "reactstrap";
 import { useSelector, useDispatch } from 'react-redux';
 import {  fetchPatientPrescriptionsByEncounter } from './../../actions/pharmacy'
+import {authentication} from '../../_services/authentication';
 //
 Moment.locale("en");
 momentLocalizer();
@@ -131,7 +132,7 @@ const Prescriptions = (props) => {
        </MenuButton>
        <MenuList style={{ hover: "#eee" }}>
          {form.data.prescription_status === 0 ? (
-           <MenuItem onSelect={() => toggle(form)}>
+           <MenuItem onSelect={() => toggle(form)}  >
              <i
                className="fa fa-pencil"
                aria-hidden="true"
@@ -142,7 +143,7 @@ const Prescriptions = (props) => {
              </i>
            </MenuItem>
          ) : (
-           <MenuItem onSelect={() => toggle(form)}>
+           <MenuItem onSelect={() => toggle(form)} hidden={!authentication.userHasRole(["pharmacy_write"])}>
              <i
                className="fa fa-pencil"
                aria-hidden="true"

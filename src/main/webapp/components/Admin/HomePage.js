@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -24,6 +24,8 @@ import * as actions from "actions/patients";
 import { connect } from "react-redux";
 import UserPage from "../Users/UserPage";
 import DatabaseManagement from "../Admin/DatabaseManagement/Index";
+import { authentication } from '_services/authentication';
+import BootstrapConfigurationHome from './BootstrapConfiguration/Index';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -72,41 +74,22 @@ const useStyles = makeStyles((theme) => ({
 function HomePage(props) {
     const classes = useStyles();
     const [value, setValue] = useState(0);
-    const [fetchingPatient, setFetchingPatient] = useState(false);
-    const getQueryParams = (params, url) => {
-        let href = url;
-        //this expression is to get the query strings
-        let reg = new RegExp("[?&]" + params + "=([^&#]*)", "i");
-        let queryString = reg.exec(href);
-        return queryString ? queryString[1] : null;
-    };
-
-    const hospitalNumber =
-        getQueryParams("hospitalNumber", props.location.search) ||
-        props.patient.hospitalNumber ||
-        "";
-
-    const isEmpty = (value) => {
-        if (JSON.stringify(value) === "{}") {
-            return true;
-        }
-        return false;
-    };
-
-    React.useEffect(() => {
-        setFetchingPatient(true);
-        const onSuccess = () => {
-            setFetchingPatient(false);
-        };
-        const onError = () => {
-            setFetchingPatient(false);
-        };
-        props.fetchPatientByHospitalNumber(hospitalNumber, onSuccess, onError);
-    }, [hospitalNumber]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+    const urlIndex = null; //getQueryParams("tab", props.location.search);
+    const urlTabs = urlIndex !== null ? urlIndex : props.location.state ;
+    useEffect ( () => {
+        switch(urlTabs){
+            case "form-builder": return setValue(1)
+            case "users": return setValue(2)
+            case "report-builder": return setValue(3)
+            case "bootstrap-configuration": return setValue(4)
+
+            default: return setValue(0)
+        }
+    }, [urlIndex]);
 
     return (
         <div className={classes.root}>
@@ -133,28 +116,32 @@ function HomePage(props) {
                     <Tab
                         className={classes.title}
                         label="Form Builder"
+                        disabled={!authentication.userHasRole(["admin_read","form_builder_read", "form_builder_write", "form_builder_delete"])}
                         icon={<GiTestTubes />}
                         {...a11yProps(1)}
                     />
                     <Tab
                         className={classes.title}
                         label="User Setup"
+                        disabled={!authentication.userHasRole(["user_read", "user_write", "user_delete", "admin_read"])}
                         icon={<FaBriefcaseMedical />}
                         {...a11yProps(2)}
                     />{" "}
-                    <Tab
-                        className={classes.title}
-                        label="Database Management"
-                        icon={<GiFiles />}
-                        {...a11yProps(3)}
-                    />
 
                     <Tab
                         className={classes.title}
                         label="Report Builder"
+                        disabled={!authentication.userHasRole(["report_builder_read", "report_builder_write", "report_builder_delete"])}
                         icon={<GiFiles />}
-                        {...a11yProps(4)}
-                    />
+                        {...a11yProps(3)}/>
+
+                    {/*<Tab*/}
+                    {/*    className={classes.title}*/}
+                    {/*    label="Boostrap Configuration"*/}
+                    {/*    //disabled={!authentication.userHasRole(["bootstrap_read", "bootstrap_write", "bootstrap_delete"])}*/}
+                    {/*    icon={<GiFiles />}*/}
+                    {/*    {...a11yProps(4)}*/}
+                    {/*/>4*/}
                 </Tabs>
 
                 <div></div>
@@ -184,14 +171,19 @@ function HomePage(props) {
                 {/* user setup */}
 
                 {/* db manager */}
-                <TabPanel value={value} index={3}>
-                    <DatabaseManagement/>
-                </TabPanel>
+                {/*<TabPanel value={value} index={3}>*/}
+                {/*    <DatabaseManagement/>*/}
+                {/*</TabPanel>*/}
                 {/* db manager */}
 
                 {/* service forms */}
-                <TabPanel value={value} index={4}>
+                <TabPanel value={value} index={3}>
                     <ReportHome/>
+                </TabPanel>
+
+                {/* service forms */}
+                <TabPanel value={value} index={4}>
+                    <BootstrapConfigurationHome/>
                 </TabPanel>
 
 
@@ -210,7 +202,6 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapActionToProps = {
-    fetchPatientByHospitalNumber: actions.fetchByHospitalNumber,
 };
 
 export default connect(mapStateToProps, mapActionToProps)(HomePage);

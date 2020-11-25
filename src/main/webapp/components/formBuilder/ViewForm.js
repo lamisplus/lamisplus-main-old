@@ -104,7 +104,10 @@ const Update = props => {
             <ToastContainer autoClose={3000} hideProgressBar />
             <Card >
                 <CardContent>
-                    <Link to="/admin">
+                    <Link to ={{
+                        pathname: "/admin",
+                        state: 'form-builder'
+                    }}>
                         <MatButton
                             type="submit"
                             variant="contained"

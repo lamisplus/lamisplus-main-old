@@ -8,6 +8,8 @@ import { FaUserPlus } from "react-icons/fa";
 import { makeStyles } from "@material-ui/core/styles";
 import Title from "components/Title/CardTitle";
 import PatientSearch from "./PatientSearch";
+import { authentication } from '../../_services/authentication';
+
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -45,6 +47,7 @@ const GeneralPatientSearch = props => {
                   color="primary"
                   className=" float-right mr-1"
                   startIcon={<FaUserPlus />}
+                  disabled={!authentication.userHasRole(["user_write"])}
               >
                 <span style={{textTransform: 'capitalize'}}>Add Patient</span>
               </Button>

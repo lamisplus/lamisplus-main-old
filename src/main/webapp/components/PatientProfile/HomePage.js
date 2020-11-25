@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import { ToastContainer } from "react-toastify";
 import InPatientDashboard from "components/PatientProfile/Dashboards/InPatientDashboard";
+import { authentication } from '../../_services/authentication';
 
 // {/* Auto textfield complete */}
 import { MdDashboard, MdContacts } from "react-icons/md";
@@ -171,6 +172,7 @@ function HomePage(props) {
           <Tab
             className={classes.title}
             label="Consultation"
+            disabled={!authentication.userHasRole(["user_write"])}
             icon={<MdContacts />}
             {...a11yProps(1)}
           />
@@ -178,17 +180,20 @@ function HomePage(props) {
             className={classes.title}
             label="Test Order"
             icon={<GiTestTubes />}
+            disabled={!authentication.userHasRole(["user_write"])}
             {...a11yProps(2)}
           />
           <Tab
             className={classes.title}
             label="Medication"
+            disabled={!authentication.userHasRole(["user_write"])}
             icon={<FaBriefcaseMedical />}
             {...a11yProps(3)}
           />{" "}
           <Tab
             className={classes.title}
             label="Service Form"
+            disabled={!authentication.userHasRole(["user_write", "user_read", "user_delete"])}
             icon={<GiFiles />}
             {...a11yProps(4)}
           />
