@@ -214,22 +214,22 @@ function PatientDashboardSubMenu(props) {
                 <Dropdown.Menu>
                 <Dropdown.Item
                   onClick={() => displayFormByFormName("Transfer Patient")}
-                  disabled={!authentication.userHasRole(["user_write"])}
+                  disabled={!authentication.userHasRole(["p_write"])}
                 >
                   Transfer Patient to Ward / Service
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={() => displayFormByFormName("Discharge Patient")}
-                  disabled={!authentication.userHasRole(["user_write"])}
+                  disabled={!authentication.userHasRole(["patient_write"])}
                 >
                   Discharge Patient
                 </Dropdown.Item>
                   <Dropdown.Item onClick={() => toggleVitalSign()}
-                                 disabled={!authentication.userHasRole(["user_write"])}
+                                 disabled={!authentication.userHasRole(["patient_write"])}
                   >Capture Vital Signs</Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item  onClick={() => displayFormByFormName("New Appointment")}
-                                  disabled={!authentication.userHasRole(["user_write"])}
+                                  disabled={!authentication.userHasRole(["patient_write"])}
                   >
                     New Appointment
                   </Dropdown.Item>
@@ -239,16 +239,16 @@ function PatientDashboardSubMenu(props) {
                 {/*<Dropdown.Header>Visit Actions</Dropdown.Header>*/}
                 <Dropdown.Item
                   onClick={() => displayFormByFormName("Admit Patient")}
-                  disabled={!authentication.userHasRole(["user_write"])}
+                  disabled={!authentication.userHasRole(["patient_write"])}
                 >
                   Admit Patient
                 </Dropdown.Item>
                   <Dropdown.Item onClick={() => toggleVitalSign()}
-                                 disabled={!authentication.userHasRole(["user_write"])}
+                                 disabled={!authentication.userHasRole(["patient_write"])}
                   >Capture Vital Signs</Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item  onClick={() => displayFormByFormName("New Appointment")}
-                                  disabled={!authentication.userHasRole(["user_write"])}
+                                  disabled={!authentication.userHasRole(["patient_write"])}
                   >
                     New Appointment
                   </Dropdown.Item>
@@ -268,22 +268,22 @@ function PatientDashboardSubMenu(props) {
                     <Dropdown.Header>Visit Actions</Dropdown.Header>
                     <Dropdown.Item
                         onClick={() => displayFormByFormName("Transfer Patient")}
-                        disabled={!authentication.userHasRole(["user_write"])}
+                        disabled={!authentication.userHasRole(["patient_write"])}
                     >
                       Transfer Patient to Ward / Service
                     </Dropdown.Item>
                     <Dropdown.Item
                         onClick={() => displayFormByFormName("Discharge Patient")}
-                        disabled={!authentication.userHasRole(["user_write"])}
+                        disabled={!authentication.userHasRole(["patient_write"])}
                     >
                       Discharge Patient
                     </Dropdown.Item>
                     <Dropdown.Item onClick={() => toggleVitalSign()}
-                                   disabled={!authentication.userHasRole(["user_write"])}
+                                   disabled={!authentication.userHasRole(["patient_write"])}
                     >Capture Vital Signs</Dropdown.Item>
                     <Dropdown.Header>Other Actions</Dropdown.Header>
                     <Dropdown.Item  onClick={() => displayFormByFormName("New Appointment")}
-                                    disabled={!authentication.userHasRole(["user_write"])}
+                                    disabled={!authentication.userHasRole(["patient_write"])}
                     >
                       New Appointment
                     </Dropdown.Item>
@@ -293,15 +293,15 @@ function PatientDashboardSubMenu(props) {
                     <Dropdown.Header>Visit Actions</Dropdown.Header>
                     <Dropdown.Item
                         onClick={() => displayFormByFormName("Admit Patient")}
-                        disabled={!authentication.userHasRole(["user_write"])}
+                        disabled={!authentication.userHasRole(["patient_write"])}
                     >
                       Admit Patient
                     </Dropdown.Item>
                     <Dropdown.Item onClick={() => toggleVitalSign()}
-                                   disabled={!authentication.userHasRole(["user_write"])}>Capture Vital Signs</Dropdown.Item>
+                                   disabled={!authentication.userHasRole(["patient_write"])}>Capture Vital Signs</Dropdown.Item>
                     <Dropdown.Header>Other Actions</Dropdown.Header>
                     <Dropdown.Item  onClick={() => displayFormByFormName("New Appointment")}
-                                    disabled={!authentication.userHasRole(["user_write"])}
+                                    disabled={!authentication.userHasRole(["patient_write"])}
                     >
                       New Appointment
                     </Dropdown.Item>
@@ -320,7 +320,7 @@ function PatientDashboardSubMenu(props) {
               </b>{" "}
               | &nbsp; &nbsp;
               <Button color="black" onClick={checkOutPatient}
-                      disabled={!authentication.userHasRole(["user_write"])}
+                      disabled={!authentication.userHasRole(["patient_write"])}
               >
                 Check Out
               </Button>
@@ -328,7 +328,7 @@ function PatientDashboardSubMenu(props) {
           ) : (
             <Menu.Item>
               <Button color="black" onClick={checkInPatient}
-                      disabled={!authentication.userHasRole(["user_write"])}
+                      disabled={!authentication.userHasRole(["patient_write"])}
               >
                 Check In
               </Button>

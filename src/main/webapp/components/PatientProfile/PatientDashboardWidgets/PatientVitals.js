@@ -65,7 +65,7 @@ import { authentication } from '../../../_services/authentication';
             <Card  >
                     <CardHeader> Recent Vital Signs
                          <button type="button" className="float-right ml-3"
-                                 disabled={!authentication.userHasRole(["user_write"])}
+                                 disabled={!authentication.userHasRole(["patient_write"])}
                                  onClick={toggle}><i className="fa fa-plus"></i> Add Vital Signs</button></CardHeader>
                         
                     <CardBody>

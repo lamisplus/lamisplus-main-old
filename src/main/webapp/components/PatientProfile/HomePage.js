@@ -172,7 +172,7 @@ function HomePage(props) {
           <Tab
             className={classes.title}
             label="Consultation"
-            disabled={!authentication.userHasRole(["user_write"])}
+            disabled={!authentication.userHasRole(["patient_write"])}
             icon={<MdContacts />}
             {...a11yProps(1)}
           />
@@ -180,20 +180,20 @@ function HomePage(props) {
             className={classes.title}
             label="Test Order"
             icon={<GiTestTubes />}
-            disabled={!authentication.userHasRole(["user_write"])}
+            disabled={!authentication.userHasRole(["patient_write"])}
             {...a11yProps(2)}
           />
           <Tab
             className={classes.title}
             label="Medication"
-            disabled={!authentication.userHasRole(["user_write"])}
+            disabled={!authentication.userHasRole(["patient_write"])}
             icon={<FaBriefcaseMedical />}
             {...a11yProps(3)}
           />{" "}
           <Tab
             className={classes.title}
             label="Service Form"
-            disabled={!authentication.userHasRole(["user_write", "user_read", "user_delete"])}
+            disabled={!authentication.userHasRole(["patient_write", "patient_read", "patient_delete"])}
             icon={<GiFiles />}
             {...a11yProps(4)}
           />

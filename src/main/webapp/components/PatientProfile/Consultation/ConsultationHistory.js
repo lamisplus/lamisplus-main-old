@@ -77,7 +77,7 @@ const columns = (editConsultation, viewConsultation) => [
           onClick={() => editConsultation(row)}
           aria-label='Edit Consultation'
           title='Edit Consultation'
-          disabled={!authentication.userHasRole("user_write")}
+          disabled={!authentication.userHasRole("patient_write")}
         >
           {' '}
           <Edit />

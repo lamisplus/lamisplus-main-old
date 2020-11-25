@@ -132,7 +132,9 @@ const Prescriptions = (props) => {
        </MenuButton>
        <MenuList style={{ hover: "#eee" }}>
          {form.data.prescription_status === 0 ? (
-           <MenuItem onSelect={() => toggle(form)}  >
+           <MenuItem onSelect={() => toggle(form)}
+                     hidden={!authentication.userHasRole(["pharmacy_write"])}
+           >
              <i
                className="fa fa-pencil"
                aria-hidden="true"

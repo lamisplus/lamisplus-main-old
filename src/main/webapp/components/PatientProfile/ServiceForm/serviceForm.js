@@ -211,7 +211,7 @@ function ServiceFormPage(props) {
             aria-label="Edit Form"
             title="Edit Form"
             onClick={() => editForm(row)}
-            disabled={!authentication.userHasRole("user_write")}
+            disabled={!authentication.userHasRole("patient_write")}
           >
             <EditIcon />
           </IconButton>
@@ -309,7 +309,7 @@ function ServiceFormPage(props) {
                           color="primary"
                           className=" mr-1"
                           onClick={loadForm}
-                          disabled={!authentication.userHasRole("user_write")}
+                          disabled={!authentication.userHasRole("patient_write")}
                         >
                           Open Form
                         </Button>
