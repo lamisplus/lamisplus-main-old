@@ -172,7 +172,9 @@ const Update = props => {
                         </Col>
                     </Row>
                     { form2 ?
-                        <FormBuilder form={row.resourceObject} {...props} onChange={(schema) => {
+                        <FormBuilder form={row.resourceObject} {...props}
+                                     submission={{data :{baseUrl:url}}}
+                                     onChange={(schema) => {
                             // console.log(JSON.stringify(schema));
                             setRes(JSON.stringify(schema));
                         }} />
@@ -207,7 +209,7 @@ const Update = props => {
                                     <Form
                                         form={JSON.parse(res)}
                                         ref={form => myform = form}
-                                        submission={{data : {patient: props.patient, authHeader: authHeader()}}}
+                                        submission={{data : {patient: props.patient, authHeader: authHeader(), baseUrl:url}}}
                                         //src={url}
                                         hideComponents={props.hideComponents}
                                         //onSubmit={props.onSubmit}
