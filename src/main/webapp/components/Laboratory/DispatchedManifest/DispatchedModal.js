@@ -276,7 +276,7 @@ const ModalViewResult = (props) => {
                                           <FormGroup>
                                               <Label for="exampleSelect">Dispatch Rider/Courier Phone Number</Label>
                                                     <Input
-                                                        type="text"
+                                                        type="number"
                                                         name="courierPhoneNumber"
                                                         id="courierPhoneNumber"
                                                         

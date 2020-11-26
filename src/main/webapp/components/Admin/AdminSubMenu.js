@@ -89,7 +89,7 @@ function AdminSubMenu(props) {
                   Global Variables
                   </Link>
                 </Dropdown.Item>
-                <Dropdown.Item >
+              {/*   <Dropdown.Item >
                   <Link
                       to={{
                         pathname: "/admin/standards"}}
@@ -104,7 +104,7 @@ function AdminSubMenu(props) {
                   >
                   Organization Unit setup
                   </Link>
-                </Dropdown.Item>
+                </Dropdown.Item>*/}
                 <Dropdown.Item >
                   <Link to={{
                         pathname: "/admin/wards"}}>
