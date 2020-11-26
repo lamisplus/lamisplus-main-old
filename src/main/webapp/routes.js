@@ -79,6 +79,8 @@ const ViewVitalsPage = React.lazy(() => import("components/Vitals/ViewVitalsPage
 
 // const CheckInModal = React.lazy(() => import('components/CheckIn/CheckInModal'));
 const EnrolledPatientsDashboard = React.lazy(() => import("components/PatientProfile/HomePage"));
+/* Data Visualisation */
+const TestPageForVisualisation = React.lazy(() => import("pages/TestPageForVisualisation"));
 
 /* Sample table i design */
 const TestPage = React.lazy(() => import("pages/TestPage"));
@@ -181,7 +183,7 @@ class Routes extends Component {
               <PrivateRoute exact path="/admin/organization-unit" component={OrganizationUnit} />
               <PrivateRoute exact path="/admin/parent-organization-unit" component={ParentOrganizationUnit} />
               <PrivateRoute exact path="/admin/parent-organization-unit-level" component={ParentOrganizationUnitLevel} />
-              //
+             
               {/* Pharmacy Links */}
               <PrivateRoute exact path="/pharmacy" component={PharmacyDashboard} />
               
@@ -201,7 +203,7 @@ class Routes extends Component {
               />
               <PrivateRoute exact path="/form-dashboard" component={formDashboard} />
               <PrivateRoute exact path="/form-builder" component={FormBuilder} />
-                <PrivateRoute exact path="/select" component={ReactSelect} />
+              <PrivateRoute exact path="/select" component={ReactSelect} />
               <PrivateRoute exact path="/view-form" component={ViewForm} />
               <PrivateRoute exact path="/pivot" component={PivotTable} />
                 <PrivateRoute exact path="/react-pivot" component={ReactPivot} />
@@ -237,6 +239,8 @@ class Routes extends Component {
               {/* The route to Appointment*/}
               {/* The route to Visualization*/}
                 <PrivateRoute exact path={"/visual"} component={TestPage} />
+                <PrivateRoute exact path={"/data-visualisation"} component={TestPageForVisualisation} />
+                
               {/* The route to Visualization*/}
                 <PrivateRoute exact path={"/unauthorised"} component={UnauthorisedPage} />
             </React.Suspense>
