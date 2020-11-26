@@ -46,7 +46,7 @@ const useStyles = makeStyles({
     const classes = useStyles()
     const [loading, setLoading] = useState('')
     const dispatch = useDispatch();
-    const listOfAllParentOrgUnit = useSelector(state => state.organizationalUnitReducer.list);
+    const listOfAllParentOrgUnitLevel = useSelector(state => state.organizationalUnitReducer.list);
 
     useEffect(() => {
       setLoading(true);
@@ -123,7 +123,7 @@ return (
                                 { title: 'Action', field: 'actions'},
                               ]}
                               isLoading={loading}
-                                data={listOfAllParentOrgUnit.map((row) => ({
+                                data={listOfAllParentOrgUnitLevel.map((row) => ({
                                       name: row.name,  
                                       description: row. description,
                                     
@@ -135,10 +135,7 @@ return (
                                             </MenuButton>
                                                 <MenuList style={{ color:"#000 !important"}} > 
                                                       <MenuItem style={{ color:"#000 !important"}}>
-                                                      <Link
-                                                        to={{pathname: "/admin/parent-organization-unit-level", state: { parentOrganisationUnitId: row.id  }}}>    
-                                                          <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>View Parent Organ. Unit</span>
-                                                       </Link>
+                                                     
                                                       </MenuItem> 
                                                       <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule('module to delete')}>                      
                                                       
