@@ -265,7 +265,9 @@ const Create = props => {
                         </Row>
 
                     </Form>
-                    <FormBuilder form={{display: displayType}} saveText={'Create Form'} onChange={(schema) => {
+                    <FormBuilder form={{display: displayType}}
+                                 submission={{data :{baseUrl:url}}}
+                                 saveText={'Create Form'} onChange={(schema) => {
                         setRes(JSON.stringify(schema));
                         console.log(res)
                     }} />
