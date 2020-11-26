@@ -121,14 +121,6 @@ const useStyles = makeStyles(theme => ({
   
 
 
-  const userProgressTableData = 
-      [
-  
-          {name: 'Total Sample Dispatached'},
-          {name: 'Total Sample Results'},
-          {name: 'Total Sample Rejected'}
-  
-      ];
 
 export default function LaboratoryDashBoard(props) {
     const classes = useStyles();
@@ -140,7 +132,7 @@ export default function LaboratoryDashBoard(props) {
             async function getCharacters() {
                 try {
                     const response = await axios.get( url+ 'laboratory-dashboard/pie');
-                    const body = response.data && response.data!==null ? response.data : {}; 
+                    const body =  {}; 
                     settestOrderGroupData(body)
                         
                 } catch (error) {}
@@ -152,27 +144,14 @@ export default function LaboratoryDashBoard(props) {
             async function getCharacters() {
                 try {
                     const response = await axios.get( url+ 'laboratory-dashboard/column/testOrders');
-                    const body = response.data && response.data!==null ? response.data : {}; 
+                    const body =  {}; 
                     settestOrdersStackChart(body)
                         
                 } catch (error) {}
             }
             getCharacters();
         }, []); 
-    // API request for LIMS BAR CHART   
-    useEffect(() => {
-        async function getCharacters() {
-            try {
-                const response = await axios.get( url+ 'laboratory-dashboard/column/lims');
-                const body = response.data && response.data!==null ? response.data : {}; 
-                setlimsBarChart(body)
-                    
-            } catch (error) {}
-        }
-        getCharacters();
-    }, []); 
-
-// Test Group Pie Chart 
+    
 
 const testGroup = {
 
@@ -183,7 +162,7 @@ const testGroup = {
         type: testOrderGroupData.type
     },
     title: {
-        text: 'LABORATORY TEST GROUP ANALYSIS FOR THE PAST 6'
+        text: ''
     },
     tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -204,7 +183,7 @@ const testGroup = {
         }
     },
     series: [{
-        name: 'Test Group',
+        name: '',
         colorByPoint: true,
         data: testOrderGroupData.data
     }]
@@ -279,7 +258,7 @@ const testGroup = {
              
                 <CardDeck>
                     <Card >
-                        <CardHeader> Laboratory Test Group for the past 6months</CardHeader>
+                        <CardHeader> Radiology Test  Chart for the past 3months</CardHeader>
                             <CardBody>
                                 <div>
                                     <HighchartsReact options={testGroup} />
@@ -287,7 +266,7 @@ const testGroup = {
                             </CardBody>                      
                     </Card>
                     <Card >
-                        <CardHeader> Laboratory Test Order/ Result for the past 6months</CardHeader>
+                        <CardHeader> Radiology Test  Results for 6months</CardHeader>
                             <CardBody>
                                 <div>
                                     <HighchartsReact options={testOrders} />
@@ -296,31 +275,7 @@ const testGroup = {
                     </Card>
                 </CardDeck>
                     <br/><br/>
-                <Grid container spacing={2}>
-                    <Grid item xs='8' >                    
-                        <Card  >
-                            <CardHeader> LIMS Chart Analysis</CardHeader>
-                                <CardBody>
-                                    <div>
-                                        <HighchartsReact options={lamisChart} />
-                                    </div> 
-                                    
-                                </CardBody>                      
-                        </Card>   
-                    </Grid>
-                  <Grid item xs='4'>
-                      <Card  >
-                          <CardHeader> Recent LIMS Analysis for the past 7days</CardHeader>
-                              <CardBody>
-                                  <UserProgressTable
-                                      headers={['' ]}
-                                      usersData={userProgressTableData}
-                                  />
-                              </CardBody>                      
-                      </Card>  
-                  </Grid>
-                    
-                </Grid> 
+                
 
            
         </div>
