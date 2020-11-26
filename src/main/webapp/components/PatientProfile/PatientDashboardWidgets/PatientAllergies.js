@@ -6,7 +6,7 @@ import {
   CardBody,
   Modal, ModalBody, ModalHeader
 } from 'reactstrap';
-import { Label } from 'semantic-ui-react';
+import {Dropdown, Label} from 'semantic-ui-react';
 import FormRendererModal from 'components/FormManager/FormRendererModal';
 import * as CODES from "api/codes";
 import { ToastContainer, toast } from 'react-toastify';
@@ -14,6 +14,7 @@ import {connect} from 'react-redux';
 import AllergyList from '../Allergy/AllergyList';
 import LinearProgress from "@material-ui/core/LinearProgress";
 import {fetchPatientAllergies} from "actions/patients";
+import { authentication } from '../../../_services/authentication';
 
 
 const useStyles = makeStyles(theme => ({
@@ -83,7 +84,10 @@ const toggleAllergyList = () => {
   return (
 <React.Fragment>
             <Card >
-              <CardHeader>Allergies <button type="button" className="float-right ml-3" onClick={addAllergy}><i className="fa fa-plus"></i> Add Allergies</button> &nbsp; <button type="button" className="float-right ml-3" onClick={toggleAllergyList}><i className="fa fa-list"></i> List All</button></CardHeader>
+              <CardHeader>Allergies
+                  <button type="button" className="float-right ml-3" onClick={addAllergy}  disabled={!authentication.userHasRole(["patient_write"])}><i className="fa fa-plus"></i> Add Allergies</button>
+                  &nbsp; <button type="button" className="float-right ml-3" onClick={toggleAllergyList} ><i className="fa fa-list"></i> List All</button>
+              </CardHeader>
              {loading && <LinearProgress color="primary" thickness={1}/>}
                     <CardBody>
                                 

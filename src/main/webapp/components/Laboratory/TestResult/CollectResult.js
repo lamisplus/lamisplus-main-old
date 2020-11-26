@@ -21,6 +21,7 @@ import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import ModalViewResult from './ViewResult';
 import ModalSampleResult from './EnterResult';
+import {authentication} from '../../../_services/authentication';
 
 
 
@@ -150,7 +151,7 @@ const ResultReporting = (props) => {
                 </MenuButton>
                     <MenuList style={{hover:"#eee"}}>
                     {e.data.lab_test_order_status!==5 ?
-                        <MenuItem onSelect={() => handleResult(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Enter Result</MenuItem>
+                        <MenuItem onSelect={() => handleResult(e)} hidden={!authentication.userHasRole(["laboratory_write"])}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Enter Result</MenuItem>
                     :""}
                     {e.data.lab_test_order_status===5 ?
                         <MenuItem onSelect={() => viewresult(e)}><FaRegEye size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>

@@ -3,6 +3,8 @@ import { url } from "../api";
 import { handleResponse } from '../_helpers';
 import store from '../store';
 import * as ACTION_TYPES from "../actions/types";
+import jwt_decode from "jwt-decode";
+import _ from 'lodash';
 
 const { dispatch } = store;
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
@@ -11,7 +13,9 @@ export const authentication = {
     login,
     logout,
     currentUser: currentUserSubject.asObservable(),
-    get currentUserValue () { return currentUserSubject.value }
+    get currentUserValue () { return currentUserSubject.value },
+    getCurrentUserRole,
+    userHasRole
 };
 
 function login(username, password, remember) {
@@ -39,4 +43,25 @@ function logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
     currentUserSubject.next(null);
+}
+
+function getCurrentUserRole() {
+    //fetch all the permissions of the logged in user
+    const user = currentUserSubject.value;
+    if(!user || !user.id_token){
+        return [];
+    }
+
+    const token = user.id_token;
+    const decoded = jwt_decode(token);
+    const permissions = decoded.auth;
+    return permissions.split(',');
+}
+
+function userHasRole(role){
+    const userRoles = getCurrentUserRole();
+    if(role && role.length > 0 && _.intersection(role, userRoles).length === 0){
+        return false;
+    }
+    return true;
 }

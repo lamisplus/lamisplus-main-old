@@ -9,6 +9,7 @@ import {GiFiles} from 'react-icons/gi';
 import { Badge } from 'reactstrap';
 import Button from "@material-ui/core/Button";
 import DispatchedModal from './DispatchedModal';
+import {authentication} from '../../../_services/authentication';
 
 
 const PatientSearch = (props) => {
@@ -93,7 +94,7 @@ useEffect(() => {
         
           { title: "FormDataObj ", 
             field: "formDataObj",
-            hidden: true 
+            hidden: true
           },
           
           {
@@ -178,6 +179,7 @@ useEffect(() => {
         actions={[         
             {
               tooltip: 'Dispatch All Selected Sample',
+              disabled: !authentication.userHasRole(["laboratory_write"]),
               icon: 'add' ,
               label: 'Add Manifest',
               onClick: (evt, data) =>
