@@ -59,7 +59,8 @@ const DataBaseSync = React.lazy(() => import("components/Admin/DatabaseManagemen
 /* Organization Unit Manager configuration */
 const OrganizationUnit = React.lazy(() => import("components/Admin/OrganizationUnit/Index"));
 const ParentOrganizationUnit = React.lazy(() => import("components/Admin/OrganizationUnit/ParentOrganizationalUnit"));
-
+const ParentOrganizationUnitLevel = React.lazy(() => import("components/Admin/OrganizationUnit/ParentOrganizationalUnitLevel"));
+//admin/parent-organization-unit-level
 /* End of Bootstrap configuration */
 const formDashboard = React.lazy(() => import('components/formBuilder/formDashboard'));
 const FormBuilder = React.lazy(() => import('components/formBuilder/FormBuilder'));
@@ -68,7 +69,7 @@ const ViewForm = React.lazy(() => import('components/formBuilder/ViewForm'));
 const PivotTable = React.lazy(() => import('components/PivotTable/PivotTable'));
 const ReactPivot = React.lazy(() => import('components/PivotTable/ReactPivot'));
 const FormPage = React.lazy(() => import('components/Admin/FormPage'));
-
+const ProgramManagerPage = React.lazy(() => import('components/Admin/ProgramManager/ProgramManager'));
 
 /* Pharmacy page loading */
 const PharmacyDashboard = React.lazy(() => import("./components/Pharmacy/PharmacyDashboard"))
@@ -175,6 +176,8 @@ class Routes extends Component {
               {/* OrganizationUnit */}
               <PrivateRoute exact path="/admin/organization-unit" component={OrganizationUnit} />
               <PrivateRoute exact path="/admin/parent-organization-unit" component={ParentOrganizationUnit} />
+              <PrivateRoute exact path="/admin/parent-organization-unit-level" component={ParentOrganizationUnitLevel} />
+              //
               {/* Pharmacy Links */}
               <PrivateRoute exact path="/pharmacy" component={PharmacyDashboard} />
               
@@ -199,7 +202,7 @@ class Routes extends Component {
               <PrivateRoute exact path="/pivot" component={PivotTable} />
                 <PrivateRoute exact path="/react-pivot" component={ReactPivot} />
                 <PrivateRoute exact path="/form-home" component={FormPage} />
-
+                <PrivateRoute exact path="/admin/program-manager" component={ProgramManagerPage} />
               
                 {/* The rout to that DataTabel */}
               <PrivateRoute exact path="/test-page" component={TestPage} />
