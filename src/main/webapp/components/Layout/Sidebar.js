@@ -32,10 +32,10 @@ const navItems = [
   { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog,
   roles: ["admin_read", "user_read"] },
   { to: '/radiology-home', name: 'Radiology', exact: false, Icon: GiTestTubes },
-  { to: '/data-visualisation', name: 'Data Visualisation', exact: false, Icon: GiTestTubes },
+  // { to: '/data-visualisation', name: 'Data Visualisation', exact: false, Icon: GiTestTubes },
   // { to: '/select', name: 'React Select', exact: false, Icon: FaUserCog },
 
-  //{ to: '/admin-dashboard', name: 'Administration Module', exact: false, Icon: FaUserCog },
+  // { to: '/admin-dashboard', name: 'Administration Module', exact: false, Icon: FaUserCog },
   
 ];
 const navContents = [
