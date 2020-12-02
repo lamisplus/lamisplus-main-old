@@ -309,7 +309,7 @@ function ServiceFormPage(props) {
                           color="primary"
                           className=" mr-1"
                           onClick={loadForm}
-                          disabled={!authentication.userHasRole("patient_write")}
+                          disabled={!authentication.userHasRole(["patient_write"])}
                         >
                           Open Form
                         </Button>
