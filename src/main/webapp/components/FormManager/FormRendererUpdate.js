@@ -9,6 +9,7 @@ import { toast } from 'react-toastify'
 import { Card, Alert, CardBody, Spinner } from 'reactstrap'
 import { formRendererService } from "_services/form-renderer";
 import _ from "lodash";
+import { url } from "api";
 
 Moment.locale('en')
 momentLocalizer()
@@ -20,7 +21,7 @@ const FormRenderer = props => {
   const [showErrorMsg, setShowErrorMsg] = React.useState(false)
   const [showLoading, setShowLoading] = React.useState(false)
   const [showLoadingEncounter, setShowLoadingEncounter] = React.useState(false)
-  const [submission, setSubmission] = React.useState({...props.submission, ...{ data: { patient: props.patient }}})
+  const [submission, setSubmission] = React.useState({...props.submission, ...{ data: { patient: props.patient, baseUrl: url }}})
   const [showLoadingForm, setShowLoadingForm] = React.useState(true)
   const onDismiss = () => setShowErrorMsg(false)
   const options = {}
