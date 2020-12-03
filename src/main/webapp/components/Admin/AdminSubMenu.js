@@ -96,7 +96,6 @@ function AdminSubMenu(props) {
         <Menu.Item>  <Link to={{pathname: "/admin/bootstrap-configuration"}} >Bootstrap Configuration </Link></Menu.Item>
         <Menu.Item>  <Link to={{pathname: "/admin/organization-unit"}} >Organization Unit </Link></Menu.Item>
         <Menu.Item>  <Link to={{pathname: "/admin/program-manager-home"}} >Program Setup </Link></Menu.Item>
-        <Menu.Item>  <Link to={{pathname: "/admin/programs-manager"}} >Programs Manager Setup </Link></Menu.Item>
       </Menu>
       <ToastContainer />
     </React.Fragment>

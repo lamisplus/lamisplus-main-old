@@ -1,8 +1,7 @@
-import React from 'react';
-import useEffect from 'react';
+import React, {useEffect} from 'react';
 import MaterialTable from 'material-table';
 import { connect } from "react-redux";
-import { fetchAll, deactivateProgram} from "actions/programManager";
+import { fetchAll, deleteProgram, } from "actions/programManager";
 import {
     Card,
     CardBody, Modal, ModalBody, ModalFooter, ModalHeader, Spinner
@@ -17,7 +16,8 @@ import {toast} from "react-toastify";
 import SaveIcon from "@material-ui/icons/Delete";
 import CancelIcon from "@material-ui/icons/Cancel";
 import {makeStyles} from "@material-ui/core/styles";
-;
+import "@reach/menu-button/styles.css";
+
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -28,7 +28,7 @@ const ProgramManagerSearch = (props) => {
     const [loading, setLoading] = React.useState(true);
     const [showModal, setShowModal] = React.useState(false);
     const [deleting, setDeleting] = React.useState(false);
-    const [currentCurrentProgram, setcurrentCurrentProgram] = React.useState(null);
+    const [currentProgramManager, setCurrentProgramManager] = React.useState(null);
     const [showDeleteModal, setShowDeleteModal] = React.useState(false);
     const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal)
     const toggleModal = () => setShowModal(!showModal)
@@ -46,13 +46,13 @@ const ProgramManagerSearch = (props) => {
         loadProgramManager()
     }, []); //componentDidMount
 
-    const openGlobalVariable = (row) => {
-        setcurrentCurrentProgram(row);
+    const openProgram = (row) => {
+        setCurrentProgramManager(row);
         toggleModal();
     }
 
-    const deactivateProgram = (row) => {
-        setcurrentCurrentProgram(row);
+    const deleteProgram = (row) => {
+        setCurrentProgramManager(row);
         toggleDeleteModal();
     }
 
@@ -61,18 +61,17 @@ const ProgramManagerSearch = (props) => {
         const onSuccess = () => {
             setDeleting(false);
             toggleDeleteModal();
-            toast.success("Global variable deleted successfully!");
+            toast.success("Program deleted successfully!");
             loadProgramManager();
         };
         const onError = () => {
             setDeleting(false);
             toast.error("Something went wrong, please contact administration");
         };
-        props.delete(id, onSuccess, onError);
+        props.deleteProgram(id, onSuccess, onError);
     }
     return (
         <Card>
-
             <CardBody>
                 <Breadcrumbs aria-label="breadcrumb">
                     <Link color="inherit" to={{pathname: "/admin"}} >
@@ -82,40 +81,35 @@ const ProgramManagerSearch = (props) => {
                 </Breadcrumbs>
                 <br/>
                 <div className={"d-flex justify-content-end pb-2"}>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<FaPlus />}
-                        onClick={() => openGlobalVariable(null)}>
+                    <Button variant="contained"
+                            color="primary"
+                            startIcon={<FaPlus />}
+                            onClick={() => openProgram(null)}>
                         <span style={{textTransform: 'capitalize'}}>Add New Program</span>
                     </Button>
 
                 </div>
                 <MaterialTable
-                    title="Find Global Variable"
+                    title="Find By Program Area"
                     columns={[
-                        {
-                            title: "Name",
-                            field: "name",
-                        },
-                        { title: "Description", field: "description" },
-                        { title: "Value", field: "format", filtering: false }
+                        { title: "Module Name", field: "moduleId" },
+                        {title: "Program Area", field: "name"},
+                        {title: "Action", field: "actions", filtering: false,},
                     ]}
                     isLoading={loading}
                     data={props.list}
-
                     actions= {[
                         {
                             icon: 'edit',
                             iconProps: {color: 'primary'},
-                            tooltip: 'Edit Global Variable',
-                            onClick: (event, rowData) => openGlobalVariable(rowData)
+                            tooltip: 'Edit Program',
+                            onClick: (event, rowData) => openProgram(rowData)
                         },
                         {
                             icon: 'delete',
                             iconProps: {color: 'primary'},
-                            tooltip: 'Delete Global Variable',
-                            onClick: (event, rowData) => deactivateProgram(rowData)
+                            tooltip: 'Delete Program',
+                            onClick: (event, rowData) => deleteProgram(rowData)
                         }
                     ]}
                     //overriding action menu with props.actions
@@ -136,10 +130,9 @@ const ProgramManagerSearch = (props) => {
                     }}
                 />
             </CardBody>
-
-            <NewProgramManager toggleModal={toggleModal} showModal={showModal} loadProgramManager={loadProgramManager} formData={currentCurrentProgram}/>
+            <NewProgramManager toggleModal={toggleModal} showModal={showModal} loadProgramManager={loadProgramManager} formData={currentProgramManager}/>
             <Modal isOpen={showDeleteModal} toggle={toggleDeleteModal} >
-                <ModalHeader toggle={toggleDeleteModal}> Deactivate and Activate Program - {currentCurrentProgram && currentCurrentProgram.name ? currentCurrentProgram.name : ""} </ModalHeader>
+                <ModalHeader toggle={toggleDeleteModal}> Delete Program - {currentProgramManager && currentProgramManager.name ? currentProgramManager.name : ""} </ModalHeader>
                 <ModalBody>
                     <p>Are you sure you want to proceed ?</p>
                 </ModalBody>
@@ -151,7 +144,7 @@ const ProgramManagerSearch = (props) => {
                         className={classes.button}
                         startIcon={<SaveIcon />}
                         disabled={deleting}
-                        onClick={() => processDelete(currentCurrentProgram.id)}>
+                        onClick={() => processDelete(currentProgramManager.id)}>
                         Delete  {deleting ? <Spinner /> : ""}
                     </Button>
                     <Button
@@ -176,7 +169,7 @@ const mapStateToProps = state => {
 
 const mapActionToProps = {
     fetchAll: fetchAll,
-    delete: deactivateProgram
+    delete: deleteProgram,
 };
 
 export default connect(mapStateToProps, mapActionToProps)(ProgramManagerSearch);

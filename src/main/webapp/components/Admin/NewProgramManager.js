@@ -13,7 +13,7 @@ import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import moment from "moment";
 
-import { newGlobalVariable, updateGlobalVariable } from 'actions/globalVariable';
+import {createProgram, updateProgram } from 'actions/programManager';
 import { Alert } from 'reactstrap';
 import { Spinner } from 'reactstrap';
 
@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 
 const ModalSample = (props) => {
     const [loading, setLoading] = useState(false)
-    const defaultValues = {name:"",description:"",format:"" }
+    const defaultValues = {name:"",moduleId:"" }
     const [formData, setFormData] = useState(defaultValues)
     const [errors, setErrors] = useState({});
     const classes = useStyles()
@@ -57,14 +57,14 @@ const ModalSample = (props) => {
         return Object.values(temp).every(x => x == "")
     }
 
-    const createGlobalVariable = e => {
+    const createNewProgram = e => {
         e.preventDefault()
         setLoading(true);
 
         const onSuccess = () => {
             setLoading(false);
-            toast.success("Global variable saved successfully!")
-            props.loadGlobalVariable();
+            toast.success("New Program saved successfully!")
+            props.createProgram();
             props.toggleModal()
         }
         const onError = () => {
@@ -73,10 +73,10 @@ const ModalSample = (props) => {
         }
 
         if(formData.id){
-            props.updateGlobalVariable(formData.id, formData, onSuccess, onError)
+            props.updateProgram(formData.id, formData, onSuccess, onError)
             return
         }
-        props.newGlobalVariable(formData, onSuccess,onError)
+        props.createProgram(formData, onSuccess,onError)
 
     }
     return (
@@ -84,8 +84,7 @@ const ModalSample = (props) => {
         <div >
             <ToastContainer />
             <Modal isOpen={props.showModal} toggle={props.toggleModal} size="lg">
-
-                <Form onSubmit={createGlobalVariable}>
+                <Form onSubmit={createNewProgram}>
                     <ModalHeader toggle={props.toggleModal}>New Program </ModalHeader>
                     <ModalBody>
                         <Card >
@@ -93,7 +92,7 @@ const ModalSample = (props) => {
                                 <Row >
                                     <Col md={12}>
                                         <FormGroup>
-                                            <Label>Name</Label>
+                                            <Label>Program Name</Label>
                                             <Input
                                                 type='text'
                                                 name='name'
@@ -103,40 +102,23 @@ const ModalSample = (props) => {
                                                 onChange={handleNameInputChange}
                                                 required
                                             />
-
                                         </FormGroup>
                                     </Col>
                                     <Col md={12}>
                                         <FormGroup>
-                                            <Label>Description</Label>
+                                            <Label>Module ID</Label>
                                             <Input
-                                                type='textarea'
-                                                name='description'
-                                                id='description'
+                                                type='text'
+                                                name='moduleId'
+                                                id='moduleId'
                                                 placeholder=' '
-                                                value={formData.description}
+                                                value={formData.moduleId}
                                                 onChange={handleInputChange}
                                                 required
                                             />
                                         </FormGroup>
                                     </Col>
-                                    <Col md={12}>
-                                        <FormGroup>
-                                            <Label>Value</Label>
-                                            <Input
-                                                type='textarea'
-                                                name='format'
-                                                id='format'
-                                                placeholder=' '
-                                                value={formData.format}
-                                                onChange={handleInputChange}
-                                                required
-                                            />
-                                        </FormGroup>
-                                    </Col>
-
                                 </Row>
-
                                 <MatButton
                                     type='submit'
                                     variant='contained'
@@ -163,4 +145,4 @@ const ModalSample = (props) => {
     );
 }
 
-export default connect(null, { newGlobalVariable, updateGlobalVariable })(ModalSample);
+export default connect(null, {createProgram, updateProgram })(ModalSample);

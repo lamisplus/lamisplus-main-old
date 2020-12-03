@@ -67,8 +67,8 @@ const PivotTable = React.lazy(() => import('components/PivotTable/PivotTable'));
 const ReactPivot = React.lazy(() => import('components/PivotTable/ReactPivot'));
 const FormPage = React.lazy(() => import('components/Admin/FormPage'));
 const NewProgramManager = React.lazy(() => import('components/Admin/NewProgramManager'));
-const ProgramManagementPage = React.lazy(() => import('components/Admin/ProgramManagementPage'));
-const ProgramManagement = React.lazy(() => import('components/Admin/BootstrapConfiguration/Index'));
+const ProgramManagerSeacrch = React.lazy(() => import('components/Admin/ProgramManagerSeacrch'));
+
 
 /* Pharmacy page loading */
 const PharmacyDashboard = React.lazy(() => import("./components/Pharmacy/PharmacyDashboard"))
@@ -195,8 +195,8 @@ class Routes extends Component {
                 <PrivateRoute exact path="/react-pivot" component={ReactPivot} />
                 <PrivateRoute exact path="/form-home" component={FormPage} />
                 <PrivateRoute exact path="/new-program" component={NewProgramManager} />
-                <PrivateRoute exact path="/program-manager-home" component={ProgramManagementPage}/>
-                <PrivateRoute exact path="/programs-manager" component={ProgramManagement}/>
+                <PrivateRoute exact path="/admin/program-manager-home" component={ProgramManagerSeacrch}/>
+
 
                 {/* The rout to that DataTabel */}
               <PrivateRoute exact path="/test-page" component={TestPage} />

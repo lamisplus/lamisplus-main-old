@@ -1,6 +1,5 @@
 import axios from "axios";
 import { url } from "api";
-import {APPOINTMENT_FORM, GENERAL_SERVICE} from "api/codes";
 import * as ACTION_TYPES from "./types";
 
 
@@ -25,9 +24,9 @@ export const fetchAll = (onSuccess , onError) => dispatch => {
         );
 };
 
-export const newGlobalVariable = (formData, onSuccess , onError) => dispatch => {
+export const createProgram = (formData, onSuccess , onError) => dispatch => {
     axios
-        .post(`${url}global-variables`, formData)
+        .post(`${url}programs`, formData)
         .then(response => {
             if(onSuccess){
                 onSuccess();
@@ -42,9 +41,9 @@ export const newGlobalVariable = (formData, onSuccess , onError) => dispatch => 
         );
 };
 
-export const updateGlobalVariable = (id, formData, onSuccess , onError) => dispatch => {
+export const updateProgram = (id, formData, onSuccess , onError) => dispatch => {
     axios
-        .put(`${url}global-variables/${id}`, formData)
+        .put(`${url}programs/${id}`, formData)
         .then(response => {
             if(onSuccess){
                 onSuccess();
@@ -59,9 +58,9 @@ export const updateGlobalVariable = (id, formData, onSuccess , onError) => dispa
         );
 };
 
-export const deactivateProgram = (id, onSuccess , onError) => dispatch => {
+export const deleteProgram = (id, onSuccess , onError) => dispatch => {
     axios
-        .delete(`${url}global-variables/${id}`)
+        .delete(`${url}programs/${id}`)
         .then(response => {
             if(onSuccess){
                 onSuccess();
