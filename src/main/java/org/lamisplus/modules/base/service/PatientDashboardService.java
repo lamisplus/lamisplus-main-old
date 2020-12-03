@@ -96,7 +96,6 @@ public class PatientDashboardService {
         data.add(50);
         data.add(12);
         data.add(89);
-        //columnSeries.add(chartUtil.getMainMap(data, "Birth Rate", null, null, null));
 
         return chartUtil.buildMainMap(type, chartTitle, subTitle, chartUtil.getXAxis(),
                 chartUtil.getYAxis(), null,

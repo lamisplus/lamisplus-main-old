@@ -6,9 +6,7 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.entity.LabTest;
 import org.lamisplus.modules.base.domain.entity.LabTestGroup;
-import org.lamisplus.modules.base.domain.mapper.LabTestMapper;
 import org.lamisplus.modules.base.repository.LabTestGroupRepository;
-import org.lamisplus.modules.base.repository.LabTestRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +29,7 @@ public class LabTestGroupService {
     public LabTestGroup save(LabTestGroup labTestGroup) {
         Optional<LabTestGroup> labTestGroupOptional = labTestGroupRepository.findById(labTestGroup.getId());
         if (labTestGroupOptional.isPresent()) throw new RecordExistException(LabTestGroup.class, "Id", labTestGroup.getId() + "");
-        labTestGroup.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
+        labTestGroup.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         return labTestGroupRepository.save(labTestGroup);
     }
 
@@ -45,7 +43,7 @@ public class LabTestGroupService {
         Optional<LabTestGroup> labTestGroupOptional = labTestGroupRepository.findById(id);
         if(!labTestGroupOptional.isPresent() || labTestGroupOptional.get().getArchived() == 1)throw new EntityNotFoundException(LabTestGroup.class, "Id", id +"");
         labTestGroup.setId(id);
-        labTestGroup.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        labTestGroup.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return labTestGroupRepository.save(labTestGroup);
     }
 
@@ -60,7 +58,7 @@ public class LabTestGroupService {
         Optional<LabTestGroup> labTestGroupOptional = labTestGroupRepository.findById(id);
         if (!labTestGroupOptional.isPresent() || labTestGroupOptional.get().getArchived() == 1) throw new EntityNotFoundException(LabTestGroup.class, "Id", id + "");
         labTestGroupOptional.get().setArchived(1);
-        labTestGroupOptional.get().setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        labTestGroupOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
 
         return labTestGroupOptional.get().getArchived();
     }

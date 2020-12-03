@@ -14,8 +14,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function PatientDetailCard(props) {
-    console.log(props)
- const patientDetail = props.getpatientdetails;
+  console.log(props)
+  const patientDetail = props.getpatientdetails;
   const classes = useStyles();
 
   return (

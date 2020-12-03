@@ -140,8 +140,7 @@ export default function LaboratoryDashBoard(props) {
             async function getCharacters() {
                 try {
                     const response = await axios.get( url+ 'laboratory-dashboard/pie');
-                    const body = response.data;
-                    //setbirthRateData(body2) 
+                    const body = response.data && response.data!==null ? response.data : {}; 
                     settestOrderGroupData(body)
                         
                 } catch (error) {}
@@ -153,8 +152,7 @@ export default function LaboratoryDashBoard(props) {
             async function getCharacters() {
                 try {
                     const response = await axios.get( url+ 'laboratory-dashboard/column/testOrders');
-                    const body = response.data;
-                    //setbirthRateData(body2) 
+                    const body = response.data && response.data!==null ? response.data : {}; 
                     settestOrdersStackChart(body)
                         
                 } catch (error) {}
@@ -166,15 +164,13 @@ export default function LaboratoryDashBoard(props) {
         async function getCharacters() {
             try {
                 const response = await axios.get( url+ 'laboratory-dashboard/column/lims');
-                const body = response.data;
-                //setbirthRateData(body2) 
+                const body = response.data && response.data!==null ? response.data : {}; 
                 setlimsBarChart(body)
                     
             } catch (error) {}
         }
         getCharacters();
     }, []); 
-console.log(limsBarChart)
 
 // Test Group Pie Chart 
 
@@ -187,7 +183,7 @@ const testGroup = {
         type: testOrderGroupData.type
     },
     title: {
-        text: 'LABORATORY TEST GROUP ANALYSIS'
+        text: 'LABORATORY TEST GROUP ANALYSIS FOR THE PAST 6'
     },
     tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -283,7 +279,7 @@ const testGroup = {
              
                 <CardDeck>
                     <Card >
-                        <CardHeader> Laboratory Test Group Analysis</CardHeader>
+                        <CardHeader> Laboratory Test Group for the past 6months</CardHeader>
                             <CardBody>
                                 <div>
                                     <HighchartsReact options={testGroup} />
@@ -291,7 +287,7 @@ const testGroup = {
                             </CardBody>                      
                     </Card>
                     <Card >
-                        <CardHeader> Laboratory Test Order/ Result</CardHeader>
+                        <CardHeader> Laboratory Test Order/ Result for the past 6months</CardHeader>
                             <CardBody>
                                 <div>
                                     <HighchartsReact options={testOrders} />

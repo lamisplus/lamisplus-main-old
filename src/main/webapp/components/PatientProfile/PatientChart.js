@@ -97,7 +97,7 @@ function PatientChart(props) {
         <CardBody>
           <Line
             data={BloodPressure(
-              data ? data.filter((x) => x.systolic !== "").map((x) => x.dateEncounter) : [],
+              data ? data.filter((x) => x.systolic !== "").map((x) => x.date_encounter) : [],
                 data ? data.filter((x) => x.systolic !== "").map((x) => x.systolic) : [],
                 data ? data.filter((x) => x.diastolic !== "").map((x) => x.diastolic) : [],
               { fill: false },
@@ -114,7 +114,7 @@ function PatientChart(props) {
             data={Weight(
               data
                 .filter((x) => x.body_weight !== "")
-                .map((x) => x.dateEncounter),
+                .map((x) => x.date_encounter),
               data.filter((x) => x.body_weight !== "").map((x) => x.body_weight),
               { fill: false }
             )}

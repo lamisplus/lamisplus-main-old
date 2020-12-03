@@ -92,7 +92,7 @@ export const createCollectedSample = (data, lab_id, onSuccess, onError ) => disp
         payload: response.data
       });
       onSuccess()
-      //toast.success("Sample Collection was successful");
+      toast.success("Sample Collection successful");
     })
     .catch(error =>{
       
@@ -101,7 +101,7 @@ export const createCollectedSample = (data, lab_id, onSuccess, onError ) => disp
         payload: error
       })
       onError()
-      //toast.error("Something went wrong, please try again");
+      toast.error("Something went wrong, please try again");
       
     });
   }else{
@@ -178,7 +178,27 @@ export const sampleDispatched = (onSuccess, onError) => dispatch => {
     });
 
 };
+// Sample Dispatched Detail by a particular ID MANIFEST_DETAIL_BY_ID
+export const sampleDispatchedByManifestID = (manifestId, onSuccess, onError) => dispatch => {
 
+  axios
+    .get(`${baseUrl}sample-manifests/dispatched-manifest/true`)
+    .then(response => {
+      dispatch({
+        type: ACTION_TYPES.MANIFEST_DETAIL_BY_ID,
+        payload: response.data.filter((x) => x.manifestId === manifestId)
+      })
+      onSuccess();
+    })
+    .catch(error => {
+      dispatch({
+        type: ACTION_TYPES.ERROR_MANIFEST_DETAIL_BY_ID,
+        payload: 'Something went wrong, please try again'
+      })
+      onError();
+    });
+
+};
 //Get list of samples Manifest by ID 
 export const samplesManifestById = (id,onSuccess, onError) => dispatch => {
   if(id){
@@ -213,7 +233,7 @@ export const sampleVerification = (data, lab_id, onSuccess, onError ) => dispatc
         payload: response.data
       });
       onSuccess()
-      //toast.success("Sample verified successful");
+      toast.success("Sample verified successful");
       //setInterval(window.location.reload(false), 80000);
     })
     .catch(error =>{
@@ -242,7 +262,7 @@ export const transferSample = (samples, lab_id) => dispatch => {
         type: ACTION_TYPES.TRANSFER_SAMPLE,
         payload: response.data
       });
-      //toast.success("Sample Transfer was successful");
+      toast.success("Sample Transfer  successful");
     })
     .catch(error =>{
       
@@ -415,11 +435,13 @@ export const updateRadiologyByFormId = (data, id, onSuccess, onError ) => dispat
             .then(response => {
                 if(onSuccess){
                     onSuccess()
+                   
                 }
             })
             .catch(error =>{
                 if(onError){
                     onError()
+                    
                 }
             });
 };

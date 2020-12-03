@@ -8,7 +8,6 @@ import org.lamisplus.modules.base.domain.dto.ProvinceDTO;
 import org.lamisplus.modules.base.domain.entity.Province;
 import org.lamisplus.modules.base.domain.mapper.ProvinceMapper;
 import org.lamisplus.modules.base.repository.ProvinceRepository;
-import org.lamisplus.modules.base.repository.StateRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +34,7 @@ public class ProvinceService {
         if (provinceOptional.isPresent()) throw new RecordExistException(Province.class, "State Id", provinceDTO.getStateId() + "");
 
         Province province = provinceMapper.toProvinceDTO(provinceDTO);
-        province.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
+        province.setCreatedBy(userService.getUserWithRoles().get().getUserName());
 
         return provinceRepository.save(province);
     }
@@ -48,7 +47,7 @@ public class ProvinceService {
         Optional<Province> provinceOptional = provinceRepository.findById(id);
         if(!provinceOptional.isPresent() || provinceOptional.get().getArchived() == 1)throw new EntityNotFoundException(Province.class, "Id", id +"");
         province.setId(id);
-        province.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        province.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return provinceRepository.save(province);
     }
 
@@ -63,7 +62,7 @@ public class ProvinceService {
         Optional<Province> provinceOptional = provinceRepository.findById(id);
         if (!provinceOptional.isPresent() || provinceOptional.get().getArchived() == 1) throw new EntityNotFoundException(Province.class, "Id", id + "");
         provinceOptional.get().setArchived(1);
-        provinceOptional.get().setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        provinceOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
 
         return provinceOptional.get().getArchived();
     }

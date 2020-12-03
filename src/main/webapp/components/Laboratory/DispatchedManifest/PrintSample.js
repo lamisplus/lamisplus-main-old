@@ -50,17 +50,13 @@ const PatientSearch = (props) => {
     
     props.patientsTestOrderList.forEach(function(value, index, array) {
         const getList = value['formDataObj'].find(x => { 
-            //console.log(value)
             if(x.data && x.data!==null && x.data.manifest_status===1){
-                console.log(value);
-            //return console.log(x)
+
             labTestType.push(value);
             }
-        // return console.log(x)
         
         })         
     });
-    // console.log(labTestType);
         
     const [labNum, setlabNum] = useState({lab_number:""})
 
@@ -79,7 +75,6 @@ const PatientSearch = (props) => {
                 
                 test.forEach(function(value, index, array) {
                     if(value['data']!==null && value['data'].hasOwnProperty("manifest_status")){
-                        //console.log(value['data'])
                         maxVal.push(value['data']);
                     }
                 }
@@ -96,7 +91,7 @@ const PatientSearch = (props) => {
                 
                 test.forEach(function(value, index, array) {
                     if(value['data']!==null && value['data'].hasOwnProperty("manifest_status")){
-                        //console.log(value['data'])
+                     
                         maxVal.push(value['data']);
                     }
                 }
@@ -130,13 +125,13 @@ const PatientSearch = (props) => {
     }
 
     const handleRecollectSample = (row) => { 
-        console.log(row)
+
         setcollectModal({...collectModal, ...row});
         setModal2(!modal2) 
     }
 
     const SampleResult = (row) => { 
-        console.log(row)
+
         setcollectModal({...collectModal, ...row});
         setModal3(!modal3) 
     }
