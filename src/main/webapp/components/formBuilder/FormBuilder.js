@@ -136,7 +136,10 @@ const Create = props => {
             <ToastContainer autoClose={3000} hideProgressBar />
             <Card >
                 <CardContent>
-                    <Link to="/admin">
+                    <Link to ={{
+                        pathname: "/admin",
+                        state: 'form-builder'
+                    }}>
                         <MatButton
                             type="submit"
                             variant="contained"
@@ -262,7 +265,9 @@ const Create = props => {
                         </Row>
 
                     </Form>
-                    <FormBuilder form={{display: displayType}} saveText={'Create Form'} onChange={(schema) => {
+                    <FormBuilder form={{display: displayType}}
+                                 submission={{data :{baseUrl:url}}}
+                                 saveText={'Create Form'} onChange={(schema) => {
                         setRes(JSON.stringify(schema));
                         console.log(res)
                     }} />

@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import {Alert} from "reactstrap";
 import { connect } from "react-redux";
 import * as CODES from "api/codes";
+import Button from "@material-ui/core/Button";
 import FormRenderer from "components/FormManager/FormRenderer";
+import { FaArrowLeft } from "react-icons/fa";
 //import "./consultation.css"
 import { ToastContainer, toast } from "react-toastify";
 import {create} from "../../actions/patients";
@@ -60,6 +62,17 @@ function PatientRegistrationFormio(props) {
             <Alert color="success" isOpen={showSuccessMsg} toggle={onDismissSuccess}>
                 {successMsg}
             </Alert>
+            <div>
+                <Button
+                    color="primary"
+                    variant="contained"
+                    className=" float-right mr-1"
+                    onClick={props.history.goBack}
+                    startIcon={<FaArrowLeft />}
+                >
+                    Go Back
+                </Button>
+            </div>
             <FormRenderer
                 formCode={currentForm.code}
                 programCode={currentForm.programCode}

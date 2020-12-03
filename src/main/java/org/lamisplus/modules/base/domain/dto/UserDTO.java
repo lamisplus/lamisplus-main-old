@@ -28,12 +28,12 @@ public class UserDTO {
         this.id = user.getId();
         this.userName = user.getUserName();
         this.roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
-        this.firstName = user.getPersonByPersonId().getFirstName();
-        this.lastName = user.getPersonByPersonId().getLastName();
+        this.firstName = user.getPerson().getFirstName();
+        this.lastName = user.getPerson().getLastName();
         this.email = user.getEmail();
         this.phoneNumber = user.getPhoneNumber();
         this.gender = user.getGender();
-        this.dateOfBirth = user.getPersonByPersonId().getDob();
+        this.dateOfBirth = user.getPerson().getDob();
 
     }
 

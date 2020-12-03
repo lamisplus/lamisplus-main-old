@@ -23,6 +23,7 @@ import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import ModalSample from './RecollectSample';
 import ModalViewResult from './../TestResult/ViewResult'
+import {authentication} from '../../../_services/authentication';
 
 
 const useStyles = makeStyles({
@@ -280,7 +281,7 @@ return (
                                                       <td className={classes.td}>{row.data.sample_type==="" ? " ":row.data.sample_type}</td>
                                                       <td className={classes.td}> {encounterDate} </td>
                                                       <td className={classes.td}>{sampleStatus(row.data.lab_test_order_status)} </td>
-                                                      <td className={classes.td}>{sampleAction(row)}</td>
+                                                      <td className={classes.td} hidden={!authentication.userHasRole(["laboratory_write"])}>{sampleAction(row)}</td>
                                                     </tr>
                                                   ))
                                                   :<p> <Spinner color="primary" /> Loading Please Wait</p>

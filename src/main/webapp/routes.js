@@ -105,7 +105,7 @@ const UserRegistration = React.lazy(() => import("components/Users/UserRegistrat
 
 const roles = React.lazy(() => import("components/Roles/RolesPage"))
 const addRole = React.lazy(() => import("components/Roles/AddRole"))
-
+const UnauthorisedPage = React.lazy(() => import("pages/Unauthorised"));
 class Routes extends Component {
   render() {
     return (
@@ -122,11 +122,15 @@ class Routes extends Component {
               <PrivateRoute
                 exact
                 path="/patient-registration"
-                component={PateintRegistationPage}/>
+                component={PateintRegistationPage}
+
+              />
                 <PrivateRoute
                     exact
                     path="/patient-registration-formio"
-                    component={PatientRegistrationFormio}/>
+                    component={PatientRegistrationFormio}
+                    roles={["patient_write", "patient_delete"]}
+                />
               <PrivateRoute
                 exact
                 path="/patient-update"
@@ -209,7 +213,9 @@ class Routes extends Component {
               <PrivateRoute exact path="/add-role" component={addRole} />
 
               <PrivateRoute exact path="/appointments" component={AppointmentPage} />
-                <PrivateRoute exact path="/admin" component={AdministrativeDashboard} />
+                <PrivateRoute exact path="/admin" component={AdministrativeDashboard}
+                              roles={["user_write", "user_delete", "user_read", "admin_read"]}
+                />
                 <PrivateRoute exact path={"/admin/global-variable"} component={GlobalVariableSearchPage} />
                 <PrivateRoute exact path={"/admin/standards"} component={StandardSearchPage} />
                 <PrivateRoute exact path={"/admin/application-codesets"} component={ApplicationCodesetPage} />
@@ -219,6 +225,7 @@ class Routes extends Component {
               {/* The route to Visualization*/}
                 <PrivateRoute exact path={"/visual"} component={TestPage} />
               {/* The route to Visualization*/}
+                <PrivateRoute exact path={"/unauthorised"} component={UnauthorisedPage} />
             </React.Suspense>
           </MainLayout>
           

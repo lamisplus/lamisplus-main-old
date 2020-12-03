@@ -83,9 +83,27 @@ function AdminSubMenu(props) {
                 <Dropdown.Item >
                   <Link to={{pathname: "/admin/standards"}}>International Standard setup</Link>
                 </Dropdown.Item>
-                <Dropdown.Item >
-                  <Link to={{pathname: "/organization-unit"}}>Organization Unit setup</Link>
+                {/*<Dropdown.Item >*/}
+                {/*  <Link to={{pathname: "/organization-unit"}}>Organization Unit setup</Link>*/}
+                {/*</Dropdown.Item>*/}
+
+              {/*   <Dropdown.Item >
+                  <Link
+                      to={{
+                        pathname: "/admin/standards"}}
+                  >
+                  International Standard setup
+                  </Link>
                 </Dropdown.Item>
+                <Dropdown.Item >
+                  <Link
+                      to={{
+                        pathname: "/organization-unit"}}
+                  >
+                  Organization Unit setup
+                  </Link>
+                </Dropdown.Item>*/}
+
                 <Dropdown.Item >
                   <Link to={{pathname: "/admin/wards"}}>Ward Manager</Link>
                 </Dropdown.Item>

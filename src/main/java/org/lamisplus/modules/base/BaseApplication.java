@@ -21,6 +21,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.RollbackException;
 import javax.transaction.*;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,8 +52,19 @@ public class BaseApplication extends SpringBootServletInitializer implements Com
         ApplicationArguments args = context.getBean(ApplicationArguments.class);
 
         Thread thread = new Thread(() -> {
-            context.close();
-            context = SpringApplication.run(clz, args.getSourceArgs());
+            try {
+                context.close();
+                context = SpringApplication.run(clz, args.getSourceArgs());
+            }catch (Exception e){
+                try {
+                    String command = "c:\\program files\\tomcat\\bin\\startup.bat";//for linux use .sh
+                    Process child = Runtime.getRuntime().exec(command);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    SpringApplication.run(BaseApplication.class, args.getSourceArgs());
+                }
+            }
+
         });
 
         thread.setDaemon(false);

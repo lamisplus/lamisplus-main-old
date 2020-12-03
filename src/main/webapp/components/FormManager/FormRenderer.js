@@ -25,7 +25,7 @@ const FormRenderer = (props) => {
   const [showLoadingForm, setShowLoadingForm] = React.useState(true);
   const [showLoadingEncounter, setShowLoadingEncounter] = React.useState(false)
   const [formId, setFormId] = React.useState()
-  const [submission, setSubmission] = React.useState({...props.submission, ...{ data: { patient: props.patient, authHeader: authHeader() }}});
+  const [submission, setSubmission] = React.useState({...props.submission, ...{ data: { patient: props.patient, authHeader: authHeader(), baseUrl: url }}});
   const onDismiss = () => setShowErrorMsg(false);
   const options = {
     noAlerts: true,
@@ -183,6 +183,7 @@ const FormRenderer = (props) => {
                 delete submission.data.patient;
                 delete submission.data.authHeader;
                 delete submission.data.submit;
+                delete submission.data.baseUrl;
 
                 if (props.onSubmit) {
                   return props.onSubmit(submission);
