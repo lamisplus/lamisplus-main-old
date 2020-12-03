@@ -1,14 +1,16 @@
 import logo200Image from "assets/img/logo/lamislogo.png";
 import sidebarBgImage from "assets/img/sidebar/sidebar-4.jpg";
 import SourceLink from "components/SourceLink";
-import React from "react";
+import React, {useState} from "react";
 import { MdDashboard, MdGraphicEq, MdPerson, MdKeyboardArrowDown } from "react-icons/md";
 import { GiTestTubes, GiMedicines } from "react-icons/gi";
 import { FaUserPlus, FaListUl, FaUserCog, FaCogs, FaWpforms } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
-import { Nav, Navbar, NavItem, NavLink as BSNavLink } from "reactstrap";
+import {Link, NavLink} from "react-router-dom";
+import { Nav, Navbar, NavItem, NavLink as BSNavLink, Collapse } from "reactstrap";
 import bn from "utils/bemnames";
 import { authentication } from '../../_services/authentication';
+import {fetchAll} from "../../actions/menu";
+import {connect} from "react-redux";
 
 const sidebarBackground = {
   backgroundImage: `url("${sidebarBgImage}")`,
@@ -30,7 +32,7 @@ const navItems = [
   { to: '/visual', name: 'Visualization', exact: false, Icon: MdGraphicEq },
   { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog,
     roles: ["admin_read", "user_read"] },
-  // { to: '/select', name: 'React Select', exact: false, Icon: FaUserCog },
+
 
   //{ to: '/admin-dashboard', name: 'Administration Module', exact: false, Icon: FaUserCog },
   
@@ -56,12 +58,20 @@ const adminItems = [
 
 const bem = bn.create("sidebar");
 const userRoles = authentication.getCurrentUserRole();
+
+
+
 class Sidebar extends React.Component {
-  state = {
-    isOpenComponents: false,
-  };
+  constructor(props) {
+    super(props);
 
+    this.state = {
+      isOpenComponents: false,
+      loading: false,
+    };
 
+    this.fetchExternalMenu();
+  }
 
   handleClick = (name) => () => {
     this.setState((prevState) => {
@@ -71,6 +81,19 @@ class Sidebar extends React.Component {
       };
     });
   };
+
+  fetchExternalMenu = () => {
+    this.setState({loading: true});
+    const onSuccess = () => {
+      this.setState({loading: false});
+    }
+    const onError = () => {
+      this.setState({loading: false});
+    }
+    this.props.fetchAllExternalModulesMenu(onSuccess, onError);
+};
+
+
 
   render() {
     return (
@@ -110,8 +133,51 @@ class Sidebar extends React.Component {
                   }
                 </>
             ))}
-            {/* The Pharmacy Menu  */}
+            {/* The External Module Menu  */}
+            {this.props.menuList.length > 0 && <NavItem
+                className={bem.e('nav-item')}
+                onClick={this.handleClick('Administration')}
+            >
+              <BSNavLink className={bem.e('nav-item-collapse')}>
+                <div className="d-flex">
+                  <FaCogs className={bem.e('nav-item-icon')}/>
+                  <span className="">External Modules</span>
+                </div>
+                <MdKeyboardArrowDown
+                    className={bem.e('nav-item-icon')}
+                    style={{
+                      padding: 0,
+                      transform: this.state.isOpenAdministration
+                          ? 'rotate(0deg)'
+                          : 'rotate(-90deg)',
+                      transitionDuration: '0.3s',
+                      transitionProperty: 'transform',
+                    }}
+                />
+              </BSNavLink>
+            </NavItem>
+            }
+            <Collapse isOpen={this.state.isOpenAdministration}>
 
+              {this.props.menuList.map(({ url, name }, index) => (
+                  <NavItem key={index} className={bem.e('nav-item')}>
+                    <BSNavLink
+                        id={`navItem-${name}-${index}`}
+                       // className="text-uppercase"
+                        tag={NavLink}
+                        to ={{
+                          pathname: `/external-modules/emid${index}`,
+                          state: url
+                        }}
+                        activeClassName="active"
+                        exact={false}
+                    >
+                      {/*<Icon className={bem.e('nav-item-icon')} />*/}
+                      <span className="">{name}</span>
+                    </BSNavLink>
+                  </NavItem>
+              ))}
+            </Collapse>
           </Nav>
         </div>
       </aside>
@@ -119,4 +185,15 @@ class Sidebar extends React.Component {
   }
 }
 
-export default Sidebar;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    menuList: state.menu.list,
+  };
+};
+
+const mapActionToProps = {
+  fetchAllExternalModulesMenu: fetchAll,
+};
+
+
+export default connect(mapStateToProps, mapActionToProps)(Sidebar);
