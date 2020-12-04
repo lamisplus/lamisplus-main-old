@@ -1,81 +1,285 @@
-import React, { useState } from "react";
-import MaterialTable from "material-table";
+import React, {useEffect} from 'react';
+import MaterialTable from 'material-table';
 import { connect } from "react-redux";
-import {fetchAllForms, Delete as Del, fetchService,} from '../../actions/formBuilder';
-import Moment from "moment";
-import momentLocalizer from "react-widgets-moment";
-import "react-widgets/dist/css/react-widgets.css";
-import FormRendererModal from "components/Admin/FormRendererModal";
-import { ToastContainer, toast } from "react-toastify";
-import {Menu, MenuButton, MenuItem, MenuList} from '@reach/menu-button';
-import {Link} from 'react-router-dom';
-import { MdDeleteForever, MdModeEdit } from "react-icons/md";
+import { fetchAll, deleteProgram, } from "actions/programManager";
 
-//Dtate Picker package
-Moment.locale("en");
-momentLocalizer();
+import {
+    Card,
+    CardBody, Modal, ModalBody, ModalFooter, ModalHeader, Spinner
+} from 'reactstrap';
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
+import { Link } from 'react-router-dom';
+import Button from "@material-ui/core/Button";
+import { FaPlus } from "react-icons/fa";
+import NewProgramManager from "./NewProgramManager";
+import {toast} from "react-toastify";
+import SaveIcon from "@material-ui/icons/Delete";
+import CancelIcon from "@material-ui/icons/Cancel";
+import {makeStyles} from "@material-ui/core/styles";
+import "@reach/menu-button/styles.css";
 
-function FormSearch(props) {
-    const [loading, setLoading] = useState(false);
-    const [showCurrentForm, setShowCurrentForm] = useState(false);
-    const [currentForm, setCurrentForm] = useState(false);
 
-    const onSuccess = () => {
-        toast.success("Form saved successfully!", { appearance: "success" });
-        setShowCurrentForm(false);
-    };
-
-    const onError = () => {
-        toast.error("Something went wrong, request failed.");
-        setShowCurrentForm(false);
-    };
-
-    const viewForm = (row) => {
-        console.log("This is the selected form: "+row.code);
-        setCurrentForm({
-            programCode: row.programCode,
-            formName: "VIEW FORM",
-            formCode: row.code,
-            type: "VIEW",
-            options: {
-                modalSize: "modal-lg",
-            },
-        });
-        setShowCurrentForm(true);
-    };
-
-    const onDelete = row => {
-        if (window.confirm(`Are you sure you want to archive ${row.name} form ?`))
-            props.deleteForm(row.id)
+const useStyles = makeStyles(theme => ({
+    button: {
+        margin: theme.spacing(1)
     }
-
-    React.useEffect(() => {
-        setLoading(true);
+}))
+const ProgramManagerSearch = (props) => {
+    const [loading, setLoading] = React.useState(true);
+    const [showModal, setShowModal] = React.useState(false);
+    const [deleting, setDeleting] = React.useState(false);
+    const [currentProgramManager, setCurrentProgramManager] = React.useState(null);
+    const [showDeleteModal, setShowDeleteModal] = React.useState(false);
+    const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal)
+    const toggleModal = () => setShowModal(!showModal)
+    const classes = useStyles()
+    const loadProgramManager = () => {
         const onSuccess = () => {
             setLoading(false);
         };
         const onError = () => {
             setLoading(false);
         };
-        props.fetchService(onSuccess, onError);
-    }, []);
+        props.fetchAll(onSuccess, onError);
+    }
+    useEffect(() => {
+        loadProgramManager()
+    }, []); //componentDidMount
 
+    const openProgram = (row) => {
+        setCurrentProgramManager(row);
+        toggleModal();
+    }
 
+    const deleteProgram = (row) => {
+        setCurrentProgramManager(row);
+        toggleDeleteModal();
+    }
+
+    const processDelete = (id) => {
+        setDeleting(true);
+        const onSuccess = () => {
+            setDeleting(false);
+            toggleDeleteModal();
+            toast.success("Program deleted successfully!");
+            loadProgramManager();
+        };
+        const onError = () => {
+            setDeleting(false);
+            toast.error("Something went wrong, please contact administration");
+        };
+        props.deleteProgram(id, onSuccess, onError);
+    }
     return (
-        <React.Fragment>
-            <div>
-                <ToastContainer autoClose={3000} hideProgressBar />
+        <Card>
+            <CardBody>
+                <Breadcrumbs aria-label="breadcrumb">
+                    <Link color="inherit" to={{pathname: "/admin"}} >
+                        Admin
+                    </Link>
+                    <Typography color="textPrimary">Program Manager</Typography>
+                </Breadcrumbs>
+                <br/>
+                <div className={"d-flex justify-content-end pb-2"}>
+                    <Button variant="contained"
+                            color="primary"
+                            startIcon={<FaPlus />}
+                            onClick={() => openProgram(null)}>
+                        <span style={{textTransform: 'capitalize'}}>Add New Program</span>
+                    </Button>
+
+                </div>
                 <MaterialTable
                     title="Find By Program Area"
                     columns={[
+                        { title: "Module Name", field: "moduleId" },
                         {title: "Program Area", field: "name"},
-                        { title: "Module Name", field: "moduleName" },
+                    ]}
+                    isLoading={loading}
+                    data={props.list}
+                    actions= {[
+                        {
+                            icon: 'edit',
+                            iconProps: {color: 'primary'},
+                            tooltip: 'Edit Program',
+                            onClick: (event, rowData) => openProgram(rowData)
+                        },
+                        {
+                            icon: 'delete',
+                            iconProps: {color: 'primary'},
+                            tooltip: 'Delete Program',
+                            onClick: (event, rowData) => deleteProgram(rowData)
+                        }
+                    ]}
+                    //overriding action menu with props.actions
+                    components={props.actions}
+                    options={{
+                        headerStyle: {
+                            backgroundColor: "#9F9FA5",
+                            color: "#000",
+                        },
+                        searchFieldStyle: {
+                            width : '300%',
+                            margingLeft: '250px',
+                        },
+                        filtering: true,
+                        exportButton: false,
+                        searchFieldAlignment: 'left',
+                        actionsColumnIndex: -1
+                    }}
+                />
+            </CardBody>
+            <NewProgramManager toggleModal={toggleModal} showModal={showModal} loadProgramManager={loadProgramManager} formData={currentProgramManager}/>
+            <Modal isOpen={showDeleteModal} toggle={toggleDeleteModal} >
+                <ModalHeader toggle={toggleDeleteModal}> Delete Program - {currentProgramManager && currentProgramManager.name ? currentProgramManager.name : ""} </ModalHeader>
+                <ModalBody>
+                    <p>Are you sure you want to proceed ?</p>
+                </ModalBody>
+                <ModalFooter>
+                    <Button
+                        type='button'
+                        variant='contained'
+                        color='primary'
+                        className={classes.button}
+                        startIcon={<SaveIcon />}
+                        disabled={deleting}
+                        onClick={() => processDelete(currentProgramManager.id)}>
+                        Delete  {deleting ? <Spinner /> : ""}
+                    </Button>
+                    <Button
+                        variant='contained'
+                        color='default'
+                        onClick={toggleDeleteModal}
+                        startIcon={<CancelIcon />}>
+                        Cancel
+                    </Button>
+                </ModalFooter>
+            </Modal>
+        </Card>
+    );
+}
+
+const mapStateToProps = state => {
+
+    return {
+        list: state.programManager.list
+    };
+};
+
+const mapActionToProps = {
+    fetchAll: fetchAll,
+    deleteProgram: deleteProgram,
+};
+
+export default connect(mapStateToProps, mapActionToProps)(ProgramManagerSearch);
+
+
+
+import React, {useEffect} from 'react';
+import MaterialTable from 'material-table';
+import { connect } from "react-redux";
+import { fetchAll, deleteProgram, } from "actions/programManager";
+
+import {
+    Card,
+    CardBody, Modal, ModalBody, ModalFooter, ModalHeader, Spinner
+} from 'reactstrap';
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
+import { Link } from 'react-router-dom';
+import Button from "@material-ui/core/Button";
+import { FaPlus } from "react-icons/fa";
+import NewProgramManager from "./NewProgramManager";
+import {toast} from "react-toastify";
+import SaveIcon from "@material-ui/icons/Delete";
+import CancelIcon from "@material-ui/icons/Cancel";
+import {makeStyles} from "@material-ui/core/styles";
+import "@reach/menu-button/styles.css";
+import { MdArchive, MdModeEdit, MdDeleteForever } from "react-icons/md";
+import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
+
+const useStyles = makeStyles(theme => ({
+    button: {
+        margin: theme.spacing(1)
+    }
+}))
+const ProgramManagerSearch = (props) => {
+    const [loading, setLoading] = React.useState(true);
+    const [showModal, setShowModal] = React.useState(false);
+    const [deleting, setDeleting] = React.useState(false);
+    const [currentProgramManager, setCurrentProgramManager] = React.useState(null);
+    const [showDeleteModal, setShowDeleteModal] = React.useState(false);
+    const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal)
+    const toggleModal = () => setShowModal(!showModal)
+    const classes = useStyles()
+    const loadProgramManager = () => {
+        const onSuccess = () => {
+            setLoading(false);
+        };
+        const onError = () => {
+            setLoading(false);
+        };
+        props.fetchAll(onSuccess, onError);
+    }
+    useEffect(() => {
+        loadProgramManager()
+    }, []); //componentDidMount
+
+    const openProgram = (row) => {
+        setCurrentProgramManager(row);
+        toggleModal();
+    }
+
+    const deleteProgram = (row) => {
+        setCurrentProgramManager(row);
+        toggleDeleteModal();
+    }
+
+    const processDelete = (id) => {
+        setDeleting(true);
+        const onSuccess = () => {
+            setDeleting(false);
+            toggleDeleteModal();
+            toast.success("Program deleted successfully!");
+            loadProgramManager();
+        };
+        const onError = () => {
+            setDeleting(false);
+            toast.error("Something went wrong, please contact administration");
+        };
+        props.deleteProgram(id, onSuccess, onError);
+    }
+    return (
+        <Card>
+            <CardBody>
+                <Breadcrumbs aria-label="breadcrumb">
+                    <Link color="inherit" to={{pathname: "/admin"}} >
+                        Admin
+                    </Link>
+                    <Typography color="textPrimary">Program Manager</Typography>
+                </Breadcrumbs>
+                <br/>
+                <div className={"d-flex justify-content-end pb-2"}>
+                    <Button variant="contained"
+                            color="primary"
+                            startIcon={<FaPlus />}
+                            onClick={() => openProgram(null)}>
+                        <span style={{textTransform: 'capitalize'}}>Add New Program</span>
+                    </Button>
+
+                </div>
+                <MaterialTable
+                    title="Find By Program Area"
+                    columns={[
+                        { title: "Module Name", field: "moduleId" },
+                        {title: "Program Area", field: "name"},
                         {title: "Action", field: "actions", filtering: false,},
                     ]}
                     isLoading={loading}
-                    data={props.formList.map((row) => ({
+                    data={props.list.map((row) => ({
+                        moduleId: row.moduleId,
                         name: row.name,
-                        // moduleName: row.moduleName,
                         actions:
                             <div>
                                 <Menu>
@@ -83,35 +287,32 @@ function FormSearch(props) {
                                         Actions <span aria-hidden>▾</span>
                                     </MenuButton>
                                     <MenuList style={{ color:"#000 !important"}} >
-                                        <MenuItem onSelect={() => viewForm (row)}>
-                                            <i
-                                                className="fa fa-eye"
-                                                aria-hidden="true"
-                                                size="15"
-                                                style={{ cursor: "pointer", color: "#blue" }}>
-                                                &nbsp; {""} View Form
-                                            </i>
-                                        </MenuItem>
                                         <MenuItem style={{ color:"#000 !important"}}>
                                             <Link
-                                                to={{
-                                                    pathname: "/view-form",
-                                                    row: row
-                                                }}>
-                                                <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Form </span>
+                                                onClick={(event, rowData) => openProgram(rowData)}>
+                                                <MdModeEdit size="15" color="blue" />{" "}
+                                                <span style={{color: '#000'}}>Edit Program</span>
                                             </Link>
                                         </MenuItem>
                                         <MenuItem style={{ color:"#000 !important"}}>
                                             <Link
-                                                onClick={() => onDelete(row)}>
+                                                onClick={(event, rowData) =>deleteProgram(rowData)}>
                                                 <MdDeleteForever size="15" color="blue" />{" "}
-                                                <span style={{color: '#000'}}>Delete Form</span>
+                                                <span style={{color: '#000'}}>Deactive Program</span>
+                                            </Link>
+                                        </MenuItem>
+                                        <MenuItem style={{ color:"#000 !important"}}>
+                                            <Link
+                                                onClick={(event, rowData) =>deleteProgram(rowData)}>
+                                                <MdArchive size="15" color="blue" />{" "}
+                                                <span style={{color: '#000'}}>Archive Program</span>
                                             </Link>
                                         </MenuItem>
                                     </MenuList>
                                 </Menu>
                             </div>
                     }))}
+                    components={props.actions}
                     options={{
                         headerStyle: {
                             backgroundColor: "#9F9FA5",
@@ -127,34 +328,47 @@ function FormSearch(props) {
 
                     }}
                 />
-            </div>
-            {/*);*/}
-            {/*}*/}
-            <ToastContainer />
-            <FormRendererModal
-                programCode={currentForm.programCode}
-                formCode={currentForm.formCode}
-                showModal={showCurrentForm}
-                setShowModal={setShowCurrentForm}
-                currentForm={currentForm}
-                onSuccess={onSuccess}
-                onError={onError}
-                options={currentForm.options}
-            />
-        </React.Fragment>
+            </CardBody>
+            <NewProgramManager toggleModal={toggleModal} showModal={showModal} loadProgramManager={loadProgramManager} formData={currentProgramManager}/>
+            <Modal isOpen={showDeleteModal} toggle={toggleDeleteModal} >
+                <ModalHeader toggle={toggleDeleteModal}> Delete Program - {currentProgramManager && currentProgramManager.name ? currentProgramManager.name : ""} </ModalHeader>
+                <ModalBody>
+                    <p>Are you sure you want to proceed ?</p>
+                </ModalBody>
+                <ModalFooter>
+                    <Button
+                        type='button'
+                        variant='contained'
+                        color='primary'
+                        className={classes.button}
+                        startIcon={<SaveIcon />}
+                        disabled={deleting}
+                        onClick={() => processDelete(currentProgramManager.id)}>
+                        Delete  {deleting ? <Spinner /> : ""}
+                    </Button>
+                    <Button
+                        variant='contained'
+                        color='default'
+                        onClick={toggleDeleteModal}
+                        startIcon={<CancelIcon />}>
+                        Cancel
+                    </Button>
+                </ModalFooter>
+            </Modal>
+        </Card>
     );
 }
-const mapStateToProps =  (state = { form:{}}) => {
-    // console.log(state.forms)
-    return {
-        // formList: state.formReducers.form,
-        formList: state.formReducers.services,
-    }}
 
-const mapActionToProps = {
-    fetchAllForms: fetchAllForms,
-    fetchService: fetchService,
-    deleteForm: Del
+const mapStateToProps = state => {
+
+    return {
+        list: state.programManager.list
+    };
 };
 
-export default connect(mapStateToProps, mapActionToProps)(FormSearch);
+const mapActionToProps = {
+    fetchAll: fetchAll,
+    deleteProgram: deleteProgram,
+};
+
+export default connect(mapStateToProps, mapActionToProps)(ProgramManagerSearch);

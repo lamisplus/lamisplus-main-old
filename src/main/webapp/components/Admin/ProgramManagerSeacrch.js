@@ -3,8 +3,6 @@ import MaterialTable from 'material-table';
 import { connect } from "react-redux";
 import { fetchAll, deleteProgram, } from "actions/programManager";
 
-// import { fetchAll, deactivateProgram} from "./../../../actions/programManager";
-// >>>>>>> 3a3d0b391d44f1101b37025c2bf4ced30a2ec49c:src/main/webapp/components/Admin/ProgramManager/ProgramManager.js
 import {
     Card,
     CardBody, Modal, ModalBody, ModalFooter, ModalHeader, Spinner
@@ -97,7 +95,6 @@ const ProgramManagerSearch = (props) => {
                     columns={[
                         { title: "Module Name", field: "moduleId" },
                         {title: "Program Area", field: "name"},
-                        {title: "Action", field: "actions", filtering: false,},
                     ]}
                     isLoading={loading}
                     data={props.list}
@@ -109,9 +106,9 @@ const ProgramManagerSearch = (props) => {
                             onClick: (event, rowData) => openProgram(rowData)
                         },
                         {
-                            icon: 'delete',
+                            icon: 'cancel',
                             iconProps: {color: 'primary'},
-                            tooltip: 'Delete Program',
+                            tooltip: 'Deactivate Program',
                             onClick: (event, rowData) => deleteProgram(rowData)
                         }
                     ]}
@@ -135,7 +132,7 @@ const ProgramManagerSearch = (props) => {
             </CardBody>
             <NewProgramManager toggleModal={toggleModal} showModal={showModal} loadProgramManager={loadProgramManager} formData={currentProgramManager}/>
             <Modal isOpen={showDeleteModal} toggle={toggleDeleteModal} >
-                <ModalHeader toggle={toggleDeleteModal}> Delete Program - {currentProgramManager && currentProgramManager.name ? currentProgramManager.name : ""} </ModalHeader>
+                <ModalHeader toggle={toggleDeleteModal}> Deactivate Program - {currentProgramManager && currentProgramManager.name ? currentProgramManager.name : ""} </ModalHeader>
                 <ModalBody>
                     <p>Are you sure you want to proceed ?</p>
                 </ModalBody>
@@ -172,7 +169,7 @@ const mapStateToProps = state => {
 
 const mapActionToProps = {
     fetchAll: fetchAll,
-    delete: deleteProgram,
+    deleteProgram: deleteProgram,
 };
 
 export default connect(mapStateToProps, mapActionToProps)(ProgramManagerSearch);

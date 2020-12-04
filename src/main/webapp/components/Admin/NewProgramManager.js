@@ -14,7 +14,6 @@ import momentLocalizer from 'react-widgets-moment';
 import moment from "moment";
 
 import {createProgram, updateProgram } from 'actions/programManager';
-import { Alert } from 'reactstrap';
 import { Spinner } from 'reactstrap';
 
 Moment.locale('en');
@@ -44,7 +43,7 @@ const ModalSample = (props) => {
 
     const handleNameInputChange = e => {
 
-        setFormData ({ ...formData, [e.target.name]: e.target.value.split(" ").join("")  });
+        setFormData ({ ...formData, [e.target.name]: e.target.value});
     }
 
     const validate = () => {
