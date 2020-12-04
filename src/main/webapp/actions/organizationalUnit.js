@@ -19,7 +19,7 @@ import { toast } from "react-toastify";
 export const fetchAllOrganizationalUnit = (onSuccess, onError) => dispatch => {
 
   axios
-    .get(`${baseUrl}organisation-units`)
+    .get(`${baseUrl}organisation-unit-levels`)
     .then(response => {
       dispatch({
         type: ACTION_TYPES.FETCH_ALL_ORGANIZATIONAL_UNIT_MODULE,
@@ -41,9 +41,8 @@ export const fetchAllOrganizationalUnit = (onSuccess, onError) => dispatch => {
 export const fetchAllParentOrganizationalUnit = (id, onSuccess, onError)=> dispatch => {
   if(id){
   axios
-    .get(`${baseUrl}organisation-units/parent-org-unit/${id}`)
+    .get(`${baseUrl}organisation-units/organisation-unit-level/${id}`)
     .then(response => {
-       console.log(response)
       dispatch({
         type: ACTION_TYPES.FETCH_ALL_PARENT_ORGANIZATIONAL_UNIT,
         payload: response.data
@@ -51,7 +50,6 @@ export const fetchAllParentOrganizationalUnit = (id, onSuccess, onError)=> dispa
       onSuccess && onSuccess();
     })
     .catch(error => {
-      console.log(error)
       dispatch({
         type: ACTION_TYPES.ERROR_FETCH_ALL_PARENT_ORGANIZATIONAL_UNIT,
         payload: error
@@ -61,6 +59,30 @@ export const fetchAllParentOrganizationalUnit = (id, onSuccess, onError)=> dispa
     );
     }
 };
+
+export const fetchAllParentOrganizationalUnitlevel = (id, onSuccess, onError)=> dispatch => {
+  if(id){
+  axios
+    .get(`${baseUrl}organisation-units/parent-org-unit/${id}`)
+    .then(response => {
+      dispatch({
+        type: ACTION_TYPES.FETCH_ALL_PARENT_ORGANIZATIONAL_UNIT_LEVEL,
+        payload: response.data
+      })
+      onSuccess && onSuccess();
+    })
+    .catch(error => {
+      dispatch({
+        type: ACTION_TYPES.ERROR_FETCH_ALL_PARENT_ORGANIZATIONAL_UNIT_LEVEL,
+        payload: error
+      })
+      onError && onError();
+    }
+    );
+    }
+};
+
+
 export const createOrganisationUnit = (data, onSuccess,onError) => dispatch => {
 console.log(data)
 

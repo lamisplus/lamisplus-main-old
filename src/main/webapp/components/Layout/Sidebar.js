@@ -1,16 +1,14 @@
 import logo200Image from "assets/img/logo/lamislogo.png";
 import sidebarBgImage from "assets/img/sidebar/sidebar-4.jpg";
 import SourceLink from "components/SourceLink";
-import React, {useState} from "react";
+import React from "react";
 import { MdDashboard, MdGraphicEq, MdPerson, MdKeyboardArrowDown } from "react-icons/md";
 import { GiTestTubes, GiMedicines } from "react-icons/gi";
 import { FaUserPlus, FaListUl, FaUserCog, FaCogs, FaWpforms } from "react-icons/fa";
-import {Link, NavLink} from "react-router-dom";
-import { Nav, Navbar, NavItem, NavLink as BSNavLink, Collapse } from "reactstrap";
+import { NavLink } from "react-router-dom";
+import { Nav, Navbar, NavItem, NavLink as BSNavLink } from "reactstrap";
 import bn from "utils/bemnames";
 import { authentication } from '../../_services/authentication';
-import {fetchAll} from "../../actions/menu";
-import {connect} from "react-redux";
 
 const sidebarBackground = {
   backgroundImage: `url("${sidebarBgImage}")`,
@@ -20,6 +18,7 @@ const sidebarBackground = {
 
 const navItems = [
   { to: '/dashboard', name: 'Dashboard', exact: true, Icon: MdDashboard },
+
   { to: '/patients', name: 'Find Patient', exact: false, Icon: FaUserPlus,
   roles:["patient_read", "patient_write", "patient_delete"]},
   { to: '/laboratory', name: 'Laboratory', exact: false, Icon: GiTestTubes,
@@ -31,10 +30,12 @@ const navItems = [
   { to: '/report', name: 'Reports', exact: false, Icon: FaListUl },
   { to: '/visual', name: 'Visualization', exact: false, Icon: MdGraphicEq },
   { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog,
-    roles: ["admin_read", "user_read"] },
+  roles: ["admin_read", "user_read"] },
+  { to: '/radiology-home', name: 'Radiology', exact: false, Icon: GiTestTubes },
+  // { to: '/data-visualisation', name: 'Data Visualisation', exact: false, Icon: GiTestTubes },
+  // { to: '/select', name: 'React Select', exact: false, Icon: FaUserCog },
 
-
-  //{ to: '/admin-dashboard', name: 'Administration Module', exact: false, Icon: FaUserCog },
+  // { to: '/admin-dashboard', name: 'Administration Module', exact: false, Icon: FaUserCog },
   
 ];
 const navContents = [
@@ -58,20 +59,12 @@ const adminItems = [
 
 const bem = bn.create("sidebar");
 const userRoles = authentication.getCurrentUserRole();
-
-
-
 class Sidebar extends React.Component {
-  constructor(props) {
-    super(props);
+  state = {
+    isOpenComponents: false,
+  };
 
-    this.state = {
-      isOpenComponents: false,
-      loading: false,
-    };
 
-    this.fetchExternalMenu();
-  }
 
   handleClick = (name) => () => {
     this.setState((prevState) => {
@@ -81,19 +74,6 @@ class Sidebar extends React.Component {
       };
     });
   };
-
-  fetchExternalMenu = () => {
-    this.setState({loading: true});
-    const onSuccess = () => {
-      this.setState({loading: false});
-    }
-    const onError = () => {
-      this.setState({loading: false});
-    }
-    this.props.fetchAllExternalModulesMenu(onSuccess, onError);
-};
-
-
 
   render() {
     return (
@@ -133,51 +113,8 @@ class Sidebar extends React.Component {
                   }
                 </>
             ))}
-            {/* The External Module Menu  */}
-            {this.props.menuList.length > 0 && <NavItem
-                className={bem.e('nav-item')}
-                onClick={this.handleClick('Administration')}
-            >
-              <BSNavLink className={bem.e('nav-item-collapse')}>
-                <div className="d-flex">
-                  <FaCogs className={bem.e('nav-item-icon')}/>
-                  <span className="">External Modules</span>
-                </div>
-                <MdKeyboardArrowDown
-                    className={bem.e('nav-item-icon')}
-                    style={{
-                      padding: 0,
-                      transform: this.state.isOpenAdministration
-                          ? 'rotate(0deg)'
-                          : 'rotate(-90deg)',
-                      transitionDuration: '0.3s',
-                      transitionProperty: 'transform',
-                    }}
-                />
-              </BSNavLink>
-            </NavItem>
-            }
-            <Collapse isOpen={this.state.isOpenAdministration}>
+            {/* The Pharmacy Menu  */}
 
-              {this.props.menuList.map(({ url, name }, index) => (
-                  <NavItem key={index} className={bem.e('nav-item')}>
-                    <BSNavLink
-                        id={`navItem-${name}-${index}`}
-                       // className="text-uppercase"
-                        tag={NavLink}
-                        to ={{
-                          pathname: `/external-modules/emid${index}`,
-                          state: url
-                        }}
-                        activeClassName="active"
-                        exact={false}
-                    >
-                      {/*<Icon className={bem.e('nav-item-icon')} />*/}
-                      <span className="">{name}</span>
-                    </BSNavLink>
-                  </NavItem>
-              ))}
-            </Collapse>
           </Nav>
         </div>
       </aside>
@@ -185,15 +122,4 @@ class Sidebar extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    menuList: state.menu.list,
-  };
-};
-
-const mapActionToProps = {
-  fetchAllExternalModulesMenu: fetchAll,
-};
-
-
-export default connect(mapStateToProps, mapActionToProps)(Sidebar);
+export default Sidebar;
