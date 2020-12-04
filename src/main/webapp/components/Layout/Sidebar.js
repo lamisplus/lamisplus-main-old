@@ -166,7 +166,7 @@ class Sidebar extends React.Component {
                        // className="text-uppercase"
                         tag={NavLink}
                         to ={{
-                          pathname: `/external-modules/emid${index}`,
+                          pathname: `/external-modules`,
                           state: url
                         }}
                         activeClassName="active"
