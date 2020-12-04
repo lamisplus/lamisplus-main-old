@@ -1,6 +1,6 @@
 
-//export const url = 'http://lamisplus.org/base-module/api/';
-export const url =  'https://lp-base.herokuapp.com/api/';
+export const url = 'http://lamisplus.org/base-module/api/';
+//export const url =  'https://lp-base.herokuapp.com/api/';
 
 //Online Server
 //export const url =  'http://www.lamisplus.org/base-module/api/';

@@ -137,7 +137,7 @@ class Sidebar extends React.Component {
                 </>
             ))}
             {/* The External Module Menu  */}
-            {this.props.menuList.length > 0 && <NavItem
+            {this.props.menuList && this.props.menuList.length > 0 && <NavItem
                 className={bem.e('nav-item')}
                 onClick={this.handleClick('Administration')}
             >
@@ -162,7 +162,7 @@ class Sidebar extends React.Component {
             }
             <Collapse isOpen={this.state.isOpenAdministration}>
 
-              {this.props.menuList.map(({ url, name }, index) => (
+              {this.props.menuList && this.props.menuList.map(({ url, name }, index) => (
                   <NavItem key={index} className={bem.e('nav-item')}>
                     <BSNavLink
                         id={`navItem-${name}-${index}`}
