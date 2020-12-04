@@ -62,7 +62,7 @@ export default function ExternalModules(props) {
   src="https://unpkg.com/x-frame-bypass"
       />
 
-      <iframe  style={{width:"100%", height:"100%", border:"none", margin:0, padding:0}} src={src} ></iframe>
+      <iframe  style={{width:"100%", height:"100%", border:"none", margin:0, padding:0}} src={src} is="x-frame-bypass"></iframe>
 </>
   );
 }

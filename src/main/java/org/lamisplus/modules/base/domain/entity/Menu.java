@@ -42,6 +42,10 @@ public class Menu implements Serializable {
     private String uuid;
 
     @Basic
+    @Column(name = "module_id")
+    private Long moduleId;
+
+    @Basic
     @Column(name = "date_created")
     @CreationTimestamp
     @JsonIgnore
@@ -67,4 +71,8 @@ public class Menu implements Serializable {
     @Column(name = "archived")
     @JsonIgnore
     private Integer archived;
+
+    @OneToOne
+    @JoinColumn(name = "module_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private Module moduleByMenu;
 }
