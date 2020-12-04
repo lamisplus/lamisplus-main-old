@@ -11,10 +11,7 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.IllegalTypeException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ModuleDTO;
-import org.lamisplus.modules.base.domain.entity.Form;
-import org.lamisplus.modules.base.domain.entity.Module;
-import org.lamisplus.modules.base.domain.entity.ModuleDependency;
-import org.lamisplus.modules.base.domain.entity.Program;
+import org.lamisplus.modules.base.domain.entity.*;
 import org.lamisplus.modules.base.domain.mapper.ModuleMapper;
 import org.lamisplus.modules.base.repository.*;
 import org.lamisplus.modules.base.util.DataLoader;
@@ -30,7 +27,6 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -97,7 +93,7 @@ public class ModuleService {
     }
 
     public List<Module> uploadAndUnzip(MultipartFile[] files) {
-        ModuleUtil.setModuleConfigs();
+       ModuleUtil.setModuleConfigs();
 
         Arrays.asList(files).stream().forEach(file ->{
             if(!file.getOriginalFilename().contains(DOT_JAR)){
@@ -140,6 +136,8 @@ public class ModuleService {
                     e.printStackTrace();
                 }
             }*/
+
+            ModuleUtil.createUIDirectory(fileName);
 
             try {
                 if(!optionalModule.isPresent()){

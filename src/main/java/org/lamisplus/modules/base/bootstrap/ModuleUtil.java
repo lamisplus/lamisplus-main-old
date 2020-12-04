@@ -3,11 +3,13 @@ package org.lamisplus.modules.base.bootstrap;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.lamisplus.modules.base.domain.entity.Module;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 import java.io.*;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -24,6 +26,7 @@ public class ModuleUtil {
     private static final String YML_FILE = ".yml";
     private static final String JSON_FILE = ".json";
     private static Timestamp ts = new Timestamp(System.currentTimeMillis());
+    private static Path uiPath;
 
     public static void copyPathFromJar(final URL jarPath, final String path, final Path target) throws Exception {
         Map<String, String> env = new HashMap<>();
@@ -57,6 +60,8 @@ public class ModuleUtil {
                         getJson(theFile);
                     } else if (theFile.getName().contains(APPLICATION_PROPERTIES)) {
                         theFile.delete();
+                    } else if (theFile.getName().contains("static")) {
+                        copyUIFiles(theFile.toPath(), uiPath);
                     }
                     return FileVisitResult.CONTINUE;
                 }
@@ -112,5 +117,39 @@ public class ModuleUtil {
     private static String getTimeStamp() {
         return ts.toString().replace(":", "").replace("-", "").
                 replace(".","").replace(" ", "");
+    }
+
+    public static Path createUIDirectory(String moduleName){
+        URL fileURL = Thread.currentThread().getContextClassLoader().getResource("static");
+        Path staticPath = null;
+        if(fileURL == null) {
+            throw new RuntimeException("Cannot find path in classpath");
+        }
+        try {
+            Path path = Paths.get(fileURL.toURI());
+            staticPath = Paths.get(path.toString(), moduleName);
+
+            //Creating a File object
+            File file = new File(staticPath.toString());
+            //Creating the directory
+            if(file.mkdir()){
+                System.out.println("file is "+file.getName());
+            }
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        uiPath = staticPath;
+        return staticPath;
+    }
+
+    public static void copyUIFiles(Path sourcePath, Path targetPath){
+        File sourceLocation= new File(sourcePath.toString());
+        File targetLocation = new File(targetPath.toString());
+
+        try {
+            FileUtils.copyDirectory(sourceLocation, targetLocation);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
