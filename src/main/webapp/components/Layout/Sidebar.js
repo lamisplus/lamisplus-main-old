@@ -20,6 +20,7 @@ const sidebarBackground = {
 
 const navItems = [
   { to: '/dashboard', name: 'Dashboard', exact: true, Icon: MdDashboard },
+
   { to: '/patients', name: 'Find Patient', exact: false, Icon: FaUserPlus,
   roles:["patient_read", "patient_write", "patient_delete"]},
   { to: '/laboratory', name: 'Laboratory', exact: false, Icon: GiTestTubes,
@@ -31,10 +32,12 @@ const navItems = [
   { to: '/report', name: 'Reports', exact: false, Icon: FaListUl },
   { to: '/visual', name: 'Visualization', exact: false, Icon: MdGraphicEq },
   { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog,
-    roles: ["admin_read", "user_read"] },
+  roles: ["admin_read", "user_read"] },
+  { to: '/radiology-home', name: 'Radiology', exact: false, Icon: GiTestTubes },
+  // { to: '/data-visualisation', name: 'Data Visualisation', exact: false, Icon: GiTestTubes },
+  // { to: '/select', name: 'React Select', exact: false, Icon: FaUserCog },
 
-
-  //{ to: '/admin-dashboard', name: 'Administration Module', exact: false, Icon: FaUserCog },
+  // { to: '/admin-dashboard', name: 'Administration Module', exact: false, Icon: FaUserCog },
   
 ];
 const navContents = [
