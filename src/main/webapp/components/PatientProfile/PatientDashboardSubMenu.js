@@ -214,7 +214,7 @@ function PatientDashboardSubMenu(props) {
                 <Dropdown.Menu>
                 <Dropdown.Item
                   onClick={() => displayFormByFormName("Transfer Patient")}
-                  disabled={!authentication.userHasRole(["p_write"])}
+                  disabled={!authentication.userHasRole(["patient_write"])}
                 >
                   Transfer Patient to Ward / Service
                 </Dropdown.Item>
