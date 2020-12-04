@@ -20,11 +20,11 @@ const sidebarBackground = {
 
 const navItems = [
   { to: '/dashboard', name: 'Dashboard', exact: true, Icon: MdDashboard },
-
   { to: '/patients', name: 'Find Patient', exact: false, Icon: FaUserPlus,
   roles:["patient_read", "patient_write", "patient_delete"]},
   { to: '/laboratory', name: 'Laboratory', exact: false, Icon: GiTestTubes,
   roles:["laboratory_read", "laboratory_write", "laboratory_delete"]},
+  { to: '/radiology-home', name: 'Radiology', exact: false, Icon: GiTestTubes },
   { to: '/pharmacy', name: 'Pharmacy', exact: false, Icon: GiMedicines,
   roles: ["pharmacy_read", "pharmacy_write", "pharmacy_delete"]},
   { to: '/appointments', name: 'Appointments', exact: false, Icon: MdGraphicEq,
@@ -33,7 +33,6 @@ const navItems = [
   { to: '/visual', name: 'Visualization', exact: false, Icon: MdGraphicEq },
   { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog,
   roles: ["admin_read", "user_read"] },
-  { to: '/radiology-home', name: 'Radiology', exact: false, Icon: GiTestTubes },
   // { to: '/data-visualisation', name: 'Data Visualisation', exact: false, Icon: GiTestTubes },
   // { to: '/select', name: 'React Select', exact: false, Icon: FaUserCog },
 
@@ -144,7 +143,7 @@ class Sidebar extends React.Component {
               <BSNavLink className={bem.e('nav-item-collapse')}>
                 <div className="d-flex">
                   <FaCogs className={bem.e('nav-item-icon')}/>
-                  <span className="">External Modules</span>
+                  <span className="">External Modules ({this.props.menuList.length}).                                                                         </span>
                 </div>
                 <MdKeyboardArrowDown
                     className={bem.e('nav-item-icon')}
