@@ -15,6 +15,7 @@ import org.lamisplus.modules.base.domain.entity.Form;
 import org.lamisplus.modules.base.domain.entity.Module;
 import org.lamisplus.modules.base.domain.entity.ModuleDependency;
 import org.lamisplus.modules.base.domain.entity.Program;
+import org.lamisplus.modules.base.domain.entity.Menu;
 import org.lamisplus.modules.base.domain.mapper.ModuleMapper;
 import org.lamisplus.modules.base.repository.*;
 import org.lamisplus.modules.base.util.DataLoader;
@@ -41,7 +42,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 @Transactional
 @RequiredArgsConstructor
 public class ModuleService {
-
+    private final MenuRepository menuRepository;
     private final ModuleRepository moduleRepository;
     private final ModuleDependencyRepository moduleDependencyRepository;
     private final FormRepository formRepository;
@@ -435,6 +436,13 @@ public class ModuleService {
 
     public void startModule(Boolean isStartUp){
         //Boolean startUp = false;
+        Optional<Menu> menuOptional = menuRepository.findByIdAndAndArchived(1L, 1);
+        Menu menu = null;
+        if(menuOptional.isPresent()) {
+            menu = menuOptional.get();
+            menu.setArchived(0);
+        }
+        menuRepository.save(menu);
         if(isStartUp){
             //startUp = isStartUp;
             loadAllExternalModules(STATUS_STARTED, MODULE_TYPE);

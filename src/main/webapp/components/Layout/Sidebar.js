@@ -143,7 +143,7 @@ class Sidebar extends React.Component {
               <BSNavLink className={bem.e('nav-item-collapse')}>
                 <div className="d-flex">
                   <FaCogs className={bem.e('nav-item-icon')}/>
-                  <span className="">External Modules ({this.props.menuList.length}).                                                                         </span>
+                  <span className="">External Modules </span>
                 </div>
                 <MdKeyboardArrowDown
                     className={bem.e('nav-item-icon')}
