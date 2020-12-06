@@ -193,7 +193,7 @@ const CreateModule = (props) => {
             setMessage('There was a problem in uploading file! please try again...');
           } else if(err.response && err.response.status === 400){
             setDisabledUploadButton(false)
-            setMessage('Module already exist! please try again...');
+            setMessage('Something went wrong! please try again...');
             //setActiveStep((prevActiveStep) => prevActiveStep + 1); 
           }else{
             setDisabledUploadButton(false)

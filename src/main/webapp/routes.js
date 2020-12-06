@@ -117,6 +117,7 @@ const UserRegistration = React.lazy(() => import("components/Users/UserRegistrat
 const roles = React.lazy(() => import("components/Roles/RolesPage"))
 const addRole = React.lazy(() => import("components/Roles/AddRole"))
 const UnauthorisedPage = React.lazy(() => import("pages/Unauthorised"));
+const BootstrapPage = React.lazy(() => import("pages/bootstrap"))
 class Routes extends Component {
   render() {
     return (
@@ -152,7 +153,7 @@ class Routes extends Component {
               <PrivateRoute exact path="/vital-signs" component={VitalSignsPage} />
               {/* Consultation Links */}
               <PrivateRoute exact path="/consultation" component={ConsultationPage} />
-              
+
               <PrivateRoute
                 exact
                 path="/consultation-dashbaord"
@@ -243,6 +244,7 @@ class Routes extends Component {
                 
               {/* The route to Visualization*/}
                 <PrivateRoute exact path={"/unauthorised"} component={UnauthorisedPage} />
+                <PrivateRoute  path="/external-modules" component={BootstrapPage} />
             </React.Suspense>
           </MainLayout>
           

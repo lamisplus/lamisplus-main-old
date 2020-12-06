@@ -12,5 +12,6 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 public class ApplicationProperties {
     private String modulePath = "src/main/java/org/lamisplus/modules";
+    private String staticPath = "src/main/resources/org/lamisplus/modules";
     private String databaseDir;
 }
