@@ -27,6 +27,7 @@ public class ModuleUtil {
     private static final String JSON_FILE = ".json";
     private static Timestamp ts = new Timestamp(System.currentTimeMillis());
     private static Path uiPath;
+    private static boolean isStatic;
 
     public static void copyPathFromJar(final URL jarPath, final String path, final Path target) throws Exception {
         Map<String, String> env = new HashMap<>();
@@ -37,13 +38,26 @@ public class ModuleUtil {
             Files.walkFileTree(pathInZipFile, new SimpleFileVisitor<Path>() {
 
                 private Path currentTarget;
+                private Path staticTarget;
 
                 @Override
                 public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) throws IOException {
                     currentTarget = target.resolve(pathInZipFile.relativize(dir)
                             .toString());
+                    System.out.println(currentTarget.toFile().getName());
                     if (!Files.exists(currentTarget)) {
                         Files.createDirectories(currentTarget);
+                    }
+                    if (currentTarget.toFile().isDirectory() && currentTarget.toFile().getPath().contains("static") &&
+                            !currentTarget.toFile().getPath().contains("static/static")) {
+                        isStatic = true;
+                        staticTarget = uiPath.resolve(pathInZipFile.relativize(dir)
+                                .toString());
+                        if (!Files.exists(staticTarget)) {
+                            Files.createDirectories(staticTarget);
+                        }
+                    } else {
+                        isStatic = false;
                     }
                     return FileVisitResult.CONTINUE;
                 }
@@ -53,6 +67,7 @@ public class ModuleUtil {
                     Path path = Files.copy(file, target.resolve(pathInZipFile.relativize(file)
                             .toString()), StandardCopyOption.REPLACE_EXISTING);
                     File theFile = new File(path.toString());
+                    //System.out.println("File name is " + theFile.getName());
                     //Checking for module.yml i.e. config file
                     if (theFile.getName().endsWith(YML_FILE)) {
                         readModuleYml(theFile);
@@ -60,8 +75,11 @@ public class ModuleUtil {
                         getJson(theFile);
                     } else if (theFile.getName().contains(APPLICATION_PROPERTIES)) {
                         theFile.delete();
-                    } else if (theFile.getName().contains("static")) {
-                        copyUIFiles(theFile.toPath(), uiPath);
+                    }
+                    if(isStatic){
+                        //copyUIFiles(currentTarget.toAbsolutePath(), uiPath);
+                        Files.copy(file, uiPath.resolve(pathInZipFile.relativize(file)
+                                .toString()), StandardCopyOption.REPLACE_EXISTING);
                     }
                     return FileVisitResult.CONTINUE;
                 }

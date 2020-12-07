@@ -39,6 +39,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 public class ModuleService {
 
     private final ModuleRepository moduleRepository;
+    private final MenuRepository menuRepository;
     private final ModuleDependencyRepository moduleDependencyRepository;
     private final FormRepository formRepository;
     private final ModuleMapper moduleMapper;
@@ -72,6 +73,7 @@ public class ModuleService {
     private static final String MODULE_CLASS_NAME = "module";
     private static final String DOT_CLASS = ".class";
     private Timestamp ts = new Timestamp(System.currentTimeMillis());
+    String currentUser;
 
     public Module save(ModuleDTO moduleDTO) {
         Optional<Module> moduleOptional = this.moduleRepository.findByName(moduleDTO.getName());
@@ -94,6 +96,7 @@ public class ModuleService {
 
     public List<Module> uploadAndUnzip(MultipartFile[] files) {
        ModuleUtil.setModuleConfigs();
+       currentUser = userService.getUserWithRoles().get().getUserName();
 
         Arrays.asList(files).stream().forEach(file ->{
             if(!file.getOriginalFilename().contains(DOT_JAR)){
@@ -110,6 +113,7 @@ public class ModuleService {
             String fileName = jarFile.getName().toLowerCase().replace(DOT_JAR,"");
             log.info("name of jar file: " + fileName);
             Optional<Module> optionalModule =  moduleRepository.findByName(fileName);
+            ModuleUtil.createUIDirectory(fileName);
 
 
             final Path modulePath = Paths.get(properties.getModulePath());
@@ -137,7 +141,7 @@ public class ModuleService {
                 }
             }*/
 
-            ModuleUtil.createUIDirectory(fileName);
+
 
             try {
                 if(!optionalModule.isPresent()){
@@ -185,10 +189,25 @@ public class ModuleService {
             }
             Optional<Module> moduleOptional = moduleRepository.findByName(externalModule.getName().toLowerCase());
 
+
             //Saving module...
             final Module module = moduleOptional.isPresent()? moduleOptional.get(): moduleRepository.save(externalModule);
             log.debug(module.getName() + " saved...");
             modules.add(module);
+
+            //menu of external module
+            if (externalModule.getMenuByModule() != null) {
+                Menu menu = externalModule.getMenuByModule();
+                if(menu.getName() != null){
+                    menu.setArchived(ARCHIVED);
+                    menu.setUrl("http://localhost:8080/"+menu.getName()+"/index.html");
+                    menu.setUuid(UUID.randomUUID().toString());
+                    menu.setCreatedBy(currentUser);
+                    menu.setModuleId(module.getId());
+
+                    menuRepository.save(menu);
+                }
+            }
 
             //Getting all dependencies
             externalModule.getModuleDependencyByModule().forEach(moduleDependency -> {
@@ -444,6 +463,11 @@ public class ModuleService {
         externalModules.forEach(module -> {
             if(!isStartUp){
                 if(module.getStatus() == STATUS_INSTALLED) {
+                    Menu menu = module.getMenuByModule();
+                    if(menu != null){
+                        menu.setArchived(UN_ARCHIVED);
+                        menuRepository.save(menu);
+                    }
                     module.setStatus(STATUS_STARTED);
                     module.setActive(ACTIVE);
                     module.setArchived(UN_ARCHIVED);
@@ -491,6 +515,7 @@ public class ModuleService {
             throw new IllegalTypeException(Module.class, MODULE_CLASS_NAME, "cannot delete core module");
         }
         module.getProgramsByModule().forEach(program -> {
+            menuRepository.delete(module.menuByModule);
             program.getFormsByProgram().forEach(form -> formRepository.delete(form));
             programRepository.delete(program);
         });
