@@ -16,6 +16,7 @@ import {  fetchById } from '../../../actions/patients'
 import {  fetchAllLabTestOrderOfPatient } from '../../../actions/laboratory'
 import ModalSample from './CollectSampleModal';
 import ModalSampleTransfer from './TransferSampleModal';
+import SampleCollectionFormIo from './SampleCollectionFormIo'
 import { useSelector, useDispatch } from 'react-redux';
 import PatientDetailCard from 'components/Functions/PatientDetailCard';
 import { Spinner } from 'reactstrap';
@@ -288,7 +289,7 @@ return (
               </Card>
             </Col>
         </Row>
-      <ModalSample modalstatus={modal} togglestatus={toggleModal} datasample={collectModal}  labnumber={labNum}/>
+      <SampleCollectionFormIo modalstatus={modal} togglestatus={toggleModal} datasample={collectModal}  labnumber={labNum}/>
       <ModalSampleTransfer modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} labnumber={labNumber!=="" ? labNumber : labNum}/>
       <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />
     </Page>

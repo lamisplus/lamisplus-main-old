@@ -151,7 +151,7 @@ function FormSearch(props) {
 const mapStateToProps =  (state = { form:{}}) => {
     // console.log(state.forms)
     return {
-        formList: state.formReducers.form,
+        formList: state.formReducers.form !==null ? state.formReducers.form : {},
     }}
 
 const mapActionToProps = {
