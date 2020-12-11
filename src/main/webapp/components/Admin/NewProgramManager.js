@@ -8,10 +8,9 @@ import CancelIcon from '@material-ui/icons/Cancel'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
-import { DateTimePicker } from 'react-widgets';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
-import moment from "moment";
+
 
 import {createProgram, updateProgram } from 'actions/programManager';
 import { Spinner } from 'reactstrap';
@@ -84,7 +83,7 @@ const ModalSample = (props) => {
             <ToastContainer />
             <Modal isOpen={props.showModal} toggle={props.toggleModal} size="lg">
                 <Form onSubmit={createNewProgram}>
-                    <ModalHeader toggle={props.toggleModal}>New Program </ModalHeader>
+                    <ModalHeader toggle={props.toggleModal}>New Program</ModalHeader>
                     <ModalBody>
                         <Card >
                             <CardBody>

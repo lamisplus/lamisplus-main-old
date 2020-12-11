@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import MaterialTable from 'material-table';
 import { connect } from "react-redux";
-import { fetchAll, deleteProgram, } from "actions/programManager";
+import { fetchAll, deleteProgram, updateProgram, } from "actions/programManager";
 
 import {
     Card,
@@ -18,13 +18,16 @@ import SaveIcon from "@material-ui/icons/Delete";
 import CancelIcon from "@material-ui/icons/Cancel";
 import {makeStyles} from "@material-ui/core/styles";
 import "@reach/menu-button/styles.css";
-
+import {Menu, MenuButton, MenuItem, MenuList} from '@reach/menu-button';
+import { MdDashboard, MdDeleteForever, MdModeEdit } from "react-icons/md";
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles(theme => ({
     button: {
         margin: theme.spacing(1)
     }
 }))
+
 const ProgramManagerSearch = (props) => {
     const [loading, setLoading] = React.useState(true);
     const [showModal, setShowModal] = React.useState(false);
@@ -34,6 +37,7 @@ const ProgramManagerSearch = (props) => {
     const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal)
     const toggleModal = () => setShowModal(!showModal)
     const classes = useStyles()
+
     const loadProgramManager = () => {
         const onSuccess = () => {
             setLoading(false);
@@ -47,6 +51,7 @@ const ProgramManagerSearch = (props) => {
         loadProgramManager()
     }, []); //componentDidMount
 
+
     const openProgram = (row) => {
         setCurrentProgramManager(row);
         toggleModal();
@@ -54,7 +59,12 @@ const ProgramManagerSearch = (props) => {
 
     const deleteProgram = (row) => {
         setCurrentProgramManager(row);
+        console.log(row)
         toggleDeleteModal();
+    }
+
+    const updatePrograms = (row)  => {
+        props.updateProgram(row.id, row)
     }
 
     const processDelete = (id) => {
@@ -71,6 +81,7 @@ const ProgramManagerSearch = (props) => {
         };
         props.deleteProgram(id, onSuccess, onError);
     }
+
     return (
         <Card>
             <CardBody>
@@ -90,28 +101,66 @@ const ProgramManagerSearch = (props) => {
                     </Button>
 
                 </div>
+                {console.log(props.list)}
                 <MaterialTable
                     title="Find By Program Area"
                     columns={[
                         { title: "Module Name", field: "moduleId" },
                         {title: "Program Area", field: "name"},
+                        {title: "Status", field: "status"},
+                        {title: "Action", field: "actions"},
                     ]}
                     isLoading={loading}
-                    data={props.list}
-                    actions= {[
-                        {
-                            icon: 'edit',
-                            iconProps: {color: 'primary'},
-                            tooltip: 'Edit Program',
-                            onClick: (event, rowData) => openProgram(rowData)
-                        },
-                        {
-                            icon: 'cancel',
-                            iconProps: {color: 'primary'},
-                            tooltip: 'Deactivate Program',
-                            onClick: (event, rowData) => deleteProgram(rowData)
-                        }
-                    ]}
+                    data={props.list.map((row) => ({
+                    moduleId: row.moduleId,
+                    name: row.name,
+                    status:  <Grid component="label" container alignItems="center" spacing={1}>
+                        <Grid item>{row.moduleId===0 ? "Active": "Inactive"}</Grid>
+                    </Grid>,
+                    actions:
+                                <div>
+                                    <Menu>
+                                        <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
+                                            Actions <span aria-hidden>▾</span>
+                                        </MenuButton>
+                                        <MenuList style={{ color:"#000 !important"}} >
+                                            <MenuItem  style={{ color:"#000 !important"}}>
+                                                <Link>
+                                                    <MdDashboard size="15" />{" "}<span style={{color: '#000'}}  onClick={updatePrograms(row)}>{row.moduleId===2 ? "Active": "Inactive"}</span>
+                                                </Link>
+                                            </MenuItem>
+                                            <MenuItem style={{ color:"#000 !important"}}>
+                                                <Link
+                                                    onClick={(event, rowData) => openProgram(rowData)}>
+                                                    <MdModeEdit size="15"  />{" "}
+                                                    <span style={{color: '#000'}}>Edit Program</span>
+                                                </Link>
+                                            </MenuItem>
+                                            <MenuItem style={{ color:"#000 !important"}}>
+                                                <Link
+                                                    onClick={(event, rowData) => deleteProgram(rowData)}>
+                                                    <MdDeleteForever size="15"  />{" "}
+                                                    <span style={{color: '#000'}}>Delete Patient</span>
+                                                </Link>
+                                            </MenuItem>
+                                        </MenuList>
+                                    </Menu>
+                                </div>
+                         }))}
+                    // actions= {[
+                    //     {
+                    //         icon: 'edit',
+                    //         iconProps: {color: 'primary'},
+                    //         tooltip: 'Edit Program',
+                    //         onClick: (event, rowData) => openProgram(rowData)
+                    //     },
+                    //     {
+                    //         icon: 'cancel',
+                    //         iconProps: {color: 'primary'},
+                    //         tooltip: 'Deactivate Program',
+                    //         onClick: (event, rowData) => deleteProgram(rowData)
+                    //     }
+                    // ]}
                     //overriding action menu with props.actions
                     components={props.actions}
                     options={{
@@ -170,6 +219,7 @@ const mapStateToProps = state => {
 const mapActionToProps = {
     fetchAll: fetchAll,
     deleteProgram: deleteProgram,
+    updateProgram: updateProgram
 };
 
 export default connect(mapStateToProps, mapActionToProps)(ProgramManagerSearch);
