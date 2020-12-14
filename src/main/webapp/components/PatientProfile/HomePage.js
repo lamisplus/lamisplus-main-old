@@ -19,7 +19,7 @@ import { FaBriefcaseMedical } from "react-icons/fa";
 import PatientDashboardSubMenu from "components/PatientProfile/PatientDashboardSubMenu";
 
 import Consultation from "./Consultation/consultation";
-import PatientDetailCard from "components/Functions/PatientDetailCard";
+import PatientDetailCard from "./PatientDetailCard";
 import TestOrder from "./TestOrder/TestOrder";
 import Medication from "./Medication/Medication";
 import ServiceForm from "./ServiceForm/serviceForm";
@@ -86,10 +86,9 @@ function HomePage(props) {
   const [fetchingPatient, setFetchingPatient] = useState(false);
 
 
-  const hospitalNumber =
-    getQueryParams("hospitalNumber", props.location.search) ||
-    props.patient.hospitalNumber ||
-    "";
+  const hospitalNumber = props.location.state
+      || getQueryParams("hospitalNumber", props.location.search)
+      || "";
 
   const isEmpty = (value) => {
     if (JSON.stringify(value) === "{}") {
@@ -197,6 +196,13 @@ function HomePage(props) {
             icon={<GiFiles />}
             {...a11yProps(4)}
           />
+          <Tab
+              className={classes.title}
+              label="Retropective Form"
+              disabled={!authentication.userHasRole(["patient_write", "patient_read", "patient_delete"])}
+              icon={<GiFiles />}
+              {...a11yProps(5)}
+          />
         </Tabs>
 
         <div></div>
@@ -258,6 +264,15 @@ function HomePage(props) {
           />
         </TabPanel>
         {/* service forms */}
+
+        {/* retrospective forms */}
+        <TabPanel value={value} index={4}>
+          <ServiceForm
+              patientId={props.patient.patientId}
+              visitId={props.patient.visitId}
+          />
+        </TabPanel>
+        {/* retrospective forms */}
       </div>
     </div>
   );
