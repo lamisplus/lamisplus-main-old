@@ -11,11 +11,7 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.IllegalTypeException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ModuleDTO;
-import org.lamisplus.modules.base.domain.entity.Form;
-import org.lamisplus.modules.base.domain.entity.Module;
-import org.lamisplus.modules.base.domain.entity.ModuleDependency;
-import org.lamisplus.modules.base.domain.entity.Program;
-import org.lamisplus.modules.base.domain.entity.Menu;
+import org.lamisplus.modules.base.domain.entity.*;
 import org.lamisplus.modules.base.domain.mapper.ModuleMapper;
 import org.lamisplus.modules.base.repository.*;
 import org.lamisplus.modules.base.util.DataLoader;
@@ -31,7 +27,6 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -42,8 +37,9 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 @Transactional
 @RequiredArgsConstructor
 public class ModuleService {
-    private final MenuRepository menuRepository;
+
     private final ModuleRepository moduleRepository;
+    private final MenuRepository menuRepository;
     private final ModuleDependencyRepository moduleDependencyRepository;
     private final FormRepository formRepository;
     private final ModuleMapper moduleMapper;
@@ -77,6 +73,7 @@ public class ModuleService {
     private static final String MODULE_CLASS_NAME = "module";
     private static final String DOT_CLASS = ".class";
     private Timestamp ts = new Timestamp(System.currentTimeMillis());
+    String currentUser;
 
     public Module save(ModuleDTO moduleDTO) {
         Optional<Module> moduleOptional = this.moduleRepository.findByName(moduleDTO.getName());
@@ -98,7 +95,8 @@ public class ModuleService {
     }
 
     public List<Module> uploadAndUnzip(MultipartFile[] files) {
-        ModuleUtil.setModuleConfigs();
+       ModuleUtil.setModuleConfigs();
+       currentUser = userService.getUserWithRoles().get().getUserName();
 
         Arrays.asList(files).stream().forEach(file ->{
             if(!file.getOriginalFilename().contains(DOT_JAR)){
@@ -115,6 +113,7 @@ public class ModuleService {
             String fileName = jarFile.getName().toLowerCase().replace(DOT_JAR,"");
             log.info("name of jar file: " + fileName);
             Optional<Module> optionalModule =  moduleRepository.findByName(fileName);
+            ModuleUtil.createUIDirectory(fileName);
 
 
             final Path modulePath = Paths.get(properties.getModulePath());
@@ -141,6 +140,8 @@ public class ModuleService {
                     e.printStackTrace();
                 }
             }*/
+
+
 
             try {
                 if(!optionalModule.isPresent()){
@@ -188,10 +189,25 @@ public class ModuleService {
             }
             Optional<Module> moduleOptional = moduleRepository.findByName(externalModule.getName().toLowerCase());
 
+
             //Saving module...
             final Module module = moduleOptional.isPresent()? moduleOptional.get(): moduleRepository.save(externalModule);
             log.debug(module.getName() + " saved...");
             modules.add(module);
+
+            //menu of external module
+            if (externalModule.getMenuByModule() != null) {
+                Menu menu = externalModule.getMenuByModule();
+                if(menu.getName() != null){
+                    menu.setArchived(ARCHIVED);
+                    menu.setUrl("http://localhost:8080/"+menu.getName()+"/index.html");
+                    menu.setUuid(UUID.randomUUID().toString());
+                    menu.setCreatedBy(currentUser);
+                    menu.setModuleId(module.getId());
+
+                    menuRepository.save(menu);
+                }
+            }
 
             //Getting all dependencies
             externalModule.getModuleDependencyByModule().forEach(moduleDependency -> {
@@ -436,13 +452,6 @@ public class ModuleService {
 
     public void startModule(Boolean isStartUp){
         //Boolean startUp = false;
-        Optional<Menu> menuOptional = menuRepository.findByIdAndAndArchived(1L, 1);
-        Menu menu = null;
-        if(menuOptional.isPresent()) {
-            menu = menuOptional.get();
-            menu.setArchived(0);
-        }
-        menuRepository.save(menu);
         if(isStartUp){
             //startUp = isStartUp;
             loadAllExternalModules(STATUS_STARTED, MODULE_TYPE);
@@ -454,6 +463,11 @@ public class ModuleService {
         externalModules.forEach(module -> {
             if(!isStartUp){
                 if(module.getStatus() == STATUS_INSTALLED) {
+                    Menu menu = module.getMenuByModule();
+                    if(menu != null){
+                        menu.setArchived(UN_ARCHIVED);
+                        menuRepository.save(menu);
+                    }
                     module.setStatus(STATUS_STARTED);
                     module.setActive(ACTIVE);
                     module.setArchived(UN_ARCHIVED);
@@ -501,6 +515,7 @@ public class ModuleService {
             throw new IllegalTypeException(Module.class, MODULE_CLASS_NAME, "cannot delete core module");
         }
         module.getProgramsByModule().forEach(program -> {
+            menuRepository.delete(module.menuByModule);
             program.getFormsByProgram().forEach(form -> formRepository.delete(form));
             programRepository.delete(program);
         });

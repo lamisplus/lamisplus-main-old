@@ -80,7 +80,12 @@ public class ProgramService {
     public Program update(Long id, ProgramDTO programDTO) {
         Optional<Program> programOptional = programRepository.findById(id);
         if(!programOptional.isPresent() || programOptional.get().getArchived() == ARCHIVED)throw new EntityNotFoundException(Program.class, "Id", id +"");
+        if(programDTO.getArchived() == null){
+            programDTO.setArchived(UN_ARCHIVED);
+        }
+        String code = programOptional.get().getCode();
         final Program program = this.programMapper.toProgramDTO(programDTO);
+        program.setCode(code);
 
         program.setId(id);
         return programRepository.save(program);
