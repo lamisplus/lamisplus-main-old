@@ -58,8 +58,8 @@ const ProgramManagerSearch = (props) => {
     }
 
     const deleteProgram = (row) => {
-        setCurrentProgramManager(row);
         console.log(row)
+        setCurrentProgramManager(row);
         toggleDeleteModal();
     }
 
@@ -180,7 +180,9 @@ const ProgramManagerSearch = (props) => {
                 />
             </CardBody>
             <NewProgramManager toggleModal={toggleModal} showModal={showModal} loadProgramManager={loadProgramManager} formData={currentProgramManager}/>
+            
             <Modal isOpen={showDeleteModal} toggle={toggleDeleteModal} >
+            {console.log(currentProgramManager)}
                 <ModalHeader toggle={toggleDeleteModal}> Deactivate Program - {currentProgramManager && currentProgramManager.name ? currentProgramManager.name : ""} </ModalHeader>
                 <ModalBody>
                     <p>Are you sure you want to proceed ?</p>

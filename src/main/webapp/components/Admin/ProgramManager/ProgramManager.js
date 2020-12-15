@@ -1,11 +1,7 @@
 import React, {useEffect} from 'react';
 import MaterialTable from 'material-table';
 import { connect } from "react-redux";
-<<<<<<< HEAD:src/main/webapp/components/Admin/ProgramManagerSeacrch.js
-import { fetchAll, deleteProgram, } from "actions/programManager";
-=======
 import { fetchAll, deactivateProgram} from "./../../../actions/programManager";
->>>>>>> 3a3d0b391d44f1101b37025c2bf4ced30a2ec49c:src/main/webapp/components/Admin/ProgramManager/ProgramManager.js
 import {
     Card,
     CardBody, Modal, ModalBody, ModalFooter, ModalHeader, Spinner
