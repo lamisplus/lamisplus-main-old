@@ -113,23 +113,26 @@ const ModalSample = (props) => {
     };
 
     const saveSample = (e) => {
-        console.log(e)
-        const newDatenow = moment(e.data.date_sample_collected).format(
+        const newData = e.data 
+        const newDateSampleCollected = moment(newData.date_sample_collected).format(
           "DD-MM-YYYY"
         );
-        
-        console.log(newDatenow)
-        return;
+        if(newData.date_sample_collected){
+          newData['date_sample_collected'] = newDateSampleCollected
+        }
+        if(newData.date_sample_collected){
+          newData['sample_type'] = newData.sample_type.toString()
+        }
+        if(newData.time_sample_collected){
+          newData['time_sample_collected'] = moment(newData.time_sample_collected, "hh:mm").format('LT')
+        }
+        datasample.data.lab_test_order_status = 1;
+        datasample.data["lab_number"] = lab_number;
+        const sampleCollectionData = Object.assign(datasample.data, newData)
         e.preventDefault();
       
             setLoading(true);
-            
-            const newTimeSampleCollected = moment(otherfields.time_sample_collected).format("LT");
-            datasample.data.lab_test_order_status = 1;
-            datasample.data.date_sample_collected = newDatenow;
-            datasample.data.comment = samples.comment;
 
-        
             /* end of the process */
             const onSuccess = () => {
                 setLoading(false);
@@ -140,14 +143,7 @@ const ModalSample = (props) => {
                 props.togglestatus();
             };
             datasample["lab_number"] = lab_number;
-            datasample.data["sample_collected_by"] =otherfields["sample_collected_by"];
-            datasample.data["sample_ordered_by"] = otherfields["sample_ordered_by"];
-            datasample.data["sample_priority"] = "Normal";
-            datasample.data["lab_number"] = lab_number;
-            datasample.data["time_sample_collected"] = newTimeSampleCollected;
-            datasample.data["comment_sample_collected"] = samples["comment"];
-            datasample.data["date_sample_ordered"] = datasample.dateEncounter;
-            props.createCollectedSample(datasample, labId, onSuccess, onError);
+            props.createCollectedSample(sampleCollectionData, labId, onSuccess, onError);
         
     };
 
@@ -159,6 +155,37 @@ const ModalSample = (props) => {
                 </Alert>
             );
         }
+        else{
+          return (
+            <Card >
+              <CardBody>
+                  <Col md={12} >
+                      <Alert color="dark" style={{backgroundColor:'#9F9FA5', color:"#000" , fontWeight: 'bolder', fontSize:'14px'}}>
+                          <p style={{marginTop: '.7rem' }}>Lab Test Group : <span style={{ fontWeight: 'bolder'}}>{lab_test_group }</span>
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Lab Test Ordered : &nbsp;&nbsp;
+                              <span style={{ fontWeight: 'bolder'}}>{description}</span>
+                              &nbsp;&nbsp;&nbsp; Lab Number : &nbsp;&nbsp;
+                              <span style={{ fontWeight: 'bolder'}}>{lab_number===""?" ---":lab_number}</span>
+                              <br/>
+                              Order by : &nbsp;&nbsp;
+                              <span style={{ fontWeight: 'bolder'}}>{ sample_ordered_by}</span>
+                              &nbsp;&nbsp;&nbsp; Priority : &nbsp;&nbsp;
+                              <span style={{ fontWeight: 'bolder'}}>{order_priority}</span>
+                          </p>
+
+                      </Alert>
+                  </Col>
+                  <FormRenderer
+                  submission={{lab_number: lab_number}}
+                  formCode={currentForm.code}
+                  programCode={currentForm.programCode}
+                  onSubmit={saveSample}
+                  />
+              </CardBody>
+          </Card>
+            
+          )
+        }
     }
     return (
         <div >
@@ -169,16 +196,7 @@ const ModalSample = (props) => {
                             <ModalHeader toggle={props.togglestatus}>Collect Sample </ModalHeader>
                             <ModalBody>
                                 {checklanumber(lab_number)}
-                                <Card >
-                                    <CardBody>
-                                      <FormRenderer
-                                          submission={{lab_number: lab_number}}
-                                          formCode={currentForm.code}
-                                          programCode={currentForm.programCode}
-                                          onSubmit={saveSample}
-                                      />
-                                    </CardBody>
-                                </Card>
+                                
                             </ModalBody>
                         </Form>
                     </Modal>
