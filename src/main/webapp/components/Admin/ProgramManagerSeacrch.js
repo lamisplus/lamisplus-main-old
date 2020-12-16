@@ -57,7 +57,8 @@ const ProgramManagerSearch = (props) => {
         toggleModal();
     }
 
-    const deleteProgram = (row) => {
+    const deleteProgram = (event,row) => {
+        console.log(event)
         console.log(row)
         setCurrentProgramManager(row);
         toggleDeleteModal();
@@ -138,7 +139,7 @@ const ProgramManagerSearch = (props) => {
                                             </MenuItem>
                                             <MenuItem style={{ color:"#000 !important"}}>
                                                 <Link
-                                                    onClick={(event, rowData) => deleteProgram(rowData)}>
+                                                    onClick={deleteProgram(row)}>
                                                     <MdDeleteForever size="15"  />{" "}
                                                     <span style={{color: '#000'}}>Delete Patient</span>
                                                 </Link>
@@ -180,7 +181,6 @@ const ProgramManagerSearch = (props) => {
                 />
             </CardBody>
             <NewProgramManager toggleModal={toggleModal} showModal={showModal} loadProgramManager={loadProgramManager} formData={currentProgramManager}/>
-            
             <Modal isOpen={showDeleteModal} toggle={toggleDeleteModal} >
             {console.log(currentProgramManager)}
                 <ModalHeader toggle={toggleDeleteModal}> Deactivate Program - {currentProgramManager && currentProgramManager.name ? currentProgramManager.name : ""} </ModalHeader>
