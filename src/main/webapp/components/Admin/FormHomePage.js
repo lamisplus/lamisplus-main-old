@@ -10,6 +10,8 @@ import { ToastContainer, toast } from "react-toastify";
 import {Menu, MenuButton, MenuItem, MenuList} from '@reach/menu-button';
 import {Link} from 'react-router-dom';
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
+import DownloadLink  from "react-download-link";
+import {CardContent} from "@material-ui/core";
 
 //Dtate Picker package
 Moment.locale("en");
@@ -31,7 +33,6 @@ function FormSearch(props) {
     };
 
     const viewForm = (row) => {
-        console.log("This is the selected form: "+row.code);
         setCurrentForm({
             programCode: row.programCode,
             formName: "VIEW FORM",
@@ -111,6 +112,14 @@ function FormSearch(props) {
                                                 <MdDeleteForever size="15" color="blue" />{" "}
                                                 <span style={{color: '#000'}}>Delete Form</span>
                                             </Link>
+                                        </MenuItem>
+                                        <MenuItem style={{ color:"#000 !important"}}>
+                                            <DownloadLink
+                                                label="Export as a json file"
+                                                filename={row ? row.name+".json" : "lamisplus-form.json"}
+                                                exportFile={() => JSON.stringify(row)}
+                                            />
+
                                         </MenuItem>
                                     </MenuList>
                                 </Menu>

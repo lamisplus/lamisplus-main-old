@@ -79,7 +79,7 @@ return (
               <h1>Parent Organization Unit
               <Link 
                   to ={{ 
-                  pathname: "/admin/organization-unit"
+                  pathname: "/admin-organization-unit"
                   }} 
                 > 
                   <MatButton
@@ -136,7 +136,7 @@ return (
                                                 <MenuList style={{ color:"#000 !important"}} > 
                                                       <MenuItem style={{ color:"#000 !important"}}>
                                                       <Link
-                                                        to={{pathname: "/admin/parent-organization-unit-level", state: { parentOrganisationUnitId: row.id  }}}>    
+                                                        to={{pathname: "/admin-parent-organization-unit-level", state: { parentOrganisationUnitId: row.id  }}}>
                                                           <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>View Parent Organ. Unit</span>
                                                        </Link>
                                                       </MenuItem> 

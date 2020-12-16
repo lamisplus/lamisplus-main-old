@@ -503,7 +503,12 @@ public class ModuleService {
             moduleClasses.add(BaseApplication.class);
             Class [] classArray = new Class[moduleClasses.size()];
             moduleClasses.toArray(classArray);
-            BaseApplication.restart(classArray, context);
+            try {
+                BaseApplication.restart(classArray, context);
+            }catch (Exception ex){
+                System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Restating error>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                ex.printStackTrace();
+            }
         }
     }
 

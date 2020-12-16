@@ -74,8 +74,11 @@ const PatientSearch = (props) => {
                   isLoading={loading}
                   data={props.patientsList.map((row) => ({
                       name: <Link
-                          to={"/patient-dashboard?hospitalNumber="+row.hospitalNumber}
-                          target="_blank"
+                          to ={{
+                              pathname: "/patient-dashboard",
+                              state: row.hospitalNumber
+                          }}
+
                           title={"Click to view patient dashboard"}
                       >{row.firstName}  { ' '}  {row.lastName}</Link>,
                       id: row.hospitalNumber,
@@ -101,7 +104,10 @@ const PatientSearch = (props) => {
 
                       <MenuItem  style={{ color:"#000 !important"}}>
                           <Link
-                              to={"/patient-dashboard?hospitalNumber="+row.hospitalNumber}
+                              to ={{
+                                  pathname: "/patient-dashboard",
+                                  state: row.hospitalNumber
+                              }}
                           >
                               <MdDashboard size="15" color="blue" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>
                           </Link>

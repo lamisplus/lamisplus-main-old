@@ -29,6 +29,7 @@ import TextField from "@material-ui/core/TextField";
 import axios from 'axios';
 import {url} from '../../api';
 import CancelIcon from "@material-ui/icons/Cancel";
+import DownloadLink  from "react-download-link";
 
 const useStyles = makeStyles(theme => ({
     root2: {
@@ -172,7 +173,7 @@ const Update = props => {
                         </Col>
                     </Row>
                     { form2 ?
-                        <FormBuilder form={row.resourceObject} {...props}
+                        <FormBuilder form={row.resourceObject || {}} {...props}
                                      submission={{data :{baseUrl:url}}}
                                      onChange={(schema) => {
                             // console.log(JSON.stringify(schema));
@@ -189,6 +190,12 @@ const Update = props => {
             <Card >
                 <CardContent>
                     <h4>Json Form</h4>
+                    <DownloadLink
+                        label="Export as a json file"
+                        filename={row ? row.name+".json" : "lamisplus-form.json"}
+                        exportFile={() => JSON.stringify(row)}
+                    /> Or Copy the json object below. <br/>
+
                     <div >
                     <textarea cols="100"
                               ref={textAreaRef}
