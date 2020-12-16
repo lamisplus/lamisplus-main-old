@@ -16,7 +16,7 @@ import {  fetchById } from '../../../actions/patients'
 import {  fetchAllLabTestOrderOfPatient } from '../../../actions/laboratory'
 import ModalSampleVerify from './VerifySample';
 import { useSelector, useDispatch } from 'react-redux';
-import PatientDetailCard from 'components/Functions/PatientDetailCard';
+import PatientDetailCard from 'components/PatientProfile/PatientDetailCard';
 import { Spinner } from 'reactstrap';
 import { Badge } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";

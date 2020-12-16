@@ -125,7 +125,7 @@ const CreateModule = (props) => {
     
       const onSuccess = () => {
         setTimeout(() => {
-          props.history.push(`/admin/bootstrap-configuration`)
+          props.history.push(`/admin-bootstrap-configuration`)
       }, 1000)
       }
     const onError = () => {}
@@ -211,7 +211,7 @@ const CreateModule = (props) => {
     const onSuccess = () => {
       setInstallationOverlay(false) 
       setDisableNextButtonProcess(true)
-      props.history.push(`/admin/bootstrap-configuration`)
+      props.history.push(`/admin-bootstrap-configuration`)
     }
     const onError = () => {
       setInstallationOverlay(false)
@@ -420,7 +420,7 @@ return (
               <h1>New Module
                 <Link 
                   to ={{ 
-                  pathname: "/admin/bootstrap-configuration",
+                  pathname: "/admin-bootstrap-configuration",
                   activetab: 1
                   }} 
                 >

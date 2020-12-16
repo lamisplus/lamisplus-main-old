@@ -10,6 +10,8 @@ import { Label } from "semantic-ui-react";
 import * as CODES from "api/codes";
 import { fetchApplicationCodeSet } from "actions/applicationCodeset";
 import {APPLICATION_CODESET_GENDER} from "actions/types";
+import { Image } from 'semantic-ui-react'
+
 const useStyles = makeStyles((theme) => ({
   root2: {
     width: "100%",
@@ -21,6 +23,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function PatientDetailCard(props) {
+  const patientDetail = props.getpatientdetails;
+  const patient = patientDetail || props.patient;
   React.useEffect(() => {
     if (props.genderList.length === 0) {
       props.fetchApplicationCodeSet("GENDER", APPLICATION_CODESET_GENDER);
@@ -45,57 +49,60 @@ function PatientDetailCard(props) {
           id="panel1c-header"
         >
           <Row>
+            <Col md={1}>
+              <Image src='https://react.semantic-ui.com/images/wireframe/white-image.png' size='small' bordered />
+            </Col>
+            <Col md={11}>
+              <Row className={"mt-1"}>
+            <Col md={12} className={classes.root2}>
+                <b style={{fontSize: "25px"}}>
+                  {patient.firstName} {patient.lastName}{" "}
+                </b>
+
+            </Col>
             <Col md={4} className={classes.root2}>
               <span>
                 {" "}
-                Patient ID : <b>{props.patient.hospitalNumber}</b>
+                Patient ID : <b>{patient.hospitalNumber}</b>
               </span>
             </Col>
 
             <Col md={4} className={classes.root2}>
               <span>
-                Date Of Birth : <b>{props.patient.dob}</b>
+                Date Of Birth : <b>{patient.dob}</b>
               </span>
             </Col>
             <Col md={4} className={classes.root2}>
               <span>
                 {" "}
-                Age : <b>{Age(props.patient.dob)}</b>
+                Age : <b>{Age(patient.dob)}</b>
               </span>
             </Col>
-            <Col md={4} className={classes.root2}>
-              <span>
-                {" "}
-                Name :{" "}
-                <b>
-                  {props.patient.firstName} {props.patient.lastName}{" "}
-                </b>
-              </span>
-            </Col>
+
             <Col md={4}>
               <span>
                 {" "}
                 Gender :{" "}
-                <b>{getGender(props.patient.genderId )}</b>
+                <b>{getGender(patient.genderId )}</b>
               </span>
             </Col>
             <Col md={4} className={classes.root2}>
               <span>
                 {" "}
-                Phone Number : <b>{props.patient.mobilePhoneNumber || "N/A"}</b>
+                Phone Number : <b>{patient.mobilePhoneNumber || "N/A"}</b>
               </span>
             </Col>
             <Col md={4} className={classes.root2}>
               <span>
                 {" "}
-                Email Address : <b>{props.patient.email || "N/A"}</b>
+                Email Address : <b>{patient.email || "N/A"}</b>
               </span>
             </Col>
             <Col md={12}>
             <Label.Group color={"blue"} size={"mini"}>
-              {props.patient.typePatient &&
-              (props.patient.typePatient === CODES.IN_PATIENT_UNBOOKED ||
-                props.patient.typePatient === CODES.IN_PATIENT_BOOKED) ? (
+              {patient.typePatient &&
+              (patient.typePatient === CODES.IN_PATIENT_UNBOOKED ||
+                patient.typePatient === CODES.IN_PATIENT_BOOKED) ? (
                 <Label>
                   IN PATIENT
                   <Label.Detail>Isolation Ward</Label.Detail>
@@ -104,6 +111,8 @@ function PatientDetailCard(props) {
                 <Label>OUT PATIENT</Label>
               )}
                </Label.Group>
+            </Col>
+              </Row>
             </Col>
           </Row>
         </ExpansionPanelSummary>

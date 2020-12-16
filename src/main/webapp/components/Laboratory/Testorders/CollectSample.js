@@ -18,7 +18,7 @@ import ModalSample from './CollectSampleModal';
 import ModalSampleTransfer from './TransferSampleModal';
 import SampleCollectionFormIo from './SampleCollectionFormIo'
 import { useSelector, useDispatch } from 'react-redux';
-import PatientDetailCard from 'components/Functions/PatientDetailCard';
+import PatientDetailCard from 'components/PatientProfile/PatientDetailCard';
 import { Spinner } from 'reactstrap';
 import { Badge } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
