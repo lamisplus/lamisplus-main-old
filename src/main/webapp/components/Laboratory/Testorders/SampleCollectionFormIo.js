@@ -129,7 +129,6 @@ const ModalSample = (props) => {
         datasample.data.lab_test_order_status = 1;
         datasample.data["lab_number"] = lab_number;
         const sampleCollectionData = Object.assign(datasample.data, newData)
-        e.preventDefault();
       
             setLoading(true);
 
@@ -176,10 +175,10 @@ const ModalSample = (props) => {
                       </Alert>
                   </Col>
                   <FormRenderer
-                  submission={{lab_number: lab_number}}
-                  formCode={currentForm.code}
-                  programCode={currentForm.programCode}
-                  onSubmit={saveSample}
+                    submission={{lab_number: lab_number}}
+                    formCode={currentForm.code}
+                    programCode={currentForm.programCode}
+                    onSubmit={saveSample}
                   />
               </CardBody>
           </Card>
