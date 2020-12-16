@@ -82,7 +82,25 @@ const ProgramManagerSearch = (props) => {
         };
         props.deleteProgram(id, onSuccess, onError);
     }
-
+    const actionButton = (e,status) =>{
+    
+        return (
+            <Menu>
+                <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px"}}>
+                    Action <span aria-hidden>▾</span>
+                </MenuButton>
+                    <MenuList style={{hover:"#eee"}}>
+                            
+                                <MenuItem onSelect={() => deleteProgram(e)}><MdModeEdit size="15" style={{color: '#000'}}/>{" "}Delete</MenuItem>
+                             
+                                <MenuItem onSelect={() => updatePrograms(e)}><MdModeEdit size="15" style={{color: '#000'}}/>{" "} Update</MenuItem>             
+                          
+                                <MenuItem onSelect={() => openProgram(e)}><MdModeEdit size="15" style={{color: '#3F51B5'}}/>{" "}Activate</MenuItem>
+                               
+                    </MenuList>
+            </Menu>
+          )
+  }
     return (
         <Card>
             <CardBody>
@@ -118,50 +136,9 @@ const ProgramManagerSearch = (props) => {
                     status:  <Grid component="label" container alignItems="center" spacing={1}>
                         <Grid item>{row.moduleId===0 ? "Active": "Inactive"}</Grid>
                     </Grid>,
-                    actions:
-                                <div>
-                                    <Menu>
-                                        <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
-                                            Actions <span aria-hidden>▾</span>
-                                        </MenuButton>
-                                        <MenuList style={{ color:"#000 !important"}} >
-                                            <MenuItem  style={{ color:"#000 !important"}}>
-                                                <Link>
-                                                    <MdDashboard size="15" />{" "}<span style={{color: '#000'}}  onClick={updatePrograms(row)}>{row.moduleId===2 ? "Active": "Inactive"}</span>
-                                                </Link>
-                                            </MenuItem>
-                                            <MenuItem style={{ color:"#000 !important"}}>
-                                                <Link
-                                                    onClick={(event, rowData) => openProgram(rowData)}>
-                                                    <MdModeEdit size="15"  />{" "}
-                                                    <span style={{color: '#000'}}>Edit Program</span>
-                                                </Link>
-                                            </MenuItem>
-                                            <MenuItem style={{ color:"#000 !important"}}>
-                                                <Link
-                                                    onClick={deleteProgram(row)}>
-                                                    <MdDeleteForever size="15"  />{" "}
-                                                    <span style={{color: '#000'}}>Delete Patient</span>
-                                                </Link>
-                                            </MenuItem>
-                                        </MenuList>
-                                    </Menu>
-                                </div>
-                         }))}
-                    // actions= {[
-                    //     {
-                    //         icon: 'edit',
-                    //         iconProps: {color: 'primary'},
-                    //         tooltip: 'Edit Program',
-                    //         onClick: (event, rowData) => openProgram(rowData)
-                    //     },
-                    //     {
-                    //         icon: 'cancel',
-                    //         iconProps: {color: 'primary'},
-                    //         tooltip: 'Deactivate Program',
-                    //         onClick: (event, rowData) => deleteProgram(rowData)
-                    //     }
-                    // ]}
+                    actions:<div>{actionButton(row)} </div>
+                         
+                }))}
                     //overriding action menu with props.actions
                     components={props.actions}
                     options={{
