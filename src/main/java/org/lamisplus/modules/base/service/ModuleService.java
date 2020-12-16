@@ -16,6 +16,7 @@ import org.lamisplus.modules.base.domain.mapper.ModuleMapper;
 import org.lamisplus.modules.base.repository.*;
 import org.lamisplus.modules.base.util.DataLoader;
 import org.lamisplus.modules.base.util.GenericSpecification;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,6 +75,8 @@ public class ModuleService {
     private static final String DOT_CLASS = ".class";
     private Timestamp ts = new Timestamp(System.currentTimeMillis());
     String currentUser;
+    @Value("${base.url}")
+    private String baseUrl;
 
     public Module save(ModuleDTO moduleDTO) {
         Optional<Module> moduleOptional = this.moduleRepository.findByName(moduleDTO.getName());
@@ -200,12 +203,15 @@ public class ModuleService {
                 Menu menu = externalModule.getMenuByModule();
                 if(menu.getName() != null){
                     menu.setArchived(ARCHIVED);
-                    menu.setUrl("http://localhost:8080/"+menu.getName()+"/index.html");
+                    menu.setUrl(baseUrl + menu.getName() + "/static/index.html");
                     menu.setUuid(UUID.randomUUID().toString());
                     menu.setCreatedBy(currentUser);
                     menu.setModuleId(module.getId());
+                    String name = menu.getName();
 
+                    if(module.getMenuByModule() == null){
                     menuRepository.save(menu);
+                    }
                 }
             }
 
@@ -514,8 +520,10 @@ public class ModuleService {
         if(module.getModuleType() == 0){
             throw new IllegalTypeException(Module.class, MODULE_CLASS_NAME, "cannot delete core module");
         }
-        module.getProgramsByModule().forEach(program -> {
+        if(module.menuByModule != null) {
             menuRepository.delete(module.menuByModule);
+        }
+        module.getProgramsByModule().forEach(program -> {
             program.getFormsByProgram().forEach(form -> formRepository.delete(form));
             programRepository.delete(program);
         });

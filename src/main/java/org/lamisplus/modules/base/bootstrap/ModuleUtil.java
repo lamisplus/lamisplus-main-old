@@ -48,11 +48,9 @@ public class ModuleUtil {
                     if (!Files.exists(currentTarget)) {
                         Files.createDirectories(currentTarget);
                     }
-                    if (currentTarget.toFile().isDirectory() && currentTarget.toFile().getPath().contains("static") &&
-                            !currentTarget.toFile().getPath().contains("static/static")) {
+                    if (currentTarget.toFile().isDirectory() && currentTarget.toFile().getPath().contains("static")) {
                         isStatic = true;
-                        staticTarget = uiPath.resolve(pathInZipFile.relativize(dir)
-                                .toString());
+                        staticTarget = uiPath.resolve(pathInZipFile.relativize(dir).toString());
                         if (!Files.exists(staticTarget)) {
                             Files.createDirectories(staticTarget);
                         }

@@ -37,7 +37,7 @@ public class MenuService {
     }
 
     public Menu save(Menu menu) {
-        Optional<Menu> menuOptional = menuRepository.findByIdAndAndArchived(menu.getId(), UN_ARCHIVED);
+        Optional<Menu> menuOptional = menuRepository.findByIdAndArchived(menu.getId(), UN_ARCHIVED);
         if (menuOptional.isPresent()) throw new RecordExistException(Menu.class, "Id", menu.getId() + "");
 
         menu.setCreatedBy(userService.getUserWithRoles().get().getUserName());
@@ -46,14 +46,14 @@ public class MenuService {
     }
 
     public Menu getMenuById(Long id) {
-        Optional<Menu> menuOptional = menuRepository.findByIdAndAndArchived(id, UN_ARCHIVED);
+        Optional<Menu> menuOptional = menuRepository.findByIdAndArchived(id, UN_ARCHIVED);
         if (!menuOptional.isPresent()) throw new EntityNotFoundException(Menu.class, "Id", id + "");
 
         return menuOptional.get();
     }
 
     public Menu update(Long id, Menu menu) {
-        Optional<Menu> menuOptional = menuRepository.findByIdAndAndArchived(menu.getId(), UN_ARCHIVED);
+        Optional<Menu> menuOptional = menuRepository.findByIdAndArchived(menu.getId(), UN_ARCHIVED);
         if (menuOptional.isPresent()) throw new EntityNotFoundException(Menu.class, "Id", id + "");
         menu.setId(id);
         menu.setModifiedBy(userService.getUserWithRoles().get().getUserName());
@@ -62,7 +62,7 @@ public class MenuService {
     }
 
     public Integer delete(Long id) {
-        Optional<Menu> menuOptional = menuRepository.findByIdAndAndArchived(id, UN_ARCHIVED);
+        Optional<Menu> menuOptional = menuRepository.findByIdAndArchived(id, UN_ARCHIVED);
         if (!menuOptional.isPresent()) throw new EntityNotFoundException(Menu.class, "Id", id + "");
         Menu menu = menuOptional.get();
         menu.setArchived(ARCHIVED);

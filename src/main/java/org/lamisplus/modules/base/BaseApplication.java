@@ -54,10 +54,11 @@ public class BaseApplication extends SpringBootServletInitializer implements Com
         Thread thread = new Thread(() -> {
             try {
                 context.close();
+                System.out.println("System is close");
                 context = SpringApplication.run(clz, args.getSourceArgs());
             }catch (Exception e){
                 try {
-                    String command = "c:\\program files\\tomcat\\bin\\startup.bat";//for linux use .sh
+                    String command = "c:\\ProgramFiles\\Apache-tomcat-9.0.41\\bin\\startup.bat";//for linux use .sh
                     Process child = Runtime.getRuntime().exec(command);
                 } catch (IOException ex) {
                     ex.printStackTrace();
