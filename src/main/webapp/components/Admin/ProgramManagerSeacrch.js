@@ -56,15 +56,20 @@ const ProgramManagerSearch = (props) => {
         setCurrentProgramManager(row);
         toggleModal();
     }
-
-    const deleteProgram = (event,row) => {
-        console.log(event)
-        console.log(row)
+    const updatePrograms = (row) =>{
         setCurrentProgramManager(row);
+        toggleModal();
+
+    }
+
+    const deleteProgram = (e) => {
+        console.log(e.name)
+        console.log(e.id)
+        setCurrentProgramManager(e);
         toggleDeleteModal();
     }
 
-    const updatePrograms = (row)  => {
+    const activateAndDeactavitePrograms = (row)  => {
         props.updateProgram(row.id, row)
     }
 
@@ -90,13 +95,9 @@ const ProgramManagerSearch = (props) => {
                     Action <span aria-hidden>▾</span>
                 </MenuButton>
                     <MenuList style={{hover:"#eee"}}>
-                            
-                                <MenuItem onSelect={() => deleteProgram(e)}><MdModeEdit size="15" style={{color: '#000'}}/>{" "}Delete</MenuItem>
-                             
-                                <MenuItem onSelect={() => updatePrograms(e)}><MdModeEdit size="15" style={{color: '#000'}}/>{" "} Update</MenuItem>             
-                          
                                 <MenuItem onSelect={() => openProgram(e)}><MdModeEdit size="15" style={{color: '#3F51B5'}}/>{" "}Activate</MenuItem>
-                               
+                                <MenuItem onSelect={() => updatePrograms(e)}><MdModeEdit size="15" style={{color: '#000'}}/>{" "} Update</MenuItem>
+                                <MenuItem onSelect={() => deleteProgram(e)}><MdModeEdit size="15" style={{color: '#000'}}/>{" "}Delete</MenuItem>
                     </MenuList>
             </Menu>
           )
@@ -159,7 +160,7 @@ const ProgramManagerSearch = (props) => {
             </CardBody>
             <NewProgramManager toggleModal={toggleModal} showModal={showModal} loadProgramManager={loadProgramManager} formData={currentProgramManager}/>
             <Modal isOpen={showDeleteModal} toggle={toggleDeleteModal} >
-            {console.log(currentProgramManager)}
+
                 <ModalHeader toggle={toggleDeleteModal}> Deactivate Program - {currentProgramManager && currentProgramManager.name ? currentProgramManager.name : ""} </ModalHeader>
                 <ModalBody>
                     <p>Are you sure you want to proceed ?</p>
