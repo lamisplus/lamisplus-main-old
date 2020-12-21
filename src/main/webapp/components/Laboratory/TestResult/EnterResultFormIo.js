@@ -8,7 +8,7 @@ import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import moment from "moment";
 import {
-    sampleVerification,
+    createCollectedSample,
     fetchFormById,
 } from "../../../actions/laboratory";
 import * as CODES from "./../../../api/codes";
@@ -57,7 +57,6 @@ const useStyles = makeStyles((theme) => ({
 
 const ModalSample = (props) => {
     const classes = useStyles()
-    console.log(props.datasample)
     const datasample = props.datasample && props.datasample!==null ? props.datasample : {};
     const date_sample_collected = datasample.data ? datasample.data.date_sample_collected : null ;
     const lab_test_group = datasample.data ? datasample.data.lab_test_group : null ;
@@ -71,7 +70,7 @@ const ModalSample = (props) => {
     //This is to get SAMPLE TYPE from application Codeset
 
     const currentForm = {
-          code: CODES.LAB_SAMPLE_VERIFICATION_CODE_FORM,
+          code: CODES.LAB_SAMPLE_RESULT_CODE_FORM,
           programCode: CODES.GENERAL_SERVICE,
           formName: "Laboratory Sample Collection",
           options:{
@@ -82,20 +81,24 @@ const ModalSample = (props) => {
 
     const saveSample = (e) => {
         const newData = e.data 
-        
-        const newDateSampleVerified = moment(newData.date_sample_verified).format(
-          "DD-MM-YYYY"
-        );
-        if(newData.date_sample_verified){
-          newData['date_sample_verified'] = newDateSampleVerified
+
+        if(newData.date_result_reported){
+          newData['date_result_reported'] = moment(newData.date_result_reported).format(
+            "DD-MM-YYYY"
+          );
         }
-        if(newData.lab_test_order_status){
-          newData['lab_test_order_status'] = newData.lab_test_order_status
+        if(newData.date_asseyed){
+          newData['date_asseyed'] = moment(newData.date_asseyed).format(
+            "DD-MM-YYYY"
+          );
         }
-        if(newData.time_sample_Verified){
-          newData['time_sample_Verified'] = moment(newData.time_sample_Verified, "hh:mm").format('LT')
+        if(newData.time_result_reported){
+          newData['time_result_reported'] = moment(newData.time_result_reported, "hh:mm").format('LT')
         }
+            datasample.data.lab_test_order_status = 5;
+            
             Object.assign(datasample.data, newData)
+
             setLoading(true);
 
             /* end of the process */
@@ -107,7 +110,7 @@ const ModalSample = (props) => {
                 setLoading(false);
                 props.togglestatus();
             };
-            props.sampleVerification(datasample, labId, onSuccess, onError);
+            props.createCollectedSample(datasample, labId, onSuccess, onError);
         
     };
 
@@ -118,7 +121,7 @@ const ModalSample = (props) => {
                 <CardBody>
                     <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
                         <Form onSubmit={saveSample}>
-                            <ModalHeader toggle={props.togglestatus}>Sample Verification</ModalHeader>
+                            <ModalHeader toggle={props.togglestatus}>Result Reporting</ModalHeader>
                             <ModalBody>
                             <Card >
                                 <CardBody>
@@ -150,6 +153,6 @@ const ModalSample = (props) => {
     );
 };
 
-export default connect(null, { sampleVerification, fetchFormById })(
+export default connect(null, { createCollectedSample, fetchFormById })(
     ModalSample
 );

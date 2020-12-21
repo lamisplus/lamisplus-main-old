@@ -170,7 +170,7 @@ return (
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                
+                                                {console.log(sampleManifestList)}
                                                 {!loading ? sampleManifestList.map((row) => (
                                                     row!==null?
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>

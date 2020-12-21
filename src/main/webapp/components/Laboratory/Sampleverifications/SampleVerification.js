@@ -14,7 +14,7 @@ import { ToastContainer } from "react-toastify";
 import Page from './../../Page'
 import {  fetchById } from '../../../actions/patients'
 import {  fetchAllLabTestOrderOfPatient } from '../../../actions/laboratory'
-import ModalSampleVerify from './VerifySample';
+import ModalSampleVerify from './SampleVerificationFromIo';
 import { useSelector, useDispatch } from 'react-redux';
 import PatientDetailCard from 'components/PatientProfile/PatientDetailCard';
 import { Spinner } from 'reactstrap';
@@ -52,9 +52,7 @@ const SampleVerification = (props) => {
     const newSample =  sampleCollections.filter(function(sample) {
       return (sample.data!==null && sample.data.lab_test_order_status !==0);
     });
-    console.log(newSample[0].data.lab_number)
     const [fetchTestOrders, setFetchTestOrders] = useState(newSample)
-
     useEffect(() => {
         
         if(props.location.state.encounterId !="" ){         
@@ -144,9 +142,9 @@ const SampleVerification = (props) => {
           return <p><Badge  color="light">Sample Collected</Badge></p>
         }else if(e===2){
           return <p><Badge  color="light">Sample Transfered</Badge></p>
-        }else if(e==="3"){
+        }else if(e===3){
           return <p><Badge  color="light">Sample Verified</Badge></p>
-        }else if(e==="4"){
+        }else if(e===4){
           return <p><Badge  color="light">Sample Rejected</Badge></p>
         }else if(e===5){
           return <p><Badge  color="light">Result Available</Badge></p>
@@ -158,31 +156,44 @@ const SampleVerification = (props) => {
 
 //This is function to check for the status of each collection to display on the tablist below 
     const sampleAction = (e) =>{
-    
-        return (
-            <Menu>
-                <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px"}}>
-                    Action <span aria-hidden>▾</span>
-                </MenuButton>
-                    <MenuList style={{hover:"#eee"}}>
-                        { e.data.lab_test_order_status===1 ?
-                            <MenuItem onSelect={() => handleVerifySample(e)}><GoChecklist size="15" style={{color: '#3F51B5'}}/>{" "}Verify Sample</MenuItem>
-                            :""
-                        } 
-                        { e.data.lab_test_order_status==="4" ?
-                        <MenuItem onSelect={() => handleRecollectSample(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Re-collect Sample</MenuItem>
-                          :""
-                        } 
-                        { e.data.lab_test_order_status===5 ?
-                        <MenuItem onSelect={() => viewresult(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>
-                          :""
-                        }
-                    </MenuList>
-            </Menu>
-          )
-  }
-
-
+        if(e.data.lab_test_order_status===1){
+            return (
+                    <Menu>
+                    <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px"}}>
+                        Action <span aria-hidden>▾</span>
+                    </MenuButton>
+                        <MenuList style={{hover:"#eee"}}>              
+                        <MenuItem onSelect={() => handleVerifySample(e)}><GoChecklist size="15" style={{color: '#3F51B5'}}/>{" "}Verify Sample</MenuItem>
+                        </MenuList>
+                    </Menu>
+                )    
+            }
+            if(e.data.lab_test_order_status==="4"){
+                return (
+                        <Menu>
+                        <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px"}}>
+                            Action <span aria-hidden>▾</span>
+                        </MenuButton>
+                            <MenuList style={{hover:"#eee"}}>              
+                            <MenuItem onSelect={() => handleRecollectSample(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Re-collect Sample</MenuItem>
+                            </MenuList>
+                        </Menu>
+                    )    
+                }
+                if(e.data.lab_test_order_status===5){
+                    return (
+                            <Menu>
+                            <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px"}}>
+                                Action <span aria-hidden>▾</span>
+                            </MenuButton>
+                                <MenuList style={{hover:"#eee"}}>              
+                                    <MenuItem onSelect={() => viewresult(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>
+                                </MenuList>
+                            </Menu>
+                        )    
+                    }
+            }
+        
 return (
     <Page title='Sample Verification'>
         <ToastContainer autoClose={2000} />

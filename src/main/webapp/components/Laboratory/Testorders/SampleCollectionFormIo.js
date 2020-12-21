@@ -59,7 +59,6 @@ const useStyles = makeStyles((theme) => ({
 
 const ModalSample = (props) => {
     const classes = useStyles()
-    console.log(props.datasample)
     const datasample = props.datasample && props.datasample!==null ? props.datasample : {};
     const order_priority = datasample.data && datasample.data.order_priority && datasample.data.order_priority.display   ? datasample.data.order_priority.display : null;
     const lab_test_group = datasample.data ? datasample.data.lab_test_group : null ;
@@ -99,21 +98,17 @@ const ModalSample = (props) => {
         }
         datasample.data.lab_test_order_status = 1;
         datasample.data["lab_number"] = lab_number;
-        const sampleCollectionData = Object.assign(datasample.data, newData)
-      
-            setLoading(true);
+        Object.assign(datasample.data, newData)
 
-            /* end of the process */
+        /* end of the process */
             const onSuccess = () => {
-                setLoading(false);
                 props.togglestatus();
             };
             const onError = () => {
-                setLoading(false);
                 props.togglestatus();
             };
             datasample["lab_number"] = lab_number;
-            props.createCollectedSample(sampleCollectionData, labId, onSuccess, onError);
+            props.createCollectedSample(datasample, labId, onSuccess, onError);
         
     };
 
@@ -146,7 +141,6 @@ const ModalSample = (props) => {
                       </Alert>
                   </Col>
                   <FormRenderer
-                    submission={{lab_number: lab_number}}
                     formCode={currentForm.code}
                     programCode={currentForm.programCode}
                     onSubmit={saveSample}

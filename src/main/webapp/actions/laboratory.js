@@ -82,8 +82,7 @@ export const fetchLabTestOrdersByEncounterID = (id)=> dispatch => {
     }
 };
 export const createCollectedSample = (data, lab_id, onSuccess, onError ) => dispatch => {
-  if(lab_id){
-    
+  if(lab_id){   
   axios
     .put(`${baseUrl}form-data/${lab_id}`, data)
     .then(response => {
@@ -95,7 +94,7 @@ export const createCollectedSample = (data, lab_id, onSuccess, onError ) => disp
       toast.success("Sample Collection successful");
     })
     .catch(error =>{
-      
+      console.log(error)
       dispatch({
         type: ACTION_TYPES.ERROR_CREATE_COLLECT_SAMPLE,
         payload: error
@@ -244,8 +243,6 @@ export const sampleVerification = (data, lab_id, onSuccess, onError ) => dispatc
       })
       onError()
       toast.error("Something went wrong, please try again");
-      //setInterval(window.location.reload(false), 80000);
-      //window.location.reload()
       
     });
   }else{
@@ -253,15 +250,16 @@ export const sampleVerification = (data, lab_id, onSuccess, onError ) => dispatc
   }
 };
 
-export const transferSample = (samples, lab_id) => dispatch => {
+export const transferSample = (data, lab_id, onSuccess, onError ) => dispatch => {
  
   axios
-    .put(`${baseUrl}form-data/`, samples)
+    .put(`${baseUrl}form-data/${lab_id}`, data)
     .then(response => {
       dispatch({
         type: ACTION_TYPES.TRANSFER_SAMPLE,
         payload: response.data
       });
+      onSuccess()
       toast.success("Sample Transfer  successful");
     })
     .catch(error =>{
@@ -270,6 +268,7 @@ export const transferSample = (samples, lab_id) => dispatch => {
         type: ACTION_TYPES.ERROR_TRANSFER_SAMPLE,
         payload: error
       })
+      onError()
       toast.error("Something went wrong, please try again");
 
     });

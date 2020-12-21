@@ -8,7 +8,7 @@ import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import moment from "moment";
 import {
-    sampleVerification,
+    transferSample,
     fetchFormById,
 } from "../../../actions/laboratory";
 import * as CODES from "./../../../api/codes";
@@ -71,43 +71,36 @@ const ModalSample = (props) => {
     //This is to get SAMPLE TYPE from application Codeset
 
     const currentForm = {
-          code: CODES.LAB_SAMPLE_VERIFICATION_CODE_FORM,
+          code: CODES.LAB_SAMPLE_TRANSFER_CODE_FORM,
           programCode: CODES.GENERAL_SERVICE,
-          formName: "Laboratory Sample Collection",
+          formName: "Laboratory Sample Transfer",
           options:{
               hideHeader: true
           },
       };
 
 
-    const saveSample = (e) => {
-        const newData = e.data 
-        
+    const transferSampleData = (e) => {
+        const newData = e.data        
         const newDateSampleVerified = moment(newData.date_sample_verified).format(
           "DD-MM-YYYY"
         );
         if(newData.date_sample_verified){
           newData['date_sample_verified'] = newDateSampleVerified
         }
-        if(newData.lab_test_order_status){
-          newData['lab_test_order_status'] = newData.lab_test_order_status
-        }
         if(newData.time_sample_Verified){
           newData['time_sample_Verified'] = moment(newData.time_sample_Verified, "hh:mm").format('LT')
         }
-            Object.assign(datasample.data, newData)
-            setLoading(true);
-
+          datasample.data.lab_test_order_status = 2;
+           Object.assign(datasample.data, newData)
             /* end of the process */
             const onSuccess = () => {
-                setLoading(false);
                 props.togglestatus();
             };
             const onError = () => {
-                setLoading(false);
                 props.togglestatus();
             };
-            props.sampleVerification(datasample, labId, onSuccess, onError);
+            props.transferSample(datasample, labId, onSuccess, onError);
         
     };
 
@@ -117,8 +110,8 @@ const ModalSample = (props) => {
             <Card >
                 <CardBody>
                     <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
-                        <Form onSubmit={saveSample}>
-                            <ModalHeader toggle={props.togglestatus}>Sample Verification</ModalHeader>
+                        <Form onSubmit={transferSampleData}>
+                            <ModalHeader toggle={props.togglestatus}>Transfer Sample </ModalHeader>
                             <ModalBody>
                             <Card >
                                 <CardBody>
@@ -136,7 +129,7 @@ const ModalSample = (props) => {
                                     <FormRenderer
                                         formCode={currentForm.code}
                                         programCode={currentForm.programCode}
-                                        onSubmit={saveSample}
+                                        onSubmit={transferSampleData}
                                     />
                                 </CardBody>
                             </Card>
@@ -150,6 +143,6 @@ const ModalSample = (props) => {
     );
 };
 
-export default connect(null, { sampleVerification, fetchFormById })(
+export default connect(null, { transferSample, fetchFormById })(
     ModalSample
 );
