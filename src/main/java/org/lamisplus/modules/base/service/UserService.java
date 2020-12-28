@@ -44,6 +44,7 @@ public class UserService {
 
     private final RoleRepository roleRepository;
 
+
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -81,9 +82,11 @@ public class UserService {
         newUser.setEmail(userDTO.getEmail());
         newUser.setPhoneNumber(userDTO.getPhoneNumber());
         newUser.setGender(userDTO.getGender());
+        newUser.setCurrentOrganisationUnitId(userDTO.getCurrentOrganisationUnitId());
         newUser.setPassword(encryptedPassword);
         newUser.setPerson(newPerson);
         newUser.setPersonId(newPerson.getId());
+
         if (userDTO.getRoles() == null || userDTO.getRoles().isEmpty()) {
             Set<Role> roles = new HashSet<>();
             Role role = roleRepository.findAll().stream()
@@ -96,6 +99,8 @@ public class UserService {
         } else {
             newUser.setRoles(getRolesFromStringSet(userDTO.getRoles()));
         }
+
+        //newUser.applicationUserOrganisationUnitsById
 
         userRepository.save(newUser);
         log.debug("User Created: {}", newUser);

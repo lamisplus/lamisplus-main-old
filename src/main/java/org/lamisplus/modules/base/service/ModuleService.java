@@ -14,7 +14,9 @@ import org.lamisplus.modules.base.domain.dto.ModuleDTO;
 import org.lamisplus.modules.base.domain.entity.*;
 import org.lamisplus.modules.base.domain.mapper.ModuleMapper;
 import org.lamisplus.modules.base.repository.*;
+import org.lamisplus.modules.base.util.CustomFileVisitorUtil;
 import org.lamisplus.modules.base.util.DataLoader;
+import org.lamisplus.modules.base.util.FileStorage;
 import org.lamisplus.modules.base.util.GenericSpecification;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -22,12 +24,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -77,6 +81,8 @@ public class ModuleService {
     String currentUser;
     @Value("${base.url}")
     private String baseUrl;
+    private final FilesStorageServiceImpl filesStorageServiceImpl;
+
 
     public Module save(ModuleDTO moduleDTO) {
         Optional<Module> moduleOptional = this.moduleRepository.findByName(moduleDTO.getName());
@@ -97,9 +103,11 @@ public class ModuleService {
         return this.moduleRepository.findAll(specification);
     }
 
-    public List<Module> uploadAndUnzip(MultipartFile[] files) {
+    public List<Module> uploadAndUnzip(MultipartFile[] files, HttpServletRequest request) {
        ModuleUtil.setModuleConfigs();
        currentUser = userService.getUserWithRoles().get().getUserName();
+
+
 
         Arrays.asList(files).stream().forEach(file ->{
             if(!file.getOriginalFilename().contains(DOT_JAR)){
@@ -116,10 +124,22 @@ public class ModuleService {
             String fileName = jarFile.getName().toLowerCase().replace(DOT_JAR,"");
             log.info("name of jar file: " + fileName);
             Optional<Module> optionalModule =  moduleRepository.findByName(fileName);
-            ModuleUtil.createUIDirectory(fileName);
+            //ModuleUtil.createUIDirectory(fileName);
 
 
-            final Path modulePath = Paths.get(properties.getModulePath());
+            //final Path modulePath = Paths.get(properties.getModulePath());
+            Path modulePath = null;
+            try {
+                String path = filesStorageServiceImpl.uploadFile(file, request);
+                ModuleUtil.uiPath = modulePath;
+                modulePath = Paths.get(path);
+                ModuleUtil.uiPath = modulePath;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            //System.out.println("modulePath - " + modulePath);
+            log.info("modulePath -" + modulePath);
+
             storageService.setRootLocation(modulePath);
             /*if(optionalModule.isPresent() && optionalModule.get().getStatus() == STATUS_STARTED
                     && !optionalModule.get().getName().contains(TEMP)){
@@ -134,7 +154,7 @@ public class ModuleService {
                 log.debug(fileName + " Uploaded...");
                 isExist = false;
             }*/
-            storageService.store(fileName, file, null);
+            //storageService.store(fileName, file, null);
             final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", fileName);
             /*if(moduleRuntimePath != null){
                 try {
@@ -148,10 +168,10 @@ public class ModuleService {
 
             try {
                 if(!optionalModule.isPresent()){
-                    ModuleUtil.copyPathFromJar(storageService.getURL(jarName),
+                    ModuleUtil.copyPathFromJar(modulePath.toUri().toURL(),
                             fileSeparator, moduleRuntimePath);
                 }else if(optionalModule.isPresent() && optionalModule.get().getStatus() != STATUS_STARTED) {
-                    ModuleUtil.copyPathFromJar(storageService.getURL(jarName),
+                    ModuleUtil.copyPathFromJar(modulePath.toUri().toURL(),
                             fileSeparator, moduleRuntimePath);
                 } else {
                     Module module = optionalModule.get();
@@ -328,7 +348,7 @@ public class ModuleService {
 
         if(rootFile != null && rootFile.exists()) {
             try {
-               ClassPathHacker.addFile(rootFile.getAbsolutePath());
+                ClassPathHacker.addFile(rootFile.getAbsolutePath());
                 List<URL> classURL = showFiles(filePath.listFiles(), rootFile, module.getMain());
                 ClassLoader loader = new URLClassLoader(classURL.toArray(
                         new URL[classURL.size()]), ClassLoader.getSystemClassLoader());
@@ -366,6 +386,7 @@ public class ModuleService {
         }
         return module;
     }
+
 
     private ClassLoader getMyClassLoader(ClassLoader loader) {
         return loader;
@@ -458,6 +479,7 @@ public class ModuleService {
 
     public void startModule(Boolean isStartUp){
         //Boolean startUp = false;
+        System.out.println("STarting starting....");
         if(isStartUp){
             //startUp = isStartUp;
             loadAllExternalModules(STATUS_STARTED, MODULE_TYPE);
@@ -506,7 +528,6 @@ public class ModuleService {
             try {
                 BaseApplication.restart(classArray, context);
             }catch (Exception ex){
-                System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Restating error>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                 ex.printStackTrace();
             }
         }
@@ -615,7 +636,7 @@ public class ModuleService {
                 }
             }
         }
-        Path libPath = Paths.get(properties.getModulePath(), "libs", externalModule.getName());
+        //Path libPath = Paths.get(properties.getModulePath(), "libs", externalModule.getName());
         File src = new File(Paths.get(properties.getModulePath(), "runtime", externalModule.getName(),"lib").toString());
 
         //Copy dependencies in lib to libs

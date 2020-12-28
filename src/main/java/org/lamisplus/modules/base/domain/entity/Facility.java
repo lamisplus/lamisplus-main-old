@@ -111,9 +111,9 @@ public class Facility implements Serializable {
     public List<FacilityService> facilityServicesByFacility;
 
 
-    @OneToMany(mappedBy = "facilityByFacilityId")
+/*    @OneToMany(mappedBy = "facilityByFacilityId")
     @JsonIgnore
     @ToString.Exclude
-    public List<Patient> patientsByFacility;
+    public List<Patient> patientsByFacility;*/
 
 }

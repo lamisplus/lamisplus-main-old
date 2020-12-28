@@ -48,7 +48,9 @@ public class EncounterService {
 
 
     public List<EncounterDTO> getAllEncounters() {
-        Specification<Encounter> specification = genericSpecification.findAll(0);
+        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+
+        Specification<Encounter> specification = genericSpecification.findAllWithOrganisation(organisationUnitId);
         List<EncounterDTO> encounterDTOS = new ArrayList();
 
         List <Encounter> encounters = encounterRepository.findAll(specification);
@@ -106,9 +108,11 @@ public class EncounterService {
     }
 
     public Encounter save(EncounterDTO encounterDTO) {
+        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+
         encounterDTO.setTimeCreated(CustomDateTimeFormat.LocalTimeByFormat(LocalTime.now(),"hh:mm a"));
-        Optional<Encounter> encounterOptional = this.encounterRepository.findByPatientIdAndProgramCodeAndFormCodeAndDateEncounter(encounterDTO.getPatientId(), encounterDTO.getFormCode(),
-                encounterDTO.getProgramCode(), encounterDTO.getDateEncounter());
+        Optional<Encounter> encounterOptional = this.encounterRepository.findByPatientIdAndProgramCodeAndFormCodeAndDateEncounterAndOrganisationUnitId(encounterDTO.getPatientId(), encounterDTO.getFormCode(),
+                encounterDTO.getProgramCode(), encounterDTO.getDateEncounter(), organisationUnitId);
 
         if (encounterOptional.isPresent()) {
             throw new RecordExistException(Encounter.class, "Patient Id ", encounterDTO.getPatientId() + ", " +
@@ -131,6 +135,7 @@ public class EncounterService {
         final Encounter encounter = encounterMapper.toEncounter(encounterDTO);
         encounter.setUuid(UuidGenerator.getUuid());
         encounter.setCreatedBy(userService.getUserWithRoles().get().getUserName());
+        encounter.setOrganisationUnitId(organisationUnitId);
 
         Encounter savedEncounter = this.encounterRepository.save(encounter);
 
@@ -211,6 +216,8 @@ public class EncounterService {
     }
 
     public Long getTotalCount(String programCode) {
-        return encounterRepository.countByProgramCodeAndArchived(programCode, 0);
+        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+
+        return encounterRepository.countByProgramCodeAndArchivedAndOrganisationUnitId(programCode, 0, organisationUnitId);
     }
 }

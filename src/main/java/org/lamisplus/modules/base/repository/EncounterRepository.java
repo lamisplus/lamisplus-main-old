@@ -19,25 +19,25 @@ import java.util.Optional;
 //EncounterRepository
 public interface EncounterRepository extends JpaRepository<Encounter, Long> , JpaSpecificationExecutor {
 
-    List <Encounter> findAllByPatientIdAndFormCode(Long patientId, String FormCode, Pageable pageable);
+    List <Encounter> findAllByPatientIdAndFormCodeAndOrganisationUnitId(Long patientId, String FormCode, Long organisationUnitId, Pageable pageable);
 
     //New
     Page<Encounter> findAllByPatientIdAndFormCodeAndArchived(Pageable pageable, Long patientId, String FormCode, int Archived);
 
 
-    Optional<Encounter> findByPatientIdAndProgramCodeAndFormCodeAndDateEncounter(Long patientId, String ProgramCode, String FormCode, LocalDate dateFncounter);
+    Optional<Encounter> findByPatientIdAndProgramCodeAndFormCodeAndDateEncounterAndOrganisationUnitId(Long patientId, String ProgramCode, String FormCode, LocalDate dateFncounter, Long organisationUnitId);
 
     List<Encounter> findByPatientId(Long PatientId);
 
     //TODO: in progress...
     @Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.EncounterDistinctDTO" +
-            "(e.patientId, e.formCode, e.programCode) FROM Encounter e WHERE e.patientId = ?1 and e.programCode = ?2")
-    List<EncounterDistinctDTO> findDistinctPatientIdAndProgramCode(Long patientId, String programCode);
+            "(e.patientId, e.formCode, e.programCode, e.organisationUnitId) FROM Encounter e WHERE e.patientId = ?1 and e.programCode = ?2")
+    List<EncounterDistinctDTO> findDistinctPatientIdAndProgramCodeAndOrganisationUnitId(Long patientId, String programCode, Long organisationUnitId);
 
     //List<PatientObservation> findByPatientAndFormCodeTitle(Patient patient, Long formCode, String title);
     Optional<Encounter> findFirstByPatientIdAndProgramCodeAndFormCodeOrderByDateEncounterDesc(Long patientId, String ProgramCode, String FormCode);
 
-    Long countByProgramCodeAndArchived(String programCode, int archived);
+    Long countByProgramCodeAndArchivedAndOrganisationUnitId(String programCode, int archived, Long organisationUnit);
 
     //Optional<Encounter> findByMaxDAndDateEncounter(String formCode, Long patientId);
     //List<Encounter> findAllByPatientIdAndProgramCodeAndFormCodeOrderByDateEncounterDesc(Long patientId, String ProgramCode, String FormCode);

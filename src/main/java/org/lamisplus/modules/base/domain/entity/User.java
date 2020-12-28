@@ -42,6 +42,7 @@ public class User implements Serializable {
     private String resetKey;
     private Integer uploaded;
     private Time timeUploaded;
+    private Long currentOrganisationUnitId;
 
     @Basic
     @Column(name = "person_id")
@@ -51,9 +52,13 @@ public class User implements Serializable {
     @JoinColumn(name = "person_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Person person;
 
-    @OneToMany(mappedBy = "clinicianByUserId")
-    private List <ClinicianPatient> clinicianPatientByUser = new ArrayList<>();
+    /*@OneToMany(mappedBy = "clinicianByUserId")
+    private List <ClinicianPatient> clinicianPatientByUser = new ArrayList<>();*/
 
     @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "applicationUserByApplicationUserId")
+    public List<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitsById;
+
 }

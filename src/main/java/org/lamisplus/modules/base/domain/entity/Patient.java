@@ -71,10 +71,14 @@ public class Patient implements Serializable {
     @Column(name = "archived")
     private Integer archived = 0;
 
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumn(name = "facility_id", referencedColumnName = "id")
     @JsonIgnore
-    private Facility facilityByFacilityId;
+    private Facility facilityByFacilityId;*/
+
+    @Basic
+    @Column(name = "organisationUnitId")
+    private Long organisationUnitId;
 
     @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id", insertable = false, updatable = false)
