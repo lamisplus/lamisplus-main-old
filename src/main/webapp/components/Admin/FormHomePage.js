@@ -117,7 +117,10 @@ function FormSearch(props) {
                                             <DownloadLink
                                                 label="Export as a json file"
                                                 filename={row ? row.name+".json" : "lamisplus-form.json"}
-                                                exportFile={() => JSON.stringify(row)}
+                                                exportFile={() => {
+                                                    delete row.id;
+                                                   return JSON.stringify(row)
+                                                }}
                                             />
 
                                         </MenuItem>
