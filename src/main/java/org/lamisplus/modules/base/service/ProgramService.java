@@ -56,7 +56,7 @@ public class ProgramService {
     }
 
     public List<Program> getAllPrograms(){
-        Specification<Program> specification = genericSpecification.findAll(0);
+        Specification<Program> specification = genericSpecification.findAllPrograms();
         return this.programRepository.findAll(specification);
     }
 

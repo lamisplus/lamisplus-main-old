@@ -6,11 +6,12 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collection;
 
 @Data
 @Entity
 @EqualsAndHashCode
-@Table(name = "organisation_unit")
+@Table(name = "organisation_unit", schema = "public", catalog = "lamisplus-old-jwt")
 public class OrganisationUnit implements Serializable {
     @Id
     @Column(name = "id", nullable = false)
@@ -37,4 +38,7 @@ public class OrganisationUnit implements Serializable {
     @Column(name = "archived")
     @JsonIgnore
     private Integer archived = 0;
+
+    @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
+    public Collection<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitsById;
 }

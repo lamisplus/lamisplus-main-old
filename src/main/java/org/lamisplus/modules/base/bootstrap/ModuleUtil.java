@@ -1,9 +1,11 @@
 package org.lamisplus.modules.base.bootstrap;
 
 
+import javafx.application.Application;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.lamisplus.modules.base.config.ApplicationProperties;
 import org.lamisplus.modules.base.domain.entity.Module;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
@@ -26,7 +28,7 @@ public class ModuleUtil {
     private static final String YML_FILE = ".yml";
     private static final String JSON_FILE = ".json";
     private static Timestamp ts = new Timestamp(System.currentTimeMillis());
-    private static Path uiPath;
+    public static Path uiPath;
     private static boolean isStatic;
 
     public static void copyPathFromJar(final URL jarPath, final String path, final Path target) throws Exception {
@@ -48,17 +50,18 @@ public class ModuleUtil {
                     if (!Files.exists(currentTarget)) {
                         Files.createDirectories(currentTarget);
                     }
-                    if (currentTarget.toFile().isDirectory() && currentTarget.toFile().getPath().contains("static") &&
-                            !currentTarget.toFile().getPath().contains("static/static")) {
+                    if (currentTarget.toFile().isDirectory() && currentTarget.toFile().getPath().contains("static")) {
                         isStatic = true;
-                        staticTarget = uiPath.resolve(pathInZipFile.relativize(dir)
-                                .toString());
+                        staticTarget = uiPath.resolve(pathInZipFile.relativize(dir).toString());
                         if (!Files.exists(staticTarget)) {
                             Files.createDirectories(staticTarget);
                         }
                     } else {
                         isStatic = false;
                     }
+                    /*if(currentTarget.toFile().isDirectory() && currentTarget.toFile().getPath().contains("modules/demo")){
+
+                    }*/
                     return FileVisitResult.CONTINUE;
                 }
 
@@ -73,11 +76,21 @@ public class ModuleUtil {
                         readModuleYml(theFile);
                     } else if (theFile.getName().endsWith(JSON_FILE)) {
                         getJson(theFile);
-                    } else if (theFile.getName().contains(APPLICATION_PROPERTIES)) {
-                        theFile.delete();
+                    } else if (theFile.getName().endsWith("properties") && !theFile.getName().contains("pom")) {
+                        if (theFile.getName().contains(APPLICATION_PROPERTIES)) {
+                            theFile.delete();
+                        } else {
+                            /*String path1 = String.format("%s/webapps/ROOT/WEB-INF/classes/", ApplicationProperties.tomcatBase);
+                            System.out.println("path1 is" + path1);
+                            File file1 = new File(path1 + theFile.getName());
+                            if(file1 != null){
+                                file1.delete();
+                            }
+                            System.out.println(file1.getName());
+                            FileUtils.copyFile(theFile, file1);*/
+                        }
                     }
                     if(isStatic){
-                        //copyUIFiles(currentTarget.toAbsolutePath(), uiPath);
                         Files.copy(file, uiPath.resolve(pathInZipFile.relativize(file)
                                 .toString()), StandardCopyOption.REPLACE_EXISTING);
                     }

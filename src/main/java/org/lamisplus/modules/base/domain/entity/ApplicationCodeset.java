@@ -18,7 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode
-@Table(name = "application_codeset", schema = "public", catalog = "lamisplus-old-jwt")
+@Table(name = "application_codeset")
 public class ApplicationCodeset implements Serializable {
     @Id
     @Column(name = "id")

@@ -12,7 +12,9 @@ import java.util.List;
 public class GenericSpecification<T>  {
 
     private static final int UN_ARCHIVED = 0;
+    private static final int ARCHIVED = 1;
     private static final int ACTIVE = 1;
+    public static final int DEACTIVATE = 2;
 
     public Specification<T> findAll(int active) {
         return (root, criteriaQuery, criteriaBuilder) -> {
@@ -33,6 +35,26 @@ public class GenericSpecification<T>  {
             if(status > 0) {
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("status"), status)));
             }
+            criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+        };
+    }
+
+    public Specification<T> findAllPrograms() {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(criteriaBuilder.and(criteriaBuilder.notEqual(root.get("archived"), ARCHIVED)));
+            criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+        };
+    }
+
+    public Specification<T> findAllWithOrganisation(Long organisationUnitId) {
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), UN_ARCHIVED)));
+            predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("organisationUnitId"), organisationUnitId)));
+
             criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
