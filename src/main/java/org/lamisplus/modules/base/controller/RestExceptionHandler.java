@@ -2,10 +2,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
-import org.lamisplus.modules.base.controller.apierror.ApiError;
-import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
-import org.lamisplus.modules.base.controller.apierror.IllegalTypeException;
-import org.lamisplus.modules.base.controller.apierror.RecordExistException;
+import org.lamisplus.modules.base.controller.apierror.*;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -134,6 +131,20 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
+    /**
+     * Handles AccessDeniedException.
+     *
+     * @param ex the AccessDeniedException
+     * @return the ApiError object
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    protected ResponseEntity<Object> handleADeniedException(
+            AccessDeniedException ex) {
+        ApiError apiError = new ApiError(FORBIDDEN);
+        apiError.setStatusCode(FORBIDDEN.value());
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
     /**
      * Handles IllegalTypeException.
      *
