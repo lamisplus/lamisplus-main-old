@@ -2,6 +2,7 @@ package org.lamisplus.modules.base.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.lamisplus.modules.base.controller.apierror.AccessDeniedException;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.FormDataDTO;
@@ -17,6 +18,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.lamisplus.modules.base.util.AccessRight;
 import org.lamisplus.modules.base.util.CustomDateTimeFormat;
 import org.lamisplus.modules.base.util.GenericSpecification;
 import org.lamisplus.modules.base.util.UuidGenerator;
@@ -29,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @org.springframework.stereotype.Service
 @Transactional
@@ -43,6 +46,7 @@ public class EncounterService {
     private final FormDataRepository formDataRepository;
     private final UserService userService;
     private final GenericSpecification<Encounter> genericSpecification;
+    private final AccessRight accessRight;
     private static final int ARCHIVED = 1;
 
 
@@ -167,7 +171,8 @@ public class EncounterService {
         return encounterOptional.get().getArchived();
     }
 
-    public List<EncounterDTO> getEncounterByFormCodeAndDateEncounter(String FormCode, Optional<String> dateStart, Optional<String> dateEnd) {
+    public List<EncounterDTO> getEncounterByFormCodeAndDateEncounter(String formCode, Optional<String> dateStart, Optional<String> dateEnd) {
+        accessRight.grantAccess(formCode, Encounter.class);
         List<EncounterDTO> encounterDTOS = new ArrayList<>();
         List<Encounter> encounters = encounterRepository.findAll(new Specification<Encounter>() {
             @Override
@@ -182,7 +187,7 @@ public class EncounterService {
                     LocalDate localDate = LocalDate.parse(dateEnd.get(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
                     predicates.add(criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("dateEncounter").as(LocalDate.class), localDate)));
                 }
-                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("formCode"), FormCode)));
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("formCode"), formCode)));
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), 0)));
                 criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
 
