@@ -15,6 +15,7 @@ export const authentication = {
     currentUser: currentUserSubject.asObservable(),
     get currentUserValue () { return currentUserSubject.value },
     getCurrentUserRole,
+    getCurrentUser,
     userHasRole
 };
 
@@ -64,4 +65,15 @@ function userHasRole(role){
         return false;
     }
     return true;
+}
+
+function getCurrentUser(){
+    const user = currentUserSubject.value;
+    if(!user || !user.id_token){
+        return [];
+    }
+
+    const token = user.id_token;
+    const decoded = jwt_decode(token);
+    return decoded;
 }

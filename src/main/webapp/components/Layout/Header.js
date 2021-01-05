@@ -77,8 +77,10 @@ class Header extends React.Component {
     authentication.logout();
   }
 
+
   render() {
     // const { isNotificationConfirmed } = this.state;
+    const currentUser = authentication.getCurrentUser();
 
     return (
       <Navbar light expand className={bem.b("bg-white")}>
@@ -125,7 +127,7 @@ class Header extends React.Component {
               >
                 <UserCard
                   title="Nurse"
-                  subtitle="abce@mail.com"
+                  subtitle={currentUser ? currentUser.sub : ""}
                   className="border-light"
                 >
                   <ListGroup flush>
