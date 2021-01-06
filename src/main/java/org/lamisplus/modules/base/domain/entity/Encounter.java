@@ -69,7 +69,7 @@ public class Encounter implements Serializable  {
     private String createdBy;
 
     @Basic
-    @Column(name = "organisationUnitId")
+    @Column(name = "organisation_unit_id")
     private Long organisationUnitId;
 
     @Basic

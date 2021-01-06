@@ -77,7 +77,7 @@ public class Patient implements Serializable {
     private Facility facilityByFacilityId;*/
 
     @Basic
-    @Column(name = "organisationUnitId")
+    @Column(name = "organisation_unit_id")
     private Long organisationUnitId;
 
     @ManyToOne
@@ -99,4 +99,7 @@ public class Patient implements Serializable {
     @JsonIgnore
     @ToString.Exclude
     private List<ClinicianPatient> clinicianByPatient;
+
+    @OneToMany(mappedBy = "patientByPatientId")
+    public List<ApplicationUserPatient> getApplicationUserPatientsById;
 }
