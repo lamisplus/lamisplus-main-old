@@ -43,6 +43,7 @@ import java.util.*;
 @Slf4j
 @RequiredArgsConstructor
 public class PatientService {
+    public static final int UNARCHIVED = 0;
     private final EncounterRepository encounterRepository;
     private final PatientRepository patientRepository;
     private final PersonRepository personRepository;
@@ -183,9 +184,7 @@ public class PatientService {
     }
 
     public PatientDTO getPatientByHospitalNumber(String hospitalNumber) {
-        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-
-        Optional<Patient> patientOptional = this.patientRepository.findByHospitalNumberAndOrganisationUnitId(hospitalNumber, organisationUnitId);
+        Optional<Patient> patientOptional = this.patientRepository.findByHospitalNumberAndOrganisationUnitId(hospitalNumber, getOrganisationUnitId());
 
         if(!patientOptional.isPresent() || patientOptional.get().getArchived()==1){
             throw new EntityNotFoundException(Patient.class, "Hospital Number", hospitalNumber+"");
@@ -295,10 +294,9 @@ public class PatientService {
     }
 
     public List getEncountersByPatientIdAndFormCode(Pageable pageable, Long patientId, String formCode, String sortField, String sortOrder, Integer limit) {
-        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
 
         Pageable pageableSorter = createPageRequest(pageable, sortField, sortOrder, limit);
-        List<Encounter> encountersList = this.encounterRepository.findAllByPatientIdAndFormCodeAndOrganisationUnitId(patientId,formCode, organisationUnitId,pageableSorter);
+        List<Encounter> encountersList = this.encounterRepository.findAllByPatientIdAndFormCodeAndOrganisationUnitId(patientId,formCode, getOrganisationUnitId(),pageableSorter);
         return this.getFormData(encountersList, null);
     }
 
@@ -465,7 +463,6 @@ public class PatientService {
     }
 
     private List<Encounter> getEncounterByPatientIdDesc(Long patientId){
-        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
 
         List<Encounter> encounters = encounterRepository.findAll(new Specification<Encounter>() {
             @Override
@@ -474,7 +471,7 @@ public class PatientService {
 
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("patientId"), patientId)));
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), 0)));
-                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("organisationUnitId"), organisationUnitId)));
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("organisationUnitId"), getOrganisationUnitId())));
 
                 criteriaQuery.orderBy(criteriaBuilder.desc(root.get("dateEncounter")));
 
@@ -487,7 +484,6 @@ public class PatientService {
 
     //TODO: In progress...
     public List<Form> getAllFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
-        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
 
         ArrayList<EncounterDistinctDTO> encounterDistinctDTOS = new ArrayList<>();
         Optional<Program> optionalProgram = programRepository.findProgramByCode(programCode);
@@ -500,7 +496,7 @@ public class PatientService {
         HashSet <String> formCodeSet = new HashSet<>();
 
         //Check for filled forms by the patient in that program
-        encounterRepository.findDistinctPatientIdAndProgramCodeAndOrganisationUnitId(patientId, programCode, organisationUnitId).forEach(encounterDistinctDTO -> {
+        encounterRepository.findDistinctPatientIdAndProgramCodeAndOrganisationUnitIdAndArchived(patientId, programCode, getOrganisationUnitId(), UNARCHIVED).forEach(encounterDistinctDTO -> {
             filledFormSet.add(encounterDistinctDTO.getFormCode());
         });
 
@@ -545,11 +541,9 @@ public class PatientService {
     }
 
     public List<Form> getFilledFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
-        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-
         List<Form> forms = new ArrayList<>();
         //Check for filled forms by the patient in that program
-        encounterRepository.findDistinctPatientIdAndProgramCodeAndOrganisationUnitId(patientId, programCode, organisationUnitId).forEach(encounterDistinctDTO -> {
+        encounterRepository.findDistinctPatientIdAndProgramCodeAndOrganisationUnitIdAndArchived(patientId, programCode, getOrganisationUnitId(), UNARCHIVED).forEach(encounterDistinctDTO -> {
             forms.add(formRepository.findByCode(encounterDistinctDTO.getFormCode()).get());
         });
         return forms;
@@ -587,6 +581,17 @@ public class PatientService {
         return patientRepository.count();
     }
 
+    public List<PatientDTO> getAllPatientsByProgramCode(String programCode ) {
+        List<PatientDTO> patientDTOList = new ArrayList<>();
+        encounterRepository.findDistinctProgramCodeAndOrganisationUnitIdAndArchived(programCode, getOrganisationUnitId(), UNARCHIVED).forEach(encounterDistinctDTO -> {
+            patientDTOList.add(getPatientByHospitalNumber(patientRepository.findById(encounterDistinctDTO.getPatientId()).get().getHospitalNumber()));
+        });
+        return patientDTOList;
+    }
+
+    private Long getOrganisationUnitId(){
+        return  userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+    }
     //TOdo add a method to get patient Relative - to avoid duplicate codes
 
 }

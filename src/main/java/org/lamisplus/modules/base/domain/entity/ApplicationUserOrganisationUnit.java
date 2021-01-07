@@ -29,11 +29,11 @@ public class ApplicationUserOrganisationUnit {
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "application_user_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "application_user_id", referencedColumnName = "id", insertable = false, updatable = false)
     public User applicationUserByApplicationUserId;
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "organisation_unit_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "organisation_unit_id", referencedColumnName = "id", insertable = false, updatable = false)
     public OrganisationUnit organisationUnitByOrganisationUnitId;
 }

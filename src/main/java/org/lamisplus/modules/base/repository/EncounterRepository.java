@@ -31,8 +31,12 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
 
     //TODO: in progress...
     @Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.EncounterDistinctDTO" +
-            "(e.patientId, e.formCode, e.programCode, e.organisationUnitId) FROM Encounter e WHERE e.patientId = ?1 and e.programCode = ?2")
-    List<EncounterDistinctDTO> findDistinctPatientIdAndProgramCodeAndOrganisationUnitId(Long patientId, String programCode, Long organisationUnitId);
+            "(e.patientId, e.formCode, e.programCode, e.organisationUnitId, e.archived) FROM Encounter e WHERE e.patientId = ?1 and e.programCode = ?2 and e.organisationUnitId = ?3 and e.archived = ?4")
+    List<EncounterDistinctDTO> findDistinctPatientIdAndProgramCodeAndOrganisationUnitIdAndArchived(Long patientId, String programCode, Long organisationUnitId, int archived);
+
+    @Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.EncounterDistinctDTO" +
+            "(e.patientId, e.programCode, e.organisationUnitId, e.archived) FROM Encounter e WHERE e.programCode = ?1 and e.organisationUnitId = ?2 and e.archived = ?3")
+    List<EncounterDistinctDTO> findDistinctProgramCodeAndOrganisationUnitIdAndArchived(String programCode, Long organisationUnitId, int archived);
 
     //List<PatientObservation> findByPatientAndFormCodeTitle(Patient patient, Long formCode, String title);
     Optional<Encounter> findFirstByPatientIdAndProgramCodeAndFormCodeOrderByDateEncounterDesc(Long patientId, String ProgramCode, String FormCode);

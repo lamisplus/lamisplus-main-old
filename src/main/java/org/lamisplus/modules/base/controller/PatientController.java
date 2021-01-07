@@ -97,6 +97,14 @@ public class PatientController {
         return ResponseEntity.ok(this.patientService.getEncountersByPatientIdAndProgramCodeExclusionList(id, programCodeExclusionList));
     }
 
+    @GetMapping("/{programCode}/registered")
+    @PreAuthorize("hasAuthority('patient_read')")
+    public ResponseEntity<List> getAllPatientsByProgramCode(@PathVariable String programCode) {
+        return ResponseEntity.ok(this.patientService.getAllPatientsByProgramCode(programCode));
+    }
+
+
+
     /*@ApiOperation(value="getVisitByPatientIdAndVisitDate", notes = "patientId= required, dateStart=optional, dateEnd=optional\n\n" +
             "Example - /api/patient/20/visits?dateStart=02-03-2020")*/
     @GetMapping("/{id}/visits/{dateStart}/{dateEnd}")

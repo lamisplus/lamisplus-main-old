@@ -58,7 +58,10 @@ public class User implements Serializable {
     @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<Role> roles;
 
-    @OneToMany(mappedBy = "applicationUserByApplicationUserId")
+    @OneToMany(mappedBy = "applicationUserByApplicationUserId", cascade = CascadeType.PERSIST)
     public List<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitsById;
 
+    @OneToMany(mappedBy = "applicationUserByApplicationUserId")
+    @JsonIgnore
+    public List<ApplicationUserPatient> applicationUserPatientsById;
 }
