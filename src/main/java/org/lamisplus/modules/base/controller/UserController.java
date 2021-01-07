@@ -57,5 +57,9 @@ public class UserController {
         }
     }
 
-
+    @GetMapping("/roles/{roleId}")
+    @PreAuthorize("hasAuthority('user_read')")
+    public ResponseEntity<List<UserDTO>> getAllUserByRole(@PathVariable Long roleId) {
+        return ResponseEntity.ok(userService.getAllUserByRole(roleId));
+    }
 }

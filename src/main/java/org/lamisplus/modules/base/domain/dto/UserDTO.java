@@ -36,8 +36,9 @@ public class UserDTO {
         this.id = user.getId();
         this.userName = user.getUserName();
         this.roles = user.getRole().stream().map(Role::getName).collect(Collectors.toSet());
+        permissions = new HashSet<>();
         user.getRole().forEach(roles1 ->{
-            permissions = roles1.getPermission().stream().map(Permission::getName).collect(Collectors.toSet());
+            permissions.addAll(roles1.getPermission().stream().map(Permission::getName).collect(Collectors.toSet()));
         });
         this.firstName = user.getPerson().getFirstName();
         this.lastName = user.getPerson().getLastName();
