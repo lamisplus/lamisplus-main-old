@@ -36,10 +36,9 @@ public class ApplicationUserOrganisationUnitController {
     }
 
     @PostMapping
-    public ResponseEntity<ApplicationUserOrganisationUnit> save(@RequestBody ApplicationUserOrganisationUnitDTO applicationUserOrganisationUnitDTO) throws URISyntaxException {
-        ApplicationUserOrganisationUnit result = applicationUserOrganisationUnitService.save(applicationUserOrganisationUnitDTO);
-        return ResponseEntity.created(new URI("/api/application_user_organisation_unit/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId()))).body(result);
+    public ResponseEntity<List<ApplicationUserOrganisationUnit>> save(@RequestBody List<ApplicationUserOrganisationUnitDTO> applicationUserOrganisationUnitDTO) throws URISyntaxException {
+        return ResponseEntity.ok(applicationUserOrganisationUnitService.save(applicationUserOrganisationUnitDTO));
+
     }
 
     @PutMapping("{id}")

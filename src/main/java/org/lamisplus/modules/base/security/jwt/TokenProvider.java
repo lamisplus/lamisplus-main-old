@@ -69,12 +69,8 @@ public class TokenProvider {
         //Temporary added by emeka for getting & adding user details to token
         String name = userService.getUserWithRoles().get().getPerson().getFirstName() + " " +
                 userService.getUserWithRoles().get().getPerson().getLastName();
-        String role = null;
 
-        for(Role role1 : userService.getUserWithRoles().get().getRoles()){
-            role = role1.getName();
-            break;
-        }
+        String role = userService.getUserWithRoles().get().getRole().stream().map(Role::getName).collect(Collectors.joining(","));
 
         return Jwts
                 .builder()

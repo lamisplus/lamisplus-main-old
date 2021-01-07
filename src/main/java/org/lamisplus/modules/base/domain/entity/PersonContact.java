@@ -63,18 +63,6 @@ public class PersonContact implements Serializable {
     @Column(name = "person_id", updatable = false)
     private Long personId;
 
-    @ManyToOne
-    @JoinColumn(name = "country_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Country countryByCountryId;
-
-    @ManyToOne
-    @JoinColumn(name = "state_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private State stateByStateId;
-
-    @ManyToOne
-    @JoinColumn(name = "province_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Province provinceByProvinceId;
-
     @OneToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Person personByPersonId;

@@ -19,8 +19,8 @@ public class AccessRight {
 
     public Boolean grantAccess(String formCode, Class clz){
         hasFormCode.set(false);
-        userService.getUserWithRoles().get().getRoles().forEach(role -> {
-            role.getPermissions().forEach(permission -> {
+        userService.getUserWithRoles().get().getRole().forEach(role -> {
+            role.getPermission().forEach(permission -> {
                 if(permission.getName().contains(formCode)){
                     hasFormCode.set(true);
                 }
@@ -35,8 +35,8 @@ public class AccessRight {
     //No need to throw an exception
     public Boolean grantAccessForm(String formCode){
         hasFormCode.set(false);
-        userService.getUserWithRoles().get().getRoles().forEach(role -> {
-            role.getPermissions().forEach(permission -> {
+        userService.getUserWithRoles().get().getRole().forEach(role -> {
+            role.getPermission().forEach(permission -> {
                 if(permission.getName().contains(formCode)){
                     hasFormCode.set(true);
                 }
@@ -51,8 +51,8 @@ public class AccessRight {
     public Boolean grantWriteAccess(String formCode, Class clz, String accessType){
         HashMap<String, Boolean> accessWrite = new HashMap<>();
         accessType = accessType.toLowerCase();
-        userService.getUserWithRoles().get().getRoles().forEach(role -> {
-            role.getPermissions().forEach(permission -> {
+        userService.getUserWithRoles().get().getRole().forEach(role -> {
+            role.getPermission().forEach(permission -> {
                 if(permission.getName().contains(formCode)){
                     if(permission.getName().contains("write")){
                         accessWrite.put("write", true);

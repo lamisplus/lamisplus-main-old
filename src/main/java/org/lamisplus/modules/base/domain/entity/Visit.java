@@ -109,9 +109,4 @@ public class Visit implements Serializable {
     @ToString.Exclude
     @JsonIgnore
     private List<Encounter> encountersByVisit;
-
-    @OneToMany(mappedBy = "VisitByVisitId")
-    @ToString.Exclude
-    @JsonIgnore
-    private List<ClinicianPatient> clinicianPatientByVisit;
 }

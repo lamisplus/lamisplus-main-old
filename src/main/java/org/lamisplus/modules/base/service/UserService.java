@@ -3,10 +3,10 @@ package org.lamisplus.modules.base.service;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
-import org.lamisplus.modules.base.domain.entity.Permission;
 import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.domain.entity.User;
+import org.lamisplus.modules.base.domain.mapper.UserMapper;
 import org.lamisplus.modules.base.repository.RoleRepository;
 import org.lamisplus.modules.base.repository.PersonRepository;
 import org.lamisplus.modules.base.repository.UserRepository;
@@ -23,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -44,21 +45,24 @@ public class UserService {
 
     private final RoleRepository roleRepository;
 
+    private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.userMapper = userMapper;
     }
 
     @Transactional
     public Optional<User> getUserWithAuthoritiesByUsername(String userName){
-        return userRepository.findOneWithRolesByUserName(userName);
+        return userRepository.findOneWithRoleByUserName(userName);
     }
 
     @Transactional(readOnly = true)
     public  Optional<User> getUserWithRoles(){
-       return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRolesByUserName);
+       return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRoleByUserName);
     }
 
     public User registerUser(UserDTO userDTO, String password){
@@ -95,9 +99,9 @@ public class UserService {
                     .orElse(null);
             if(role !=null)
                 roles.add(role);
-            newUser.setRoles(roles);
+            newUser.setRole(roles);
         } else {
-            newUser.setRoles(getRolesFromStringSet(userDTO.getRoles()));
+            newUser.setRole(getRolesFromStringSet(userDTO.getRoles()));
         }
 
         //newUser.applicationUserOrganisationUnitsById
@@ -135,6 +139,15 @@ public class UserService {
             roleSet.add(roleToAdd);
         }
         return roleSet;
+    }
+
+    @Transactional
+    public List<UserDTO> getAllUserByRole(Long roleId){
+        HashSet<Role> roles = new HashSet<>();
+        Optional<Role> role = roleRepository.findById(roleId);
+        roles.add(role.get());
+
+        return userMapper.usersToUserDTOs(userRepository.findAllByRoleIn(roles));
     }
 
 

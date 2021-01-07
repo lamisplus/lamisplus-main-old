@@ -52,11 +52,8 @@ public class User implements Serializable {
     @JoinColumn(name = "person_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Person person;
 
-    /*@OneToMany(mappedBy = "clinicianByUserId")
-    private List <ClinicianPatient> clinicianPatientByUser = new ArrayList<>();*/
-
     @ManyToMany(cascade = CascadeType.PERSIST)
-    private Set<Role> roles;
+    private Set<Role> role;
 
     @OneToMany(mappedBy = "applicationUserByApplicationUserId", cascade = CascadeType.PERSIST)
     public List<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitsById;
