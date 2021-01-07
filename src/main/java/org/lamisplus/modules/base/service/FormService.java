@@ -68,15 +68,16 @@ public class FormService {
         Form form = formMapper.toFormDTO(formDTO);
         form.setArchived(UN_ARCHIVED);
         form.setCreatedBy(userService.getUserWithRoles().get().getUserName());
-        String nameRead = formDTO.getCode()+"_read";
-        String nameWrite = formDTO.getCode()+"_write";
-        String nameDelete = formDTO.getCode()+"_delete";
+        String read = "_read"; String write = "_write"; String delete = "_delete";
+        String nameRead = formDTO.getCode()+read;
+        String nameWrite = formDTO.getCode()+write;
+        String nameDelete = formDTO.getCode()+delete;
 
-        permissions.add(new Permission(nameRead, formDTO.getName()));
+        permissions.add(new Permission(nameRead, formDTO.getName() + read));
 
-        permissions.add(new Permission(nameWrite, formDTO.getName()));
+        permissions.add(new Permission(nameWrite, formDTO.getName() + write));
 
-        permissions.add(new Permission(nameDelete, formDTO.getName()));
+        permissions.add(new Permission(nameDelete, formDTO.getName() + delete));
         permissionRepository.saveAll(permissions);
 
         return formRepository.save(form);

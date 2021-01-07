@@ -20,5 +20,5 @@ public class Permission {
     private String name;
 
     @NonNull
-    private String display_name;
+    private String description;
 }
