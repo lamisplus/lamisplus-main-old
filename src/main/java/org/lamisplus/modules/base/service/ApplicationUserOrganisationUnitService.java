@@ -11,6 +11,7 @@ import org.lamisplus.modules.base.repository.ApplicationUserOrganisationUnitRepo
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,16 +26,20 @@ public class ApplicationUserOrganisationUnitService {
     private final ApplicationUserOrganisationUnitMapper applicationUserOrganisationUnitMapper;
 
 
-    public ApplicationUserOrganisationUnit save(ApplicationUserOrganisationUnitDTO applicationUserOrganisationUnitDTO) {
-        Optional<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitOptional = applicationUserOrganisationUnitRepository.
-                findByApplicationUserIdAndOrganisationUnitId(applicationUserOrganisationUnitDTO.getApplicationUserId(), applicationUserOrganisationUnitDTO.getOrganisationUnitId());
-        if(applicationUserOrganisationUnitOptional.isPresent())
-            throw new RecordExistException(ApplicationUserOrganisationUnit.class, "mapping",
-                applicationUserOrganisationUnitDTO.getApplicationUserId() + " and " + applicationUserOrganisationUnitDTO.getOrganisationUnitId());
+    public List<ApplicationUserOrganisationUnit> save(List<ApplicationUserOrganisationUnitDTO> applicationUserOrganisationUnitDTO1) {
+        List<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitList = new ArrayList<>();
+        applicationUserOrganisationUnitDTO1.forEach(applicationUserOrganisationUnitDTO -> {
+            Optional<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitOptional = applicationUserOrganisationUnitRepository.
+                    findByApplicationUserIdAndOrganisationUnitId(applicationUserOrganisationUnitDTO.getApplicationUserId(), applicationUserOrganisationUnitDTO.getOrganisationUnitId());
+            if(applicationUserOrganisationUnitOptional.isPresent())
+                throw new RecordExistException(ApplicationUserOrganisationUnit.class, "mapping",
+                        applicationUserOrganisationUnitDTO.getApplicationUserId() + " and " + applicationUserOrganisationUnitDTO.getOrganisationUnitId());
 
-        ApplicationUserOrganisationUnit applicationUserOrganisationUnit = applicationUserOrganisationUnitMapper.toApplicationUserOrganisationUnit(applicationUserOrganisationUnitDTO);
+            ApplicationUserOrganisationUnit applicationUserOrganisationUnit = applicationUserOrganisationUnitMapper.toApplicationUserOrganisationUnit(applicationUserOrganisationUnitDTO);
+            applicationUserOrganisationUnitList.add(applicationUserOrganisationUnit);
+        });
 
-        return applicationUserOrganisationUnitRepository.save(applicationUserOrganisationUnit);
+        return applicationUserOrganisationUnitRepository.saveAll(applicationUserOrganisationUnitList);
     }
 
     public ApplicationUserOrganisationUnit update(Long id, ApplicationUserOrganisationUnit applicationUserOrganisationUnit) {
