@@ -49,9 +49,9 @@ public class UserController {
                 }
                 rolesSet.add(roleToAdd);
             }
-            user.setRoles(rolesSet);
+            user.setRole(rolesSet);
             userService.update(id, user);
-            return ResponseEntity.ok(user.getRoles().toArray());
+            return ResponseEntity.ok(user.getRole().toArray());
         } catch (Exception e) {
             throw e;
         }

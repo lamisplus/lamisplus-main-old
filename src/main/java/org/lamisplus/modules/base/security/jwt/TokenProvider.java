@@ -71,7 +71,7 @@ public class TokenProvider {
                 userService.getUserWithRoles().get().getPerson().getLastName();
         String role = null;
 
-        for(Role role1 : userService.getUserWithRoles().get().getRoles()){
+        for(Role role1 : userService.getUserWithRoles().get().getRole()){
             role = role1.getName();
             break;
         }

@@ -96,10 +96,5 @@ public class Patient implements Serializable {
     private List<Encounter> encountersByPatient;
 
     @OneToMany(mappedBy = "patientByPatientId")
-    @JsonIgnore
-    @ToString.Exclude
-    private List<ClinicianPatient> clinicianByPatient;
-
-    @OneToMany(mappedBy = "patientByPatientId")
     public List<ApplicationUserPatient> getApplicationUserPatientsById;
 }
