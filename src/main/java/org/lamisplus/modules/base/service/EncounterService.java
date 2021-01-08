@@ -59,6 +59,9 @@ public class EncounterService {
 
         List <Encounter> encounters = encounterRepository.findAll(specification);
         encounters.forEach(singleEncounter -> {
+            if(!accessRight.grantAccessForm(singleEncounter.getFormCode())){
+                return;
+            }
             Patient patient = singleEncounter.getPatientByPatientId();
             Person person = patient.getPersonByPersonId();
             Form form = singleEncounter.getFormForEncounterByFormCode();
@@ -78,6 +81,8 @@ public class EncounterService {
         if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()== ARCHIVED) {
             throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
         }
+        accessRight.grantAccess(encounterOptional.get().getFormCode(), Encounter.class);
+
         Encounter encounter = encounterOptional.get();
 
         Patient patient = encounter.getPatientByPatientId();
@@ -104,6 +109,8 @@ public class EncounterService {
         if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()==ARCHIVED) {
             throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
         }
+        accessRight.grantAccessByAccessType(encounterOptional.get().getFormCode(), Encounter.class, "write");
+
         Encounter encounter = encounterMapper.toEncounter(encounterDTO);
         encounter.setId(id);
         encounter.setModifiedBy(userService.getUserWithRoles().get().getUserName());
@@ -112,6 +119,7 @@ public class EncounterService {
     }
 
     public Encounter save(EncounterDTO encounterDTO) {
+        accessRight.grantAccessByAccessType(encounterDTO.getFormCode(), Encounter.class, "write");
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
 
         encounterDTO.setTimeCreated(CustomDateTimeFormat.LocalTimeByFormat(LocalTime.now(),"hh:mm a"));
@@ -165,6 +173,8 @@ public class EncounterService {
         if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()== ARCHIVED) {
             throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
         }
+        accessRight.grantAccessByAccessType(encounterOptional.get().getFormCode(), Encounter.class, "delete");
+
         encounterOptional.get().setArchived(1);
         encounterOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
 
@@ -216,6 +226,8 @@ public class EncounterService {
         if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()==1) {
             throw new EntityNotFoundException(Encounter.class, "Id",encounterId+"" );
         }
+        accessRight.grantAccess(encounterOptional.get().getFormCode(), Encounter.class);
+
         List<FormData> formDataList = encounterOptional.get().getFormDataByEncounter();
         return formDataList;
     }

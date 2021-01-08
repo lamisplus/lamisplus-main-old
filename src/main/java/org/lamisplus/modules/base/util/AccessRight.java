@@ -17,7 +17,7 @@ public class AccessRight {
     AtomicReference<Boolean> hasFormCode = new AtomicReference<>();
 
 
-    public Boolean grantAccess(String formCode, Class clz){
+    public void grantAccess(String formCode, Class clz){
         hasFormCode.set(false);
         userService.getUserWithRoles().get().getRole().forEach(role -> {
             role.getPermission().forEach(permission -> {
@@ -29,7 +29,6 @@ public class AccessRight {
         if(hasFormCode.get() != true){
             throw new AccessDeniedException(clz, "formCode",formCode+"" );
         }
-        return hasFormCode.get();
     }
 
     //No need to throw an exception
@@ -48,7 +47,7 @@ public class AccessRight {
         return hasFormCode.get();
     }
 
-    public Boolean grantWriteAccess(String formCode, Class clz, String accessType){
+    public void grantAccessByAccessType(String formCode, Class clz, String accessType){
         HashMap<String, Boolean> accessWrite = new HashMap<>();
         accessType = accessType.toLowerCase();
         userService.getUserWithRoles().get().getRole().forEach(role -> {
@@ -64,9 +63,8 @@ public class AccessRight {
                 }
             });
         });
-        if(accessWrite.get(accessType) != true){
+        if(accessWrite.isEmpty() || !accessWrite.get(accessType)){
             throw new AccessDeniedException(clz, "formCode",formCode+", "+accessType+" = "+ accessWrite.get(accessType));
-        }else
-            return accessWrite.get(accessType);
+        }
     }
 }
