@@ -123,7 +123,7 @@ public class FormService {
     }
 
     public Form update(Long id, FormDTO formDTO) {
-        accessRight.grantWriteAccess(formDTO.getCode(), FormService.class, "write");
+        accessRight.grantAccessByAccessType(formDTO.getCode(), FormService.class, "write");
         Optional<Form> formOptional = formRepository.findById(id);
         log.info("form optional  is" + formOptional.get());
         if(!formOptional.isPresent() || formOptional.get().getArchived() == ARCHIVED)throw new EntityNotFoundException(Form.class, "Id", id +"");
@@ -137,7 +137,7 @@ public class FormService {
     public Integer delete(Long id) {
         Optional<Form> formOptional = formRepository.findById(id);
         if(!formOptional.isPresent() || formOptional.get().getArchived() == ARCHIVED)throw new EntityNotFoundException(Form.class, "Id", id +"");
-        accessRight.grantWriteAccess(formOptional.get().getCode(), FormService.class, "delete");
+        accessRight.grantAccessByAccessType(formOptional.get().getCode(), FormService.class, "delete");
 
         formOptional.get().setArchived(ARCHIVED);
         formOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
