@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.domain.entity.User;
@@ -61,5 +62,14 @@ public class UserController {
     @PreAuthorize("hasAuthority('user_read')")
     public ResponseEntity<List<UserDTO>> getAllUserByRole(@PathVariable Long roleId) {
         return ResponseEntity.ok(userService.getAllUserByRole(roleId));
+    }
+
+    @PostMapping("/organisationUnit/{id}")
+    public ResponseEntity<UserDTO> getAllUsers(@PathVariable Long id) {
+        UserDTO userDTO = userService
+                .getUserWithRoles()
+                .map(UserDTO::new)
+                .orElseThrow(() -> new EntityNotFoundException(User.class, "Not Found", ""));
+        return ResponseEntity.ok(userService.changeOrganisationUnit(id, userDTO));
     }
 }

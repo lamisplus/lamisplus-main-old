@@ -99,7 +99,7 @@ public class Module implements Serializable {
     @Column(name = "main")
     private String main;
 
-    @OneToMany(mappedBy = "moduleByDependency")
+    @OneToMany(mappedBy = "moduleByDependency", fetch = FetchType.EAGER)
     @JsonIgnore
     @ToString.Exclude
     public List<ModuleDependency> moduleDependencyByModule;

@@ -53,6 +53,9 @@ public class AccountController {
         User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
     }
 
+
+
+
     @GetMapping("/users")
     @PreAuthorize("hasAuthority('user_read')")
     public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {

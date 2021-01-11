@@ -3,12 +3,14 @@ package org.lamisplus.modules.base.domain.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.lamisplus.modules.base.domain.entity.ApplicationUserOrganisationUnit;
 import org.lamisplus.modules.base.domain.entity.Permission;
 import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.domain.entity.User;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +31,10 @@ public class UserDTO {
     private String gender;
     private LocalDate dateOfBirth;
     private Long currentOrganisationUnitId;
-    private List<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitsById;
+    @ToString.Exclude
+    private List<ApplicationUserOrganisationUnit> applicationUserOrganisationUnits;
+    private String currentOrganisationUnitName;
+
 
 
     public UserDTO(User user) {
@@ -47,8 +52,8 @@ public class UserDTO {
         this.gender = user.getGender();
         this.dateOfBirth = user.getPerson().getDob();
         this.currentOrganisationUnitId = user.getCurrentOrganisationUnitId();
-        this.applicationUserOrganisationUnitsById = user.applicationUserOrganisationUnitsById;
-
+        this.applicationUserOrganisationUnits = user.getApplicationUserOrganisationUnits();
+        currentOrganisationUnitName = user.getOrganisationUnitByCurrentOrganisationUnitId().getName();
     }
 
 
@@ -66,7 +71,6 @@ public class UserDTO {
                 ", currentOrganisationUnitId='" + currentOrganisationUnitId + '\'' +
                 ", roles=" + roles + '\'' +
                 ", permissions=" + permissions + '\'' +
-                ", applicationUserOrganisationUnitsById=" + applicationUserOrganisationUnitsById +
                 '}';
     }
 }

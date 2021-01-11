@@ -67,7 +67,7 @@ public class ModuleService {
     private static final int UN_ARCHIVED = 0;
     private static final String OLD_MODULE_SUFFIX = "_old";
     private static final int STATUS_EXIST = 4;
-    private static final String ORG_LAMISPLUS_MODULES_PATH = "/org/lamisplus/modules/";
+    private static String ORG_LAMISPLUS_MODULES_PATH = "/org/lamisplus/modules/";
     private List<Module> externalModules;
     private static final boolean ACTIVE = true;
     private static final String FORM = "Form";
@@ -228,28 +228,34 @@ public class ModuleService {
                     menu.setCreatedBy(currentUser);
                     menu.setModuleId(module.getId());
                     String name = menu.getName();
+                    log.debug("menu base url - " + menu);
 
-                    if(module.getMenuByModule() == null){
+                    if(!module.getMenuByModule().getName().equals(menu.getName())){
                     menuRepository.save(menu);
+                    log.debug("save menu is - " + menu);
                     }
                 }
             }
+            log.debug("We are here- ");
+
 
             //Getting all dependencies
-            externalModule.getModuleDependencyByModule().forEach(moduleDependency -> {
-                if(moduleDependency.getId() == null) {
-                    moduleDependency.setModuleId(module.getId());
-                    moduleDependency.setArchived(ARCHIVED);
-                }
-                if(notArchived){
-                    moduleDependency.setArchived(UN_ARCHIVED);
-                }
-                //save dependencies
-                final Optional<ModuleDependency> OptionalDependency = moduleDependencyRepository.findByModuleIdAndArtifactId(
-                        module.getId(), moduleDependency.getArtifactId());
-                final ModuleDependency dependency =  OptionalDependency.isPresent()? OptionalDependency.get(): moduleDependencyRepository.save(moduleDependency);
-                log.debug(dependency.getArtifactId() + " saved...");
-            });
+            if(externalModule.getModuleDependencyByModule() != null && !externalModule.getModuleDependencyByModule().isEmpty()) {
+                externalModule.getModuleDependencyByModule().forEach(moduleDependency -> {
+                    if (moduleDependency.getId() == null) {
+                        moduleDependency.setModuleId(module.getId());
+                        moduleDependency.setArchived(ARCHIVED);
+                    }
+                    if (notArchived) {
+                        moduleDependency.setArchived(UN_ARCHIVED);
+                    }
+                    //save dependencies
+                    final Optional<ModuleDependency> OptionalDependency = moduleDependencyRepository.findByModuleIdAndArtifactId(
+                            module.getId(), moduleDependency.getArtifactId());
+                    final ModuleDependency dependency = OptionalDependency.isPresent() ? OptionalDependency.get() : moduleDependencyRepository.save(moduleDependency);
+                    log.debug(dependency.getArtifactId() + " saved...");
+                });
+            }
 
             //Get program
             externalModule.getProgramsByModule().forEach(program -> {
@@ -339,10 +345,11 @@ public class ModuleService {
                 }
             }
         }
+        ORG_LAMISPLUS_MODULES_PATH = fileSeparator + module.getBasePackage().replace(".", fileSeparator) + fileSeparator;
 
         File rootFile = new File(moduleRuntimePath.toAbsolutePath().toString());
         File filePath = new File(moduleRuntimePath.toAbsolutePath().toString() +
-                ORG_LAMISPLUS_MODULES_PATH + module.getName().replace(TEMP, ""));
+                ORG_LAMISPLUS_MODULES_PATH /*+ module.getName().replace(TEMP, "")*/);
 
         log.debug("moduleRuntimePath is " + moduleRuntimePath.toString());
 
@@ -570,7 +577,7 @@ public class ModuleService {
         externalModules.forEach(module -> {
             final Path moduleDependencyRuntimePath = Paths.get(properties.getModulePath(), "libs", module.getName());
             //Path libPath = Paths.get(properties.getModulePath(), "libs", module.getName());
-            if(moduleDependencyRuntimePath != null) {
+            if(module.getModuleDependencyByModule() != null && !module.getModuleDependencyByModule().isEmpty()) {
                 for (File file : moduleDependencyRuntimePath.toFile().listFiles()) {
                     System.out.println(file.getName());
                     //Load dependencies
@@ -620,7 +627,7 @@ public class ModuleService {
             jarFile.delete();
             log.debug(jarFile.getName() + " deleted...");
         }
-        if(externalModule.getModuleDependencyByModule().size() < moduleDependencyRuntimePath.toFile().list().length) {
+        if(externalModule.getModuleDependencyByModule() != null && !externalModule.getModuleDependencyByModule().isEmpty() && externalModule.getModuleDependencyByModule().size() < moduleDependencyRuntimePath.toFile().list().length) {
             for (File file : moduleDependencyRuntimePath.toFile().listFiles()) {
                 for (ModuleDependency moduleDependency : externalModule.getModuleDependencyByModule()) {
                     if (file.getName().contains(moduleDependency.getArtifactId())) {
@@ -635,20 +642,21 @@ public class ModuleService {
                     foundFile = false;
                 }
             }
-        }
-        //Path libPath = Paths.get(properties.getModulePath(), "libs", externalModule.getName());
-        File src = new File(Paths.get(properties.getModulePath(), "runtime", externalModule.getName(),"lib").toString());
 
-        //Copy dependencies in lib to libs
-        try {
-            for(File file: src.listFiles()) {
-                //FileSystemUtils.copyRecursively(file, target);
-                if(!file.isDirectory()) {
-                    FileUtils.copyFile(file, Paths.get(properties.getModulePath(), "libs", externalModule.getName(), file.getName()).toFile());
+            //Path libPath = Paths.get(properties.getModulePath(), "libs", externalModule.getName());
+            File src = new File(Paths.get(properties.getModulePath(), "runtime", externalModule.getName(),"lib").toString());
+
+            //Copy dependencies in lib to libs
+            try {
+                for(File file: src.listFiles()) {
+                    //FileSystemUtils.copyRecursively(file, target);
+                    if(!file.isDirectory()) {
+                        FileUtils.copyFile(file, Paths.get(properties.getModulePath(), "libs", externalModule.getName(), file.getName()).toFile());
+                    }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
