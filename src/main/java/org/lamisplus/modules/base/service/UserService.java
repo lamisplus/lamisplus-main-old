@@ -3,10 +3,9 @@ package org.lamisplus.modules.base.service;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
-import org.lamisplus.modules.base.domain.entity.Person;
-import org.lamisplus.modules.base.domain.entity.Role;
-import org.lamisplus.modules.base.domain.entity.User;
+import org.lamisplus.modules.base.domain.entity.*;
 import org.lamisplus.modules.base.domain.mapper.UserMapper;
+import org.lamisplus.modules.base.repository.OrganisationUnitRepository;
 import org.lamisplus.modules.base.repository.RoleRepository;
 import org.lamisplus.modules.base.repository.PersonRepository;
 import org.lamisplus.modules.base.repository.UserRepository;
@@ -47,12 +46,16 @@ public class UserService {
 
     private final UserMapper userMapper;
 
+    private final OrganisationUnitRepository organisationUnitRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, UserMapper userMapper) {
+
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, UserMapper userMapper, OrganisationUnitRepository organisationUnitRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
+        this.organisationUnitRepository = organisationUnitRepository;
     }
 
     @Transactional
@@ -150,7 +153,25 @@ public class UserService {
         return userMapper.usersToUserDTOs(userRepository.findAllByRoleIn(roles));
     }
 
+    public UserDTO changeOrganisationUnit(Long organisationUnitId, UserDTO userDTO){
+        Optional<User> optionalUser = userRepository.findById(userDTO.getId());
 
+
+        boolean found = false;
+        for (ApplicationUserOrganisationUnit applicationUserOrganisationUnit : userDTO.getApplicationUserOrganisationUnits()) {
+            Long orgUnitId = applicationUserOrganisationUnit.getOrganisationUnitId();
+            if(organisationUnitId.longValue() == orgUnitId.longValue()){
+                found = true;
+                break;
+            }
+        }
+        if(!found){
+            throw new EntityNotFoundException(OrganisationUnit.class, "Id", organisationUnitId +"");
+        }
+        User user = optionalUser.get();
+        user.setCurrentOrganisationUnitId(organisationUnitId);
+        return userMapper.userToUserDTO(userRepository.save(user));
+    }
 }
 
 class UsernameAlreadyUsedException extends RuntimeException {

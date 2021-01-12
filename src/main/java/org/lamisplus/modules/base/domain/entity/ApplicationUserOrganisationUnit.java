@@ -1,16 +1,13 @@
 package org.lamisplus.modules.base.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Objects;
 
+@Data
 @Entity
-@Getter
-@Setter
 @EqualsAndHashCode
 @Table(name = "application_user_organisation_unit")
 public class ApplicationUserOrganisationUnit {
@@ -21,19 +18,29 @@ public class ApplicationUserOrganisationUnit {
     private Long id;
 
     @Basic
-    @Column(name = "application_user_id", insertable = true, updatable = true)
-    public Long applicationUserId;
+    @Column(name = "application_user_id")
+    private Long applicationUserId;
+
     @Basic
-    @Column(name = "organisation_unit_id", insertable = true, updatable = true)
-    public Long organisationUnitId;
+    @Column(name = "organisation_unit_id")
+    private Long organisationUnitId;
 
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "application_user_id", referencedColumnName = "id", insertable = false, updatable = false)
-    public User applicationUserByApplicationUserId;
+    @ToString.Exclude
+    private User applicationUserByApplicationUserId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     @JoinColumn(name = "organisation_unit_id", referencedColumnName = "id", insertable = false, updatable = false)
-    public OrganisationUnit organisationUnitByOrganisationUnitId;
+    @ToString.Exclude
+    private OrganisationUnit organisationUnitByOrganisationUnitId;
+
+    public String getOrganisationUnitName(){
+        if (organisationUnitByOrganisationUnitId != null){
+            return organisationUnitByOrganisationUnitId.getName();
+        }
+        return null;
+    }
 }

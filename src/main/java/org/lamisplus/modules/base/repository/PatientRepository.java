@@ -21,4 +21,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
 
 
     Boolean existsByHospitalNumber(String patientNumber);
+
+    Long countByOrganisationUnitIdAndArchived(Long organisationUnitId, int archived);
 }

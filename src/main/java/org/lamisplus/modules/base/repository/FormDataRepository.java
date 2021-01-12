@@ -10,4 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FormDataRepository extends JpaRepository<FormData, Long>, JpaSpecificationExecutor {
+    Optional<FormData> findByIdAndOrganisationUnitId(Long id, Long organisationUnitId);
+
+    List<FormData> findAllByOrganisationUnitId(Long organisationUnitId);
 }

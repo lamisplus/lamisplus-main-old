@@ -28,9 +28,9 @@ public class Patient implements Serializable {
     @NotNull
     private LocalDate dateRegistration;
 
-    @Basic
+/*    @Basic
     @Column(name = "facility_id", insertable = false, updatable = false)
-    private Long facilityId = 1L;
+    private Long facilityId = 1L;*/
 
     @Basic
     @Column(name = "person_id")
