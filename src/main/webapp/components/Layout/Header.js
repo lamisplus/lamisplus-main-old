@@ -33,7 +33,8 @@ import bn from "utils/bemnames";
 import {url as baseUrl} from "../../api";
 import MatButton from "@material-ui/core/Button";
 import CancelIcon from '@material-ui/icons/Cancel'
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const bem = bn.create("header");
 
 // const MdNotificationsActiveWithBadge = withBadge({
@@ -83,27 +84,40 @@ function Header() {
     authentication.logout();
   }
 
+  async function fetchMe() {
+    axios
+        .get(`${baseUrl}account`)
+        .then((response) => {
+          setUser(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+  }
+
+  async function switchFacility (facility) {
+    console.log(facility)
+    await axios.post(`${baseUrl}users/organisationUnit/${facility.value.organisationUnitId}`, {})
+        .then(response => {
+          toast.success('Facility switched successfully!');
+          fetchMe();
+          toggleAssignFacilityModal();
+        }) .catch((error) => {
+         toast.error('An error occurred, could not switch facilty.');
+        });
+
+  }
+
   const currentUser = authentication.getCurrentUser();
 
   useEffect(() => {
-    async function getCharacters() {
-      axios
-          .get(`${baseUrl}account`)
-          .then((response) => {
-            setUser(response.data);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-    }
-
-    getCharacters();
+    fetchMe();
   }, []);
 
-  const me = authentication.fetchMe();
 
     return (
       <Navbar light expand className={bem.b("bg-white")}>
+        <ToastContainer />
         <Nav navbar className="mr-2">
           <Button outline onClick={handleSidebarControlButton}>
             <MdClearAll size={25} />
@@ -111,7 +125,7 @@ function Header() {
         </Nav>
         <Nav navbar>
           <NavItem className="ml-2 d-inline-flex">
-            <h4>Logged In Facility: {user ? user.currentOrganisationUnitId : ""}</h4>
+            <h4>Logged In Facility: {user && user.currentOrganisationUnitName ? user.currentOrganisationUnitName : ""}</h4>
           </NavItem>
         </Nav>
         <Nav navbar>{/* <SearchInput /> */}</Nav>
@@ -177,7 +191,7 @@ function Header() {
               </PopoverBody>
             </Popover>
           </NavItem>
-          <Modal isOpen={modal} backdrop={true}>
+          <Modal isOpen={modal} backdrop={true}  zIndex={"9999"}>
             <ModalHeader toggle={() => setModal(!modal)}> Switch Facility </ModalHeader>
             <ModalBody>
               <Card >
@@ -189,9 +203,9 @@ function Header() {
                         <Select
                             required
                             isMulti={false}
-                            onChange={() => {}}
-                            options={user ? user.applicationUserOrganisationUnitsById.map((x) => ({
-                              label: x.organisationUnitId,
+                            onChange={switchFacility}
+                            options={user && user.applicationUserOrganisationUnits ? user.applicationUserOrganisationUnits.map((x) => ({
+                              label: x.organisationUnitName,
                               value: x,
                             })) : []}
                         />
