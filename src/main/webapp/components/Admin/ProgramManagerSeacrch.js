@@ -19,7 +19,7 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import {makeStyles} from "@material-ui/core/styles";
 import "@reach/menu-button/styles.css";
 import {Menu, MenuButton, MenuItem, MenuList} from '@reach/menu-button';
-import { MdDashboard, MdDeleteForever, MdModeEdit } from "react-icons/md";
+import {MdDeleteForever, MdModeEdit } from "react-icons/md";
 import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles(theme => ({
@@ -97,7 +97,7 @@ const ProgramManagerSearch = (props) => {
                     <MenuList style={{hover:"#eee"}}>
                                 <MenuItem onSelect={() => openProgram(e)}><MdModeEdit size="15" style={{color: '#3F51B5'}}/>{" "}Activate</MenuItem>
                                 <MenuItem onSelect={() => updatePrograms(e)}><MdModeEdit size="15" style={{color: '#000'}}/>{" "} Update</MenuItem>
-                                <MenuItem onSelect={() => deleteProgram(e)}><MdModeEdit size="15" style={{color: '#000'}}/>{" "}Delete</MenuItem>
+                                <MenuItem onSelect={() => deleteProgram(e)}><MdDeleteForever size="15" style={{color: '#000'}}/>{" "}Delete</MenuItem>
                     </MenuList>
             </Menu>
           )
@@ -160,7 +160,6 @@ const ProgramManagerSearch = (props) => {
             </CardBody>
             <NewProgramManager toggleModal={toggleModal} showModal={showModal} loadProgramManager={loadProgramManager} formData={currentProgramManager}/>
             <Modal isOpen={showDeleteModal} toggle={toggleDeleteModal} >
-
                 <ModalHeader toggle={toggleDeleteModal}> Deactivate Program - {currentProgramManager && currentProgramManager.name ? currentProgramManager.name : ""} </ModalHeader>
                 <ModalBody>
                     <p>Are you sure you want to proceed ?</p>
