@@ -37,7 +37,7 @@ public class RoleService {
             Role role = new Role();
             role.setName(roleDTO.getName());
             HashSet<Permission> permissions = getPermissions(roleDTO.getPermissions());
-            role.setPermissions(permissions);
+            role.setPermission(permissions);
             return roleRepository.save(role);
         } catch (Exception e) {
             throw  e;
@@ -63,7 +63,7 @@ public class RoleService {
         if(!roleOptional.isPresent())throw new EntityNotFoundException(Role.class, "Id", id +"");
         Role updatedRole = roleOptional.get();
         HashSet<Permission> permissionsSet = getPermissions(permissions);
-        updatedRole.setPermissions(permissionsSet);
+        updatedRole.setPermission(permissionsSet);
         return roleRepository.save(updatedRole);
     }
 

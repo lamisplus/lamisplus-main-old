@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 
 @Data
 @Entity
@@ -13,7 +15,7 @@ import java.io.Serializable;
 @Table(name = "organisation_unit_level")
 public class OrganisationUnitLevel implements Serializable {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -29,4 +31,7 @@ public class OrganisationUnitLevel implements Serializable {
     @Column(name = "archived")
     @JsonIgnore
     private Integer archived = 0;
+
+    @OneToMany(mappedBy = "organisationUnitLevelByOrganisationUnitLevelId")
+    public List<OrganisationUnitHierarchy> organisationUnitHierarchiesById;
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -50,8 +51,8 @@ public class ModuleController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<List<Module>> uploadAndUnzip(@RequestParam("file1") MultipartFile [] jarFile) {
-        return ResponseEntity.ok(moduleService.uploadAndUnzip(jarFile));
+    public ResponseEntity<List<Module>> uploadAndUnzip(@RequestParam("file1") MultipartFile [] jarFile, HttpServletRequest request) {
+        return ResponseEntity.ok(moduleService.uploadAndUnzip(jarFile, request));
     }
 
     @PostMapping("{id}/install")

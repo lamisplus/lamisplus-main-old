@@ -19,6 +19,7 @@ public class PatientDTO {
     private Long visitId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate dateRegistration;
+    private Long organisationUnitId;
 
     private String hospitalNumber;
     private String firstName;

@@ -11,20 +11,20 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.IllegalTypeException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ModuleDTO;
-import org.lamisplus.modules.base.domain.entity.Form;
-import org.lamisplus.modules.base.domain.entity.Module;
-import org.lamisplus.modules.base.domain.entity.ModuleDependency;
-import org.lamisplus.modules.base.domain.entity.Program;
-import org.lamisplus.modules.base.domain.entity.Menu;
+import org.lamisplus.modules.base.domain.entity.*;
 import org.lamisplus.modules.base.domain.mapper.ModuleMapper;
 import org.lamisplus.modules.base.repository.*;
+import org.lamisplus.modules.base.util.CustomFileVisitorUtil;
 import org.lamisplus.modules.base.util.DataLoader;
+import org.lamisplus.modules.base.util.FileStorage;
 import org.lamisplus.modules.base.util.GenericSpecification;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -42,8 +42,9 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 @Transactional
 @RequiredArgsConstructor
 public class ModuleService {
-    private final MenuRepository menuRepository;
+
     private final ModuleRepository moduleRepository;
+    private final MenuRepository menuRepository;
     private final ModuleDependencyRepository moduleDependencyRepository;
     private final FormRepository formRepository;
     private final ModuleMapper moduleMapper;
@@ -66,7 +67,7 @@ public class ModuleService {
     private static final int UN_ARCHIVED = 0;
     private static final String OLD_MODULE_SUFFIX = "_old";
     private static final int STATUS_EXIST = 4;
-    private static final String ORG_LAMISPLUS_MODULES_PATH = "/org/lamisplus/modules/";
+    private static String ORG_LAMISPLUS_MODULES_PATH = "/org/lamisplus/modules/";
     private List<Module> externalModules;
     private static final boolean ACTIVE = true;
     private static final String FORM = "Form";
@@ -77,6 +78,11 @@ public class ModuleService {
     private static final String MODULE_CLASS_NAME = "module";
     private static final String DOT_CLASS = ".class";
     private Timestamp ts = new Timestamp(System.currentTimeMillis());
+    String currentUser;
+    @Value("${base.url}")
+    private String baseUrl;
+    private final FilesStorageServiceImpl filesStorageServiceImpl;
+
 
     public Module save(ModuleDTO moduleDTO) {
         Optional<Module> moduleOptional = this.moduleRepository.findByName(moduleDTO.getName());
@@ -97,8 +103,11 @@ public class ModuleService {
         return this.moduleRepository.findAll(specification);
     }
 
-    public List<Module> uploadAndUnzip(MultipartFile[] files) {
-        ModuleUtil.setModuleConfigs();
+    public List<Module> uploadAndUnzip(MultipartFile[] files, HttpServletRequest request) {
+       ModuleUtil.setModuleConfigs();
+       currentUser = userService.getUserWithRoles().get().getUserName();
+
+
 
         Arrays.asList(files).stream().forEach(file ->{
             if(!file.getOriginalFilename().contains(DOT_JAR)){
@@ -115,9 +124,22 @@ public class ModuleService {
             String fileName = jarFile.getName().toLowerCase().replace(DOT_JAR,"");
             log.info("name of jar file: " + fileName);
             Optional<Module> optionalModule =  moduleRepository.findByName(fileName);
+            //ModuleUtil.createUIDirectory(fileName);
 
 
-            final Path modulePath = Paths.get(properties.getModulePath());
+            //final Path modulePath = Paths.get(properties.getModulePath());
+            Path modulePath = null;
+            try {
+                String path = filesStorageServiceImpl.uploadFile(file, request);
+                ModuleUtil.uiPath = modulePath;
+                modulePath = Paths.get(path);
+                ModuleUtil.uiPath = modulePath;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            //System.out.println("modulePath - " + modulePath);
+            log.info("modulePath -" + modulePath);
+
             storageService.setRootLocation(modulePath);
             /*if(optionalModule.isPresent() && optionalModule.get().getStatus() == STATUS_STARTED
                     && !optionalModule.get().getName().contains(TEMP)){
@@ -132,7 +154,7 @@ public class ModuleService {
                 log.debug(fileName + " Uploaded...");
                 isExist = false;
             }*/
-            storageService.store(fileName, file, null);
+            //storageService.store(fileName, file, null);
             final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", fileName);
             /*if(moduleRuntimePath != null){
                 try {
@@ -142,12 +164,14 @@ public class ModuleService {
                 }
             }*/
 
+
+
             try {
                 if(!optionalModule.isPresent()){
-                    ModuleUtil.copyPathFromJar(storageService.getURL(jarName),
+                    ModuleUtil.copyPathFromJar(modulePath.toUri().toURL(),
                             fileSeparator, moduleRuntimePath);
                 }else if(optionalModule.isPresent() && optionalModule.get().getStatus() != STATUS_STARTED) {
-                    ModuleUtil.copyPathFromJar(storageService.getURL(jarName),
+                    ModuleUtil.copyPathFromJar(modulePath.toUri().toURL(),
                             fileSeparator, moduleRuntimePath);
                 } else {
                     Module module = optionalModule.get();
@@ -188,26 +212,50 @@ public class ModuleService {
             }
             Optional<Module> moduleOptional = moduleRepository.findByName(externalModule.getName().toLowerCase());
 
+
             //Saving module...
             final Module module = moduleOptional.isPresent()? moduleOptional.get(): moduleRepository.save(externalModule);
             log.debug(module.getName() + " saved...");
             modules.add(module);
 
+            //menu of external module
+            if (externalModule.getMenuByModule() != null) {
+                Menu menu = externalModule.getMenuByModule();
+                if(menu.getName() != null){
+                    menu.setArchived(ARCHIVED);
+                    menu.setUrl(baseUrl + menu.getName() + "/static/index.html");
+                    menu.setUuid(UUID.randomUUID().toString());
+                    menu.setCreatedBy(currentUser);
+                    menu.setModuleId(module.getId());
+                    String name = menu.getName();
+                    log.debug("menu base url - " + menu);
+
+                    if(!module.getMenuByModule().getName().equals(menu.getName())){
+                    menuRepository.save(menu);
+                    log.debug("save menu is - " + menu);
+                    }
+                }
+            }
+            log.debug("We are here- ");
+
+
             //Getting all dependencies
-            externalModule.getModuleDependencyByModule().forEach(moduleDependency -> {
-                if(moduleDependency.getId() == null) {
-                    moduleDependency.setModuleId(module.getId());
-                    moduleDependency.setArchived(ARCHIVED);
-                }
-                if(notArchived){
-                    moduleDependency.setArchived(UN_ARCHIVED);
-                }
-                //save dependencies
-                final Optional<ModuleDependency> OptionalDependency = moduleDependencyRepository.findByModuleIdAndArtifactId(
-                        module.getId(), moduleDependency.getArtifactId());
-                final ModuleDependency dependency =  OptionalDependency.isPresent()? OptionalDependency.get(): moduleDependencyRepository.save(moduleDependency);
-                log.debug(dependency.getArtifactId() + " saved...");
-            });
+            if(externalModule.getModuleDependencyByModule() != null && !externalModule.getModuleDependencyByModule().isEmpty()) {
+                externalModule.getModuleDependencyByModule().forEach(moduleDependency -> {
+                    if (moduleDependency.getId() == null) {
+                        moduleDependency.setModuleId(module.getId());
+                        moduleDependency.setArchived(ARCHIVED);
+                    }
+                    if (notArchived) {
+                        moduleDependency.setArchived(UN_ARCHIVED);
+                    }
+                    //save dependencies
+                    final Optional<ModuleDependency> OptionalDependency = moduleDependencyRepository.findByModuleIdAndArtifactId(
+                            module.getId(), moduleDependency.getArtifactId());
+                    final ModuleDependency dependency = OptionalDependency.isPresent() ? OptionalDependency.get() : moduleDependencyRepository.save(moduleDependency);
+                    log.debug(dependency.getArtifactId() + " saved...");
+                });
+            }
 
             //Get program
             externalModule.getProgramsByModule().forEach(program -> {
@@ -297,16 +345,17 @@ public class ModuleService {
                 }
             }
         }
+        ORG_LAMISPLUS_MODULES_PATH = fileSeparator + module.getBasePackage().replace(".", fileSeparator) + fileSeparator;
 
         File rootFile = new File(moduleRuntimePath.toAbsolutePath().toString());
         File filePath = new File(moduleRuntimePath.toAbsolutePath().toString() +
-                ORG_LAMISPLUS_MODULES_PATH + module.getName().replace(TEMP, ""));
+                ORG_LAMISPLUS_MODULES_PATH /*+ module.getName().replace(TEMP, "")*/);
 
         log.debug("moduleRuntimePath is " + moduleRuntimePath.toString());
 
         if(rootFile != null && rootFile.exists()) {
             try {
-               ClassPathHacker.addFile(rootFile.getAbsolutePath());
+                ClassPathHacker.addFile(rootFile.getAbsolutePath());
                 List<URL> classURL = showFiles(filePath.listFiles(), rootFile, module.getMain());
                 ClassLoader loader = new URLClassLoader(classURL.toArray(
                         new URL[classURL.size()]), ClassLoader.getSystemClassLoader());
@@ -344,6 +393,7 @@ public class ModuleService {
         }
         return module;
     }
+
 
     private ClassLoader getMyClassLoader(ClassLoader loader) {
         return loader;
@@ -436,13 +486,7 @@ public class ModuleService {
 
     public void startModule(Boolean isStartUp){
         //Boolean startUp = false;
-        Optional<Menu> menuOptional = menuRepository.findByIdAndAndArchived(1L, 1);
-        Menu menu = null;
-        if(menuOptional.isPresent()) {
-            menu = menuOptional.get();
-            menu.setArchived(0);
-        }
-        menuRepository.save(menu);
+        System.out.println("STarting starting....");
         if(isStartUp){
             //startUp = isStartUp;
             loadAllExternalModules(STATUS_STARTED, MODULE_TYPE);
@@ -454,6 +498,11 @@ public class ModuleService {
         externalModules.forEach(module -> {
             if(!isStartUp){
                 if(module.getStatus() == STATUS_INSTALLED) {
+                    Menu menu = module.getMenuByModule();
+                    if(menu != null){
+                        menu.setArchived(UN_ARCHIVED);
+                        menuRepository.save(menu);
+                    }
                     module.setStatus(STATUS_STARTED);
                     module.setActive(ACTIVE);
                     module.setArchived(UN_ARCHIVED);
@@ -483,7 +532,11 @@ public class ModuleService {
             moduleClasses.add(BaseApplication.class);
             Class [] classArray = new Class[moduleClasses.size()];
             moduleClasses.toArray(classArray);
-            BaseApplication.restart(classArray, context);
+            try {
+                BaseApplication.restart(classArray, context);
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -499,6 +552,9 @@ public class ModuleService {
         Module module = moduleOptional.get();
         if(module.getModuleType() == 0){
             throw new IllegalTypeException(Module.class, MODULE_CLASS_NAME, "cannot delete core module");
+        }
+        if(module.menuByModule != null) {
+            menuRepository.delete(module.menuByModule);
         }
         module.getProgramsByModule().forEach(program -> {
             program.getFormsByProgram().forEach(form -> formRepository.delete(form));
@@ -521,7 +577,7 @@ public class ModuleService {
         externalModules.forEach(module -> {
             final Path moduleDependencyRuntimePath = Paths.get(properties.getModulePath(), "libs", module.getName());
             //Path libPath = Paths.get(properties.getModulePath(), "libs", module.getName());
-            if(moduleDependencyRuntimePath != null) {
+            if(module.getModuleDependencyByModule() != null && !module.getModuleDependencyByModule().isEmpty()) {
                 for (File file : moduleDependencyRuntimePath.toFile().listFiles()) {
                     System.out.println(file.getName());
                     //Load dependencies
@@ -571,7 +627,7 @@ public class ModuleService {
             jarFile.delete();
             log.debug(jarFile.getName() + " deleted...");
         }
-        if(externalModule.getModuleDependencyByModule().size() < moduleDependencyRuntimePath.toFile().list().length) {
+        if(externalModule.getModuleDependencyByModule() != null && !externalModule.getModuleDependencyByModule().isEmpty() && externalModule.getModuleDependencyByModule().size() < moduleDependencyRuntimePath.toFile().list().length) {
             for (File file : moduleDependencyRuntimePath.toFile().listFiles()) {
                 for (ModuleDependency moduleDependency : externalModule.getModuleDependencyByModule()) {
                     if (file.getName().contains(moduleDependency.getArtifactId())) {
@@ -586,20 +642,21 @@ public class ModuleService {
                     foundFile = false;
                 }
             }
-        }
-        Path libPath = Paths.get(properties.getModulePath(), "libs", externalModule.getName());
-        File src = new File(Paths.get(properties.getModulePath(), "runtime", externalModule.getName(),"lib").toString());
 
-        //Copy dependencies in lib to libs
-        try {
-            for(File file: src.listFiles()) {
-                //FileSystemUtils.copyRecursively(file, target);
-                if(!file.isDirectory()) {
-                    FileUtils.copyFile(file, Paths.get(properties.getModulePath(), "libs", externalModule.getName(), file.getName()).toFile());
+            //Path libPath = Paths.get(properties.getModulePath(), "libs", externalModule.getName());
+            File src = new File(Paths.get(properties.getModulePath(), "runtime", externalModule.getName(),"lib").toString());
+
+            //Copy dependencies in lib to libs
+            try {
+                for(File file: src.listFiles()) {
+                    //FileSystemUtils.copyRecursively(file, target);
+                    if(!file.isDirectory()) {
+                        FileUtils.copyFile(file, Paths.get(properties.getModulePath(), "libs", externalModule.getName(), file.getName()).toFile());
+                    }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

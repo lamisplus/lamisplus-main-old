@@ -74,5 +74,6 @@ public class Menu implements Serializable {
 
     @OneToOne
     @JoinColumn(name = "module_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private Module moduleByMenu;
 }

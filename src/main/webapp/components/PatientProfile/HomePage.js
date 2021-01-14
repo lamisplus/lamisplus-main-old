@@ -23,6 +23,8 @@ import PatientDetailCard from "./PatientDetailCard";
 import TestOrder from "./TestOrder/TestOrder";
 import Medication from "./Medication/Medication";
 import ServiceForm from "./ServiceForm/serviceForm";
+import RetropectiveServiceForm from "./ServiceForm/RetropectiveServiceForm";
+
 import * as actions from "actions/patients";
 import { connect } from "react-redux";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -266,8 +268,8 @@ function HomePage(props) {
         {/* service forms */}
 
         {/* retrospective forms */}
-        <TabPanel value={value} index={4}>
-          <ServiceForm
+        <TabPanel value={value} index={5}>
+          <RetropectiveServiceForm
               patientId={props.patient.patientId}
               visitId={props.patient.visitId}
           />

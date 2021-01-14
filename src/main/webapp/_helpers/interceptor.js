@@ -30,6 +30,9 @@ axios.interceptors.response.use(function (response) {
             payload: error.response.status
         });
         window.location.reload(true);
-    }  
+    }
+    // if( error.response.status == 403){
+    //     window.location.href = '/unauthorised';
+    // }
     return Promise.reject(error);
   })

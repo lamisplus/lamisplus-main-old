@@ -38,7 +38,7 @@ public class Role {
     @Getter
     @Setter
     @ManyToMany(cascade = CascadeType.PERSIST)
-    private Set<Permission> permissions;
+    private Set<Permission> permission;
 
     @Override
     public int hashCode() {
@@ -67,7 +67,7 @@ public class Role {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", dateModified='" + dateModified + '\'' +
-                ", permissions=" + permissions +
+                ", permissions=" + permission +
                 '}';
     }
 }
