@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react';
 import MaterialTable from 'material-table';
 import { connect } from "react-redux";
-import { fetchAll, deactivateProgram} from "./../../../actions/programManager";
+import { fetchAll, deleteProgram, updateProgram, } from "actions/programManager";
+
 import {
     Card,
     CardBody, Modal, ModalBody, ModalFooter, ModalHeader, Spinner
@@ -17,13 +18,16 @@ import SaveIcon from "@material-ui/icons/Delete";
 import CancelIcon from "@material-ui/icons/Cancel";
 import {makeStyles} from "@material-ui/core/styles";
 import "@reach/menu-button/styles.css";
-
+import {Menu, MenuButton, MenuItem, MenuList} from '@reach/menu-button';
+import {MdDeleteForever, MdModeEdit } from "react-icons/md";
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles(theme => ({
     button: {
         margin: theme.spacing(1)
     }
 }))
+
 const ProgramManagerSearch = (props) => {
     const [loading, setLoading] = React.useState(true);
     const [showModal, setShowModal] = React.useState(false);
@@ -33,6 +37,7 @@ const ProgramManagerSearch = (props) => {
     const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal)
     const toggleModal = () => setShowModal(!showModal)
     const classes = useStyles()
+
     const loadProgramManager = () => {
         const onSuccess = () => {
             setLoading(false);
@@ -42,18 +47,30 @@ const ProgramManagerSearch = (props) => {
         };
         props.fetchAll(onSuccess, onError);
     }
-    // useEffect(() => {
-    //     //loadProgramManager()
-    // }, []); //componentDidMount
+    useEffect(() => {
+        loadProgramManager()
+    }, []); //componentDidMount
+
 
     const openProgram = (row) => {
         setCurrentProgramManager(row);
         toggleModal();
     }
-
-    const deleteProgram = (row) => {
+    const updatePrograms = (row) =>{
         setCurrentProgramManager(row);
+        toggleModal();
+
+    }
+
+    const deleteProgram = (e) => {
+        console.log(e.name)
+        console.log(e.id)
+        setCurrentProgramManager(e);
         toggleDeleteModal();
+    }
+
+    const activateAndDeactavitePrograms = (row)  => {
+        props.updateProgram(row.id, row)
     }
 
     const processDelete = (id) => {
@@ -70,6 +87,21 @@ const ProgramManagerSearch = (props) => {
         };
         props.deleteProgram(id, onSuccess, onError);
     }
+    const actionButton = (e,status) =>{
+    
+        return (
+            <Menu>
+                <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px"}}>
+                    Action <span aria-hidden>▾</span>
+                </MenuButton>
+                    <MenuList style={{hover:"#eee"}}>
+                                <MenuItem onSelect={() => openProgram(e)}><MdModeEdit size="15" style={{color: '#3F51B5'}}/>{" "}Activate</MenuItem>
+                                <MenuItem onSelect={() => updatePrograms(e)}><MdModeEdit size="15" style={{color: '#000'}}/>{" "} Update</MenuItem>
+                                <MenuItem onSelect={() => deleteProgram(e)}><MdDeleteForever size="15" style={{color: '#000'}}/>{" "}Delete</MenuItem>
+                    </MenuList>
+            </Menu>
+          )
+  }
     return (
         <Card>
             <CardBody>
@@ -89,29 +121,25 @@ const ProgramManagerSearch = (props) => {
                     </Button>
 
                 </div>
+                {console.log(props.list)}
                 <MaterialTable
                     title="Find By Program Area"
                     columns={[
                         { title: "Module Name", field: "moduleId" },
                         {title: "Program Area", field: "name"},
-                        {title: "Action", field: "actions", filtering: false,},
+                        {title: "Status", field: "status"},
+                        {title: "Action", field: "actions"},
                     ]}
                     isLoading={loading}
-                    data={props.list}
-                    actions= {[
-                        {
-                            icon: 'edit',
-                            iconProps: {color: 'primary'},
-                            tooltip: 'Edit Program',
-                            onClick: (event, rowData) => openProgram(rowData)
-                        },
-                        {
-                            icon: 'delete',
-                            iconProps: {color: 'primary'},
-                            tooltip: 'Delete Program',
-                            onClick: (event, rowData) => deleteProgram(rowData)
-                        }
-                    ]}
+                    data={props.list.map((row) => ({
+                    moduleId: row.moduleId,
+                    name: row.name,
+                    status:  <Grid component="label" container alignItems="center" spacing={1}>
+                        <Grid item>{row.moduleId===0 ? "Active": "Inactive"}</Grid>
+                    </Grid>,
+                    actions:<div>{actionButton(row)} </div>
+                         
+                }))}
                     //overriding action menu with props.actions
                     components={props.actions}
                     options={{
@@ -132,7 +160,7 @@ const ProgramManagerSearch = (props) => {
             </CardBody>
             <NewProgramManager toggleModal={toggleModal} showModal={showModal} loadProgramManager={loadProgramManager} formData={currentProgramManager}/>
             <Modal isOpen={showDeleteModal} toggle={toggleDeleteModal} >
-                <ModalHeader toggle={toggleDeleteModal}> Delete Program - {currentProgramManager && currentProgramManager.name ? currentProgramManager.name : ""} </ModalHeader>
+                <ModalHeader toggle={toggleDeleteModal}> Deactivate Program - {currentProgramManager && currentProgramManager.name ? currentProgramManager.name : ""} </ModalHeader>
                 <ModalBody>
                     <p>Are you sure you want to proceed ?</p>
                 </ModalBody>
@@ -169,7 +197,8 @@ const mapStateToProps = state => {
 
 const mapActionToProps = {
     fetchAll: fetchAll,
-    delete: deleteProgram,
+    deleteProgram: deleteProgram,
+    updateProgram: updateProgram
 };
 
 export default connect(mapStateToProps, mapActionToProps)(ProgramManagerSearch);

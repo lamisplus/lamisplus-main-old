@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 const PatientSearch = (props) => {
     const [loading, setLoading] = useState('')
+    console.log(props.patientsTestOrderList)
     useEffect(() => {
     setLoading('true');
         const onSuccess = () => {

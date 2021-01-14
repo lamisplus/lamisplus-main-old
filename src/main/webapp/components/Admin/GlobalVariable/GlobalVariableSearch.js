@@ -70,7 +70,6 @@ const GlobalVariableSearch = (props) => {
     }
     return (
         <Card>
-
             <CardBody>
                 <Breadcrumbs aria-label="breadcrumb">
                     <Link color="inherit" to={{pathname: "/admin"}} >
@@ -78,18 +77,16 @@ const GlobalVariableSearch = (props) => {
                     </Link>
                     <Typography color="textPrimary">Global Variable</Typography>
                 </Breadcrumbs>
-<br/>
-<div className={"d-flex justify-content-end pb-2"}>
-<Button
-                        variant="contained"
+                <br/>
+                <div className={"d-flex justify-content-end pb-2"}>
+                    <Button variant="contained"
                         color="primary"
                         startIcon={<FaPlus />}
-                        onClick={() => openGlobalVariable(null)}
-                    >
+                        onClick={() => openGlobalVariable(null)}>
                         <span style={{textTransform: 'capitalize'}}>Add Global Variable</span>
                     </Button>
 
-</div>
+                        </div>
             <MaterialTable
                 title="Find Global Variable"
                 columns={[
