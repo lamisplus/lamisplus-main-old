@@ -108,4 +108,9 @@ public class Module implements Serializable {
     @JsonIgnore
     @ToString.Exclude
     private List<Program> programsByModule;
+
+    @OneToOne(mappedBy = "moduleByMenu")
+    @JsonIgnore
+    @ToString.Exclude
+    public Menu menuByModule;
 }

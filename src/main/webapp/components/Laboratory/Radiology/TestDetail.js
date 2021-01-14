@@ -6,7 +6,7 @@ import { TiArrowBack } from 'react-icons/ti';
 import { Link } from 'react-router-dom';
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
-import PatientDetailCard from "../../Functions/PatientDetailCard";
+import PatientDetailCard from "../../PatientProfile/PatientDetailCard";
 import {getQueryParams} from "components/Utils/PageUtils"
 import {Card, CardBody, Spinner ,CardHeader,Table} from 'reactstrap'
 import {Menu, MenuButton, MenuItem, MenuList} from "@reach/menu-button";

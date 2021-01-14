@@ -79,7 +79,7 @@ return (
               <h1>Parent Organization Unit
               <Link 
                   to ={{ 
-                  pathname: "/admin/organization-unit"
+                  pathname: "/admin-organization-unit"
                   }} 
                 > 
                   <MatButton

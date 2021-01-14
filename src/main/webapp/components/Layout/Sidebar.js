@@ -2,13 +2,15 @@ import logo200Image from "assets/img/logo/lamislogo.png";
 import sidebarBgImage from "assets/img/sidebar/sidebar-4.jpg";
 import SourceLink from "components/SourceLink";
 import React from "react";
-import { MdDashboard, MdGraphicEq, MdPerson, MdKeyboardArrowDown } from "react-icons/md";
+import { MdDashboard, MdGraphicEq, MdPerson, } from "react-icons/md";
 import { GiTestTubes, GiMedicines } from "react-icons/gi";
-import { FaUserPlus, FaListUl, FaUserCog, FaCogs, FaWpforms } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
-import { Nav, Navbar, NavItem, NavLink as BSNavLink } from "reactstrap";
+import { FaUserPlus, FaListUl, FaUserCog,  FaWpforms } from "react-icons/fa";
+import {Link, NavLink} from "react-router-dom";
+import { Nav, Navbar, NavItem, NavLink as BSNavLink} from "reactstrap";
 import bn from "utils/bemnames";
 import { authentication } from '../../_services/authentication';
+import {fetchAll} from "../../actions/menu";
+import {connect} from "react-redux";
 
 const sidebarBackground = {
   backgroundImage: `url("${sidebarBgImage}")`,
@@ -18,25 +20,21 @@ const sidebarBackground = {
 
 const navItems = [
   { to: '/dashboard', name: 'Dashboard', exact: true, Icon: MdDashboard },
-
   { to: '/patients', name: 'Find Patient', exact: false, Icon: FaUserPlus,
   roles:["patient_read", "patient_write", "patient_delete"]},
   { to: '/laboratory', name: 'Laboratory', exact: false, Icon: GiTestTubes,
   roles:["laboratory_read", "laboratory_write", "laboratory_delete"]},
+  { to: '/radiology-home', name: 'Radiology', exact: false, Icon: GiTestTubes },
   { to: '/pharmacy', name: 'Pharmacy', exact: false, Icon: GiMedicines,
   roles: ["pharmacy_read", "pharmacy_write", "pharmacy_delete"]},
   { to: '/appointments', name: 'Appointments', exact: false, Icon: MdGraphicEq,
   roles: ["appointment_read", "appointment_write", "appointment_delete"]},
-  { to: '/report', name: 'Reports', exact: false, Icon: FaListUl },
-  { to: '/visual', name: 'Visualization', exact: false, Icon: MdGraphicEq },
-  { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog,
+  // { to: '/report', name: 'Reports', exact: false, Icon: FaListUl },
+  // { to: '/visual', name: 'Visualization', exact: false, Icon: MdGraphicEq },
+   { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog,
   roles: ["admin_read", "user_read"] },
-  { to: '/radiology-home', name: 'Radiology', exact: false, Icon: GiTestTubes },
   // { to: '/data-visualisation', name: 'Data Visualisation', exact: false, Icon: GiTestTubes },
-  // { to: '/select', name: 'React Select', exact: false, Icon: FaUserCog },
-
-  // { to: '/admin-dashboard', name: 'Administration Module', exact: false, Icon: FaUserCog },
-  
+ 
 ];
 const navContents = [
   { to: '/bootstrap-configuration', name: 'Bootstrap Configuration', exact: false, Icon: FaListUl },
@@ -59,12 +57,20 @@ const adminItems = [
 
 const bem = bn.create("sidebar");
 const userRoles = authentication.getCurrentUserRole();
+
+
+
 class Sidebar extends React.Component {
-  state = {
-    isOpenComponents: false,
-  };
+  constructor(props) {
+    super(props);
 
+    this.state = {
+      isOpenComponents: false,
+      loading: false,
+    };
 
+    this.fetchExternalMenu();
+  }
 
   handleClick = (name) => () => {
     this.setState((prevState) => {
@@ -74,6 +80,19 @@ class Sidebar extends React.Component {
       };
     });
   };
+
+  fetchExternalMenu = () => {
+    this.setState({loading: true});
+    const onSuccess = () => {
+      this.setState({loading: false});
+    }
+    const onError = () => {
+      this.setState({loading: false});
+    }
+    this.props.fetchAllExternalModulesMenu(onSuccess, onError);
+};
+
+
 
   render() {
     return (
@@ -122,4 +141,15 @@ class Sidebar extends React.Component {
   }
 }
 
-export default Sidebar;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    menuList: state.menu.list,
+  };
+};
+
+const mapActionToProps = {
+  fetchAllExternalModulesMenu: fetchAll,
+};
+
+
+export default connect(mapStateToProps, mapActionToProps)(Sidebar);

@@ -8,33 +8,34 @@ import { QueryRenderer } from '@cubejs-client/react';
 //   { apiUrl: 'https://react-dashboard-demo.cubecloudapp.dev/cubejs-api/v1' },
 // );
 
-const API_URL = 'https://react-dashboard.cubecloudapp.dev';
-const CUBEJS_TOKEN =
-  '52fcb0bc21fe4de49e600892a275305d7aaf4f20ae929ce3011aa64e33f8a372f934d8935c787be114bf5726e905dc807d6fd7afb6180d87289411e20b1dd9f7';
+// const API_URL = 'http://localhost:4000';
+// const CUBEJS_TOKEN =
+//   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDc1MDU1MTIsImV4cCI6MTYwNzU5MTkxMn0.qKLZbJUwVqPBvBGDlDNQt5Lf3MZz_KZEQUMwJMMNfuc';
 
-const cubejsApi = cubejs(CUBEJS_TOKEN, {
-  apiUrl: `${API_URL}/cubejs-api/v1`,
-});
-
+// const cubejsApi = cubejs(CUBEJS_TOKEN, {
+//   apiUrl: `${API_URL}/cubejs-api/v1`,
+// });
+const cubejsApi = cubejs(`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDc1MDU1MTIsImV4cCI6MTYwNzU5MTkxMn0.qKLZbJUwVqPBvBGDlDNQt5Lf3MZz_KZEQUMwJMMNfuc`);
 
 export default () => {
   return (
     <QueryRenderer
       query={{
-        measures: ['Stories.count'],
-        dimensions: ['Stories.time.month']
+        measures: ['Orders.count'],
+        dimensions: ['Orders.time.month']
       }}
       cubejsApi={cubejsApi}
       render={({ resultSet }) => {
+        console.log(resultSet)
         if (!resultSet) {
           return 'Loading...';
         }
 
         return (
           <LineChart data={resultSet.rawData()}>
-            <XAxis dataKey="Stories.time"/>
+            <XAxis dataKey="Orders.time"/>
             <YAxis/>
-            <Line type="monotone" dataKey="Stories.count" stroke="#8884d8"/>
+            <Line type="monotone" dataKey="Orders.count" stroke="#8884d8"/>
           </LineChart>
         );
       }}
@@ -42,3 +43,4 @@ export default () => {
     
   )
 }
+

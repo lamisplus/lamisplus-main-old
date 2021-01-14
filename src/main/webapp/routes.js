@@ -12,8 +12,6 @@ import { Register } from "pages/Register";
 import { history } from "./history";
 import { PrivateRoute } from "./PrivateRoute"
 
-
-
 const DashboardPage = React.lazy(() => import("pages/DashboardPage"));
 const AdministrativeDashboard = React.lazy(() => import("components/Admin/HomePage"));
 /* New Page loading using easy loading */
@@ -24,14 +22,6 @@ const PatientRegistrationFormio = React.lazy(() =>
     import("components/Patient/PatientRegistrationFormio")
 );
 const PateintUpdate= React.lazy(() => import("components/Patient/EditPatient"));
-const CheckInPage = React.lazy(() => import("components/CheckIn/CheckInPage"));
-const VitalSignsPage = React.lazy(() => import("components/Vitals/VitalSignsPage"));
-
-/* Consultation page loading */
-const ConsultationPage = React.lazy(() => import("pages/ConsultationPage"));
-const ConsultationDashboardPage = React.lazy(() =>
-  import("components/Consultation/Dashboard")
-);
 
 /* Laboratory page loading */
 const LaboratoryPage = React.lazy(() => import("components/Laboratory/HomePage"));
@@ -62,7 +52,6 @@ const ParentOrganizationUnit = React.lazy(() => import("components/Admin/Organiz
 const ParentOrganizationUnitLevel = React.lazy(() => import("components/Admin/OrganizationUnit/ParentOrganizationalUnitLevel"));
 //admin/parent-organization-unit-level
 /* End of Bootstrap configuration */
-const formDashboard = React.lazy(() => import('components/formBuilder/formDashboard'));
 const FormBuilder = React.lazy(() => import('components/formBuilder/FormBuilder'));
 const ReactSelect = React.lazy(() => import('components/formBuilder/ReactSelect'));
 const ViewForm = React.lazy(() => import('components/formBuilder/ViewForm'));
@@ -73,9 +62,6 @@ const ProgramManagerPage = React.lazy(() => import('components/Admin/ProgramMana
 
 /* Pharmacy page loading */
 const PharmacyDashboard = React.lazy(() => import("./components/Pharmacy/PharmacyDashboard"))
-
-const CheckInPatientPage = React.lazy(() => import("components/CheckIn/CheckedInPatientPage"));
-const ViewVitalsPage = React.lazy(() => import("components/Vitals/ViewVitalsPage"));
 
 // const CheckInModal = React.lazy(() => import('components/CheckIn/CheckInModal'));
 const EnrolledPatientsDashboard = React.lazy(() => import("components/PatientProfile/HomePage"));
@@ -96,6 +82,11 @@ const Prescription = React.lazy(() => import("components/Pharmacy/Prescriptions"
 
 //Appointment
 const AppointmentPage = React.lazy(() => import("components/Appointments/HomePage"));
+//Case Management
+const CaseManagerPage = React.lazy(() => import("components/Admin/CaseManagers/CaseManagerList"));
+const CaseManagerPatientsPage = React.lazy(() => import("components/Admin/CaseManagers/CaseManagerPatients/CaseManagerPatientList"));
+const CaseManagerPatientsList = React.lazy(() => import("components/Admin/CaseManagers/CaseManagerPatients/ManagePatients"));
+const CaseManagerSwitchPatients = React.lazy(() => import("components/Admin/CaseManagers/CaseManagerPatients/ReAssignPatients"));
 
 //Admin
 const GlobalVariableSearchPage = React.lazy(() => import("components/Admin/GlobalVariable/GlobalVariableSearch"));
@@ -117,6 +108,7 @@ const UserRegistration = React.lazy(() => import("components/Users/UserRegistrat
 const roles = React.lazy(() => import("components/Roles/RolesPage"))
 const addRole = React.lazy(() => import("components/Roles/AddRole"))
 const UnauthorisedPage = React.lazy(() => import("pages/Unauthorised"));
+const BootstrapPage = React.lazy(() => import("pages/bootstrap"))
 class Routes extends Component {
   render() {
     return (
@@ -146,17 +138,7 @@ class Routes extends Component {
                 exact
                 path="/patient-update"
                 component={PateintUpdate}/>
-              <PrivateRoute exact path="/checkin" component={CheckInPage} />
-              <PrivateRoute exact path="/vital-signs" component={VitalSignsPage} />
-              <PrivateRoute exact path="/checkin" component={CheckInPage} />
-              <PrivateRoute exact path="/vital-signs" component={VitalSignsPage} />
-              {/* Consultation Links */}
-              <PrivateRoute exact path="/consultation" component={ConsultationPage} />
-              
-              <PrivateRoute
-                exact
-                path="/consultation-dashbaord"
-                component={ConsultationDashboardPage}/>
+
               {/* Laboratory Links */}
              <PrivateRoute exact path="/collect-result" component={LaboratorySampleResultPage} />
               <PrivateRoute exact path="/laboratory" component={LaboratoryPage} />
@@ -172,15 +154,15 @@ class Routes extends Component {
               {/* Radiology Link*/}
               <PrivateRoute exact path="/radiology-home" component={RadiologyPage} />
               {/* BootstrapConfiguration Link */}
-              <PrivateRoute exact path="/admin/bootstrap-configuration" component={BootStrapConfiguration} />
-              <PrivateRoute exact path="/admin/bootstrap-configuration/create-module" component={CreateModule} />
-              <PrivateRoute exact path="/admin/bootstrap-configuration/update-module" component={UpdateModule} />
+              <PrivateRoute exact path="/admin-bootstrap-configuration" component={BootStrapConfiguration} />
+              <PrivateRoute exact path="/admin-bootstrap-configuration-create-module" component={CreateModule} />
+              <PrivateRoute exact path="/admin-bootstrap-configuration-update-module" component={UpdateModule} />
               <PrivateRoute exact path="/updated-module" component={UpdatedModule} />
               {/* DataBaseManagement Link */}
               <PrivateRoute exact path="/database-management" component={DataBaseManagement} />
               <PrivateRoute exact path="/database-sync" component={DataBaseSync} />
               {/* OrganizationUnit */}
-              <PrivateRoute exact path="/admin/organization-unit" component={OrganizationUnit} />
+              <PrivateRoute exact path="/admin-organization-unit" component={OrganizationUnit} />
               <PrivateRoute exact path="/admin/parent-organization-unit" component={ParentOrganizationUnit} />
               <PrivateRoute exact path="/admin/parent-organization-unit-level" component={ParentOrganizationUnitLevel} />
              
@@ -189,10 +171,11 @@ class Routes extends Component {
               
               <PrivateRoute exact path="/prescriptions" component={Prescription}/>
               <PrivateRoute exact path="/appointment" component={AppointmentPage} />
-              <PrivateRoute exact path="/checkedin-patients" component={CheckInPatientPage}/>
-
-              <PrivateRoute exact path="/view-vitals" component={ViewVitalsPage} />
-              {/* <PrivateRoute exact path="/add-vitals" component={AddVitalsPage} /> */}
+              <PrivateRoute exact path="/case-managers" component={CaseManagerPage} />
+              <PrivateRoute exact path="/case-manager" component={CaseManagerPatientsPage} />
+              <PrivateRoute exact path="/patients-managed-case" component={CaseManagerPatientsList} /> 
+              <PrivateRoute exact path="/switch-patients" component={CaseManagerSwitchPatients} /> 
+              
               {/* <PrivateRoute exact path="/checkin-modal" component={CheckInModal} /> */}
 
               {/* The rout to Hiv Module */}
@@ -201,7 +184,6 @@ class Routes extends Component {
                 path="/patient-dashboard"
                 component={EnrolledPatientsDashboard}
               />
-              <PrivateRoute exact path="/form-dashboard" component={formDashboard} />
               <PrivateRoute exact path="/form-builder" component={FormBuilder} />
               <PrivateRoute exact path="/select" component={ReactSelect} />
               <PrivateRoute exact path="/view-form" component={ViewForm} />
@@ -231,10 +213,10 @@ class Routes extends Component {
                 <PrivateRoute exact path="/admin" component={AdministrativeDashboard}
                               roles={["user_write", "user_delete", "user_read", "admin_read"]}
                 />
-                <PrivateRoute exact path={"/admin/global-variable"} component={GlobalVariableSearchPage} />
-                <PrivateRoute exact path={"/admin/standards"} component={StandardSearchPage} />
-                <PrivateRoute exact path={"/admin/application-codesets"} component={ApplicationCodesetPage} />
-                <PrivateRoute exact path={"/admin/wards"} component={WardManagerPage} />
+                <PrivateRoute exact path={"/admin-global-variable"} component={GlobalVariableSearchPage} />
+                <PrivateRoute exact path={"/admin-standards"} component={StandardSearchPage} />
+                <PrivateRoute exact path={"/admin-application-codesets"} component={ApplicationCodesetPage} />
+                <PrivateRoute exact path={"/admin-wards"} component={WardManagerPage} />
                 <PrivateRoute exact path={"/radiology"} component={RadiologyTestDetailPage} />
               {/* The route to Appointment*/}
               {/* The route to Visualization*/}
@@ -243,6 +225,7 @@ class Routes extends Component {
                 
               {/* The route to Visualization*/}
                 <PrivateRoute exact path={"/unauthorised"} component={UnauthorisedPage} />
+                <PrivateRoute  path="/external-modules" component={BootstrapPage} />
             </React.Suspense>
           </MainLayout>
           

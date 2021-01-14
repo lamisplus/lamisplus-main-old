@@ -77,14 +77,14 @@ function AdminSubMenu(props) {
           <Dropdown text="System Configurations"   labeled simple    className='icon link item'>
               <Dropdown.Menu>
                 <Dropdown.Item>
-                  <Link to={{pathname: "/admin/application-codesets"}} >
+                  <Link to={{pathname: "/admin-application-codesets"}} >
                  Application Codeset Manager
                   </Link>
                 </Dropdown.Item>
                 <Dropdown.Item>
                   <Link
                       to={{
-                        pathname: "/admin/global-variable"}}
+                        pathname: "/admin-global-variable"}}
                   >
                   Global Variables
                   </Link>
@@ -107,14 +107,16 @@ function AdminSubMenu(props) {
                 </Dropdown.Item>*/}
                 <Dropdown.Item >
                   <Link to={{
-                        pathname: "/admin/wards"}}>
+                        pathname: "/admin-wards"}}>
                     Ward Manager
                   </Link>
                 </Dropdown.Item>
               </Dropdown.Menu>
           </Dropdown>
-        <Menu.Item>  <Link to={{pathname: "/admin/bootstrap-configuration"}} >Bootstrap Configuration </Link></Menu.Item>
-        <Menu.Item>  <Link to={{pathname: "/admin/organization-unit"}} >Organization Unit </Link></Menu.Item>
+        <Menu.Item>  <Link to={{pathname: "/admin-bootstrap-configuration"}} >Bootstrap Configuration </Link></Menu.Item>
+        <Menu.Item>  <Link to={{pathname: "/admin-organization-unit"}} >Organization Unit </Link></Menu.Item>
+        <Menu.Item>  <Link to={{pathname: "/case-managers"}} >Case Management </Link></Menu.Item>
+        
       </Menu>
 
       <ToastContainer />
