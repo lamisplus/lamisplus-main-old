@@ -30,7 +30,7 @@ const PatientSearch = (props) => {
             //   if (dataSamples[i][key]!==null && dataSamples[i][key].lab_test_order_status ===1 &&  dataSamples[i][key].lab_test_order_status !==2 && dataSamples[i][key].lab_test_order_status !==5)
             //     collectedSamples.push(value)
             // } 
-            if (dataSamples[i][key]!==null && dataSamples[i][key].lab_test_order_status ===3  || dataSamples[i][key].lab_test_order_status ===5)
+            if (dataSamples[i][key]!==null && (dataSamples[i][key].lab_test_order_status ===3  || dataSamples[i][key].lab_test_order_status ===5))
                 collectedSamples.push(value)
             }            
           }
