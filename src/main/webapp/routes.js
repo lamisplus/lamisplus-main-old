@@ -82,6 +82,11 @@ const Prescription = React.lazy(() => import("components/Pharmacy/Prescriptions"
 
 //Appointment
 const AppointmentPage = React.lazy(() => import("components/Appointments/HomePage"));
+//Case Management
+const CaseManagerPage = React.lazy(() => import("components/Admin/CaseManagers/CaseManagerList"));
+const CaseManagerPatientsPage = React.lazy(() => import("components/Admin/CaseManagers/CaseManagerPatients/CaseManagerPatientList"));
+const CaseManagerPatientsList = React.lazy(() => import("components/Admin/CaseManagers/CaseManagerPatients/ManagePatients"));
+const CaseManagerSwitchPatients = React.lazy(() => import("components/Admin/CaseManagers/CaseManagerPatients/ReAssignPatients"));
 
 //Admin
 const GlobalVariableSearchPage = React.lazy(() => import("components/Admin/GlobalVariable/GlobalVariableSearch"));
@@ -166,8 +171,11 @@ class Routes extends Component {
               
               <PrivateRoute exact path="/prescriptions" component={Prescription}/>
               <PrivateRoute exact path="/appointment" component={AppointmentPage} />
-
-              {/* <PrivateRoute exact path="/add-vitals" component={AddVitalsPage} /> */}
+              <PrivateRoute exact path="/case-managers" component={CaseManagerPage} />
+              <PrivateRoute exact path="/case-manager" component={CaseManagerPatientsPage} />
+              <PrivateRoute exact path="/patients-managed-case" component={CaseManagerPatientsList} /> 
+              <PrivateRoute exact path="/switch-patients" component={CaseManagerSwitchPatients} /> 
+              
               {/* <PrivateRoute exact path="/checkin-modal" component={CheckInModal} /> */}
 
               {/* The rout to Hiv Module */}

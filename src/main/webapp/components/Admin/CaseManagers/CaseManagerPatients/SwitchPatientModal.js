@@ -11,9 +11,9 @@ import "react-widgets/dist/css/react-widgets.css";
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import moment from "moment";
-import {url} from '../../../api'
+import {url} from '../../../../api'
 import { Alert } from 'reactstrap';
-import { dispatchedManifestSamples, updateFormDataObj } from '../../../actions/laboratory';
+import { dispatchedManifestSamples, updateFormDataObj } from '../../../../actions/laboratory';
 import { Spinner } from 'reactstrap';
 import axios from "axios";
 
@@ -207,7 +207,7 @@ const ModalViewResult = (props) => {
          
               <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
               <Form onSubmit={saveSample}>
-            <ModalHeader toggle={props.togglestatus}>Dispatch Samples</ModalHeader>
+            <ModalHeader toggle={props.togglestatus}>Switch Patients</ModalHeader>
                 <ModalBody>
                     
                         <Card >
@@ -216,82 +216,18 @@ const ModalViewResult = (props) => {
                                     <Col md={12} >
                                         <Alert color="dark" style={{backgroundColor:'#9F9FA5', color:"#000" , fontWeight: 'bolder', fontSize:'14px'}}>
                                             <p style={{marginTop: '.7rem' }}>
-                                                Total Sample Shipment : &nbsp;&nbsp;&nbsp;<span style={{ fontWeight: 'bolder'}}>{Object.keys(manifestSamples).length }</span>
+                                                Current Case Manager : &nbsp;&nbsp;&nbsp;<span style={{ fontWeight: 'bolder'}}>Dr Dorcas</span>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                Manifest ID : &nbsp;&nbsp;&nbsp;<span style={{ fontWeight: 'bolder'}}>{manifestId}</span>
+                                                Program Type : &nbsp;&nbsp;&nbsp;<span style={{ fontWeight: 'bolder'}}>HIV</span>
                                             </p>
 
                                         </Alert>
                                     </Col>
                                     
-                                    <Col md={6}>
-                                        {/* <p>Sample Type {manifestSamples.data.description}  </p> */}
-                                          <FormGroup>
-                                              <Label >Date Dispatched</Label>
-                                          
-                                                  <DateTimePicker
-                                                      time={false}
-                                                      name="dateSampleDispatched"
-                                                      id="dateSampleDispatched"
-                                                      onChange={date_transfered =>
-                                                        setOtherFields({ ...otherfields, dateSampleDispatched: moment(date_transfered).format("DD-MM-YYYY") })
-                                                      }
-                                                      required/>
-                                                      {errors.dateSampleDispatched !="" ? (
-                                                          <span className={classes.error}>{errors.dateSampleDispatched}</span>
-                                                      ) : "" }
-                                          </FormGroup>
-                                      </Col>
-                                      <Col md={6}>
-                                          <FormGroup> 
-                                              <Label for=''>Time Dispatched</Label>
-                                                  <DateTimePicker
-                                                      date={false}
-                                                      name="timeSampleDispatched"
-                                                      id="timeSampleDispatched"
-                                                      onChange={value1 =>
-                                                        setOtherFields({ ...otherfields, timeSampleDispatched: moment(value1).format("LT") })
-                                                      }/>
-                                                      {errors.timeSampleDispatched !="" ? (
-                                                        <span className={classes.error}>{errors.timeSampleDispatched}</span>
-                                                      ) : "" }      
-                                          </FormGroup>
-                                      </Col>
+
                                       <Col md={6}>
                                           <FormGroup>
-                                              <Label for="">Dispatch Rider/Courier Name</Label>
-                                                    <Input
-                                                        type="text"
-                                                        name="courierName"
-                                                        id="courierName"
-                                                        
-                                                        value={otherfields.courierName}
-                                                        onChange={handleOtherFieldInputChange}
-                                                        {...(errors.courierName && { invalid: true})}
-                                                        
-                                                    />
-                                                      <FormFeedback>{errors.courierName}</FormFeedback>
-                                          </FormGroup>
-                                      </Col>
-                                      <Col md={6}>
-                                          <FormGroup>
-                                              <Label for="exampleSelect">Dispatch Rider/Courier Phone Number</Label>
-                                                    <Input
-                                                        type="number"
-                                                        name="courierPhoneNumber"
-                                                        id="courierPhoneNumber"
-                                                        
-                                                        value={otherfields.courierPhoneNumber}
-                                                        onChange={handleOtherFieldInputChange}
-                                                        {...(errors.courierPhoneNumber && { invalid: true})}
-                                                        
-                                                    />
-                                                      <FormFeedback>{errors.courierPhoneNumber}</FormFeedback>
-                                          </FormGroup>
-                                      </Col>
-                                      <Col md={6}>
-                                          <FormGroup>
-                                              <Label for="occupation">Sample Dispatched By </Label>
+                                              <Label for="occupation">Case Manager  </Label>
 
                                                 <Input
                                                     type="select"
@@ -309,41 +245,7 @@ const ModalViewResult = (props) => {
                                                     <FormFeedback>{errors.sampleDispatchedBy}</FormFeedback>
                                           </FormGroup>
                                       </Col>
-                                      <Col md={6}>
-                                          <FormGroup>
-                                              <Label for="">Sender Phone Number</Label>
-                                                    <Input
-                                                        type="text"
-                                                        name="sampleDispatchedByPhoneNumber"
-                                                        id="sampleDispatchedByPhoneNumber"
                                                         
-                                                        value={otherfields.sampleDispatchedByPhoneNumber}
-                                                        onChange={handleOtherFieldInputChange}
-                                                        {...(errors.sampleDispatchedByPhoneNumber && { invalid: true})}
-                                                        
-                                                    />
-                                                      <FormFeedback>{errors.sampleDispatchedByPhoneNumber}</FormFeedback>
-                                          </FormGroup>
-                                      </Col>
-                                      <Col md={6}>
-                                          <FormGroup>
-                                              <Label for="occupation">Receiving Lab Name </Label>
-                                              <Input type="select" name="receivingLabName" id="receivingLabName" 
-                                                    vaule={otherfields.receivingLabName}
-                                                    onChange={handleOtherFieldInputChange}
-                                                    {...(errors.receivingLabName && { invalid: true})}
-                                                  >
-                                                        <option> </option>
-                                                        {pcrOptions.map(({ title, value }) => (
-                                                            
-                                                            <option key={title} value={title}>
-                                                                {title}
-                                                            </option>
-                                                        ))}
-                                                  </Input>
-                                                      <FormFeedback>{errors.receivingLabName}</FormFeedback>
-                                          </FormGroup>                                        
-                                      </Col>                   
                                   </Row>
                                       <br/>
                                       {loading ? <Spinner /> : ""}

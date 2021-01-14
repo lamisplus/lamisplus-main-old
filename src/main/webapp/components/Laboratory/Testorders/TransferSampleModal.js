@@ -148,7 +148,7 @@ const ModalSampleTransfer = (props) => {
           <Form onSubmit={saveSample}>
             <ModalHeader toggle={props.togglestatus}>Transfer Sample</ModalHeader>
                 <ModalBody>
-                    {checklanumber(props.labnumber['lab_number'])}
+                    {/* {checklanumber(props.labnumber['lab_number']!==null ? props.labnumber['lab_number'] : null)} */}
                         <Card >
                             <CardBody>
                                 <Row >
@@ -260,18 +260,7 @@ const ModalSampleTransfer = (props) => {
                                       <br/>
                                       {loading ? <Spinner /> : ""}
                                       <br/>
-                                      {props.labnumber['lab_number']!==""?
-                                          <MatButton
-                                              type='submit'
-                                              variant='contained'
-                                              color='primary'
-                                              className={classes.button}
-                                              startIcon={<SaveIcon />}
-                                              disabled={loading}
-                                          >   
-                                              Save
-                                          </MatButton>
-                                              :
+                                      
                                           <MatButton
                                               type='submit'
                                               variant='contained'
@@ -283,7 +272,7 @@ const ModalSampleTransfer = (props) => {
                                               Save
                                           </MatButton>
                                           
-                                      }
+                                      
                                           <MatButton
                                               variant='contained'
                                               color='default'

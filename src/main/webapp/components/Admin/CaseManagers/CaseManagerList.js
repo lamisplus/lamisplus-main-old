@@ -3,14 +3,15 @@ import React, {useEffect, useState} from 'react';
 import MaterialTable from 'material-table';
 import { Link } from 'react-router-dom'
 import { connect } from "react-redux";
-import { fetchAllLabTestOrder } from "./../../../actions/laboratory";
-import "./../laboratory.css";
+import { fetchAllLabTestOrder } from "../../../actions/laboratory";
+import "./casemanager.css";
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
+import {Col,Input,FormGroup,Label} from "reactstrap";
+import Page from '../../Page';
 
-
-const PatientSearch = (props) => {
+const CaseManager = (props) => {
     const [loading, setLoading] = useState('')
     useEffect(() => {
     setLoading('true');
@@ -49,26 +50,25 @@ const PatientSearch = (props) => {
     }
     
   return (
-      <div>
+    <Page title='Case Managers'>
+        <br/>
+         
+        <br/>
           <MaterialTable
-              title="Laboratory Test Orders"
+              title="Case Managers"
               columns={[
-                  { title: "Patient ID", field: "Id" },
+                  { title: "Name", field: "Id" },
                   {
-                    title: "Patient Name",
+                    title: "Programme",
                     field: "name",
                   },
-                  { title: "Date Order", field: "date", type: "date" , filtering: false},          
+                  { title: "Date", field: "date", type: "date" , filtering: false},          
                   {
-                    title: "Total Sample ",
+                    title: "Total Patients ",
                     field: "count",
                     filtering: false
                   },
-                  {
-                    title: "Sample Collected ",
-                    field: "samplecount",
-                    filtering: false
-                  },
+                  
                   {
                     title: "Action",
                     field: "actions",
@@ -81,9 +81,9 @@ const PatientSearch = (props) => {
                   name: row.firstName +  ' ' + row.lastName,
                   date: row.dateEncounter,
                   count: row.formDataObj.length,
-                  samplecount: totalSampleConllected(row.formDataObj),
+                  
                   actions:  <Link to ={{ 
-                                  pathname: "/collect-sample",  
+                                  pathname: "/case-manager",  
                                   state: row
                               }} 
                                   style={{ cursor: "pointer", color: "blue", fontStyle: "bold"}}
@@ -114,7 +114,7 @@ const PatientSearch = (props) => {
               }}
 
           />
-    </div>
+    </Page>
   );
 }
 
@@ -127,4 +127,4 @@ const mapActionToProps = {
     fetchAllLabTestOrderToday: fetchAllLabTestOrder
 };
   
-export default connect(mapStateToProps, mapActionToProps)(PatientSearch);
+export default connect(mapStateToProps, mapActionToProps)(CaseManager);
