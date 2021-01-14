@@ -110,6 +110,10 @@ const ResultReporting = (props) => {
         setcollectModal({...collectModal, ...row});
         setModal3(!modal3) 
     }
+    const addresult = (row) => {  
+        setcollectModal({...collectModal, ...row});
+        setModal2(!modal2) 
+    }
 
 
     const getGroup = e => {
