@@ -7,7 +7,6 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
 import {FaPlusSquare, FaRegEye} from 'react-icons/fa';
-import {GoChecklist} from 'react-icons/go';
 import 'react-widgets/dist/css/react-widgets.css'
 //Date Picker
 import Page from './../../Page'
@@ -20,7 +19,7 @@ import { Badge } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import ModalViewResult from './ViewResult';
-import ModalSampleResult from './EnterResult';
+import ModalSampleResult from './EnterResultFormIo';
 import {authentication} from '../../../_services/authentication';
 
 
@@ -111,6 +110,11 @@ const ResultReporting = (props) => {
         setcollectModal({...collectModal, ...row});
         setModal3(!modal3) 
     }
+    const addresult = (row) => {  
+        setcollectModal({...collectModal, ...row});
+        setModal2(!modal2) 
+    }
+
 
     const getGroup = e => {
         const getValue =e.target.value;
@@ -136,7 +140,7 @@ const ResultReporting = (props) => {
         }else if(e===5){
           return <p><Badge  color="light">Result Available</Badge></p>
         }else{
-          return <p>{"---"}</p>
+          return <p>{""}</p>
         }
     }
 
@@ -155,6 +159,9 @@ const ResultReporting = (props) => {
                     :""}
                     {e.data.lab_test_order_status===5 ?
                         <MenuItem onSelect={() => viewresult(e)}><FaRegEye size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>
+                    :""}
+                    {e.data.lab_test_order_status===5 ?
+                        <MenuItem onSelect={() => handleResult(e)} hidden={!authentication.userHasRole(["laboratory_write"])}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Add Result</MenuItem>
                     :""}   
                     </MenuList>
             </Menu>

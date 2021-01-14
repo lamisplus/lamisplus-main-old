@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import {Modal,ModalHeader, ModalBody,Form,Alert,Col,Card,CardBody,} from "reactstrap";
+import React, { useState, useEffect } from "react";
+import {Modal,ModalHeader, ModalBody,Form,FormFeedback,Row,Alert,Col,Input,FormGroup,Label,Card,CardBody,} from "reactstrap";
+import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
@@ -7,6 +8,7 @@ import "react-widgets/dist/css/react-widgets.css";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import moment from "moment";
+import { url } from "../../../api";
 import {
     createCollectedSample,
     fetchFormById,
@@ -62,7 +64,8 @@ const ModalSample = (props) => {
     const lab_test_group = datasample.data ? datasample.data.lab_test_group : null ;
     const sample_ordered_by = datasample.data ? datasample.data.sample_ordered_by : null ;
     const description = datasample.data ? datasample.data.description : null ;
-    const lab_number = props.labnumber && props.labnumber!==null  ? props.labnumber : null;
+    const lab_number = props.labnumber && props.labnumber["lab_number"]  ? props.labnumber["lab_number"] : null;
+   
     const labId = datasample.id
     const [loading, setLoading] = useState(false)
     const [visible, setVisible] = useState(true);
