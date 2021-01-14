@@ -23,14 +23,17 @@ const PatientSearch = (props) => {
             props.fetchAllLabTestOrderToday(onSuccess, onError);
     }, []); //componentDidMount
     const collectedSamples = []
+
     props.patientsTestOrderList.forEach(function(value, index, array) {
-        const dataSamples = value.formDataObj 
+        const dataSamples = value.formDataObj
+        if(value.formDataObj.data!==null) {
         for(var i=0; i<dataSamples.length; i++){
             for (var key in dataSamples[i]) {
-              if (dataSamples[i][key]!==null && dataSamples[i][key].lab_test_order_status <=1 )
+              if (dataSamples[i][key]!==null && dataSamples[i][key].lab_test_order_status < 1 )
                 collectedSamples.push(value)
             }            
           }
+        }
     });
 
     function totalSampleConllected (test){
@@ -44,7 +47,6 @@ const PatientSearch = (props) => {
           }
         return maxVal.length;
     }
- 
     
   return (
       <div>

@@ -190,6 +190,7 @@ const ModalViewResult = (props) => {
 
                     //Process the Samples to be dispatched 
                     sampleManifest['sampleManifests'] = modifyManifestSample;
+                    
                     props.dispatchedManifestSamples(sampleManifest)
                                        
                     //Closing of the modal 
@@ -276,7 +277,7 @@ const ModalViewResult = (props) => {
                                           <FormGroup>
                                               <Label for="exampleSelect">Dispatch Rider/Courier Phone Number</Label>
                                                     <Input
-                                                        type="text"
+                                                        type="number"
                                                         name="courierPhoneNumber"
                                                         id="courierPhoneNumber"
                                                         

@@ -456,7 +456,7 @@ const deathChart = {
             </Card>
           </Col>
         </Row>
-
+       
       </Page>
   ); 
 }

@@ -18,7 +18,7 @@ import {  MdDelete, MdModeEdit, MdRemoveRedEye } from "react-icons/md";
 import DeleteModule from "./DeleteModule";
 import CreateParentOrgUnit from "./CreateParentOrgUnit";
 import { useSelector, useDispatch } from 'react-redux';
-import {  fetchAllParentOrganizationalUnit } from '../../../actions/organizationalUnit';
+import {  fetchAllParentOrganizationalUnitlevel } from '../../../actions/organizationalUnit';
 
 
 
@@ -57,7 +57,7 @@ const useStyles = makeStyles({
       const onError = () => {
           setLoading(false)     
       }
-        const fetchAllOrgUnit = dispatch(fetchAllParentOrganizationalUnit(parentOrganisationUnitId, onSuccess,onError ));
+        const fetchAllOrgUnit = dispatch(fetchAllParentOrganizationalUnitlevel(parentOrganisationUnitId, onSuccess,onError ));
 
   }, []); //componentDidMount
     const deleteModule = (row) => {  
@@ -79,7 +79,7 @@ return (
               <h1>Parent Organization Unit
               <Link 
                   to ={{ 
-                  pathname: "/admin/organization-unit"
+                  pathname: "/admin-organization-unit"
                   }} 
                 > 
                   <MatButton
@@ -135,11 +135,10 @@ return (
                                             </MenuButton>
                                                 <MenuList style={{ color:"#000 !important"}} > 
                                                       <MenuItem style={{ color:"#000 !important"}}>
-                                                            <Link
-                                                                
-                                                            >
-                                                              <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit  Unit  </span>                   
-                                                            </Link>
+                                                      <Link
+                                                        to={{pathname: "/admin-parent-organization-unit-level", state: { parentOrganisationUnitId: row.id  }}}>
+                                                          <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>View Parent Organ. Unit</span>
+                                                       </Link>
                                                       </MenuItem> 
                                                       <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule('module to delete')}>                      
                                                       

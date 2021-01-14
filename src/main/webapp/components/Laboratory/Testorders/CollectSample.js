@@ -6,7 +6,7 @@ import MatButton from '@material-ui/core/Button'
 import 'react-datepicker/dist/react-datepicker.css'
 import { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
-import {FaPlusSquare, FaRegEye} from 'react-icons/fa';
+import {FaPlusSquare} from 'react-icons/fa';
 import {TiArrowForward} from 'react-icons/ti';
 import 'react-widgets/dist/css/react-widgets.css'
 import { ToastContainer } from "react-toastify";
@@ -14,10 +14,11 @@ import { ToastContainer } from "react-toastify";
 import Page from './../../Page'
 import {  fetchById } from '../../../actions/patients'
 import {  fetchAllLabTestOrderOfPatient } from '../../../actions/laboratory'
-import ModalSample from './CollectSampleModal';
-import ModalSampleTransfer from './TransferSampleModal';
+import TransferModalConfirmation from './TransferModalConfirmation';
+import ModalSampleTransfer from './TransferSampleFormIo';
+import SampleCollectionFormIo from './SampleCollectionFormIo'
 import { useSelector, useDispatch } from 'react-redux';
-import PatientDetailCard from 'components/Functions/PatientDetailCard';
+import PatientDetailCard from 'components/PatientProfile/PatientDetailCard';
 import { Spinner } from 'reactstrap';
 import { Badge } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
@@ -40,6 +41,7 @@ const useStyles = makeStyles({
 
 
   const CollectSample = (props) => {
+    console.log(props.location.state)
     const testOrders = useSelector(state => state.laboratory.testorder);
     const sampleCollections = props.location.state && props.location.state.formDataObj  ? props.location.state.formDataObj : {};
     const encounterDate = props.location.state && props.location.state.dateEncounter ? props.location.state.dateEncounter : null ;
@@ -48,7 +50,7 @@ const useStyles = makeStyles({
     const [loading, setLoading] = useState('')
     const [fetchTestOrders, setFetchTestOrders] = useState(sampleCollections)
     const classes = useStyles()
-
+   
     useEffect(() => {
         
         if(props.location.state.encounterId !="" ){         
@@ -58,7 +60,9 @@ const useStyles = makeStyles({
  
                     }
                     const onError = () => {
-                        setLoading(false)     
+                        //setFetchTestOrders(...testOrders)
+                        setLoading(false) 
+
                     }
             dispatch(fetchAllLabTestOrderOfPatient(props.location.state.encounterId,onSuccess,onError ));
             dispatch(fetchById(hospitalNumber,onSuccess,onError));
@@ -80,6 +84,8 @@ const useStyles = makeStyles({
         const toggleModal = () => setModal(!modal)
         const [modal2, setModal2] = useState(false)//modal to transfer sample
         const toggleModal2 = () => setModal2(!modal2)
+        const [modal4, setModal4] = useState(false)//modal to transfer sample Confirmation
+        const toggleModal4 = () => setModal4(!modal4)
         const [modal3, setModal3] = useState(false)//modal to View Result
         const toggleModal3 = () => setModal3(!modal3)
         const [collectModal, setcollectModal] = useState([])//to collect array of datas into the modal and pass it as props
@@ -89,10 +95,12 @@ const useStyles = makeStyles({
         let  labNumber = "" //check if that key exist in the array
             testOrders.forEach(function(value, index, array) {
                 if(value['data']!==null && value['data'].hasOwnProperty("lab_number")){
-                    labNumber = value['data'].lab_number
+                    if(value['data'].lab_number !== null){
+                        labNumber = value['data'].lab_number
+                    }
                 }               
             });
-          
+    
     const handleLabNumber = e => {
         e.preventDefault();   
             setlabNum({ ...labNum, [e.target.name]: e.target.value })
@@ -105,6 +113,10 @@ const useStyles = makeStyles({
 
     const transferSample = (row) => {
         setModal2(!modal2)
+        setcollectModal({...collectModal, ...row});
+    }
+    const transferSampleConfirmation = (row) => {
+        setModal4(!modal4)
         setcollectModal({...collectModal, ...row});
     }
 
@@ -144,28 +156,39 @@ const useStyles = makeStyles({
 
 //This is function to check for the status of each collection to display on the tablist below 
     const sampleAction = (e,dateEncounter) =>{
-    
-        return (
-            <Menu>
-                <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px"}}>
-                    Action <span aria-hidden>▾</span>
-                </MenuButton>
-                    <MenuList style={{hover:"#eee"}}>
-                            { e.data.lab_test_order_status ===0 || e.data.lab_test_order_status ===null ?
+            if(e.data.lab_test_order_status ===0 || e.data.lab_test_order_status ===null){
+                return (  <Menu>
+                            <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px"}}>
+                                Action <span aria-hidden>▾</span>
+                            </MenuButton>
+                                <MenuList style={{hover:"#eee"}}>
                                 <MenuItem onSelect={() => handleSample(e,dateEncounter)}><FaPlusSquare size="15" style={{color: '#000'}}/>{" "}Collect Sample</MenuItem>
-                                :""
-                            }
-                            { e.data.lab_test_order_status ===1 ?
-                                <MenuItem onSelect={() => transferSample(e)}><TiArrowForward size="15" style={{color: '#000'}}/>{" "} Transfer Sample</MenuItem>             
-                                :""
-                            }
-                            { e.data.lab_test_order_status===5 ?
-                                <MenuItem onSelect={() => viewresult(e)}><FaRegEye size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>
-                                :""
-                            }  
-                    </MenuList>
-            </Menu>
-          )
+                                </MenuList>
+                            </Menu>    
+                        )
+            }
+            if(e.data.lab_test_order_status ===1){
+                return (  <Menu>
+                            <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px"}}>
+                                Action <span aria-hidden>▾</span>
+                            </MenuButton>
+                                <MenuList style={{hover:"#eee"}}>
+                                <MenuItem onSelect={() => transferSampleConfirmation(e)}><TiArrowForward size="15" style={{color: '#000'}}/>{" "} Transfer Sample</MenuItem> 
+                                </MenuList>
+                            </Menu>    
+                        )
+            }
+            if(e.data.lab_test_order_status===5){
+                return (  <Menu>
+                            <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px"}}>
+                                Action <span aria-hidden>▾</span>
+                            </MenuButton>
+                                <MenuList style={{hover:"#eee"}}>
+                                <MenuItem onSelect={() => handleSample(e,dateEncounter)}><FaPlusSquare size="15" style={{color: '#000'}}/>{" "}Collect Sample</MenuItem>
+                                </MenuList>
+                            </Menu>    
+                        )
+            }
   }
 
 
@@ -288,9 +311,10 @@ return (
               </Card>
             </Col>
         </Row>
-      <ModalSample modalstatus={modal} togglestatus={toggleModal} datasample={collectModal}  labnumber={labNum}/>
+      <SampleCollectionFormIo modalstatus={modal} togglestatus={toggleModal} datasample={collectModal}  labnumber={labNum}/>
       <ModalSampleTransfer modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} labnumber={labNumber!=="" ? labNumber : labNum}/>
       <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />
+      <TransferModalConfirmation modalstatus={modal4} togglestatusConfirmation={toggleModal4} datasample={collectModal} actionButton={transferSample} labnumber={labNumber!=="" ? labNumber : labNum}/>
     </Page>
   )  
 }

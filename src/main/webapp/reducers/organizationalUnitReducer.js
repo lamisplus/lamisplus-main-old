@@ -12,6 +12,8 @@ const organizationalUnitReducer = (state = initialState, action) => {
     
     case ACTION_TYPES.FETCH_ALL_PARENT_ORGANIZATIONAL_UNIT:
       return { ...state, list: [...action.payload] }
+    case ACTION_TYPES.FETCH_ALL_PARENT_ORGANIZATIONAL_UNIT_LEVEL:
+      return { ...state, list: [...action.payload] }
     case ACTION_TYPES.DELETE_ORGANISATION_UNIT:
       return {
         ...state,
