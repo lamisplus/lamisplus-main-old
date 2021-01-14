@@ -111,6 +111,7 @@ const ResultReporting = (props) => {
         setModal3(!modal3) 
     }
 
+
     const getGroup = e => {
         const getValue =e.target.value;
         if(getValue!=='All' || getValue ===null)
@@ -154,6 +155,9 @@ const ResultReporting = (props) => {
                     :""}
                     {e.data.lab_test_order_status===5 ?
                         <MenuItem onSelect={() => viewresult(e)}><FaRegEye size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>
+                    :""}
+                    {e.data.lab_test_order_status===5 ?
+                        <MenuItem onSelect={() => handleResult(e)} hidden={!authentication.userHasRole(["laboratory_write"])}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Add Result</MenuItem>
                     :""}   
                     </MenuList>
             </Menu>
