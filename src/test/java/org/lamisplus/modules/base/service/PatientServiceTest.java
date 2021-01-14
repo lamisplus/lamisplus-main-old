@@ -81,7 +81,7 @@ class PatientServiceTest {
         patient1.setId(1L);
         patient1.setHospitalNumber("Test1");
         patient1.setPersonId(1L);
-        patient1.setFacilityId(200L);
+        //patient1.setFacilityId(200L);
         patient1.setDateCreated(timestamp);
         patient1.setCreatedBy("Emeka");
         patient1.setDateModified(timestamp);
@@ -92,7 +92,7 @@ class PatientServiceTest {
         patient2.setId(2L);
         patient2.setHospitalNumber("Test2");
         patient2.setPersonId(2L);
-        patient2.setFacilityId(200L);
+        //patient2.setFacilityId(200L);
         patient2.setDateCreated(timestamp);
         patient2.setCreatedBy("Emeka");
         patient2.setDateModified(timestamp);
@@ -103,7 +103,7 @@ class PatientServiceTest {
         patient3.setId(3L);
         patient3.setHospitalNumber("Test3");
         patient3.setPersonId(3L);
-        patient3.setFacilityId(200L);
+        //patient3.setFacilityId(200L);
         patient3.setDateCreated(timestamp);
         patient3.setCreatedBy("Emeka");
         patient3.setDateModified(timestamp);

@@ -28,9 +28,9 @@ public class Patient implements Serializable {
     @NotNull
     private LocalDate dateRegistration;
 
-    @Basic
+/*    @Basic
     @Column(name = "facility_id", insertable = false, updatable = false)
-    private Long facilityId = 1L;
+    private Long facilityId = 1L;*/
 
     @Basic
     @Column(name = "person_id")
@@ -71,10 +71,14 @@ public class Patient implements Serializable {
     @Column(name = "archived")
     private Integer archived = 0;
 
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumn(name = "facility_id", referencedColumnName = "id")
     @JsonIgnore
-    private Facility facilityByFacilityId;
+    private Facility facilityByFacilityId;*/
+
+    @Basic
+    @Column(name = "organisation_unit_id")
+    private Long organisationUnitId;
 
     @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id", insertable = false, updatable = false)
@@ -92,7 +96,5 @@ public class Patient implements Serializable {
     private List<Encounter> encountersByPatient;
 
     @OneToMany(mappedBy = "patientByPatientId")
-    @JsonIgnore
-    @ToString.Exclude
-    private List<ClinicianPatient> clinicianByPatient;
+    public List<ApplicationUserPatient> getApplicationUserPatientsById;
 }

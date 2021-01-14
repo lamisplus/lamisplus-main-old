@@ -1,34 +1,17 @@
 package org.lamisplus.modules.base;
 
-import org.lamisplus.modules.base.domain.entity.Permission;
-import org.lamisplus.modules.base.domain.entity.Role;
-import org.lamisplus.modules.base.security.PermissionConstants;
-import org.lamisplus.modules.base.security.RolesConstants;
 import org.lamisplus.modules.base.service.ModuleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.RollbackException;
-import javax.transaction.*;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @EnableScheduling
 @SpringBootApplication
-public class BaseApplication extends SpringBootServletInitializer implements CommandLineRunner {
+public class BaseApplication extends SpringBootServletInitializer{
     private static ConfigurableApplicationContext context;
 
     private static Boolean isStartUp = true;
@@ -54,17 +37,11 @@ public class BaseApplication extends SpringBootServletInitializer implements Com
         Thread thread = new Thread(() -> {
             try {
                 context.close();
+                //System.out.println("System is close");
                 context = SpringApplication.run(clz, args.getSourceArgs());
             }catch (Exception e){
-                try {
-                    String command = "c:\\program files\\tomcat\\bin\\startup.bat";//for linux use .sh
-                    Process child = Runtime.getRuntime().exec(command);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    SpringApplication.run(BaseApplication.class, args.getSourceArgs());
-                }
+                e.printStackTrace();
             }
-
         });
 
         thread.setDaemon(false);
@@ -75,7 +52,7 @@ public class BaseApplication extends SpringBootServletInitializer implements Com
         return context;
     }
 
-    @PersistenceContext
+    /*@PersistenceContext
     EntityManager em;
 
     @Transactional
@@ -142,7 +119,7 @@ public class BaseApplication extends SpringBootServletInitializer implements Com
             Role role = new Role(RolesConstants.USER);
             em.persist(role);
         }
-    }
+    }*/
 
     /**
      * Refresh the given application context, if necessary.
@@ -156,4 +133,3 @@ public class BaseApplication extends SpringBootServletInitializer implements Com
 		}
 	}*/
 }
-

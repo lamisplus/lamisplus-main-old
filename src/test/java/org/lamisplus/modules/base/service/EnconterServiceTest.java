@@ -59,7 +59,7 @@ public class EnconterServiceTest {
 
 
         Mockito.when(encounterRepository.findAll()).thenReturn(encounters);
-        Mockito.when(encounterRepository.findByPatientIdAndProgramCodeAndFormCodeAndDateEncounter(1L, "wrong_program_code", "invalid_form_name", LocalDate.now())).thenReturn(null);
+        //Mockito.when(encounterRepository.findByPatientIdAndProgramCodeAndFormCodeAndDateEncounter(1L, "wrong_program_code", "invalid_form_name", LocalDate.now())).thenReturn(null);
 
         Mockito.when(encounterService.getAllEncounters()).thenReturn(null);
 

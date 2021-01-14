@@ -20,7 +20,11 @@ import bootstrapModuleReducer from "./bootstrapReducer";
 import organizationalUnitReducer from './organizationalUnitReducer';
 import rolesReducer from './rolesReducer';
 import generalUsersDashboardModuleReducer from './generalUserDashboardReducer';
+<<<<<<< HEAD
 import programManagerReducer from './programManagerReducer';
+=======
+import menuReducer from "./menu";
+>>>>>>> dev
 
 export default combineReducers({
   patients: patientReducer,
@@ -44,6 +48,7 @@ export default combineReducers({
   boostrapmodule: bootstrapModuleReducer,
   organizationalUnitReducer : organizationalUnitReducer,
   roles: rolesReducer,
-  generalUsersDashboardModuleReducer : generalUsersDashboardModuleReducer
+  generalUsersDashboardModuleReducer : generalUsersDashboardModuleReducer,
+  menu: menuReducer
 })
 

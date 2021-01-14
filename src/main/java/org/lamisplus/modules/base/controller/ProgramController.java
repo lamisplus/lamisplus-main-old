@@ -29,11 +29,9 @@ public class ProgramController {
                 .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(program.getId()))).body(program);
     }
 
-    @PutMapping
-    public ResponseEntity<Program> update(@PathVariable Long id, @RequestBody ProgramDTO programDTO) throws URISyntaxException {
-        Program program = this.programService.update(id, programDTO);
-        return ResponseEntity.created(new URI("/api/programs/" + program.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(program.getId()))).body(program);
+    @PutMapping("/{id}")
+    public Program update(@PathVariable Long id, @RequestBody ProgramDTO programDTO) throws URISyntaxException {
+        return programService.update(id, programDTO);
     }
 
     @GetMapping("{id}/forms")

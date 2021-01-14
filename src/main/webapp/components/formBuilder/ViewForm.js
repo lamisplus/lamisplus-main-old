@@ -29,6 +29,8 @@ import TextField from "@material-ui/core/TextField";
 import axios from 'axios';
 import {url} from '../../api';
 import CancelIcon from "@material-ui/icons/Cancel";
+import DownloadLink  from "react-download-link";
+import { Alert } from '@material-ui/lab';
 
 const useStyles = makeStyles(theme => ({
     root2: {
@@ -44,6 +46,7 @@ const Update = props => {
     const [formPrecedenceList, setFormPrecedenceList] = useState([{title: 'Loading', value: ''}]);
     const [disabledCheckBox, setdisabledCheckBox] = useState(true)
     const [formPrecedence, setformPrecedence] = useState([]);
+    const [row, setRow] = useState(props.location.state && props.location.state.row ? props.location.state.row : "");
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
     const [displayType, setDisplayType] = React.useState("");
@@ -55,7 +58,10 @@ const Update = props => {
     const textAreaRef = useRef(null);
     const [showModal, setShowModal] = React.useState(false);
     const toggleModal = () => setShowModal(!showModal)
-    const row =  props.location.state && props.location.state.row ? props.location.state.row : "";
+
+    let fileReader;
+    const [showFileImport, setShowFileImport] = useState(true);
+    const toggleShowFileImport = () => setShowFileImport(!showFileImport);
 
     useEffect(() => {
         async function fetchForms() {
@@ -75,6 +81,19 @@ const Update = props => {
         }
         fetchForms();
     }, []);
+
+    const handleFileRead = (e) => {
+        const content = fileReader.result;
+        setRow( {...JSON.parse(content), ...{id: row.id, code: row.code, name: row.name} });
+        setform2({...JSON.parse(content), ...{id: row.id, code: row.code, name: row.name} });
+        setRes(content.resourceObject);
+    }
+
+    const handleFileChosen = (file) => {
+        fileReader = new FileReader();
+        fileReader.onloadend = handleFileRead;
+        fileReader.readAsText(file);
+    };
 
     useEffect (() => {
         setformCode(row.code);
@@ -118,6 +137,15 @@ const Update = props => {
             </Link>
                 </Col>
                 <Col md={12}>
+                    {showFileImport && <>
+                        <Alert onClose={toggleShowFileImport} icon={false} className={"mb-3"}>
+                            <h4>Import Form from a <b>(.json)</b> file</h4>
+                            <input type="file" id="file" className="input-file mb-4" accept='.json'
+                                   onChange={e => handleFileChosen(e.target.files[0])}/>
+
+                        </Alert>
+                    </>
+                    }
             <Card >
                 <CardContent>
 
@@ -172,7 +200,7 @@ const Update = props => {
                         </Col>
                     </Row>
                     { form2 ?
-                        <FormBuilder form={row.resourceObject} {...props}
+                        <FormBuilder form={row.resourceObject || {}} {...props}
                                      submission={{data :{baseUrl:url}}}
                                      onChange={(schema) => {
                             // console.log(JSON.stringify(schema));
@@ -189,6 +217,12 @@ const Update = props => {
             <Card >
                 <CardContent>
                     <h4>Json Form</h4>
+                    <DownloadLink
+                        label="Export as a json file"
+                        filename={row ? row.name+".json" : "lamisplus-form.json"}
+                        exportFile={() => JSON.stringify(row)}
+                    /> Or Copy the json object below. <br/>
+
                     <div >
                     <textarea cols="100"
                               ref={textAreaRef}

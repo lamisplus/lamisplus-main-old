@@ -90,6 +90,46 @@ const createUploadBatch = () => {
                                 </Col>
                               </Row>
                                 <Row>
+                                <Col md={6}>
+                                          <FormGroup>
+                                              <Label for="">Organisation  Unit</Label>
+
+                                                <Input
+                                                    type="select"
+                                                    name="sample_transfered_by"
+                                                    id="sample_transfered_by"
+                                                    vaule={otherfields.sample_transfered_by}
+                                                    onChange={handleOtherFieldInputChange}
+                                                    {...(errors.sample_transfered_by && { invalid: true})} 
+                                                >
+                                                      <option value=""></option>
+                                                      <option value="Dorcas"> Dorcas </option>
+                                                      <option value="Jeph"> Jeph </option>
+                                                      <option value="Debora"> Debora </option>
+                                                </Input>
+                                                    <FormFeedback>{errors.sample_transfered_by}</FormFeedback>
+                                          </FormGroup>
+                                      </Col>
+                                      <Col md={6}>
+                                          <FormGroup>
+                                              <Label for="">Organisation  Parent Unit</Label>
+
+                                                <Input
+                                                    type="select"
+                                                    name="sample_transfered_by"
+                                                    id="sample_transfered_by"
+                                                    vaule={otherfields.sample_transfered_by}
+                                                    onChange={handleOtherFieldInputChange}
+                                                    {...(errors.sample_transfered_by && { invalid: true})} 
+                                                >
+                                                      <option value=""></option>
+                                                      <option value=""> Nigeria </option>
+                                                      <option value=""> Facilities </option>
+                                                      <option value=""> Community </option>
+                                                </Input>
+                                                    <FormFeedback>{errors.sample_transfered_by}</FormFeedback>
+                                          </FormGroup>
+                                      </Col>
                                   <Col md={6}>
                                     <FormGroup>
                                         <Label for="">Parent name</Label>

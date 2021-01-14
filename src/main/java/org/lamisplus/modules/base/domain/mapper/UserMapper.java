@@ -33,7 +33,7 @@ public class UserMapper {
             user.setId(userDTO.getId());
             user.setUserName(userDTO.getUserName());
             Set<Role> roles = this.rolessFromStrings(userDTO.getRoles());
-            user.setRoles(roles);
+            user.setRole(roles);
             return user;
         }
     }

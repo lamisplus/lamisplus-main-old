@@ -4,12 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
+import org.lamisplus.modules.base.domain.dto.ApplicationUserOrganisationUnitDTO;
 import org.lamisplus.modules.base.domain.dto.FormDTO;
 import org.lamisplus.modules.base.domain.entity.Form;
+import org.lamisplus.modules.base.domain.entity.Permission;
 import org.lamisplus.modules.base.domain.entity.Program;
 import org.lamisplus.modules.base.domain.mapper.FormMapper;
 import org.lamisplus.modules.base.repository.FormRepository;
+import org.lamisplus.modules.base.repository.PermissionRepository;
 import org.lamisplus.modules.base.repository.ProgramRepository;
+import org.lamisplus.modules.base.util.AccessRight;
 import org.lamisplus.modules.base.util.GenericSpecification;
 import org.lamisplus.modules.base.util.UuidGenerator;
 import org.springframework.data.jpa.domain.Specification;
@@ -31,19 +35,15 @@ public class FormService {
     private final UserService userService;
     private static final int ARCHIVED = 1;
     private final GenericSpecification<Form> genericSpecification;
+    private final AccessRight accessRight;
+    private final PermissionRepository permissionRepository;
+
 
     public List getAllForms() {
         Specification<Form> specification = genericSpecification.findAll(0);
 
         List<Form> forms = this.formRepository.findAll(specification);
-        List<FormDTO> formList = new ArrayList<>();
-        forms.forEach(form -> {
-            final FormDTO formDTO = formMapper.toForm(form);
-            Optional<Program>  program = this.programRepository.findProgramByCode(formDTO.getProgramCode());
-            program.ifPresent(value -> formDTO.setProgramName(value.getName()));
-            formList.add(formDTO);
-        });
-        return formList;
+        return getForms(forms);
     }
 
 
@@ -60,6 +60,7 @@ public class FormService {
 
     public Form save(FormDTO formDTO) {
         formDTO.setCode(UuidGenerator.getUuid());
+        List<Permission> permissions = new ArrayList<>();
         Optional<Form> formOptional = formRepository.findByNameAndProgramCodeAndArchived(formDTO.getName(), formDTO.getProgramCode(), UN_ARCHIVED);
         if (formOptional.isPresent()) {
             throw new RecordExistException(Form.class, "Name", formDTO.getName());
@@ -67,6 +68,18 @@ public class FormService {
         Form form = formMapper.toFormDTO(formDTO);
         form.setArchived(UN_ARCHIVED);
         form.setCreatedBy(userService.getUserWithRoles().get().getUserName());
+        String read = "_read"; String write = "_write"; String delete = "_delete";
+        String nameRead = formDTO.getCode()+read;
+        String nameWrite = formDTO.getCode()+write;
+        String nameDelete = formDTO.getCode()+delete;
+
+        permissions.add(new Permission(nameRead, formDTO.getName() + read));
+
+        permissions.add(new Permission(nameWrite, formDTO.getName() + write));
+
+        permissions.add(new Permission(nameDelete, formDTO.getName() + delete));
+        permissionRepository.saveAll(permissions);
+
         return formRepository.save(form);
     }
 
@@ -75,10 +88,13 @@ public class FormService {
         if(!formOptional.isPresent() || formOptional.get().getArchived() == 1) {
             throw new EntityNotFoundException(Form.class, "Id", id+"");
         }
+        accessRight.grantAccess(formOptional.get().getCode(), FormService.class);
+
         return formOptional.get();
     }
 
     public Form getFormsByFormCode(String formCode) {
+        accessRight.grantAccess(formCode, FormService.class);
         Optional<Form> formOptional = formRepository.findByCode(formCode);
         if(!formOptional.isPresent() || formOptional.get().getArchived() == 1) {
             throw new EntityNotFoundException(Form.class, "Form Code", formCode);
@@ -87,11 +103,27 @@ public class FormService {
     }
 
     public List getFormsByUsageStatus(Integer usageStatus) {
-        List<Form> formList = formRepository.findAllByUsageCodeAndArchived(usageStatus, UN_ARCHIVED);
+        List<Form> forms = formRepository.findAllByUsageCodeAndArchived(usageStatus, UN_ARCHIVED);
+        return getForms(forms);
+    }
+
+    private List getForms(List<Form> forms){
+        List<FormDTO> formList = new ArrayList<>();
+        forms.forEach(form -> {
+            if(accessRight.grantAccessForm(form.getCode()) == null){
+                return;
+            }
+            final FormDTO formDTO = formMapper.toForm(form);
+            Optional<Program>  program = this.programRepository.findProgramByCode(formDTO.getProgramCode());
+            program.ifPresent(value -> formDTO.setProgramName(value.getName()));
+            formList.add(formDTO);
+        });
         return formList;
+
     }
 
     public Form update(Long id, FormDTO formDTO) {
+        accessRight.grantAccessByAccessType(formDTO.getCode(), FormService.class, "write");
         Optional<Form> formOptional = formRepository.findById(id);
         log.info("form optional  is" + formOptional.get());
         if(!formOptional.isPresent() || formOptional.get().getArchived() == ARCHIVED)throw new EntityNotFoundException(Form.class, "Id", id +"");
@@ -104,8 +136,10 @@ public class FormService {
 
     public Integer delete(Long id) {
         Optional<Form> formOptional = formRepository.findById(id);
-        if(!formOptional.isPresent() || formOptional.get().getArchived() == 1)throw new EntityNotFoundException(Form.class, "Id", id +"");
-        formOptional.get().setArchived(1);
+        if(!formOptional.isPresent() || formOptional.get().getArchived() == ARCHIVED)throw new EntityNotFoundException(Form.class, "Id", id +"");
+        accessRight.grantAccessByAccessType(formOptional.get().getCode(), FormService.class, "delete");
+
+        formOptional.get().setArchived(ARCHIVED);
         formOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return formOptional.get().getArchived();
     }

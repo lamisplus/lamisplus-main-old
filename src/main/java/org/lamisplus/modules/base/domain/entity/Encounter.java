@@ -69,6 +69,10 @@ public class Encounter implements Serializable  {
     private String createdBy;
 
     @Basic
+    @Column(name = "organisation_unit_id")
+    private Long organisationUnitId;
+
+    @Basic
     @Column(name = "date_modified")
     @JsonIgnore
     @UpdateTimestamp

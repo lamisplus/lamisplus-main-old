@@ -1,10 +1,11 @@
 import { BehaviorSubject } from 'rxjs';
-import { url } from "../api";
+import {url as baseUrl, url} from "../api";
 import { handleResponse } from '../_helpers';
 import store from '../store';
 import * as ACTION_TYPES from "../actions/types";
 import jwt_decode from "jwt-decode";
 import _ from 'lodash';
+import axios from "axios";
 
 const { dispatch } = store;
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
@@ -15,7 +16,9 @@ export const authentication = {
     currentUser: currentUserSubject.asObservable(),
     get currentUserValue () { return currentUserSubject.value },
     getCurrentUserRole,
-    userHasRole
+    getCurrentUser,
+    userHasRole,
+    fetchMe
 };
 
 function login(username, password, remember) {
@@ -64,4 +67,35 @@ function userHasRole(role){
         return false;
     }
     return true;
+}
+
+function getCurrentUser(){
+    const user = currentUserSubject.value;
+    if(!user || !user.id_token){
+        return [];
+    }
+
+    const token = user.id_token;
+    const decoded = jwt_decode(token);
+    console.log(decoded);
+    return decoded;
+}
+
+async function fetchMe(){
+    axios
+        .get(`${baseUrl}account`)
+        .then((response) => {
+            dispatch({
+                type: ACTION_TYPES.FETCH_ME,
+                payload: response.data,
+            });
+            return response.data;
+        })
+        .catch((error) => {
+            dispatch({
+                type: ACTION_TYPES.FETCH_ME,
+                payload: null,
+            });
+            return null;
+        });
 }

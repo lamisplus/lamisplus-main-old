@@ -13,10 +13,10 @@ import java.util.Objects;
 @Data
 @Entity
 @EqualsAndHashCode
-@Table(name = "form_data")
+@Table(name = "form_data", schema = "public", catalog = "lamisplus-old-jwt")
 public class FormData extends JsonBEntity implements Serializable {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -29,9 +29,17 @@ public class FormData extends JsonBEntity implements Serializable {
     @Column(name = "encounter_id")
     private Long encounterId;
 
+    @Basic
+    @Column(name = "organisation_unit_id")
+    @JsonIgnore
+    private Long organisationUnitId;
+
     @ManyToOne
     @JoinColumn(name = "encounter_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
     private Encounter encounterByEncounterId;
 
+    @ManyToOne
+    @JoinColumn(name = "organisation_unit_id", referencedColumnName = "id", insertable = false, updatable = false)
+    public OrganisationUnit organisationUnitByOrganisationUnitId;
 }
