@@ -115,6 +115,7 @@ const ResultReporting = (props) => {
         setModal2(!modal2) 
     }
 
+
     const getGroup = e => {
         const getValue =e.target.value;
         if(getValue!=='All' || getValue ===null)
