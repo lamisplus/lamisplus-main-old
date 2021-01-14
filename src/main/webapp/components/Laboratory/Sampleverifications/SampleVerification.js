@@ -195,7 +195,7 @@ const SampleVerification = (props) => {
                                 Action <span aria-hidden>▾</span>
                             </MenuButton>
                                 <MenuList style={{hover:"#eee"}}>              
-                                    <MenuItem onSelect={() => viewresult(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>
+                                    <MenuItem onSelect={() => viewresult(e)}><FaRegEye size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>
                                     <MenuItem onSelect={() => addResult(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Add Result</MenuItem>
                                 </MenuList>
                                 
