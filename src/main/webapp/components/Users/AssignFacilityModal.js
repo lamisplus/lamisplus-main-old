@@ -28,7 +28,7 @@ const AssignFacilityModal = (props) => {
     const currentUser = props.user;
     const [formData, setFormData] = useState( defaultValues)
     const [facilities, setFacilities] = useState([]);
-    const [selectedFacilities, setSelectedFacilities] = useState(props.user && props.user.applicationUserOrganisationUnitsById ? props.user.applicationUserOrganisationUnitsById : [] );
+    const [selectedFacilities, setSelectedFacilities] = useState( [] );
     const classes = useStyles()
 
     const onFacilitySelect = (selectedValues) => {
@@ -39,6 +39,12 @@ const AssignFacilityModal = (props) => {
         //for application codeset edit, load form data
         setFormData(props.formData ? props.formData : defaultValues);
     }, [props.formData]);
+
+    useEffect(() => {
+        const y = props.user && props.user.applicationUserOrganisationUnits
+            ? props.user.applicationUserOrganisationUnits.map((x) => (x.organisationUnitId)) : [];
+        setSelectedFacilities(y);
+    }, [props.user]);
 
     /* Get list of Facilities from the server - id is 4*/
     useEffect(() => {
