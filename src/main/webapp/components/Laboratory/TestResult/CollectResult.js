@@ -110,6 +110,10 @@ const ResultReporting = (props) => {
         setcollectModal({...collectModal, ...row});
         setModal3(!modal3) 
     }
+    const addresult = (row) => {  
+        setcollectModal({...collectModal, ...row});
+        setModal2(!modal2) 
+    }
 
     const getGroup = e => {
         const getValue =e.target.value;
@@ -154,6 +158,9 @@ const ResultReporting = (props) => {
                     :""}
                     {e.data.lab_test_order_status===5 ?
                         <MenuItem onSelect={() => viewresult(e)}><FaRegEye size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>
+                    :""}
+                    {e.data.lab_test_order_status===5 ?
+                        <MenuItem onSelect={() => handleResult(e)} hidden={!authentication.userHasRole(["laboratory_write"])}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Add Result</MenuItem>
                     :""}   
                     </MenuList>
             </Menu>

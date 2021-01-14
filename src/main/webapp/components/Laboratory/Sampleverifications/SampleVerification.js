@@ -22,7 +22,8 @@ import { Badge } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import ModalSample from './RecollectSample';
-import ModalViewResult from './../TestResult/ViewResult'
+import ModalViewResult from './../TestResult/ViewResult';
+import ModalSampleResult from './../TestResult/EnterResult'
 import {authentication} from '../../../_services/authentication';
 
 
@@ -91,6 +92,8 @@ const SampleVerification = (props) => {
         const toggleModal2 = () => setModal2(!modal2)
         const [modal3, setModal3] = useState(false)//modal to View Result
         const toggleModal3 = () => setModal3(!modal3)
+        const [modal4, setModal4] = useState(false)//modal to Enter Result
+        const toggleModal4 = () => setModal4(!modal4)
         const [collectModal, setcollectModal] = useState([])//to collect array of datas into the modal and pass it as props
         const [labNum, setlabNum] = useState({lab_number:""})
         
@@ -122,6 +125,11 @@ const SampleVerification = (props) => {
         setcollectModal({...collectModal, ...row});
         setModal3(!modal3) 
     }
+    const addResult = (row) => {  
+        setcollectModal({...collectModal, ...row});
+        setModal4(!modal4) 
+    }
+
 
     const getGroup = e => {
         const getValue =e.target.value;
@@ -188,7 +196,9 @@ const SampleVerification = (props) => {
                             </MenuButton>
                                 <MenuList style={{hover:"#eee"}}>              
                                     <MenuItem onSelect={() => viewresult(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>
+                                    <MenuItem onSelect={() => addResult(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Add Result</MenuItem>
                                 </MenuList>
+                                
                             </Menu>
                         )    
                     }
@@ -312,7 +322,8 @@ return (
         </Row>
       <ModalSampleVerify modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
       <ModalSample modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal}  labnumber={newSample[0].data.lab_number}/>
-      <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />    
+      <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} /> 
+      <ModalSampleResult modalstatus={modal4} togglestatus={toggleModal4} datasample={collectModal} />   
     </Page>
   )
   
