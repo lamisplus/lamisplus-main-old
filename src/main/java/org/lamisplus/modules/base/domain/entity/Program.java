@@ -34,7 +34,6 @@ public class Program implements Serializable {
 
     @Basic
     @Column(name = "archived")
-    @JsonIgnore
     private Integer archived;
 
     @OneToMany(mappedBy = "programForEncounterByProgramCode")

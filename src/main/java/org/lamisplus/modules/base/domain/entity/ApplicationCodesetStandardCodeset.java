@@ -9,6 +9,7 @@ import java.util.Objects;
 @Entity
 @Data
 @EqualsAndHashCode
+//@IdClass(ApplicationCodesetHasStandardCodesetPK.class)
 @Table(name = "application_codeset_standard_codeset")
 public class ApplicationCodesetStandardCodeset {
 

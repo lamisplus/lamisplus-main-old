@@ -1,12 +1,16 @@
 package org.lamisplus.modules.base.controller;
 
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.dto.FileInfo;
+import org.lamisplus.modules.base.service.FilesStorageServiceImpl;
+import org.lamisplus.modules.base.util.FileStorage;
 import org.lamisplus.modules.base.util.upload.FilesStorageService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,25 +19,23 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
 public class FileController {
 
     private final FilesStorageService storageService;
+    private final FilesStorageServiceImpl filesStorageServiceImpl;
+
+    @Value("${uploadFile.location}")
+    private String uploadFileLocation; // upload the local directory saved by the file, use @Value to get the attribute value configured in the global configuration file
+
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
-        String message = "";
-        try {
-            storageService.save(file);
-
-            message = "Uploaded the file successfully: " + file.getOriginalFilename();
-            return ResponseEntity.status(HttpStatus.OK).body(message);
-        } catch (Exception e) {
-            message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Failed");
-        }
+    public String uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws Exception {
+        return filesStorageServiceImpl.uploadFile(file, request);
     }
 
     @GetMapping("/files")

@@ -183,7 +183,7 @@ const testGroup = {
         type: testOrderGroupData.type
     },
     title: {
-        text: 'LABORATORY TEST GROUP ANALYSIS'
+        text: 'LABORATORY TEST GROUP ANALYSIS FOR THE PAST 6'
     },
     tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -279,7 +279,7 @@ const testGroup = {
              
                 <CardDeck>
                     <Card >
-                        <CardHeader> Laboratory Test Group Analysis</CardHeader>
+                        <CardHeader> Laboratory Test Group for the past 6months</CardHeader>
                             <CardBody>
                                 <div>
                                     <HighchartsReact options={testGroup} />
@@ -287,7 +287,7 @@ const testGroup = {
                             </CardBody>                      
                     </Card>
                     <Card >
-                        <CardHeader> Laboratory Test Order/ Result</CardHeader>
+                        <CardHeader> Laboratory Test Order/ Result for the past 6months</CardHeader>
                             <CardBody>
                                 <div>
                                     <HighchartsReact options={testOrders} />

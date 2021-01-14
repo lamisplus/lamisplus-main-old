@@ -124,7 +124,7 @@ return (
                                                 <MenuList style={{ color:"#000 !important"}} >
                                                     <MenuItem  style={{ color:"#000 !important"}} >                      
                                                       <Link
-                                                        to={{pathname: "/admin/parent-organization-unit", state: { parentOrganisationUnitId: row.organisationUnitLevelId  }}}>    
+                                                        to={{pathname: "/admin-parent-organization-unit", state: { parentOrganisationUnitId: row.id  }}}>
                                                           <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>View Organ. Unit</span>
                                                        </Link>  
                                                       </MenuItem>

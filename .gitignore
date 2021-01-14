@@ -158,3 +158,5 @@ src/main/resources/static/static/
 target/
 
 base-module.iml
+
+src/main/resources/log/
