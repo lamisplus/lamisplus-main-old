@@ -34,10 +34,7 @@ const navItems = [
    { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog,
   roles: ["admin_read", "user_read"] },
   // { to: '/data-visualisation', name: 'Data Visualisation', exact: false, Icon: GiTestTubes },
-  // { to: '/select', name: 'React Select', exact: false, Icon: FaUserCog },
-
  
-  
 ];
 const navContents = [
   { to: '/bootstrap-configuration', name: 'Bootstrap Configuration', exact: false, Icon: FaListUl },
