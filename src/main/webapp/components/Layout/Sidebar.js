@@ -28,9 +28,16 @@ const navItems = [
   { to: '/pharmacy', name: 'Pharmacy', exact: false, Icon: GiMedicines,
     roles: ["pharmacy_read", "pharmacy_write", "pharmacy_delete"]},
   { to: '/appointments', name: 'Appointments', exact: false, Icon: MdGraphicEq,
+<<<<<<< HEAD
+  roles: ["appointment_read", "appointment_write", "appointment_delete"]},
+
+  { to: '/report', name: 'Reports', exact: false, Icon: FaListUl },
+  { to: '/visual', name: 'Visualization', exact: false, Icon: MdGraphicEq },
+=======
     roles: ["appointment_read", "appointment_write", "appointment_delete"]},
   // { to: '/report', name: 'Reports', exact: false, Icon: FaListUl },
   // { to: '/visual', name: 'Visualization', exact: false, Icon: MdGraphicEq },
+>>>>>>> dev
   { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog,
     roles: ["admin_read", "user_read"] },
   // { to: '/data-visualisation', name: 'Data Visualisation', exact: false, Icon: GiTestTubes },
@@ -38,6 +45,7 @@ const navItems = [
 
   // { to: '/admin-dashboard', name: 'Administration Module', exact: false, Icon: FaUserCog },
 
+ 
 ];
 const navContents = [
   { to: '/bootstrap-configuration', name: 'Bootstrap Configuration', exact: false, Icon: FaListUl },

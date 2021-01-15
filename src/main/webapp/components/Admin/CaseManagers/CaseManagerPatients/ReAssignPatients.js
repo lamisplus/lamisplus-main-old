@@ -4,16 +4,16 @@ import MaterialTable from 'material-table';
 import { Link } from 'react-router-dom'
 import { connect } from "react-redux";
 import {Col,Input,FormGroup,Label} from "reactstrap";
-import { fetchAllLabTestOrder } from "./../../../actions/laboratory";
-import "./../laboratory.css";
+import { fetchAllLabTestOrder } from "../../../../actions/laboratory";
+import "../casemanager.css";
 import {GiFiles} from 'react-icons/gi'; 
 import { Badge } from 'reactstrap';
 import Button from "@material-ui/core/Button";
-import DispatchedModal from './SampleDispatchedModalFormIo';
-import {authentication} from '../../../_services/authentication';
+import SwitchPatientModal from './SwitchPatientModal';
+import {authentication} from '../../../../_services/authentication';
+import Page from '../../../Page';
 
-
-const PatientSearch = (props) => {
+const CaseManagerPatientList = (props) => {
   const [loading, setLoading] = useState('')
   const [modal3, setModal3] = useState(false)//modal to View Result
   const togglemodal3 = () => setModal3(!modal3)
@@ -71,15 +71,13 @@ useEffect(() => {
 
   return (
     
-    <div>
-        <br/>
-        <br/>
+    <Page title='Re-Assign Patients'>
         <br/>
         <br/>
       <>
         <Col md={3}>
           <FormGroup>
-              <Label for="occupation">Sample Type </Label>
+              <Label for="">Program Type </Label>
 
               <Input
                   type="select"
@@ -89,15 +87,15 @@ useEffect(() => {
                   className=" float-left mr-1"
               >
                   <option value=""> </option>
-                  <option value="eid"> EID </option>
-                  <option value="viral Load"> Viral </option>
+                  <option value="eid"> Hiv </option>
+                  <option value="viral Load"> Tb </option>
                  
               </Input>
               
           </FormGroup>
       </Col>
        </>            
-      <Link to="/dispatched-sample">
+      <Link to="/patients-managed-case">
         {/* <Link to="/dispatched-sample"> */}
             <Button
               color="primary"
@@ -106,11 +104,12 @@ useEffect(() => {
               size="large"
             >
               {<GiFiles />} &nbsp;&nbsp;
-              <span style={{textTransform: 'capitalize'}}>Dispatched  </span>
+              <span style={{textTransform: 'capitalize'}}>Back </span>
                   &nbsp;&nbsp;
-              <span style={{textTransform: 'capitalize'}}> Samples</span>              
+                          
             </Button>
       </Link>
+      
         <br/>
         <br/>
         <br/>
@@ -213,13 +212,11 @@ useEffect(() => {
                 getDispatch(evt, data)   
             
             }
-        ]}
-
-       
+        ]}       
       />
-      <DispatchedModal modalstatus={modal3} togglestatus={togglemodal3} manifestSamples={collectmodal} />
+      <SwitchPatientModal modalstatus={modal3} togglestatus={togglemodal3} manifestSamples={collectmodal} />
 
-    </div>
+    </Page>
     
   );
 }
@@ -236,4 +233,4 @@ const mapStateToProps = state => {
       fetchAllLabTestOrderToday: fetchAllLabTestOrder
   };
   
-export default connect(mapStateToProps, mapActionToProps)(PatientSearch);
+export default connect(mapStateToProps, mapActionToProps)(CaseManagerPatientList);

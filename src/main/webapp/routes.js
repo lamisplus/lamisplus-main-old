@@ -7,8 +7,6 @@ import SignIn from "pages/SignPage";
 
 import PrintDispatchedManifest from "pages/PrintManifest";
 
-import { Register } from "pages/Register";
-
 import { history } from "./history";
 import { PrivateRoute } from "./PrivateRoute"
 
@@ -58,12 +56,19 @@ const ViewForm = React.lazy(() => import('components/formBuilder/ViewForm'));
 const PivotTable = React.lazy(() => import('components/PivotTable/PivotTable'));
 const ReactPivot = React.lazy(() => import('components/PivotTable/ReactPivot'));
 const FormPage = React.lazy(() => import('components/Admin/FormPage'));
-const ProgramManagerPage = React.lazy(() => import('components/Admin/ProgramManager/ProgramManager'));
+const NewProgramManager = React.lazy(() => import('components/Admin/NewProgramManager'));
+
+const ProgramManagerSeacrch = React.lazy(() => import('components/Admin/ProgramManagerSeacrch'));
 
 /* Pharmacy page loading */
 const PharmacyDashboard = React.lazy(() => import("./components/Pharmacy/PharmacyDashboard"))
 
+
+const CheckInPatientPage = React.lazy(() => import("components/CheckIn/CheckedInPatientPage"));
+const ViewVitalsPage = React.lazy(() => import("components/Vitals/ViewVitalsPage"));
+
 // const CheckInModal = React.lazy(() => import('components/CheckIn/CheckInModal'));
+
 const EnrolledPatientsDashboard = React.lazy(() => import("components/PatientProfile/HomePage"));
 /* Data Visualisation */
 const TestPageForVisualisation = React.lazy(() => import("pages/TestPageForVisualisation"));
@@ -82,6 +87,11 @@ const Prescription = React.lazy(() => import("components/Pharmacy/Prescriptions"
 
 //Appointment
 const AppointmentPage = React.lazy(() => import("components/Appointments/HomePage"));
+//Case Management
+const CaseManagerPage = React.lazy(() => import("components/Admin/CaseManagers/CaseManagerList"));
+const CaseManagerPatientsPage = React.lazy(() => import("components/Admin/CaseManagers/CaseManagerPatients/CaseManagerPatientList"));
+const CaseManagerPatientsList = React.lazy(() => import("components/Admin/CaseManagers/CaseManagerPatients/ManagePatients"));
+const CaseManagerSwitchPatients = React.lazy(() => import("components/Admin/CaseManagers/CaseManagerPatients/ReAssignPatients"));
 
 //Admin
 const GlobalVariableSearchPage = React.lazy(() => import("components/Admin/GlobalVariable/GlobalVariableSearch"));
@@ -91,11 +101,6 @@ const WardManagerPage = React.lazy(() => import("components/Admin/WardManager/Wa
 
 //Radiology
 const RadiologyTestDetailPage = React.lazy(() => import("components/Laboratory/Radiology/TestDetail"));
-// const getBasename = () => {
-//   return `/${process.env.PUBLIC_URL.split("/").pop()}`;
-// };
-
-// const Prescription = React.lazy(() => import("components/Pharmacy/prescriptions"))
 
 const UsersPage = React.lazy(() => import("components/Users/UserPage"))
 const UserRegistration = React.lazy(() => import("components/Users/UserRegistration"))
@@ -167,23 +172,37 @@ class Routes extends Component {
               <PrivateRoute exact path="/prescriptions" component={Prescription}/>
               <PrivateRoute exact path="/appointment" component={AppointmentPage} />
 
-              {/* <PrivateRoute exact path="/add-vitals" component={AddVitalsPage} /> */}
+              <PrivateRoute exact path="/checkedin-patients" component={CheckInPatientPage}/>
+
+
+              <PrivateRoute exact path="/case-managers" component={CaseManagerPage} />
+              <PrivateRoute exact path="/case-manager" component={CaseManagerPatientsPage} />
+              <PrivateRoute exact path="/patients-managed-case" component={CaseManagerPatientsList} /> 
+              <PrivateRoute exact path="/switch-patients" component={CaseManagerSwitchPatients} /> 
+              
               {/* <PrivateRoute exact path="/checkin-modal" component={CheckInModal} /> */}
+
 
               {/* The rout to Hiv Module */}
               <PrivateRoute
                 exact
                 path="/patient-dashboard"
+
+                component={EnrolledPatientsDashboard}/>
+              <PrivateRoute exact path="/form-dashboard" component={formDashboard} />
+
                 component={EnrolledPatientsDashboard}
               />
+
               <PrivateRoute exact path="/form-builder" component={FormBuilder} />
               <PrivateRoute exact path="/select" component={ReactSelect} />
               <PrivateRoute exact path="/view-form" component={ViewForm} />
               <PrivateRoute exact path="/pivot" component={PivotTable} />
                 <PrivateRoute exact path="/react-pivot" component={ReactPivot} />
                 <PrivateRoute exact path="/form-home" component={FormPage} />
-                <PrivateRoute exact path="/admin/program-manager" component={ProgramManagerPage} />
-              
+                <PrivateRoute exact path="/new-program" component={NewProgramManager} />
+                <PrivateRoute exact path="/admin/program-manager-home" component={ProgramManagerSeacrch}/>
+
                 {/* The rout to that DataTabel */}
               <PrivateRoute exact path="/test-page" component={TestPage} />
               <PrivateRoute exact path="/form-renderer" component={FormRendererPage} />
