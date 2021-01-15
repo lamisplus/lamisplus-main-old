@@ -350,11 +350,16 @@ public class ModuleService {
         File rootFile = new File(moduleRuntimePath.toAbsolutePath().toString());
         File filePath = new File(moduleRuntimePath.toAbsolutePath().toString() +
                 ORG_LAMISPLUS_MODULES_PATH /*+ module.getName().replace(TEMP, "")*/);
+        final Path moduleJarPath = Paths.get(properties.getModulePath(), module.getName()+".jar");
+        //File moduleJarFile = new File(moduleJarPath.toAbsolutePath().toString());
+
+
 
         log.debug("moduleRuntimePath is " + moduleRuntimePath.toString());
 
         if(rootFile != null && rootFile.exists()) {
             try {
+                //ClassPathHacker.addFile(moduleJarFile.getAbsolutePath());
                 ClassPathHacker.addFile(rootFile.getAbsolutePath());
                 List<URL> classURL = showFiles(filePath.listFiles(), rootFile, module.getMain());
                 ClassLoader loader = new URLClassLoader(classURL.toArray(
@@ -624,7 +629,7 @@ public class ModuleService {
         final Path moduleDependencyRuntimePath = Paths.get(properties.getModulePath(), "runtime", externalModule.getName(), "lib");
         File jarFile = new File(moduleJarPath.toString());
         if(jarFile != null && jarFile.exists()){
-            jarFile.delete();
+            //jarFile.delete();
             log.debug(jarFile.getName() + " deleted...");
         }
         if(externalModule.getModuleDependencyByModule() != null && !externalModule.getModuleDependencyByModule().isEmpty() && externalModule.getModuleDependencyByModule().size() < moduleDependencyRuntimePath.toFile().list().length) {

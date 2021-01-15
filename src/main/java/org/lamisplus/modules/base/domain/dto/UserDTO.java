@@ -53,7 +53,7 @@ public class UserDTO {
         this.dateOfBirth = user.getPerson().getDob();
         this.currentOrganisationUnitId = user.getCurrentOrganisationUnitId();
         this.applicationUserOrganisationUnits = user.getApplicationUserOrganisationUnits();
-        currentOrganisationUnitName = user.getOrganisationUnitByCurrentOrganisationUnitId().getName();
+        currentOrganisationUnitName = user.getOrganisationUnitByCurrentOrganisationUnitId() != null ? user.getOrganisationUnitByCurrentOrganisationUnitId().getName() : null;
     }
 
 

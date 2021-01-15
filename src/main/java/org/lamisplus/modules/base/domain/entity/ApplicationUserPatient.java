@@ -1,55 +1,46 @@
 package org.lamisplus.modules.base.domain.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Data
+@EqualsAndHashCode
+
 @Table(name = "application_user_patient")
 public class ApplicationUserPatient {
-    private Long id;
-    private User applicationUserByApplicationUserId;
-    private Patient patientByPatientId;
 
     @Id
     @Column(name = "id")
-    public Long getId() {
-        return id;
-    }
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Basic
+    @Column(name = "application_user_id")
+    private Long userId;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ApplicationUserPatient that = (ApplicationUserPatient) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+    @Basic
+    @Column(name = "patient_id")
+    private Long patientId;
 
     @ManyToOne
-    @JoinColumn(name = "application_user_id", referencedColumnName = "id", nullable = false)
-    public User getApplicationUserByApplicationUserId() {
-        return applicationUserByApplicationUserId;
-    }
-
-    public void setApplicationUserByApplicationUserId(User applicationUserByApplicationUserId) {
-        this.applicationUserByApplicationUserId = applicationUserByApplicationUserId;
-    }
+    @JoinColumn(name = "application_user_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private User applicationUserByApplicationUserId;
 
     @ManyToOne
-    @JoinColumn(name = "patient_id", referencedColumnName = "id", nullable = false)
-    public Patient getPatientByPatientId() {
-        return patientByPatientId;
-    }
+    @JoinColumn(name = "patient_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private Patient patientByPatientId;
 
-    public void setPatientByPatientId(Patient patientByPatientId) {
-        this.patientByPatientId = patientByPatientId;
+    @ManyToOne
+    @JoinColumn(name = "organisation_unit_id", referencedColumnName = "id")
+    public OrganisationUnit organisationUnitByOrganisationUnitId;
+
+    public ApplicationUserPatient(Long userId, Long patientId){
+        this.userId = userId;
+        this.patientId = patientId;
     }
 }
