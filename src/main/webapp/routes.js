@@ -64,8 +64,8 @@ const ProgramManagerSeacrch = React.lazy(() => import('components/Admin/ProgramM
 const PharmacyDashboard = React.lazy(() => import("./components/Pharmacy/PharmacyDashboard"))
 
 
-const CheckInPatientPage = React.lazy(() => import("components/CheckIn/CheckedInPatientPage"));
-const ViewVitalsPage = React.lazy(() => import("components/Vitals/ViewVitalsPage"));
+// const CheckInPatientPage = React.lazy(() => import("components/CheckIn/CheckedInPatientPage"));
+// const ViewVitalsPage = React.lazy(() => import("components/Vitals/ViewVitalsPage"));
 
 // const CheckInModal = React.lazy(() => import('components/CheckIn/CheckInModal'));
 
@@ -172,7 +172,7 @@ class Routes extends Component {
               <PrivateRoute exact path="/prescriptions" component={Prescription}/>
               <PrivateRoute exact path="/appointment" component={AppointmentPage} />
 
-              <PrivateRoute exact path="/checkedin-patients" component={CheckInPatientPage}/>
+              {/*<PrivateRoute exact path="/checkedin-patients" component={CheckInPatientPage}/>*/}
 
 
               <PrivateRoute exact path="/case-managers" component={CaseManagerPage} />
@@ -189,10 +189,10 @@ class Routes extends Component {
                 path="/patient-dashboard"
 
                 component={EnrolledPatientsDashboard}/>
-              <PrivateRoute exact path="/form-dashboard" component={formDashboard} />
+              {/*<PrivateRoute exact path="/form-dashboard" component={formDashboard} />*/}
 
-                component={EnrolledPatientsDashboard}
-              />
+              {/*  component={EnrolledPatientsDashboard}*/}
+              {/*/>*/}
 
               <PrivateRoute exact path="/form-builder" component={FormBuilder} />
               <PrivateRoute exact path="/select" component={ReactSelect} />
