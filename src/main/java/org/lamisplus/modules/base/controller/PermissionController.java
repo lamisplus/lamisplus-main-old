@@ -16,7 +16,7 @@ public class PermissionController {
     private final PermissionRepository permissionRepository;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('user_write')")
+    @PreAuthorize("hasAuthority('user_read')")
     public ResponseEntity<List<Permission>> getAll() {
         return ResponseEntity.ok(this.permissionRepository.findAll());
     }
