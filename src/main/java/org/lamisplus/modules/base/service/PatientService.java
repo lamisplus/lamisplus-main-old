@@ -486,7 +486,7 @@ public class PatientService {
         return  userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
     }
 
-    private List<PatientDTO> getPatients(List<Patient> patients){
+    public List<PatientDTO> getPatients(List<Patient> patients){
         List<PatientDTO> patientDTOs = new ArrayList<>();
         patients.forEach(patient -> {
             Person person = patient.getPersonByPersonId();

@@ -30,6 +30,7 @@ public class OrganisationUnitService {
 
     public OrganisationUnit save(OrganisationUnitDTO organisationUnitDTO) {
         Optional<OrganisationUnit> organizationOptional = organisationUnitRepository.findByNameAndParentOrganisationUnitIdAndArchived(organisationUnitDTO.getName(), organisationUnitDTO.getId(), UNARCHIVED);
+
         if(organizationOptional.isPresent())throw new RecordExistException(OrganisationUnit.class, "Name", organisationUnitDTO.getName() +"");
         final OrganisationUnit organisationUnit = organisationUnitMapper.toOrganisationUnit(organisationUnitDTO);
         OrganisationUnit organisationUnit1 = organisationUnitRepository.save(organisationUnit);
@@ -38,9 +39,7 @@ public class OrganisationUnitService {
         OrganisationUnit returnOrgUnit = organisationUnit1;
 
         for(int i=1; i < level; i++){
-/*            organisationUnitHierarchy.setOrganisationUnitId(organisationUnit1.getId());
-            organisationUnitHierarchy.setParentOrganisationUnitId(organisationUnit1.getParentOrganisationUnitId());
-            organisationUnitHierarchy.setOrganisationUnitLevelId(level);*/
+
             organisationUnitHierarchies.add(new OrganisationUnitHierarchy(null, returnOrgUnit.getId(), organisationUnit1.getParentOrganisationUnitId(),
                     level, null, null, null));
 
