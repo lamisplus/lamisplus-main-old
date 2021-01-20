@@ -62,7 +62,7 @@ public class ApplicationCodesetService {
 
     public List<ApplicationCodesetDTO> getApplicationCodeByCodesetGroup(String codeSetGroup){
         List<ApplicationCodesetDTO> applicationCodesetDTOS = new ArrayList<>();
-        List<ApplicationCodeset> applicationCodesetList = applicationCodesetRepository.findAllByCodesetGroupOrderByIdAsc(codeSetGroup);
+        List<ApplicationCodeset> applicationCodesetList = applicationCodesetRepository.findAllByCodesetGroupAndArchivedOrderByIdAsc(codeSetGroup, UN_ARCHIVED);
         applicationCodesetList.forEach(applicationCodeset->{
             if(applicationCodeset.getArchived() == 1){return;}
             final ApplicationCodesetDTO applicationCodesetDTO = applicationCodesetMapper.toApplicationCodesetDTO(applicationCodeset);
@@ -72,13 +72,13 @@ public class ApplicationCodesetService {
     }
 
     public ApplicationCodesetDTO getApplicationCodeset(Long id){
-        Optional<ApplicationCodeset> applicationCodeset = applicationCodesetRepository.findByIdAndAndArchived(id, UN_ARCHIVED);
+        Optional<ApplicationCodeset> applicationCodeset = applicationCodesetRepository.findByIdAndArchived(id, UN_ARCHIVED);
         if(!applicationCodeset.isPresent()) throw new EntityNotFoundException(ApplicationCodeset.class,"Display:",id+"");
         return  applicationCodesetMapper.toApplicationCodesetDTO(applicationCodeset.get());
     }
 
     public ApplicationCodeset update(Long id, ApplicationCodesetDTO applicationCodesetDTO){
-        Optional<ApplicationCodeset> applicationCodesetOptional = applicationCodesetRepository.findByIdAndAndArchived(id, UN_ARCHIVED);
+        Optional<ApplicationCodeset> applicationCodesetOptional = applicationCodesetRepository.findByIdAndArchived(id, UN_ARCHIVED);
         if(!applicationCodesetOptional.isPresent()) {
             throw new EntityNotFoundException(ApplicationCodeset.class,"Display:",id+"");
         }
@@ -91,7 +91,7 @@ public class ApplicationCodesetService {
     }
 
     public Integer delete(Long id){
-        Optional<ApplicationCodeset> applicationCodesetOptional = applicationCodesetRepository.findByIdAndAndArchived(id, UN_ARCHIVED);
+        Optional<ApplicationCodeset> applicationCodesetOptional = applicationCodesetRepository.findByIdAndArchived(id, UN_ARCHIVED);
         if(!applicationCodesetOptional.isPresent()) throw new EntityNotFoundException(ApplicationCodeset.class,"Display:",id+"");
         applicationCodesetOptional.get().setArchived(ARCHIVED);
         applicationCodesetOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());

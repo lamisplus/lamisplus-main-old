@@ -74,6 +74,8 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
     //Optional<Encounter> findByPatientIdAndProgramCodeAndFormCodeAndVisitId(Long patientId, String ProgramCode, String FormCode, Long visitId);
 
 
-    //List<Encounter> findAllByFormCode(String formCode);
+    //List<Encounter> findAllByFormCode(String formCode);\
+
+    List<Encounter> findAllByOrganisationUnitIdAndArchived(Long organisationUnitId, int archived);
 }
 
