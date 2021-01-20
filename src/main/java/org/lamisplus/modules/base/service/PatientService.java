@@ -57,6 +57,7 @@ public class PatientService {
     private final EncounterMapper encounterMapper;
     private final VisitMapper visitMapper;
     private final UserService userService;
+    private final AppointmentService appointmentService;
     private final ProgramRepository programRepository;
     private final Integer archived = 1;
     private final FormRepository formRepository;
@@ -201,7 +202,9 @@ public class PatientService {
 
 
     public List getEncountersByPatientIdAndDateEncounter(Long patientId, String formCode, Optional<String> dateStart, Optional<String> dateEnd) {
-        accessRight.grantAccessByAccessType(formCode, Patient.class, "read");
+        Set<String> permissions = accessRight.getAllPermission();
+
+        accessRight.grantAccessByAccessType(formCode, Patient.class, "read", permissions);
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
 
         Specification<Encounter> specification = new GenericSpecification<Encounter>().findAllEncountersByPatientIdAndDateEncounter(patientId, formCode, dateStart, dateEnd, organisationUnitId);
@@ -214,8 +217,10 @@ public class PatientService {
     public List getAllEncountersByPatientId(Long patientId) {
         List<Encounter> encounters = getEncounterByPatientIdDesc(patientId);
         List<Object> formDataList = new ArrayList<>();
-            encounters.forEach(encounter -> {
-                if(!accessRight.grantAccessForm(encounter.getFormCode())){
+        Set<String> permissions = accessRight.getAllPermission();
+
+        encounters.forEach(encounter -> {
+                if(!accessRight.grantAccessForm(encounter.getFormCode(), permissions)){
                     return;
                 }
                 encounter.getFormDataByEncounter().forEach(formData1 -> {
@@ -226,7 +231,9 @@ public class PatientService {
     }
 
     public List getEncountersByPatientIdAndFormCode(Pageable pageable, Long patientId, String formCode, String sortField, String sortOrder, Integer limit) {
-        accessRight.grantAccessByAccessType(formCode, Patient.class, "read");
+        Set<String> permissions = accessRight.getAllPermission();
+
+        accessRight.grantAccessByAccessType(formCode, Patient.class, "read", permissions);
         Pageable pageableSorter = createPageRequest(pageable, sortField, sortOrder, limit);
         List<Encounter> encountersList = this.encounterRepository.findAllByPatientIdAndFormCodeAndOrganisationUnitId(patientId,formCode, getOrganisationUnitId(),pageableSorter);
         return this.getFormData(encountersList, null);
@@ -236,12 +243,15 @@ public class PatientService {
     public List getEncountersByPatientIdAndProgramCodeExclusionList(Long patientId, List<String> programCodeExclusionList) {
         List<Encounter> encounters = getEncounterByPatientIdDesc(patientId);
         List<EncounterDTO> encounterDTOS = new ArrayList<>();
+        Set<String> permissions = accessRight.getAllPermission();
 
-            if (programCodeExclusionList != null && programCodeExclusionList.size() > 0)
+
+        if (programCodeExclusionList != null && programCodeExclusionList.size() > 0)
                 programCodeExclusionList.forEach(programCode -> {
+
                     //log.info("Exclusion list is" + programCode);
                     encounters.forEach(singleEncounter -> {
-                        if(!accessRight.grantAccessForm(singleEncounter.getFormCode())){
+                        if(!accessRight.grantAccessForm(singleEncounter.getFormCode(), permissions)){
                             return;
                         }
                         if (singleEncounter.getProgramCode().equals(programCode)) return;
@@ -294,7 +304,9 @@ public class PatientService {
         visitList.forEach(visit -> {
             Patient patient = visit.getPatientByVisit();
             Person person = patient.getPersonByPersonId();
+            List<AppointmentDTO> appointmentDTOS = appointmentService.getOpenAllAppointmentByPatientId(patient.getId());
             final VisitDTO visitDTO = visitMapper.toVisitDTO(visit, person);
+            visitDTO.setAppointmentDTOList(appointmentDTOS);
             visitDTOS.add(visitDTO);
         });
 
