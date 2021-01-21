@@ -42,9 +42,8 @@ public class AppointmentService {
         appointments.forEach(appointment -> {
             Patient patient = appointment.getPatientByPatientId();
             Person person = patient.getPersonByPersonId();
-            PersonContact personContact = person.getPersonContactsByPerson();
 
-            final AppointmentDTO appointmentDTO = appointmentMapper.toAppointmentDTO(appointment, person, personContact);
+            final AppointmentDTO appointmentDTO = appointmentMapper.toAppointmentDTO(appointment, person, patient);
 
             appointmentDTOS.add(appointmentDTO);
         });
@@ -100,9 +99,8 @@ public class AppointmentService {
     private AppointmentDTO getAppointmentDTO(Appointment appointment){
         Patient patient = appointment.getPatientByPatientId();
         Person person = patient.getPersonByPersonId();
-        PersonContact personContact = person.getPersonContactsByPerson();
 
-        return  appointmentMapper.toAppointmentDTO(appointment, person, personContact);
+        return  appointmentMapper.toAppointmentDTO(appointment, person, patient);
     }
 
 }

@@ -49,18 +49,6 @@ public class FormService {
         return getForms(forms, permissions);
     }
 
-
-/*
-    public List<Form> getAllForms() {
-       List<Form> forms = this.formRepository.findAll();
-        forms.forEach(form -> {
-            Optional<Program>  program = this.programRepository.findProgramByUuid(form.getProgramCode());
-            program.ifPresent(value -> form.setProgramName(value.getName()));
-        });
-        return forms;
-    }
-*/
-
     public Form save(FormDTO formDTO) {
         formDTO.setCode(UuidGenerator.getUuid());
         List<Permission> permissions = new ArrayList<>();
@@ -72,25 +60,21 @@ public class FormService {
         form.setArchived(UN_ARCHIVED);
         form.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         String read = "_read"; String write = "_write"; String delete = "_delete";
-        String nameRead = formDTO.getCode()+read;
-        String nameWrite = formDTO.getCode()+write;
-        String nameDelete = formDTO.getCode()+delete;
 
-        permissions.add(new Permission(nameRead, formDTO.getName() + read));
+        permissions.add(new Permission(formDTO.getCode()+read, formDTO.getName() + read));
 
-        permissions.add(new Permission(nameWrite, formDTO.getName() + write));
+        permissions.add(new Permission(formDTO.getCode()+write, formDTO.getName() + write));
 
-        permissions.add(new Permission(nameDelete, formDTO.getName() + delete));
+        permissions.add(new Permission(formDTO.getCode()+delete, formDTO.getName() + delete));
         permissionRepository.saveAll(permissions);
 
         return formRepository.save(form);
     }
 
     public Form getForm(Long id) {
-        Optional<Form> formOptional = this.formRepository.findById(id);
-        if(!formOptional.isPresent() || formOptional.get().getArchived() == 1) {
-            throw new EntityNotFoundException(Form.class, "Id", id+"");
-        }
+        Optional<Form> formOptional = this.formRepository.findByIdAndArchived(id, UN_ARCHIVED);
+        if(!formOptional.isPresent()) throw new EntityNotFoundException(Form.class, "Id", id+"");
+
         Set<String> permissions = accessRight.getAllPermission();
 
         accessRight.grantAccess(formOptional.get().getCode(), FormService.class, permissions);
@@ -102,7 +86,7 @@ public class FormService {
         Set<String> permissions = accessRight.getAllPermission();
 
         accessRight.grantAccess(formCode, FormService.class, permissions);
-        Optional<Form> formOptional = formRepository.findByCode(formCode);
+        Optional<Form> formOptional = formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED);
         if(!formOptional.isPresent() || formOptional.get().getArchived() == 1) {
             throw new EntityNotFoundException(Form.class, "Form Code", formCode);
         }
@@ -119,7 +103,7 @@ public class FormService {
     private List getForms(List<Form> forms, Set<String> permissions){
         List<FormDTO> formList = new ArrayList<>();
         forms.forEach(form -> {
-            if(accessRight.grantAccessForm(form.getCode(), permissions) == null){
+            if(!accessRight.grantAccessForm(form.getCode(), permissions)){
                 return;
             }
             final FormDTO formDTO = formMapper.toForm(form);
@@ -135,9 +119,9 @@ public class FormService {
         Set<String> permissions = accessRight.getAllPermission();
 
         accessRight.grantAccessByAccessType(formDTO.getCode(), FormService.class, "write", permissions);
-        Optional<Form> formOptional = formRepository.findById(id);
+        Optional<Form> formOptional = formRepository.findByIdAndArchived(id, UN_ARCHIVED);
         log.info("form optional  is" + formOptional.get());
-        if(!formOptional.isPresent() || formOptional.get().getArchived() == ARCHIVED)throw new EntityNotFoundException(Form.class, "Id", id +"");
+        if(!formOptional.isPresent())throw new EntityNotFoundException(Form.class, "Id", id +"");
 
         Form form = formMapper.toFormDTO(formDTO);
         form.setId(id);
@@ -146,8 +130,8 @@ public class FormService {
     }
 
     public Integer delete(Long id) {
-        Optional<Form> formOptional = formRepository.findById(id);
-        if(!formOptional.isPresent() || formOptional.get().getArchived() == ARCHIVED)throw new EntityNotFoundException(Form.class, "Id", id +"");
+        Optional<Form> formOptional = formRepository.findByIdAndArchived(id, UN_ARCHIVED);
+        if(!formOptional.isPresent())throw new EntityNotFoundException(Form.class, "Id", id +"");
         Set<String> permissions = accessRight.getAllPermission();
 
         accessRight.grantAccessByAccessType(formOptional.get().getCode(), FormService.class, "delete", permissions);
@@ -156,24 +140,4 @@ public class FormService {
         formOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return formOptional.get().getArchived();
     }
-
-    /*public Program getProgramByProgramCode(Long id) {
-        Optional<Form> formOptional = formRepository.findById(id);
-        if(!formOptional.isPresent())throw new EntityNotFoundException(Form.class, "Id", id +"");
-        Program program = formOptional.get().getProgramByProgramCode();
-        return program;
-    }*/
-
-
-    /*
-
-    public FormDTO getFormByFormIdAndProgramCode(Long Id, String programCode) {
-        Optional<Form> formOptional= this.formRepository.findByIdAndProgramCode(Id, programCode);
-        if(!formOptional.isPresent() || formOptional.get().getArchived() == 1) throw new EntityNotFoundException(Form.class, "Program Code", programCode);
-        FormDTO formDTO = formMapper.toForm(formOptional.get());
-        log.info("FormDTO - " + formDTO);
-        return formDTO;
-    }
-*/
-
 }

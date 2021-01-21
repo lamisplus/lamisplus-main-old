@@ -432,7 +432,7 @@ public class PatientService {
             });
 
             formCodeSet.forEach(formCode ->{
-                forms.add(formRepository.findByCode(formCode).get());
+                forms.add(formRepository.findByCodeAndArchived(formCode, UNARCHIVED).get());
             });
 
         }else {
@@ -449,7 +449,7 @@ public class PatientService {
         List<Form> forms = new ArrayList<>();
         //Check for filled forms by the patient in that program
         encounterRepository.findDistinctPatientIdAndProgramCodeAndOrganisationUnitIdAndArchived(patientId, programCode, getOrganisationUnitId(), UNARCHIVED).forEach(encounterDistinctDTO -> {
-            forms.add(formRepository.findByCode(encounterDistinctDTO.getFormCode()).get());
+            forms.add(formRepository.findByCodeAndArchived(encounterDistinctDTO.getFormCode(), UNARCHIVED).get());
         });
         return forms;
     }
