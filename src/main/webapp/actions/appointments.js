@@ -5,8 +5,9 @@ import * as ACTION_TYPES from "./types";
 
 
 export const fetchAllAppointments = (onSuccess , onError) => dispatch => {
+    //.get(`${url}encounters/${APPOINTMENT_FORM}/{dateStart}/{dateEnd}`)
     axios
-      .get(`${url}encounters/${APPOINTMENT_FORM}/{dateStart}/{dateEnd}`)
+      .get(`${url}appointments`)
       .then(response => {
         dispatch({
           type: ACTION_TYPES.APPOINTMENTS_FETCH_ALL,

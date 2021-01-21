@@ -17,6 +17,8 @@ import { fetchAllAppointments } from "actions/appointments";
 import FormRendererModal from "components/FormManager/FormRendererModal";
 import * as CODES from "api/codes";
 import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
+import {url as baseUrl} from "../../api";
 
 //Dtate Picker package
 Moment.locale("en");
@@ -66,6 +68,8 @@ function HomePage(props) {
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [currentPatientId, setCurrentPatientId] = useState(null);
+  const [currentApptId, setCurrentApptId] = useState(null);
   const fetchAppointments = () => {
     setLoading(true);
     const onSuccess = () => {
@@ -97,15 +101,18 @@ function HomePage(props) {
     setShowCurrentForm(false);
   };
 
-  const editAppointment = (patientId, visitId, encounterId) => {
+  const editAppointment = (patientId, id, formData) => {
+    setCurrentPatientId(patientId);
+    setCurrentApptId(id);
+    console.log(formData);
     setCurrentForm({
       code: CODES.APPOINTMENT_FORM,
       programCode: CODES.GENERAL_SERVICE,
       formName: "PATIENT APPOINTMENT",
       patientId: patientId,
-      visitId: visitId,
-      encounterId: encounterId,
+      submission: {data : formData},
       type: "EDIT",
+      onSubmit: updateAppointment,
       options: {
         modalSize: "modal-lg",
       },
@@ -113,21 +120,39 @@ function HomePage(props) {
     setShowCurrentForm(true);
   };
 
-  const viewAppointment = (patientId, visitId, encounterId) => {
+  const viewAppointment = (patientId, id, formData) => {
+    console.log(formData);
     setCurrentForm({
       code: CODES.APPOINTMENT_FORM,
       programCode: CODES.GENERAL_SERVICE,
       formName: "PATIENT APPOINTMENT",
       patientId: patientId,
-      visitId: visitId,
-      encounterId: encounterId,
       type: "VIEW",
+      submission: {data : formData},
       options: {
         modalSize: "modal-lg",
       },
     });
     setShowCurrentForm(true);
   };
+
+  const updateAppointment = (submission) => {
+    const data = {
+      patientId: currentPatientId,
+      detail: submission.data
+    }
+
+    axios
+        .put(`${baseUrl}appointments/${currentApptId}`, data)
+        .then(response => {
+          onSuccess();
+        })
+        .catch(error => {
+              onError();
+            }
+
+        );
+  }
   return (
     <React.Fragment>
       <AppBar position="static">

@@ -85,14 +85,17 @@ function Header() {
   }
 
   async function fetchMe() {
-    axios
-        .get(`${baseUrl}account`)
-        .then((response) => {
-          setUser(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    if( authentication.currentUserValue != null ) {
+      axios
+          .get(`${baseUrl}account`)
+          .then((response) => {
+            setUser(response.data);
+          })
+          .catch((error) => {
+            authentication.logout();
+            console.log(error);
+          });
+    }
   }
 
   async function switchFacility (facility) {

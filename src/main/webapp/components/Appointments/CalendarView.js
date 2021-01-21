@@ -10,19 +10,19 @@ const localizer = momentLocalizer(moment);
 function CalendarViewPage(props){
 
     const eventList = props.appointments.map((row) => ({
-        id: row.encounterId,
-        title:  row.firstName + " "+ row.lastName +" ("+row.hospitalNumber+") - " + (row.formDataObj[0].data.service ? row.formDataObj[0].data.service.name : '') + ' - '+ (row.formDataObj[0].data.service_provider || ''),
-        start: row.formDataObj[0].data.appointment_date ? moment(row.formDataObj[0].data.appointment_date.substring(0, 10)).add(moment.duration(row.formDataObj[0].data.appointment_time)).toDate() : "",
-        end: row.formDataObj[0].data.appointment_date ? moment(row.formDataObj[0].data.appointment_date.substring(0, 10)).add(moment.duration(row.formDataObj[0].data.appointment_time)).toDate() : "",
+        id: row.id,
+        title:  row.firstName + " "+ row.lastName +" ("+row.hospitalNumber+") - " + (row.detail.service ? row.detail.service.name : '') + ' - '+ (row.detail.service_provider || ''),
+        start: row.detail.appointment_date ? moment(row.detail.appointment_date.substring(0, 10)).add(moment.duration(row.detail.appointment_time)).toDate() : "",
+        end: row.detail.appointment_date ? moment(row.detail.appointment_date.substring(0, 10)).add(moment.duration(row.detail.appointment_time)).toDate() : "",
         extendedProps: row
     }));
     console.log(eventList);
     const handleDateClick = (arg) => { // bind with an arrow function
-        console.log(arg)
+        //console.log(arg)
         //setCalendarViewType("listWeek");
       }
       const handleEventClick = (item) => { // bind with an arrow function
-        console.log(item)
+        //console.log(item)
         //setCalendarViewType("listWeek");
       }
     return (
@@ -37,13 +37,13 @@ function CalendarViewPage(props){
                 endAccessor="end"
                 onSelectEvent={event =>  props.viewAppointment(
                     event.extendedProps.patientId,
-                    event.extendedProps.visitId,
-                    event.extendedProps.encounterId
+                    event.extendedProps.id,
+                    event.extendedProps.detail
                 )}
                 onDoubleClickEvent={event => props.editAppointment(
                     event.extendedProps.patientId,
-                    event.extendedProps.visitId,
-                    event.extendedProps.encounterId
+                    event.extendedProps.id,
+                    event.extendedProps.detail
                 )}
                popup
                messages={{
