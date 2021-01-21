@@ -57,6 +57,7 @@ function NewAppointmentPage(props) {
                   programCode:CODES.GENERAL_SERVICE,
                   formName:"PATIENT APPOINTMENT",
                   patientId: props.data.patientId,
+                    patientHospitalNumber: props.data.hospitalNumber,
                   visitId: props.data.visitId,
                     onSubmit: saveAppointment,
                   options:{
