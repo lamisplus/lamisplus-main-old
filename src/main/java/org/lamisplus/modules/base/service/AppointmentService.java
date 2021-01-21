@@ -7,6 +7,9 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.AppointmentDTO;
 import org.lamisplus.modules.base.domain.entity.Appointment;
+import org.lamisplus.modules.base.domain.entity.Patient;
+import org.lamisplus.modules.base.domain.entity.Person;
+import org.lamisplus.modules.base.domain.entity.PersonContact;
 import org.lamisplus.modules.base.domain.mapper.AppointmentMapper;
 import org.lamisplus.modules.base.repository.AppointmentRepository;
 import org.lamisplus.modules.base.util.GenericSpecification;
@@ -37,7 +40,12 @@ public class AppointmentService {
 
         List<AppointmentDTO> appointmentDTOS = new ArrayList<>();
         appointments.forEach(appointment -> {
-            final AppointmentDTO appointmentDTO = appointmentMapper.toAppointmentDTO(appointment);
+            Patient patient = appointment.getPatientByPatientId();
+            Person person = patient.getPersonByPersonId();
+            PersonContact personContact = person.getPersonContactsByPerson();
+
+            final AppointmentDTO appointmentDTO = appointmentMapper.toAppointmentDTO(appointment, person, personContact);
+
             appointmentDTOS.add(appointmentDTO);
         });
         return appointmentDTOS;
@@ -54,16 +62,17 @@ public class AppointmentService {
         List<AppointmentDTO> appointmentDTOS = new ArrayList<>();
         List<Appointment> appointmentList = appointmentRepository.findAllByPatientIdAndArchivedAndVisitId(patientId, UN_ARCHIVED, null);
         appointmentList.forEach(appointment -> {
-            final AppointmentDTO appointmentDTO = appointmentMapper.toAppointmentDTO(appointment);
-            appointmentDTOS.add(appointmentDTO);
+            appointmentDTOS.add(getAppointmentDTO(appointment));
         });
         return appointmentDTOS;
     }
 
     public AppointmentDTO getAppointment(Long id) {
-        Optional<Appointment> appointment = appointmentRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if (!appointment.isPresent()) throw new EntityNotFoundException(Appointment.class, "Display:", id + "");
-        return appointmentMapper.toAppointmentDTO(appointment.get());
+        Optional<Appointment> optionalAppointment = appointmentRepository.findByIdAndArchived(id, UN_ARCHIVED);
+        if (!optionalAppointment.isPresent()) throw new EntityNotFoundException(Appointment.class, "Display:", id + "");
+        Appointment appointment = optionalAppointment.get();
+
+        return getAppointmentDTO(appointment);
     }
 
     public Appointment update(Long id, AppointmentDTO appointmentDTO) {
@@ -86,6 +95,14 @@ public class AppointmentService {
         appointmentOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
 
         return appointmentOptional.get().getArchived();
+    }
+
+    private AppointmentDTO getAppointmentDTO(Appointment appointment){
+        Patient patient = appointment.getPatientByPatientId();
+        Person person = patient.getPersonByPersonId();
+        PersonContact personContact = person.getPersonContactsByPerson();
+
+        return  appointmentMapper.toAppointmentDTO(appointment, person, personContact);
     }
 
 }
