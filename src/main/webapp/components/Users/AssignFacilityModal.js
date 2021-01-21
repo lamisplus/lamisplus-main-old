@@ -234,6 +234,7 @@ const AssignFacilityModal = (props) => {
                                         <FormGroup>
                                             <Label for="Facility">Assign Facilities</Label>
                                             <DualListBox
+                                                canFilter
                                                 options={facilities}
                                                 onChange={onFacilitySelect}
                                                 selected={selectedFacilities}
