@@ -2,6 +2,8 @@ package org.lamisplus.modules.base.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Data
@@ -12,6 +14,7 @@ public class AppointmentDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss")
     private Timestamp date;
 
+    @NotNull(message = "patientId")
     private Long patientId;
 
     private Long visitId;
@@ -20,5 +23,5 @@ public class AppointmentDTO {
 
     private String firstName;
     private String lastName;
-    private String mobilePhoneNumber;
+    private String hospitalNumber;
 }

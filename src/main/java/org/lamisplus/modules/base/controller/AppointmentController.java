@@ -28,7 +28,6 @@ public class AppointmentController {
         return ResponseEntity.ok(this.appointmentService.getOpenAllAppointmentByPatientId(patientId));
     }
 
-
     @PostMapping
     public ResponseEntity<Appointment> save(@RequestBody AppointmentDTO appointmentDTO) {
         return ResponseEntity.ok(this.appointmentService.save(appointmentDTO));
