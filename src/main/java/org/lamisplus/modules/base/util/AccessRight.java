@@ -48,15 +48,19 @@ public class AccessRight {
     public void grantAccessByAccessType(String formCode, Class clz, String accessType, Set<String> permissions){
         HashMap<String, Boolean> accessWrite = new HashMap<>();
         accessType = accessType.toLowerCase();
-            permissions.forEach(permission->{
-                if(permission.contains(formCode+"_write")){
-                    accessWrite.put("write", true);
-                }else if(permission.contains(formCode+"_read")){
-                    accessWrite.put("read", true);
-                } else if(permission.contains(formCode+"_delete")){
-                    accessWrite.put("delete", true);
-                }
-            });
+        //permissions.contains()
+        for (String permission : permissions) {
+            if (permission.contains(formCode + "_write")) {
+                accessWrite.put("write", true);
+                break;
+            } else if (permission.contains(formCode + "_read")) {
+                accessWrite.put("read", true);
+                break;
+            } else if (permission.contains(formCode + "_delete")) {
+                accessWrite.put("delete", true);
+                break;
+            }
+        }
         if(accessWrite.isEmpty() || !accessWrite.get(accessType)){
             throw new AccessDeniedException(clz, "formCode",formCode+", "+accessType+" = "+ accessWrite.get(accessType));
         }

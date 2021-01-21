@@ -17,4 +17,8 @@ public class AppointmentDTO {
     private Long visitId;
 
     private Object detail;
+
+    private String firstName;
+    private String lastName;
+    private String mobilePhoneNumber;
 }
