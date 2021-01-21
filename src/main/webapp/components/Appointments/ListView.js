@@ -69,13 +69,14 @@ function ListViewPage(props) {
           name: row.firstName + " " + row.lastName,
           id: row.hospitalNumber,
           phoneNumber: row.phoneNumber,
-          service: row.formDataObj[0].data.service && row.formDataObj[0].data.service.name ? row.formDataObj[0].data.service.name : '',
-            serviceProvider: row.formDataObj[0].data.service_provider || '',
-          appointmentDate: row.formDataObj[0].data.appointment_date ,
-          appointmentTime: row.formDataObj[0].data.appointment_time ,
+          service: row.detail.service && row.detail.service.name ? row.detail.service.name : '',
+            serviceProvider: row.detail.service_provider || '',
+          appointmentDate: row.detail.appointment_date ,
+          appointmentTime: row.detail.appointment_time ,
           patientId: row.patientId,
           visitId: row.visitId,
-          encounterId: row.encounterId,
+          appointmentId: row.id,
+            detail: row.detail
         }))}
         actions={[
           {
@@ -85,8 +86,8 @@ function ListViewPage(props) {
             onClick: (event, rowData) =>
               props.viewAppointment(
                 rowData.patientId,
-                rowData.visitId,
-                rowData.encounterId
+                rowData.appointmentId,
+                rowData.detail
               ),
           },
           {
@@ -96,8 +97,8 @@ function ListViewPage(props) {
             onClick: (event, rowData) =>
                 props.editAppointment(
                     rowData.patientId,
-                    rowData.visitId,
-                    rowData.encounterId
+                    rowData.appointmentId,
+                    rowData.detail
                 ),
           },
         ]}

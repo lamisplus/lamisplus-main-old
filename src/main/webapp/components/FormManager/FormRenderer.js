@@ -13,6 +13,8 @@ import axios from "axios";
 import { formRendererService } from "_services/form-renderer";
 import { authHeader } from '_helpers/auth-header';
 import _ from 'lodash';
+import {fetchByHospitalNumber} from "actions/patients";
+
 
 Moment.locale("en");
 momentLocalizer();
@@ -80,6 +82,14 @@ const FormRenderer = (props) => {
   ;
       
   }
+
+  //fetch patient by patient id if patient is not in the props object
+  React.useEffect(() => {
+    if( (props.patient && props.patient.hospitalNumber !== props.patientId) || (!props.patient.hospitalNumber) ){
+      props.fetchPatientByHospitalNumber(props.patientId);
+    }
+
+  }, [props.patientId]);
 
   // Submit form to server
   const submitForm = (submission) => {
@@ -165,6 +175,7 @@ const FormRenderer = (props) => {
             <h4 class="text-capitalize">
               {"New: "}
               {props.title || (form && form.name ? form.name : '')}
+
             </h4>
             <hr />
             </>
@@ -173,7 +184,8 @@ const FormRenderer = (props) => {
             <Alert color="danger" isOpen={showErrorMsg} toggle={onDismiss}>
               {errorMsg}
             </Alert>
-
+            {JSON.stringify(submission)}
+            nzsk
             <Form
               form={form.resourceObject}
               submission={submission}
@@ -209,6 +221,7 @@ const mapStateToProps = (state = { form: {} }) => {
 const mapActionToProps = {
   fetchForm: actions.fetchById,
   saveEncounter: actions.saveEncounter,
+  fetchPatientByHospitalNumber: fetchByHospitalNumber
 };
 
 export default connect(mapStateToProps, mapActionToProps)(FormRenderer);

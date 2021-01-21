@@ -21,11 +21,11 @@ const FormRenderer = props => {
   const [showErrorMsg, setShowErrorMsg] = React.useState(false)
   const [showLoading, setShowLoading] = React.useState(false)
   const [showLoadingEncounter, setShowLoadingEncounter] = React.useState(false)
-  const [submission, setSubmission] = React.useState({...props.submission, ...{ data: { patient: props.patient, baseUrl: url }}})
+  const [submission, setSubmission] = React.useState(_.merge(props.submission, { data: { patient: props.patient, baseUrl: url }}))
   const [showLoadingForm, setShowLoadingForm] = React.useState(true)
   const onDismiss = () => setShowErrorMsg(false)
   const options = {}
- 
+
   //extract the formData as an obj (if form data length is one) or an array
   const extractFormData = (formData) => {
     if(!formData){
@@ -57,6 +57,15 @@ const FormRenderer = props => {
 
   //fetch encounter by encounter id
   React.useEffect(() => {
+      if(!props.encounterId){
+          // if encounterId does not exist then the form data object was passed as a submission, if not throw an error
+          if(!props.submission){
+              setErrorMsg("No encounter information passed");
+              setShowErrorMsg(true);
+          }
+          return;
+      }
+
     setShowLoadingEncounter(true);
     formRendererService
       .fetchEncounterById(props.encounterId)
@@ -67,7 +76,7 @@ const FormRenderer = props => {
           setErrorMsg("Could not load encounter information");
           setShowErrorMsg(true);
         }
-        setSubmission({ data: extractedData });
+        setSubmission(_.merge({ data: extractedData }, submission));
       })
       .catch((error) => {
         setErrorMsg("Could not load encounter information");

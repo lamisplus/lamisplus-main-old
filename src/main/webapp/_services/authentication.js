@@ -82,6 +82,7 @@ function getCurrentUser(){
 }
 
 async function fetchMe(){
+
     axios
         .get(`${baseUrl}account`)
         .then((response) => {
