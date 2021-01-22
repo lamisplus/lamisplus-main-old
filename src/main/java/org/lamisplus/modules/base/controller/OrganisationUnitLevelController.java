@@ -4,6 +4,7 @@ package org.lamisplus.modules.base.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
+import org.lamisplus.modules.base.domain.dto.OrganisationUnitLevelDTO;
 import org.lamisplus.modules.base.domain.entity.OrganisationUnitLevel;
 import org.lamisplus.modules.base.service.OrganisationUnitLevelService;
 import org.springframework.http.ResponseEntity;
@@ -22,27 +23,23 @@ public class OrganisationUnitLevelController {
     private static final String ENTITY_NAME = "OrganisationUnitLevel";
 
     @PostMapping
-    public ResponseEntity<OrganisationUnitLevel> save(@RequestBody OrganisationUnitLevel organisationUnitLevel) throws URISyntaxException {
-        OrganisationUnitLevel result = organisationUnitLevelService.save(organisationUnitLevel);
-        return ResponseEntity.created(new URI("/api/organisation-unit-levels/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId()))).body(result);
+    public ResponseEntity<OrganisationUnitLevelDTO> save(@RequestBody OrganisationUnitLevelDTO organisationUnitLevelDTO) throws URISyntaxException {
+        return ResponseEntity.ok(organisationUnitLevelService.save(organisationUnitLevelDTO));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<OrganisationUnitLevel> update(@PathVariable Long id, @RequestBody OrganisationUnitLevel organisationUnitLevel) throws URISyntaxException {
-        OrganisationUnitLevel result = organisationUnitLevelService.update(id, organisationUnitLevel);
-        return ResponseEntity.created(new URI("/api/organisation-unit-levels/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId())))
-                .body(result);
+    public ResponseEntity<OrganisationUnitLevelDTO> update(@PathVariable Long id, @RequestBody OrganisationUnitLevelDTO organisationUnitLevelDTO){
+        return ResponseEntity.ok(organisationUnitLevelService.update(id, organisationUnitLevelDTO));
+
     }
 
     @GetMapping
-    public ResponseEntity<List<OrganisationUnitLevel>> getAllOrganizationUnitLevel() {
+    public ResponseEntity<List<OrganisationUnitLevelDTO>> getAllOrganizationUnitLevel() {
         return ResponseEntity.ok(organisationUnitLevelService.getAllOrganizationUnitLevel());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrganisationUnitLevel> getOrganizationUnitLevel(@PathVariable Long id) {
+    public ResponseEntity<OrganisationUnitLevelDTO> getOrganizationUnitLevel(@PathVariable Long id) {
         return ResponseEntity.ok(organisationUnitLevelService.getOrganizationUnitLevel(id));
     }
 
@@ -50,5 +47,4 @@ public class OrganisationUnitLevelController {
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
         return ResponseEntity.ok(organisationUnitLevelService.delete(id));
     }
-
 }
