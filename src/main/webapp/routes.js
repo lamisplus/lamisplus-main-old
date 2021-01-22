@@ -19,6 +19,9 @@ const PateintRegistationPage = React.lazy(() =>
 const PatientRegistrationFormio = React.lazy(() =>
     import("components/Patient/PatientRegistrationFormio")
 );
+const EditPatientFormio = React.lazy(() =>
+    import("components/Patient/EditPatientFormio")
+);
 const PateintUpdate= React.lazy(() => import("components/Patient/EditPatient"));
 
 /* Laboratory page loading */
@@ -138,6 +141,10 @@ class Routes extends Component {
                 exact
                 path="/patient-update"
                 component={PateintUpdate}/>
+                <PrivateRoute
+                    exact
+                    path="/patient-update-formio"
+                    component={EditPatientFormio}/>
 
               {/* Laboratory Links */}
              <PrivateRoute exact path="/collect-result" component={LaboratorySampleResultPage} />
