@@ -104,7 +104,6 @@ function HomePage(props) {
   const editAppointment = (patientId, id, formData) => {
     setCurrentPatientId(patientId);
     setCurrentApptId(id);
-    console.log(formData);
     setCurrentForm({
       code: CODES.APPOINTMENT_FORM,
       programCode: CODES.GENERAL_SERVICE,

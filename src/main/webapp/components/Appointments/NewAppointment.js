@@ -33,6 +33,7 @@ function NewAppointmentPage(props) {
             detail: submission.data
         }
         console.log(data);
+        return;
         axios
             .post(`${baseUrl}appointments`, data)
             .then(response => {
@@ -52,19 +53,19 @@ function NewAppointmentPage(props) {
         aria-label="Create Appointment"
         title="Create Appointment"
         onClick={(event) => {
+            setCurrentPatientId(props.data.patientId);
                 setCurrentForm({
                   code:CODES.APPOINTMENT_FORM,
                   programCode:CODES.GENERAL_SERVICE,
                   formName:"PATIENT APPOINTMENT",
                   patientId: props.data.patientId,
-                    patientHospitalNumber: props.data.hospitalNumber,
+                    patientHospitalNumber: props.data.id,
                   visitId: props.data.visitId,
                     onSubmit: saveAppointment,
                   options:{
                     modalSize: "modal-lg"
                   },
               });
-                setCurrentPatientId(props.data.patientId);
               setShowAppointmentForm(true);
         }}>
         <FaCalendarPlus />

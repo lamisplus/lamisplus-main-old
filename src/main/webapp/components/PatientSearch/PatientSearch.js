@@ -116,8 +116,8 @@ const PatientSearch = (props) => {
                         <MenuItem style={{ color:"#000 !important"}}>
                               <Link
                                   to={{
-                                    pathname: "/patient-update",
-                                    currentId: row
+                                    pathname: "/patient-update-formio",
+                                      state: row.hospitalNumber
                                   }}
                                 >
                               <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Patient </span>
