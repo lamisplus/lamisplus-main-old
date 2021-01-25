@@ -1,8 +1,10 @@
 package org.lamisplus.modules.base.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.lamisplus.modules.base.util.UuidGenerator;
 
@@ -15,7 +17,8 @@ import java.util.Objects;
 @Data
 @EqualsAndHashCode
 @Table(name = "Ward")
-public class Ward {
+@DynamicUpdate
+public class Ward extends Audit<String>{
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,28 +29,16 @@ public class Ward {
     private String name;
 
     @Basic
-    @Column(name = "date_created")
-    @CreationTimestamp
-    private Timestamp dateCreated;
-
-    @Basic
-    @Column(name = "created_by")
-    private String createdBy;
-
-    @Basic
-    @Column(name = "date_modified")
-    @UpdateTimestamp
-    private Timestamp dateModified;
-
-    @Basic
-    @Column(name = "modified_by")
-    private String modifiedBy;
-
-    @Basic
     @Column(name = "uuid")
     private String uuid = UuidGenerator.getUuid();
 
     @Basic
     @Column(name = "archived")
+    @JsonIgnore
     private Integer archived = 0;
+
+    @Basic
+    @Column(name = "organisation_unit_id")
+    @JsonIgnore
+    private Long organisationUnitId;
 }

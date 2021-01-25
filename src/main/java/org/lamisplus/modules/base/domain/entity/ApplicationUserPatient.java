@@ -1,16 +1,18 @@
 package org.lamisplus.modules.base.domain.entity;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.List;
 
 @Entity
 @Data
 @EqualsAndHashCode
-
+@NoArgsConstructor
 @Table(name = "application_user_patient")
 public class ApplicationUserPatient {
 
@@ -29,15 +31,21 @@ public class ApplicationUserPatient {
 
     @ManyToOne
     @JoinColumn(name = "application_user_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @ToString.Exclude
+    @JsonIgnore
     private User applicationUserByApplicationUserId;
 
     @ManyToOne
     @JoinColumn(name = "patient_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @ToString.Exclude
+    @JsonIgnore
     private Patient patientByPatientId;
 
     @ManyToOne
     @JoinColumn(name = "organisation_unit_id", referencedColumnName = "id")
-    public OrganisationUnit organisationUnitByOrganisationUnitId;
+    @ToString.Exclude
+    @JsonIgnore
+    private OrganisationUnit organisationUnitByOrganisationUnitId;
 
     public ApplicationUserPatient(Long userId, Long patientId){
         this.userId = userId;

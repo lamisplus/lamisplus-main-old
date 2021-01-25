@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
+import org.lamisplus.modules.base.domain.dto.DrugDTO;
 import org.lamisplus.modules.base.domain.entity.Drug;
 import org.lamisplus.modules.base.domain.entity.DrugGroup;
+import org.lamisplus.modules.base.domain.mapper.DrugMapper;
 import org.lamisplus.modules.base.repository.DrugGroupRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +20,11 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class DrugGroupService {
+    private static final int ARCHIVED = 1;
     private final DrugGroupRepository drugGroupRepository;
     private final UserService userService;
+    private final DrugMapper drugMapper;
+
 
     public List<DrugGroup> getAllDrugGroups() {
         return this.drugGroupRepository.findAll();
@@ -46,20 +51,18 @@ public class DrugGroupService {
         return drugGroupRepository.save(drugGroup);
     }
 
-    public List<Drug> getDrugByDrugGroupId(Long id){
+    public List<DrugDTO> getDrugByDrugGroupId(Long id){
         Optional<DrugGroup> drugGroupOptional = drugGroupRepository.findById(id);
         if(!drugGroupOptional.isPresent())throw new EntityNotFoundException(DrugGroup.class, "Id", id +"");
-        List<Drug> drugs = drugGroupOptional.get().getDrugsByDrugGroup();
-        return drugs;
+        return drugMapper.toDrugDTOList(drugGroupOptional.get().getDrugsById());
     }
 
     public Integer delete(Long id) {
         Optional<DrugGroup> drugGroupOptional = drugGroupRepository.findById(id);
         if(!drugGroupOptional.isPresent())throw new EntityNotFoundException(DrugGroup.class, "Id", id +"");
-        drugGroupOptional.get().setArchived(1);
+        drugGroupOptional.get().setArchived(ARCHIVED);
         drugGroupOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
 
         return drugGroupOptional.get().getArchived();
     }
-
 }

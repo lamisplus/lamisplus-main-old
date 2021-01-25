@@ -2,6 +2,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.lamisplus.modules.base.domain.dto.DrugDTO;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.entity.Drug;
 import org.lamisplus.modules.base.domain.entity.DrugGroup;
@@ -31,7 +32,7 @@ public class DrugGroupController {
     }
 
     @GetMapping("/{id}/drugs")
-    public ResponseEntity<List<Drug>> getDrugByDrugGroupId(@PathVariable Long id) {
+    public ResponseEntity<List<DrugDTO>> getDrugByDrugGroupId(@PathVariable Long id) {
         return ResponseEntity.ok(drugGroupService.getDrugByDrugGroupId(id));
     }
 
