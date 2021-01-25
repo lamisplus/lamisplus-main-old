@@ -32,8 +32,8 @@ public class DrugController {
     }
 
     @GetMapping("/regimen/{regimenId}")
-    public ResponseEntity<List<DrugDTO>> getDrugByRegimenId(@PathVariable Long regimenId) {
-        return ResponseEntity.ok(drugService.getDrugByRegimenId(regimenId));
+    public ResponseEntity<List<DrugDTO>> getDrugsByRegimenId(@PathVariable Long regimenId) {
+        return ResponseEntity.ok(drugService.getDrugsByRegimenId(regimenId));
     }
 
     @PostMapping

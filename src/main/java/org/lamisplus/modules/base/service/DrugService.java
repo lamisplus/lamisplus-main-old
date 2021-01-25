@@ -67,7 +67,7 @@ public class DrugService {
         return drugOptional.get().getArchived();
     }
 
-    public List<DrugDTO> getDrugByRegimenId(Long regimenId) {
+    public List<DrugDTO> getDrugsByRegimenId(Long regimenId) {
         List<Drug> drug = regimenDrugRepository.findAllByRegimenId(regimenId).stream().map(RegimenDrug::getDrugByDrugId).collect(Collectors.toList());
         return drugMapper.toDrugDTOList(drug);
     }

@@ -45,8 +45,8 @@ public class RegimenController {
     }
 
     @GetMapping("/regimenLine/{regimenLineId}")
-    public ResponseEntity<List<RegimenDTO>> getRegimenByRegimenLineId(@PathVariable Long regimenLineId) {
-        return ResponseEntity.ok(regimenService.getRegimenByRegimenLineId(regimenLineId));
+    public ResponseEntity<List<RegimenDTO>> getRegimensByRegimenLineId(@PathVariable Long regimenLineId) {
+        return ResponseEntity.ok(regimenService.getRegimensByRegimenLineId(regimenLineId));
     }
 
     @DeleteMapping("/{id}")
