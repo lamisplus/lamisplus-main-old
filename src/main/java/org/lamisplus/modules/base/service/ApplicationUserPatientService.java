@@ -33,7 +33,7 @@ public class ApplicationUserPatientService {
 
 
 
-    public List<PatientDTO> getAllApplicationUserPatientByUserId(Long userId) {
+    public List<PatientDTO> getAllPatientByUserId(Long userId) {
         List<ApplicationUserPatient> applicationUserPatients = applicationUserPatientRepository.findAllByUserId(userId);
         List<Patient> patients = new ArrayList<>();
         applicationUserPatients.forEach(applicationUserPatient -> {
@@ -42,7 +42,7 @@ public class ApplicationUserPatientService {
             return patientService.getPatients(patients);
     }
 
-    public UserDTO getAllApplicationUserUserByPatientId(Long patientId) {
+    public UserDTO getAllApplicationUserByPatientId(Long patientId) {
         Optional<ApplicationUserPatient> optionalApplicationUserPatient = applicationUserPatientRepository.findAllByPatientId(patientId);
         if(!optionalApplicationUserPatient.isPresent()) throw new EntityNotFoundException(ApplicationUserPatient.class,"patientId:",patientId+"");
 

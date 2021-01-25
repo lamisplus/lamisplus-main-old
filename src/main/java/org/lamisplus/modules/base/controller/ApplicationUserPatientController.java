@@ -18,17 +18,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ApplicationUserPatientController {
     private final ApplicationUserPatientService applicationUserPatientService;
-    private static final String ENTITY_NAME = "ApplicationUserPatient";
 
 
-    @GetMapping("/User/{id}")
-    public ResponseEntity<UserDTO> getAllApplicationUserUserByPatientId(@PathVariable Long id) {
-        return ResponseEntity.ok(applicationUserPatientService.getAllApplicationUserUserByPatientId(id));
+    @GetMapping("/patients/{patientId}")
+    public ResponseEntity<UserDTO> getAllApplicationUserByPatientId(@PathVariable Long patientId) {
+        return ResponseEntity.ok(applicationUserPatientService.getAllApplicationUserByPatientId(patientId));
     }
 
-    @GetMapping("/{patientId}")
-    public ResponseEntity<List<PatientDTO>> getAllApplicationUserPatientByUserId(@PathVariable Long patientId) {
-        return ResponseEntity.ok(applicationUserPatientService.getAllApplicationUserPatientByUserId(patientId));
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<List<PatientDTO>> getAllApplicationUserPatientByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(applicationUserPatientService.getAllPatientByUserId(userId));
     }
 
     @PostMapping

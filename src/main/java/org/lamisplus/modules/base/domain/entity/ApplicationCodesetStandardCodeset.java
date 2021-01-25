@@ -23,7 +23,7 @@ public class ApplicationCodesetStandardCodeset {
 
     /*@ManyToOne
     @JoinColumn(name = "application_codeset_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private ApplicationCodeset applicationCodesetByApplicationCodesetId;
+    private ApplicationCodeSet applicationCodesetByApplicationCodesetId;
 */
     @ManyToOne
     @JoinColumn(name = "standard_codeset_id", referencedColumnName = "id", insertable = false, updatable = false)

@@ -103,7 +103,7 @@ public class Visit implements Serializable {
     /*@JoinColumn(name = "visit_type_id", insertable = false, updatable = false)
     @ManyToOne
     @JsonIgnore
-    private ApplicationCodeset visit_Type;*/
+    private ApplicationCodeSet visit_Type;*/
 
     @OneToMany(mappedBy = "visitByVisitId")
     @ToString.Exclude
