@@ -14,7 +14,7 @@ import java.util.List;
 @EqualsAndHashCode
 @NoArgsConstructor
 @Table(name = "application_user_patient")
-public class ApplicationUserPatient {
+public class ApplicationUserPatient extends Audit<String>{
 
     @Id
     @Column(name = "id")

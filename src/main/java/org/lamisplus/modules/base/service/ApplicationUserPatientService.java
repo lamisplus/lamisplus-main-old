@@ -26,9 +26,9 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ApplicationUserPatientService {
     private final ApplicationUserPatientRepository applicationUserPatientRepository;
-    private final UserService userService;
+    //private final UserService userService;
     private final PatientService patientService;
-    private final ApplicationUserPatientMapper applicationUserPatientMapper;
+    //private final ApplicationUserPatientMapper applicationUserPatientMapper;
     private final UserMapper userMapper;
 
 

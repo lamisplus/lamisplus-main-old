@@ -71,7 +71,7 @@ public class ApplicationCodeSetService {
 
     public Integer delete(Long id){
         Optional<ApplicationCodeSet> applicationCodeSetOptional = applicationCodeSetRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if(!applicationCodeSetOptional.isPresent()) throw new EntityNotFoundException(ApplicationCodeSet.class,"Display:",id+"");
+        if(!applicationCodeSetOptional.isPresent()) throw new EntityNotFoundException(ApplicationCodeSet.class,"id:",id+"");
         applicationCodeSetOptional.get().setArchived(ARCHIVED);
 
         return applicationCodeSetOptional.get().getArchived();

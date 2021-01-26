@@ -47,7 +47,7 @@ public class VisitScheduler {
                                 (customNowLocalTime.isAfter(localTime) || customNowLocalTime.equals(localTime))) {
                             visit.setDateVisitEnd(localDate);
                             visit.setTimeVisitEnd(localTime);
-                            visit.setModifiedBy("System");
+                            //visit.setModifiedBy("System");
                             this.visitRepository.save(visit);
                         }
                     }

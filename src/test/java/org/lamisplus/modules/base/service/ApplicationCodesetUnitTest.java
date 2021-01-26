@@ -42,7 +42,7 @@ public class ApplicationCodesetUnitTest {
         // Mocking remote service
         when(template.getForEntity(any(String.class), any(Class.class))).thenReturn(new ResponseEntity(applicationCodesets, HttpStatus.OK));
 
-        List<ApplicationCodesetDTO> applicationCodesetList = appCodesetService.getApplicationCodeByCodesetGroup("GENDER");
+        List<ApplicationCodesetDTO> applicationCodesetList = appCodesetService.getApplicationCodeByCodeSetGroup("GENDER");
         if(applicationCodesetList == null){
             System.out.println("List is null");
         } else {

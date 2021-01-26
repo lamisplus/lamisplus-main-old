@@ -29,7 +29,7 @@ public class DrugService {
     private static final int UN_ARCHIVED = 0;
     private final DrugRepository drugRepository;
     private final RegimenDrugRepository regimenDrugRepository;
-    private final UserService userService;
+    //private final UserService userService;
     private final DrugMapper drugMapper;
 
 
@@ -40,7 +40,6 @@ public class DrugService {
     public Drug save(Drug drug) {
         Optional<Drug> DrugOptional = drugRepository.findByNameAndArchived(drug.getName(), UN_ARCHIVED);
         if (DrugOptional.isPresent()) throw new RecordExistException(Drug.class, "Name", drug.getName());
-        drug.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         return drugRepository.save(drug);
     }
 
@@ -55,7 +54,6 @@ public class DrugService {
         if(!drugOptional.isPresent())throw new EntityNotFoundException(Drug.class, "Id", id +"");
         drugDTo.setId(id);
         Drug drug = drugMapper.toDrug(drugDTo);
-        drug.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return drugRepository.save(drug);
     }
 
@@ -63,7 +61,6 @@ public class DrugService {
         Optional<Drug> drugOptional = drugRepository.findByIdAndArchived(id, UN_ARCHIVED);
         if(!drugOptional.isPresent()) throw new EntityNotFoundException(Drug.class,"Display:",id+"");
         drugOptional.get().setArchived(ARCHIVED);
-        drugOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return drugOptional.get().getArchived();
     }
 

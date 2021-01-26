@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
@@ -28,20 +29,24 @@ public class Audit<U>
     @CreatedBy
     @Column(name = "created_by", nullable = false, updatable = false)
     @JsonIgnore
+    @ToString.Exclude
     private U createdBy;
 
     @CreatedDate
     @Column(name = "date_created", nullable = false, updatable = false)
     @JsonIgnore
+    @ToString.Exclude
     private Timestamp dateCreated;
 
     @LastModifiedBy
     @Column(name = "modified_by")
     @JsonIgnore
+    @ToString.Exclude
     private U modifiedBy;
 
     @LastModifiedDate
     @Column(name = "date_modified")
     @JsonIgnore
+    @ToString.Exclude
     private Timestamp dateModified;
 }

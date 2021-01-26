@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 @EqualsAndHashCode
 @Table(name = "person")
-public class Person implements Serializable {
+public class Person extends Audit<String> {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -69,31 +69,9 @@ public class Person implements Serializable {
     private String uuid;
 
     @Basic
-    @Column(name = "date_created")
-    @JsonIgnore
-    @CreationTimestamp
-    private Timestamp dateCreated;
-
-    @Basic
-    @Column(name = "created_by")
-    @JsonIgnore
-    private String createdBy;
-
-    @Basic
-    @Column(name = "date_modified")
-    @JsonIgnore
-    @UpdateTimestamp
-    private Timestamp dateModified;
-
-    @Basic
-    @Column(name = "modified_by")
-    @JsonIgnore
-    private String modifiedBy;
-
-    @Basic
     @Column(name = "archived")
     @JsonIgnore
-    private Integer archived;
+    private Integer archived = 0;
 
     @OneToMany(mappedBy = "personByPersonId")
     @ToString.Exclude

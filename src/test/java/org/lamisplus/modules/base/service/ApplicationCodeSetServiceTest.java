@@ -74,7 +74,7 @@ public class ApplicationCodeSetServiceTest {
     @Test
     public void whenValidCodeSet_thenApplicationCodesetShouldBeFound() {
         String codeset = "GENDER";
-        ApplicationCodesetDTO applicationCodesetDTO = applicationCodesetService.getApplicationCodeset(1L);
+        ApplicationCodesetDTO applicationCodesetDTO = applicationCodesetService.getApplicationCodeSet(1L);
 
         assertThat(applicationCodesetDTO.getCodesetGroup()).isEqualTo(codeset);
     }
@@ -83,7 +83,7 @@ public class ApplicationCodeSetServiceTest {
     @DisplayName("method should throw exception")
     public void whenInValidName_thenApplicationCodesetShouldNotBeFound() {
         Long id = 3L;
-        Throwable thrown = assertThrows(EntityNotFoundException.class, () -> applicationCodesetService.getApplicationCodeset(id));
+        Throwable thrown = assertThrows(EntityNotFoundException.class, () -> applicationCodesetService.getApplicationCodeSet(id));
         assertThat(thrown.getMessage(), is("ApplicationCodeSet was not found for parameters {Display:="+id+"}"));
        // System.out.println(thrown.getCause()+"class is" +thrown.getClass());
 

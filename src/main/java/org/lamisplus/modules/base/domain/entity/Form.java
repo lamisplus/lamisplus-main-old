@@ -6,6 +6,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -66,6 +68,7 @@ public class Form extends JsonBEntity implements Serializable {
     @CreationTimestamp
     private Timestamp dateCreated;
 
+    @CreatedBy
     @Basic
     @Column(name = "created_by")
     @JsonIgnore
@@ -77,6 +80,7 @@ public class Form extends JsonBEntity implements Serializable {
     @UpdateTimestamp
     private Timestamp dateModified;
 
+    @LastModifiedBy
     @Basic
     @Column(name = "modified_by")
     @JsonIgnore
