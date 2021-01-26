@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.ApplicationUserOrganisationUnitDTO;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.entity.ApplicationUserOrganisationUnit;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequestMapping("/api/application_user_organisation_unit")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class ApplicationUserOrganisationUnitController {
     private final ApplicationUserOrganisationUnitService applicationUserOrganisationUnitService;
     private static final String ENTITY_NAME = "ApplicationUserOrganisationUnit";

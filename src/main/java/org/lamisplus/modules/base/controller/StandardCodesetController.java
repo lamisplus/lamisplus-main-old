@@ -2,6 +2,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.dto.StandardCodesetDTO;
 import org.lamisplus.modules.base.domain.dto.StandardCodesetSourceDTO;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequestMapping("/api/standard_codesets")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class StandardCodesetController {
     private final StandardCodesetService standardCodesetService;
     private final String ENTITY_NAME = "StandardCodeset";

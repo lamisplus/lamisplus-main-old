@@ -2,6 +2,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.entity.LabTest;
 import org.lamisplus.modules.base.domain.entity.LabTestGroup;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequestMapping("/api/lab-test-groups")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class LabTestGroupController {
     private final LabTestGroupService labTestGroupService;
     private final String ENTITY_NAME = "LabTestGroup";

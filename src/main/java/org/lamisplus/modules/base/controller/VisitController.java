@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.VisitDTO;
 import org.lamisplus.modules.base.domain.entity.Visit;
 import org.lamisplus.modules.base.service.VisitService;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/visits")
 @RequiredArgsConstructor
+@Audit
 public class VisitController {
     private static final String ENTITY_NAME = "Visit";
     private final VisitService visitService;

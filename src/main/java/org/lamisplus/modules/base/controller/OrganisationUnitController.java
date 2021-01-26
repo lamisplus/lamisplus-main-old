@@ -2,6 +2,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.dto.OrganisationUnitDTO;
 import org.lamisplus.modules.base.domain.entity.OrganisationUnit;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequestMapping("/api/organisation-units")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class OrganisationUnitController {
 
     private final OrganisationUnitService organisationUnitService;

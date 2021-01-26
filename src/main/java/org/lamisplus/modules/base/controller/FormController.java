@@ -2,6 +2,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.FormDTO;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.entity.Form;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequestMapping("/api/forms")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class FormController {
     private final FormService formService;
     private final String ENTITY_NAME = "Form";

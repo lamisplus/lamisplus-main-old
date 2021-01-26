@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.controller;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.entity.Encounter;
 import org.lamisplus.modules.base.service.EncounterService;
 import org.lamisplus.modules.base.domain.dto.EncounterDTO;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @RequestMapping("/api/encounters")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class EncounterController {
     private static String ENTITY_NAME = "Encounter";
     private final EncounterService encounterService;

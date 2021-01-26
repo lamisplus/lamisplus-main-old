@@ -1,5 +1,6 @@
 package org.lamisplus.modules.base.controller;
 
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.controller.vm.ManagedUserVM;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.domain.entity.User;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@Audit
 public class AccountController {
     private static class AccountResourceException extends RuntimeException {
         private AccountResourceException(String message) {

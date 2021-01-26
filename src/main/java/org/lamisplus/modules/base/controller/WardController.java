@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.dto.WardDTO;
 import org.lamisplus.modules.base.domain.entity.Ward;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequestMapping("/api/wards")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class WardController {
     private final WardService wardService;
     private static String ENTITY_NAME = "Ward";

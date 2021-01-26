@@ -2,6 +2,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.entity.RadiologyTest;
 import org.lamisplus.modules.base.domain.entity.RadiologyTestGroup;
 import org.lamisplus.modules.base.service.RadiologyTestGroupService;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequestMapping("/api/radiology-test-groups")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class RadiologyTestGroupController {
     private final RadiologyTestGroupService radiologyTestGroupService;
     private final String ENTITY_NAME = "RadiologyTestGroup";
