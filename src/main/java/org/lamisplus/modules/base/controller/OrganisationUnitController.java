@@ -22,21 +22,15 @@ import java.util.List;
 public class OrganisationUnitController {
 
     private final OrganisationUnitService organisationUnitService;
-    private static final String ENTITY_NAME = "OrganisationUnit";
 
     @PostMapping
-    public ResponseEntity<OrganisationUnit> save(@RequestBody OrganisationUnitDTO organisationUnitDTO) throws URISyntaxException {
-        OrganisationUnit result = organisationUnitService.save(organisationUnitDTO);
-        return ResponseEntity.created(new URI("/api/organisation-units/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId()))).body(result);
+    public ResponseEntity<OrganisationUnit> save(@RequestBody OrganisationUnitDTO organisationUnitDTO) {
+        return ResponseEntity.ok(organisationUnitService.save(organisationUnitDTO));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<OrganisationUnit> update(@PathVariable Long id, @RequestBody OrganisationUnitDTO organisationUnitDTO) throws URISyntaxException {
-        OrganisationUnit result = organisationUnitService.update(id, organisationUnitDTO);
-        return ResponseEntity.created(new URI("/api/organisation-units/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId())))
-                .body(result);
+    public ResponseEntity<OrganisationUnit> update(@PathVariable Long id, @RequestBody OrganisationUnitDTO organisationUnitDTO) {
+        return ResponseEntity.ok(organisationUnitService.update(id, organisationUnitDTO));
     }
 
     @GetMapping("/{id}")

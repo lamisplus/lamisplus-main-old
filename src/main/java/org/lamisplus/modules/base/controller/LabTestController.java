@@ -21,7 +21,6 @@ import java.util.List;
 @Audit
 public class LabTestController {
     private final LabTestService labTestService;
-    private final String ENTITY_NAME = "LabTest";
 
     @GetMapping
     @PreAuthorize("hasAuthority('laboratory_read')")
@@ -37,19 +36,14 @@ public class LabTestController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('laboratory_write')")
-    public ResponseEntity<LabTest> save(@RequestBody LabTest labTest) throws URISyntaxException {
-        LabTest result = labTestService.save(labTest);
-        return ResponseEntity.created(new URI("/api/lab-test-groups/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId()))).body(result);
+    public ResponseEntity<LabTest> save(@RequestBody LabTest labTest) {
+        return ResponseEntity.ok(labTestService.save(labTest));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('laboratory_write')")
-    public ResponseEntity<LabTest> update(@PathVariable Long id, @RequestBody LabTest labTest) throws URISyntaxException {
-        LabTest result = labTestService.update(id, labTest);
-        return ResponseEntity.created(new URI("/api/lab-test-groups/" + id))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(id)))
-                .body(result);
+    public ResponseEntity<LabTest> update(@PathVariable Long id, @RequestBody LabTest labTest) {
+        return ResponseEntity.ok(labTestService.update(id, labTest));
     }
 
     @DeleteMapping("/{id}")

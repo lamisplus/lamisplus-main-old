@@ -21,7 +21,6 @@ import java.util.List;
 @Audit
 public class RadiologyTestGroupController {
     private final RadiologyTestGroupService radiologyTestGroupService;
-    private final String ENTITY_NAME = "RadiologyTestGroup";
 
     @GetMapping
     public ResponseEntity<List<RadiologyTestGroup>> getAllRadiologyTestGroups() {

@@ -70,7 +70,7 @@ public class RoleController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteRole(@PathVariable Long id) throws Exception{
+    public void deleteRole(@PathVariable Long id) {
         try {
             roleRepository.deleteById(id);
         } catch (Exception e) {

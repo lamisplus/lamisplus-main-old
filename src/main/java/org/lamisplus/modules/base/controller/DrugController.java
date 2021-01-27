@@ -39,12 +39,12 @@ public class DrugController {
     }
 
     @PostMapping
-    public ResponseEntity<Drug> save(@RequestBody Drug drug) throws URISyntaxException {
+    public ResponseEntity<Drug> save(@RequestBody Drug drug) {
         return ResponseEntity.ok(drugService.save(drug));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Drug> update(@PathVariable Long id, @RequestBody DrugDTO drugDTO) throws URISyntaxException {
+    public ResponseEntity<Drug> update(@PathVariable Long id, @RequestBody DrugDTO drugDTO) {
         return ResponseEntity.ok(drugService.update(id, drugDTO));
 
     }

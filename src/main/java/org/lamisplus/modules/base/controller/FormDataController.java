@@ -21,7 +21,6 @@ import java.util.List;
 @Audit
 public class FormDataController {
     private final FormDataService formDataService;
-    private static final String ENTITY_NAME = "FormData";
 
 
     @GetMapping
@@ -35,18 +34,15 @@ public class FormDataController {
     }
 
     @PostMapping
-    public ResponseEntity<FormData> save(@RequestBody FormData formData) throws URISyntaxException {
-        FormData result = formDataService.save(formData);
-        return ResponseEntity.created(new URI("/api/form-data/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId()))).body(result);
+    public ResponseEntity<FormData> save(@RequestBody FormData formData) {
+        return ResponseEntity.ok(formDataService.save(formData));
+
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<FormData> update(@PathVariable Long id, @RequestBody FormData formData) throws URISyntaxException {
-        FormData result = formDataService.update(id, formData);
-        return ResponseEntity.created(new URI("/api/form-data/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId())))
-                .body(result);
+    public ResponseEntity<FormData> update(@PathVariable Long id, @RequestBody FormData formData) {
+        return ResponseEntity.ok(formDataService.update(id, formData));
+
     }
 
     @DeleteMapping("/{id}")

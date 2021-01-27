@@ -22,7 +22,6 @@ import java.util.List;
 @Audit
 public class WardController {
     private final WardService wardService;
-    private static String ENTITY_NAME = "Ward";
 
 
     @GetMapping("/{id}")
@@ -36,17 +35,13 @@ public class WardController {
     }
 
     @PostMapping
-    public ResponseEntity<Ward> save(@RequestBody WardDTO wardDTO) throws URISyntaxException {
-        Ward ward = wardService.save(wardDTO);
-        return ResponseEntity.created(new URI("/api/wards/" + ward.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(ward.getId()))).body(ward);
+    public ResponseEntity<Ward> save(@RequestBody WardDTO wardDTO){
+        return ResponseEntity.ok(wardService.save(wardDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Ward> update(@PathVariable Long id, @RequestBody WardDTO wardDTO) throws URISyntaxException {
-        Ward ward = wardService.update(id, wardDTO);
-        return ResponseEntity.created(new URI("/api/wards" + ward.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(ward.getId()))).body(ward);
+    public ResponseEntity<Ward> update(@PathVariable Long id, @RequestBody WardDTO wardDTO) {
+        return ResponseEntity.ok(wardService.update(id, wardDTO));
     }
 
     @DeleteMapping("/{id}")

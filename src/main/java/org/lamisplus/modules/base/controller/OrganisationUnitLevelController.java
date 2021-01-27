@@ -22,10 +22,9 @@ import java.util.List;
 @Audit
 public class OrganisationUnitLevelController {
     private final OrganisationUnitLevelService organisationUnitLevelService;
-    private static final String ENTITY_NAME = "OrganisationUnitLevel";
 
     @PostMapping
-    public ResponseEntity<OrganisationUnitLevelDTO> save(@RequestBody OrganisationUnitLevelDTO organisationUnitLevelDTO) throws URISyntaxException {
+    public ResponseEntity<OrganisationUnitLevelDTO> save(@RequestBody OrganisationUnitLevelDTO organisationUnitLevelDTO) {
         return ResponseEntity.ok(organisationUnitLevelService.save(organisationUnitLevelDTO));
     }
 

@@ -8,7 +8,6 @@ import org.lamisplus.modules.base.domain.dto.ProgramDTO;
 import org.lamisplus.modules.base.domain.entity.Form;
 import org.lamisplus.modules.base.domain.entity.Program;
 import org.lamisplus.modules.base.service.ProgramService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,14 +24,12 @@ public class ProgramController {
     private final ProgramService programService;
 
     @PostMapping
-    public ResponseEntity<Program> save(@RequestBody ProgramDTO programDTO) throws URISyntaxException {
-        Program program = this.programService.save(programDTO);
-        return ResponseEntity.created(new URI("/api/programs/" + program.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(program.getId()))).body(program);
+    public ResponseEntity<Program> save(@RequestBody ProgramDTO programDTO) {
+        return ResponseEntity.ok(this.programService.save(programDTO));
     }
 
     @PutMapping("/{id}")
-    public Program update(@PathVariable Long id, @RequestBody ProgramDTO programDTO) throws URISyntaxException {
+    public Program update(@PathVariable Long id, @RequestBody ProgramDTO programDTO) {
         return programService.update(id, programDTO);
     }
 

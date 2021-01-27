@@ -24,7 +24,6 @@ import java.util.List;
 @RequestMapping("/api/modules")
 @Audit
 public class ModuleController {
-    private final String ENTITY_NAME = "Module";
     private final ModuleService moduleService;
     private static final Boolean IS_START_UP = false;
 
@@ -47,9 +46,7 @@ public class ModuleController {
 
     @PostMapping
     public ResponseEntity<Module> save(@RequestBody ModuleDTO moduleDTO) throws URISyntaxException {
-        Module module = this.moduleService.save(moduleDTO);
-        return ResponseEntity.created(new URI("/api/modules/" + module.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(module.getId()))).body(module);
+        return ResponseEntity.ok(this.moduleService.save(moduleDTO));
     }
 
     @PostMapping("/upload")

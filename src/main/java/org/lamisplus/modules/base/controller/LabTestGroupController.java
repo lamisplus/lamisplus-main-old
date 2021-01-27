@@ -22,7 +22,6 @@ import java.util.List;
 @Audit
 public class LabTestGroupController {
     private final LabTestGroupService labTestGroupService;
-    private final String ENTITY_NAME = "LabTestGroup";
 
     @GetMapping
     @PreAuthorize("hasAuthority('laboratory_read')")
@@ -44,19 +43,14 @@ public class LabTestGroupController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('laboratory_write')")
-    public ResponseEntity<LabTestGroup> save(@RequestBody LabTestGroup labTestGroup) throws URISyntaxException {
-        LabTestGroup result = labTestGroupService.save(labTestGroup);
-        return ResponseEntity.created(new URI("/api/lab-test-groups/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId()))).body(result);
+    public ResponseEntity<LabTestGroup> save(@RequestBody LabTestGroup labTestGroup) {
+        return ResponseEntity.ok(labTestGroupService.save(labTestGroup));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('laboratory_write')")
-    public ResponseEntity<LabTestGroup> update(@PathVariable Long id, @RequestBody LabTestGroup labTestGroup) throws URISyntaxException {
-        LabTestGroup result = labTestGroupService.update(id, labTestGroup);
-        return ResponseEntity.created(new URI("/api/lab-test-groups/" + id))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(id)))
-                .body(result);
+    public ResponseEntity<LabTestGroup> update(@PathVariable Long id, @RequestBody LabTestGroup labTestGroup) {
+        return ResponseEntity.ok(labTestGroupService.update(id, labTestGroup));
     }
 
     @DeleteMapping("/{id}")

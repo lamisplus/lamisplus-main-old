@@ -52,7 +52,7 @@ public class AccountController {
     @ResponseStatus(HttpStatus.CREATED)
     public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
         //Check Password Length
-        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
+        userService.registerUser(managedUserVM, managedUserVM.getPassword());
     }
 
 

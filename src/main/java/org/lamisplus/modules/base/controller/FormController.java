@@ -23,7 +23,6 @@ import java.util.List;
 @Audit
 public class FormController {
     private final FormService formService;
-    private final String ENTITY_NAME = "Form";
 
     @GetMapping
     public ResponseEntity<List<FormDTO>> getAllForms() {
@@ -46,17 +45,15 @@ public class FormController {
     }
 
     @PostMapping
-    public ResponseEntity<Form> save(@RequestBody FormDTO formDTO) throws URISyntaxException {
-        Form form2 = this.formService.save(formDTO);
-        return ResponseEntity.created(new URI("/api/forms/" + form2.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(form2.getId()))).body(form2);
+    public ResponseEntity<Form> save(@RequestBody FormDTO formDTO) {
+        return ResponseEntity.ok(this.formService.save(formDTO));
+
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Form> update(@PathVariable Long id, @RequestBody FormDTO formDTO) throws URISyntaxException {
-        Form form1 = this.formService.update(id, formDTO);
-        return ResponseEntity.created(new URI("/api/forms/" + id))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(id))).body(form1);
+    public ResponseEntity<Form> update(@PathVariable Long id, @RequestBody FormDTO formDTO) {
+        return ResponseEntity.ok(this.formService.update(id, formDTO));
+
     }
 
     @DeleteMapping("/{id}")

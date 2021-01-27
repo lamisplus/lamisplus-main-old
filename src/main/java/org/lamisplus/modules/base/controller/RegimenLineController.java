@@ -23,21 +23,15 @@ import java.util.List;
 @Audit
 public class RegimenLineController {
     private final RegimenLineService regimenLineService;
-    private static final String ENTITY_NAME = "RegimenLine";
 
     @PostMapping
-    public ResponseEntity<RegimenLine> save(@RequestBody RegimenLine regimenLine) throws URISyntaxException {
-        RegimenLine result = regimenLineService.save(regimenLine);
-        return ResponseEntity.created(new URI("/api/regimen-lines/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId()))).body(result);
+    public ResponseEntity<RegimenLine> save(@RequestBody RegimenLine regimenLine) {
+        return ResponseEntity.ok(regimenLineService.save(regimenLine));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<RegimenLine> update(@PathVariable Long id, @RequestBody RegimenLine regimenLine) throws URISyntaxException {
-        RegimenLine result = regimenLineService.update(id, regimenLine);
-        return ResponseEntity.created(new URI("/api/regimen-lines/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId())))
-                .body(result);
+    public ResponseEntity<RegimenLine> update(@PathVariable Long id, @RequestBody RegimenLine regimenLine) {
+        return ResponseEntity.ok(regimenLineService.update(id, regimenLine));
     }
 
     @GetMapping

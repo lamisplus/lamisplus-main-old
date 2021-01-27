@@ -24,7 +24,7 @@ import java.util.List;
 @Audit
 public class ApplicationUserOrganisationUnitController {
     private final ApplicationUserOrganisationUnitService applicationUserOrganisationUnitService;
-    private static final String ENTITY_NAME = "ApplicationUserOrganisationUnit";
+    //private static final String ENTITY_NAME = "ApplicationUserOrganisationUnit";
 
 
     @GetMapping
@@ -38,17 +38,14 @@ public class ApplicationUserOrganisationUnitController {
     }
 
     @PostMapping
-    public ResponseEntity<List<ApplicationUserOrganisationUnit>> save(@RequestBody List<ApplicationUserOrganisationUnitDTO> applicationUserOrganisationUnitDTO) throws URISyntaxException {
+    public ResponseEntity<List<ApplicationUserOrganisationUnit>> save(@RequestBody List<ApplicationUserOrganisationUnitDTO> applicationUserOrganisationUnitDTO) {
         return ResponseEntity.ok(applicationUserOrganisationUnitService.save(applicationUserOrganisationUnitDTO));
 
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ApplicationUserOrganisationUnit> update(@PathVariable Long id, @RequestBody ApplicationUserOrganisationUnit applicationUserOrganisationUnit) throws URISyntaxException {
-        ApplicationUserOrganisationUnit result = applicationUserOrganisationUnitService.update(id, applicationUserOrganisationUnit);
-        return ResponseEntity.created(new URI("/api/application_user_organisation_unit/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId())))
-                .body(result);
+    public ResponseEntity<ApplicationUserOrganisationUnit> update(@PathVariable Long id, @RequestBody ApplicationUserOrganisationUnit applicationUserOrganisationUnit) {
+        return ResponseEntity.ok(applicationUserOrganisationUnitService.update(id, applicationUserOrganisationUnit));
     }
 
     @DeleteMapping("/{id}")

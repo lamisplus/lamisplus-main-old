@@ -20,7 +20,6 @@ import java.util.List;
 @Audit
 public class ApplicationCodesetController {
     private final ApplicationCodeSetService applicationCodesetService;
-    private static String ENTITY_NAME = "ApplicationCodeSet";
 
     @GetMapping("/codesetGroup")
     public ResponseEntity<List<ApplicationCodesetDTO>> getApplicationCodeByCodeSetGroup(@RequestParam String codesetGroup) {
@@ -45,7 +44,7 @@ public class ApplicationCodesetController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApplicationCodeSet> update(@PathVariable Long id, @RequestBody ApplicationCodesetDTO applicationCodesetDTO) throws URISyntaxException {
+    public ResponseEntity<ApplicationCodeSet> update(@PathVariable Long id, @RequestBody ApplicationCodesetDTO applicationCodesetDTO) {
         return ResponseEntity.ok(applicationCodesetService.update(id, applicationCodesetDTO));
 
     }

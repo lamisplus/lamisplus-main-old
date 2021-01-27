@@ -21,14 +21,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Audit
 public class EncounterController {
-    private static String ENTITY_NAME = "Encounter";
+    //private static String ENTITY_NAME = "Encounter";
     private final EncounterService encounterService;
 
     @PostMapping
-    public ResponseEntity<Encounter> save(@RequestBody EncounterDTO encounterDTO) throws URISyntaxException {
-        Encounter encounter = encounterService.save(encounterDTO);
-        return ResponseEntity.created(new URI("/api/encounters/" + encounter.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(encounter.getId()))).body(encounter);
+    public ResponseEntity<Encounter> save(@RequestBody EncounterDTO encounterDTO) {
+        return ResponseEntity.ok(encounterService.save(encounterDTO));
     }
 
     @ApiOperation(value="getAllEncounters", notes = "response is List of EncounterDTO\n\n" +
@@ -43,9 +41,8 @@ public class EncounterController {
     @GetMapping("/{formCode}/{dateStart}/{dateEnd}")
     public ResponseEntity<List<EncounterDTO>> getEncounterByFormCodeAndDateEncounter(@PathVariable String formCode,
                                                                  @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional<String> dateStart,
-                                                                            @ApiParam(value = "", required = false) @PathVariable(required = false) Optional<String> dateEnd) throws URISyntaxException {
-        List<EncounterDTO> encounterDTOS = this.encounterService.getEncounterByFormCodeAndDateEncounter(formCode, dateStart, dateEnd);
-        return ResponseEntity.ok(encounterDTOS);
+                                                                            @ApiParam(value = "", required = false) @PathVariable(required = false) Optional<String> dateEnd) {
+        return ResponseEntity.ok(this.encounterService.getEncounterByFormCodeAndDateEncounter(formCode, dateStart, dateEnd));
     }
 
     @GetMapping("/{id}")
@@ -65,10 +62,8 @@ public class EncounterController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Encounter> update(@PathVariable Long id, @RequestBody EncounterDTO encounterDTO) throws URISyntaxException {
-        Encounter encounter1 = this.encounterService.update(id, encounterDTO);
-        return ResponseEntity.created(new URI("/api/encounters/" + id))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(id))).body(encounter1);
+    public ResponseEntity<Encounter> update(@PathVariable Long id, @RequestBody EncounterDTO encounterDTO){
+        return ResponseEntity.ok(this.encounterService.update(id, encounterDTO));
     }
 
     @DeleteMapping("/{id}")

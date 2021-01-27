@@ -1,6 +1,5 @@
 package org.lamisplus.modules.base.domain.entity;
 
-
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,13 +14,13 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
+
 @Data
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @EqualsAndHashCode
 @Table(name = "form")
 public class Form extends JsonBEntity implements Serializable {
-
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

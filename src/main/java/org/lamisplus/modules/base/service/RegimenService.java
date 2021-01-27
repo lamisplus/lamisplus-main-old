@@ -47,7 +47,7 @@ public class RegimenService {
     }
 
     public List<RegimenDTO> getRegimensByRegimenLineId(Long regimenLineId){
-        List<Regimen> regimens = this.regimenRepository.findAllByRegimenLineIdAndArchived(regimenLineId, 0);
+        List<Regimen> regimens = this.regimenRepository.findAllByRegimenLineIdAndArchived(regimenLineId, UN_ARCHIVED);
         return regimenMapper.toRegimenDTOList(regimens);
     }
 

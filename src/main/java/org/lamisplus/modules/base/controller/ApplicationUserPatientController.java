@@ -33,13 +33,13 @@ public class ApplicationUserPatientController {
     }
 
     @PostMapping
-    public ResponseEntity<List<ApplicationUserOrganisationUnit>> save(@RequestBody ApplicationUserPatientDTO applicationUserPatientDTO) throws URISyntaxException {
+    public ResponseEntity<List<ApplicationUserOrganisationUnit>> save(@RequestBody ApplicationUserPatientDTO applicationUserPatientDTO) {
         return ResponseEntity.ok(applicationUserPatientService.save(applicationUserPatientDTO));
 
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ApplicationUserPatientDTO> update(@PathVariable Long id, @RequestBody ApplicationUserPatientDTO applicationUserPatientDTO) throws URISyntaxException {
+    public ResponseEntity<ApplicationUserPatientDTO> update(@PathVariable Long id, @RequestBody ApplicationUserPatientDTO applicationUserPatientDTO) {
 
         return ResponseEntity.ok(applicationUserPatientService.update(id, applicationUserPatientDTO));
 

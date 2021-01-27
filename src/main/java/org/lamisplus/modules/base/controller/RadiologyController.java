@@ -26,7 +26,6 @@ import java.util.UUID;
 public class RadiologyController {
     private final StorageUtil storageService;
     private final RadiologyService radiologyService;
-    //private final ImageFormat imageFormat;
 
 
     @PostMapping("/api/radiologies")

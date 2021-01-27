@@ -36,7 +36,7 @@ public class AppointmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Appointment> update(@PathVariable Long id, @RequestBody AppointmentDTO appointmentDTO) throws URISyntaxException {
+    public ResponseEntity<Appointment> update(@PathVariable Long id, @RequestBody AppointmentDTO appointmentDTO) {
         return ResponseEntity.ok(this.appointmentService.update(id, appointmentDTO));
 
     }

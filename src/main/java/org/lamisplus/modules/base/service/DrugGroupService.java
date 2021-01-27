@@ -50,7 +50,7 @@ public class DrugGroupService {
         return drugGroupRepository.save(drugGroup);
     }
 
-    public List<DrugDTO> getDrugByDrugGroupId(Long id){
+    public List<DrugDTO> getDrugsByDrugGroupId(Long id){
         Optional<DrugGroup> drugGroupOptional = drugGroupRepository.findByIdAndArchived(id, UN_ARCHIVED);
         if(!drugGroupOptional.isPresent())throw new EntityNotFoundException(DrugGroup.class, "Id", id +"");
         return drugMapper.toDrugDTOList(drugGroupOptional.get().getDrugsById());

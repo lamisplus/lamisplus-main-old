@@ -26,12 +26,12 @@ public class RegimenController {
     private final RegimenService regimenService;
 
     @PostMapping
-    public ResponseEntity<RegimenDTO> save(@RequestBody RegimenDTO regimenDTO) throws URISyntaxException {
+    public ResponseEntity<RegimenDTO> save(@RequestBody RegimenDTO regimenDTO) {
         return ResponseEntity.ok(regimenService.save(regimenDTO));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<RegimenDTO> update(@PathVariable Long id, @RequestBody RegimenDTO regimenDTO) throws URISyntaxException {
+    public ResponseEntity<RegimenDTO> update(@PathVariable Long id, @RequestBody RegimenDTO regimenDTO) {
         return ResponseEntity.ok(regimenService.update(id, regimenDTO));
 
     }
