@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
-import org.lamisplus.modules.base.domain.dto.ApplicationUserOrganisationUnitDTO;
 import org.lamisplus.modules.base.domain.dto.FormDTO;
 import org.lamisplus.modules.base.domain.entity.Form;
 import org.lamisplus.modules.base.domain.entity.Permission;
@@ -14,9 +13,7 @@ import org.lamisplus.modules.base.repository.FormRepository;
 import org.lamisplus.modules.base.repository.PermissionRepository;
 import org.lamisplus.modules.base.repository.ProgramRepository;
 import org.lamisplus.modules.base.util.AccessRight;
-import org.lamisplus.modules.base.util.GenericSpecification;
 import org.lamisplus.modules.base.util.UuidGenerator;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -29,21 +26,24 @@ import java.util.Set;
 @Slf4j
 @RequiredArgsConstructor
 public class FormService {
-    public static final int UN_ARCHIVED = 0;
     private final FormRepository formRepository;
     private final ProgramRepository programRepository;
     private final FormMapper formMapper;
     private final UserService userService;
     private static final int ARCHIVED = 1;
-    private final GenericSpecification<Form> genericSpecification;
+    //private final GenericSpecification<Form> genericSpecification;
     private final AccessRight accessRight;
     private final PermissionRepository permissionRepository;
+    private static final int UN_ARCHIVED = 0;
+    private static final String READ = "read";
+    private static final String WRITE = "write";
+    private static final String DELETE = "delete";
+
+
 
 
     public List getAllForms() {
-        Specification<Form> specification = genericSpecification.findAll(0);
-
-        List<Form> forms = this.formRepository.findAll(specification);
+        List<Form> forms = formRepository.findAllByArchivedOrderByIdAsc(UN_ARCHIVED);
         Set<String> permissions = accessRight.getAllPermission();
 
         return getForms(forms, permissions);
@@ -87,7 +87,7 @@ public class FormService {
 
         accessRight.grantAccess(formCode, FormService.class, permissions);
         Optional<Form> formOptional = formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED);
-        if(!formOptional.isPresent() || formOptional.get().getArchived() == 1) {
+        if(!formOptional.isPresent()) {
             throw new EntityNotFoundException(Form.class, "Form Code", formCode);
         }
         return formOptional.get();
@@ -107,7 +107,7 @@ public class FormService {
                 return;
             }
             final FormDTO formDTO = formMapper.toForm(form);
-            Optional<Program>  program = this.programRepository.findProgramByCode(formDTO.getProgramCode());
+            Optional<Program>  program = this.programRepository.findProgramByCodeAndArchived(formDTO.getProgramCode(), UN_ARCHIVED);
             program.ifPresent(value -> formDTO.setProgramName(value.getName()));
             formList.add(formDTO);
         });
@@ -118,14 +118,14 @@ public class FormService {
     public Form update(Long id, FormDTO formDTO) {
         Set<String> permissions = accessRight.getAllPermission();
 
-        accessRight.grantAccessByAccessType(formDTO.getCode(), FormService.class, "write", permissions);
+        accessRight.grantAccessByAccessType(formDTO.getCode(), FormService.class, WRITE, permissions);
         Optional<Form> formOptional = formRepository.findByIdAndArchived(id, UN_ARCHIVED);
         log.info("form optional  is" + formOptional.get());
         if(!formOptional.isPresent())throw new EntityNotFoundException(Form.class, "Id", id +"");
 
         Form form = formMapper.toFormDTO(formDTO);
         form.setId(id);
-        form.setModifiedBy(userService.getUserWithRoles().get().getUserName());
+        //form.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return formRepository.save(form);
     }
 
@@ -134,10 +134,10 @@ public class FormService {
         if(!formOptional.isPresent())throw new EntityNotFoundException(Form.class, "Id", id +"");
         Set<String> permissions = accessRight.getAllPermission();
 
-        accessRight.grantAccessByAccessType(formOptional.get().getCode(), FormService.class, "delete", permissions);
+        accessRight.grantAccessByAccessType(formOptional.get().getCode(), FormService.class, DELETE, permissions);
 
         formOptional.get().setArchived(ARCHIVED);
-        formOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
+        //formOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return formOptional.get().getArchived();
     }
 }

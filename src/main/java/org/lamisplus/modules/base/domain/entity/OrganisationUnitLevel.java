@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -33,5 +34,6 @@ public class OrganisationUnitLevel implements Serializable {
     private Integer archived = 0;
 
     @OneToMany(mappedBy = "organisationUnitLevelByOrganisationUnitLevelId")
+    @ToString.Exclude
     public List<OrganisationUnitHierarchy> organisationUnitHierarchiesById;
 }

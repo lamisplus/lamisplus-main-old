@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.dto.ModuleDTO;
 import org.lamisplus.modules.base.domain.entity.Module;
@@ -21,8 +22,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/modules")
+@Audit
 public class ModuleController {
-    private final String ENTITY_NAME = "Module";
     private final ModuleService moduleService;
     private static final Boolean IS_START_UP = false;
 
@@ -45,9 +46,7 @@ public class ModuleController {
 
     @PostMapping
     public ResponseEntity<Module> save(@RequestBody ModuleDTO moduleDTO) throws URISyntaxException {
-        Module module = this.moduleService.save(moduleDTO);
-        return ResponseEntity.created(new URI("/api/modules/" + module.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(module.getId()))).body(module);
+        return ResponseEntity.ok(this.moduleService.save(moduleDTO));
     }
 
     @PostMapping("/upload")

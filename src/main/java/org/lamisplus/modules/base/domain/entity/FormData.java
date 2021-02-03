@@ -13,7 +13,7 @@ import java.util.Objects;
 @Data
 @Entity
 @EqualsAndHashCode
-@Table(name = "form_data", schema = "public", catalog = "lamisplus-old-jwt")
+@Table(name = "form_data")
 public class FormData extends JsonBEntity implements Serializable {
     @Id
     @Column(name = "id")

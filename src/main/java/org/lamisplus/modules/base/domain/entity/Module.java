@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @EqualsAndHashCode
 @Table(name = "module")
-public class Module implements Serializable {
+public class Module extends Audit<String> implements Serializable {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,25 +53,6 @@ public class Module implements Serializable {
     @Column(name = "uuid")
     @JsonIgnore
     private String uuid;
-
-    @Basic
-    @Column(name = "date_created")
-    private Timestamp dateCreated;
-
-    @Basic
-    @Column(name = "created_by")
-    private String createdBy;
-
-    @Basic
-    @Column(name = "date_modified")
-    @JsonIgnore
-    @UpdateTimestamp
-    private Timestamp dateModified;
-
-    @Basic
-    @Column(name = "modified_by")
-    @JsonIgnore
-    private String modifiedBy;
 
     @Basic
     @Column(name = "date_installed")

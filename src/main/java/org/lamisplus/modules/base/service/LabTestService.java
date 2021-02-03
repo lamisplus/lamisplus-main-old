@@ -18,6 +18,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class LabTestService {
+    public static final int ARCHIVED = 1;
     private final LabTestRepository labTestRepository;
     private final UserService userService;
 
@@ -28,7 +29,6 @@ public class LabTestService {
     public LabTest save(LabTest labTest) {
         Optional<LabTest> labTestOptional = labTestRepository.findById(labTest.getId());
         if (labTestOptional.isPresent()) throw new RecordExistException(LabTest.class, "Id", labTest.getId() + "");
-        labTest.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         return labTestRepository.save(labTest);
     }
 
@@ -42,15 +42,13 @@ public class LabTestService {
         Optional<LabTest> labTestOptional = labTestRepository.findById(id);
         if(!labTestOptional.isPresent() || labTestOptional.get().getArchived() == 1)throw new EntityNotFoundException(LabTest.class, "Id", id +"");
         labTest.setId(id);
-        labTest.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return labTestRepository.save(labTest);
     }
 
     public Integer delete(Long id) {
         Optional<LabTest> labTestOptional = labTestRepository.findById(id);
         if(!labTestOptional.isPresent() || labTestOptional.get().getArchived() == 1)throw new EntityNotFoundException(LabTest.class, "Id", id +"");
-        labTestOptional.get().setArchived(1);
-        labTestOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
+        labTestOptional.get().setArchived(ARCHIVED);
 
         return labTestOptional.get().getArchived();
     }

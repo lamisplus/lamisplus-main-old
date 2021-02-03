@@ -3,14 +3,13 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.ApplicationCodesetDTO;
-import org.lamisplus.modules.base.domain.dto.HeaderUtil;
-import org.lamisplus.modules.base.domain.entity.ApplicationCodeset;
-import org.lamisplus.modules.base.service.ApplicationCodesetService;
+import org.lamisplus.modules.base.domain.entity.ApplicationCodeSet;
+import org.lamisplus.modules.base.service.ApplicationCodeSetService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -18,13 +17,13 @@ import java.util.List;
 @RequestMapping("/api/application-codesets")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class ApplicationCodesetController {
-    private final ApplicationCodesetService applicationCodesetService;
-    private static String ENTITY_NAME = "ApplicationCodeset";
+    private final ApplicationCodeSetService applicationCodesetService;
 
     @GetMapping("/codesetGroup")
-    public ResponseEntity<List<ApplicationCodesetDTO>> getApplicationCodeByCodesetGroup(@RequestParam String codesetGroup) {
-        return ResponseEntity.ok(this.applicationCodesetService.getApplicationCodeByCodesetGroup(codesetGroup));
+    public ResponseEntity<List<ApplicationCodesetDTO>> getApplicationCodeByCodeSetGroup(@RequestParam String codesetGroup) {
+        return ResponseEntity.ok(this.applicationCodesetService.getApplicationCodeByCodeSetGroup(codesetGroup));
     }
 
    /* @GetMapping("/{id}")
@@ -35,21 +34,19 @@ public class ApplicationCodesetController {
     @GetMapping
     public ResponseEntity<List<ApplicationCodesetDTO>> getAllApplicationCodesets() {
 
-        return ResponseEntity.ok(this.applicationCodesetService.getAllApplicationCodeset(0));
+        return ResponseEntity.ok(this.applicationCodesetService.getAllApplicationCodeSet());
     }
 
     @PostMapping
-    public ResponseEntity<ApplicationCodeset> save(@RequestBody ApplicationCodesetDTO applicationCodesetDTO) throws URISyntaxException {
-        ApplicationCodeset applicationCodeset = applicationCodesetService.save(applicationCodesetDTO);
-        return ResponseEntity.created(new URI("/api/application-codesets/" + applicationCodeset.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(applicationCodeset.getId()))).body(applicationCodeset);
+    public ResponseEntity<ApplicationCodeSet> save(@RequestBody ApplicationCodesetDTO applicationCodesetDTO) {
+        return ResponseEntity.ok(applicationCodesetService.save(applicationCodesetDTO));
+
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApplicationCodeset> update(@PathVariable Long id, @RequestBody ApplicationCodesetDTO applicationCodesetDTO) throws URISyntaxException {
-        ApplicationCodeset applicationCodeset = applicationCodesetService.update(id, applicationCodesetDTO);
-        return ResponseEntity.created(new URI("/api/application-codesets/" + applicationCodeset.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(applicationCodeset.getId()))).body(applicationCodeset);
+    public ResponseEntity<ApplicationCodeSet> update(@PathVariable Long id, @RequestBody ApplicationCodesetDTO applicationCodesetDTO) {
+        return ResponseEntity.ok(applicationCodesetService.update(id, applicationCodesetDTO));
+
     }
 
     @DeleteMapping("/{id}")

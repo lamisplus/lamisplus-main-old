@@ -89,10 +89,10 @@ public class ModuleService {
         if(moduleOptional.isPresent()) throw new RecordExistException(Module.class, MODULE_CLASS_NAME, moduleDTO.getName());
 
         final Module module = this.moduleMapper.toModuleDTO(moduleDTO);
-        module.setCreatedBy(userService.getUserWithRoles().get().getUserName());
+/*        module.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         if(module.getDateCreated() == null){
             module.setDateCreated(ts);
-        }
+        }*/
         module.setArchived(UN_ARCHIVED);
 
         return this.moduleRepository.save(module);

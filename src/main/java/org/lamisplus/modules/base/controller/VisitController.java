@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.VisitDTO;
 import org.lamisplus.modules.base.domain.entity.Visit;
 import org.lamisplus.modules.base.service.VisitService;
@@ -15,8 +16,8 @@ import java.util.List;
 @RestController
 @RequestMapping("api/visits")
 @RequiredArgsConstructor
+@Audit
 public class VisitController {
-    private static final String ENTITY_NAME = "Visit";
     private final VisitService visitService;
 
     @GetMapping
@@ -35,18 +36,13 @@ public class VisitController {
     }
 
     @PostMapping
-    public ResponseEntity<Visit> save(@RequestBody VisitDTO visitDTO) throws URISyntaxException {
-        Visit visit1 = this.visitService.save(visitDTO);
-        return ResponseEntity.created(new URI("/api/visits/" + visit1.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(visit1.getId()))).body(visit1);
+    public ResponseEntity<Visit> save(@RequestBody VisitDTO visitDTO) {
+        return ResponseEntity.ok(this.visitService.save(visitDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Visit> updateVisit(@RequestBody Visit visit, @PathVariable Long id) throws URISyntaxException{
-        Visit result = visitService.update(id, visit);
-        return ResponseEntity.created(new URI("/api/visits/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId())))
-                .body(result);
+    public ResponseEntity<Visit> updateVisit(@RequestBody Visit visit, @PathVariable Long id) {
+        return ResponseEntity.ok(visitService.update(id, visit));
     }
 
     @DeleteMapping("/{id}")

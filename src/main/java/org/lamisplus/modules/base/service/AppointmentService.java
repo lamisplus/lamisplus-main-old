@@ -29,7 +29,7 @@ public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
     private final AppointmentMapper appointmentMapper;
-    private final UserService userService;
+    //private final UserService userService;
     private static final int ARCHIVED = 1;
     private static final int UN_ARCHIVED = 0;
     private final GenericSpecification<Appointment> genericSpecification;
@@ -52,7 +52,6 @@ public class AppointmentService {
 
     public Appointment save(AppointmentDTO appointmentDTO) {
         final Appointment appointment = appointmentMapper.toAppointment(appointmentDTO);
-        appointment.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         appointment.setArchived(UN_ARCHIVED);
         return appointmentRepository.save(appointment);
     }
@@ -82,7 +81,6 @@ public class AppointmentService {
         final Appointment appointment = appointmentMapper.toAppointment(appointmentDTO);
         appointment.setId(id);
         appointment.setArchived(UN_ARCHIVED);
-        appointment.setModifiedBy(userService.getUserWithRoles().get().getUserName());
 
         return appointmentRepository.save(appointment);
     }
@@ -91,7 +89,6 @@ public class AppointmentService {
         Optional<Appointment> appointmentOptional = appointmentRepository.findByIdAndArchived(id, UN_ARCHIVED);
         if (!appointmentOptional.isPresent()) throw new EntityNotFoundException(Appointment.class, "Display:", id + "");
         appointmentOptional.get().setArchived(ARCHIVED);
-        appointmentOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
 
         return appointmentOptional.get().getArchived();
     }
