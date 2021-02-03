@@ -17,7 +17,7 @@ const columns = [
   },
   {
     name: 'Drug Name (Generic)',
-    selector: 'generic_name',
+    selector: 'drug.genericName',
     sortable: false,
   },
   {

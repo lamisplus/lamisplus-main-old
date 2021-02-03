@@ -3,26 +3,27 @@ import {Alert, Spinner} from "reactstrap";
 import { connect } from "react-redux";
 import * as CODES from "api/codes";
 import Button from "@material-ui/core/Button";
-import FormRenderer from "components/FormManager/FormRenderer";
+import FormRendererUpdate from "components/FormManager/FormRendererUpdate";
 import { FaArrowLeft } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
-import {update} from "../../actions/patients";
 import moment from "moment";
 import _ from 'lodash';
-import {fetchByHospitalNumber} from "actions/patients";
+import {fetchByHospitalNumber, update} from "actions/patients";
+import axios from "axios";
+import {url as baseUrl} from "../../api";
 
-function EditPatientFormio(props) {
+const EditPatientFormio = (props) => {
     const [errorMsg, setErrorMsg] = React.useState("");
     const [showErrorMsg, setShowErrorMsg] = useState(false);
     const onDismiss = () => setShowErrorMsg(false);
     const [successMsg, setSuccessMsg] = React.useState("");
     const [showSuccessMsg, setShowSuccessMsg] = useState(false);
-    const [submission, setSubmission] = React.useState({});
+    const [submission, setSubmission] = React.useState();
     const onDismissSuccess = () => setShowSuccessMsg(false);
-    const [showLoadingPatientInfo , setShowLoadingPatientInfo] = React.useState(true);
+    const [showLoadingPatientInfo , setShowLoadingPatientInfo] = React.useState(false);
 
-    const patientHospitalNumber2 = props.location.state;
-
+    const patientHospitalNumber = props.location.state;
+    let patientId;
     const currentForm = {
         code: CODES.PATIENT_REGISTRATION_FORM,
         programCode: CODES.GENERAL_SERVICE,
@@ -37,42 +38,36 @@ function EditPatientFormio(props) {
         window.scrollTo(0, 0);
     };
 
-    //fetch patient by patient hospital number
-    // React.useEffect(() => {
-    //     const onError = () => {
-    //         toast.error("An error occurred, could not load patient information");
-    //     }
-    //
-    //     if(patientHospitalNumber) {
-    //         console.log(patientHospitalNumber);
-    //         props.fetchByHospitalNumber(patientHospitalNumber, () => setShowLoadingPatientInfo(false), onError);
-    //     }
-    // }, [patientHospitalNumber]);
 
-        const onPSuccess = () => {
-            setShowLoadingPatientInfo(false);
-        };
-        const onPError = () => {
-            setShowLoadingPatientInfo(false);
-        };
-        props.fetchByHospitalNumber(patientHospitalNumber2, onPSuccess, onPError);
-
-
-    //Add patient data to submission
+   // fetch patient by patient hospital number
     React.useEffect(() => {
-        setSubmission(_.merge(submission, { data:  props.patient}));
-    }, [props.patient]);
-
+        async function fetchPatient() {
+            let requestOptions = {
+                headers: { 'Content-Type': 'application/json' }
+            };
+            setShowLoadingPatientInfo(true);
+            axios
+                .get(`${baseUrl}patients/${patientHospitalNumber}`, requestOptions)
+                .then(response => {
+                    try {
+                        const patientObj = response.data;
+                        patientId = response.data.patientId;
+                       setSubmission({data: patientObj});
+                        setShowLoadingPatientInfo(false);
+                    } catch(c){
+                        console.log(c);
+                    }
+                })
+                .catch(error => {
+                        setShowLoadingPatientInfo(false);
+                    }
+                );
+        }
+        fetchPatient();
+    }, [patientHospitalNumber]);
 
     const registerPatient = (formData) => {
         const data = formData.data;
-        data['authHeader'] = null;
-        if(data.dateOfRegistration) {
-            data['dateRegistration'] = moment(data.dateOfRegistration).format("DD-MM-YYYY");
-        }
-        if(data.dateOfBirth) {
-            data['dob'] = moment(data.dateOfBirth).format("DD-MM-YYYY");
-        }
         const onSuccess = () => {
             toast.success("Patient saved successfully!");
             setTimeout(() => {
@@ -82,7 +77,7 @@ function EditPatientFormio(props) {
         const onError = () => {
             toast.error("An error occurred, could not save patient information");
         }
-        props.update(data, props.patientHospitalNumber, onSuccess, onError);
+        props.update(data, submission.data.patientId, onSuccess, onError);
 
     }
 
@@ -113,7 +108,7 @@ function EditPatientFormio(props) {
                     Go Back
                 </Button>
             </div>
-            <FormRenderer
+            <FormRendererUpdate
                 formCode={currentForm.code}
                 submission={submission}
                 programCode={currentForm.programCode}
@@ -124,11 +119,13 @@ function EditPatientFormio(props) {
 }
 const mapStateToProps = (state) => {
     return {
-        patient: state.patients.patient
+
     };
 };
 
 const mapActionToProps = {
+    fetchPatientByHospitalNumber: fetchByHospitalNumber,
+    update: update
 };
 
-export default connect(mapStateToProps, { update , fetchByHospitalNumber})(EditPatientFormio);
+export default connect(mapStateToProps,mapActionToProps)(EditPatientFormio);

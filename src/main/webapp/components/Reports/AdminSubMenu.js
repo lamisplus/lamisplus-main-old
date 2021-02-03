@@ -1,24 +1,14 @@
 import React, { useState } from "react";
-import { Button, Dropdown, Menu } from "semantic-ui-react";
+import {  Dropdown, Menu } from "semantic-ui-react";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Popover from "@material-ui/core/Popover";
 import { connect } from "react-redux";
-import { Badge } from "reactstrap";
-import CheckInModal from "components/CheckIn/CheckInModal";
-import FormRendererModal from "components/FormManager/FormRendererModal";
 import * as CODES from "api/codes";
 import { ToastContainer, toast } from "react-toastify";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import { update } from "actions/visit";
 import { fetchByHospitalNumber} from "actions/patients";
-import { APPLICATION_CODESET_RELATIONSHIPS } from "actions/types";
 import { fetchApplicationCodeSet } from "actions/applicationCodeset";
-import {MenuItem} from '@reach/menu-button';
 
 Moment.locale("en");
 momentLocalizer();
