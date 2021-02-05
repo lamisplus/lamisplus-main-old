@@ -4,6 +4,7 @@ package org.lamisplus.modules.base.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.audit4j.core.annotation.Audit;
+import org.audit4j.core.annotation.IgnoreAudit;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.dto.ModuleDTO;
 import org.lamisplus.modules.base.domain.entity.Module;
@@ -29,33 +30,33 @@ public class ModuleController {
 
 
     @GetMapping
-    public ResponseEntity<List<Module>> getAllModule() {
+    public ResponseEntity<List<Module>> getAllModules() {
         return ResponseEntity.ok(this.moduleService.getAllModules());
     }
 
     @GetMapping("{moduleType}")
-    public ResponseEntity<List<Module>> getAllModuleByModuleStatus(@PathVariable int moduleType) {
+    public ResponseEntity<List<Module>> getAllModulesByModuleStatus(@PathVariable int moduleType) {
         return ResponseEntity.ok(this.moduleService.getAllModuleByModuleStatus(moduleType));
     }
 
     @GetMapping("{moduleStatus}/{batchNo}")
-    public ResponseEntity<List<Module>> getAllModuleByModuleStatusAndBatchNo(@PathVariable int moduleStatus,
+    public ResponseEntity<List<Module>> getAllModulesByModuleStatusAndBatchNo(@PathVariable int moduleStatus,
                                                                              @PathVariable String batchNo) {
         return ResponseEntity.ok(this.moduleService.getAllModuleByModuleStatusAndBatchNo(moduleStatus, batchNo));
     }
 
     @PostMapping
-    public ResponseEntity<Module> save(@RequestBody ModuleDTO moduleDTO) throws URISyntaxException {
+    public ResponseEntity<Module> save(@RequestBody ModuleDTO moduleDTO) {
         return ResponseEntity.ok(this.moduleService.save(moduleDTO));
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<List<Module>> uploadAndUnzip(@RequestParam("file1") MultipartFile [] jarFile, HttpServletRequest request) {
+    public ResponseEntity<List<Module>> uploadAndUnzip(@IgnoreAudit @RequestParam("file1") MultipartFile [] jarFile, @IgnoreAudit HttpServletRequest request) {
         return ResponseEntity.ok(moduleService.uploadAndUnzip(jarFile, request));
     }
 
     @PostMapping("{id}/install")
-    public ResponseEntity<Module> installModule(@PathVariable Long id) {
+    public ResponseEntity<Module> installModule(@IgnoreAudit @PathVariable Long id) {
         return ResponseEntity.ok(moduleService.installModule(id, null));
     }
 
