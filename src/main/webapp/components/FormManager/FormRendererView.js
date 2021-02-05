@@ -5,7 +5,7 @@ import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import { Card, Alert, CardBody, Spinner } from "reactstrap";
 import { formRendererService } from "_services/form-renderer";
-
+import { authHeader } from '_helpers/auth-header';
 Moment.locale("en");
 momentLocalizer();
 

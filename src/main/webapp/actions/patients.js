@@ -287,27 +287,30 @@ export const fetchPatientVitalSigns = (id, onSuccess, onError) => dispatch => {
  }
 
  export const fetchByHospitalNumber = (id, onSuccess, onError) => dispatch => {
-  axios
-    .get(`${baseUrl}patients/${id}`)
-    .then(response => {
-      dispatch({
-        type: ACTION_TYPES.PATIENTS_FETCH_BY_ID,
-        payload: response.data
-      });
-      if(onSuccess){
-      onSuccess();
-      }
-    })
-    .catch(error => {
-      dispatch({
-        type: ACTION_TYPES.PATIENTS_ERROR,
-        payload: "Something went wrong, please try again"
-      })
-      if(onError){
-      onError();
-      }
+    console.log(id);
+    if(id) {
+        axios
+            .get(`${baseUrl}patients/${id}`)
+            .then(response => {
+                dispatch({
+                    type: ACTION_TYPES.PATIENTS_FETCH_BY_ID,
+                    payload: response.data
+                });
+                if (onSuccess) {
+                    onSuccess();
+                }
+            })
+            .catch(error => {
+                    dispatch({
+                        type: ACTION_TYPES.PATIENTS_ERROR,
+                        payload: "Something went wrong, please try again"
+                    })
+                    if (onError) {
+                        onError();
+                    }
+                }
+            );
     }
-    );
 };
  
 export const fetchPatientEncounterProgramCodeExclusionList = (id, onSuccess, onError) => dispatch => {

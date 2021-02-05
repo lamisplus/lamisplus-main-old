@@ -9,6 +9,8 @@ import axios from "axios";
 
 const { dispatch } = store;
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
+console.log(localStorage.getItem('currentUser_Permissions'));
+const currentUserPermissions = new BehaviorSubject(localStorage.getItem('currentUser_Permission') ? JSON.parse( localStorage.getItem('currentUser_Permission')) : null);
 
 export const authentication = {
     login,
@@ -45,20 +47,17 @@ function login(username, password, remember) {
 function logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('currentUser_Permissions');
     currentUserSubject.next(null);
 }
 
 function getCurrentUserRole() {
     //fetch all the permissions of the logged in user
-    const user = currentUserSubject.value;
-    if(!user || !user.id_token){
+    const permissions = currentUserPermissions.value;
+    if(!permissions || permissions.length < 1){
         return [];
     }
-
-    const token = user.id_token;
-    const decoded = jwt_decode(token);
-    const permissions = decoded.auth;
-    return permissions.split(',');
+    return permissions;
 }
 
 function userHasRole(role){

@@ -85,11 +85,12 @@ const FormRenderer = (props) => {
 
   //fetch patient by patient hospital number if patient is not in the props object
   React.useEffect(() => {
-    if( (props.patient && props.patient.hospitalNumber !== props.patientHospitalNumber) || (!props.patient.hospitalNumber) ){
-      props.fetchPatientByHospitalNumber(props.patientHospitalNumber);
+    if(props.patientHospitalNumber) {
+      console.log('form render')
+        props.fetchPatientByHospitalNumber(props.patientHospitalNumber);
     }
 
-  }, [props.patientHospitalNumber]);
+  }, []);
 
   //Add patient data to submission
   React.useEffect(() => {
