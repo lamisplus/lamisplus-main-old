@@ -25,6 +25,7 @@ public interface VisitRepository extends JpaRepository<Visit, Long>, JpaSpecific
 
     Long countByVisitTypeIdAndArchived(Long visitTypeId, int archive);
 
+    Optional<Visit> findByIdAndArchived(Long id, int archived);
 
     //Date Visit End Less than or equal to today
 }

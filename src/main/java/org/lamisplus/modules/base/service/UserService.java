@@ -156,7 +156,6 @@ public class UserService {
     public UserDTO changeOrganisationUnit(Long organisationUnitId, UserDTO userDTO){
         Optional<User> optionalUser = userRepository.findById(userDTO.getId());
 
-
         boolean found = false;
         for (ApplicationUserOrganisationUnit applicationUserOrganisationUnit : userDTO.getApplicationUserOrganisationUnits()) {
             Long orgUnitId = applicationUserOrganisationUnit.getOrganisationUnitId();

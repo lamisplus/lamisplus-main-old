@@ -14,12 +14,12 @@ public interface ApplicationCodesetRepository extends JpaRepository<ApplicationC
 
     Optional<ApplicationCodeset> findByDisplayAndCodesetGroup(String display, String codeSetGroup);
 
-    List<ApplicationCodeset> findAllByCodesetGroupOrderByIdAsc(String codeSetGroup);
+    List<ApplicationCodeset> findAllByCodesetGroupAndArchivedOrderByIdAsc(String codeSetGroup, int archived);
      ApplicationCodeset findByDisplay(String display);
 
     Boolean existsByDisplayAndCodesetGroup(String display, String codesetGroup);
 
     Optional<ApplicationCodeset> findByDisplayAndCodesetGroupAndArchived(String display, String codesetGroup, Integer active);
 
-    Optional<ApplicationCodeset> findByIdAndAndArchived(Long id, int archive);
+    Optional<ApplicationCodeset> findByIdAndArchived(Long id, int archive);
 }

@@ -3,7 +3,7 @@ import {url} from '../api'
 import * as FORMTYPES from './types'
 import {toast} from 'react-toastify';
 
-export const fetchService = () => dispatch => {
+export const fetchService = (onSuccess) => dispatch => {
     axios.get(`${url}programs`)
         .then(response => {
             console.log(response)
@@ -11,6 +11,7 @@ export const fetchService = () => dispatch => {
                 type: FORMTYPES.FORMTYPES_FETCH_SERVICES,
                 payload: response.data
             })
+            onSuccess()
         })
         .catch(error => {
             console.log(error)

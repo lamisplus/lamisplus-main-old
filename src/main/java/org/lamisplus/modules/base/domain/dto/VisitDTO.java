@@ -10,6 +10,7 @@ import javax.persistence.Convert;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 
 @Data
@@ -61,7 +62,5 @@ public class VisitDTO {
     private Long genderId;
     private Long educationId;
     private Long occupationId;
-    
-
-
+    private List<AppointmentDTO> appointmentDTOList;
 }

@@ -101,7 +101,7 @@ const Update = props => {
 
         setform2(row)
 
-        props.fetchPatientByHospitalNumber('6768595', null, null)
+        props.fetchPatientByHospitalNumber('AD-0221', null, null)
     }, [])
 
     const handleSubmit = e =>  {

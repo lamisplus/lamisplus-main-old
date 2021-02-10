@@ -31,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 @org.springframework.stereotype.Service
@@ -39,6 +40,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @RequiredArgsConstructor
 public class EncounterService {
 
+    private static final int UNARCHIVED = 0;
     private final EncounterRepository encounterRepository;
     private final VisitRepository visitRepository;
     private final EncounterMapper encounterMapper;
@@ -53,13 +55,11 @@ public class EncounterService {
 
     public List<EncounterDTO> getAllEncounters() {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-
-        Specification<Encounter> specification = genericSpecification.findAllWithOrganisation(organisationUnitId);
         List<EncounterDTO> encounterDTOS = new ArrayList();
-
-        List <Encounter> encounters = encounterRepository.findAll(specification);
+        List<Encounter> encounters = encounterRepository.findAllByOrganisationUnitIdAndArchived(organisationUnitId, UNARCHIVED);
+        Set<String> permissions = accessRight.getAllPermission();
         encounters.forEach(singleEncounter -> {
-            if(!accessRight.grantAccessForm(singleEncounter.getFormCode())){
+            if(!accessRight.grantAccessForm(singleEncounter.getFormCode(), permissions)){
                 return;
             }
             Patient patient = singleEncounter.getPatientByPatientId();
@@ -67,9 +67,11 @@ public class EncounterService {
             Form form = singleEncounter.getFormForEncounterByFormCode();
             final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, singleEncounter, form);
             List formDataList = new ArrayList();
-            singleEncounter.getFormDataByEncounter().forEach(formData -> {
-                formDataList.add(formData);
-            });
+            if(null == singleEncounter.getFormDataByEncounter() && !singleEncounter.getFormDataByEncounter().isEmpty()) {
+                singleEncounter.getFormDataByEncounter().forEach(formData -> {
+                    formDataList.add(formData);
+                });
+            }
             encounterDTO.setFormDataObj(formDataList);
             encounterDTOS.add(encounterDTO);
         });
@@ -81,7 +83,9 @@ public class EncounterService {
         if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()== ARCHIVED) {
             throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
         }
-        accessRight.grantAccess(encounterOptional.get().getFormCode(), Encounter.class);
+        Set<String> permissions = accessRight.getAllPermission();
+
+        accessRight.grantAccess(encounterOptional.get().getFormCode(), Encounter.class, permissions);
 
         Encounter encounter = encounterOptional.get();
 
@@ -109,7 +113,9 @@ public class EncounterService {
         if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()==ARCHIVED) {
             throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
         }
-        accessRight.grantAccessByAccessType(encounterOptional.get().getFormCode(), Encounter.class, "write");
+        Set<String> permissions = accessRight.getAllPermission();
+
+        accessRight.grantAccessByAccessType(encounterOptional.get().getFormCode(), Encounter.class, "write", permissions);
 
         Encounter encounter = encounterMapper.toEncounter(encounterDTO);
         encounter.setId(id);
@@ -119,7 +125,9 @@ public class EncounterService {
     }
 
     public Encounter save(EncounterDTO encounterDTO) {
-        accessRight.grantAccessByAccessType(encounterDTO.getFormCode(), Encounter.class, "write");
+        Set<String> permissions = accessRight.getAllPermission();
+
+        accessRight.grantAccessByAccessType(encounterDTO.getFormCode(), Encounter.class, "write", permissions);
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
 
         encounterDTO.setTimeCreated(CustomDateTimeFormat.LocalTimeByFormat(LocalTime.now(),"hh:mm a"));
@@ -173,7 +181,9 @@ public class EncounterService {
         if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()== ARCHIVED) {
             throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
         }
-        accessRight.grantAccessByAccessType(encounterOptional.get().getFormCode(), Encounter.class, "delete");
+        Set<String> permissions = accessRight.getAllPermission();
+
+        accessRight.grantAccessByAccessType(encounterOptional.get().getFormCode(), Encounter.class, "delete", permissions);
 
         encounterOptional.get().setArchived(1);
         encounterOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
@@ -182,7 +192,9 @@ public class EncounterService {
     }
 
     public List<EncounterDTO> getEncounterByFormCodeAndDateEncounter(String formCode, Optional<String> dateStart, Optional<String> dateEnd) {
-        accessRight.grantAccess(formCode, Encounter.class);
+        Set<String> permissions = accessRight.getAllPermission();
+
+        accessRight.grantAccess(formCode, Encounter.class, permissions);
         List<EncounterDTO> encounterDTOS = new ArrayList<>();
         List<Encounter> encounters = encounterRepository.findAll(new Specification<Encounter>() {
             @Override
@@ -226,7 +238,9 @@ public class EncounterService {
         if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()==1) {
             throw new EntityNotFoundException(Encounter.class, "Id",encounterId+"" );
         }
-        accessRight.grantAccess(encounterOptional.get().getFormCode(), Encounter.class);
+        Set<String> permissions = accessRight.getAllPermission();
+
+        accessRight.grantAccess(encounterOptional.get().getFormCode(), Encounter.class, permissions);
 
         List<FormData> formDataList = encounterOptional.get().getFormDataByEncounter();
         return formDataList;

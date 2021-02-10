@@ -11,8 +11,6 @@ import javax.persistence.*;
 @RequiredArgsConstructor
 public class Permission {
     @Id
-    @Getter
-    @Setter
     @GeneratedValue
     private Long id;
 

@@ -28,17 +28,90 @@ const AssignFacilityModal = (props) => {
     const currentUser = props.user;
     const [formData, setFormData] = useState( defaultValues)
     const [facilities, setFacilities] = useState([]);
-    const [selectedFacilities, setSelectedFacilities] = useState(props.user && props.user.applicationUserOrganisationUnitsById ? props.user.applicationUserOrganisationUnitsById : [] );
+    const [countries, setCountries] = useState([]);
+    const [states, setStates] = useState([]);
+    const [lgas, setLgas] = useState([]);
+    const [selectedFacilities, setSelectedFacilities] = useState( [] );
     const classes = useStyles()
 
     const onFacilitySelect = (selectedValues) => {
         setSelectedFacilities(selectedValues);
     };
 
+    const getStateByCountry = (data) => {
+        fetchOrgUnitByParentId(data.value.id, 2, setStates);
+        fetchFacilityByParentId(data.value.id, 4);
+    };
+
+    const getLgaByState = (data) => {
+        fetchOrgUnitByParentId(data.value.id, 3, setLgas);
+        fetchFacilityByParentId(data.value.id, 4);
+    }
+
+    const getFacilities = (data) => {
+        fetchFacilityByParentId(data.value.id, 4);
+    }
+
+    const fetchCountries = () => {
+        axios
+            .get(`${baseUrl}organisation-units/organisation-unit-level/1`)
+            .then((response) => {
+                const c = response.data.map(x => ({
+                    ...x,
+                    label: x.name,
+                    value: x.id,
+                }));
+                setCountries(c);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    const fetchFacilityByParentId = (parentId, levelId) => {
+        axios
+            .get(`${baseUrl}organisation-units/hierarchy/${parentId}/${levelId}`)
+            .then((response) => {
+                setFacilities(
+                    Object.entries(response.data).map(([key, value]) => ({
+                        label: value.name,
+                        value: value.id,
+                    }))
+                );
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    const fetchOrgUnitByParentId = (parentId, levelId, setData) => {
+        axios
+            .get(`${baseUrl}organisation-units/hierarchy/${parentId}/${levelId}`)
+            .then((response) => {
+                const c = response.data.map(x => ({
+                    ...x,
+                    label: x.name,
+                    value: x.id,
+                }));
+               // const d = c.push({label:'Select one', value:''});
+
+               setData(c);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
     useEffect(() => {
         //for application codeset edit, load form data
         setFormData(props.formData ? props.formData : defaultValues);
     }, [props.formData]);
+
+    useEffect(() => {
+        const y = props.user && props.user.applicationUserOrganisationUnits
+            ? props.user.applicationUserOrganisationUnits.map((x) => (x.organisationUnitId)) : [];
+        setSelectedFacilities(y);
+    }, [props.user]);
 
     /* Get list of Facilities from the server - id is 4*/
     useEffect(() => {
@@ -59,6 +132,7 @@ const AssignFacilityModal = (props) => {
         }
 
         getCharacters();
+        fetchCountries();
     }, []);
 
     const handleInputChange = e => {
@@ -97,10 +171,7 @@ const AssignFacilityModal = (props) => {
 
     }
 
-    let getFacilities;
-    let getLgaByState;
-    let countries = [];
-    let getStateByCountry;
+
     return (
 
         <div >
@@ -120,6 +191,7 @@ const AssignFacilityModal = (props) => {
                                             <Select
                                                 required
                                                 isMulti={false}
+                                                isClearable={true}
                                                 onChange={getStateByCountry}
                                                 options={countries.map((x) => ({
                                                     label: x.name,
@@ -134,8 +206,9 @@ const AssignFacilityModal = (props) => {
                                             <Select
                                                 required
                                                 isMulti={false}
+                                                isClearable={true}
                                                 onChange={getLgaByState}
-                                                options={countries.map((x) => ({
+                                                options={states.map((x) => ({
                                                     label: x.name,
                                                     value: x,
                                                 }))}
@@ -148,8 +221,9 @@ const AssignFacilityModal = (props) => {
                                             <Select
                                                 required
                                                 isMulti={false}
+                                                isClearable={true}
                                                 onChange={getFacilities}
-                                                options={countries.map((x) => ({
+                                                options={lgas.map((x) => ({
                                                     label: x.name,
                                                     value: x,
                                                 }))}
@@ -160,6 +234,7 @@ const AssignFacilityModal = (props) => {
                                         <FormGroup>
                                             <Label for="Facility">Assign Facilities</Label>
                                             <DualListBox
+                                                canFilter
                                                 options={facilities}
                                                 onChange={onFacilitySelect}
                                                 selected={selectedFacilities}
