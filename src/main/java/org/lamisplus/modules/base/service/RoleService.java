@@ -63,6 +63,7 @@ public class RoleService {
         if(!roleOptional.isPresent())throw new EntityNotFoundException(Role.class, "Id", id +"");
         Role updatedRole = roleOptional.get();
         HashSet<Permission> permissionsSet = getPermissions(permissions);
+        System.out.println(permissionsSet);
         updatedRole.setPermission(permissionsSet);
         return roleRepository.save(updatedRole);
     }
@@ -71,16 +72,20 @@ public class RoleService {
         HashSet permissionsSet = new HashSet<>();
         Permission permissionToAdd = new Permission();
         for(Permission p : permissions){
-            // add permissions by either id or name
-            if(null != p.getName()) {
-                permissionToAdd = permissionRepository.findByName(p.getName()).get();
-            } else if(p.getId() != null ){
+            try {
+                // add permissions by either id or name
+                if (null != p.getName()) {
+                    permissionToAdd = permissionRepository.findByName(p.getName()).get();
+                } /*else if(p.getId() != null ){
                 permissionToAdd = permissionRepository.findById(p.getId()).get();
-            } else {
-                ResponseEntity.badRequest();
-                return null;
+            }*/ else {
+                    ResponseEntity.badRequest();
+                    return null;
+                }
+                permissionsSet.add(permissionToAdd);
+            }catch(Exception e){
+                e.printStackTrace();
             }
-            permissionsSet.add(permissionToAdd);
         }
         return permissionsSet;
     }

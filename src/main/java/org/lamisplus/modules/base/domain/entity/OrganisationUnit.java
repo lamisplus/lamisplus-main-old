@@ -3,7 +3,6 @@ package org.lamisplus.modules.base.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,23 +12,14 @@ import java.util.List;
 @Data
 @Entity
 @EqualsAndHashCode
-@Table(name = "organisation_unit", schema = "public", catalog = "lamisplus-old-jwt")
+@Table(name = "organisation_unit")
 public class OrganisationUnit implements Serializable {
-    @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
-    @JsonIgnore
-    public List<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitsById;
-    @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
-    @JsonIgnore
-    public List<OrganisationUnitHierarchy> organisationUnitHierarchiesById;
-    @OneToMany(mappedBy = "organisationUnitByParentOrganisationUnitId")
-    @JsonIgnore
-    public List<OrganisationUnitHierarchy> organisationUnitHierarchiesById_0;
-    @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
-    public List<FormData> formDataById;
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Basic
     @Column(name = "name")
     private String name;
@@ -47,8 +37,29 @@ public class OrganisationUnit implements Serializable {
     @JsonIgnore
     private Integer archived = 0;
 
-    @ToString.Exclude
+    @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
+    public List<Appointment> appointmentsById;
+
+    @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
+    public List<ApplicationUserPatient> applicationUserPatientsById;
+
+    @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
     @JsonIgnore
+    public List<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitsById;
+
+    @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
+    @JsonIgnore
+    public List<OrganisationUnitHierarchy> organisationUnitHierarchiesById;
+
+    @OneToMany(mappedBy = "organisationUnitByParentOrganisationUnitId")
+    @JsonIgnore
+    public List<OrganisationUnitHierarchy> organisationUnitHierarchiesById_0;
+
+    @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
+    @JsonIgnore
+    public List<FormData> formDataById;
+
     @OneToMany(mappedBy = "organisationUnitByCurrentOrganisationUnitId")
-    public Collection<User> users;
+    @JsonIgnore
+    public List<User> users;
 }

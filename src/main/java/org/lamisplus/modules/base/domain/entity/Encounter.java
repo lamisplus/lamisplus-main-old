@@ -18,6 +18,7 @@ import java.util.List;
 
 @Entity
 @EqualsAndHashCode
+@ToString
 @Table(name = "encounter")
 @Data
 public class Encounter implements Serializable  {
@@ -91,24 +92,29 @@ public class Encounter implements Serializable  {
     @ManyToOne
     @JoinColumn(name = "patient_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
+    @ToString.Exclude
     private Patient patientByPatientId;
 
     @ManyToOne
     @JoinColumn(name = "visit_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
+    @ToString.Exclude
     private Visit visitByVisitId;
 
     @ManyToOne
     @JoinColumn(name = "form_code", referencedColumnName = "code", insertable = false, updatable = false)
     @JsonIgnore
+    @ToString.Exclude
     private Form formForEncounterByFormCode;
 
     @ManyToOne
     @JoinColumn(name = "program_code", referencedColumnName = "code", insertable = false, updatable = false)
     @JsonIgnore
+    @ToString.Exclude
     private Program programForEncounterByProgramCode;
 
     @OneToMany(mappedBy = "encounterByEncounterId")
     @JsonIgnore
+    @ToString.Exclude
     private List<FormData> formDataByEncounter;
     }
