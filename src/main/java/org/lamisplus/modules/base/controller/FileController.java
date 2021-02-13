@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.controller;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,8 +32,7 @@ public class FileController {
     private final FilesStorageService storageService;
     private final FilesStorageServiceImpl filesStorageServiceImpl;
 
-    @Value("${uploadFile.location}")
-    private String uploadFileLocation; // upload the local directory saved by the file, use @Value to get the attribute value configured in the global configuration file
+    private String uploadFileLocation = System.getProperty("user.dir"); // upload the local directory saved by the file, use @Value to get the attribute value configured in the global configuration file
 
 
     @PostMapping("/upload")

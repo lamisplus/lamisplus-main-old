@@ -1,6 +1,8 @@
 package org.lamisplus.modules.base;
 
+import org.jfree.util.Log;
 import org.lamisplus.modules.base.service.ModuleService;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,7 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
 @SpringBootApplication
-public class BaseApplication extends SpringBootServletInitializer{
+public class BaseApplication extends SpringBootServletInitializer implements InitializingBean {
     private static ConfigurableApplicationContext context;
 
     private static Boolean isStartUp = true;
@@ -22,6 +24,7 @@ public class BaseApplication extends SpringBootServletInitializer{
     }
 
     public static void main(String[] args) {
+        //Log.info("java.class.path"System.getProperty("java.class.path"));
         context = SpringApplication.run(BaseApplication.class, args);
         ModuleService moduleService = context.getBean(ModuleService.class);
         moduleService.startModule(isStartUp);
@@ -31,11 +34,15 @@ public class BaseApplication extends SpringBootServletInitializer{
         if (context == null) {
             context = configurableApplicationContext;
         }
+        for(Class c : clz){
+            Log.info("Class is - " + c.getSimpleName());
+        }
 
         ApplicationArguments args = context.getBean(ApplicationArguments.class);
 
         Thread thread = new Thread(() -> {
             try {
+                //context.refresh();
                 context.close();
                 //System.out.println("System is close");
                 context = SpringApplication.run(clz, args.getSourceArgs());
@@ -50,6 +57,13 @@ public class BaseApplication extends SpringBootServletInitializer{
 
     public static ConfigurableApplicationContext getContext() {
         return context;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println("In afterPropertiesSet");
+        System.setProperty("java.class.path", System.getProperty("user.dir"));
+        System.getProperty("java.class.path");
     }
 
     /*@PersistenceContext
