@@ -88,7 +88,6 @@ public class ModuleService {
     @Value("${base.url}")
     private String baseUrl;
     private final FilesStorageServiceImpl filesStorageServiceImpl;
-    JarClassLoader jcl;
 
     public Module save(ModuleDTO moduleDTO) {
         Optional<Module> moduleOptional = this.moduleRepository.findByName(moduleDTO.getName());
@@ -101,19 +100,16 @@ public class ModuleService {
         }
         module.setArchived(UN_ARCHIVED);
 
-        return this.moduleRepository.save(module);
+        return moduleRepository.save(module);
     }
 
     public List<Module> getAllModules(){
-        Specification<Module> specification = genericSpecification.findAll(0);
-        return this.moduleRepository.findAll(specification);
+        return moduleRepository.findAllByArchived(UN_ARCHIVED);
     }
 
     public List<Module> uploadAndUnzip(MultipartFile[] files, HttpServletRequest request) {
         ModuleUtil.setModuleConfigs();
         currentUser = userService.getUserWithRoles().get().getUserName();
-
-
 
         Arrays.asList(files).stream().forEach(file ->{
             if(!file.getOriginalFilename().contains(DOT_JAR)){
@@ -630,10 +626,7 @@ public class ModuleService {
     }
 
     private List<Module> getAllModuleByStatusAndModuleType(int moduleStatus, int moduleType) {
-        Specification<Module> moduleSpecification = genericSpecification.findAllModules(moduleStatus, moduleType);
-        List<Module> modules = this.moduleRepository.findAll(moduleSpecification);
-
-        return modules;
+        return moduleRepository.findAllByStatusAndModuleType(moduleStatus, moduleType);
     }
 
     private Class getBeanInContext(String clzName){
