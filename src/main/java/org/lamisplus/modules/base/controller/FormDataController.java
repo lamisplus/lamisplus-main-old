@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.entity.FormData;
 import org.lamisplus.modules.base.service.FormDataService;
@@ -17,9 +18,9 @@ import java.util.List;
 @RequestMapping("/api/form-data")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class FormDataController {
     private final FormDataService formDataService;
-    private static final String ENTITY_NAME = "FormData";
 
 
     @GetMapping
@@ -33,18 +34,15 @@ public class FormDataController {
     }
 
     @PostMapping
-    public ResponseEntity<FormData> save(@RequestBody FormData formData) throws URISyntaxException {
-        FormData result = formDataService.save(formData);
-        return ResponseEntity.created(new URI("/api/form-data/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId()))).body(result);
+    public ResponseEntity<FormData> save(@RequestBody FormData formData) {
+        return ResponseEntity.ok(formDataService.save(formData));
+
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<FormData> update(@PathVariable Long id, @RequestBody FormData formData) throws URISyntaxException {
-        FormData result = formDataService.update(id, formData);
-        return ResponseEntity.created(new URI("/api/form-data/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId())))
-                .body(result);
+    public ResponseEntity<FormData> update(@PathVariable Long id, @RequestBody FormData formData) {
+        return ResponseEntity.ok(formDataService.update(id, formData));
+
     }
 
     @DeleteMapping("/{id}")

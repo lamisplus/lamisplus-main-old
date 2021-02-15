@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.sf.jasperreports.engine.JRException;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.DataSourceDTO;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.dto.JasperReportInfoDTO;
@@ -29,6 +30,7 @@ import java.util.List;
 @RequestMapping("/api/jasper-reports")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class JasperReportController {
     private final JasperReportService jasperReportService;
     private static final String ENTITY_NAME = "JasperReport";

@@ -10,8 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.lamisplus.modules.base.BaseApplication;
 import org.lamisplus.modules.base.domain.dto.ApplicationCodesetDTO;
-import org.lamisplus.modules.base.domain.entity.ApplicationCodeset;
-import org.lamisplus.modules.base.service.ApplicationCodesetService;
+import org.lamisplus.modules.base.domain.entity.ApplicationCodeSet;
 import org.lamisplus.modules.base.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ApplicationCodesetUnitTest {
 
     @Autowired
-    private ApplicationCodesetService appCodesetService;
+    private ApplicationCodeSetService appCodesetService;
 
     // MockBean is the annotation provided by Spring that wraps mockito one
     // Annotation that can be used to add mocks to a Spring ApplicationContext.
@@ -39,11 +38,11 @@ public class ApplicationCodesetUnitTest {
     @Test
     public void testGetApplicationCodeset() throws IOException {
         // Parsing mock file
-        ApplicationCodeset applicationCodesets = JsonUtils.jsonFile2Object("appCodeSet.json", ApplicationCodeset.class);
+        ApplicationCodeSet applicationCodesets = JsonUtils.jsonFile2Object("appCodeSet.json", ApplicationCodeSet.class);
         // Mocking remote service
         when(template.getForEntity(any(String.class), any(Class.class))).thenReturn(new ResponseEntity(applicationCodesets, HttpStatus.OK));
 
-        List<ApplicationCodesetDTO> applicationCodesetList = appCodesetService.getApplicationCodeByCodesetGroup("GENDER");
+        List<ApplicationCodesetDTO> applicationCodesetList = appCodesetService.getApplicationCodeByCodeSetGroup("GENDER");
         if(applicationCodesetList == null){
             System.out.println("List is null");
         } else {

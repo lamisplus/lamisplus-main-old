@@ -10,7 +10,7 @@ import java.util.Objects;
 @Entity
 @EqualsAndHashCode
 @Table(name = "application_user_organisation_unit")
-public class ApplicationUserOrganisationUnit {
+public class ApplicationUserOrganisationUnit extends Audit<String> {
 
     @Id
     @Column(name = "id")
@@ -24,6 +24,10 @@ public class ApplicationUserOrganisationUnit {
     @Basic
     @Column(name = "organisation_unit_id")
     private Long organisationUnitId;
+
+    @Basic
+    @Column(name = "archived")
+    private int archived = 0;
 
     @ManyToOne
     @JsonIgnore

@@ -2,6 +2,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.dto.StandardCodesetDTO;
 import org.lamisplus.modules.base.domain.dto.StandardCodesetSourceDTO;
@@ -20,9 +21,9 @@ import java.util.List;
 @RequestMapping("/api/standard_codesets")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class StandardCodesetController {
     private final StandardCodesetService standardCodesetService;
-    private final String ENTITY_NAME = "StandardCodeset";
 
     @GetMapping
     public ResponseEntity<List<StandardCodesetDTO>> getAllStandardCodeset() {
@@ -50,10 +51,8 @@ public class StandardCodesetController {
     }
 
     @PostMapping
-    public ResponseEntity<StandardCodeset> save(@RequestBody StandardCodesetDTO standardCodesetDTO) throws URISyntaxException {
-        StandardCodeset result = standardCodesetService.save(standardCodesetDTO);
-        return ResponseEntity.created(new URI("/api/standard_codesets/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId()))).body(result);
+    public ResponseEntity<StandardCodeset> save(@RequestBody StandardCodesetDTO standardCodesetDTO) {
+        return ResponseEntity.ok(standardCodesetService.save(standardCodesetDTO));
     }
 
     @PutMapping("/{id}")

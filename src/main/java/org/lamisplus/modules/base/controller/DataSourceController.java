@@ -2,6 +2,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.DataSourceDTO;
 import org.lamisplus.modules.base.domain.entity.DataSource;
 import org.lamisplus.modules.base.repository.DataSourceRepository;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequestMapping("/api/data-sources")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class DataSourceController {
     private final DataSourceService dataSourceService;
     private final DataSourceRepository dataSourceRepository;

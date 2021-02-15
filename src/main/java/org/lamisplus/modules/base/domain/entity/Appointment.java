@@ -15,7 +15,7 @@ import java.util.Objects;
 @Data
 @EqualsAndHashCode
 @Table(name = "appointment")
-public class Appointment {
+public class Appointment extends Audit<String>{
 
     @Id
     @Column(name = "id")
@@ -44,29 +44,7 @@ public class Appointment {
     
     @Basic
     @Column(name = "archived")
-    private Integer archived;
-
-    @Basic
-    @Column(name = "date_created")
-    @JsonIgnore
-    @CreationTimestamp
-    private Timestamp dateCreated;
-
-    @Basic
-    @Column(name = "created_by")
-    @JsonIgnore
-    private String createdBy;
-
-    @Basic
-    @Column(name = "date_modified")
-    @UpdateTimestamp
-    @JsonIgnore
-    private Timestamp dateModified;
-
-    @Basic
-    @Column(name = "modified_by")
-    @JsonIgnore
-    private String modifiedBy;
+    private Integer archived = 0;
     
     @ManyToOne
     @JoinColumn(name = "patient_id", referencedColumnName = "id", insertable = false, updatable = false)

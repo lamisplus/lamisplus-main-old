@@ -39,6 +39,7 @@ public class Role {
     @Setter
     @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<Permission> permission;
+    //private Collection<ApplicationUserRole> applicationUserRolesById;
 
     @Override
     public int hashCode() {
@@ -70,4 +71,13 @@ public class Role {
                 ", permissions=" + permission +
                 '}';
     }
+
+    /*@OneToMany(mappedBy = "roleByRoleId")
+    public Collection<ApplicationUserRole> getApplicationUserRolesById() {
+        return applicationUserRolesById;
+    }
+
+    public void setApplicationUserRolesById(Collection<ApplicationUserRole> applicationUserRolesById) {
+        this.applicationUserRolesById = applicationUserRolesById;
+    }*/
 }

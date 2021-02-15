@@ -14,8 +14,8 @@ import * as ACTION_TYPES from "../../actions/types";
 function NewAppointmentPage(props) {
     const [showAppointmentForm, setShowAppointmentForm] = useState(false);
     const [currentForm, setCurrentForm] = useState(false);
-    const [currentPatientId, setCurrentPatientId] = useState(null);
-    
+    //const [currentPatientId, setCurrentPatientId] = useState();
+    let currentPatientId = null;
     const onSuccess = () => {
         toast.success("Form saved successfully!", { appearance: "success" });
         setShowAppointmentForm(false);
@@ -28,11 +28,14 @@ function NewAppointmentPage(props) {
 
 
     const saveAppointment = (submission) => {
+        if(!currentPatientId){
+            onError();
+            return;
+        }
         const data = {
             patientId: currentPatientId,
             detail: submission.data
         }
-        console.log(data);
         axios
             .post(`${baseUrl}appointments`, data)
             .then(response => {
@@ -52,19 +55,21 @@ function NewAppointmentPage(props) {
         aria-label="Create Appointment"
         title="Create Appointment"
         onClick={(event) => {
+
+                currentPatientId = props.data.patientId;
+               // setCurrentPatientId(props.data.patientId);
                 setCurrentForm({
                   code:CODES.APPOINTMENT_FORM,
                   programCode:CODES.GENERAL_SERVICE,
                   formName:"PATIENT APPOINTMENT",
                   patientId: props.data.patientId,
-                    patientHospitalNumber: props.data.hospitalNumber,
+                    patientHospitalNumber: props.data.id,
                   visitId: props.data.visitId,
                     onSubmit: saveAppointment,
                   options:{
                     modalSize: "modal-lg"
                   },
               });
-                setCurrentPatientId(props.data.patientId);
               setShowAppointmentForm(true);
         }}>
         <FaCalendarPlus />

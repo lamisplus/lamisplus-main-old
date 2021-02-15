@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.ApplicationUserOrganisationUnitDTO;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.entity.ApplicationUserOrganisationUnit;
@@ -20,9 +21,10 @@ import java.util.List;
 @RequestMapping("/api/application_user_organisation_unit")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class ApplicationUserOrganisationUnitController {
     private final ApplicationUserOrganisationUnitService applicationUserOrganisationUnitService;
-    private static final String ENTITY_NAME = "ApplicationUserOrganisationUnit";
+    //private static final String ENTITY_NAME = "ApplicationUserOrganisationUnit";
 
 
     @GetMapping
@@ -36,17 +38,14 @@ public class ApplicationUserOrganisationUnitController {
     }
 
     @PostMapping
-    public ResponseEntity<List<ApplicationUserOrganisationUnit>> save(@RequestBody List<ApplicationUserOrganisationUnitDTO> applicationUserOrganisationUnitDTO) throws URISyntaxException {
+    public ResponseEntity<List<ApplicationUserOrganisationUnit>> save(@RequestBody List<ApplicationUserOrganisationUnitDTO> applicationUserOrganisationUnitDTO) {
         return ResponseEntity.ok(applicationUserOrganisationUnitService.save(applicationUserOrganisationUnitDTO));
 
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ApplicationUserOrganisationUnit> update(@PathVariable Long id, @RequestBody ApplicationUserOrganisationUnit applicationUserOrganisationUnit) throws URISyntaxException {
-        ApplicationUserOrganisationUnit result = applicationUserOrganisationUnitService.update(id, applicationUserOrganisationUnit);
-        return ResponseEntity.created(new URI("/api/application_user_organisation_unit/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId())))
-                .body(result);
+    public ResponseEntity<ApplicationUserOrganisationUnit> update(@PathVariable Long id, @RequestBody ApplicationUserOrganisationUnit applicationUserOrganisationUnit) {
+        return ResponseEntity.ok(applicationUserOrganisationUnitService.update(id, applicationUserOrganisationUnit));
     }
 
     @DeleteMapping("/{id}")

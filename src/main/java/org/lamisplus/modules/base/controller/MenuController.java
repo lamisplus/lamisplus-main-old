@@ -2,6 +2,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.dto.StandardCodesetSourceDTO;
 import org.lamisplus.modules.base.domain.entity.Menu;
@@ -19,9 +20,10 @@ import java.util.List;
 @RequestMapping("/api/menu")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class MenuController {
     private final MenuService menuService;
-    private final String ENTITY_NAME = "Menu";
+    //private final String ENTITY_NAME = "Menu";
 
     @GetMapping
     public ResponseEntity<List<Menu>> getAllStandardCodesetSource() {
@@ -34,10 +36,8 @@ public class MenuController {
     }
 
     @PostMapping
-    public ResponseEntity<Menu> save(@RequestBody Menu menu) throws URISyntaxException {
-        Menu result = menuService.save(menu);
-        return ResponseEntity.created(new URI("/api/menu/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId()))).body(result);
+    public ResponseEntity<Menu> save(@RequestBody Menu menu) {
+        return ResponseEntity.ok(menuService.save(menu));
     }
 
     @PutMapping("/{id}")

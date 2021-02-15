@@ -1,11 +1,13 @@
 package org.lamisplus.modules.base.controller;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.FileInfo;
 import org.lamisplus.modules.base.service.FilesStorageServiceImpl;
 import org.lamisplus.modules.base.util.FileStorage;
@@ -24,13 +26,13 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class FileController {
 
     private final FilesStorageService storageService;
     private final FilesStorageServiceImpl filesStorageServiceImpl;
 
-    @Value("${uploadFile.location}")
-    private String uploadFileLocation; // upload the local directory saved by the file, use @Value to get the attribute value configured in the global configuration file
+    private String uploadFileLocation = System.getProperty("user.dir"); // upload the local directory saved by the file, use @Value to get the attribute value configured in the global configuration file
 
 
     @PostMapping("/upload")

@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.AppointmentDTO;
 import org.lamisplus.modules.base.domain.entity.Appointment;
 import org.lamisplus.modules.base.service.AppointmentService;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequestMapping("/api/appointments")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class AppointmentController {
     private final AppointmentService appointmentService;
 
@@ -34,7 +36,7 @@ public class AppointmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Appointment> update(@PathVariable Long id, @RequestBody AppointmentDTO appointmentDTO) throws URISyntaxException {
+    public ResponseEntity<Appointment> update(@PathVariable Long id, @RequestBody AppointmentDTO appointmentDTO) {
         return ResponseEntity.ok(this.appointmentService.update(id, appointmentDTO));
 
     }

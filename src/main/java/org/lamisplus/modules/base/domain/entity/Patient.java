@@ -17,16 +17,13 @@ import java.util.List;
 @Entity
 @EqualsAndHashCode
 @Table(name = "patient")
-public class Patient implements Serializable {
+public class Patient extends Audit<String> implements Serializable {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-/*    @Basic
-    @Column(name = "facility_id", insertable = false, updatable = false)
-    private Long facilityId = 1L;*/
     @Basic
     @Column(name = "date_registration", nullable = false)
     @NotNull
@@ -41,24 +38,6 @@ public class Patient implements Serializable {
     @Column(name = "uuid")
     @JsonIgnore
     private String uuid;
-    @Basic
-    @Column(name = "date_created")
-    @JsonIgnore
-    @CreationTimestamp
-    private Timestamp dateCreated;
-    @Basic
-    @Column(name = "created_by")
-    @JsonIgnore
-    private String createdBy;
-    @Basic
-    @Column(name = "date_modified")
-    @JsonIgnore
-    @UpdateTimestamp
-    private Timestamp dateModified;
-    @Basic
-    @Column(name = "modified_by")
-    @JsonIgnore
-    private String modifiedBy;
 
     @Basic
     @Column(name = "archived")
@@ -66,6 +45,7 @@ public class Patient implements Serializable {
 
     @Basic
     @Column(name = "organisation_unit_id")
+    @JsonIgnore
     private Long organisationUnitId;
 
     @ManyToOne
@@ -84,8 +64,12 @@ public class Patient implements Serializable {
     private List<Encounter> encountersByPatient;
 
     @OneToMany(mappedBy = "patientByPatientId")
+    @JsonIgnore
+    @ToString.Exclude
     public List<ApplicationUserPatient> applicationUserPatientsById;
 
     @OneToMany(mappedBy = "patientByPatientId")
+    @JsonIgnore
+    @ToString.Exclude
     public List<Appointment> appointmentsById;
 }

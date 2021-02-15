@@ -37,7 +37,9 @@ const FormRendererModal = (props) => {
         <Alert color="danger" isOpen={showErrorMsg} toggle={onDismiss}>
           {errorMsg}
         </Alert>
-        { props.currentForm && (!props.currentForm.type || props.currentForm.type === 'NEW') &&
+
+        {/*return this if currentForm type is NEW or nothing is specified*/}
+          { props.currentForm && (!props.currentForm.type || props.currentForm.type === 'NEW') &&
         <FormRenderer
           patientId={props.patientId}
           formCode={props.currentForm.code}
@@ -46,6 +48,7 @@ const FormRendererModal = (props) => {
           visitId={props.visitId || props.patient.visitId}
           onSuccess={props.onSuccess}
           onSubmit={props.currentForm.onSubmit}
+          patientHospitalNumber={props.currentForm.patientHospitalNumber}
           typePatient={props.currentForm.typePatient}
         />
     }

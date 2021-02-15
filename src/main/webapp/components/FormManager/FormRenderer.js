@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import { toast } from "react-toastify";
-import { Card, Alert, CardBody, Spinner } from "reactstrap";
+import {Card, Alert, CardBody, Spinner, ModalBody} from "reactstrap";
 import { fetchLastEncounter } from '_services/form-renderer';
 import { url } from "api";
 import axios from "axios";
@@ -83,13 +83,19 @@ const FormRenderer = (props) => {
       
   }
 
-  //fetch patient by patient id if patient is not in the props object
+  //fetch patient by patient hospital number if patient is not in the props object
   React.useEffect(() => {
-    if( (props.patient && props.patient.hospitalNumber !== props.patientId) || (!props.patient.hospitalNumber) ){
-      props.fetchPatientByHospitalNumber(props.patientId);
+    if(props.patientHospitalNumber) {
+      console.log('form render')
+        props.fetchPatientByHospitalNumber(props.patientHospitalNumber);
     }
 
-  }, [props.patientId]);
+  }, []);
+
+  //Add patient data to submission
+  React.useEffect(() => {
+    setSubmission(_.merge(submission, { data: { patient: props.patient}}));
+  }, [props.patient]);
 
   // Submit form to server
   const submitForm = (submission) => {
@@ -175,7 +181,6 @@ const FormRenderer = (props) => {
             <h4 class="text-capitalize">
               {"New: "}
               {props.title || (form && form.name ? form.name : '')}
-
             </h4>
             <hr />
             </>
@@ -184,8 +189,6 @@ const FormRenderer = (props) => {
             <Alert color="danger" isOpen={showErrorMsg} toggle={onDismiss}>
               {errorMsg}
             </Alert>
-            {JSON.stringify(submission)}
-            nzsk
             <Form
               form={form.resourceObject}
               submission={submission}

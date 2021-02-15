@@ -51,7 +51,7 @@ public class RegimenLineService {
     public List<Regimen> getRegimenByRegimenLineId(Long id){
         Optional<RegimenLine> regimenLineOptional = this.regimenLineRepository.findById(id);
         if (!regimenLineOptional.isPresent() || regimenLineOptional.get().getArchived() == 1)throw new EntityNotFoundException(RegimenLine.class, "Id", id +"");
-        return regimenLineOptional.get().getRegimensByRegimenLine();
+        return regimenLineOptional.get().getRegimensById();
     }
 
     public Integer delete(Long id) {
