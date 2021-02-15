@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -316,6 +317,8 @@ public class ModuleService {
 
     public Module installModule(Long moduleId, Boolean isInitialized){
         //classNames.clear();
+        log.info("java.class.path - " + System.getProperty("java.class.path"));
+
         Optional<Module> moduleOptional = moduleRepository.findById(moduleId);
         List<Module> moduleList = new ArrayList<>();
         Object obj = null;
@@ -370,39 +373,26 @@ public class ModuleService {
                 List<URL> classURL = showFiles(filePath.listFiles(), rootFile, module.getMain());
                 ClassLoader loader = new URLClassLoader(classURL.toArray(
                         new URL[classURL.size()]), ClassLoader.getSystemClassLoader());
-                jcl=new JarClassLoader();
-
+                Thread.currentThread().setContextClassLoader(loader);
 
                 for (String className : classNames) {
                     try {
                         if (className.contains(module.getMain())) {
-                            Class c = loader.loadClass(className);
+                            Class c = Class.forName(className, true, loader);
+                            //loader.loadClass(className);
                             moduleClasses.add(c);
-                            jcl.add(properties.getModulePath() +fileSeparator+"demo.jar");
-                            //Create default factory
-                            JclObjectFactory factory = JclObjectFactory.getInstance();
-                            //Create object of loaded class
-                            obj = factory.create(jcl,className);
-
-
-
-                            //genericApplicationContext.registerBean(module.getName(), loader.loadClass(className));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-                DefaultContextLoader context=new DefaultContextLoader(jcl);
-                context.loadContext();
-
-/*                JclCustomClassLoader.loadClass(moduleRuntimePath, classNames);
-                loadJclLoader();*/
 
             } catch (IOException e) {
                 log.debug(e.getClass().getName()+": " + e.getMessage());
                 e.printStackTrace();
                 throw new RuntimeException("Server error module not loaded: " + e.getMessage());
             }
+            System.setProperty("java.class.path", System.getProperty("user.dir")+ "\\demo.jar");
 
             //changing module status
             if(isInitialized == null) {
@@ -419,18 +409,25 @@ public class ModuleService {
             log.debug("Cannot find File" + module.getName());
             //TODO: remove module from externalModules list
         }
-        try {
-            String[] args = {"test"};
-           /* obj.getClass().getDeclaredMethod( "main", String[].class).
-                    invoke( obj, new Object[]{new String[0]});*/
+        return module;
+    }
 
-            System.out.println(obj.getClass().getDeclaredMethod( "sayHello", null).
-                    invoke( obj, null));
-        } catch (Exception e) {
+    public void test(File file){
+        ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
+
+// Add the conf dir to the classpath
+// Chain the current thread classloader
+        URLClassLoader urlClassLoader = null;
+        try {
+            urlClassLoader = new URLClassLoader(new URL[]{file.toURL()},
+                    currentThreadClassLoader);
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
-        return module;
+// Replace the thread classloader - assumes
+// you have permissions to do so
+        Thread.currentThread().setContextClassLoader(urlClassLoader);
     }
     public void startModule(Boolean isStartUp){
         //Boolean startUp = false;

@@ -24,37 +24,37 @@ public class LabTestGroupController {
     private final LabTestGroupService labTestGroupService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('laboratory_read')")
+    //@PreAuthorize("hasAuthority('laboratory_read')")
     public ResponseEntity<List<LabTestGroup>> getAllLabTestGroups() {
         return ResponseEntity.ok(this.labTestGroupService.getAllLabTestGroups());
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('laboratory_read')")
+    //@PreAuthorize("hasAuthority('laboratory_read')")
     public ResponseEntity<LabTestGroup> getLabTestGroup(@PathVariable Long id) {
         return ResponseEntity.ok(labTestGroupService.getLabTestGroup(id));
     }
 
     @GetMapping("/{id}/lab-tests")
-    @PreAuthorize("hasAuthority('laboratory_read')")
+    //@PreAuthorize("hasAuthority('laboratory_read')")
     public ResponseEntity<List<LabTest>> getLabTestsByLabTestGroupId(@PathVariable Long id) {
         return ResponseEntity.ok(labTestGroupService.getLabTestsByLabTestGroupId(id));
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('laboratory_write')")
+    //@PreAuthorize("hasAuthority('laboratory_write')")
     public ResponseEntity<LabTestGroup> save(@RequestBody LabTestGroup labTestGroup) {
         return ResponseEntity.ok(labTestGroupService.save(labTestGroup));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('laboratory_write')")
+    //@PreAuthorize("hasAuthority('laboratory_write')")
     public ResponseEntity<LabTestGroup> update(@PathVariable Long id, @RequestBody LabTestGroup labTestGroup) {
         return ResponseEntity.ok(labTestGroupService.update(id, labTestGroup));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('laboratory_delete')")
+    //@PreAuthorize("hasAuthority('laboratory_delete')")
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
         return ResponseEntity.ok(this.labTestGroupService.delete(id));
     }

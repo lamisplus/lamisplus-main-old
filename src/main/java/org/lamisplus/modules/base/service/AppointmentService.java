@@ -29,14 +29,14 @@ public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
     private final AppointmentMapper appointmentMapper;
-    //private final UserService userService;
     private static final int ARCHIVED = 1;
     private static final int UN_ARCHIVED = 0;
     private final GenericSpecification<Appointment> genericSpecification;
+    private final UserService userService;
 
     public List<AppointmentDTO> getAllAppointment() {
-        Specification<Appointment> appointmentSpecification = genericSpecification.findAll(0);
-        List<Appointment> appointments = appointmentRepository.findAll(appointmentSpecification);
+        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+        List<Appointment> appointments = appointmentRepository.findAllByArchivedAndOrganisationUnitIdOrderByIdAsc(UN_ARCHIVED, organisationUnitId);
 
         List<AppointmentDTO> appointmentDTOS = new ArrayList<>();
         appointments.forEach(appointment -> {

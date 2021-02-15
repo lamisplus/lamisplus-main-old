@@ -44,14 +44,14 @@ public class RoleController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('user_write')")
+    //@PreAuthorize("hasAuthority('user_write')")
     @ResponseStatus(HttpStatus.CREATED)
     public Role addRole(@Valid @RequestBody RoleDTO roleDTO) throws Exception {
         return roleService.save(roleDTO);
     }
 
     @PostMapping("/{id}")
-    @PreAuthorize("hasAuthority('user_write')")
+    //@PreAuthorize("hasAuthority('user_write')")
     public ResponseEntity<Role> update(@Valid @RequestBody RoleDTO role, @PathVariable Long id) {
         try {
             Role updatedRole = new Role();

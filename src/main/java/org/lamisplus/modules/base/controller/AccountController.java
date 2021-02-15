@@ -40,6 +40,7 @@ public class AccountController {
     }
 
     @GetMapping("/account")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Super Admin')")
     public UserDTO getAccount(Principal principal){
         return userService
                 .getUserWithRoles()
@@ -48,8 +49,8 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    @PreAuthorize("hasAuthority('user_write')")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAnyAuthority('Admin', 'Super Admin')")
     public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
         //Check Password Length
         userService.registerUser(managedUserVM, managedUserVM.getPassword());
@@ -59,11 +60,10 @@ public class AccountController {
 
 
     @GetMapping("/users")
-    @PreAuthorize("hasAuthority('user_read')")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Super Admin')")
     public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {
         final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
-
 }
