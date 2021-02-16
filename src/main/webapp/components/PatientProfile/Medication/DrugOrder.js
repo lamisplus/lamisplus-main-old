@@ -27,7 +27,11 @@ const DrugOrder = (props) => {
             prescription_status: 0,
             quantity_dispensed: 0,
             user_id: 0,
+<<<<<<< HEAD
             type: 1,
+=======
+            type: 1
+>>>>>>> mathew
         };
         const prescriptions = submission.data.orders.map((x) => {
             return {

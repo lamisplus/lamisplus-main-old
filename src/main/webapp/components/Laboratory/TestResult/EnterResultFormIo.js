@@ -96,7 +96,12 @@ const ModalSample = (props) => {
           newData['time_result_reported'] = moment(newData.time_result_reported, "hh:mm").format('LT')
         }
             datasample.data.lab_test_order_status = 5;
-            
+           
+            if(datasample.data.hasOwnProperty('reported_result')){
+                datasample.data.reported_result.push(newData);
+            }else{
+                datasample.data['reported_result'] =[newData]
+            }
             Object.assign(datasample.data, newData)
 
             setLoading(true);
@@ -110,6 +115,7 @@ const ModalSample = (props) => {
                 setLoading(false);
                 props.togglestatus();
             };
+           
             props.createCollectedSample(datasample, labId, onSuccess, onError);
         
     };
