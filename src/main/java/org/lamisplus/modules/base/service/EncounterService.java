@@ -47,9 +47,13 @@ public class EncounterService {
     private final FormDataMapper formDataMapper;
     private final FormDataRepository formDataRepository;
     private final UserService userService;
-    private final GenericSpecification<Encounter> genericSpecification;
+    //private final GenericSpecification<Encounter> genericSpecification;
     private final AccessRight accessRight;
     private static final int ARCHIVED = 1;
+    //private static final String READ = "read";
+    private static final String WRITE = "write";
+    private static final String DELETE = "delete";
+
 
 
 
@@ -109,25 +113,23 @@ public class EncounterService {
     }
 
     public Encounter update(Long id, EncounterDTO encounterDTO) {
-        Optional<Encounter> encounterOptional = this.encounterRepository.findById(id);
-        if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()==ARCHIVED) {
-            throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
-        }
-        Set<String> permissions = accessRight.getAllPermission();
+        Optional<Encounter> optionalEncounter = encounterRepository.findByIdAndArchived(id, UNARCHIVED);
 
-        accessRight.grantAccessByAccessType(encounterOptional.get().getFormCode(), Encounter.class, "write", permissions);
+
+        accessRight.grantAccessByAccessType(optionalEncounter.get().getFormCode(),
+                Encounter.class, WRITE, checkForEncounterAndGetPermission(optionalEncounter, id));
 
         Encounter encounter = encounterMapper.toEncounter(encounterDTO);
         encounter.setId(id);
-        encounter.setModifiedBy(userService.getUserWithRoles().get().getUserName());
-        this.encounterRepository.save(encounter);
+        //encounter.setModifiedBy(userService.getUserWithRoles().get().getUserName());
+        encounterRepository.save(encounter);
         return encounter;
     }
 
     public Encounter save(EncounterDTO encounterDTO) {
         Set<String> permissions = accessRight.getAllPermission();
 
-        accessRight.grantAccessByAccessType(encounterDTO.getFormCode(), Encounter.class, "write", permissions);
+        accessRight.grantAccessByAccessType(encounterDTO.getFormCode(), Encounter.class, WRITE, permissions);
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
 
         encounterDTO.setTimeCreated(CustomDateTimeFormat.LocalTimeByFormat(LocalTime.now(),"hh:mm a"));
@@ -177,18 +179,15 @@ public class EncounterService {
     }
 
     public Integer delete(Long id) {
-        Optional<Encounter> encounterOptional = encounterRepository.findById(id);
-        if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()== ARCHIVED) {
-            throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
-        }
-        Set<String> permissions = accessRight.getAllPermission();
+        Optional<Encounter> optionalEncounter = encounterRepository.findByIdAndArchived(id, UNARCHIVED);
 
-        accessRight.grantAccessByAccessType(encounterOptional.get().getFormCode(), Encounter.class, "delete", permissions);
+        accessRight.grantAccessByAccessType(optionalEncounter.get().getFormCode(),
+                Encounter.class, DELETE, checkForEncounterAndGetPermission(optionalEncounter, id));
 
-        encounterOptional.get().setArchived(1);
-        encounterOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
+        optionalEncounter.get().setArchived(ARCHIVED);
+        //optionalEncounter.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
 
-        return encounterOptional.get().getArchived();
+        return optionalEncounter.get().getArchived();
     }
 
     public List<EncounterDTO> getEncounterByFormCodeAndDateEncounter(String formCode, Optional<String> dateStart, Optional<String> dateEnd) {
@@ -234,21 +233,24 @@ public class EncounterService {
     }
 
     public List getFormDataByEncounterId(Long encounterId) {
-        Optional<Encounter> encounterOptional = encounterRepository.findById(encounterId);
-        if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()==1) {
-            throw new EntityNotFoundException(Encounter.class, "Id",encounterId+"" );
-        }
-        Set<String> permissions = accessRight.getAllPermission();
+        Optional<Encounter> optionalEncounter = encounterRepository.findById(encounterId);
 
-        accessRight.grantAccess(encounterOptional.get().getFormCode(), Encounter.class, permissions);
+        accessRight.grantAccess(optionalEncounter.get().getFormCode(), Encounter.class, checkForEncounterAndGetPermission(optionalEncounter, encounterId));
 
-        List<FormData> formDataList = encounterOptional.get().getFormDataByEncounter();
+        List<FormData> formDataList = optionalEncounter.get().getFormDataByEncounter();
         return formDataList;
     }
 
     public Long getTotalCount(String programCode) {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
 
-        return encounterRepository.countByProgramCodeAndArchivedAndOrganisationUnitId(programCode, 0, organisationUnitId);
+        return encounterRepository.countByProgramCodeAndArchivedAndOrganisationUnitId(programCode, UNARCHIVED, organisationUnitId);
+    }
+
+    private Set<String> checkForEncounterAndGetPermission(Optional<Encounter> optionalEncounter, Long id){
+        if(!optionalEncounter.isPresent()) {
+            throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
+        }
+        return accessRight.getAllPermission();
     }
 }

@@ -25,8 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class FilesStorageServiceImpl implements FilesStorageService {
 
-    @Value("${uploadFile.location}")
-    private String path;
+    private String path = System.getProperty("user.dir");
 
     private Path root;
 

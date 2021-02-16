@@ -21,10 +21,6 @@ public class ApplicationCodesetStandardCodeset {
     @Column(name = "application_codeset_id")
     private Long applicationCodesetId;
 
-    /*@ManyToOne
-    @JoinColumn(name = "application_codeset_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private ApplicationCodeset applicationCodesetByApplicationCodesetId;
-*/
     @ManyToOne
     @JoinColumn(name = "standard_codeset_id", referencedColumnName = "id", insertable = false, updatable = false)
     private StandardCodeset standardCodesetByStandardCodesetId;

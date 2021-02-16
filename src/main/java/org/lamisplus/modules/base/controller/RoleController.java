@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.RoleDTO;
 import org.lamisplus.modules.base.domain.entity.Permission;
 import org.lamisplus.modules.base.domain.entity.Role;
@@ -21,6 +22,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("api/roles")
 //@RequiredArgsConstructor
+@Audit
 public class RoleController {
     private final RoleService roleService;
     private final RoleRepository roleRepository;
@@ -68,7 +70,7 @@ public class RoleController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteRole(@PathVariable Long id) throws Exception{
+    public void deleteRole(@PathVariable Long id) {
         try {
             roleRepository.deleteById(id);
         } catch (Exception e) {

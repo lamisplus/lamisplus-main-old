@@ -65,7 +65,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public  Optional<User> getUserWithRoles(){
-       return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRoleByUserName);
+           return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRoleByUserName);
     }
 
     public User registerUser(UserDTO userDTO, String password){

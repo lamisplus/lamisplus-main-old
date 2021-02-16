@@ -12,5 +12,5 @@ import java.util.Objects;
 public class ApplicationUserPatientDTO {
     private Long id;
     private Long UserId;
-    private List<Long> PatientId;
+    private List<Long> patientIds;
 }

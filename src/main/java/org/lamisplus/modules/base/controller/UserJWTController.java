@@ -1,6 +1,8 @@
 package org.lamisplus.modules.base.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.audit4j.core.annotation.Audit;
+import org.audit4j.core.annotation.IgnoreAudit;
 import org.lamisplus.modules.base.controller.vm.LoginVM;
 import org.lamisplus.modules.base.security.jwt.JWTFilter;
 import org.lamisplus.modules.base.security.jwt.TokenProvider;
@@ -21,6 +23,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
+@Audit
 public class UserJWTController {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;

@@ -7,11 +7,12 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ApplicationUserPatientRepository extends JpaRepository<ApplicationUserPatient, Long>, JpaSpecificationExecutor {
 
     List<ApplicationUserPatient> findAllByUserId(Long userId);
-    List<ApplicationUserPatient> findAllByPatientId(Long patientId);
+    Optional<ApplicationUserPatient> findAllByPatientId(Long patientId);
 
 }

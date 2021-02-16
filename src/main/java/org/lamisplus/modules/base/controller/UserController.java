@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.domain.entity.Role;
@@ -20,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/users")
 @RequiredArgsConstructor
+@Audit
 public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;

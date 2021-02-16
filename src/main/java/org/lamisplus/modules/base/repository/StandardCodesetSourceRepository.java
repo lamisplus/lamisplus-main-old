@@ -1,13 +1,11 @@
 package org.lamisplus.modules.base.repository;
 
 
-import org.lamisplus.modules.base.domain.entity.ApplicationCodeset;
 import org.lamisplus.modules.base.domain.entity.StandardCodesetSource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository

@@ -2,6 +2,8 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
+import org.lamisplus.modules.base.domain.dto.DrugDTO;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.entity.Drug;
 import org.lamisplus.modules.base.domain.entity.DrugGroup;
@@ -17,9 +19,9 @@ import java.util.List;
 @RequestMapping("/api/drug-groups")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class DrugGroupController {
     private final DrugGroupService drugGroupService;
-    private final String ENTITY_NAME = "DrugGroup";
 
     @GetMapping
     public ResponseEntity<List<DrugGroup>> getAllDrugGroups() {
@@ -31,23 +33,19 @@ public class DrugGroupController {
     }
 
     @GetMapping("/{id}/drugs")
-    public ResponseEntity<List<Drug>> getDrugByDrugGroupId(@PathVariable Long id) {
-        return ResponseEntity.ok(drugGroupService.getDrugByDrugGroupId(id));
+    public ResponseEntity<List<DrugDTO>> getDrugsByDrugGroupId(@PathVariable Long id) {
+        return ResponseEntity.ok(drugGroupService.getDrugsByDrugGroupId(id));
     }
 
     @PostMapping
-    public ResponseEntity<DrugGroup> save(@RequestBody DrugGroup drugGroup) throws URISyntaxException {
-        DrugGroup result = drugGroupService.save(drugGroup);
-        return ResponseEntity.created(new URI("/api/drug-groups/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId()))).body(result);
+    public ResponseEntity<DrugGroup> save(@RequestBody DrugGroup drugGroup) {
+        return ResponseEntity.ok(drugGroupService.save(drugGroup));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DrugGroup> update(@PathVariable Long id, @RequestBody DrugGroup drugGroup) throws URISyntaxException {
-        DrugGroup result = drugGroupService.update(id, drugGroup);
-        return ResponseEntity.created(new URI("/api/drug-groups/" + id))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(id)))
-                .body(result);
+    public ResponseEntity<DrugGroup> update(@PathVariable Long id, @RequestBody DrugGroup drugGroup) {
+        return ResponseEntity.ok(drugGroupService.update(id, drugGroup));
+
     }
 
     @DeleteMapping("/{id}")
