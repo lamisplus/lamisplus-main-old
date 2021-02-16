@@ -5,6 +5,7 @@ import org.eclipse.birt.report.engine.api.IRenderOption;
 public enum OutputType {
     HTML(IRenderOption.OUTPUT_FORMAT_HTML),
     PDF(IRenderOption.OUTPUT_FORMAT_PDF),
+    EXCEL("excel"),
     INVALID("invalid");
 
     String val;

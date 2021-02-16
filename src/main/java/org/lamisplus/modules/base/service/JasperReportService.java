@@ -107,9 +107,9 @@ public class JasperReportService {
         JasperReport report = JasperCompileManager.compileReport(stream);
 
         // Adding the additional parameters to the report.
-        Map<String, Object> parameters = new HashMap<>();
-        List<Parameter> parameterList = reportDetailDTO.getParameters();
-        parameters = parameterList.stream().collect(Collectors.toMap(Parameter::getName, Parameter::getValue));
+        Map<String, Object> parameters = reportDetailDTO.getParameters();
+        /*List<Parameter> parameterList = reportDetailDTO.getParameters().
+        parameters = parameterList.stream().collect(Collectors.toMap(Parameter::getName, Parameter::getValue));*/
 
         // Fetching the data from the data source.
         //Filling the report with the data and additional parameters information.
@@ -140,15 +140,15 @@ public class JasperReportService {
         Path path = Paths.get(root.toAbsolutePath() + "/report/");
         Files.createDirectories(path);
 
-        System.out.println("Report Type: "+reportDetailDTO.getReportType());
+        System.out.println("Report Type: "+reportDetailDTO.getReportFormat());
         String fileName = "";
-        if(reportDetailDTO.getReportType().trim().toLowerCase().equals("html")) {
+        if(reportDetailDTO.getReportFormat().trim().toLowerCase().equals("html")) {
             fileName = exportHtml(print, path);
         }else {
-            if(reportDetailDTO.getReportType().trim().toLowerCase().equals("excel")) {
+            if(reportDetailDTO.getReportFormat().trim().toLowerCase().equals("excel")) {
                 fileName = exportXls(print, path);
             }else {
-                if(reportDetailDTO.getReportType().trim().toLowerCase().equals("csv")) {
+                if(reportDetailDTO.getReportFormat().trim().toLowerCase().equals("csv")) {
                     fileName = exportCsv(print, path);
                 }else {
                     fileName = exportPdf(print, path);

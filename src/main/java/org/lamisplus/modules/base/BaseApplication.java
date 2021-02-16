@@ -37,7 +37,7 @@ public class BaseApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication application = new SpringApplication(BaseApplication.class);
-        addInitHooks(application);
+        //addInitHooks(application);
         context = application.run(args);
         Log.info("java.class.path - " + System.getProperty("java.class.path"));
         ModuleService moduleService = context.getBean(ModuleService.class);
@@ -71,7 +71,7 @@ public class BaseApplication extends SpringBootServletInitializer {
         return context;
     }
 
-    static void addInitHooks(SpringApplication application) {
+    /*static void addInitHooks(SpringApplication application) {
         try {
             System.setProperty("java.class.path", System.getProperty("user.dir")+ "\\runtime\\demo" +";"+System.getProperty("user.dir"));
             System.out.println(System.getProperty("java.class.path"));
@@ -81,11 +81,11 @@ public class BaseApplication extends SpringBootServletInitializer {
         }catch (Exception e){
             e.printStackTrace();
         }
-        /*application.addListeners((ApplicationListener<ApplicationEnvironmentPreparedEvent>) event -> {
+        *//*application.addListeners((ApplicationListener<ApplicationEnvironmentPreparedEvent>) event -> {
             String version = event.getEnvironment().getProperty("java.runtime.version");
             log.info("Running with Java {}", version);
-        });*/
-    }
+        });*//*
+    }*/
 
     /*@PersistenceContext
     EntityManager em;

@@ -1,15 +1,33 @@
 package org.lamisplus.modules.base.birt.engine;
 
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
 import org.eclipse.birt.report.engine.api.*;
+import org.jfree.util.Log;
 import org.lamisplus.modules.base.birt.OutputType;
+import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
+import org.lamisplus.modules.base.controller.apierror.RecordExistException;
+import org.lamisplus.modules.base.domain.dto.ReportDetailDTO;
+import org.lamisplus.modules.base.domain.dto.ReportInfoDTO;
+import org.lamisplus.modules.base.domain.dto.ReportInfoDTO;
+import org.lamisplus.modules.base.domain.dto.ReportInfoDTO;
+import org.lamisplus.modules.base.domain.entity.ReportInfo;
+import org.lamisplus.modules.base.domain.entity.Program;
+import org.lamisplus.modules.base.domain.entity.ReportInfo;
+import org.lamisplus.modules.base.domain.entity.ReportInfo;
+import org.lamisplus.modules.base.domain.mapper.ReportInfoMapper;
+import org.lamisplus.modules.base.repository.ProgramRepository;
+import org.lamisplus.modules.base.repository.ReportInfoRepository;
+import org.lamisplus.modules.base.util.GenericSpecification;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -17,10 +35,14 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.InputStream;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class BirtReportService implements ApplicationContextAware, DisposableBean{
+    private static final int UN_ARCHIVED = 0;
+    private static final int ARCHIVED = 1;
     @Value("${reports.relative.path}")
     private String reportsPath;
     @Value("${images.relative.path}")
@@ -28,14 +50,18 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
     private HTMLServerImageHandler htmlImageHandler = new HTMLServerImageHandler();
 
-    @Autowired
-    private ResourceLoader resourceLoader;
-    @Autowired
-    private ServletContext servletContext;
+    private final ResourceLoader resourceLoader;
+    private final ServletContext servletContext;
 
     private IReportEngine birtEngine;
     private ApplicationContext context;
     private String imageFolder;
+    
+    private final ReportInfoRepository reportInfoRepository;
+    
+    private final ReportInfoMapper reportInfoMapper;
+
+    private final ProgramRepository programRepository;
 
     private Map<String, IReportRunnable> reports = new HashMap<>();
 
@@ -67,11 +93,15 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
             if (!file.endsWith(".rptdesign")) {
                 continue;
             }
-
             reports.put(file.replace(".rptdesign", ""),
                     birtEngine.openReportDesign(folder.getAbsolutePath() + File.separator + file));
-
         }
+
+    }
+
+    public void loadReports(String reportName, InputStream reportStream) throws EngineException {
+        reports.put(reportName, birtEngine.openReportDesign(reportStream));
+
     }
 
 //    public List<Report> getReports() {
@@ -97,13 +127,24 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 //        return Report.ParameterType.STRING;
 //    }
 
-    public void generateMainReport(String reportName, OutputType output, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
+    public void generateReport(ReportDetailDTO reportDetailDTO, OutputType output, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
+        ReportInfo reportInfo = getReport(reportDetailDTO.getReportId());
+        InputStream stream = IOUtils.toInputStream(reportInfo.getTemplate());
+        try {
+            loadReports(reportDetailDTO.getReportName(), stream);
+        } catch (EngineException e) {
+            e.printStackTrace();
+        }
+
         switch (output) {
             case HTML:
-                generateHTMLReport(reports.get(reportName), params, response, request);
+                generateHTMLReport(reports.get(reportInfo.getName()), params, response, request);
                 break;
             case PDF:
-                generatePDFReport(reports.get(reportName), params, response, request);
+                generatePDFReport(reports.get(reportInfo.getName()), params, response, request);
+                break;
+            case EXCEL:
+                generateExcelReport(reports.get(reportInfo.getName()), params, response, request);
                 break;
             default:
                 throw new IllegalArgumentException("Output type not recognized:" + output);
@@ -125,17 +166,8 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         htmlOptions.setImageDirectory(imageFolder);
         htmlOptions.setImageHandler(htmlImageHandler);
         runAndRenderTask.setRenderOption(htmlOptions);
-        runAndRenderTask.getAppContext().put(EngineConstants.APPCONTEXT_BIRT_VIEWER_HTTPSERVET_REQUEST, request);
-
-        try {
-            htmlOptions.setOutputStream(response.getOutputStream());
-            runAndRenderTask.run();
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
-        } finally {
-            runAndRenderTask.close();
+        runAndRenderTask(htmlOptions, runAndRenderTask, response, request);
         }
-    }
 
     /**
      * Generate a report as PDF
@@ -143,6 +175,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
     @SuppressWarnings("unchecked")
     private void generatePDFReport(IReportRunnable report, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
         IRunAndRenderTask runAndRenderTask = birtEngine.createRunAndRenderTask(report);
+
         runAndRenderTask.setParameterValues(params);
         response.setContentType(birtEngine.getMIMEType("pdf"));
         IRenderOption options = new RenderOption();
@@ -161,10 +194,86 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         }
     }
 
+    /**
+     * Generate a report as Excel
+     */
+    @SuppressWarnings("unchecked")
+    private void generateExcelReport(IReportRunnable report, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
+        IRunAndRenderTask runAndRenderTask = birtEngine.createRunAndRenderTask(report);
+        runAndRenderTask.setParameterValues(params);
+        response.setContentType(birtEngine.getMIMEType("xlsx"));
+        IRenderOption options = new RenderOption();
+
+        EXCELRenderOption excelRenderOption = new EXCELRenderOption(options);
+        excelRenderOption.setOutputFormat("xlsx");
+
+        runAndRenderTask(excelRenderOption, runAndRenderTask, response, request);
+    }
+
+    private void runAndRenderTask(RenderOption renderOption, IRunAndRenderTask runAndRenderTask, HttpServletResponse response, HttpServletRequest request){
+        runAndRenderTask.setRenderOption(renderOption);
+        runAndRenderTask.getAppContext().put(EngineConstants.APPCONTEXT_BIRT_VIEWER_HTTPSERVET_REQUEST, request);
+
+        try {
+            renderOption.setOutputStream(response.getOutputStream());
+            runAndRenderTask.run();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        } finally {
+            runAndRenderTask.close();
+        }
+    }
+
     @Override
     public void destroy() {
         birtEngine.destroy();
         Platform.shutdown();
+    }
+
+    public ReportInfo save(ReportInfoDTO reportInfoDTO) {
+        Optional<ReportInfo> optional = this.reportInfoRepository.findByName(reportInfoDTO.getName());
+        if (optional.isPresent()) throw new RecordExistException(ReportInfo.class, "name", reportInfoDTO.getName());
+        ReportInfo reportInfo = this.reportInfoMapper.toReportInfo(reportInfoDTO);
+        reportInfo.setArchived(UN_ARCHIVED);
+        return reportInfoRepository.save(reportInfo);
+    }
+
+    public ReportInfo update(Long id, ReportInfoDTO reportInfoDTO) {
+        Optional<ReportInfo> optional = this.reportInfoRepository.findById(id);
+        if(!optional.isPresent() || optional.get().getArchived() == ARCHIVED)throw new EntityNotFoundException(ReportInfo.class, "Id", id +"");
+        reportInfoDTO.setId(id);
+
+        ReportInfo jasperReportInfo = reportInfoMapper.toReportInfo(reportInfoDTO);
+        return reportInfoRepository.save(jasperReportInfo);
+    }
+
+
+    public Integer delete(Long id) {
+        Optional<ReportInfo> optional = reportInfoRepository.findById(id);
+        if(!optional.isPresent() || optional.get().getArchived() == ARCHIVED)throw new EntityNotFoundException(ReportInfo.class, "Id", id +"");
+        optional.get().setArchived(ARCHIVED);
+        return optional.get().getArchived();
+    }
+
+    public List<ReportInfoDTO> getReports() {
+        GenericSpecification<ReportInfo> genericSpecification = new GenericSpecification<ReportInfo>();
+        Specification<ReportInfo> specification = genericSpecification.findAll(0);
+        List<ReportInfo> reportInfos = reportInfoRepository.findAll(specification);
+
+        List<ReportInfoDTO> reportInfoDTOS = new ArrayList<>();
+        reportInfos.forEach(reportInfo -> {
+            final ReportInfoDTO reportInfoDTO = reportInfoMapper.toReportInfoDTO(reportInfo);
+            Optional<Program>  program = this.programRepository.findProgramByCodeAndArchived(reportInfoDTO.getProgramCode(), 0);
+            program.ifPresent(value -> reportInfoDTO.setProgramName(value.getName()));
+            reportInfoDTOS.add(reportInfoDTO);
+        });
+        return reportInfoDTOS;
+    }
+
+    public ReportInfo getReport(Long id) {
+        Optional<ReportInfo> optional = this.reportInfoRepository.findById(id);
+        if(!optional.isPresent() || optional.get().getArchived() == ARCHIVED) throw new EntityNotFoundException(ReportInfo.class, "Id", id+"");
+        return optional.get();
     }
 
 }
