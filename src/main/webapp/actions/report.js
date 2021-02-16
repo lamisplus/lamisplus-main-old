@@ -29,10 +29,10 @@ export const creatReport = (data, onSuccess, onError) => dispatch => {
 };
 
 
-export const generateReport = (data) => dispatch => {
+export const generateReport = (data, onError) => dispatch => {
     const reportType = 'application/'+(data.reportType).toLowerCase();
     axios
-        .post(`${url}jasper-reports/generate`, data, {responseType: 'arraybuffer'})
+        .post(`${url}reports/generate`, data, {responseType: 'arraybuffer'})
         .then(response => {
         //Create a Blob from the PDF Stream
             const file = new Blob(
@@ -44,7 +44,9 @@ export const generateReport = (data) => dispatch => {
             window.open(fileURL);
         })
         .catch(error => {
-            console.log(error);
+            if(onError){
+                onError();
+            }
         });
 }
 
@@ -88,7 +90,7 @@ export const update = (id, data) => dispatch => {
 }
 
 
-export const Delete = (id) => dispatch => {
+export const Delete = (id, onSuccess, onError) => dispatch => {
     console.log(`${url}jasper-reports/${id}`);
     axios
         .delete(`${url}jasper-reports/${id}`)
@@ -98,17 +100,18 @@ export const Delete = (id) => dispatch => {
                 type: ACTION_TYPES.REPORTS_DELETE,
                 payload: id
             });
-            toast.success("Report was deleted successfully!");
+            if(onSuccess){
+                onSuccess();
+            }
+
         })
         .catch(error => {
             dispatch({
                 type: ACTION_TYPES.REPORTS_ERROR,
                 payload:error.response.data
             });
-            if(error.response.data.apierror.message===null || error.response.data.apierror.message===""){
-                toast.error("Something went wrong");
-            }else{
-                toast.error(error.response.data.apierror.message);
+            if(onError){
+                onError(error);
             }
         });
 };

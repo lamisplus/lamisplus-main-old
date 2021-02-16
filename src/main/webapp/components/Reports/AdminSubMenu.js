@@ -88,15 +88,15 @@ function AdminSubMenu(props) {
 
                 {/*</Dropdown>*/}
 
-                <Dropdown text="Jasper Report Configuration" className='link item' simple>
-                    <Dropdown.Menu>
-                        <Dropdown.Item>Jasper Report Template</Dropdown.Item>
-                        <Dropdown.Item>View All Template</Dropdown.Item>
-                        {/*<Dropdown.Divider />*/}
-                        {/*<Dropdown.Header> View All Report</Dropdown.Header>*/}
-                        {/*<Dropdown.Item>View All Reports</Dropdown.Item>*/}
-                    </Dropdown.Menu>
-                </Dropdown>
+                {/*<Dropdown text="Jasper Report Configuration" className='link item' simple>*/}
+                {/*    <Dropdown.Menu>*/}
+                {/*        <Dropdown.Item>Jasper Report Template</Dropdown.Item>*/}
+                {/*        <Dropdown.Item>View All Template</Dropdown.Item>*/}
+                {/*        /!*<Dropdown.Divider />*!/*/}
+                {/*        /!*<Dropdown.Header> View All Report</Dropdown.Header>*!/*/}
+                {/*        /!*<Dropdown.Item>View All Reports</Dropdown.Item>*!/*/}
+                {/*    </Dropdown.Menu>*/}
+                {/*</Dropdown>*/}
 
             </Menu>
 

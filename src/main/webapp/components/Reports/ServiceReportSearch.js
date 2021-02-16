@@ -66,7 +66,7 @@ function ReportSearch(props) {
                             <Link
                                 to={{
                                     pathname: "/report-view",
-                                    row: row
+                                    state: row
                                 }}
                                 style={{ cursor: "pointer", color: "blue", fontStyle: "bold" }}>
                                 <Tooltip title="Generate Report">
