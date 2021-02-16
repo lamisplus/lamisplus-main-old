@@ -167,8 +167,7 @@ const ResultReporting = (props) => {
             </Menu>
           )
   }
-
-
+console.log(testOrders)
 return (
     <Page title='Result Reporting'>
       <br/>

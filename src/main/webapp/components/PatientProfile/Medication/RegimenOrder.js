@@ -29,15 +29,13 @@ const DrugOrder = (props) => {
             type: 0,
             user_id: 0,
         };
-        const prescriptions = submission.data.orders.map((x) => {
-            return {
-                ...x,
+        const prescriptions = {
+                ...submission.data,
                 ...defaults,
-            };
-        });
+            }
 
         const data = {
-            data: prescriptions,
+            data: [prescriptions],
             patientId: PatientID,
             visitId: visitId,
             formCode: CODES.DRUG_PRESCRIPTION_FORM,
@@ -45,9 +43,16 @@ const DrugOrder = (props) => {
             dateEncounter: moment(new Date()).format("DD-MM-YYYY"),
         };
         const onSuccess = () => {
+            try{
             toast.success("Drug Order Successfully Saved!");
             props.fetchPatientMedicationOrder(  props.patientId);
             reloadForm();
+<<<<<<< HEAD
+=======
+            }catch(e){
+                console.log(e)
+            }
+>>>>>>> mathew
         };
         const onError = (errstatus) => {
             toast.error("Something went wrong, please contact administration");
@@ -68,7 +73,7 @@ const DrugOrder = (props) => {
                 formCode={currentForm.code}
                 programCode={currentForm.programCode}
                 visitId={props.patient.visitId}
-                onSuccess={saveDrugOrders}
+                onSubmit={saveDrugOrders}
             />}
             </React.Fragment>
     )
