@@ -169,7 +169,7 @@ class Routes extends Component {
               <PrivateRoute exact path="/database-management" component={DataBaseManagement} />
               <PrivateRoute exact path="/database-sync" component={DataBaseSync} />
               {/* OrganizationUnit */}
-              <PrivateRoute exact path="/admin-organization-unit" component={OrganizationUnit} />
+              <PrivateRoute exact path="/admin/organization-unit" component={OrganizationUnit} />
               <PrivateRoute exact path="/admin/parent-organization-unit" component={ParentOrganizationUnit} />
               <PrivateRoute exact path="/admin/parent-organization-unit-level" component={ParentOrganizationUnitLevel} />
              

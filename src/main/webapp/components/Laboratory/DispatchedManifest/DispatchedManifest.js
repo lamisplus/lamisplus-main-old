@@ -47,6 +47,7 @@ useEffect(() => {
           })         
      });
 
+
      function getDispatch (evt, data){
         setcollectmodal({...collectmodal, ...data});
         setModal3(!modal3) 
