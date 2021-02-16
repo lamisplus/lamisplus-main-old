@@ -26,6 +26,7 @@ const DrugOrder = (props) => {
             patient_id: PatientID,
             prescription_status: 0,
             quantity_dispensed: 0,
+            type: 0,
             user_id: 0,
         };
         const prescriptions = submission.data.orders.map((x) => {
@@ -39,13 +40,14 @@ const DrugOrder = (props) => {
             data: prescriptions,
             patientId: PatientID,
             visitId: visitId,
-            formCode: CODES.REGIMEN_PRESCRIPTION_FORM,
+            formCode: CODES.DRUG_PRESCRIPTION_FORM,
             programCode: CODES.GENERAL_SERVICE,
             dateEncounter: moment(new Date()).format("DD-MM-YYYY"),
         };
         const onSuccess = () => {
             toast.success("Drug Order Successfully Saved!");
             props.fetchPatientMedicationOrder(  props.patientId);
+            reloadForm();
         };
         const onError = (errstatus) => {
             toast.error("Something went wrong, please contact administration");
