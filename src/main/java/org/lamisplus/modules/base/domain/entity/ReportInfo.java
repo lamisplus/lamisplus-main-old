@@ -10,8 +10,9 @@ import java.io.Serializable;
 
 @Data
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "report_info")
-public class ReportInfo implements Serializable {
+public class ReportInfo extends JsonBEntity implements Serializable {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,14 +30,17 @@ public class ReportInfo implements Serializable {
     @Column(name = "program_code")
     private String programCode;
 
-    //@Type(type="org.lamisplus.modules.base.domain.entity.SQLXMLType")
-    //@Column(name="template", nullable=false, columnDefinition = "xml")
     private String template;
 
     @Basic
     @Column(name = "archived")
     @JsonIgnore
     private Integer archived = 0;
+
+    @Type(type = "jsonb")
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "resource_object", nullable = false, columnDefinition = "jsonb")
+    private Object resourceObject;
 
     @Transient
     private String programName;

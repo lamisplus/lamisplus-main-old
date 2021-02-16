@@ -7,7 +7,7 @@ import {toast} from 'react-toastify';
 export const creatReport = (data, onSuccess, onError) => dispatch => {
     console.log(data)
     axios
-        .post(`${url}jasper-reports/`, data)
+        .post(`${url}reports/`, data)
         .then(response => {
             dispatch({
                 type: ACTION_TYPES.REPORTS_CREATE_REPORT,
@@ -30,14 +30,14 @@ export const creatReport = (data, onSuccess, onError) => dispatch => {
 
 
 export const generateReport = (data, onError) => dispatch => {
-    const reportType = 'application/'+(data.reportType).toLowerCase();
+    const reportFormat = 'application/'+(data.reportFormat).toLowerCase();
     axios
         .post(`${url}reports/generate`, data, {responseType: 'arraybuffer'})
         .then(response => {
         //Create a Blob from the PDF Stream
             const file = new Blob(
                 [response.data],
-                {type: reportType});
+                {type: reportFormat});
             //Build a URL from the file
             const fileURL = URL.createObjectURL(file);
         //Open the URL on new Window
@@ -52,7 +52,7 @@ export const generateReport = (data, onError) => dispatch => {
 
 export const fetchAll = (onSuccess) => dispatch => {
     axios
-        .get(`${url}jasper-reports`)
+        .get(`${url}reports`)
         .then(response => {
             dispatch({
                 type: ACTION_TYPES.REPORTS_FETCH_ALL,
@@ -72,7 +72,7 @@ export const fetchAll = (onSuccess) => dispatch => {
 
 export const update = (id, data) => dispatch => {
     axios
-        .put(`${url}jasper-reports/${id}`, data)
+        .put(`${url}reports/${id}`, data)
         .then(response => {
             dispatch({
                 type: ACTION_TYPES.REPORTS_UPDATE,
@@ -91,9 +91,9 @@ export const update = (id, data) => dispatch => {
 
 
 export const Delete = (id, onSuccess, onError) => dispatch => {
-    console.log(`${url}jasper-reports/${id}`);
+    console.log(`${url}reports/${id}`);
     axios
-        .delete(`${url}jasper-reports/${id}`)
+        .delete(`${url}reports/${id}`)
         .then(response => {
 
             dispatch({

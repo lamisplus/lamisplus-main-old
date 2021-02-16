@@ -1,12 +1,9 @@
 package org.lamisplus.modules.base.controller;
-import org.eclipse.birt.report.engine.api.EngineException;
-import org.lamisplus.modules.base.birt.OutputType;
-import org.lamisplus.modules.base.birt.engine.BirtReportService;
+import org.lamisplus.modules.base.service.report.birt.OutputType;
+import org.lamisplus.modules.base.service.report.birt.BirtReportService;
 import org.lamisplus.modules.base.domain.dto.HeaderUtil;
-import org.lamisplus.modules.base.domain.dto.JasperReportInfoDTO;
 import org.lamisplus.modules.base.domain.dto.ReportDetailDTO;
 import org.lamisplus.modules.base.domain.dto.ReportInfoDTO;
-import org.lamisplus.modules.base.domain.entity.JasperReportInfo;
 import org.lamisplus.modules.base.domain.entity.ReportInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +44,7 @@ public class ReportController {
         log.info("Generating full report: " + data.getReportName() + "; format: " + data.getReportFormat());
         String reportFormat = data.getReportFormat().toLowerCase().trim();
         OutputType format = OutputType.from(reportFormat);
+
         reportService.generateReport(data, format, data.getParameters(), response, request);
     }
 

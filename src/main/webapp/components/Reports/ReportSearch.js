@@ -71,7 +71,7 @@ function ReportSearch(props) {
                         {title: "Action", field: "actions", filtering: false,},
                     ]}
                     isLoading={loading}
-                    data={props.reportList.map((row) => ({
+                    data={!props.reportList && !props.reportList.length ? [] : props.reportList.map((row) => ({
                         programName: row.programName,
                         name: row.name,
                         description: row.description,

@@ -12,5 +12,5 @@ public class ReportDetailDTO implements Serializable {
     private Long reportId;
     private String reportName;
     private String reportFormat;
-    Map<String,Object> parameters;
+    Map<String, Object> parameters;
 }

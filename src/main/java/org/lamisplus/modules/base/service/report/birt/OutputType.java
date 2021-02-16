@@ -1,4 +1,4 @@
-package org.lamisplus.modules.base.birt;
+package org.lamisplus.modules.base.service.report.birt;
 
 import org.eclipse.birt.report.engine.api.IRenderOption;
 

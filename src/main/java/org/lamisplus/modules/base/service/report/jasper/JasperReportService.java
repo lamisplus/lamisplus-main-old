@@ -1,4 +1,4 @@
-package org.lamisplus.modules.base.service;
+package org.lamisplus.modules.base.service.report.jasper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,6 @@ import org.lamisplus.modules.base.domain.dto.JasperReportInfoDTO;
 import org.lamisplus.modules.base.domain.dto.PatientList;
 import org.lamisplus.modules.base.domain.entity.JasperReportInfo;
 import org.lamisplus.modules.base.domain.dto.ReportDetailDTO;
-import org.lamisplus.modules.base.domain.entity.Parameter;
 import org.lamisplus.modules.base.domain.entity.Program;
 import org.lamisplus.modules.base.domain.mapper.JasperReportInfoMapper;
 import org.lamisplus.modules.base.repository.JasperReportInfoRepository;
@@ -40,7 +39,6 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
 @Transactional

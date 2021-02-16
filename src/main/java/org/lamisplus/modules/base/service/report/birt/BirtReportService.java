@@ -1,28 +1,21 @@
-package org.lamisplus.modules.base.birt.engine;
+package org.lamisplus.modules.base.service.report.birt;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
 import org.eclipse.birt.report.engine.api.*;
-import org.jfree.util.Log;
-import org.lamisplus.modules.base.birt.OutputType;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ReportDetailDTO;
 import org.lamisplus.modules.base.domain.dto.ReportInfoDTO;
-import org.lamisplus.modules.base.domain.dto.ReportInfoDTO;
-import org.lamisplus.modules.base.domain.dto.ReportInfoDTO;
 import org.lamisplus.modules.base.domain.entity.ReportInfo;
 import org.lamisplus.modules.base.domain.entity.Program;
-import org.lamisplus.modules.base.domain.entity.ReportInfo;
-import org.lamisplus.modules.base.domain.entity.ReportInfo;
 import org.lamisplus.modules.base.domain.mapper.ReportInfoMapper;
 import org.lamisplus.modules.base.repository.ProgramRepository;
 import org.lamisplus.modules.base.repository.ReportInfoRepository;
 import org.lamisplus.modules.base.util.GenericSpecification;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -89,12 +82,14 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
      */
     public void loadReports() throws EngineException {
         File folder = new File(reportsPath);
-        for (String file : Objects.requireNonNull(folder.list())) {
-            if (!file.endsWith(".rptdesign")) {
-                continue;
+        if(folder.list().length > 0) {
+            for (String file : Objects.requireNonNull(folder.list())) {
+                if (!file.endsWith(".rptdesign")) {
+                    continue;
+                }
+                reports.put(file.replace(".rptdesign", ""),
+                        birtEngine.openReportDesign(folder.getAbsolutePath() + File.separator + file));
             }
-            reports.put(file.replace(".rptdesign", ""),
-                    birtEngine.openReportDesign(folder.getAbsolutePath() + File.separator + file));
         }
 
     }

@@ -12,7 +12,7 @@ public class ReportInfoDTO {
 
     private String description;
 
-    private String format;
+    private String reportFormat;
 
     private String programCode;
 
@@ -20,5 +20,5 @@ public class ReportInfoDTO {
 
     private String programName;
 
-
+    private Object resourceObject;
 }
