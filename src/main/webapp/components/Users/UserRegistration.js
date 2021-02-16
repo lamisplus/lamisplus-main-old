@@ -1,3 +1,4 @@
+import axios from "axios";
 import Page from "components/Page";
 import React, { useState, useEffect } from "react";
 import MatButton from "@material-ui/core/Button";
@@ -22,6 +23,7 @@ import { connect } from "react-redux";
 // React Notification
 import Title from "components/Title/CardTitle";
 import { register } from "../../actions/user";
+import { url as baseUrl } from "../../api";
 import { initialfieldState_userRegistration } from "../../_helpers/initialFieldState_UserRegistration";
 import useForm from "../Functions/UseForm";
 import { Spinner } from "reactstrap";
@@ -78,7 +80,7 @@ const UserRegistration = (props) => {
     initialfieldState_userRegistration
   );
   const [gender, setGender] = useState([]);
-  const [designation, setDesignation] = useState([]);
+  const [role, setRole] = useState([]);
   const [confirm, setConfirm] = useState("");
   const [matchingPassword, setMatchingPassword] = useState(false);
   const [validPassword, setValidPassword] = useState(false);
@@ -89,36 +91,41 @@ const UserRegistration = (props) => {
   /* Get list of gender parameter from the endpoint */
   useEffect(() => {
     async function getCharacters() {
-      try {
-        const response = await fetch(
-          "http://lamisplus.org/base-module/api/application-codesets/codesetGroup?codesetGroup=GENDER"
-        );
-        const body = await response.json();
-        setGender(
-          body.map(({ display, id }) => ({ label: display, value: id }))
-        );
-      } catch (error) {
-        console.log(error);
-      }
+      axios
+        .get(`${baseUrl}application-codesets/codesetGroup?codesetGroup=GENDER`)
+        .then((response) => {
+          console.log(Object.entries(response.data));
+          setGender(
+            Object.entries(response.data).map(([key, value]) => ({
+              label: value.display,
+              value: value.display,
+            }))
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
     getCharacters();
   }, []);
 
-  /* TODO Brian: Change from occupation endpoint to designation endpoint. Not yet implemented in the back end */
-  /* Get list of Designation parameter from the endpoint */
+  /* Get list of Role parameter from the endpoint */
   useEffect(() => {
     async function getCharacters() {
-      try {
-        const response = await fetch(
-          "http://lamisplus.org/base-module/api/application-codesets/codesetGroup?codesetGroup=OCCUPATION"
-        );
-        const body = await response.json();
-        setDesignation(
-          body.map(({ display, id }) => ({ label: display, value: id }))
-        );
-      } catch (error) {
-        console.log(error);
-      }
+      axios
+        .get(`${baseUrl}roles`)
+        .then((response) => {
+          console.log(Object.entries(response.data));
+          setRole(
+            Object.entries(response.data).map(([key, value]) => ({
+              label: value.name,
+              value: value.name,
+            }))
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
     getCharacters();
   }, []);
@@ -151,8 +158,9 @@ const UserRegistration = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const dateOfBirth = moment(values.dateOfBirth).format("DD-MM-YYYY");
-    values["dob"] = dateOfBirth;
+    const dateOfBirth = moment(values.dateOfBirth).format("YYYY-MM-DD");
+    values["dateOfBirth"] = dateOfBirth;
+    values["roles"] = [values["role"]]
     setSaving(true);
     const onSuccess = () => {
       setSaving(false);
@@ -161,6 +169,7 @@ const UserRegistration = (props) => {
     };
     const onError = () => {
       setSaving(false);
+      toast.error("Something went wrong");
     };
     props.register(values, onSuccess, onError);
   };
@@ -168,7 +177,12 @@ const UserRegistration = (props) => {
   return (
     <Page title="User Registration">
       <Title>
-        <Link to="/users">
+        <Link
+              to ={{
+                pathname: "/admin",
+                state: 'users'
+              }}
+        >
           <Button
             variant="contained"
             color="primary"
@@ -217,13 +231,13 @@ const UserRegistration = (props) => {
                     />
                   </FormGroup>
                   <FormGroup>
-                    <Label for="username">Username *</Label>
+                    <Label for="userName">Username *</Label>
                     <Input
                       type="text"
-                      name="username"
-                      id="username"
+                      name="userName"
+                      id="userName"
                       onChange={handleInputChange}
-                      value={values.username}
+                      value={values.userName}
                       required
                     />
                   </FormGroup>
@@ -239,30 +253,30 @@ const UserRegistration = (props) => {
                     />
                   </FormGroup>
                   <FormGroup>
-                    <Label for="phone">Phone Number *</Label>
+                    <Label for="phoneNumber">Phone Number *</Label>
                     <Input
                       type="text"
-                      name="phone"
-                      id="phone"
+                      name="phoneNumber"
+                      id="phoneNumber"
                       onChange={handleInputChange}
-                      value={values.phone}
+                      value={values.phoneNumber}
                       required
                     />
                   </FormGroup>
                 </Col>
                 <Col md={6}>
                   <FormGroup>
-                    <Label for="designationId">Designation *</Label>
+                    <Label for="role">Role *</Label>
                     <Input
                       type="select"
-                      name="designationId"
-                      id="designationId"
-                      value={values.designationId}
+                      name="role"
+                      id="role"
+                      value={values.role}
                       onChange={handleInputChange}
                       required
                     >
                       <option value=""> </option>
-                      {designation.map(({ label, value }) => (
+                      {role.map(({ label, value }) => (
                         <option key={value} value={value}>
                           {label}
                         </option>
@@ -270,12 +284,12 @@ const UserRegistration = (props) => {
                     </Input>
                   </FormGroup>
                   <FormGroup>
-                    <Label for="genderId">Gender *</Label>
+                    <Label for="gender">Gender *</Label>
                     <Input
                       type="select"
-                      name="genderId"
-                      id="genderId"
-                      value={values.genderId}
+                      name="gender"
+                      id="gender"
+                      value={values.gender}
                       onChange={handleInputChange}
                       required
                     >
@@ -291,10 +305,10 @@ const UserRegistration = (props) => {
                     <Label>Date of Birth *</Label>
                     <DateTimePicker
                       time={false}
-                      name="dob"
-                      value={values.dob}
+                      name="dateOfBirth"
+                      value={values.dateOfBirth}
                       onChange={(value1) =>
-                        setValues({ ...values, dob: value1 })
+                        setValues({ ...values, dateOfBirth: value1 })
                       }
                       defaultValue={new Date()}
                       max={new Date()}

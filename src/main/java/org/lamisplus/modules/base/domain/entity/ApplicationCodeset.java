@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -29,20 +30,12 @@ public class ApplicationCodeset implements Serializable {
     private String codesetGroup;
 
     @Basic
-    @Column(name = "version")
-    private String version;
-
-    @Basic
     @Column(name = "language")
     private String language;
 
     @Basic
     @Column(name = "display")
     private String display;
-
-    @Basic
-    @Column(name = "active")
-    private Integer active;
 
     @Basic
     @Column(name = "code")
@@ -79,5 +72,10 @@ public class ApplicationCodeset implements Serializable {
     @ToString.Exclude
     @JsonIgnore
     private List<Visit> visitsByApplicationCodeset;*/
+
+    /*@ToString.Exclude
+    @JsonIgnore
+    @OneToMany(mappedBy = "applicationCodesetByApplicationCodesetId")
+    private List<ApplicationCodesetStandardCodeset> applicationCodesetStandardCodesetsById;*/
 
 }

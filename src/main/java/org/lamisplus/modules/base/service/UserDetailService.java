@@ -1,18 +1,21 @@
 package org.lamisplus.modules.base.service;
 
+import org.lamisplus.modules.base.domain.entity.User;
 import org.lamisplus.modules.base.repository.UserRepository;
+import org.lamisplus.modules.base.security.UserPrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,28 +27,32 @@ public class UserDetailService implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        log.debug("Authenticating {}", userName);
-
-        String lowercaseUserName = userName.toLowerCase();
-        return userRepository
-                .findOneWithAuthoritiesByUserName(lowercaseUserName)
-                .map(user -> createSecurityUser(lowercaseUserName, user))
-                .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseUserName + "was not found"));
-
-        /*SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ADMIN");
-        List<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
-        authorities.add(grantedAuthority);
-        return new User("abc@mail.com","12345", authorities);*/
+    @PersistenceContext
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
-    private User createSecurityUser(String lowercaseUserName, org.lamisplus.modules.base.domain.entity.User user){
+    private EntityManager entityManager;
+
+    @Override
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        try {
+            User user = entityManager
+                    .createQuery("SELECT u FROM User u LEFT JOIN FETCH u.role r LEFT JOIN FETCH r.permission p WHERE u.userName = :userName", User.class)
+                    .setParameter("userName", userName)
+                    .getSingleResult();
+            return new UserPrincipal(user);
+        } catch (NoResultException e) {
+            throw new UsernameNotFoundException("not found");
+        }
+    }
+
+    /*private User createSecurityUser(String lowercaseUserName, org.lamisplus.modules.base.domain.entity.User user){
         List<GrantedAuthority> grantedAuthorities = user
-                .getAuthorities()
+                .getRoles()
                 .stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getName()))
                 .collect(Collectors.toList());
         return new User(user.getUserName(), user.getPassword(), grantedAuthorities);
-    }
+    }*/
 }

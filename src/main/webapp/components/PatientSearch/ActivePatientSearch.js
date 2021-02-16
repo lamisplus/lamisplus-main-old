@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom'
 import { connect } from "react-redux";
 import { fetchAll, Delete as Del , fetchCheckedInPatients} from "../../actions/patients";
 import "./PatientSearch.css";
-import { Dashboard } from "@material-ui/icons";
-import IconButton from '@material-ui/core/IconButton';
 
 const ActivePatientSearch = (props) => {
   const [loading, setLoading] = React.useState(true);
@@ -63,7 +61,7 @@ const ActivePatientSearch = (props) => {
             : calculate_age(row.dob),
           address: row.street || ''  ,
           patientId: row.patientId,
-          visitId: row.id,
+          visitId: row.visitId,
           checkIn: row.dateVisitStart + ' ' + (row.timeVisitStart ? row.timeVisitStart : '' ) 
         }))}
         

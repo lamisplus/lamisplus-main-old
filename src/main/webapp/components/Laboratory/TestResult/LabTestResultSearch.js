@@ -21,13 +21,21 @@ const PatientSearch = (props) => {
     }
         props.fetchAllLabTestOrderToday(onSuccess, onError);
       }, []); //componentDidMount
-      
+    const collectedSamples = []
+    props.patientsTestOrderList.forEach(function(value, index, array) {
+        const dataSamples = value.formDataObj 
+        for(var i=0; i<dataSamples.length; i++){
+            for (var key in dataSamples[i]) {
+              if (dataSamples[i][key]!==null && dataSamples[i][key].lab_test_order_status >= 3 )
+                collectedSamples.push(value)
+            }            
+          }
+    });
       function totalResultCollected (test){
-        const  maxVal = []
-       
+        const  maxVal = []      
         for(var i=0; i<test.length; i++){
           for (var key in test[i]) {
-            if (test[i][key]!==null && test[i][key].lab_test_order_status=== 5)
+            if (test[i][key]!==null && test[i][key].lab_test_order_status ===5)
               maxVal.push(test[i][key])
           }
          
@@ -35,7 +43,7 @@ const PatientSearch = (props) => {
         return maxVal.length;
         //return 2
       }
- 
+
   return (
     <div>
       <MaterialTable
@@ -64,7 +72,7 @@ const PatientSearch = (props) => {
           },
         ]}
         isLoading={loading}
-        data={props.patientsTestOrderList.map((row) => ({
+        data={collectedSamples.map((row) => ({
           Id: row.hospitalNumber,
           name: row.firstName +  ' ' + row.lastName,
           

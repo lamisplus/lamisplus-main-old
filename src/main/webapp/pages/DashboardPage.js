@@ -32,11 +32,36 @@ const  DashboardPage = (props) => {
   const [birthSeries, setBirthSereies] = useState({})
   const [deathRateData, setdeathRateData] = useState({})
   const [deathSeries, setDeathSereies] = useState({})
+  const [totalPatients,setTotalPatients] = useState()
+  const [totalAppointment,setTotalAppointment] = useState(21)
   useEffect(() => {
     
             props.fetchAllGender();
     }, []); //componentDidMount
-
+  //Total Patients
+  useEffect(() => {
+    async function getCharacters() {
+        try {
+            const response = await axios.get( url+ 'patients/totalCount');
+                const body2 = response.data && response.data!==null ? response.data :0.00;
+                setTotalPatients(body2) 
+                
+        } catch (error) {}
+      }
+      getCharacters();
+  }, []);
+    //Total Appointment
+    useEffect(() => {
+      async function getCharacters() {
+          try {
+              const response = await axios.get( url+ 'visits/totalCount/');
+                  const body2 = response.data && response.data!==null ? response.data :0.00;
+                  setTotalAppointment(body2) 
+                  
+          } catch (error) {}
+        }
+        getCharacters();
+    }, []);
   useEffect(() => {
     async function getCharacters() {
         try {
@@ -85,7 +110,6 @@ useEffect(() => {
     }
     getCharacters();
 }, []);  
-console.log(birthSeries.data)
 
 /* Gender Pie Chart */
 const genderChart = {
@@ -247,9 +271,9 @@ const deathChart = {
 
 
   return (
-      <Page className="DashboardPage p-5" title="Dashboard">
+      <>
                {/* Card stats */}
-               <Row>
+               <Row className={"p-3"}>
                 <Col lg={3} md={6} sm={6} xs={12}>
                   <Card  style={cardStyle} className="card-stats mb-4 mb-xl-0 p-3">
                     <CardBody>
@@ -262,20 +286,23 @@ const deathChart = {
                            tag="h6"
                             className=" text-uppercase text-muted mb-0" 
                           >
-                             Patients
+                              <div className="icon icon-shape   " >
+                              <FaUserPlus size={10} className={"text-primary"}/> Patients
+                              </div>
+
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
-                            100
+                            {totalPatients}
                           </span>
                         </div>
-                        <Col className="col-auto">
-                          <div className="icon icon-shape  text-primary " >
-                            <FaUserPlus size={30} />
-                          </div>
-                        </Col>
+                        {/*<Col className="col-auto">*/}
+                        {/*  <div className="icon icon-shape  text-primary " >*/}
+                        {/*    <FaUserPlus size={10} />*/}
+                        {/*  </div>*/}
+                        {/*</Col>*/}
                         </Link>
                       </Row>
-                      <p className="mt-3 mb-0 text-muted text-sm">
+                      <p className="mt-1 mb-0 text-muted text-sm">
                         
                         <span className="text-nowrap">This month</span>
                       </p>
@@ -294,20 +321,23 @@ const deathChart = {
                             tag="h6"
                             className="text-uppercase text-muted mb-0"
                           >
-                            Emergency
+                                <div className="icon icon-shape ">
+                                <MdAirlineSeatIndividualSuite className={" text-danger"} size={13} /> Emergency
+                                </div>
+
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
                             22
                           </span>
                         </div>
-                        <Col className="col-auto">
-                          <div className="icon icon-shape  text-danger">
-                          <MdAirlineSeatIndividualSuite size={30} />
-                          </div>
-                        </Col>
+                        {/*<Col className="col-auto">*/}
+                        {/*  <div className="icon icon-shape  text-danger">*/}
+                        {/*  <MdAirlineSeatIndividualSuite size={10} />*/}
+                        {/*  </div>*/}
+                        {/*</Col>*/}
                         </Link>
                       </Row>
-                      <p className="mt-3 mb-0 text-muted text-sm">
+                      <p className="mt-1 mb-0 text-muted text-sm">
                        {" "}
                         <span className="text-nowrap">This week</span>
                       </p>
@@ -319,25 +349,28 @@ const deathChart = {
                     <CardBody>
                       <Row>
                         <Link
-                        to={{pathname: "/"}}
+                        to={{pathname: "/patients"}}
                         style={{ cursor: "pointer",  }}>
                         <div className="col">
                           <CardTitle
                             tag="h6"
                             className="text-uppercase text-muted mb-0"
                           >
-                            Checked In
+                                <div className="icon icon-shape  ">
+                                  <FaUserCheck className="text-black" size={10} />  Checked In
+                                </div>
+
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">924</span>
                         </div>
-                        <Col className="col-auto">
-                          <div className="icon icon-shape text-black ">
-                            <FaUserCheck size={30} />
-                          </div>
-                        </Col>
+                        {/*<Col className="col-auto">*/}
+                        {/*  <div className="icon icon-shape text-black ">*/}
+                        {/*    <FaUserCheck size={10} />*/}
+                        {/*  </div>*/}
+                        {/*</Col>*/}
                         </Link>
                       </Row>
-                      <p className="mt-3 mb-0 text-muted text-sm">
+                      <p className="mt-1 mb-0 text-muted text-sm">
                         {" "}
                         <span className="text-nowrap">As at Today</span>
                       </p>
@@ -356,20 +389,21 @@ const deathChart = {
                             tag="h6"
                             className="text-uppercase text-muted mb-0"
                           >
-                            Appointments
+
+                                  <div className="icon icon-shape">
+                                      <FaCalendarAlt className=" text-warning" size={10} />   Appointments
+                                  </div>
+
+
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
-                            49
+                            {totalAppointment}
                           </span>
                         </div>
-                        <Col className="col-auto">
-                          <div className="icon icon-shape text-warning">
-                          <FaCalendarAlt size={30} />
-                          </div>
-                        </Col>
+
                         </Link>
                       </Row>
-                      <p className="mt-3 mb-0 text-muted text-sm">
+                      <p className="mt-1 mb-0 text-muted text-sm">
                         {" "}
                         <span className="text-nowrap">As at Today</span>
                       </p>
@@ -378,10 +412,10 @@ const deathChart = {
                 </Col>
               </Row>
 
-          <Row>
+          <Row className={"pl-3 pr-3 "}>
       
           
-          <Col md="6" sm="12" xs="12" xl="6" lg="6">
+          <Col md="6" sm="12" xs="12" xl="6" lg="6" className={"pb-1"}>
             <Card>
               <CardHeader>Total Registered Patients (Male, Female and Pediatric)  {' '}
               
@@ -432,8 +466,8 @@ const deathChart = {
             </Card>
           </Col>
         </Row>
-
-      </Page>
+       
+      </>
   ); 
 }
 

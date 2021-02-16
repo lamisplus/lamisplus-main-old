@@ -3,10 +3,10 @@ import { connect } from "react-redux";
 import {fetchByHospitalNumber} from "actions/patients";
 import {fetchRadiologyTestOrdersByEncounterID, updateRadiologyByFormId} from "actions/laboratory"
 import { TiArrowBack } from 'react-icons/ti';
-import Link from '@material-ui/core/Link';
+import { Link } from 'react-router-dom';
 import Button from "@material-ui/core/Button";
 import {makeStyles} from "@material-ui/core/styles";
-import PatientDetailCard from "../../Functions/PatientDetailCard";
+import PatientDetailCard from "../../PatientProfile/PatientDetailCard";
 import {getQueryParams} from "components/Utils/PageUtils"
 import {Card, CardBody, Spinner ,CardHeader,Table} from 'reactstrap'
 import {Menu, MenuButton, MenuItem, MenuList} from "@reach/menu-button";
@@ -17,6 +17,7 @@ import moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import UploadResultPage from "./UploadResultPage";
 import ViewResultPage from "./ViewResultPage";
+import {authentication} from '../../../_services/authentication';
 //Dtate Picker package
 Moment.locale("en");
 momentLocalizer();
@@ -100,7 +101,7 @@ const GlobalVariableSearch = (props) => {
         <Card>
             <CardHeader>Test Order Details
                 <Link
-                    href = "/laboratory?tab=radiology" >
+                    to={{pathname: "/laboratory?tab=radiology" }}>
 
                     <Button
                         type='submit'
@@ -134,13 +135,13 @@ const GlobalVariableSearch = (props) => {
                                 <td className={classes.td}>{row.data.order_date ? row.data.order_date : ""} {" "}{row.data.order_time ? row.data.order_time : ""}  </td>
                                 <td className={classes.td}>{row.data.files ? row.data.files.length : "0"}</td>
                                 <td className={classes.td}>{row.data.result_date ? row.data.result_date : ""} {" "}{row.data.result_time ? row.data.result_time : ""}  </td>
-                                <td className={classes.td}> <Menu>
+                                <td className={classes.td} > <Menu>
                                     <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px"}}>
                                         Action <span aria-hidden>▾</span>
                                     </MenuButton>
                                     <MenuList style={{hover:"#eee"}}>
 
-                                        <MenuItem onSelect={() => uploadResultPage(row)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Upload Result</MenuItem>
+                                        <MenuItem onSelect={() => uploadResultPage(row)} hidden={!authentication.userHasRole(["laboratory_write"])} ><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Upload Result</MenuItem>
                                         {row.data && row.data.files && row.data.files.length > 0 &&  <MenuItem onSelect={() => openResultPage(row)}><FaRegEye size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>}
 
                                     </MenuList>

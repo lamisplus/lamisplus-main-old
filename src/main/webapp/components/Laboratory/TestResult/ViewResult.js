@@ -51,8 +51,8 @@ const ModalViewResult = (props) => {
     const description = datasample.data ? datasample.data.description : null ;
     const unit_measurement = datasample.data ? datasample.data.unit_measurement : null ;
     const date_result_reported = datasample.data ? datasample.data.date_result_reported : null ;
-    const test_result = datasample.data ? datasample.data.test_result : null ;
-
+    const test_result = datasample.data ? datasample.data.comment_sample_reported : null ;
+    const result_detail = datasample.data && datasample.data.reported_result ?  datasample.data.reported_result : null
 
 
   return (      
@@ -77,27 +77,40 @@ const ModalViewResult = (props) => {
                                                       
                                     </Col>
                                     <br/>
-                                    <Col xs="6">
-                                        <span style={{ fontWeight: 'bold'}}>Date Assayed </span>: {date_result_reported}
+                                    <Col xs="12">
+                                        <span>Results: </span>
+                                        {console.log(result_detail)}
+                                    {
+                                        !result_detail ? "" :
+                                        result_detail.map(x => {
+                                            return (
+                                                <Row >
+                                        <Col xs="6">
+                                        <span style={{ fontWeight: 'bold'}}>Date Assayed </span>: {x.date_result_reported}
                                         <br/>
                                     </Col>
                                     <br/>
                                     <Col xs="6">
-                                        <span style={{ fontWeight: 'bold'}}>Date Reported </span>: {date_result_reported}
+                                        <span style={{ fontWeight: 'bold'}}>Date Reported </span>: {x.date_result_reported}
                                         <br/>    
                                     </Col>
                                     <br/>
                                     <Col xs="4">
                                         <FormGroup>
                                           <br/>
-                                            <Label for="examplePassword"><span style={{ fontWeight: 'bold'}}> Result </span>: {test_result} </Label>
+                                            <Label for="examplePassword"><span style={{ fontWeight: 'bold'}}> Result </span>: {x.test_result} </Label>
                                       
                                         </FormGroup>
                                     </Col>
+                                                </Row>)
+                                        })
+                                        
+                                    }
+                                </Col>
                     
                                 </Row>
                             <br/>
-                            <MatButton
+                            {/* <MatButton
                                 type='submit'
                                 variant='contained'
                                 color='primary'
@@ -106,7 +119,7 @@ const ModalViewResult = (props) => {
                                 
                             >
                                 Print 
-                            </MatButton>
+                            </MatButton> */}
                             <MatButton
                               variant='contained'
                               color='default'

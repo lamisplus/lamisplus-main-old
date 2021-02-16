@@ -15,6 +15,7 @@ import { Spinner } from 'reactstrap';
 import { Badge } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import AddSample from "./AddSample";
+import {authentication} from '../../../_services/authentication';
 
 
 
@@ -146,6 +147,7 @@ return (
                                   color="primary"         
                                   className=" float-right mr-1"
                                   onClick={() => AddSampleToManifest(samplesDispatched)}
+                                  disabled={!authentication.userHasRole(["laboratory_write"])}
                               >
                                 <TiPlusOutline/>{" "} Add Sample
                             </MatButton>
@@ -168,7 +170,7 @@ return (
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                
+                                                {console.log(sampleManifestList)}
                                                 {!loading ? sampleManifestList.map((row) => (
                                                     row!==null?
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>

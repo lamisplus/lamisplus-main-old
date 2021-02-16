@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 const PatientSearch = (props) => {
     const [loading, setLoading] = useState('')
+    console.log(props.patientsTestOrderList)
     useEffect(() => {
     setLoading('true');
         const onSuccess = () => {
@@ -22,7 +23,21 @@ const PatientSearch = (props) => {
         }
             props.fetchAllLabTestOrderToday(onSuccess, onError);
     }, []); //componentDidMount
-function totalSampleConllected (test){
+    const collectedSamples = []
+
+    props.patientsTestOrderList.forEach(function(value, index, array) {
+        const dataSamples = value.formDataObj
+        if(value.formDataObj.data!==null) {
+        for(var i=0; i<dataSamples.length; i++){
+            for (var key in dataSamples[i]) {
+              if (dataSamples[i][key]!==null && dataSamples[i][key].lab_test_order_status < 1 )
+                collectedSamples.push(value)
+            }            
+          }
+        }
+    });
+
+    function totalSampleConllected (test){
         const  maxVal = []
           for(var i=0; i<test.length; i++){
               for (var key in test[i]) {
@@ -33,7 +48,6 @@ function totalSampleConllected (test){
           }
         return maxVal.length;
     }
- 
     
   return (
       <div>
@@ -63,7 +77,7 @@ function totalSampleConllected (test){
                   },
               ]}
               isLoading={loading}
-              data={props.patientsTestOrderList.map((row) => ({
+              data={collectedSamples.map((row) => ({
                   Id: row.hospitalNumber,
                   name: row.firstName +  ' ' + row.lastName,
                   date: row.dateEncounter,

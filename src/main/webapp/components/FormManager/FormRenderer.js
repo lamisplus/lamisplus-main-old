@@ -6,12 +6,15 @@ import { connect } from "react-redux";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import { toast } from "react-toastify";
-import { Card, Alert, CardBody, Spinner } from "reactstrap";
+import {Card, Alert, CardBody, Spinner, ModalBody} from "reactstrap";
 import { fetchLastEncounter } from '_services/form-renderer';
 import { url } from "api";
 import axios from "axios";
 import { formRendererService } from "_services/form-renderer";
 import { authHeader } from '_helpers/auth-header';
+import _ from 'lodash';
+import {fetchByHospitalNumber} from "actions/patients";
+
 
 Moment.locale("en");
 momentLocalizer();
@@ -24,7 +27,7 @@ const FormRenderer = (props) => {
   const [showLoadingForm, setShowLoadingForm] = React.useState(true);
   const [showLoadingEncounter, setShowLoadingEncounter] = React.useState(false)
   const [formId, setFormId] = React.useState()
-  const [submission, setSubmission] = React.useState({...props.submission, ...{ data: { patient: props.patient, authHeader: authHeader() }}});
+  const [submission, setSubmission] = React.useState(_.merge(props.submission, { data: { patient: props.patient, authHeader: authHeader(), baseUrl: url }}));
   const onDismiss = () => setShowErrorMsg(false);
   const options = {
     noAlerts: true,
@@ -80,6 +83,20 @@ const FormRenderer = (props) => {
       
   }
 
+  //fetch patient by patient hospital number if patient is not in the props object
+  React.useEffect(() => {
+    if(props.patientHospitalNumber) {
+      console.log('form render')
+        props.fetchPatientByHospitalNumber(props.patientHospitalNumber);
+    }
+
+  }, []);
+
+  //Add patient data to submission
+  React.useEffect(() => {
+    setSubmission(_.merge(submission, { data: { patient: props.patient}}));
+  }, [props.patient]);
+
   // Submit form to server
   const submitForm = (submission) => {
     const onSuccess = () => {
@@ -93,19 +110,21 @@ const FormRenderer = (props) => {
       setShowErrorMsg(true);
       setShowLoading(false);
     };
+
     if(formId){
-      updateForm(onSuccess, onError);
+      updateForm(submission, onSuccess, onError);
     }else{
-      saveForm(onSuccess, onError);
+      saveForm(submission, onSuccess, onError);
     }
   };
 
-  const saveForm = (onSuccess, onError) => {
+  const saveForm = (submission, onSuccess, onError) => {
 
     const encounterDate = submission["dateEncounter"]
       ? submission["dateEncounter"]
       : new Date();
     const formatedDate = Moment(encounterDate).format("DD-MM-YYYY");
+
     let data = {
       data: [submission.data],
       patientId: props.patientId,
@@ -126,7 +145,7 @@ const FormRenderer = (props) => {
     );
   }
 
-  const updateForm = (onSuccess, onError) => {
+  const updateForm = (submission, onSuccess, onError) => {
     const data = {
       data: submission.data,
   }
@@ -161,7 +180,7 @@ const FormRenderer = (props) => {
             <>
             <h4 class="text-capitalize">
               {"New: "}
-              {props.title || form.name}
+              {props.title || (form && form.name ? form.name : '')}
             </h4>
             <hr />
             </>
@@ -170,13 +189,18 @@ const FormRenderer = (props) => {
             <Alert color="danger" isOpen={showErrorMsg} toggle={onDismiss}>
               {errorMsg}
             </Alert>
-
+            
             <Form
               form={form.resourceObject}
               submission={submission}
               hideComponents={props.hideComponents}
               options={options}
               onSubmit={(submission) => {
+                delete submission.data.patient;
+                delete submission.data.authHeader;
+                delete submission.data.submit;
+                delete submission.data.baseUrl;
+
                 if (props.onSubmit) {
                   return props.onSubmit(submission);
                 }
@@ -201,6 +225,7 @@ const mapStateToProps = (state = { form: {} }) => {
 const mapActionToProps = {
   fetchForm: actions.fetchById,
   saveEncounter: actions.saveEncounter,
+  fetchPatientByHospitalNumber: fetchByHospitalNumber
 };
 
 export default connect(mapStateToProps, mapActionToProps)(FormRenderer);

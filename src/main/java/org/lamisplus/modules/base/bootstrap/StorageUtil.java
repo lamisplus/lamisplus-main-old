@@ -20,6 +20,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+
 
 @Service
 @Slf4j
@@ -34,16 +37,18 @@ public class StorageUtil {
         return this.rootLocation = path;
     }
 
-    public URL store(String module, MultipartFile file, Boolean overrideExistFile, String fileNewName) {
-        URL filePath;
+    public Path store(String module, MultipartFile file, String newName) {
+        Path filePath;
+        InputStream inputStream = null;
         module = module.toLowerCase().trim();
         String filename = StringUtils.cleanPath(file.getOriginalFilename().trim());
-        System.out.println("file name is " + filename);
+        if(newName != null){
+            filename = newName;
+        }
 
-        //TODO: check...
         try {
 
-            if((overrideExistFile != null && overrideExistFile == true) && Files.exists(rootLocation.resolve(module))){
+            if(Files.exists(rootLocation.resolve(module))){
                 try {
                     Files.delete(rootLocation.resolve(module));
                 }catch (NullPointerException npe){
@@ -58,14 +63,20 @@ public class StorageUtil {
                 throw new RuntimeException("Cannot store file with relative path outside current directory " + filename);
             }
 
-            filePath = this.rootLocation.resolve(filename).toFile().toURI().toURL();
-            InputStream inputStream = file.getInputStream();
+            filePath = this.rootLocation.resolve(filename).toFile().toPath();
+            inputStream = file.getInputStream();
             FileUtils.copyInputStreamToFile(inputStream, this.rootLocation.resolve(filename).toFile());
             inputStream.close();
 
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             throw new RuntimeException("Failed to store file " + filename, e);
+        } finally {
+            try {
+                if (inputStream != null){inputStream.close();}
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return filePath;
     }

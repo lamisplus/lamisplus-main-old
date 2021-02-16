@@ -1,44 +1,65 @@
 import React, { useState } from "react";
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from "@fullcalendar/timegrid";
-import listPlugin from '@fullcalendar/list';
-import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
 import { connect } from "react-redux";
-import "@fullcalendar/core/main.css";
-import "@fullcalendar/daygrid/main.css";
-import "@fullcalendar/timegrid/main.css";
-import "@fullcalendar/list/main.css";
+import { Calendar, Views, momentLocalizer } from 'react-big-calendar'
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import moment from 'moment';
+import "./appointment.css";
+
+const localizer = momentLocalizer(moment);
 
 function CalendarViewPage(props){
+
+    const eventList = props.appointments.map((row) => ({
+        id: row.id,
+        title:  row.firstName + " "+ row.lastName +" ("+row.hospitalNumber+") - " + (row.detail.service ? row.detail.service.name : '') + ' - '+ (row.detail.service_provider || ''),
+        start: row.detail.appointment_date ? moment(row.detail.appointment_date.substring(0, 10)).add(moment.duration(row.detail.appointment_time)).toDate() : "",
+        end: row.detail.appointment_date ? moment(row.detail.appointment_date.substring(0, 10)).add(moment.duration(row.detail.appointment_time)).toDate() : "",
+        extendedProps: row
+    }));
+    console.log(eventList);
     const handleDateClick = (arg) => { // bind with an arrow function
-        console.log(arg)
+        //console.log(arg)
         //setCalendarViewType("listWeek");
       }
-      const handleEventClick = ({event}) => { // bind with an arrow function
-        console.log(event)
+      const handleEventClick = (item) => { // bind with an arrow function
+        //console.log(item)
         //setCalendarViewType("listWeek");
       }
     return (
         <React.Fragment>
-        <FullCalendar
-        defaultView="dayGridMonth"
-        header={{
-            left: "prev,next",
-            center: "title",
-            right: "dayGridMonth,timeGridWeek,timeGridDay"
-          }}
-         plugins={[ dayGridPlugin,timeGridPlugin, listPlugin, interactionPlugin  ]}
-         weekends={true}
-         dateClick={handleDateClick}
-         eventClick={handleEventClick}
-         events={props.appointments.map((row) => ({
-          id: row.encounterId,
-           title: row.hospitalNumber +" - "+row.firstName + " " + row.lastName,
-            date: row.formDataObj[0].data.appointmentDate,
-            extendedProps: row
-         }))}
-         />
+            <Calendar
+               selectable
+                localizer={localizer}
+                events={eventList}
+               defaultView={Views.MONTH}
+                defaultDate={new Date()}
+                startAccessor="start"
+                endAccessor="end"
+                onSelectEvent={event =>  props.viewAppointment(
+                    event.extendedProps.patientId,
+                    event.extendedProps.id,
+                    event.extendedProps.detail
+                )}
+                onDoubleClickEvent={event => props.editAppointment(
+                    event.extendedProps.patientId,
+                    event.extendedProps.id,
+                    event.extendedProps.detail
+                )}
+               popup
+               messages={{
+                   showMore: total => (
+                       <div
+                           style={{ cursor: 'pointer' }}
+                           onMouseOver={e => {
+                               e.stopPropagation();
+                               e.preventDefault();
+                           }}
+                       >{`+${total} more`}
+                       </div>
+                   ),
+               }}
+            />
+
                    </React.Fragment>
     )
 }

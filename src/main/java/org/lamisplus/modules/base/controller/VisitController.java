@@ -24,6 +24,11 @@ public class VisitController {
         return ResponseEntity.ok(visitService.getAllVisits());
     }
 
+    @GetMapping("/totalCount/checkIn")
+    public ResponseEntity<Long> getTotalCount() {
+        return ResponseEntity.ok(visitService.getVisitType());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<VisitDTO> getVisit(@PathVariable Long id) {
         return ResponseEntity.ok(visitService.getVisit(id));

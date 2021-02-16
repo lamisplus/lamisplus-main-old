@@ -5,11 +5,10 @@ import lombok.Data;
 @Data
 public class ProgramDTO {
 
-    private Long id;
-
-    private String programCode;
-
     private Long moduleId;
 
+    private String name;
+
+    private Integer archived;
 
 }

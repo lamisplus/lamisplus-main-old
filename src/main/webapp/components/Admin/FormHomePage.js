@@ -10,6 +10,8 @@ import { ToastContainer, toast } from "react-toastify";
 import {Menu, MenuButton, MenuItem, MenuList} from '@reach/menu-button';
 import {Link} from 'react-router-dom';
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
+import DownloadLink  from "react-download-link";
+import {CardContent} from "@material-ui/core";
 
 //Dtate Picker package
 Moment.locale("en");
@@ -31,7 +33,6 @@ function FormSearch(props) {
     };
 
     const viewForm = (row) => {
-        console.log("This is the selected form: "+row.code);
         setCurrentForm({
             programCode: row.programCode,
             formName: "VIEW FORM",
@@ -98,8 +99,10 @@ function FormSearch(props) {
                                             <Link
                                                 to={{
                                                     pathname: "/view-form",
-                                                    row: row
-                                                }}>
+                                                    state: {row:row}
+                                                }}
+
+                                            >
                                                 <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Form </span>
                                             </Link>
                                         </MenuItem>
@@ -109,6 +112,17 @@ function FormSearch(props) {
                                                 <MdDeleteForever size="15" color="blue" />{" "}
                                                 <span style={{color: '#000'}}>Delete Form</span>
                                             </Link>
+                                        </MenuItem>
+                                        <MenuItem style={{ color:"#000 !important"}}>
+                                            <DownloadLink
+                                                label="Export as a json file"
+                                                filename={row ? row.name+".json" : "lamisplus-form.json"}
+                                                exportFile={() => {
+                                                    delete row.id;
+                                                   return JSON.stringify(row)
+                                                }}
+                                            />
+
                                         </MenuItem>
                                     </MenuList>
                                 </Menu>
@@ -149,7 +163,7 @@ function FormSearch(props) {
 const mapStateToProps =  (state = { form:{}}) => {
     // console.log(state.forms)
     return {
-        formList: state.formReducers.form,
+        formList: state.formReducers.form !==null ? state.formReducers.form : {},
     }}
 
 const mapActionToProps = {

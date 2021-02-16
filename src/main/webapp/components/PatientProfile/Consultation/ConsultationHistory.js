@@ -10,6 +10,7 @@ import FormRendererModal from "components/FormManager/FormRendererModal";
 import { ToastContainer, toast } from "react-toastify";
 import IconButton from '@material-ui/core/IconButton'
 import { Edit, ViewList  } from '@material-ui/icons'
+import {authentication} from '../../../_services/authentication';
 
 const columns = (editConsultation, viewConsultation) => [
   {
@@ -28,7 +29,7 @@ const columns = (editConsultation, viewConsultation) => [
     cell: (row) => 
     <div>
     <span>{(row.visitNote && row.visitNote.length > 100) ? row.visitNote.slice(0, 100) + '...' : row.visitNote}</span>
-    <span>{(row.consulationNotes && row.consulationNotes.length > 100) ? row.consulationNotes.slice(0, 100) + '...' : row.consulationNotes}</span>
+    <span>{(row.visit_note && row.visit_note.length > 100) ? row.visit_note.slice(0, 100) + '...' : row.visit_note}</span>
     </div>
   },
   {
@@ -41,7 +42,7 @@ const columns = (editConsultation, viewConsultation) => [
         <Label.Group size="mini" color="pink">
           {row.presentingComplaints.map((presentingComplaint) => (
             <span>
-              {presentingComplaint.complaint} {", "}
+              <span dangerouslySetInnerHTML={{__html: JSON.stringify(presentingComplaint.complaint)}} /> {"; "}
             </span>
           ))}
         </Label.Group>
@@ -58,8 +59,8 @@ const columns = (editConsultation, viewConsultation) => [
           {row.diagnosis && row.diagnosis.map((x) => (
             <List.Item>
             <Label size="mini" color="blue">
-              {x.condition || x.condition1} 
-              <Label.Detail> {x.certainty}</Label.Detail>
+              <span dangerouslySetInnerHTML={{__html: JSON.stringify(x.condition)}} />
+              <Label.Detail> {JSON.stringify(x.certainty) || ''}</Label.Detail>
             </Label>
             </List.Item>
           ))}
@@ -76,6 +77,7 @@ const columns = (editConsultation, viewConsultation) => [
           onClick={() => editConsultation(row)}
           aria-label='Edit Consultation'
           title='Edit Consultation'
+          disabled={!authentication.userHasRole("patient_write")}
         >
           {' '}
           <Edit />

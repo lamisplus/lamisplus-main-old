@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import MaterialTable from 'material-table';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
-import { fetchAll, Delete as Del } from "actions/patients";
+import { fetchAll, Delete as Del } from "../../actions/patients";
 import "./PatientSearch.css";
 import { MdDashboard, MdDeleteForever, MdModeEdit } from "react-icons/md";
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
@@ -11,26 +11,29 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
 
+
+
+
 const PatientSearch = (props) => {
   const [loading, setLoading] = useState('')
   const [patients, setPatients] = useState()
 
-      
+
   useEffect(() => {
       console.log(props.patientsList)
       setLoading('true');
       const onSuccess = () => {
-          
-      
+
+
       setLoading(false)
     }
       const onError = () => {
-      setLoading(false)     
+      setLoading(false)
     }
         props.fetchAllPatients(onSuccess, onError);
   }, []); //componentDidMount
 
-      const onDelete = id => {      
+      const onDelete = id => {
               if (window.confirm(`Are you sure to delete this record? ${id}`))
                   props.deletePatient(id)
       }
@@ -52,7 +55,7 @@ const PatientSearch = (props) => {
                   return age_now + " year(s)";
         };
 
-  
+
   return (
       <div>
         <ToastContainer autoClose={3000} hideProgressBar />
@@ -70,7 +73,14 @@ const PatientSearch = (props) => {
                   ]}
                   isLoading={loading}
                   data={props.patientsList.map((row) => ({
-                      name: row.firstName +  ' ' + row.lastName,
+                      name: <Link
+                          to ={{
+                              pathname: "/patient-dashboard",
+                              state: row.hospitalNumber
+                          }}
+
+                          title={"Click to view patient dashboard"}
+                      >{row.firstName}  { ' '}  {row.lastName}</Link>,
                       id: row.hospitalNumber,
                       age: (row.dob === 0 ||
                       row.dob === undefined ||
@@ -79,9 +89,9 @@ const PatientSearch = (props) => {
                         ? 0
                         : calculate_age(row.dob),
                       address: row.street || '',
-                      actions: 
+                      actions:
         <div>
-        
+
           <Menu>
               <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
                 Actions <span aria-hidden>▾</span>
@@ -94,7 +104,10 @@ const PatientSearch = (props) => {
 
                       <MenuItem  style={{ color:"#000 !important"}}>
                           <Link
-                              to={"/patient-dashboard?hospitalNumber="+row.hospitalNumber}
+                              to ={{
+                                  pathname: "/patient-dashboard",
+                                  state: row.hospitalNumber
+                              }}
                           >
                               <MdDashboard size="15" color="blue" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>
                           </Link>
@@ -103,25 +116,25 @@ const PatientSearch = (props) => {
                         <MenuItem style={{ color:"#000 !important"}}>
                               <Link
                                   to={{
-                                    pathname: "/patient-update",
-                                    currentId: row
+                                    pathname: "/patient-update-formio",
+                                      state: row.hospitalNumber
                                   }}
                                 >
-                              <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Patient </span>                   
+                              <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Patient </span>
                             </Link>
-                        </MenuItem>                                      
+                        </MenuItem>
                         <MenuItem style={{ color:"#000 !important"}}>
                             <Link
                                 onClick={() => onDelete(row.patientId)}>
                               <MdDeleteForever size="15" color="blue" />{" "}
                               <span style={{color: '#000'}}>Delete Patient</span>
-                          </Link>                                  
+                          </Link>
                         </MenuItem>
                 </MenuList>
           </Menu>
-        </div>            
+        </div>
         }))}
-        
+
         options={{
             headerStyle: {
                 backgroundColor: "#9F9FA5",
@@ -145,11 +158,11 @@ const PatientSearch = (props) => {
     return {
         patientsList: state.patients.list
     };
-  };    
+  };
 
   const mapActionToProps = {
       fetchAllPatients: fetchAll,
       deletePatient: Del
   };
-    
+
 export default connect(mapStateToProps, mapActionToProps)(PatientSearch);

@@ -1,7 +1,7 @@
 package org.lamisplus.modules.base.domain.mapper;
 
 import org.lamisplus.modules.base.domain.dto.UserDTO;
-import org.lamisplus.modules.base.domain.entity.Authority;
+import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.domain.entity.User;
 import org.springframework.stereotype.Service;
 
@@ -32,22 +32,22 @@ public class UserMapper {
             User user = new User();
             user.setId(userDTO.getId());
             user.setUserName(userDTO.getUserName());
-            Set<Authority> authorities = this.authoritiesFromStrings(userDTO.getAuthorities());
-            user.setAuthorities(authorities);
+            Set<Role> roles = this.rolessFromStrings(userDTO.getRoles());
+            user.setRole(roles);
             return user;
         }
     }
 
-    private Set<Authority> authoritiesFromStrings(Set<String> authoritiesAsString) {
-        Set<Authority> authorities = new HashSet<>();
+    private Set<Role> rolessFromStrings(Set<String> rolesAsString) {
+        Set<Role> roles = new HashSet<>();
 
-        if (authoritiesAsString != null) {
-            authorities =
-                    authoritiesAsString
+        if (rolesAsString != null) {
+            roles =
+                    rolesAsString
                             .stream()
                             .map(
                                     string -> {
-                                        Authority auth = new Authority();
+                                        Role auth = new Role();
                                         auth.setName(string);
                                         return auth;
                                     }
@@ -55,7 +55,7 @@ public class UserMapper {
                             .collect(Collectors.toSet());
         }
 
-        return authorities;
+        return roles;
     }
 
     public User userFromId(Long id) {

@@ -7,10 +7,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { ToastContainer } from "react-toastify";
 import momentLocalizer from "react-widgets-moment";
 import Moment from "moment";
-import PatientDetailCard from "./PatientDetailCard";
+import PatientDetailCard from 'components/PatientProfile/PatientDetailCard';
 import { Link } from "react-router-dom";
-import DispenseModal from './DispenseModal'
-import ViewModal from './ViewModal'
+//import DispenseModal from './DispenseModal'
+import DispenseModal from './DrugDispenseFormIo'
+import ViewModal from './ViewModalForm'
 import { Menu, MenuList, MenuButton, MenuItem } from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import { Spinner } from 'reactstrap';
@@ -24,6 +25,9 @@ import {
 } from "reactstrap";
 import { useSelector, useDispatch } from 'react-redux';
 import {  fetchPatientPrescriptionsByEncounter } from './../../actions/pharmacy'
+import {authentication} from '../../_services/authentication';
+
+
 //
 Moment.locale("en");
 momentLocalizer();
@@ -88,6 +92,7 @@ const Prescriptions = (props) => {
   const [loading, setLoading] = useState('')
   const [modal, setModal] = useState(false);
   const [modal1, setModal1] = useState(false);
+  const [modalRegimen, setModalRegimen] = useState(false);
   const [drugDetails, setDrugDetails] = useState({})
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -96,6 +101,7 @@ const Prescriptions = (props) => {
   const toggle = (form) => {
     setDrugDetails({ ...drugDetails, ...form });
     setModal(!modal);
+    
   } 
   const toggle1 = (form) => {
     setDrugDetails({ ...drugDetails, ...form });
@@ -115,6 +121,7 @@ const Prescriptions = (props) => {
    );
 
   const formData = props.location.state ? prescriptionOrder : null 
+  console.log(formData)
 
  const Actions = (form) => {
    return (
@@ -131,7 +138,10 @@ const Prescriptions = (props) => {
        </MenuButton>
        <MenuList style={{ hover: "#eee" }}>
          {form.data.prescription_status === 0 ? (
-           <MenuItem onSelect={() => toggle(form)}>
+
+           <MenuItem onSelect={() => toggle(form)}
+                     hidden={!authentication.userHasRole(["pharmacy_write"])}
+           >
              <i
                className="fa fa-pencil"
                aria-hidden="true"
@@ -141,8 +151,10 @@ const Prescriptions = (props) => {
                &nbsp; {""} Dispense drugs
              </i>
            </MenuItem>
+
+        
          ) : (
-           <MenuItem onSelect={() => toggle(form)}>
+           <MenuItem onSelect={() => toggle(form)} hidden={!authentication.userHasRole(["pharmacy_write"])}>
              <i
                className="fa fa-pencil"
                aria-hidden="true"
@@ -153,16 +165,21 @@ const Prescriptions = (props) => {
              </i>
            </MenuItem>
          )}
-         <MenuItem onSelect={() => toggle1(form)}>
-           <i
-             className="fa fa-eye"
-             aria-hidden="true"
-             size="15"
-             style={{ cursor: "pointer", color: "#000" }}
-           >
-             &nbsp; {""}View details
-           </i>
-         </MenuItem>
+         {form.data.prescription_status !=0 ? (
+            <MenuItem onSelect={() => toggle1(form)}>
+              <i
+                className="fa fa-eye"
+                aria-hidden="true"
+                size="15"
+                style={{ cursor: "pointer", color: "#000" }}
+              >
+                &nbsp; {""}View details
+              </i>
+            </MenuItem>
+         )
+         :
+         ""
+      }
        </MenuList>
      </Menu>
    );
@@ -223,11 +240,11 @@ const Prescriptions = (props) => {
                                   form.data!==null?
                                   <tr key={form.id}>
                                     <td>
-                                      <b>{form.data.generic_name}</b>
+                                      <b>{form.data && form.data.type!=0 ? form.data.drug.name :  form.data.regimen.name}</b>
                                     </td>
-                                    <td>{form.data.dosage}</td>
-                                    <td>{form.data.date_prescribed}</td>
-                                    <td>{form.data.date_dispensed}</td>
+                                    <td>{form.data.duration && form.data.duration ? form.data.duration : ''}</td>
+                                    <td>{Moment(form.data.date_prescribed).format("DD-MM-YYYY")}</td>
+                                    <td>{ Moment(form.data.date_dispensed).format("DD-MM-YYYY")}</td>
                                     <td>{Actions(form)}</td>
                                   </tr>
                                   :

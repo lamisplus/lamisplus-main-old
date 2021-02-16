@@ -10,7 +10,7 @@ import * as ACTION_TYPES from "./types";
  * @method POST => register() -> register a new User
 
  */
-export const register = (data) => (dispatch) => {
+export const register = (data, onSuccess, onError) => (dispatch) => {
   axios
     .post(`${baseUrl}register/`, data)
     .then((response) => {
@@ -19,7 +19,9 @@ export const register = (data) => (dispatch) => {
           type: ACTION_TYPES.REGISTER_SUCCESS,
           payload: response.data,
         });
+        onSuccess && onSuccess();
       } catch (err) {
+        onError();
         console.log(err);
       }
     })
@@ -32,20 +34,75 @@ export const register = (data) => (dispatch) => {
     });
 };
 
-
-export const fetchUsers = () => dispatch => {
+export const fetchUsers = (onSuccess, onError) => (dispatch) => {
   axios
     .get(`${baseUrl}users/`)
-    .then(response => {
+    .then((response) => {
+      if (onSuccess) {
+        onSuccess();
+      }
       dispatch({
         type: ACTION_TYPES.FETCH_USERS,
-        payload: response.data
+        payload: response.data,
       });
+      onSuccess();
     })
-    .catch(error =>
+    .catch((error) => {
+      if (onError) {
+        onError();
+      }
+      dispatch({
+        type: ACTION_TYPES.USER_ROLE_UPDATE,
+        payload: "Something went wrong, please try again",
+      });
+      onError();
+    });
+};
+
+
+export const updateUserRole = (id, data, onSuccess, onError) => (dispatch) => {
+  axios
+    .post(`${baseUrl}users/${id}/roles`, data)
+    .then((response) => {
+      try {
+        dispatch({
+          type: ACTION_TYPES.USER_ROLE_UPDATE,
+          payload: response.data,
+        });
+        onSuccess && onSuccess();
+      } catch (err) {
+        onError();
+        console.log(err);
+      }
+    })
+    .catch((error) => {
       dispatch({
         type: ACTION_TYPES.USERS_ERROR,
-        payload: "Something went wrong, please try again"
-      })
-    );
+        payload: "Something went wrong, please try again",
+      });
+      console.log(error);
+    });
+};
+
+export const fetchMe = (onSuccess, onError) => (dispatch) => {
+    axios
+        .get(`${baseUrl}account/`)
+        .then((response) => {
+            if (onSuccess) {
+                onSuccess();
+            }
+            dispatch({
+                type: ACTION_TYPES.FETCH_ME,
+                payload: response.data,
+            });
+        })
+        .catch((error) => {
+            if (onError) {
+                onError();
+            }
+            dispatch({
+                type: ACTION_TYPES.FETCH_ME,
+                payload: null,
+            });
+        });
 };

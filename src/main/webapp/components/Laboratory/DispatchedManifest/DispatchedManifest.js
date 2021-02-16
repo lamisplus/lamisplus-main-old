@@ -3,12 +3,14 @@ import React, {useEffect, useState} from 'react';
 import MaterialTable from 'material-table';
 import { Link } from 'react-router-dom'
 import { connect } from "react-redux";
+import {Col,Input,FormGroup,Label} from "reactstrap";
 import { fetchAllLabTestOrder } from "./../../../actions/laboratory";
 import "./../laboratory.css";
 import {GiFiles} from 'react-icons/gi'; 
 import { Badge } from 'reactstrap';
 import Button from "@material-ui/core/Button";
-import DispatchedModal from './DispatchedModal';
+import DispatchedModal from './SampleDispatchedModalFormIo';
+import {authentication} from '../../../_services/authentication';
 
 
 const PatientSearch = (props) => {
@@ -34,13 +36,17 @@ useEffect(() => {
     
     props.testOrder.forEach(function(value, index, array) {
           const getList = value['formDataObj'].find(x => { 
-
+            
             if(x.data && x.data!==null && x.data.lab_test_order_status===2 && x.data.manifest_status==null){
+              x['hospitalNumber'] = value.hospitalNumber;
+              x['firstName'] = value.firstName ;
+              x['lastName'] = value.lastName;
               labTestType.push(x);
             }
           
           })         
      });
+
 
      function getDispatch (evt, data){
         setcollectmodal({...collectmodal, ...data});
@@ -63,13 +69,35 @@ useEffect(() => {
           return (<p>{" "}</p>)
       }
   }
-  //console.log(labTestType)
 
   return (
     
     <div>
-      <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+      <>
+        <Col md={3}>
+          <FormGroup>
+              <Label for="occupation">Sample Type </Label>
 
+              <Input
+                  type="select"
+                  name="sample_collected_by"
+                  id="sample_collected_by"
+                  vaule=""
+                  className=" float-left mr-1"
+              >
+                  <option value=""> </option>
+                  <option value="eid"> EID </option>
+                  <option value="viral Load"> Viral </option>
+                 
+              </Input>
+              
+          </FormGroup>
+      </Col>
+       </>            
       <Link to="/dispatched-sample">
         {/* <Link to="/dispatched-sample"> */}
             <Button
@@ -93,7 +121,7 @@ useEffect(() => {
         
           { title: "FormDataObj ", 
             field: "formDataObj",
-            hidden: true 
+            hidden: true
           },
           
           {
@@ -178,6 +206,7 @@ useEffect(() => {
         actions={[         
             {
               tooltip: 'Dispatch All Selected Sample',
+              disabled: !authentication.userHasRole(["laboratory_write"]),
               icon: 'add' ,
               label: 'Add Manifest',
               onClick: (evt, data) =>

@@ -25,8 +25,8 @@ public class Program implements Serializable {
     private String name;
 
     @Basic
-    @Column(name = "uuid")
-    private String uuid;
+    @Column(name = "code")
+    private String code;
 
     @Basic
     @Column(name = "module_id")
@@ -34,7 +34,6 @@ public class Program implements Serializable {
 
     @Basic
     @Column(name = "archived")
-    @JsonIgnore
     private Integer archived;
 
     @OneToMany(mappedBy = "programForEncounterByProgramCode")
