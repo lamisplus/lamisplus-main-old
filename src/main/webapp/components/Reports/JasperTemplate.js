@@ -21,7 +21,7 @@ import { Link } from 'react-router-dom';
 
 const CreateReports = props => {
     const datanew = {
-        parameterResourceObject: "",
+        resourceObject: "",
         programCode: "",
     }
     const [newdata2] = React.useState(datanew);
@@ -40,7 +40,7 @@ const CreateReports = props => {
 
     const handleSubmit = e => {
         newdata2['programCode']=programCode;
-        newdata2['parameterResourceObject']=res;
+        newdata2['resourceObject']=res;
         newdata2['name']=name;
         newdata2['description']=description;
         newdata2['dataSource']=dataSource;

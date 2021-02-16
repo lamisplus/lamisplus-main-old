@@ -13,10 +13,10 @@ import java.util.Optional;
 @Repository
 public interface ModuleRepository extends JpaRepository<Module, Long> , JpaSpecificationExecutor {
     Optional<Module> findByName(String name);
-    //List<ModuleDependency> findByModuleDependencyByModule();
-    //List<Program> findByModuleByModuleId(Long programId);
     List<Module>findAllByStatusAndBatchNo(int status, String BatchNo);
     List<Module> findAllByStatus(int status);
     List<Module> findAllByBatchNo(String batchNo);
     List<Module> findAllByModuleType(int moduleType);
+    List<Module>  findAllByArchived(int archived);
+    List<Module> findAllByStatusAndModuleType(int moduleStatus, int moduleType);
 }

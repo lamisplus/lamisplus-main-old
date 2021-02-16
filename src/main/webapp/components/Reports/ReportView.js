@@ -63,7 +63,7 @@ const GenerateReport = props => {
             }
         } );
         newdata2['reportId']=form2.id;
-        newdata2['parameters']=formattedData;
+        newdata2['parameters']=data ;
         props.generateReport(newdata2, onError);
         return;
     }
@@ -82,7 +82,7 @@ const GenerateReport = props => {
                 <Card>
                     <CardBody>
                     { form2 ?
-                        <Form form={row.parameterResourceObject}
+                        <Form form={row.resourceObject}
                               options={options}
                               {...props} onSubmit={(submission) => {
                             return submitForm(submission);

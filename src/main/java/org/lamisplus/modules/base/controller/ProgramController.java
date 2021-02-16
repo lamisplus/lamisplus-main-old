@@ -20,7 +20,6 @@ import java.util.List;
 @RequestMapping("/api/programs")
 @Audit
 public class ProgramController {
-    private final String ENTITY_NAME = "Program";
     private final ProgramService programService;
 
     @PostMapping

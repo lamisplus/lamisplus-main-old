@@ -61,7 +61,7 @@ function ReportSearch(props) {
                         programName: row.programName,
                         name: row.name,
                         description: row.description,
-                        parameterResourceObject: row.parameterResourceObject,
+                        resourceObject: row.resourceObject,
                         actions:  (
                             <Link
                                 to={{

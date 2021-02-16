@@ -25,7 +25,6 @@ import java.util.List;
 @Audit
 public class StandardCodesetSourceController {
     private final StandardCodesetSourceService standardCodesetSourceService;
-    private final String ENTITY_NAME = "StandardCodesetSource";
 
     @GetMapping
     public ResponseEntity<List<StandardCodesetSourceDTO>> getAllStandardCodesetSource() {

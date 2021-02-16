@@ -8,6 +8,7 @@ import org.lamisplus.modules.base.domain.dto.ApplicationCodesetDTO;
 import org.lamisplus.modules.base.domain.entity.ApplicationCodeSet;
 import org.lamisplus.modules.base.service.ApplicationCodeSetService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URISyntaxException;
@@ -22,6 +23,7 @@ public class ApplicationCodesetController {
     private final ApplicationCodeSetService applicationCodesetService;
 
     @GetMapping("/codesetGroup")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Super Admin')")
     public ResponseEntity<List<ApplicationCodesetDTO>> getApplicationCodeByCodeSetGroup(@RequestParam String codesetGroup) {
         return ResponseEntity.ok(this.applicationCodesetService.getApplicationCodeByCodeSetGroup(codesetGroup));
     }
@@ -32,24 +34,28 @@ public class ApplicationCodesetController {
     }*/
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('Admin', 'Super Admin')")
     public ResponseEntity<List<ApplicationCodesetDTO>> getAllApplicationCodesets() {
 
         return ResponseEntity.ok(this.applicationCodesetService.getAllApplicationCodeSet());
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('Admin', 'Super Admin')")
     public ResponseEntity<ApplicationCodeSet> save(@RequestBody ApplicationCodesetDTO applicationCodesetDTO) {
         return ResponseEntity.ok(applicationCodesetService.save(applicationCodesetDTO));
 
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Super Admin')")
     public ResponseEntity<ApplicationCodeSet> update(@PathVariable Long id, @RequestBody ApplicationCodesetDTO applicationCodesetDTO) {
         return ResponseEntity.ok(applicationCodesetService.update(id, applicationCodesetDTO));
 
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('Admin', 'Super Admin')")
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
         return ResponseEntity.ok(this.applicationCodesetService.delete(id));
     }
