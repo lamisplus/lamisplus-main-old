@@ -43,9 +43,6 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
     private HTMLServerImageHandler htmlImageHandler = new HTMLServerImageHandler();
 
-    private final ResourceLoader resourceLoader;
-    private final ServletContext servletContext;
-
     private IReportEngine birtEngine;
     private ApplicationContext context;
     private String imageFolder;
@@ -99,28 +96,6 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
     }
 
-//    public List<Report> getReports() {
-//        List<Report> response = new ArrayList<>();
-//        for (Map.Entry<String, IReportRunnable> entry : reports.entrySet()) {
-//            IReportRunnable report = reports.get(entry.getKey());
-//            IGetParameterDefinitionTask task = birtEngine.createGetParameterDefinitionTask(report);
-//            Report reportItem = new Report(report.getDesignHandle().getProperty("title").toString(), entry.getKey());
-//            for (Object h : task.getParameterDefns(false)) {
-//                IParameterDefn def = (IParameterDefn) h;
-//                reportItem.getParameters()
-//                        .add(new Report.Parameter(def.getPromptText(), def.getName(), getParameterType(def)));
-//            }
-//            response.add(reportItem);
-//        }
-//        return response;
-//    }
-//
-//    private Report.ParameterType getParameterType(IParameterDefn param) {
-//        if (IParameterDefn.TYPE_INTEGER == param.getDataType()) {
-//            return Report.ParameterType.INT;
-//        }
-//        return Report.ParameterType.STRING;
-//    }
 
     public void generateReport(ReportDetailDTO reportDetailDTO, OutputType output, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
         ReportInfo reportInfo = getReport(reportDetailDTO.getReportId());
@@ -226,7 +201,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
     }
 
     public ReportInfo save(ReportInfoDTO reportInfoDTO) {
-        Optional<ReportInfo> optional = this.reportInfoRepository.findByName(reportInfoDTO.getName());
+        Optional<ReportInfo> optional = this.reportInfoRepository.findByNameAndArchived(reportInfoDTO.getName(), UN_ARCHIVED);
         if (optional.isPresent()) throw new RecordExistException(ReportInfo.class, "name", reportInfoDTO.getName());
         ReportInfo reportInfo = this.reportInfoMapper.toReportInfo(reportInfoDTO);
         reportInfo.setArchived(UN_ARCHIVED);
@@ -234,26 +209,24 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
     }
 
     public ReportInfo update(Long id, ReportInfoDTO reportInfoDTO) {
-        Optional<ReportInfo> optional = this.reportInfoRepository.findById(id);
-        if(!optional.isPresent() || optional.get().getArchived() == ARCHIVED)throw new EntityNotFoundException(ReportInfo.class, "Id", id +"");
+        Optional<ReportInfo> optional = this.reportInfoRepository.findByIdAndArchived(id, UN_ARCHIVED);
+        if(!optional.isPresent())throw new EntityNotFoundException(ReportInfo.class, "Id", id +"");
         reportInfoDTO.setId(id);
 
-        ReportInfo jasperReportInfo = reportInfoMapper.toReportInfo(reportInfoDTO);
-        return reportInfoRepository.save(jasperReportInfo);
+        ReportInfo reportInfo = reportInfoMapper.toReportInfo(reportInfoDTO);
+        return reportInfoRepository.save(reportInfo);
     }
 
 
     public Integer delete(Long id) {
-        Optional<ReportInfo> optional = reportInfoRepository.findById(id);
-        if(!optional.isPresent() || optional.get().getArchived() == ARCHIVED)throw new EntityNotFoundException(ReportInfo.class, "Id", id +"");
+        Optional<ReportInfo> optional = reportInfoRepository.findByIdAndArchived(id, UN_ARCHIVED);
+        if(!optional.isPresent())throw new EntityNotFoundException(ReportInfo.class, "Id", id +"");
         optional.get().setArchived(ARCHIVED);
         return optional.get().getArchived();
     }
 
     public List<ReportInfoDTO> getReports() {
-        GenericSpecification<ReportInfo> genericSpecification = new GenericSpecification<ReportInfo>();
-        Specification<ReportInfo> specification = genericSpecification.findAll(0);
-        List<ReportInfo> reportInfos = reportInfoRepository.findAll(specification);
+        List<ReportInfo> reportInfos = reportInfoRepository.findAllByArchived(UN_ARCHIVED);
 
         List<ReportInfoDTO> reportInfoDTOS = new ArrayList<>();
         reportInfos.forEach(reportInfo -> {
@@ -266,8 +239,8 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
     }
 
     public ReportInfo getReport(Long id) {
-        Optional<ReportInfo> optional = this.reportInfoRepository.findById(id);
-        if(!optional.isPresent() || optional.get().getArchived() == ARCHIVED) throw new EntityNotFoundException(ReportInfo.class, "Id", id+"");
+        Optional<ReportInfo> optional = this.reportInfoRepository.findByIdAndArchived(id, UN_ARCHIVED);
+        if(!optional.isPresent()) throw new EntityNotFoundException(ReportInfo.class, "Id", id+"");
         return optional.get();
     }
 
