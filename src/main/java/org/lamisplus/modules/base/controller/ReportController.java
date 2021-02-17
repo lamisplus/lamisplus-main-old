@@ -1,42 +1,34 @@
 package org.lamisplus.modules.base.controller;
+import lombok.RequiredArgsConstructor;
 import org.lamisplus.modules.base.service.report.birt.OutputType;
 import org.lamisplus.modules.base.service.report.birt.BirtReportService;
-import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.dto.ReportDetailDTO;
 import org.lamisplus.modules.base.domain.dto.ReportInfoDTO;
 import org.lamisplus.modules.base.domain.entity.ReportInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static org.hibernate.id.IdentifierGenerator.ENTITY_NAME;
 
 @RestController
 @RequestMapping("/api/reports")
 @Controller
+@RequiredArgsConstructor
 public class ReportController {
     private static final Logger log = LoggerFactory.getLogger(ReportController.class);
 
-    @Autowired
-    private BirtReportService reportService;
+    private final BirtReportService reportService;
 
     @PostMapping
-    public ResponseEntity<ReportInfo> save(@RequestBody ReportInfoDTO reportInfoDTO) throws URISyntaxException {
+    public ResponseEntity<ReportInfo> save(@RequestBody ReportInfoDTO reportInfoDTO) {
         reportInfoDTO.setId(0L);
-        ReportInfo reportInfo = this.reportService.save(reportInfoDTO);
-        return ResponseEntity.created(new URI("/api/reports/" + reportInfo.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(reportInfo.getId()))).body(reportInfo);
+        return ResponseEntity.ok(this.reportService.save(reportInfoDTO));
     }
 
     @PostMapping(value = "/generate")
@@ -49,10 +41,8 @@ public class ReportController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ReportInfo> update(@PathVariable Long id, @RequestBody ReportInfoDTO reportInfoDTO) throws URISyntaxException {
-        ReportInfo reportInfo = this.reportService.update(id, reportInfoDTO);
-        return ResponseEntity.created(new URI("/api/reports/" + id))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(id))).body(reportInfo);
+    public ResponseEntity<ReportInfo> update(@PathVariable Long id, @RequestBody ReportInfoDTO reportInfoDTO) {
+        return ResponseEntity.ok(this.reportService.update(id, reportInfoDTO));
     }
 
     @DeleteMapping("/{id}")
