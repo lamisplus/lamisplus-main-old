@@ -47,12 +47,9 @@ const DrugOrder = (props) => {
             toast.success("Drug Order Successfully Saved!");
             props.fetchPatientMedicationOrder(  props.patientId);
             reloadForm();
-<<<<<<< HEAD
-=======
             }catch(e){
                 console.log(e)
             }
->>>>>>> mathew
         };
         const onError = (errstatus) => {
             toast.error("Something went wrong, please contact administration");
