@@ -13,9 +13,13 @@ import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEven
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -37,7 +41,7 @@ public class BaseApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication application = new SpringApplication(BaseApplication.class);
-        //addInitHooks(application);
+        addInitHooks(application);
         context = application.run(args);
         Log.info("java.class.path - " + System.getProperty("java.class.path"));
         ModuleService moduleService = context.getBean(ModuleService.class);
@@ -53,7 +57,6 @@ public class BaseApplication extends SpringBootServletInitializer {
 
         Thread thread = new Thread(() -> {
             try {
-                //context.refresh();
                 context.close();
                 //System.out.println("System is close");
                 context = SpringApplication.run(clz, args.getSourceArgs());
@@ -64,6 +67,7 @@ public class BaseApplication extends SpringBootServletInitializer {
         });
 
         thread.setDaemon(false);
+        thread.setContextClassLoader(ModuleService.getClassLoader());
         thread.start();
     }
 
@@ -87,94 +91,39 @@ public class BaseApplication extends SpringBootServletInitializer {
         });*//*
     }*/
 
-    /*@PersistenceContext
-    EntityManager em;
+    static void addInitHooks(SpringApplication application) {
+        application.addListeners((ApplicationListener<ApplicationEnvironmentPreparedEvent>) event -> {
+            String version = event.getEnvironment().getProperty("java.runtime.version");
+            System.setProperty("java.class.path", System.getProperty("user.dir"));
+            String classPath = event.getEnvironment().getProperty("java.class.path");
+            log.info("Running with Java {}", version);
+            log.info("Classpath {}", classPath);
 
-    @Transactional
-    @Override
-    public void run(String... args) throws Exception {
+        });
+    }
 
-        HashSet createdPermissions = new HashSet<>();
 
-        // Seed permissions
-        List<Permission> permissionsObject = em.createQuery("SELECT a FROM Permission a", Permission.class).getResultList();
-        List<String> permissions = permissionsObject.stream()
-                .map(Permission::getName)
-                .collect(Collectors.toList());
-        for (PermissionConstants.PermissionsEnum _permission : PermissionConstants.PermissionsEnum.values()) {
-            if (!permissions.contains(_permission.toString())) {
-                Permission permission = new Permission(_permission.toString());
-                createdPermissions.add(permission);
-                em.persist(permission);
-            }
-        }
-        List<Role> RolesObject = em.createQuery("SELECT a FROM Role a", Role.class).getResultList();
-        List<String> Roles = RolesObject.stream()
-                .map(Role::getName)
-                .collect(Collectors.toList());
-        if (!Roles.contains(RolesConstants.SUPER_ADMIN)) {
-            Role admin = new Role(RolesConstants.SUPER_ADMIN);
-            admin.setPermissions(createdPermissions);
-            em.persist(admin);
+    @Bean
+    public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+        PropertySourcesPlaceholderConfigurer properties =
+                new PropertySourcesPlaceholderConfigurer();
+        properties.setLocation(new FileSystemResource("config.properties"));
+        properties.setIgnoreResourceNotFound(true);
+        return properties;
+    }
+
+    private void customClassLoader(){
+        ClassLoader oscl =  ModuleService.getClassLoader();
+
+        Field scl = null;
+        try {
+            scl = ClassLoader.class.getDeclaredField("scl");
+            scl.setAccessible(true);
+            scl.set(null, oscl);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        if (!Roles.contains(RolesConstants.COUNTRY_ADMIN)) {
-            Role role = new Role(RolesConstants.COUNTRY_ADMIN);
-            em.persist(role);
-        }
-        if (!Roles.contains(RolesConstants.STATE_ADMIN)) {
-            Role role = new Role(RolesConstants.STATE_ADMIN);
-            em.persist(role);
-        }
-        if (!Roles.contains(RolesConstants.FACILITY_ADMIN)) {
-            Role role = new Role(RolesConstants.FACILITY_ADMIN);
-            em.persist(role);
-        }
-        if (!Roles.contains(RolesConstants.CLINICIAN)) {
-            Role role = new Role(RolesConstants.CLINICIAN);
-            em.persist(role);
-        }
-        if (!Roles.contains(RolesConstants.NURSE)) {
-            Role role = new Role(RolesConstants.NURSE);
-            em.persist(role);
-        }
-        if (!Roles.contains(RolesConstants.PHARMACIST)) {
-            Role role = new Role(RolesConstants.PHARMACIST);
-            em.persist(role);
-        }
-        if (!Roles.contains(RolesConstants.LABORATORY_SCIENTIST)) {
-            Role role = new Role(RolesConstants.LABORATORY_SCIENTIST);
-            em.persist(role);
-        }
-        if (!Roles.contains(RolesConstants.DATA_CLERK)) {
-            Role role = new Role(RolesConstants.DATA_CLERK);
-            em.persist(role);
-        }
-        if (!Roles.contains(RolesConstants.USER)) {
-            Role role = new Role(RolesConstants.USER);
-            em.persist(role);
-        }
-    }*/
-
-    /**
-     * Refresh the given application context, if necessary.
-     */
-	/*protected void refreshApplicationContext(ApplicationContext applicationContext) {
-		if (applicationContext instanceof ConfigurableApplicationContext) {
-			ConfigurableApplicationContext cac = (ConfigurableApplicationContext) applicationContext;
-			if (!cac.isActive()) {
-				cac.refresh();
-			}
-		}
-	}*/
-
-    public static void addURL(URL url) throws Exception {
-        URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-        Class clazz= URLClassLoader.class;
-
-        // Use reflection
-        Method method = clazz.getDeclaredMethod("addURL", new Class[] { URL.class });
-        method.setAccessible(true);
-        method.invoke(classLoader, new Object[] { url });
     }
 }
