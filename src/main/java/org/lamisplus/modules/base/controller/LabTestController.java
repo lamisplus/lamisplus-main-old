@@ -23,31 +23,31 @@ public class LabTestController {
     private final LabTestService labTestService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('laboratory_read')")
+    //@PreAuthorize("hasAuthority('laboratory_read')")
     public ResponseEntity<List<LabTest>> getAllLabTests() {
         return ResponseEntity.ok(this.labTestService.getAllLabTests());
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('laboratory_read')")
+    //@PreAuthorize("hasAuthority('laboratory_read')")
     public ResponseEntity<LabTest> getLabTest(@PathVariable Long id) {
         return ResponseEntity.ok(labTestService.getLabTest(id));
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('laboratory_write')")
+    //@PreAuthorize("hasAuthority('laboratory_write')")
     public ResponseEntity<LabTest> save(@RequestBody LabTest labTest) {
         return ResponseEntity.ok(labTestService.save(labTest));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('laboratory_write')")
+    //@PreAuthorize("hasAuthority('laboratory_write')")
     public ResponseEntity<LabTest> update(@PathVariable Long id, @RequestBody LabTest labTest) {
         return ResponseEntity.ok(labTestService.update(id, labTest));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('laboratory_delete')")
+    //@PreAuthorize("hasAuthority('laboratory_delete')")
     public ResponseEntity<Integer> delete(@PathVariable Long id){
         return ResponseEntity.ok(this.labTestService.delete(id));
     }

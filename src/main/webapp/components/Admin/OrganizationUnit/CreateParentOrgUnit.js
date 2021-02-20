@@ -64,7 +64,6 @@ const CreateParentOrgUnit = (props) => {
 }
 
 const createUploadBatch = () => {
-    console.log('code get here good')
     props.togglestatus();
     setModal3(!modal3)
 }

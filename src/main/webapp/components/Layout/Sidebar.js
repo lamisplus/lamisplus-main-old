@@ -29,7 +29,7 @@ const navItems = [
     roles: ["pharmacy_read", "pharmacy_write", "pharmacy_delete"]},
   { to: '/appointments', name: 'Appointments', exact: false, Icon: MdGraphicEq,
   roles: ["4d358195-095a-4944-bc5b-aa711915af8a_read", "4d358195-095a-4944-bc5b-aa711915af8a_write", "4d358195-095a-4944-bc5b-aa711915af8a_delete", "22ec08bd-eeae-4f5e-9041-44461d511e90_read"]},
-  // { to: '/report', name: 'Reports', exact: false, Icon: FaListUl },
+  { to: '/report', name: 'Reports', exact: false, Icon: FaListUl },
   // { to: '/visual', name: 'Visualization', exact: false, Icon: MdGraphicEq },
   { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog,
     roles: ["admin_read", "user_read"] },

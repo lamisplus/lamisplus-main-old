@@ -1,4 +1,4 @@
-package org.lamisplus.modules.base.service;
+package org.lamisplus.modules.base.service.report.jasper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,6 @@ import org.lamisplus.modules.base.domain.dto.JasperReportInfoDTO;
 import org.lamisplus.modules.base.domain.dto.PatientList;
 import org.lamisplus.modules.base.domain.entity.JasperReportInfo;
 import org.lamisplus.modules.base.domain.dto.ReportDetailDTO;
-import org.lamisplus.modules.base.domain.entity.Parameter;
 import org.lamisplus.modules.base.domain.entity.Program;
 import org.lamisplus.modules.base.domain.mapper.JasperReportInfoMapper;
 import org.lamisplus.modules.base.repository.JasperReportInfoRepository;
@@ -40,7 +39,6 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
 @Transactional
@@ -107,9 +105,9 @@ public class JasperReportService {
         JasperReport report = JasperCompileManager.compileReport(stream);
 
         // Adding the additional parameters to the report.
-        Map<String, Object> parameters = new HashMap<>();
-        List<Parameter> parameterList = reportDetailDTO.getParameters();
-        parameters = parameterList.stream().collect(Collectors.toMap(Parameter::getName, Parameter::getValue));
+        Map<String, Object> parameters = reportDetailDTO.getParameters();
+        /*List<Parameter> parameterList = reportDetailDTO.getParameters().
+        parameters = parameterList.stream().collect(Collectors.toMap(Parameter::getName, Parameter::getValue));*/
 
         // Fetching the data from the data source.
         //Filling the report with the data and additional parameters information.
@@ -140,15 +138,15 @@ public class JasperReportService {
         Path path = Paths.get(root.toAbsolutePath() + "/report/");
         Files.createDirectories(path);
 
-        System.out.println("Report Type: "+reportDetailDTO.getReportType());
+        System.out.println("Report Type: "+reportDetailDTO.getReportFormat());
         String fileName = "";
-        if(reportDetailDTO.getReportType().trim().toLowerCase().equals("html")) {
+        if(reportDetailDTO.getReportFormat().trim().toLowerCase().equals("html")) {
             fileName = exportHtml(print, path);
         }else {
-            if(reportDetailDTO.getReportType().trim().toLowerCase().equals("excel")) {
+            if(reportDetailDTO.getReportFormat().trim().toLowerCase().equals("excel")) {
                 fileName = exportXls(print, path);
             }else {
-                if(reportDetailDTO.getReportType().trim().toLowerCase().equals("csv")) {
+                if(reportDetailDTO.getReportFormat().trim().toLowerCase().equals("csv")) {
                     fileName = exportCsv(print, path);
                 }else {
                     fileName = exportPdf(print, path);

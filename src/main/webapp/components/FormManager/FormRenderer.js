@@ -27,7 +27,7 @@ const FormRenderer = (props) => {
   const [showLoadingForm, setShowLoadingForm] = React.useState(true);
   const [showLoadingEncounter, setShowLoadingEncounter] = React.useState(false)
   const [formId, setFormId] = React.useState()
-  const [submission, setSubmission] = React.useState({...props.submission, ...{ data: { patient: props.patient, authHeader: authHeader(), baseUrl: url }}});
+  const [submission, setSubmission] = React.useState(_.merge(props.submission, { data: { patient: props.patient, authHeader: authHeader(), baseUrl: url }}));
   const onDismiss = () => setShowErrorMsg(false);
   const options = {
     noAlerts: true,
@@ -189,6 +189,7 @@ const FormRenderer = (props) => {
             <Alert color="danger" isOpen={showErrorMsg} toggle={onDismiss}>
               {errorMsg}
             </Alert>
+            
             <Form
               form={form.resourceObject}
               submission={submission}

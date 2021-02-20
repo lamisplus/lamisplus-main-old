@@ -33,7 +33,6 @@ public class RegimenController {
     @PutMapping("{id}")
     public ResponseEntity<RegimenDTO> update(@PathVariable Long id, @RequestBody RegimenDTO regimenDTO) {
         return ResponseEntity.ok(regimenService.update(id, regimenDTO));
-
     }
 
     @GetMapping

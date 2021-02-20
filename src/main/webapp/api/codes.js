@@ -33,7 +33,8 @@ export const LAB_SAMPLE_VERIFICATION_CODE_FORM = '8e3f8867-d5fc-4ddf-9972-004abe
 export const LAB_SAMPLE_TRANSFER_CODE_FORM = 'cca9fb2e-9f1e-4836-b982-705378b7b55e'
 export const LAB_SAMPLE_RESULT_CODE_FORM = '4fcabd08-5f7a-43fc-b246-da15e9a05f43'
 export const LAB_SAMPLE_DISPATCHED_CODE_FORM = '58220e59-e468-4a4b-91f1-53341068f0a1'
-
+export const PHARMARCY_DRUG_DISPENSE = '01a75846-83ed-4caa-9c78-136697742b72'
+export const PHARMARCY_DRUG_DISPENSE_REGIMEN = 'c9b1b50f-6544-42b6-a868-91a5bf320671'
 /**
  * @CODES
  * ==============================================

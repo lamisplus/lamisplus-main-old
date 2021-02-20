@@ -23,14 +23,12 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.xeustechnologies.jcl.JarClassLoader;
-import org.xeustechnologies.jcl.JclObjectFactory;
-import org.xeustechnologies.jcl.context.DefaultContextLoader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -87,7 +85,7 @@ public class ModuleService {
     @Value("${base.url}")
     private String baseUrl;
     private final FilesStorageServiceImpl filesStorageServiceImpl;
-    JarClassLoader jcl;
+    private static ClassLoader classLoader;
 
     public Module save(ModuleDTO moduleDTO) {
         Optional<Module> moduleOptional = this.moduleRepository.findByName(moduleDTO.getName());
@@ -100,19 +98,16 @@ public class ModuleService {
         }
         module.setArchived(UN_ARCHIVED);
 
-        return this.moduleRepository.save(module);
+        return moduleRepository.save(module);
     }
 
     public List<Module> getAllModules(){
-        Specification<Module> specification = genericSpecification.findAll(0);
-        return this.moduleRepository.findAll(specification);
+        return moduleRepository.findAllByArchived(UN_ARCHIVED);
     }
 
     public List<Module> uploadAndUnzip(MultipartFile[] files, HttpServletRequest request) {
         ModuleUtil.setModuleConfigs();
         currentUser = userService.getUserWithRoles().get().getUserName();
-
-
 
         Arrays.asList(files).stream().forEach(file ->{
             if(!file.getOriginalFilename().contains(DOT_JAR)){
@@ -316,9 +311,10 @@ public class ModuleService {
 
     public Module installModule(Long moduleId, Boolean isInitialized){
         //classNames.clear();
+        log.info("java.class.path - " + System.getProperty("java.class.path"));
+
         Optional<Module> moduleOptional = moduleRepository.findById(moduleId);
         List<Module> moduleList = new ArrayList<>();
-        Object obj = null;
 
         if(!moduleOptional.isPresent()) {
             throw new EntityNotFoundException(Module.class, MODULE_CLASS_NAME, moduleId + "");
@@ -369,40 +365,27 @@ public class ModuleService {
                 ClassPathHacker.addFile(rootFile.getAbsolutePath());
                 List<URL> classURL = showFiles(filePath.listFiles(), rootFile, module.getMain());
                 ClassLoader loader = new URLClassLoader(classURL.toArray(
-                        new URL[classURL.size()]), ClassLoader.getSystemClassLoader());
-                jcl=new JarClassLoader();
-
+                        new URL[classURL.size()]), sun.misc.Launcher.getLauncher().getClassLoader());
+                setClassLoader(loader);
 
                 for (String className : classNames) {
                     try {
                         if (className.contains(module.getMain())) {
-                            Class c = loader.loadClass(className);
+                            Class c = Class.forName(className, true, loader);
+                            //loader.loadClass(className);
                             moduleClasses.add(c);
-                            jcl.add(properties.getModulePath() +fileSeparator+"demo.jar");
-                            //Create default factory
-                            JclObjectFactory factory = JclObjectFactory.getInstance();
-                            //Create object of loaded class
-                            obj = factory.create(jcl,className);
-
-
-
-                            //genericApplicationContext.registerBean(module.getName(), loader.loadClass(className));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-                DefaultContextLoader context=new DefaultContextLoader(jcl);
-                context.loadContext();
-
-/*                JclCustomClassLoader.loadClass(moduleRuntimePath, classNames);
-                loadJclLoader();*/
 
             } catch (IOException e) {
                 log.debug(e.getClass().getName()+": " + e.getMessage());
                 e.printStackTrace();
                 throw new RuntimeException("Server error module not loaded: " + e.getMessage());
             }
+            System.setProperty("java.class.path", System.getProperty("user.dir")+ "\\demo.jar");
 
             //changing module status
             if(isInitialized == null) {
@@ -419,18 +402,25 @@ public class ModuleService {
             log.debug("Cannot find File" + module.getName());
             //TODO: remove module from externalModules list
         }
-        try {
-            String[] args = {"test"};
-           /* obj.getClass().getDeclaredMethod( "main", String[].class).
-                    invoke( obj, new Object[]{new String[0]});*/
+        return module;
+    }
 
-            System.out.println(obj.getClass().getDeclaredMethod( "sayHello", null).
-                    invoke( obj, null));
-        } catch (Exception e) {
+    public void test(File file){
+        ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
+
+// Add the conf dir to the classpath
+// Chain the current thread classloader
+        URLClassLoader urlClassLoader = null;
+        try {
+            urlClassLoader = new URLClassLoader(new URL[]{file.toURL()},
+                    currentThreadClassLoader);
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
-        return module;
+// Replace the thread classloader - assumes
+// you have permissions to do so
+        Thread.currentThread().setContextClassLoader(urlClassLoader);
     }
     public void startModule(Boolean isStartUp){
         //Boolean startUp = false;
@@ -633,10 +623,7 @@ public class ModuleService {
     }
 
     private List<Module> getAllModuleByStatusAndModuleType(int moduleStatus, int moduleType) {
-        Specification<Module> moduleSpecification = genericSpecification.findAllModules(moduleStatus, moduleType);
-        List<Module> modules = this.moduleRepository.findAll(moduleSpecification);
-
-        return modules;
+        return moduleRepository.findAllByStatusAndModuleType(moduleStatus, moduleType);
     }
 
     private Class getBeanInContext(String clzName){
@@ -743,5 +730,13 @@ public class ModuleService {
         }
 
         return moduleRepository.findById(moduleId).get();
+    }
+
+    public void setClassLoader(ClassLoader loader){
+        classLoader = loader;
+    }
+
+    public static ClassLoader getClassLoader(){
+        return classLoader;
     }
 }

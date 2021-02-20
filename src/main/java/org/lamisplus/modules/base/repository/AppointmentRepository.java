@@ -14,4 +14,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
     List<Appointment> findAllByPatientIdAndArchivedAndVisitId(Long patientId, int archived, Long visitId);
 
     Optional<Appointment> findByIdAndArchived(Long id, int archived);
+
+    List<Appointment> findAllByArchivedAndOrganisationUnitIdOrderByIdAsc(int archived, Long organisationUnit);
 }

@@ -31,8 +31,20 @@ function ReportSearch(props) {
     };
 
     const onDelete = row => {
+        const onSuccess = () => {
+            toast.success("Report was deleted successfully!");
+            props.fetchAll();
+        }
+
+        const onError = (error) => {
+            if(error.response.data.apierror.message===null || error.response.data.apierror.message===""){
+                toast.error("Something went wrong");
+            }else{
+                toast.error(error.response.data.apierror.message);
+            }
+        }
         if (window.confirm(`Are you sure you want to archive ${row.name} form ?`))
-            props.deleteForm(row.id)
+            props.deleteForm(row.id, onSuccess, onError);
     }
 
     React.useEffect(() => {
@@ -59,7 +71,7 @@ function ReportSearch(props) {
                         {title: "Action", field: "actions", filtering: false,},
                     ]}
                     isLoading={loading}
-                    data={props.reportList.map((row) => ({
+                    data={!props.reportList && !props.reportList.length ? [] : props.reportList.map((row) => ({
                         programName: row.programName,
                         name: row.name,
                         description: row.description,
@@ -71,15 +83,15 @@ function ReportSearch(props) {
                                         Actions <span aria-hidden>▾</span>
                                     </MenuButton>
                                     <MenuList style={{ color:"#000 !important"}} >
-                                        <MenuItem style={{ color:"#000 !important"}}>
-                                            <Link
-                                                to={{
-                                                    pathname: "/template-update",
-                                                    row: row
-                                                }}>
-                                                <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Report</span>
-                                            </Link>
-                                        </MenuItem>
+                                        {/*<MenuItem style={{ color:"#000 !important"}}>*/}
+                                        {/*    <Link*/}
+                                        {/*        to={{*/}
+                                        {/*            pathname: "/template-update",*/}
+                                        {/*            row: row*/}
+                                        {/*        }}>*/}
+                                        {/*        <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Report</span>*/}
+                                        {/*    </Link>*/}
+                                        {/*</MenuItem>*/}
                                         <MenuItem style={{ color:"#000 !important"}}>
                                             <Link
                                                 onClick={() => onDelete(row)}>

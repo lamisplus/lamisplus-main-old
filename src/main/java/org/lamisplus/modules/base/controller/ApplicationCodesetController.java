@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.ApplicationCodesetDTO;
 import org.lamisplus.modules.base.domain.entity.ApplicationCodeSet;
-import org.lamisplus.modules.base.service.ApplicationCodeSetService;
+import org.lamisplus.modules.base.service.ApplicationCodesetService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,11 +19,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @Audit
 public class ApplicationCodesetController {
-    private final ApplicationCodeSetService applicationCodesetService;
+    private final ApplicationCodesetService applicationCodesetService;
 
     @GetMapping("/codesetGroup")
     public ResponseEntity<List<ApplicationCodesetDTO>> getApplicationCodeByCodeSetGroup(@RequestParam String codesetGroup) {
-        return ResponseEntity.ok(this.applicationCodesetService.getApplicationCodeByCodeSetGroup(codesetGroup));
+        return ResponseEntity.ok(this.applicationCodesetService.getApplicationCodeByCodesetGroup(codesetGroup));
     }
 
    /* @GetMapping("/{id}")
@@ -33,8 +33,7 @@ public class ApplicationCodesetController {
 
     @GetMapping
     public ResponseEntity<List<ApplicationCodesetDTO>> getAllApplicationCodesets() {
-
-        return ResponseEntity.ok(this.applicationCodesetService.getAllApplicationCodeSet());
+        return ResponseEntity.ok(this.applicationCodesetService.getAllApplicationCodeset());
     }
 
     @PostMapping

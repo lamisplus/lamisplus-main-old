@@ -23,7 +23,6 @@ import java.util.List;
 @Audit
 public class MenuController {
     private final MenuService menuService;
-    //private final String ENTITY_NAME = "Menu";
 
     @GetMapping
     public ResponseEntity<List<Menu>> getAllStandardCodesetSource() {

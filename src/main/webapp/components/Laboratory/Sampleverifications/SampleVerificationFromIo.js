@@ -73,7 +73,7 @@ const ModalSample = (props) => {
     const currentForm = {
           code: CODES.LAB_SAMPLE_VERIFICATION_CODE_FORM,
           programCode: CODES.GENERAL_SERVICE,
-          formName: "Laboratory Sample Collection",
+          formName: "Laboratory Sample Verification",
           options:{
               hideHeader: true
           },
@@ -114,8 +114,7 @@ const ModalSample = (props) => {
 
     return (
         <div >
-            <Card >
-                <CardBody>
+
                     <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
                         <Form onSubmit={saveSample}>
                             <ModalHeader toggle={props.togglestatus}>Sample Verification</ModalHeader>
@@ -144,8 +143,7 @@ const ModalSample = (props) => {
                             </ModalBody>
                         </Form>
                     </Modal>
-                </CardBody>
-            </Card>
+                
         </div>
     );
 };

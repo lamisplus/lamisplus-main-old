@@ -8,10 +8,13 @@ import org.lamisplus.modules.base.domain.dto.FormDTO;
 import org.lamisplus.modules.base.domain.entity.Form;
 import org.lamisplus.modules.base.domain.entity.Permission;
 import org.lamisplus.modules.base.domain.entity.Program;
+import org.lamisplus.modules.base.domain.entity.User;
 import org.lamisplus.modules.base.domain.mapper.FormMapper;
 import org.lamisplus.modules.base.repository.FormRepository;
 import org.lamisplus.modules.base.repository.PermissionRepository;
 import org.lamisplus.modules.base.repository.ProgramRepository;
+import org.lamisplus.modules.base.repository.UserRepository;
+import org.lamisplus.modules.base.security.SecurityUtils;
 import org.lamisplus.modules.base.util.AccessRight;
 import org.lamisplus.modules.base.util.UuidGenerator;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,14 +34,16 @@ public class FormService {
     private final FormMapper formMapper;
     private final UserService userService;
     private static final int ARCHIVED = 1;
-    //private final GenericSpecification<Form> genericSpecification;
     private final AccessRight accessRight;
     private final PermissionRepository permissionRepository;
     private static final int UN_ARCHIVED = 0;
     private static final String READ = "read";
     private static final String WRITE = "write";
     private static final String DELETE = "delete";
+    private static final String UNDERSCORE = "_";
+    private static final String SPACE = " ";
 
+    private final UserRepository userRepository;
 
 
 
@@ -50,7 +55,9 @@ public class FormService {
     }
 
     public Form save(FormDTO formDTO) {
-        formDTO.setCode(UuidGenerator.getUuid());
+        if(formDTO.getCode() == null || formDTO.getCode().isEmpty()){
+            formDTO.setCode(UuidGenerator.getUuid());
+        }
         List<Permission> permissions = new ArrayList<>();
         Optional<Form> formOptional = formRepository.findByNameAndProgramCodeAndArchived(formDTO.getName(), formDTO.getProgramCode(), UN_ARCHIVED);
         if (formOptional.isPresent()) {
@@ -59,7 +66,7 @@ public class FormService {
         Form form = formMapper.toFormDTO(formDTO);
         form.setArchived(UN_ARCHIVED);
         form.setCreatedBy(userService.getUserWithRoles().get().getUserName());
-        String read = "_read"; String write = "_write"; String delete = "_delete";
+        String read = UNDERSCORE+READ; String write = UNDERSCORE+WRITE; String delete = UNDERSCORE+DELETE;
 
         permissions.add(new Permission(formDTO.getCode()+read, formDTO.getName() + read));
 
@@ -67,6 +74,13 @@ public class FormService {
 
         permissions.add(new Permission(formDTO.getCode()+delete, formDTO.getName() + delete));
         permissionRepository.saveAll(permissions);
+
+        //TODO:
+        Optional<User> optionalUser =  SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRoleByUserName);
+        if(optionalUser.isPresent()){
+            User user = optionalUser.get();
+            //Which role do we put the permission into?
+        }
 
         return formRepository.save(form);
     }
@@ -140,4 +154,6 @@ public class FormService {
         //formOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return formOptional.get().getArchived();
     }
+
+
 }
