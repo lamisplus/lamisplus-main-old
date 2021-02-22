@@ -92,7 +92,7 @@ const saveOrgName = (e) => {
       <div >
               <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
               <Form onSubmit={saveOrgName}> 
-                  <ModalHeader toggle={props.togglestatus}>Create Organization Unit</ModalHeader>
+                  <ModalHeader toggle={props.togglestatus}>Create Organization Unit Level</ModalHeader>
                       <ModalBody>
                           <Card>
                             <CardBody>
@@ -105,7 +105,7 @@ const saveOrgName = (e) => {
                                 <Row>
                                   <Col md={6}>
                                     <FormGroup>
-                                        <Label for="">Organisation Unit  name</Label>
+                                        <Label for="">Name</Label>
                                               <Input
                                                   type="text"
                                                   name="name"
