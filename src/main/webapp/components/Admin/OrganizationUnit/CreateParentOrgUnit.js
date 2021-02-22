@@ -1,10 +1,12 @@
-import React, { useState }   from 'react';
+import React, { useState, useEffect }   from 'react';
 import { Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Input,FormFeedback,Label,Card,CardBody
 } from 'reactstrap';
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import CreateParentOrgUnitByUpload from "./CreateParentOrgUnitByUpload";
+import axios from "axios";
+import {url} from '../../../api'
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -47,9 +49,12 @@ const CreateParentOrgUnit = (props) => {
     const classes = useStyles()
     const datasample = props.datasample ? props.datasample : {};
     const [otherfields, setOtherFields] = useState({fileName:""});
+    const defaultValues = {name:"",id:"" }
+    const [formData, setFormData] = useState(defaultValues)
     const [errors, setErrors] = useState({});
     const [modal3, setModal3] = useState(false) //
     const toggleModal3 = () => setModal3(!modal3)
+    const [pcrOptions, setOptionPcr] = useState([]);
     const handleOtherFieldInputChange = e => {
       setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
       //console.log(otherfields)
@@ -63,6 +68,26 @@ const CreateParentOrgUnit = (props) => {
       return Object.values(temp).every(x => x == "")
 }
 
+useEffect(() => {
+    async function getCharacters() {
+        try {
+            const response = await axios(
+                url + "organisation-units"
+            );
+            const body = response.data && response.data !==null ? response.data : {};
+            
+            setOptionPcr(
+                 body.map(({ name, id }) => ({ title: name, value: id }))
+             );
+        } catch (error) {
+        }
+    }
+    getCharacters();
+}, []);
+
+const handleInputChange = e => {
+    setFormData ({ ...formData, [e.target.name]: e.target.value});
+}
 const createUploadBatch = () => {
     props.togglestatus();
     setModal3(!modal3)
@@ -78,14 +103,7 @@ const createUploadBatch = () => {
                               <br />
                               <Row>
                                   <Col>
-                                  <Alert severity="info">
-                                    <AlertTitle>Instructions to Batch in more than one record please click the link below</AlertTitle>
-                                      <ul>
-                                       <a style={{ cursor: 'pointer'}}><li onClick={() => createUploadBatch()}>* Download the template and upload  <strong>(only *.csv)</strong></li></a> 
-                                       
-                                      </ul>
-                                      
-                                  </Alert>
+                                
                                 </Col>
                               </Row>
                                 <Row>
@@ -93,45 +111,25 @@ const createUploadBatch = () => {
                                           <FormGroup>
                                               <Label for="">Organisation  Unit</Label>
 
-                                                <Input
-                                                    type="select"
-                                                    name="sample_transfered_by"
-                                                    id="sample_transfered_by"
-                                                    vaule={otherfields.sample_transfered_by}
-                                                    onChange={handleOtherFieldInputChange}
-                                                    {...(errors.sample_transfered_by && { invalid: true})} 
-                                                >
-                                                      <option value=""></option>
-                                                      <option value="Dorcas"> Dorcas </option>
-                                                      <option value="Jeph"> Jeph </option>
-                                                      <option value="Debora"> Debora </option>
-                                                </Input>
-                                                    <FormFeedback>{errors.sample_transfered_by}</FormFeedback>
+                                              <Input type="select" name="moduleId" id="moduleId" 
+                                                    vaule={formData.id}
+                                                    onChange={handleInputChange}
+                                                    
+                                                  >
+                                                        <option> </option>
+                                                        {pcrOptions.map(({ title, value }) => (
+                                                            
+                                                            <option key={value} value={value}>
+                                                                {title}
+                                                            </option>
+                                                        ))}
+                                                  </Input>
                                           </FormGroup>
                                       </Col>
-                                      <Col md={6}>
-                                          <FormGroup>
-                                              <Label for="">Organisation  Parent Unit</Label>
-
-                                                <Input
-                                                    type="select"
-                                                    name="sample_transfered_by"
-                                                    id="sample_transfered_by"
-                                                    vaule={otherfields.sample_transfered_by}
-                                                    onChange={handleOtherFieldInputChange}
-                                                    {...(errors.sample_transfered_by && { invalid: true})} 
-                                                >
-                                                      <option value=""></option>
-                                                      <option value=""> Nigeria </option>
-                                                      <option value=""> Facilities </option>
-                                                      <option value=""> Community </option>
-                                                </Input>
-                                                    <FormFeedback>{errors.sample_transfered_by}</FormFeedback>
-                                          </FormGroup>
-                                      </Col>
+                                     
                                   <Col md={6}>
                                     <FormGroup>
-                                        <Label for="">Parent name</Label>
+                                        <Label for=""> Name</Label>
                                               <Input
                                                   type="text"
                                                   name="fileName"
@@ -145,7 +143,22 @@ const createUploadBatch = () => {
                                                 <FormFeedback>{errors.fileName}</FormFeedback>
                                       </FormGroup>
                                   </Col>
-                                
+                                  <Col md={6}>
+                                    <FormGroup>
+                                        <Label for="">Description</Label>
+                                              <Input
+                                                  type="text"
+                                                  name="fileName"
+                                                  id="fileName"
+                                                  
+                                                  value={otherfields.fileName}
+                                                  onChange={handleOtherFieldInputChange}
+                                                  {...(errors.fileName && { invalid: true})}
+                                                  
+                                              />
+                                                <FormFeedback>{errors.fileName}</FormFeedback>
+                                      </FormGroup>
+                                  </Col>
                                 </Row>
                             <br/>
                             <Row>

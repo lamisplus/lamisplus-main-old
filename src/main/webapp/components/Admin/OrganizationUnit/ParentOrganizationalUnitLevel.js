@@ -76,10 +76,10 @@ return (
       
         <Row>
             <Col>
-              <h1>Parent Organization Unit
+              <h1>Organization Unit
               <Link 
                   to ={{ 
-                  pathname: "/admin-organization-unit"
+                  pathname: "/admin/organization-unit"
                   }} 
                 > 
                   <MatButton
@@ -115,7 +115,7 @@ return (
                             
                                
                             <MaterialTable
-                              title="Parent Org. Unit"
+                              title="Unit Levels"
                               columns={[
                                 { title: 'Parent Name', field: 'name' },
                                 { title: 'Description', field: 'description' },

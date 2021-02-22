@@ -22,6 +22,7 @@ import {  fetchAllOrganizationalUnit, Delete } from '../../../actions/organizati
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
+import CreateParentOrgUnit from "./CreateParentOrgUnit";
 
 
 const useStyles = makeStyles({
@@ -46,6 +47,8 @@ const useStyles = makeStyles({
     const toggleModal2 = () => setModal2(!modal2)
     const [modal3, setModal3] = useState(false) //
     const toggleModal3 = () => setModal3(!modal3)
+    const [modal4, setModal4] = useState(false) //
+    const toggleModal4 = () => setModal4(!modal4)
     const classes = useStyles()
     const [loading, setLoading] = useState('')
     const dispatch = useDispatch();
@@ -72,8 +75,9 @@ const useStyles = makeStyles({
     const createOrgUnit = () => {  
       setModal2(!modal2) 
     }
-  console.log(listOfAllOrgUnit)
-    
+    const createParentOrgUnit = () => {  
+      setModal4(!modal4) 
+    }
 
 return (
     <Page >
@@ -122,13 +126,17 @@ return (
                                               Actions <span aria-hidden>▾</span>
                                             </MenuButton>
                                                 <MenuList style={{ color:"#000 !important"}} >
-                                                    <MenuItem  style={{ color:"#000 !important"}} >                      
+                                                       <MenuItem  style={{ color:"#000 !important"}}  onClick={() => createParentOrgUnit()}>                      
+                                                      
+                                                          <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>Add Org. Unit</span>
+                                                    
+                                                      </MenuItem>
+                                                      <MenuItem  style={{ color:"#000 !important"}} >                      
                                                       <Link
-                                                        to={{pathname: "/admin-parent-organization-unit", state: { parentOrganisationUnitId: row.id  }}}>
+                                                        to={{pathname: "/admin/parent-organization-unit", state: { parentOrganisationUnitId: row.id  }}}>
                                                           <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>View Organ. Unit</span>
                                                        </Link>  
                                                       </MenuItem>
-                                                      
                                                       <MenuItem style={{ color:"#000 !important"}}>
                                                             
                                                               <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Org. Unit  </span>                   
@@ -163,6 +171,7 @@ return (
        <DeleteModule modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
        <CreateOrganizationUnit modalstatus={modal2} togglestatus={toggleModal2}  />
        <CreatOrgUnitByUpload modalstatus={modal3} togglestatus={toggleModal3}  />
+       <CreateParentOrgUnit modalstatus={modal4} togglestatus={toggleModal4}  />
                        
        
     </Page>

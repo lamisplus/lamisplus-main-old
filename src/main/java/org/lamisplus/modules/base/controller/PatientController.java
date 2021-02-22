@@ -155,19 +155,16 @@ public class PatientController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('patient_write')")
     public ResponseEntity<Person> save(@RequestBody PatientDTO patientDTO) {
         return ResponseEntity.ok(this.patientService.save(patientDTO));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('patient_write')")
     public Person update(@PathVariable Long id, @RequestBody PatientDTO patientDTO) {
         return this.patientService.update(id, patientDTO);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('patient_delete')")
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
         return ResponseEntity.ok(this.patientService.delete(id));
     }

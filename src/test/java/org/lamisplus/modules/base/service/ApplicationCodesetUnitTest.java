@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ApplicationCodesetUnitTest {
 
     @Autowired
-    private ApplicationCodeSetService appCodesetService;
+    private ApplicationCodesetService appCodesetService;
 
     // MockBean is the annotation provided by Spring that wraps mockito one
     // Annotation that can be used to add mocks to a Spring ApplicationContext.
@@ -42,7 +42,7 @@ public class ApplicationCodesetUnitTest {
         // Mocking remote service
         when(template.getForEntity(any(String.class), any(Class.class))).thenReturn(new ResponseEntity(applicationCodesets, HttpStatus.OK));
 
-        List<ApplicationCodesetDTO> applicationCodesetList = appCodesetService.getApplicationCodeByCodeSetGroup("GENDER");
+        List<ApplicationCodesetDTO> applicationCodesetList = appCodesetService.getApplicationCodeByCodesetGroup("GENDER");
         if(applicationCodesetList == null){
             System.out.println("List is null");
         } else {
