@@ -75,12 +75,7 @@ function AdminSubMenu(props) {
           <Dropdown text="System Configurations"   labeled simple    className='icon link item'>
               <Dropdown.Menu>
                 <Dropdown.Item>
-{/*<<<<<<< HEAD*/}
-{/*                  <Link to={{pathname: "/admin/application-codesets"}} >Application Codeset Manager</Link>*/}
-{/*                </Dropdown.Item>*/}
-{/*                <Dropdown.Item>*/}
-{/*                  <Link to={{pathname: "/admin/global-variable"}}>Global Variables</Link>*/}
-{/*=======*/}
+
                   <Link to={{pathname: "/admin-application-codesets"}} >
                  Application Codeset Manager
                   </Link>
@@ -119,15 +114,7 @@ function AdminSubMenu(props) {
                 </Dropdown.Item>*/}
 
                 <Dropdown.Item >
-{/*<<<<<<< HEAD*/}
-{/*                  <Link to={{pathname: "/admin/wards"}}>Ward Manager</Link>*/}
-{/*                </Dropdown.Item>*/}
-{/*              </Dropdown.Menu>*/}
-{/*          </Dropdown>*/}
-{/*        <Menu.Item>  <Link to={{pathname: "/admin/bootstrap-configuration"}} >Bootstrap Configuration </Link></Menu.Item>*/}
-{/*        <Menu.Item>  <Link to={{pathname: "/admin/organization-unit"}} >Organization Unit </Link></Menu.Item>*/}
-{/*        <Menu.Item>  <Link to={{pathname: "/admin/program-manager-home"}} >Program Setup </Link></Menu.Item>*/}
-{/*=======*/}
+
                   <Link to={{
                         pathname: "/admin-wards"}}>
                     Ward Manager
@@ -135,8 +122,8 @@ function AdminSubMenu(props) {
                 </Dropdown.Item>
               </Dropdown.Menu>
           </Dropdown>
-        <Menu.Item>  <Link to={{pathname: "/admin-bootstrap-configuration"}} >Bootstrap Configuration </Link></Menu.Item>
-        <Menu.Item>  <Link to={{pathname: "/admin-organization-unit"}} >Organization Unit </Link></Menu.Item>
+        <Menu.Item>  <Link to={{pathname: "/admin/bootstrap-configuration"}} >Bootstrap Configuration </Link></Menu.Item>
+        <Menu.Item>  <Link to={{pathname: "/admin/organization-unit"}} >Organization Unit </Link></Menu.Item>
         {/*<Menu.Item>  <Link to={{pathname: "/case-managers"}} >Case Management </Link></Menu.Item>*/}
         <Menu.Item>  <Link to={{pathname: "/admin/program-manager-home"}} >Program Setup </Link></Menu.Item>
       </Menu>

@@ -137,7 +137,7 @@ const ModalSample = (props) => {
                                                             </option>
                                                         ))}
                                                   </Input>
-                                                      <FormFeedback>{errors.receivingLabName}</FormFeedback>
+                                                     
                                           </FormGroup>
                                     </Col>
                                 </Row>
