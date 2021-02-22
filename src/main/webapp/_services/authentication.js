@@ -9,8 +9,8 @@ import axios from "axios";
 
 const { dispatch } = store;
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
-console.log(localStorage.getItem('currentUser_Permissions'));
-const currentUserPermissions = new BehaviorSubject(localStorage.getItem('currentUser_Permission') ? JSON.parse( localStorage.getItem('currentUser_Permission')) : null);
+
+//const currentUserPermissions = localStorage.getItem('currentUser_Permission') ? new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser_Permission'))) : null;
 
 export const authentication = {
     login,
@@ -40,6 +40,7 @@ function login(username, password, remember) {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem('currentUser', JSON.stringify(user));
             currentUserSubject.next(user);
+            fetchMe();
             return user;
         });
 }
@@ -52,8 +53,13 @@ function logout() {
 }
 
 function getCurrentUserRole() {
-    //fetch all the permissions of the logged in user
-    const permissions = currentUserPermissions.value;
+
+    const currentUserPermissions = localStorage.getItem('currentUser_Permission') != null ? JSON.parse(localStorage.getItem('currentUser_Permission')) : null;
+    if(!currentUserPermissions){
+        return [];
+    }
+   // fetch all the permissions of the logged in user
+    const permissions = currentUserPermissions;
     if(!permissions || permissions.length < 1){
         return [];
     }
@@ -85,6 +91,8 @@ async function fetchMe(){
     axios
         .get(`${baseUrl}account`)
         .then((response) => {
+            localStorage.setItem('currentUser_Permission', JSON.stringify(response.data.permissions));
+
             dispatch({
                 type: ACTION_TYPES.FETCH_ME,
                 payload: response.data,

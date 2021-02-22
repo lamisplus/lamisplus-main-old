@@ -36,16 +36,16 @@ import java.util.*;
 public class BirtReportService implements ApplicationContextAware, DisposableBean{
     private static final int UN_ARCHIVED = 0;
     private static final int ARCHIVED = 1;
-    @Value("${reports.relative.path}")
-    private String reportsPath;
+    /*@Value("${reports.relative.path}")
+    private String reportsPath = System.getProperty("user.dir");
     @Value("${images.relative.path}")
     private String imagesPath;
 
     private HTMLServerImageHandler htmlImageHandler = new HTMLServerImageHandler();
-
+*/
     private IReportEngine birtEngine;
     private ApplicationContext context;
-    private String imageFolder;
+    //private String imageFolder;
     
     private final ReportInfoRepository reportInfoRepository;
     
@@ -64,8 +64,8 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         IReportEngineFactory factory = (IReportEngineFactory) Platform
                 .createFactoryObject(IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY);
         birtEngine = factory.createReportEngine(config);
-        imageFolder = System.getProperty("user.dir") + File.separatorChar + reportsPath + imagesPath;
-        loadReports();
+        //imageFolder = System.getProperty("user.dir") + File.separatorChar + reportsPath + imagesPath;
+        //loadReports();
     }
 
     @Override
@@ -77,9 +77,9 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
      * Load report files to memory
      *
      */
-    public void loadReports() throws EngineException {
+    /*public void loadReports() throws EngineException {
         File folder = new File(reportsPath);
-        if(folder.list().length > 0) {
+        if(folder.exists() || folder.list().length > 0) {
             for (String file : Objects.requireNonNull(folder.list())) {
                 if (!file.endsWith(".rptdesign")) {
                     continue;
@@ -89,7 +89,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
             }
         }
 
-    }
+    }*/
 
     public void loadReports(String reportName, InputStream reportStream) throws EngineException {
         reports.put(reportName, birtEngine.openReportDesign(reportStream));
@@ -101,7 +101,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         ReportInfo reportInfo = getReport(reportDetailDTO.getReportId());
         InputStream stream = IOUtils.toInputStream(reportInfo.getTemplate());
         try {
-            loadReports(reportDetailDTO.getReportName(), stream);
+            loadReports(reportInfo.getName(), stream);
         } catch (EngineException e) {
             e.printStackTrace();
         }
@@ -132,11 +132,15 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         IRenderOption options = new RenderOption();
         HTMLRenderOption htmlOptions = new HTMLRenderOption(options);
         htmlOptions.setOutputFormat("html");
-        htmlOptions.setBaseImageURL("/" + reportsPath + imagesPath);
-        htmlOptions.setImageDirectory(imageFolder);
-        htmlOptions.setImageHandler(htmlImageHandler);
+        //htmlOptions.setBaseImageURL("/" + reportsPath + imagesPath);
+        //htmlOptions.setImageDirectory(imageFolder);
+        //htmlOptions.setImageHandler(htmlImageHandler);
         runAndRenderTask.setRenderOption(htmlOptions);
-        runAndRenderTask(htmlOptions, runAndRenderTask, response, request);
+
+        runAndRenderTask.setRenderOption(htmlOptions);
+        runAndRenderTask.getAppContext().put(EngineConstants.APPCONTEXT_BIRT_VIEWER_HTTPSERVET_REQUEST, request);
+
+        customRunAndRenderTask(htmlOptions, runAndRenderTask, response);
         }
 
     /**
@@ -176,19 +180,20 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
         EXCELRenderOption excelRenderOption = new EXCELRenderOption(options);
         excelRenderOption.setOutputFormat("xlsx");
+        runAndRenderTask.setRenderOption(excelRenderOption);
+        runAndRenderTask.getAppContext().put(EngineConstants.APPCONTEXT_BIRT_VIEWER_HTTPSERVET_REQUEST, request);
 
-        runAndRenderTask(excelRenderOption, runAndRenderTask, response, request);
+
+        customRunAndRenderTask(excelRenderOption, runAndRenderTask, response);
     }
 
-    private void runAndRenderTask(RenderOption renderOption, IRunAndRenderTask runAndRenderTask, HttpServletResponse response, HttpServletRequest request){
-        runAndRenderTask.setRenderOption(renderOption);
-        runAndRenderTask.getAppContext().put(EngineConstants.APPCONTEXT_BIRT_VIEWER_HTTPSERVET_REQUEST, request);
+    private void customRunAndRenderTask(RenderOption renderOption, IRunAndRenderTask runAndRenderTask, HttpServletResponse response){
 
         try {
             renderOption.setOutputStream(response.getOutputStream());
             runAndRenderTask.run();
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
+            e.printStackTrace();
         } finally {
             runAndRenderTask.close();
         }
@@ -214,6 +219,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         reportInfoDTO.setId(id);
 
         ReportInfo reportInfo = reportInfoMapper.toReportInfo(reportInfoDTO);
+        reportInfo.setArchived(UN_ARCHIVED);
         return reportInfoRepository.save(reportInfo);
     }
 
@@ -231,7 +237,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         List<ReportInfoDTO> reportInfoDTOS = new ArrayList<>();
         reportInfos.forEach(reportInfo -> {
             final ReportInfoDTO reportInfoDTO = reportInfoMapper.toReportInfoDTO(reportInfo);
-            Optional<Program>  program = this.programRepository.findProgramByCodeAndArchived(reportInfoDTO.getProgramCode(), 0);
+            Optional<Program>  program = this.programRepository.findProgramByCodeAndArchived(reportInfoDTO.getProgramCode(), UN_ARCHIVED);
             program.ifPresent(value -> reportInfoDTO.setProgramName(value.getName()));
             reportInfoDTOS.add(reportInfoDTO);
         });

@@ -44,5 +44,4 @@ public class ReportInfo extends JsonBEntity implements Serializable {
 
     @Transient
     private String programName;
-
 }

@@ -23,9 +23,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.xeustechnologies.jcl.JarClassLoader;
-import org.xeustechnologies.jcl.JclObjectFactory;
-import org.xeustechnologies.jcl.context.DefaultContextLoader;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
@@ -88,6 +85,7 @@ public class ModuleService {
     @Value("${base.url}")
     private String baseUrl;
     private final FilesStorageServiceImpl filesStorageServiceImpl;
+    private static ClassLoader classLoader;
 
     public Module save(ModuleDTO moduleDTO) {
         Optional<Module> moduleOptional = this.moduleRepository.findByName(moduleDTO.getName());
@@ -317,7 +315,6 @@ public class ModuleService {
 
         Optional<Module> moduleOptional = moduleRepository.findById(moduleId);
         List<Module> moduleList = new ArrayList<>();
-        Object obj = null;
 
         if(!moduleOptional.isPresent()) {
             throw new EntityNotFoundException(Module.class, MODULE_CLASS_NAME, moduleId + "");
@@ -368,8 +365,8 @@ public class ModuleService {
                 ClassPathHacker.addFile(rootFile.getAbsolutePath());
                 List<URL> classURL = showFiles(filePath.listFiles(), rootFile, module.getMain());
                 ClassLoader loader = new URLClassLoader(classURL.toArray(
-                        new URL[classURL.size()]), ClassLoader.getSystemClassLoader());
-                Thread.currentThread().setContextClassLoader(loader);
+                        new URL[classURL.size()]), sun.misc.Launcher.getLauncher().getClassLoader());
+                setClassLoader(loader);
 
                 for (String className : classNames) {
                     try {
@@ -733,5 +730,13 @@ public class ModuleService {
         }
 
         return moduleRepository.findById(moduleId).get();
+    }
+
+    public void setClassLoader(ClassLoader loader){
+        classLoader = loader;
+    }
+
+    public static ClassLoader getClassLoader(){
+        return classLoader;
     }
 }
