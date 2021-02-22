@@ -68,7 +68,7 @@ const useStyles = makeStyles({
     const createParentOrgUnit = () => {  
       setModal2(!modal2) 
     }
-console.log(props.location.state)
+
     
 
 return (
@@ -76,10 +76,10 @@ return (
       
         <Row>
             <Col>
-              <h1>Parent Organization Unit
+              <h1>Organization Unit
               <Link 
                   to ={{ 
-                  pathname: "/admin-organization-unit"
+                  pathname: "/admin/organization-unit"
                   }} 
                 > 
                   <MatButton
@@ -115,7 +115,7 @@ return (
                             
                                
                             <MaterialTable
-                              title="Parent Org. Unit"
+                              title=" Unit Levels"
                               columns={[
                                 { title: 'Parent Name', field: 'name' },
                                 { title: 'Description', field: 'description' },
@@ -136,8 +136,8 @@ return (
                                                 <MenuList style={{ color:"#000 !important"}} > 
                                                       <MenuItem style={{ color:"#000 !important"}}>
                                                       <Link
-                                                        to={{pathname: "/admin-parent-organization-unit-level", state: { parentOrganisationUnitId: row.id  }}}>
-                                                          <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>View Parent Organ. Unit</span>
+                                                        to={{pathname: "/admin/parent-organization-unit-level", state: { parentOrganisationUnitId: row.id  }}}>
+                                                          <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit</span>
                                                        </Link>
                                                       </MenuItem> 
                                                       <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule('module to delete')}>                      

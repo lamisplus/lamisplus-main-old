@@ -99,20 +99,30 @@ const saveOrgName = (e) => {
                               <br />
                               <Row>
                                   <Col>
-                                  <Alert severity="info">
-                                    <AlertTitle>Instructions to Batch in more than one record please click the link below</AlertTitle>
-                                      <ul>
-                                       <a style={{ cursor: 'pointer'}}><li onClick={() => createUploadBatch()}>* Download the template and upload  <strong>(only *.csv)</strong></li></a> 
-                                       
-                                      </ul>
-                                      
-                                  </Alert>
+                                 
                                 </Col>
                               </Row>
                                 <Row>
                                   <Col md={6}>
                                     <FormGroup>
-                                        <Label for="">Parent name</Label>
+                                        <Label for="">Organisation Unit  name</Label>
+                                              <Input
+                                                  type="text"
+                                                  name="name"
+                                                  id="name"
+                                                  
+                                                  value={otherfields.name}
+                                                  onChange={handleOtherFieldInputChange}
+                                                  {...(errors.name && { invalid: true})}
+                                                  
+                                              />
+                                                <FormFeedback>{errors.name}</FormFeedback>
+                                      </FormGroup>
+                                  </Col>
+
+                                  <Col md={6}>
+                                    <FormGroup>
+                                        <Label for="">Description</Label>
                                               <Input
                                                   type="text"
                                                   name="name"
