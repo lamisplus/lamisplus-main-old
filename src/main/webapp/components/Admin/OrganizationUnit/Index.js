@@ -14,6 +14,8 @@ import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import MaterialTable from 'material-table';
 import {  MdDelete, MdModeEdit, MdRemoveRedEye } from "react-icons/md";
+import { FaPlusCircle} from 'react-icons/fa'
+
 import DeleteModule from "./DeleteModule";
 import CreateOrganizationUnit from "./CreateOrganizationUnit";
 import CreatOrgUnitByUpload from "./CreatOrgUnitByUpload";
@@ -40,7 +42,7 @@ const useStyles = makeStyles({
 
 
   const OrganizationUnit = (props) => {
-    const [collectModal, setcollectModal] = useState([])
+    const [orgUnitID, setorgUnitID] = useState([])
     const [modal, setModal] = useState(false) // 
     const toggleModal = () => setModal(!modal)
     const [modal2, setModal2] = useState(false) //
@@ -75,41 +77,37 @@ const useStyles = makeStyles({
     const createOrgUnit = () => {  
       setModal2(!modal2) 
     }
-    const createParentOrgUnit = () => {  
-      setModal4(!modal4) 
+    const createParentOrgUnit = (e) => {
+      setorgUnitID(e)  
+      setModal4(!modal4)
+       
     }
 
 return (
-    <Page >
+    <div >
       <ToastContainer autoClose={3000} hideProgressBar />
-        <Row>
-            <Col>
-              <h1>Organization Unit Manager
-                <MatButton
-                  type='submit'
-                  variant='contained'
-                  color='primary'
-                  className={classes.button}                        
-                  className=" float-right mr-1"
-                  onClick={() => createOrgUnit()}
-                >
-                  <TiPlus/>{" "} New 
-                </MatButton>
-                </h1>
-                <Card className="mb-12">
-                
-                <CardBody>
-
+        
                 <br />
                     <Row>
                         <Col>
                             <Card body>
-                            
+                            <h1>Organization Unit Manager
+                                <MatButton
+                                  type='submit'
+                                  variant='contained'
+                                  color='primary'
+                                  className={classes.button}                        
+                                  className=" float-right mr-1"
+                                  onClick={() => createOrgUnit()}
+                                >
+                                  <TiPlus/>{" "} New Org. Level
+                                </MatButton>
+                                </h1>
                                
                             <MaterialTable
-                              title="Parent Org. Unit"
+                              title="Organisational Unit Level"
                               columns={[
-                                { title: 'Parent Name', field: 'name' },
+                                { title: ' Name', field: 'name' },
                                 { title: 'Description', field: 'description' },
                                 
                                 { title: 'Action', field: 'actions'},
@@ -126,25 +124,25 @@ return (
                                               Actions <span aria-hidden>▾</span>
                                             </MenuButton>
                                                 <MenuList style={{ color:"#000 !important"}} >
-                                                       <MenuItem  style={{ color:"#000 !important"}}  onClick={() => createParentOrgUnit()}>                      
+                                                       <MenuItem  style={{ color:"#000 !important"}}  onClick={() => createParentOrgUnit( row.id)}>                      
                                                       
-                                                          <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>Add Org. Unit</span>
+                                                          <FaPlusCircle size="15" color="blue" />{" "}<span style={{color: '#000'}}>Add </span>
                                                     
                                                       </MenuItem>
                                                       <MenuItem  style={{ color:"#000 !important"}} >                      
                                                       <Link
                                                         to={{pathname: "/admin/parent-organization-unit", state: { parentOrganisationUnitId: row.id  }}}>
-                                                          <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>View Organ. Unit</span>
+                                                          <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>View</span>
                                                        </Link>  
                                                       </MenuItem>
                                                       <MenuItem style={{ color:"#000 !important"}}>
                                                             
-                                                              <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Org. Unit  </span>                   
+                                                              <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit   </span>                   
                                                            
                                                       </MenuItem> 
                                                       <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule(row.organisationUnitLevelId)}>                      
                                                       
-                                                            <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Delete Org. Unit</span>
+                                                            <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Delete </span>
                                                                                 
                                                       </MenuItem>                                    
                                                       
@@ -164,17 +162,14 @@ return (
                             </Card>
                         </Col>
                   </Row>
-                </CardBody>
-              </Card>
-            </Col>
-        </Row>
-       <DeleteModule modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
+        
+       <DeleteModule modalstatus={modal} togglestatus={toggleModal} orgUnitID={orgUnitID}/>
        <CreateOrganizationUnit modalstatus={modal2} togglestatus={toggleModal2}  />
        <CreatOrgUnitByUpload modalstatus={modal3} togglestatus={toggleModal3}  />
-       <CreateParentOrgUnit modalstatus={modal4} togglestatus={toggleModal4}  />
+       <CreateParentOrgUnit modalstatus={modal4} togglestatus={toggleModal4}   orgUnitID={orgUnitID}/>
                        
        
-    </Page>
+    </div>
   )
   
 }

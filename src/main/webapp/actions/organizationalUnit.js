@@ -110,6 +110,33 @@ console.log(data)
 };
 
 
+export const createOrgUnitLevel = (data, onSuccess,onError) => dispatch => {
+  console.log(data)
+  
+    axios
+      .post(`${baseUrl}organisation-units`, data)
+      .then(response => {
+        dispatch({
+          type: ACTION_TYPES.CREATE_ORGANISATION_UNIT,
+          payload: response.data
+        });
+        onSuccess()
+        toast.success("Organisational Unit Created Successfully");
+      })
+      .catch(error =>{
+        
+        dispatch({
+          type: ACTION_TYPES.ERROR_CREATE_ORGANISATION_UNIT,
+          payload: error
+        })
+        onError()
+        toast.error("Something went wrong, please try again");
+        
+      });
+    
+  };
+
+
 export const Delete = (id) => dispatch => {
   console.log(`${baseUrl}patients/${id}`);
   axios

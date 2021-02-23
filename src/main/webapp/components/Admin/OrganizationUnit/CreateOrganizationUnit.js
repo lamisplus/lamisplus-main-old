@@ -1,9 +1,8 @@
 import React, { useState }   from 'react';
-import { Form,Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Input,FormFeedback,Label,Card,CardBody
+import { Form,Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Input,FormFeedback,Label,Card,CardBody, Alert 
 } from 'reactstrap';
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import { Alert, AlertTitle } from '@material-ui/lab';
 import CreatOrgUnitByUpload from "./CreatOrgUnitByUpload";
 import {createOrganisationUnit} from './../../../actions/organizationalUnit'
 import { connect } from "react-redux";
@@ -136,12 +135,35 @@ const saveOrgName = (e) => {
                                                 <FormFeedback>{errors.name}</FormFeedback>
                                       </FormGroup>
                                   </Col>
-                                
+                                <Col md={12}>
+                                <FormGroup check>
+                                        <Label check>
+                                        <Input type="checkbox" />{' '}
+                                            Has no child 
+                                            <br/>
+                                            <Alert color="primary">
+                                                 This organisational unit level has no lower level
+                                            </Alert>
+                                          
+                                        </Label>
+                                    </FormGroup>
+                                </Col>
                                 </Row>
                             <br/>
                             <Row>
                                 <Col sm={12}>
+                                    
                                     <MatButton
+                                        variant='contained'
+                                        color='default'
+                                        onClick={props.togglestatus}
+                                        className={classes.button}
+                                        
+                                        className=" float-right mr-1"
+                                    >
+                                        Cancel
+                                   </MatButton> { " "} { " "} { " "} { " "} { " "}
+                                   <MatButton
                                         type='submit'
                                         variant='contained'
                                         color='primary'
@@ -152,16 +174,6 @@ const saveOrgName = (e) => {
                                     >
                                         Save 
                                     </MatButton>
-                                    <MatButton
-                                        variant='contained'
-                                        color='default'
-                                        onClick={props.togglestatus}
-                                        className={classes.button}
-                                        
-                                        className=" float-right mr-1"
-                                    >
-                                        Cancel
-                                   </MatButton>
                             </Col>
                             </Row>
                       </CardBody>

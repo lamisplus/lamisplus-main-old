@@ -142,7 +142,7 @@ return (
                                                       </MenuItem> 
                                                       <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule('module to delete')}>                      
                                                       
-                                                            <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Delete Unit</span>
+                                                            <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Delete </span>
                                                                                 
                                                       </MenuItem>                                    
                                                       
