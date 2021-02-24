@@ -40,7 +40,6 @@ public class AccountController {
     }
 
     @GetMapping("/account")
-    @PreAuthorize("hasAnyAuthority('Admin', 'Super Admin')")
     public UserDTO getAccount(Principal principal){
         return userService
                 .getUserWithRoles()
@@ -50,7 +49,6 @@ public class AccountController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyAuthority('Admin', 'Super Admin')")
     public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
         //Check Password Length
         userService.registerUser(managedUserVM, managedUserVM.getPassword());

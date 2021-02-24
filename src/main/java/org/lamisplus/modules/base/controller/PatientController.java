@@ -36,7 +36,6 @@ public class PatientController {
     }*/
 
     @GetMapping
-    //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List<PatientDTO>> getAllPatients() {
         return ResponseEntity.ok(this.patientService.getAllPatients());
     }

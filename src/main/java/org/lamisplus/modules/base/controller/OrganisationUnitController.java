@@ -59,6 +59,11 @@ public class OrganisationUnitController {
         return ResponseEntity.ok(this.organisationUnitService.getOrganisationUnitByOrganisationUnitLevelId(id));
     }
 
+    @GetMapping ("/organisation-unit-levels/{id}")
+    public  ResponseEntity<List<OrganisationUnit>>  getAllOrganisationUnitByOrganisationUnitLevelId(@PathVariable Long id) {
+        return ResponseEntity.ok(this.organisationUnitService.getAllOrganisationUnitByOrganisationUnitLevelId(id));
+    }
+
     @GetMapping ("/hierarchy/{parentOrgUnitId}/{orgUnitLevelId}")
     public  ResponseEntity<List<OrganisationUnitDTO>>  getOrganisationUnitSubsetByParentOrganisationUnitIdAndOrganisationUnitLevelId(
             @PathVariable Long parentOrgUnitId, @PathVariable Long orgUnitLevelId) {
