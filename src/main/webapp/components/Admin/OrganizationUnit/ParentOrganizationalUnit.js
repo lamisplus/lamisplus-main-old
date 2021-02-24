@@ -36,10 +36,10 @@ const useStyles = makeStyles({
 
 
   const ParentOrganizationUnit = (props) => {
-    
-    const parentOrganisationUnitId = props.location.state && props.location.state.parentOrganisationUnitId  ? props.location.state.parentOrganisationUnitId : {};
-    console.log(parentOrganisationUnitId)
+  
+    const parentOrganisationUnitId = props.location.state && props.location.state.orgUnitLevel  ? props.location.state.orgUnitLevel : {};
     const [collectModal, setcollectModal] = useState([])
+    const [orgUnitID, setorgUnitID] = useState([])
     const [modal, setModal] = useState(false) // 
     const toggleModal = () => setModal(!modal)
     const [modal2, setModal2] = useState(false) //
@@ -67,9 +67,11 @@ const useStyles = makeStyles({
     }
 
     const createParentOrgUnit = () => {  
+      console.log(parentOrganisationUnitId)
+      setorgUnitID(parentOrganisationUnitId)  
       setModal2(!modal2) 
     }
-console.log(props.location.state)
+
     
 
 return (
@@ -151,7 +153,7 @@ return (
                             </Card>
                    
        <DeleteModule modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
-       <CreateParentOrgUnit modalstatus={modal2} togglestatus={toggleModal2}  />
+       <CreateParentOrgUnit modalstatus={modal2} togglestatus={toggleModal2} orgUnitID={orgUnitID} />
 
        
     </div>

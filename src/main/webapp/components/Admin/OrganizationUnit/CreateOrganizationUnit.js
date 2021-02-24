@@ -89,8 +89,8 @@ const createUploadBatch = () => {
 const saveOrgName = (e) => {
     e.preventDefault();
     const status = otherfields.status===true ?  otherfields.status=1 :  otherfields.status=0
-
-    return 
+    console.log(otherfields)
+ 
     if (validate()) {
         setLoading(true);        
         const onSuccess = () => {
@@ -192,7 +192,7 @@ const saveOrgName = (e) => {
                                         variant='contained'
                                         color='primary'
                                         className={classes.button}
-                                        
+                                        disabled={loading}
                                         className=" float-right mr-1"
                                         
                                     >

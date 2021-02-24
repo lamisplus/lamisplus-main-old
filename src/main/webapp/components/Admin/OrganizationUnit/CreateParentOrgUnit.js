@@ -3,12 +3,12 @@ import { Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Input,FormFeedback,Labe
 } from 'reactstrap';
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-
-import CreateParentOrgUnitByUpload from "./CreateParentOrgUnitByUpload";
 import axios from "axios";
 import {url} from '../../../api'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
+import {createOrgUnitLevel} from './../../../actions/organizationalUnit'
+import { connect } from "react-redux";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -53,8 +53,8 @@ const filterOptions = createFilterOptions({
 
 const CreateParentOrgUnit = (props) => {
     const classes = useStyles()
-    const orgUnitIDParam = props.orgUnitID ? props.orgUnitID :"";
-    console.log(orgUnitIDParam)
+    const orgUnitIDParam = props.orgUnitID ? props.orgUnitID :{};
+    console.log(props)
     const [otherfields, setOtherFields] = useState({parentOrganisationUnitId:"", name:"", description:"", organisationUnitLevelId:""});
     const defaultValues = {name:"",id:"" }
     const [formData, setFormData] = useState(defaultValues)
@@ -105,7 +105,7 @@ const createOrgUnit = (e) => {
    console.log(props.orgUnitID.id) 
     
     console.log(otherfields)
-    return 
+ 
     const onSuccess = () => {
         setLoading(false);
         props.togglestatus();
@@ -128,7 +128,7 @@ const createOrgUnit = (e) => {
                               <br />
                               <Form onSubmit={createOrgUnit}>
                                 <Row>
-                                { props.orgUnitID.id != 1 ? (
+                               
                                 <Col md={6}>
                                           <FormGroup>
                                               <Label for="">Parent Organisation  Unit</Label>
@@ -147,9 +147,7 @@ const createOrgUnit = (e) => {
                                                     />
                                           </FormGroup>
                                       </Col>
-                                )
-                                : ""
-                                    }
+                               
                                   <Col md={6}>
                                     <FormGroup>
                                         <Label for=""> Name</Label>
@@ -221,4 +219,8 @@ const createOrgUnit = (e) => {
   );
 }
 
-export default CreateParentOrgUnit;
+
+export default connect(null, { createOrgUnitLevel })(
+    CreateParentOrgUnit
+);
+

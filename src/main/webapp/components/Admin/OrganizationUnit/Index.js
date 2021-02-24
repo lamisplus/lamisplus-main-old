@@ -130,7 +130,7 @@ return (
                                                       </MenuItem>
                                                       <MenuItem  style={{ color:"#000 !important"}} >                      
                                                       <Link
-                                                        to={{pathname: "/admin/parent-organization-unit", state: { parentOrganisationUnitId: row  }}}>
+                                                        to={{pathname: "/admin/parent-organization-unit", state: { orgUnitLevel: row  }}}>
                                                           <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>View</span>
                                                        </Link>  
                                                       </MenuItem>

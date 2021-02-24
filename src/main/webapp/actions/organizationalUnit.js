@@ -87,7 +87,7 @@ export const createOrganisationUnit = (data, onSuccess,onError) => dispatch => {
 console.log(data)
 
   axios
-    .post(`${baseUrl}organisation-units`, data)
+    .post(`${baseUrl}organisation-unit-levels`, data)
     .then(response => {
       dispatch({
         type: ACTION_TYPES.CREATE_ORGANISATION_UNIT,
@@ -111,13 +111,12 @@ console.log(data)
 
 
 export const createOrgUnitLevel = (data, onSuccess,onError) => dispatch => {
-  console.log(data)
   
     axios
       .post(`${baseUrl}organisation-units`, data)
       .then(response => {
         dispatch({
-          type: ACTION_TYPES.CREATE_ORGANISATION_UNIT,
+          type: ACTION_TYPES.CREATE_ORGANISATION_UNIT_LEVELS,
           payload: response.data
         });
         onSuccess()
@@ -126,7 +125,7 @@ export const createOrgUnitLevel = (data, onSuccess,onError) => dispatch => {
       .catch(error =>{
         
         dispatch({
-          type: ACTION_TYPES.ERROR_CREATE_ORGANISATION_UNIT,
+          type: ACTION_TYPES.ERROR_ORGANISATION_UNIT_LEVELS,
           payload: error
         })
         onError()
@@ -157,11 +156,5 @@ export const Delete = (id) => dispatch => {
     });
     console.log(error)
     
-    // if(error.response.data.apierror.message===null || error.response.data.apierror.message===""){
-    //   toast.error("Something went wrong");
-    // }else{
-    //   toast.error(error.response.data.apierror.message);
-    // }
-   //console.log(error.response.data.apierror.message);
   });
 };
