@@ -63,7 +63,7 @@ export const fetchAllParentOrganizationalUnit = (id, onSuccess, onError)=> dispa
 export const fetchAllParentOrganizationalUnitlevel = (id, onSuccess, onError)=> dispatch => {
   if(id){
   axios
-    .get(`${baseUrl}organisation-units/parent-org-unit/${id}`)
+    .get(`${baseUrl}organisation-units/organisation-unit-level/${id}`)
     .then(response => {
       dispatch({
         type: ACTION_TYPES.FETCH_ALL_PARENT_ORGANIZATIONAL_UNIT_LEVEL,

@@ -1,21 +1,16 @@
 import React from 'react'
-import {Card, CardBody,CardHeader,Col,Row} from 'reactstrap'
+import {Card,} from 'reactstrap'
 import { useState, useEffect} from 'react'
-import { TiPlus } from 'react-icons/ti'
-import MatButton from '@material-ui/core/Button'
+import Button from '@material-ui/core/Button'
 import 'react-datepicker/dist/react-datepicker.css'
 import { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
 import 'react-widgets/dist/css/react-widgets.css'
-//Date Picker
-import Page from '../../Page'
-//import { Spinner } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import MaterialTable from 'material-table';
 import {  MdDelete, MdModeEdit, MdRemoveRedEye } from "react-icons/md";
-import { FaPlusCircle} from 'react-icons/fa'
-
+import { FaPlusCircle, FaPlus} from 'react-icons/fa'
 import DeleteModule from "./DeleteModule";
 import CreateOrganizationUnit from "./CreateOrganizationUnit";
 import CreatOrgUnitByUpload from "./CreatOrgUnitByUpload";
@@ -25,6 +20,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
 import CreateParentOrgUnit from "./CreateParentOrgUnit";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
 
 
 const useStyles = makeStyles({
@@ -86,24 +83,26 @@ const useStyles = makeStyles({
 return (
     <div >
       <ToastContainer autoClose={3000} hideProgressBar />
-        
-                <br />
-                    <Row>
-                        <Col>
                             <Card body>
-                            <h1>Organization Unit Manager
-                                <MatButton
-                                  type='submit'
-                                  variant='contained'
-                                  color='primary'
-                                  className={classes.button}                        
-                                  className=" float-right mr-1"
-                                  onClick={() => createOrgUnit()}
-                                >
-                                  <TiPlus/>{" "} New Org. Level
-                                </MatButton>
-                                </h1>
+                              
+                            <Breadcrumbs aria-label="breadcrumb">
+                              <Link color="inherit" to={{pathname: "/admin"}} >
+                                  Admin
+                              </Link>
+                              <Typography color="textPrimary">Organisational Unit Level Manager </Typography>
+                             </Breadcrumbs>
                                
+                               
+                                <br/>
+                                  <div className={"d-flex justify-content-end pb-2"}>
+                                      <Button variant="contained"
+                                              color="primary"
+                                              startIcon={<FaPlus />}
+                                              onClick={() => createOrgUnit()}>
+                                          <span style={{textTransform: 'capitalize'}}>New Org. Unit Level</span>
+                                      </Button>
+
+                                  </div>
                             <MaterialTable
                               title="Organisational Unit Level"
                               columns={[
@@ -124,14 +123,14 @@ return (
                                               Actions <span aria-hidden>▾</span>
                                             </MenuButton>
                                                 <MenuList style={{ color:"#000 !important"}} >
-                                                       <MenuItem  style={{ color:"#000 !important"}}  onClick={() => createParentOrgUnit( row.id)}>                      
+                                                       <MenuItem  style={{ color:"#000 !important"}}  onClick={() => createParentOrgUnit( row)}>                      
                                                       
                                                           <FaPlusCircle size="15" color="blue" />{" "}<span style={{color: '#000'}}>Add </span>
                                                     
                                                       </MenuItem>
                                                       <MenuItem  style={{ color:"#000 !important"}} >                      
                                                       <Link
-                                                        to={{pathname: "/admin/parent-organization-unit", state: { parentOrganisationUnitId: row.id  }}}>
+                                                        to={{pathname: "/admin/parent-organization-unit", state: { parentOrganisationUnitId: row  }}}>
                                                           <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>View</span>
                                                        </Link>  
                                                       </MenuItem>
@@ -156,13 +155,19 @@ return (
                                   color: "#000",
                                   margin: "auto"
                                   },
-                                filtering: true
+                                  searchFieldStyle: {
+                                    width : '300%',
+                                    margingLeft: '250px',
+                                },
+                                filtering: true,
+                                exportButton: false,
+                                searchFieldAlignment: 'left',
+                                actionsColumnIndex: -1
+                               
                               }}
                             />
                             </Card>
-                        </Col>
-                  </Row>
-        
+                      
        <DeleteModule modalstatus={modal} togglestatus={toggleModal} orgUnitID={orgUnitID}/>
        <CreateOrganizationUnit modalstatus={modal2} togglestatus={toggleModal2}  />
        <CreatOrgUnitByUpload modalstatus={modal3} togglestatus={toggleModal3}  />

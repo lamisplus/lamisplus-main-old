@@ -54,7 +54,7 @@ const filterOptions = createFilterOptions({
 const CreateParentOrgUnit = (props) => {
     const classes = useStyles()
     const orgUnitIDParam = props.orgUnitID ? props.orgUnitID :"";
-
+    console.log(orgUnitIDParam)
     const [otherfields, setOtherFields] = useState({parentOrganisationUnitId:"", name:"", description:"", organisationUnitLevelId:""});
     const defaultValues = {name:"",id:"" }
     const [formData, setFormData] = useState(defaultValues)
@@ -99,7 +99,13 @@ useEffect(() => {
 const createOrgUnit = (e) => {
     e.preventDefault();
     setOtherFields({ ...otherfields, organisationUnitLevelId: props.orgUnitID });
-    otherfields['organisationUnitLevelId'] = props.orgUnitID
+    otherfields['organisationUnitLevelId'] = props.orgUnitID.id
+    otherfields['parentOrganisationUnitId'] = props.orgUnitID.id ===1 ? 0 : otherfields.parentOrganisationUnitId
+   //check if the Org Unit Level ID is 1 which is country
+   console.log(props.orgUnitID.id) 
+    
+    console.log(otherfields)
+    return 
     const onSuccess = () => {
         setLoading(false);
         props.togglestatus();
@@ -122,7 +128,7 @@ const createOrgUnit = (e) => {
                               <br />
                               <Form onSubmit={createOrgUnit}>
                                 <Row>
-                                { props.orgUnitID != 1 ? (
+                                { props.orgUnitID.id != 1 ? (
                                 <Col md={6}>
                                           <FormGroup>
                                               <Label for="">Parent Organisation  Unit</Label>
@@ -135,7 +141,7 @@ const createOrgUnit = (e) => {
                                                     size="small"
                                                     onChange={(e, i) => {
                                                         console.log(1)
-                                                        setOtherFields({ ...otherfields, parentOrganisationUnitId: i });
+                                                        setOtherFields({ ...otherfields, parentOrganisationUnitId: i.value });
                                                     }}
                                                     renderInput={(params) => <TextField {...params} variant="outlined" />}
                                                     />
