@@ -29,7 +29,6 @@ public class DrugService {
     private static final int UN_ARCHIVED = 0;
     private final DrugRepository drugRepository;
     private final RegimenDrugRepository regimenDrugRepository;
-    //private final UserService userService;
     private final DrugMapper drugMapper;
 
 

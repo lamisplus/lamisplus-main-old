@@ -17,4 +17,7 @@ public interface OrganisationUnitRepository extends JpaRepository<OrganisationUn
 
     Optional<OrganisationUnit> findByIdAndArchived(Long id, int archived);
 
+    List<OrganisationUnit> findAllByArchivedOrderByIdAsc(int unarchived);
+
+    List<OrganisationUnit> findAllByOrganisationUnitLevelIdIn(List<Long> organisationUnitLevelId);
 }

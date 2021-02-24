@@ -15,4 +15,6 @@ public class OrganisationUnitLevelDTO {
     private String name;
 
     private String description;
+
+    private int status;
 }

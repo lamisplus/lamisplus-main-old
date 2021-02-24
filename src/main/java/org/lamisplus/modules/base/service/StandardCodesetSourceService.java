@@ -25,23 +25,12 @@ import java.util.Optional;
 public class StandardCodesetSourceService {
     private final StandardCodesetSourceRepository standardCodesetSourceRepository;
     private final StandardCodesetSourceMapper standardCodesetSourceMapper;
-    private final UserService userService;
     public static final int UN_ARCHIVED = 0;
     public static final int ARCHIVED = 1;
-    private final GenericSpecification<StandardCodesetSource> genericSpecification;
-
 
 
     public List<StandardCodesetSourceDTO> getAllStandardCodesetSource() {
-        Specification<StandardCodesetSource> standardCodesetSourceSpecification = genericSpecification.findAll(0);
-        List<StandardCodesetSource> standardCodesetSources = standardCodesetSourceRepository.findAll(standardCodesetSourceSpecification);
-
-        List<StandardCodesetSourceDTO> standardCodesetSourceDTOS = new ArrayList<>();
-        standardCodesetSources.forEach(standardCodesetSource->{
-            final StandardCodesetSourceDTO standardCodesetSourceDTO = standardCodesetSourceMapper.toStandardCodesetSourceDTO(standardCodesetSource);
-            standardCodesetSourceDTOS.add(standardCodesetSourceDTO);
-        });
-        return standardCodesetSourceDTOS;
+        return standardCodesetSourceMapper.toStandardCodesetSourceDTOList(standardCodesetSourceRepository.findAllByArchivedOrderByIdDesc(UN_ARCHIVED));
     }
 
     public StandardCodesetSource save(StandardCodesetSourceDTO standardCodesetSourceDTO) {
@@ -49,7 +38,6 @@ public class StandardCodesetSourceService {
         if (standardCodesetSourceOptional.isPresent()) throw new RecordExistException(StandardCodesetSource.class, "Id", standardCodesetSourceDTO.getId() + "");
         final StandardCodesetSource standardCodesetSource = standardCodesetSourceMapper.toStandardCodesetSource(standardCodesetSourceDTO);
 
-        //standardCodesetSource.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
         standardCodesetSource.setArchived(UN_ARCHIVED);
         return standardCodesetSourceRepository.save(standardCodesetSource);
     }
@@ -67,7 +55,6 @@ public class StandardCodesetSourceService {
         final StandardCodesetSource standardCodesetSource = standardCodesetSourceMapper.toStandardCodesetSource(standardCodesetSourceDTO);
 
         standardCodesetSource.setId(id);
-        //standardCodesetSource.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
         standardCodesetSource.setArchived(UN_ARCHIVED);
         return standardCodesetSourceRepository.save(standardCodesetSource);
     }
@@ -77,7 +64,6 @@ public class StandardCodesetSourceService {
         if (!standardCodesetSourceOptional.isPresent()) throw new EntityNotFoundException(StandardCodesetSource.class, "Id", id + "");
         StandardCodesetSource standardCodesetSource = standardCodesetSourceOptional.get();
         standardCodesetSource.setArchived(ARCHIVED);
-        //standardCodesetSource.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
         standardCodesetSourceRepository.save(standardCodesetSource);
 
         return ARCHIVED;

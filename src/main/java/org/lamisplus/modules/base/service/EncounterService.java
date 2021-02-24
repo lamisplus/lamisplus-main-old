@@ -115,7 +115,6 @@ public class EncounterService {
     public Encounter update(Long id, EncounterDTO encounterDTO) {
         Optional<Encounter> optionalEncounter = encounterRepository.findByIdAndArchived(id, UNARCHIVED);
 
-
         accessRight.grantAccessByAccessType(optionalEncounter.get().getFormCode(),
                 Encounter.class, WRITE, checkForEncounterAndGetPermission(optionalEncounter, id));
 

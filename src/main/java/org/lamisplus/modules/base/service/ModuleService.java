@@ -56,7 +56,6 @@ public class ModuleService {
     private final Set<String> classNames;
     private final String fileSeparator = File.separator;
     private final Set<Class> moduleClasses;
-    private final GenericSpecification<Module> genericSpecification;
     private final UserService userService;
     private final ProgramRepository programRepository;
     private final DataLoader<Form> formDataLoader;

@@ -20,9 +20,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RegimenService {
 
-    public static final int UN_ARCHIVED = 0;
+    private static final int UN_ARCHIVED = 0;
     private final RegimenRepository regimenRepository;
-
     private final RegimenMapper regimenMapper;
 
 
@@ -34,8 +33,8 @@ public class RegimenService {
     }
 
     public RegimenDTO update(Long id, RegimenDTO regimenDTO) {
-        Optional<Regimen> regimenOptional = regimenRepository.findById(id);
-        if(!regimenOptional.isPresent() || regimenOptional.get().getArchived() == 1)throw new EntityNotFoundException(Regimen.class, "Id", id +"");
+        Optional<Regimen> regimenOptional = regimenRepository.findByIdAndArchived(id, UN_ARCHIVED);
+        if(!regimenOptional.isPresent())throw new EntityNotFoundException(Regimen.class, "Id", id +"");
         regimenDTO.setId(id);
         Regimen regimen = regimenMapper.toRegimen(regimenDTO);
         return regimenMapper.toRegimenDTO(regimenRepository.save(regimen));
@@ -52,13 +51,12 @@ public class RegimenService {
     }
 
     public List<RegimenDTO> getAllRegimens() {
-        return regimenMapper.toRegimenDTOList(regimenRepository.findAll());
+        return regimenMapper.toRegimenDTOList(regimenRepository.findAllByArchived(UN_ARCHIVED));
     }
 
-
     public Integer delete(Long id) {
-        Optional<Regimen> regimenOptional = this.regimenRepository.findById(id);
-        if (!regimenOptional.isPresent() || regimenOptional.get().getArchived() == 1)throw new EntityNotFoundException(Regimen.class, "Id", id +"");
+        Optional<Regimen> regimenOptional = this.regimenRepository.findByIdAndArchived(id, UN_ARCHIVED);
+        if (!regimenOptional.isPresent())throw new EntityNotFoundException(Regimen.class, "Id", id +"");
         regimenOptional.get().setArchived(1);
         return regimenOptional.get().getArchived();
     }

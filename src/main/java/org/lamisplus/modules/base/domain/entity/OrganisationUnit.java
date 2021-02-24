@@ -38,9 +38,11 @@ public class OrganisationUnit implements Serializable {
     private Integer archived = 0;
 
     @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
+    @JsonIgnore
     public List<Appointment> appointmentsById;
 
     @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
+    @JsonIgnore
     public List<ApplicationUserPatient> applicationUserPatientsById;
 
     @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")

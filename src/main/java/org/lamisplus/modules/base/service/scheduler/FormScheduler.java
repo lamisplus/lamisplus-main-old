@@ -1,5 +1,6 @@
 package org.lamisplus.modules.base.service.scheduler;
 
+import jdk.nashorn.internal.runtime.options.Option;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.entity.Form;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -30,6 +32,7 @@ public class FormScheduler {
     public void setFormPermission(){
         log.info("Form Application Ready Event");
         List<Permission> permissions = permissionRepository.findAll();
+        Optional<Permission> optionalPermission = permissionRepository.findByName("form_all");
 
         List<String> formNames = new ArrayList();
 
@@ -46,6 +49,11 @@ public class FormScheduler {
             permissions.add(new Permission(form.getCode()+UNDERSCORE+WRITE, form.getName() +SPACE+ WRITE));
             permissions.add(new Permission(form.getCode()+UNDERSCORE+DELETE, form.getName() +SPACE+ DELETE));
         }
+
+        if(!optionalPermission.isPresent()){
+            permissions.add(new Permission("form_all", "All form operations"));
+        }
+
         if(!permissions.isEmpty()) {
             permissionRepository.saveAll(permissions);
         }

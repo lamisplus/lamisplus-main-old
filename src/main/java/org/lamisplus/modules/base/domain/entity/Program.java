@@ -25,7 +25,7 @@ public class Program implements Serializable {
     private String name;
 
     @Basic
-    @Column(name = "code")
+    @Column(name = "code", updatable = false)
     private String code;
 
     @Basic

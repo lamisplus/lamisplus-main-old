@@ -25,4 +25,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
     Long countByOrganisationUnitIdAndArchived(Long organisationUnitId, int archived);
 
     Optional<Patient> findByIdAndArchivedAndOrganisationUnitId(Long id, int archived, Long organisationUnitId);
+
+    List<Patient> findAllByArchivedAndOrganisationUnitIdOrderByIdDesc(int archived, Long organisationUnitId);
 }
