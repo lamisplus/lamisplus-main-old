@@ -74,7 +74,7 @@ const PharmacyDashboard = React.lazy(() => import("./components/Pharmacy/Pharmac
 
 const EnrolledPatientsDashboard = React.lazy(() => import("components/PatientProfile/HomePage"));
 /* Data Visualisation */
-const TestPageForVisualisation = React.lazy(() => import("pages/TestPageForVisualisation"));
+const TestPageForVisualisation = React.lazy(() => import("pages/TestPage"));
 
 /* Sample table i design */
 const TestPage = React.lazy(() => import("pages/TestPage"));

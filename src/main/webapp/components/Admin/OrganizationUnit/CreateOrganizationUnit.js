@@ -1,9 +1,8 @@
 import React, { useState }   from 'react';
-import { Form,Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Input,FormFeedback,Label,Card,CardBody
+import { Form,Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Input,FormFeedback,Label,Card,CardBody, Alert 
 } from 'reactstrap';
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import { Alert, AlertTitle } from '@material-ui/lab';
 import CreatOrgUnitByUpload from "./CreatOrgUnitByUpload";
 import {createOrganisationUnit} from './../../../actions/organizationalUnit'
 import { connect } from "react-redux";
@@ -48,18 +47,34 @@ const useStyles = makeStyles(theme => ({
 
 const CreateOrgUnit = (props) => {
     const classes = useStyles()
-    const [otherfields, setOtherFields] = useState({name:""});
+    const [otherfields, setOtherFields] = useState({name:"", description: "", status:""});
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false)
     const [modal3, setModal3] = useState(false) //
     const toggleModal3 = () => setModal3(!modal3)
+
+
     const handleOtherFieldInputChange = e => {
-      setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
-      //console.log(otherfields)
+      
+      if(e.target.checked){
+        setOtherFields ({ ...otherfields, status:0 });  
+        }else{
+            setOtherFields ({ ...otherfields, status:1});
+        }
+        setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
+        
   }
+
+  const handleCheckedBox = e => {
+      
+    var isChecked = e.target.checked;
+    setOtherFields ({ ...otherfields, status:isChecked });
+}
   const validate = () => {
       let temp = { ...errors }
       temp.name = otherfields.name ? "" : "This field is required"
+      temp.description = otherfields.description ? "" : "This field is required"
+      
       setErrors({
           ...temp
           })    
@@ -67,12 +82,15 @@ const CreateOrgUnit = (props) => {
 }
 
 const createUploadBatch = () => {
-    console.log('code get here good')
+
     props.togglestatus();
     setModal3(!modal3)
 }
 const saveOrgName = (e) => {
     e.preventDefault();
+    const status = otherfields.status===true ?  otherfields.status=1 :  otherfields.status=0
+    console.log(otherfields)
+ 
     if (validate()) {
         setLoading(true);        
         const onSuccess = () => {
@@ -84,7 +102,7 @@ const saveOrgName = (e) => {
             props.togglestatus();
         };
        
-        props.createOrganisationUnit(otherfields.name, onSuccess, onError);
+        props.createOrganisationUnit(otherfields, onSuccess, onError);
     }
 };
 
@@ -92,7 +110,7 @@ const saveOrgName = (e) => {
       <div >
               <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
               <Form onSubmit={saveOrgName}> 
-                  <ModalHeader toggle={props.togglestatus}>Create Organization Unit</ModalHeader>
+                  <ModalHeader toggle={props.togglestatus}>Create Organization Unit Level</ModalHeader>
                       <ModalBody>
                           <Card>
                             <CardBody>
@@ -105,7 +123,7 @@ const saveOrgName = (e) => {
                                 <Row>
                                   <Col md={6}>
                                     <FormGroup>
-                                        <Label for="">Organisation Unit  name</Label>
+                                        <Label for="">Name</Label>
                                               <Input
                                                   type="text"
                                                   name="name"
@@ -125,33 +143,40 @@ const saveOrgName = (e) => {
                                         <Label for="">Description</Label>
                                               <Input
                                                   type="text"
-                                                  name="name"
-                                                  id="name"
+                                                  name="description"
+                                                  id="description"
                                                   
-                                                  value={otherfields.name}
+                                                  value={otherfields.description}
                                                   onChange={handleOtherFieldInputChange}
-                                                  {...(errors.name && { invalid: true})}
+                                                  {...(errors.description && { invalid: true})}
                                                   
                                               />
-                                                <FormFeedback>{errors.name}</FormFeedback>
+                                                <FormFeedback>{errors.description}</FormFeedback>
                                       </FormGroup>
                                   </Col>
-                                
+                                <Col md={12}>
+                                <FormGroup check>
+                                        <Label check>
+                                        <Input 
+                                        type="checkbox"
+                                        name="status"
+                                        id="status" 
+                                       
+                                        onChange={handleCheckedBox}/>{' '}
+                                            Has no child 
+                                            <br/>
+                                            <Alert color="primary">
+                                                 This organisational unit level has no lower level
+                                            </Alert>
+                                          
+                                        </Label>
+                                    </FormGroup>
+                                </Col>
                                 </Row>
                             <br/>
                             <Row>
                                 <Col sm={12}>
-                                    <MatButton
-                                        type='submit'
-                                        variant='contained'
-                                        color='primary'
-                                        className={classes.button}
-                                        
-                                        className=" float-right mr-1"
-                                        
-                                    >
-                                        Save 
-                                    </MatButton>
+                                    
                                     <MatButton
                                         variant='contained'
                                         color='default'
@@ -161,7 +186,18 @@ const saveOrgName = (e) => {
                                         className=" float-right mr-1"
                                     >
                                         Cancel
-                                   </MatButton>
+                                   </MatButton> { " "} { " "} { " "} { " "} { " "}
+                                   <MatButton
+                                        type='submit'
+                                        variant='contained'
+                                        color='primary'
+                                        className={classes.button}
+                                        disabled={loading}
+                                        className=" float-right mr-1"
+                                        
+                                    >
+                                        Save 
+                                    </MatButton>
                             </Col>
                             </Row>
                       </CardBody>

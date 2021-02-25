@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MaterialTable from "material-table";
 import { connect } from "react-redux";
 import {fetchAllForms, Delete as Del,} from '../../actions/formBuilder';
@@ -21,6 +21,17 @@ function FormSearch(props) {
     const [loading, setLoading] = useState(false);
     const [showCurrentForm, setShowCurrentForm] = useState(false);
     const [currentForm, setCurrentForm] = useState(false);
+
+    useEffect(() => {
+        setLoading(true);
+        const onSuccess = () => {
+            setLoading(false);
+        };
+        const onError = () => {
+            setLoading(false);
+        };
+        props.fetchAllForms(onSuccess, onError);
+    }, []);
 
     const onSuccess = () => {
         toast.success("Form saved successfully!", { appearance: "success" });
@@ -50,16 +61,7 @@ function FormSearch(props) {
             props.deleteForm(row.id)
     }
 
-    React.useEffect(() => {
-        setLoading(true);
-        const onSuccess = () => {
-            setLoading(false);
-        };
-        const onError = () => {
-            setLoading(false);
-        };
-        props.fetchAllForms(onSuccess, onError);
-    }, []);
+
 
 
     return (
