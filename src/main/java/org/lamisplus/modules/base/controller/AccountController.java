@@ -58,7 +58,6 @@ public class AccountController {
 
 
     @GetMapping("/users")
-    @PreAuthorize("hasAnyAuthority('Admin', 'Super Admin')")
     public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {
         final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
