@@ -75,13 +75,6 @@ public class FormService {
         permissions.add(new Permission(formDTO.getCode()+delete, formDTO.getName() + delete));
         permissionRepository.saveAll(permissions);
 
-        //TODO:
-        Optional<User> optionalUser =  SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRoleByUserName);
-        if(optionalUser.isPresent()){
-            User user = optionalUser.get();
-            //Which role do we put the permission into?
-        }
-
         return formRepository.save(form);
     }
 

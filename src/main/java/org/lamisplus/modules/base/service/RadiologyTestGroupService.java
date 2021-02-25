@@ -18,15 +18,15 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class RadiologyTestGroupService {
+    private static final int UN_ARCHIVED = 0;
     private final RadiologyTestGroupRepository radiologyTestGroupRepository;
     private final RadiologyTestRepository radiologyTestRepository;
 
     public List<RadiologyTestGroup> getAllRadiologyTestGroups() {
-        return this.radiologyTestGroupRepository.findAll();
+        return this.radiologyTestGroupRepository.findAllByArchivedOrderByIdDesc(UN_ARCHIVED);
     }
 
     public List<RadiologyTest> getRadiologyTestByGroupId(Long groupId) {
-        return this.radiologyTestRepository.findRadiologyTestsByGroupId(groupId);
+        return this.radiologyTestRepository.findAllByGroupIdAndArchived(groupId, UN_ARCHIVED);
     }
-
 }

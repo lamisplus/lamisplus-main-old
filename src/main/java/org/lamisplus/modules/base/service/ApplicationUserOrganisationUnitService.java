@@ -23,7 +23,6 @@ public class ApplicationUserOrganisationUnitService {
 
     private static final int UN_ARCHIVED = 0;
     private final ApplicationUserOrganisationUnitRepository applicationUserOrganisationUnitRepository;
-    //private final UserService userService;
     private final ApplicationUserOrganisationUnitMapper applicationUserOrganisationUnitMapper;
 
 
@@ -33,13 +32,17 @@ public class ApplicationUserOrganisationUnitService {
             Optional<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitOptional = applicationUserOrganisationUnitRepository.
                     findByApplicationUserIdAndOrganisationUnitIdAndArchived(applicationUserOrganisationUnitDTO.getApplicationUserId(),
                             applicationUserOrganisationUnitDTO.getOrganisationUnitId(), UN_ARCHIVED);
-            if(applicationUserOrganisationUnitOptional.isPresent())
+
+            applicationUserOrganisationUnitOptional.ifPresent(applicationUserOrganisationUnit -> {
                 throw new RecordExistException(ApplicationUserOrganisationUnit.class, "mapping",
-                        applicationUserOrganisationUnitDTO.getApplicationUserId() + " and " + applicationUserOrganisationUnitDTO.getOrganisationUnitId());
+                        applicationUserOrganisationUnitDTO.getApplicationUserId() + " and " +
+                                applicationUserOrganisationUnitDTO.getOrganisationUnitId());
+            });
 
             ApplicationUserOrganisationUnit applicationUserOrganisationUnit = applicationUserOrganisationUnitMapper.toApplicationUserOrganisationUnit(applicationUserOrganisationUnitDTO);
             applicationUserOrganisationUnitList.add(applicationUserOrganisationUnit);
         });
+
 
         return applicationUserOrganisationUnitRepository.saveAll(applicationUserOrganisationUnitList);
     }

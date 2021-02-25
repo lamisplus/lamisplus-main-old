@@ -17,4 +17,6 @@ public interface StandardCodesetRepository extends JpaRepository<StandardCodeset
     List<StandardCodeset> findAllByStandardCodesetSourceIdAndArchived(Long standardCodesetSourceId, int archive);
 
     Optional<StandardCodeset> findByCodeAndAndArchived(String code, int archived);
+
+    List<StandardCodeset> findAllByArchivedOrderByIdDesc(int archived);
 }

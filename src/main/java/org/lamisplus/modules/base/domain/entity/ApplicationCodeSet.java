@@ -38,7 +38,7 @@ public class ApplicationCodeSet extends Audit<String> {
     private String display;
 
     @Basic
-    @Column(name = "code")
+    @Column(name = "code", updatable = false)
     private String code;
 
     @Basic

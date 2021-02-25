@@ -24,7 +24,6 @@ import java.util.List;
 @Audit
 public class ApplicationUserOrganisationUnitController {
     private final ApplicationUserOrganisationUnitService applicationUserOrganisationUnitService;
-    //private static final String ENTITY_NAME = "ApplicationUserOrganisationUnit";
 
 
     @GetMapping

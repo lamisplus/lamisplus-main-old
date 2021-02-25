@@ -16,9 +16,9 @@ import java.util.Objects;
 @Entity
 @EqualsAndHashCode
 @Table(name = "standard_codeset")
-public class StandardCodeset {
+public class StandardCodeset extends Audit<String> {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -43,30 +43,7 @@ public class StandardCodeset {
     private StandardCodesetSource standardCodesetSourceByStandardCodesetSourceId;
 
     @Basic
-    @Column(name = "date_created")
-    @JsonIgnore
-    @CreationTimestamp
-    private Timestamp dateCreated;
-
-    @Basic
-    @Column(name = "created_by")
-    @JsonIgnore
-    private String createdBy;
-
-    @Basic
-    @Column(name = "date_modified")
-    @JsonIgnore
-    @UpdateTimestamp
-    private Timestamp dateModified;
-
-    @Basic
-    @Column(name = "modified_by")
-    @JsonIgnore
-    private String modifiedBy;
-
-    @Basic
     @Column(name = "archived")
     @JsonIgnore
     private Integer archived;
-
 }

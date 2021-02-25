@@ -17,7 +17,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode
 @Table(name = "menu")
-public class Menu implements Serializable {
+public class Menu extends Audit<String> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,35 +37,13 @@ public class Menu implements Serializable {
     private String url;
 
     @Basic
-    @Column(name = "uuid")
+    @Column(name = "uuid", updatable = false)
     @JsonIgnore
     private String uuid;
 
     @Basic
     @Column(name = "module_id")
     private Long moduleId;
-
-    @Basic
-    @Column(name = "date_created")
-    @CreationTimestamp
-    @JsonIgnore
-    private Timestamp dateCreated;
-
-    @Basic
-    @Column(name = "created_by")
-    @JsonIgnore
-    private String createdBy;
-
-    @Basic
-    @Column(name = "date_modified")
-    @JsonIgnore
-    @UpdateTimestamp
-    private Timestamp dateModified;
-
-    @Basic
-    @Column(name = "modified_by")
-    @JsonIgnore
-    private String modifiedBy;
 
     @Basic
     @Column(name = "archived")
