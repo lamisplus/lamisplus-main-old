@@ -58,7 +58,7 @@ function getCurrentUserRole() {
     if(!currentUserPermissions){
         return [];
     }
-   // fetch all the permissions of the logged in user
+    // fetch all the permissions of the logged in user
     const permissions = currentUserPermissions;
     if(!permissions || permissions.length < 1){
         return [];
