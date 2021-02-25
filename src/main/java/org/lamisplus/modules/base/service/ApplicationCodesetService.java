@@ -45,7 +45,6 @@ public class ApplicationCodesetService {
         }
 
         final ApplicationCodeSet applicationCodeset = applicationCodesetMapper.toApplicationCodeset(applicationCodesetDTO);
-        applicationCodeset.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         applicationCodeset.setCode(UuidGenerator.getUuid());
         applicationCodeset.setArchived(UN_ARCHIVED);
 
