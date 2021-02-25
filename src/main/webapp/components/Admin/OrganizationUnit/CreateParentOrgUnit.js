@@ -102,7 +102,7 @@ const createOrgUnit = (e) => {
     otherfields['organisationUnitLevelId'] = props.orgUnitID.id
     otherfields['parentOrganisationUnitId'] = props.orgUnitID.id ===1 ? 0 : otherfields.parentOrganisationUnitId
    //check if the Org Unit Level ID is 1 which is country
-   console.log(props.orgUnitID.id) 
+  
     
     console.log(otherfields)
  
@@ -128,7 +128,7 @@ const createOrgUnit = (e) => {
                               <br />
                               <Form onSubmit={createOrgUnit}>
                                 <Row>
-                               
+                               {orgUnitIDParam.id!= 1 ? (
                                 <Col md={6}>
                                           <FormGroup>
                                               <Label for="">Parent Organisation  Unit</Label>
@@ -147,7 +147,10 @@ const createOrgUnit = (e) => {
                                                     />
                                           </FormGroup>
                                       </Col>
-                               
+                               ):
+
+                               ""
+                             }
                                   <Col md={6}>
                                     <FormGroup>
                                         <Label for=""> Name</Label>
