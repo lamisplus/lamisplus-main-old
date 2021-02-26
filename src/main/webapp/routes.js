@@ -161,9 +161,9 @@ class Routes extends Component {
               {/* Radiology Link*/}
               <PrivateRoute exact path="/radiology-home" component={RadiologyPage} />
               {/* BootstrapConfiguration Link */}
-              <PrivateRoute exact path="/admin-bootstrap-configuration" component={BootStrapConfiguration} />
-              <PrivateRoute exact path="/admin-bootstrap-configuration-create-module" component={CreateModule} />
-              <PrivateRoute exact path="/admin-bootstrap-configuration-update-module" component={UpdateModule} />
+              <PrivateRoute exact path="/admin/bootstrap-configuration" component={BootStrapConfiguration} />
+              <PrivateRoute exact path="/admin/bootstrap-configuration-create-module" component={CreateModule} />
+              <PrivateRoute exact path="/admin/bootstrap-configuration-update-module" component={UpdateModule} />
               <PrivateRoute exact path="/updated-module" component={UpdatedModule} />
               {/* DataBaseManagement Link */}
               <PrivateRoute exact path="/database-management" component={DataBaseManagement} />
