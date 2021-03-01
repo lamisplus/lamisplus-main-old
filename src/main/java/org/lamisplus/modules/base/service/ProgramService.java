@@ -12,8 +12,6 @@ import org.lamisplus.modules.base.domain.entity.Program;
 import org.lamisplus.modules.base.domain.mapper.ProgramMapper;
 import org.lamisplus.modules.base.repository.ModuleRepository;
 import org.lamisplus.modules.base.repository.ProgramRepository;
-import org.lamisplus.modules.base.util.GenericSpecification;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;

@@ -7,7 +7,6 @@ import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.entity.Regimen;
 import org.lamisplus.modules.base.domain.entity.RegimenLine;
 import org.lamisplus.modules.base.repository.RegimenLineRepository;
-import org.lamisplus.modules.base.repository.RegimenRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

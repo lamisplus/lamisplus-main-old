@@ -8,8 +8,6 @@ import org.lamisplus.modules.base.domain.dto.PatientDTO;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.domain.entity.ApplicationUserPatient;
 import org.lamisplus.modules.base.domain.entity.Patient;
-import org.lamisplus.modules.base.domain.entity.User;
-import org.lamisplus.modules.base.domain.mapper.ApplicationUserPatientMapper;
 import org.lamisplus.modules.base.domain.mapper.UserMapper;
 import org.lamisplus.modules.base.repository.ApplicationUserPatientRepository;
 import org.springframework.stereotype.Service;
@@ -18,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @Transactional
