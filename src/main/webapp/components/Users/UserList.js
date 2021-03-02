@@ -194,6 +194,7 @@ const UserList = (props) => {
                     <FormGroup>
                       <Label for="roles">Roles</Label>
                       <DualListBox
+                          canFilter
                         options={roles}
                         onChange={onRoleSelect}
                         selected={selectedRoles}

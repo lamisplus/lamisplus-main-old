@@ -5,7 +5,7 @@ import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import { Card, Alert, CardBody, Spinner } from "reactstrap";
 import { formRendererService } from "_services/form-renderer";
-
+import { authHeader } from '_helpers/auth-header';
 Moment.locale("en");
 momentLocalizer();
 
@@ -46,6 +46,14 @@ const FormRenderer = (props) => {
   }, []);
 
   React.useEffect(() => {
+    if(!props.encounterId){
+      // if encounterId does not exist then the form data object was passed as a submission, if not throw an error
+      if(!props.submission){
+        setErrorMsg("No encounter information passed");
+        setShowErrorMsg(true);
+      }
+        return;
+    }
     formRendererService
       .fetchEncounterById(props.encounterId)
       .then((response) => {

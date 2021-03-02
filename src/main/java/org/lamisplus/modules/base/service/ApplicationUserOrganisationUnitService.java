@@ -21,8 +21,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ApplicationUserOrganisationUnitService {
 
+    private static final int UN_ARCHIVED = 0;
     private final ApplicationUserOrganisationUnitRepository applicationUserOrganisationUnitRepository;
-    private final UserService userService;
     private final ApplicationUserOrganisationUnitMapper applicationUserOrganisationUnitMapper;
 
 
@@ -30,33 +30,38 @@ public class ApplicationUserOrganisationUnitService {
         List<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitList = new ArrayList<>();
         applicationUserOrganisationUnitDTO1.forEach(applicationUserOrganisationUnitDTO -> {
             Optional<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitOptional = applicationUserOrganisationUnitRepository.
-                    findByApplicationUserIdAndOrganisationUnitId(applicationUserOrganisationUnitDTO.getApplicationUserId(), applicationUserOrganisationUnitDTO.getOrganisationUnitId());
-            if(applicationUserOrganisationUnitOptional.isPresent())
+                    findByApplicationUserIdAndOrganisationUnitIdAndArchived(applicationUserOrganisationUnitDTO.getApplicationUserId(),
+                            applicationUserOrganisationUnitDTO.getOrganisationUnitId(), UN_ARCHIVED);
+
+            applicationUserOrganisationUnitOptional.ifPresent(applicationUserOrganisationUnit -> {
                 throw new RecordExistException(ApplicationUserOrganisationUnit.class, "mapping",
-                        applicationUserOrganisationUnitDTO.getApplicationUserId() + " and " + applicationUserOrganisationUnitDTO.getOrganisationUnitId());
+                        applicationUserOrganisationUnitDTO.getApplicationUserId() + " and " +
+                                applicationUserOrganisationUnitDTO.getOrganisationUnitId());
+            });
 
             ApplicationUserOrganisationUnit applicationUserOrganisationUnit = applicationUserOrganisationUnitMapper.toApplicationUserOrganisationUnit(applicationUserOrganisationUnitDTO);
             applicationUserOrganisationUnitList.add(applicationUserOrganisationUnit);
         });
 
+
         return applicationUserOrganisationUnitRepository.saveAll(applicationUserOrganisationUnitList);
     }
 
     public ApplicationUserOrganisationUnit update(Long id, ApplicationUserOrganisationUnit applicationUserOrganisationUnit) {
-        Optional<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitOptional = applicationUserOrganisationUnitRepository.findById(id);
+        Optional<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitOptional = applicationUserOrganisationUnitRepository.findByIdAndArchived(id, UN_ARCHIVED);
         if(!applicationUserOrganisationUnitOptional.isPresent())throw new EntityNotFoundException(ApplicationUserOrganisationUnit.class, "Id", id +"");
         applicationUserOrganisationUnit.setId(id);
         return applicationUserOrganisationUnitRepository.save(applicationUserOrganisationUnit);
     }
 
     public ApplicationUserOrganisationUnit getApplicationUserOrganisationUnit(Long id){
-        Optional<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitOptional = this.applicationUserOrganisationUnitRepository.findById(id);
+        Optional<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitOptional = this.applicationUserOrganisationUnitRepository.findByIdAndArchived(id, UN_ARCHIVED);
         if (!applicationUserOrganisationUnitOptional.isPresent())throw new EntityNotFoundException(ApplicationUserOrganisationUnit.class, "Id", id +"");
         return applicationUserOrganisationUnitOptional.get();
     }
 
     public List<ApplicationUserOrganisationUnit> getAllApplicationUserOrganisationUnit() {
-        return applicationUserOrganisationUnitRepository.findAll();
+        return applicationUserOrganisationUnitRepository.findAllByArchived(UN_ARCHIVED);
     }
 
     public Boolean delete(Long id, ApplicationUserOrganisationUnit applicationUserOrganisationUnit) {

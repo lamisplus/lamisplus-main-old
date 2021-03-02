@@ -67,7 +67,7 @@ const RoleList = (props) => {
         .then((response) => {
           setPermissions(
             Object.entries(response.data).map(([key, value]) => ({
-              label: value.name,
+              label: value.description,
               value: value.name,
             }))
           );
@@ -95,11 +95,8 @@ const RoleList = (props) => {
       axios
         .get(`${baseUrl}roles/${id}`)
         .then((response) => {
-          setselectedPermissions(
-            Object.entries(response.data.permissions).map(
-              ([key, value]) => value.name
-            )
-          );
+          const c = response.data.permission.map(x => (x.name));
+          setselectedPermissions(c);
         })
         .catch((error) => {
           console.log(error);
@@ -193,14 +190,15 @@ const RoleList = (props) => {
         }}
       />
 
-      <Modal isOpen={modal} backdrop={true}>
+      <Modal isOpen={modal} backdrop={true} size={"lg"}>
         <Form onSubmit={handleEdit}>
           <ModalHeader>Edit Permissions</ModalHeader>
           <ModalBody>
             <FormGroup>
               <Label for="permissions">Permissions</Label>
               <DualListBox
-                options={permissions}
+                  canFilter
+                  options={permissions}
                 onChange={onPermissionSelect}
                 selected={selectedPermissions}
               />

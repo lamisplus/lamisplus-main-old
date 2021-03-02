@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.domain.entity.Role;
@@ -20,19 +21,20 @@ import java.util.List;
 @RestController
 @RequestMapping("api/users")
 @RequiredArgsConstructor
+@Audit
 public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('user_read')")
+    //@PreAuthorize("hasAuthority('user_read')")
     public ResponseEntity<UserDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok(userRepository.findById(id).map(UserDTO::new).get());
     }
 
     @PostMapping("/{id}/roles")
-    @PreAuthorize("hasAuthority('user_write')")
+    //@PreAuthorize("hasAuthority('user_write')")
     public ResponseEntity<Object[]> updateRoles(@Valid @RequestBody List<Role> roles, @PathVariable Long id) throws Exception {
         try {
             User user = userRepository.findById(id).get();
@@ -59,7 +61,7 @@ public class UserController {
     }
 
     @GetMapping("/roles/{roleId}")
-    @PreAuthorize("hasAuthority('user_read')")
+    //@PreAuthorize("hasAuthority('user_read')")
     public ResponseEntity<List<UserDTO>> getAllUserByRole(@PathVariable Long roleId) {
         return ResponseEntity.ok(userService.getAllUserByRole(roleId));
     }

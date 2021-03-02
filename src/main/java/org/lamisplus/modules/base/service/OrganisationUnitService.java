@@ -22,24 +22,26 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class OrganisationUnitService {
-    public static final int UNARCHIVED = 0;
+    private static final int UNARCHIVED = 0;
+    private static final int ARCHIVED = 1;
+    private static final Long FIRST_ORG_LEVEL = 1L;
     private final OrganisationUnitRepository organisationUnitRepository;
     private final OrganisationUnitMapper organisationUnitMapper;
-
     private final OrganisationUnitHierarchyRepository organisationUnitHierarchyRepository;
 
     public OrganisationUnit save(OrganisationUnitDTO organisationUnitDTO) {
         Optional<OrganisationUnit> organizationOptional = organisationUnitRepository.findByNameAndParentOrganisationUnitIdAndArchived(organisationUnitDTO.getName(), organisationUnitDTO.getId(), UNARCHIVED);
-
         if(organizationOptional.isPresent())throw new RecordExistException(OrganisationUnit.class, "Name", organisationUnitDTO.getName() +"");
         final OrganisationUnit organisationUnit = organisationUnitMapper.toOrganisationUnit(organisationUnitDTO);
+
         OrganisationUnit organisationUnit1 = organisationUnitRepository.save(organisationUnit);
         Long level = organisationUnit1.getOrganisationUnitLevelId();
         List<OrganisationUnitHierarchy> organisationUnitHierarchies = new ArrayList<>();
         OrganisationUnit returnOrgUnit = organisationUnit1;
 
-        for(int i=1; i < level; i++){
-
+        Long parent_org_unit_id = 1L;
+        while(parent_org_unit_id > 0){
+            parent_org_unit_id = organisationUnit1.getParentOrganisationUnitId();
             organisationUnitHierarchies.add(new OrganisationUnitHierarchy(null, returnOrgUnit.getId(), organisationUnit1.getParentOrganisationUnitId(),
                     level, null, null, null));
 
@@ -47,11 +49,13 @@ public class OrganisationUnitService {
             if(organisationUnitOptional.isPresent()){
                 organisationUnit1 = organisationUnitOptional.get();
             }
+            --parent_org_unit_id;
         }
         organisationUnitHierarchyRepository.saveAll(organisationUnitHierarchies);
         return returnOrgUnit;
     }
 
+    //TODO: work on this
     public OrganisationUnit update(Long id, OrganisationUnitDTO organisationUnitDTO) {
         Optional<OrganisationUnit> organizationOptional = organisationUnitRepository.findByIdAndArchived(id, UNARCHIVED);
         if(!organizationOptional.isPresent())throw new EntityNotFoundException(OrganisationUnit.class, "Id", id +"");
@@ -64,7 +68,7 @@ public class OrganisationUnitService {
     public Integer delete(Long id) {
         Optional<OrganisationUnit> organizationOptional = organisationUnitRepository.findByIdAndArchived(id, UNARCHIVED);
         if (!organizationOptional.isPresent())throw new EntityNotFoundException(OrganisationUnit.class, "Id", id +"");
-        organizationOptional.get().setArchived(1);
+        organizationOptional.get().setArchived(ARCHIVED);
         return organizationOptional.get().getArchived();
     }
 
@@ -79,8 +83,7 @@ public class OrganisationUnitService {
     }
 
     public List<OrganisationUnit> getAllOrganizationUnit() {
-        //TODO: Order the list by id
-        return organisationUnitRepository.findAll();
+        return organisationUnitRepository.findAllByArchivedOrderByIdAsc(UNARCHIVED);
     }
 
     public List<OrganisationUnit> getOrganisationUnitByParentOrganisationUnitIdAndOrganisationUnitLevelId(Long parentOrgUnitId, Long orgUnitLevelId) {
@@ -99,5 +102,13 @@ public class OrganisationUnitService {
             organisationUnitDTOS.add(organisationUnitDTO);
         });
         return organisationUnitDTOS;
+    }
+
+    public List<OrganisationUnit> getAllOrganisationUnitByOrganisationUnitLevelId(Long organisationUnitLevelId) {
+        List<Long> level = new ArrayList<>();
+        for(Long i = FIRST_ORG_LEVEL; i < organisationUnitLevelId; i++){
+            level.add(i);
+        }
+        return organisationUnitRepository.findAllByOrganisationUnitLevelIdIn(level);
     }
 }

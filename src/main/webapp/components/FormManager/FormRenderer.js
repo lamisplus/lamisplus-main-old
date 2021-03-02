@@ -6,13 +6,15 @@ import { connect } from "react-redux";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import { toast } from "react-toastify";
-import { Card, Alert, CardBody, Spinner } from "reactstrap";
+import {Card, Alert, CardBody, Spinner, ModalBody} from "reactstrap";
 import { fetchLastEncounter } from '_services/form-renderer';
 import { url } from "api";
 import axios from "axios";
 import { formRendererService } from "_services/form-renderer";
 import { authHeader } from '_helpers/auth-header';
 import _ from 'lodash';
+import {fetchByHospitalNumber} from "actions/patients";
+
 
 Moment.locale("en");
 momentLocalizer();
@@ -25,7 +27,7 @@ const FormRenderer = (props) => {
   const [showLoadingForm, setShowLoadingForm] = React.useState(true);
   const [showLoadingEncounter, setShowLoadingEncounter] = React.useState(false)
   const [formId, setFormId] = React.useState()
-  const [submission, setSubmission] = React.useState({...props.submission, ...{ data: { patient: props.patient, authHeader: authHeader(), baseUrl: url }}});
+  const [submission, setSubmission] = React.useState(_.merge(props.submission, { data: { patient: props.patient, authHeader: authHeader(), baseUrl: url }}));
   const onDismiss = () => setShowErrorMsg(false);
   const options = {
     noAlerts: true,
@@ -80,6 +82,20 @@ const FormRenderer = (props) => {
   ;
       
   }
+
+  //fetch patient by patient hospital number if patient is not in the props object
+  React.useEffect(() => {
+    if(props.patientHospitalNumber) {
+      console.log('form render')
+        props.fetchPatientByHospitalNumber(props.patientHospitalNumber);
+    }
+
+  }, []);
+
+  //Add patient data to submission
+  React.useEffect(() => {
+    setSubmission(_.merge(submission, { data: { patient: props.patient}}));
+  }, [props.patient]);
 
   // Submit form to server
   const submitForm = (submission) => {
@@ -173,7 +189,7 @@ const FormRenderer = (props) => {
             <Alert color="danger" isOpen={showErrorMsg} toggle={onDismiss}>
               {errorMsg}
             </Alert>
-
+            
             <Form
               form={form.resourceObject}
               submission={submission}
@@ -209,6 +225,7 @@ const mapStateToProps = (state = { form: {} }) => {
 const mapActionToProps = {
   fetchForm: actions.fetchById,
   saveEncounter: actions.saveEncounter,
+  fetchPatientByHospitalNumber: fetchByHospitalNumber
 };
 
 export default connect(mapStateToProps, mapActionToProps)(FormRenderer);

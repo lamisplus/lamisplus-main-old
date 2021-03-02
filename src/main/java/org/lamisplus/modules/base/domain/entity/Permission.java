@@ -1,7 +1,6 @@
 package org.lamisplus.modules.base.domain.entity;
 
 import lombok.*;
-
 import javax.persistence.*;
 
 @Data
@@ -19,4 +18,9 @@ public class Permission {
 
     @NonNull
     private String description;
+
+    /*@OneToMany(mappedBy = "permissionByPermissionId")
+    @ToString.Exclude
+    @JsonIgnore
+    public List<RolePermission> rolePermissionsById;*/
 }

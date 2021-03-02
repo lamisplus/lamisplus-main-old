@@ -1,22 +1,13 @@
 import React, { useState } from "react";
-import useForm from "../Functions/UseForm";
 import FormRenderer from "components/FormManager/FormRenderer";
 import {
-  Col,
-  FormGroup,
-  Input,
-  Label,
-  Row,
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Alert,
 } from "reactstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import MatButton from "@material-ui/core/Button";
-import * as actions from "actions/patients";
 import { connect } from "react-redux";
 import ViewForm from 'components/FormManager/FormRendererView';
 import UpdateForm from 'components/FormManager/FormRendererUpdate';
@@ -46,14 +37,18 @@ const FormRendererModal = (props) => {
         <Alert color="danger" isOpen={showErrorMsg} toggle={onDismiss}>
           {errorMsg}
         </Alert>
-        { props.currentForm && (!props.currentForm.type || props.currentForm.type === 'NEW') &&
+
+        {/*return this if currentForm type is NEW or nothing is specified*/}
+          { props.currentForm && (!props.currentForm.type || props.currentForm.type === 'NEW') &&
         <FormRenderer
           patientId={props.patientId}
           formCode={props.currentForm.code}
           programCode={props.currentForm.programCode}
+          submission={props.currentForm.submission}
           visitId={props.visitId || props.patient.visitId}
           onSuccess={props.onSuccess}
           onSubmit={props.currentForm.onSubmit}
+          patientHospitalNumber={props.currentForm.patientHospitalNumber}
           typePatient={props.currentForm.typePatient}
         />
     }
@@ -65,6 +60,7 @@ const FormRendererModal = (props) => {
           programCode={props.currentForm.programCode}
           visitId={props.visitId || props.patient.visitId}
           onSuccess={props.onSuccess}
+          submission={props.currentForm.submission}
           onSubmit={props.currentForm.onSubmit}
           typePatient={props.currentForm.typePatient}
           encounterId={props.currentForm.encounterId}
@@ -77,6 +73,7 @@ const FormRendererModal = (props) => {
           formCode={props.currentForm.code}
           programCode={props.currentForm.programCode}
           visitId={props.visitId || props.patient.visitId}
+          submission={props.currentForm.submission}
           onSuccess={props.onSuccess}
           onSubmit={props.currentForm.onSubmit}
           typePatient={props.currentForm.typePatient}

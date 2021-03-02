@@ -1,26 +1,19 @@
 package org.lamisplus.modules.base.controller;
 
-import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.*;
-import org.lamisplus.modules.base.domain.entity.Encounter;
 import org.lamisplus.modules.base.domain.entity.Form;
 import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.service.PatientService;
-import org.lamisplus.modules.base.util.PaginationUtil;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,8 +24,8 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/patients")
+@Audit
 public class PatientController {
-    private final String ENTITY_NAME = "Patient";
     private final PatientService patientService;
 
     /*@GetMapping
@@ -43,7 +36,6 @@ public class PatientController {
     }*/
 
     @GetMapping
-    @PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List<PatientDTO>> getAllPatients() {
         return ResponseEntity.ok(this.patientService.getAllPatients());
     }
@@ -55,25 +47,25 @@ public class PatientController {
 
 
     @GetMapping("/hospitalNumber")
-    @PreAuthorize("hasAuthority('patient_read')")
+    //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<PatientDTO> getPatientByHospitalNumber(@RequestParam String hospitalNumber) {
         return ResponseEntity.ok(this.patientService.getPatientByHospitalNumber(hospitalNumber));
     }
 
     @GetMapping("/{hospitalNumber}")
-    @PreAuthorize("hasAuthority('patient_read')")
+    //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<PatientDTO> getPatientByHospitalNumber2(@PathVariable String hospitalNumber) {
         return ResponseEntity.ok(this.patientService.getPatientByHospitalNumber(hospitalNumber));
     }
 
     @GetMapping("/{hospitalNumber}/exist")
-    @PreAuthorize("hasAuthority('patient_read')")
+    //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<Boolean> exist(@PathVariable String hospitalNumber) {
         return ResponseEntity.ok(this.patientService.exist(hospitalNumber));
     }
   
     @GetMapping("/{id}/encounters/{formCode}")
-    @PreAuthorize("hasAuthority('patient_read')")
+    //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List> getEncountersByPatientIdAndFormCode(@PathVariable Long id,
                                                                     @PathVariable String formCode, @RequestParam(required = false) String sortOrder,
                                                                     @RequestParam (required = false) String sortField, @RequestParam(required = false) Integer limit,
@@ -92,13 +84,13 @@ public class PatientController {
     }*/
 
     @GetMapping("/{id}/encounters/programCodeExclusionList")
-    @PreAuthorize("hasAuthority('patient_read')")
+    //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List> getEncountersByPatientIdAndProgramCodeExclusionList(@PathVariable Long id, @RequestParam(required = false) List<String> programCodeExclusionList) {
         return ResponseEntity.ok(this.patientService.getEncountersByPatientIdAndProgramCodeExclusionList(id, programCodeExclusionList));
     }
 
     @GetMapping("/{programCode}/registered")
-    @PreAuthorize("hasAuthority('patient_read')")
+    //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List> getAllPatientsByProgramCode(@PathVariable String programCode) {
         return ResponseEntity.ok(this.patientService.getAllPatientsByProgramCode(programCode));
     }
@@ -108,7 +100,7 @@ public class PatientController {
     /*@ApiOperation(value="getVisitByPatientIdAndVisitDate", notes = "patientId= required, dateStart=optional, dateEnd=optional\n\n" +
             "Example - /api/patient/20/visits?dateStart=02-03-2020")*/
     @GetMapping("/{id}/visits/{dateStart}/{dateEnd}")
-    @PreAuthorize("hasAuthority('patient_read')")
+    //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List<VisitDTO>> getVisitByPatientIdAndVisitDate(@PathVariable Optional<Long> id, @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional<String> dateStart,
                                                                           @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional <String> dateEnd) {
         return ResponseEntity.ok(patientService.getVisitByPatientIdAndVisitDate(id,dateStart,dateEnd));
@@ -117,7 +109,7 @@ public class PatientController {
     /*@ApiOperation(value="getEncountersByPatientIdAndDateEncounter", notes = " programCode= required, formCode=required, dateStart=optional, dateEnd=optional\n\n" +
             "Example - api/encounters/{programCode}/{formCode}?dateStart=01-01-2020&dateEnd=01-04-2020")*/
     @GetMapping("/{id}/encounters/{formCode}/{dateStart}/{dateEnd}")
-    @PreAuthorize("hasAuthority('patient_read')")
+    //@PreAuthorize("hasAuthority('patient_read')")
     public List getEncountersByPatientIdAndDateEncounter(@PathVariable Long id, @PathVariable String formCode,
                                                          @ApiParam(defaultValue = "") @PathVariable(required = false) Optional<String> dateStart,
                                                          @ApiParam(defaultValue = "") @PathVariable(required = false) Optional<String> dateEnd) {
@@ -127,24 +119,21 @@ public class PatientController {
     /*@ApiOperation(value="getAllEncountersByPatientId", notes = " id=required\n\n" +
             "Example - /api/encounters/20")*/
     @GetMapping("/{id}/encounters")
-    @PreAuthorize("hasAuthority('patient_read')")
+    //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List> getAllEncounterByPatientId(@PathVariable Long id){
         return ResponseEntity.ok(this.patientService.getAllEncountersByPatientId(id));
     }
 
-    //TODO: in progress...
     @GetMapping("/{id}/{programCode}/form")
     public ResponseEntity<List<Form>> getAllFormsByPatientIdAndProgramCode(@PathVariable Long id, @PathVariable String programCode){
         return ResponseEntity.ok(this.patientService.getAllFormsByPatientIdAndProgramCode(id, programCode));
     }
 
-    //TODO: in progress...
     @GetMapping("/{id}/{programCode}/filledForms")
     public ResponseEntity<List<Form>> getFilledFormsByPatientIdAndProgramCode(@PathVariable Long id, @PathVariable String programCode){
         return ResponseEntity.ok(this.patientService.getFilledFormsByPatientIdAndProgramCode(id, programCode));
     }
 
-    //TODO: in progress...
     @GetMapping("/{id}/programEnrolled")
     public ResponseEntity<List> getAllProgramEnrolled(@PathVariable Long id){
         return ResponseEntity.ok(this.patientService.getAllProgramEnrolled(id));
@@ -165,21 +154,16 @@ public class PatientController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('patient_write')")
-    public ResponseEntity<Person> save(@RequestBody PatientDTO patientDTO) throws URISyntaxException {
-        Person person = this.patientService.save(patientDTO);
-        return ResponseEntity.created(new URI("/api/patients/" + person.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(person.getId()))).body(person);
+    public ResponseEntity<Person> save(@RequestBody PatientDTO patientDTO) {
+        return ResponseEntity.ok(this.patientService.save(patientDTO));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('patient_write')")
     public Person update(@PathVariable Long id, @RequestBody PatientDTO patientDTO) {
         return this.patientService.update(id, patientDTO);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('patient_delete')")
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
         return ResponseEntity.ok(this.patientService.delete(id));
     }

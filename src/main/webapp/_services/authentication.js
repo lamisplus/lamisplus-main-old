@@ -10,6 +10,8 @@ import axios from "axios";
 const { dispatch } = store;
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
 
+//const currentUserPermissions = localStorage.getItem('currentUser_Permission') ? new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser_Permission'))) : null;
+
 export const authentication = {
     login,
     logout,
@@ -38,6 +40,7 @@ function login(username, password, remember) {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem('currentUser', JSON.stringify(user));
             currentUserSubject.next(user);
+            fetchMe();
             return user;
         });
 }
@@ -45,20 +48,22 @@ function login(username, password, remember) {
 function logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('currentUser_Permissions');
     currentUserSubject.next(null);
 }
 
 function getCurrentUserRole() {
-    //fetch all the permissions of the logged in user
-    const user = currentUserSubject.value;
-    if(!user || !user.id_token){
+
+    const currentUserPermissions = localStorage.getItem('currentUser_Permission') != null ? JSON.parse(localStorage.getItem('currentUser_Permission')) : null;
+    if(!currentUserPermissions){
         return [];
     }
-
-    const token = user.id_token;
-    const decoded = jwt_decode(token);
-    const permissions = decoded.auth;
-    return permissions.split(',');
+    // fetch all the permissions of the logged in user
+    const permissions = currentUserPermissions;
+    if(!permissions || permissions.length < 1){
+        return [];
+    }
+    return permissions;
 }
 
 function userHasRole(role){
@@ -82,9 +87,12 @@ function getCurrentUser(){
 }
 
 async function fetchMe(){
+
     axios
         .get(`${baseUrl}account`)
         .then((response) => {
+            localStorage.setItem('currentUser_Permission', JSON.stringify(response.data.permissions));
+
             dispatch({
                 type: ACTION_TYPES.FETCH_ME,
                 payload: response.data,

@@ -21,8 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.swing.text.html.Option;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +63,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public  Optional<User> getUserWithRoles(){
-       return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRoleByUserName);
+           return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRoleByUserName);
     }
 
     public User registerUser(UserDTO userDTO, String password){

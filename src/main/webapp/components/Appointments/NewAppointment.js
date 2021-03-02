@@ -6,11 +6,16 @@ import { FaCalendarPlus } from "react-icons/fa";
 import * as CODES from "api/codes";
 import { ToastContainer, toast } from "react-toastify";
 import FormRendererModal from "components/FormManager/FormRendererModal";
+import axios from "axios";
+import {url as baseUrl} from "../../api";
+
+import * as ACTION_TYPES from "../../actions/types";
 
 function NewAppointmentPage(props) {
     const [showAppointmentForm, setShowAppointmentForm] = useState(false);
     const [currentForm, setCurrentForm] = useState(false);
-    
+    //const [currentPatientId, setCurrentPatientId] = useState();
+    let currentPatientId = null;
     const onSuccess = () => {
         toast.success("Form saved successfully!", { appearance: "success" });
         setShowAppointmentForm(false);
@@ -21,6 +26,28 @@ function NewAppointmentPage(props) {
         setShowAppointmentForm(false);
       };
 
+
+    const saveAppointment = (submission) => {
+        if(!currentPatientId){
+            onError();
+            return;
+        }
+        const data = {
+            patientId: currentPatientId,
+            detail: submission.data
+        }
+        axios
+            .post(`${baseUrl}appointments`, data)
+            .then(response => {
+                    onSuccess();
+            })
+            .catch(error => {
+                onError();
+                }
+
+            );
+    }
+
   const actionButton = {
     Action: (props) => (
       <IconButton
@@ -28,12 +55,17 @@ function NewAppointmentPage(props) {
         aria-label="Create Appointment"
         title="Create Appointment"
         onClick={(event) => {
+
+                currentPatientId = props.data.patientId;
+               // setCurrentPatientId(props.data.patientId);
                 setCurrentForm({
                   code:CODES.APPOINTMENT_FORM,
                   programCode:CODES.GENERAL_SERVICE,
                   formName:"PATIENT APPOINTMENT",
                   patientId: props.data.patientId,
+                    patientHospitalNumber: props.data.id,
                   visitId: props.data.visitId,
+                    onSubmit: saveAppointment,
                   options:{
                     modalSize: "modal-lg"
                   },
@@ -50,25 +82,6 @@ function NewAppointmentPage(props) {
   <PatientList actions={actionButton} />
   <FormRendererModal patientId={currentForm.patientId} visitId={currentForm.visitId} showModal={showAppointmentForm} setShowModal={setShowAppointmentForm} currentForm={currentForm} onSuccess={onSuccess} onError={onError} options={currentForm.options}/>
   </>
-  );
-}
-
-function NewAppointmentButton() {
-  const openAppointmentForm = () => {
-    console.log("appt form opened");
-  };
-
-  return (
-    <IconButton
-      color="primary"
-      aria-label="View Patient"
-      title="View Patient"
-      onClick={openAppointmentForm}>
-      <FaCalendarPlus
-        title="Create Appointment"
-        aria-label="Create Appointment"
-      />
-    </IconButton>
   );
 }
 

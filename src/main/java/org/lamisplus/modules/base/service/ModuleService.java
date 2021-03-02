@@ -14,24 +14,20 @@ import org.lamisplus.modules.base.domain.dto.ModuleDTO;
 import org.lamisplus.modules.base.domain.entity.*;
 import org.lamisplus.modules.base.domain.mapper.ModuleMapper;
 import org.lamisplus.modules.base.repository.*;
-import org.lamisplus.modules.base.util.CustomFileVisitorUtil;
 import org.lamisplus.modules.base.util.DataLoader;
-import org.lamisplus.modules.base.util.FileStorage;
-import org.lamisplus.modules.base.util.GenericSpecification;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -50,10 +46,9 @@ public class ModuleService {
     private final ModuleMapper moduleMapper;
     private final StorageUtil storageService;
     private final ApplicationProperties properties;
-    private final List<String> classNames;
+    private final Set<String> classNames;
     private final String fileSeparator = File.separator;
     private final Set<Class> moduleClasses;
-    private final GenericSpecification<Module> genericSpecification;
     private final UserService userService;
     private final ProgramRepository programRepository;
     private final DataLoader<Form> formDataLoader;
@@ -82,7 +77,7 @@ public class ModuleService {
     @Value("${base.url}")
     private String baseUrl;
     private final FilesStorageServiceImpl filesStorageServiceImpl;
-
+    private static ClassLoader classLoader;
 
     public Module save(ModuleDTO moduleDTO) {
         Optional<Module> moduleOptional = this.moduleRepository.findByName(moduleDTO.getName());
@@ -95,19 +90,16 @@ public class ModuleService {
         }
         module.setArchived(UN_ARCHIVED);
 
-        return this.moduleRepository.save(module);
+        return moduleRepository.save(module);
     }
 
     public List<Module> getAllModules(){
-        Specification<Module> specification = genericSpecification.findAll(0);
-        return this.moduleRepository.findAll(specification);
+        return moduleRepository.findAllByArchived(UN_ARCHIVED);
     }
 
     public List<Module> uploadAndUnzip(MultipartFile[] files, HttpServletRequest request) {
-       ModuleUtil.setModuleConfigs();
-       currentUser = userService.getUserWithRoles().get().getUserName();
-
-
+        ModuleUtil.setModuleConfigs();
+        currentUser = userService.getUserWithRoles().get().getUserName();
 
         Arrays.asList(files).stream().forEach(file ->{
             if(!file.getOriginalFilename().contains(DOT_JAR)){
@@ -231,8 +223,8 @@ public class ModuleService {
                     log.debug("menu base url - " + menu);
 
                     if(!module.getMenuByModule().getName().equals(menu.getName())){
-                    menuRepository.save(menu);
-                    log.debug("save menu is - " + menu);
+                        menuRepository.save(menu);
+                        log.debug("save menu is - " + menu);
                     }
                 }
             }
@@ -310,7 +302,9 @@ public class ModuleService {
     }
 
     public Module installModule(Long moduleId, Boolean isInitialized){
-        classNames.clear();
+        //classNames.clear();
+        log.info("java.class.path - " + System.getProperty("java.class.path"));
+
         Optional<Module> moduleOptional = moduleRepository.findById(moduleId);
         List<Module> moduleList = new ArrayList<>();
 
@@ -363,14 +357,17 @@ public class ModuleService {
                 ClassPathHacker.addFile(rootFile.getAbsolutePath());
                 List<URL> classURL = showFiles(filePath.listFiles(), rootFile, module.getMain());
                 ClassLoader loader = new URLClassLoader(classURL.toArray(
-                        new URL[classURL.size()]), ClassLoader.getSystemClassLoader());
+                        new URL[classURL.size()]), sun.misc.Launcher.getLauncher().getClassLoader());
+                setClassLoader(loader);
 
                 for (String className : classNames) {
                     try {
                         if (className.contains(module.getMain())) {
-                            moduleClasses.add(loader.loadClass(className));
+                            Class c = Class.forName(className, true, loader);
+                            //loader.loadClass(className);
+                            moduleClasses.add(c);
                         }
-                    } catch (ClassNotFoundException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -380,6 +377,7 @@ public class ModuleService {
                 e.printStackTrace();
                 throw new RuntimeException("Server error module not loaded: " + e.getMessage());
             }
+            System.setProperty("java.class.path", System.getProperty("user.dir")+ "\\demo.jar");
 
             //changing module status
             if(isInitialized == null) {
@@ -399,96 +397,23 @@ public class ModuleService {
         return module;
     }
 
+    public void test(File file){
+        ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
 
-    private ClassLoader getMyClassLoader(ClassLoader loader) {
-        return loader;
-    }
-
-    public void changeFileNames(String tempName, String name) {
-        final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", name);
-        //final Path oldModulePath = Paths.get(properties.getModulePath(), "runtime", name+OLD_MODULE_SUFFIX);
-        final Path moduleTempPath = Paths.get(properties.getModulePath(), "runtime", tempName);
-        final Path libPath = Paths.get(properties.getModulePath(), "libs", name);
-        final Path libTempPath = Paths.get(properties.getModulePath(), "libs", tempName);
-
-
-        String oldModulePathRenamed = "";
-        String moduleTempPathRenamed = "";
-
+// Add the conf dir to the classpath
+// Chain the current thread classloader
+        URLClassLoader urlClassLoader = null;
         try {
-                // rename a file in the same directory
-                oldModulePathRenamed = Files.move(moduleRuntimePath, moduleRuntimePath.resolveSibling(name+OLD_MODULE_SUFFIX)).toString();
-                moduleTempPathRenamed = Files.move(moduleTempPath, moduleTempPath.resolveSibling(name)).toString();
-
-            File file = new File(oldModulePathRenamed);
-            File libFiles = new File(libPath.toString());
-
-            file.setWritable(true);
-            libFiles.setWritable(true);
-
-            System.gc();
-            System.runFinalization();
-            Thread.currentThread().sleep(5000);
-
-            org.apache.tomcat.util.http.fileupload.FileUtils.forceDelete(file);
-            org.apache.tomcat.util.http.fileupload.FileUtils.forceDelete(libFiles);
-
-            Files.move(libTempPath, libTempPath.resolveSibling(name), REPLACE_EXISTING).toString();
-
-            //file.deleteOnExit();
-            System.out.println("changed rootFile- " + oldModulePathRenamed);
-            System.out.println("changed tempFile- " + moduleTempPathRenamed);
-
-        }catch (IOException | InterruptedException ie){
-            log.debug(ie.getMessage());
-            ie.printStackTrace();
+            urlClassLoader = new URLClassLoader(new URL[]{file.toURL()},
+                    currentThreadClassLoader);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
 
+// Replace the thread classloader - assumes
+// you have permissions to do so
+        Thread.currentThread().setContextClassLoader(urlClassLoader);
     }
-
-    private Module overridingOldModuleWithNewModule(Module newModule) {
-        List<Module> newModules = new ArrayList<>();
-        List<Module> oldModules = new ArrayList<>();
-
-        String moduleName = newModule.getName();
-        Long moduleId = newModule.getId();
-        newModules.add(newModule);
-        String changedName = UUID.randomUUID().toString().replace("-", "");
-        System.out.println(changedName);
-        String oldName = moduleName.replace(TEMP,"");
-        Optional<Module> optionalOldModule = moduleRepository.findByName(oldName);
-        if(optionalOldModule.isPresent() && optionalOldModule.get() != null) {
-            final Module oldModule = optionalOldModule.get();
-            oldModules.add(oldModule);
-            oldModule.getProgramsByModule().forEach(program -> {
-                program.getFormsByProgram().forEach(form -> {
-                    form.getEncountersByForm().forEach(encounter -> {
-                        encounter.setArchived(DEACTIVATED);
-                        encounterRepository.save(encounter);
-                        // TODO: DEACTIVATED encounter.getFormDataByEncounter();
-                    });
-                    form.setArchived(DEACTIVATED);
-                    formRepository.save(form);
-                });
-                program.setArchived(DEACTIVATED);
-                programRepository.save(program);
-            });
-
-            //Unloading a jar file
-            //loadDependencies(oldModules, true);
-
-            oldModule.setName(oldName + OLD_MODULE_SUFFIX + "_" + changedName);
-            oldModule.setStatus(DEACTIVATED);
-            oldModule.setArchived(DEACTIVATED);
-            //delete(oldModule.getId());
-            moduleRepository.save(oldModule);
-            newModule.setStatus(STATUS_UPLOADED);
-            moduleRepository.save(newModule);
-        }
-
-        return moduleRepository.findById(moduleId).get();
-    }
-
     public void startModule(Boolean isStartUp){
         //Boolean startUp = false;
         System.out.println("STarting starting....");
@@ -690,10 +615,7 @@ public class ModuleService {
     }
 
     private List<Module> getAllModuleByStatusAndModuleType(int moduleStatus, int moduleType) {
-        Specification<Module> moduleSpecification = genericSpecification.findAllModules(moduleStatus, moduleType);
-        List<Module> modules = this.moduleRepository.findAll(moduleSpecification);
-
-        return modules;
+        return moduleRepository.findAllByStatusAndModuleType(moduleStatus, moduleType);
     }
 
     private Class getBeanInContext(String clzName){
@@ -711,5 +633,102 @@ public class ModuleService {
         List<Form> forms = formDataLoader.readJsonFile(new Form(), jsonFile);
 
         return forms;
+    }
+
+    private ClassLoader getMyClassLoader(ClassLoader loader) {
+        return loader;
+    }
+
+    public void changeFileNames(String tempName, String name) {
+        final Path moduleRuntimePath = Paths.get(properties.getModulePath(), "runtime", name);
+        //final Path oldModulePath = Paths.get(properties.getModulePath(), "runtime", name+OLD_MODULE_SUFFIX);
+        final Path moduleTempPath = Paths.get(properties.getModulePath(), "runtime", tempName);
+        final Path libPath = Paths.get(properties.getModulePath(), "libs", name);
+        final Path libTempPath = Paths.get(properties.getModulePath(), "libs", tempName);
+
+
+        String oldModulePathRenamed = "";
+        String moduleTempPathRenamed = "";
+
+        try {
+            // rename a file in the same directory
+            oldModulePathRenamed = Files.move(moduleRuntimePath, moduleRuntimePath.resolveSibling(name+OLD_MODULE_SUFFIX)).toString();
+            moduleTempPathRenamed = Files.move(moduleTempPath, moduleTempPath.resolveSibling(name)).toString();
+
+            File file = new File(oldModulePathRenamed);
+            File libFiles = new File(libPath.toString());
+
+            file.setWritable(true);
+            libFiles.setWritable(true);
+
+            System.gc();
+            System.runFinalization();
+            Thread.currentThread().sleep(5000);
+
+            org.apache.tomcat.util.http.fileupload.FileUtils.forceDelete(file);
+            org.apache.tomcat.util.http.fileupload.FileUtils.forceDelete(libFiles);
+
+            Files.move(libTempPath, libTempPath.resolveSibling(name), REPLACE_EXISTING).toString();
+
+            //file.deleteOnExit();
+            System.out.println("changed rootFile- " + oldModulePathRenamed);
+            System.out.println("changed tempFile- " + moduleTempPathRenamed);
+
+        }catch (IOException | InterruptedException ie){
+            log.debug(ie.getMessage());
+            ie.printStackTrace();
+        }
+
+    }
+
+    private Module overridingOldModuleWithNewModule(Module newModule) {
+        List<Module> newModules = new ArrayList<>();
+        List<Module> oldModules = new ArrayList<>();
+
+        String moduleName = newModule.getName();
+        Long moduleId = newModule.getId();
+        newModules.add(newModule);
+        String changedName = UUID.randomUUID().toString().replace("-", "");
+        System.out.println(changedName);
+        String oldName = moduleName.replace(TEMP,"");
+        Optional<Module> optionalOldModule = moduleRepository.findByName(oldName);
+        if(optionalOldModule.isPresent() && optionalOldModule.get() != null) {
+            final Module oldModule = optionalOldModule.get();
+            oldModules.add(oldModule);
+            oldModule.getProgramsByModule().forEach(program -> {
+                program.getFormsByProgram().forEach(form -> {
+                    form.getEncountersByForm().forEach(encounter -> {
+                        encounter.setArchived(DEACTIVATED);
+                        encounterRepository.save(encounter);
+                        // TODO: DEACTIVATED encounter.getFormDataByEncounter();
+                    });
+                    form.setArchived(DEACTIVATED);
+                    formRepository.save(form);
+                });
+                program.setArchived(DEACTIVATED);
+                programRepository.save(program);
+            });
+
+            //Unloading a jar file
+            //loadDependencies(oldModules, true);
+
+            oldModule.setName(oldName + OLD_MODULE_SUFFIX + "_" + changedName);
+            oldModule.setStatus(DEACTIVATED);
+            oldModule.setArchived(DEACTIVATED);
+            //delete(oldModule.getId());
+            moduleRepository.save(oldModule);
+            newModule.setStatus(STATUS_UPLOADED);
+            moduleRepository.save(newModule);
+        }
+
+        return moduleRepository.findById(moduleId).get();
+    }
+
+    public void setClassLoader(ClassLoader loader){
+        classLoader = loader;
+    }
+
+    public static ClassLoader getClassLoader(){
+        return classLoader;
     }
 }

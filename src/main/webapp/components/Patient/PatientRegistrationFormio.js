@@ -34,13 +34,6 @@ function PatientRegistrationFormio(props) {
 
     const registerPatient = (formData) => {
         const data = formData.data;
-        data['authHeader'] = null;
-        if(data.dateOfRegistration) {
-            data['dateRegistration'] = moment(data.dateOfRegistration).format("DD-MM-YYYY");
-        }
-        if(data.dateOfBirth) {
-            data['dob'] = moment(data.dateOfBirth).format("DD-MM-YYYY");
-        }
         const onSuccess = () => {
             toast.success("Patient saved successfully!");
             setTimeout(() => {

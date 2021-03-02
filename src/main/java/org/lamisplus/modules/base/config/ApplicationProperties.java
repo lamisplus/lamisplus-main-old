@@ -20,8 +20,7 @@ public class ApplicationProperties {
     private String dotPropertiesPath = String.format("%s/webapps/ROOT/WEB-INF/classes", tomcatBase);*/
 
 
-    @Value("${uploadFile.location}")
-    private String modulePath;
+    private String modulePath = System.getProperty("user.dir");
 
 
     private String dotPropertiesPath = modulePath;

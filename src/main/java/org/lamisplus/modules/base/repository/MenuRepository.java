@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,4 +16,5 @@ public interface MenuRepository extends JpaRepository<Menu, Long>, JpaSpecificat
     Optional<Menu> findByModuleIdAndArchived(Long moduleId, int archive);
     Optional<Menu> findByName(String name);
 
+    List<Menu> findAllByArchivedOrderByIdDesc(int archived);
 }

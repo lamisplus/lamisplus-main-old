@@ -10,6 +10,7 @@ import { Card, Alert, CardBody, Spinner } from 'reactstrap'
 import { formRendererService } from "_services/form-renderer";
 import _ from "lodash";
 import { url } from "api";
+import { authHeader } from '_helpers/auth-header';
 
 Moment.locale('en')
 momentLocalizer()
@@ -21,11 +22,12 @@ const FormRenderer = props => {
   const [showErrorMsg, setShowErrorMsg] = React.useState(false)
   const [showLoading, setShowLoading] = React.useState(false)
   const [showLoadingEncounter, setShowLoadingEncounter] = React.useState(false)
-  const [submission, setSubmission] = React.useState({...props.submission, ...{ data: { patient: props.patient, baseUrl: url }}})
+  const [submission, setSubmission] = React.useState(JSON.stringify(_.merge(props.submission, { data: { patient: props.patient,authHeader: authHeader(), baseUrl: url }})));
+
   const [showLoadingForm, setShowLoadingForm] = React.useState(true)
   const onDismiss = () => setShowErrorMsg(false)
   const options = {}
- 
+
   //extract the formData as an obj (if form data length is one) or an array
   const extractFormData = (formData) => {
     if(!formData){
@@ -45,7 +47,8 @@ const FormRenderer = props => {
   //fetch form by form code
   React.useEffect(() => {
     formRendererService
-      .fetchFormByFormCode(props.formCode).then((response) => {
+      .fetchFormByFormCode(props.formCode)
+        .then((response) => {
         setForm(response.data);
         setShowLoadingForm(false);
       }) .catch((error) => {
@@ -57,7 +60,17 @@ const FormRenderer = props => {
 
   //fetch encounter by encounter id
   React.useEffect(() => {
-    setShowLoadingEncounter(true);
+      setShowLoadingEncounter(true);
+      if(!props.encounterId){
+          // if encounterId does not exist then the form data object was passed as a submission, if not throw an error
+          if(!props.submission){
+              setErrorMsg("No encounter information passed");
+              setShowErrorMsg(true);
+          }
+          setShowLoadingEncounter(false);
+          return;
+      }
+
     formRendererService
       .fetchEncounterById(props.encounterId)
       .then((response) => {
@@ -67,7 +80,7 @@ const FormRenderer = props => {
           setErrorMsg("Could not load encounter information");
           setShowErrorMsg(true);
         }
-        setSubmission({ data: extractedData });
+        setSubmission(_.merge({ data: extractedData }, submission));
       })
       .catch((error) => {
         setErrorMsg("Could not load encounter information");
@@ -131,10 +144,9 @@ const FormRenderer = props => {
       <Alert color='danger' isOpen={showErrorMsg} toggle={onDismiss}>
             {errorMsg}
           </Alert>
-          
       <Form
           form={form.resourceObject}
-          submission={submission}
+          submission={JSON.parse(submission)}
           options={options}
           hideComponents={props.hideComponents}
           onSubmit={(submission) => {

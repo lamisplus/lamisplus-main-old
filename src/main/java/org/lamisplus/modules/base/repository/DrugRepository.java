@@ -10,5 +10,12 @@ import java.util.Optional;
 
 @Repository
 public interface DrugRepository extends JpaRepository<Drug, Long> {
-    Optional<Drug> findByBrandName(String brandName);
+
+    Optional<Drug> findByName(String name);
+
+    Optional<Drug> findByNameAndArchived(String name, int archived);
+
+    Optional<Drug> findByIdAndArchived(Long id, int archived);
+
+    List<Drug> findAllByArchived(int archived);
 }

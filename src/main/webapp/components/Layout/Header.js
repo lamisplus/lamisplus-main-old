@@ -85,14 +85,20 @@ function Header() {
   }
 
   async function fetchMe() {
-    axios
-        .get(`${baseUrl}account`)
-        .then((response) => {
-          setUser(response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    if( authentication.currentUserValue != null ) {
+      axios
+          .get(`${baseUrl}account`)
+          .then((response) => {
+            setUser(response.data);
+            console.log(response.data);
+            // set user permissions in local storage for easy retrieval, when user logs out it will be removed from the local storage
+            localStorage.setItem('currentUser_Permission', JSON.stringify(response.data.permissions));
+          })
+          .catch((error) => {
+            authentication.logout();
+            console.log(error);
+          });
+    }
   }
 
   async function switchFacility (facility) {

@@ -2,6 +2,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.util.MediaTypeUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -22,6 +23,7 @@ import java.nio.file.Paths;
 @RequestMapping("/api/logs")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class LoggingController {
     private final ServletContext servletContext;
     @Value("${logging.file.name}")

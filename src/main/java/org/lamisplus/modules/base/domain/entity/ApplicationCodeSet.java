@@ -19,7 +19,7 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode
 @Table(name = "application_codeset")
-public class ApplicationCodeset implements Serializable {
+public class ApplicationCodeSet extends Audit<String> {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,44 +38,11 @@ public class ApplicationCodeset implements Serializable {
     private String display;
 
     @Basic
-    @Column(name = "code")
+    @Column(name = "code", updatable = false)
     private String code;
-
-    @Basic
-    @Column(name = "date_created")
-    @JsonIgnore
-    @CreationTimestamp
-    private Timestamp dateCreated;
-
-    @Basic
-    @Column(name = "created_by")
-    @JsonIgnore
-    private String createdBy;
-
-    @Basic
-    @Column(name = "date_modified")
-    @UpdateTimestamp
-    @JsonIgnore
-    private Timestamp dateModified;
-
-    @Basic
-    @Column(name = "modified_by")
-    @JsonIgnore
-    private String modifiedBy;
 
     @Basic
     @Column(name = "archived")
     @JsonIgnore
     private Integer archived = 0;
-
-    /*@OneToMany(mappedBy = "visit_Type")
-    @ToString.Exclude
-    @JsonIgnore
-    private List<Visit> visitsByApplicationCodeset;*/
-
-    /*@ToString.Exclude
-    @JsonIgnore
-    @OneToMany(mappedBy = "applicationCodesetByApplicationCodesetId")
-    private List<ApplicationCodesetStandardCodeset> applicationCodesetStandardCodesetsById;*/
-
 }

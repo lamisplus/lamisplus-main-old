@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Entity
 @EqualsAndHashCode
 @Table(name = "radiology_test")
-public class RadiologyTest implements Serializable {
+public class RadiologyTest extends Audit<String> implements Serializable {
 
     @Id
     @Column(name = "id")

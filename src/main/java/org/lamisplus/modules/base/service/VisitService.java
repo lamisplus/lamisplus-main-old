@@ -6,7 +6,6 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.AppointmentDTO;
 import org.lamisplus.modules.base.domain.dto.VisitDTO;
-import org.lamisplus.modules.base.domain.entity.Appointment;
 import org.lamisplus.modules.base.domain.entity.Patient;
 import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.domain.entity.Visit;
@@ -75,7 +74,6 @@ public class VisitService {
 
         Visit visit = visitMapper.toVisit(visitDTO);
         visit.setUuid(UuidGenerator.getUuid());
-        visit.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         if(visitDTO.getAppointmentDTOList() != null && !visitDTO.getAppointmentDTOList().isEmpty()){
             appointmentRepository.saveAll(appointmentMapper.toAppointmentList(visitDTO.getAppointmentDTOList()));
         }
@@ -99,7 +97,6 @@ public class VisitService {
         Optional<Visit> visitOptional = this.visitRepository.findByIdAndArchived(id, UNARCHIVED);
         if (!visitOptional.isPresent()) throw new EntityNotFoundException(Visit.class, "Id", id + "");
         visit.setId(id);
-        visit.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return visitRepository.save(visit);
     }
 
@@ -107,7 +104,6 @@ public class VisitService {
         Optional<Visit> visitOptional = this.visitRepository.findByIdAndArchived(id, UNARCHIVED);
         if (!visitOptional.isPresent()) throw new EntityNotFoundException(Visit.class, "Id", id + "");
         visitOptional.get().setArchived(ARCHIVED);
-        visitOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return visitOptional.get().getArchived();
     }
 

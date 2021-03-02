@@ -10,8 +10,8 @@ import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
-
-
+import axios from "axios";
+import {url} from '../../api'
 import {createProgram, updateProgram } from 'actions/programManager';
 import { Spinner } from 'reactstrap';
 
@@ -29,12 +29,30 @@ const ModalSample = (props) => {
     const defaultValues = {name:"",moduleId:"" }
     const [formData, setFormData] = useState(defaultValues)
     const [errors, setErrors] = useState({});
+    const [pcrOptions, setOptionPcr] = useState([]);
     const classes = useStyles()
 
     useEffect(() => {
         //for application codeset edit, load form data
         setFormData(props.formData ? props.formData : defaultValues);
     }, [props.formData]);
+
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+                const response = await axios(
+                    url + "modules/1"
+                );
+                const body = response.data && response.data !==null ? response.data : {};
+                
+                setOptionPcr(
+                     body.map(({ name, id }) => ({ title: name, value: id }))
+                 );
+            } catch (error) {
+            }
+        }
+        getCharacters();
+    }, []);
 
     const handleInputChange = e => {
         setFormData ({ ...formData, [e.target.name]: e.target.value});
@@ -103,18 +121,24 @@ const ModalSample = (props) => {
                                         </FormGroup>
                                     </Col>
                                     <Col md={12}>
+                                       
                                         <FormGroup>
-                                            <Label>Module ID</Label>
-                                            <Input
-                                                type='text'
-                                                name='moduleId'
-                                                id='moduleId'
-                                                placeholder=' '
-                                                value={formData.moduleId}
-                                                onChange={handleInputChange}
-                                                required
-                                            />
-                                        </FormGroup>
+                                              <Label for="">Module ID</Label>
+                                                  <Input type="select" name="moduleId" id="moduleId" 
+                                                    vaule={formData.moduleId}
+                                                    onChange={handleInputChange}
+                                                    
+                                                  >
+                                                        <option> </option>
+                                                        {pcrOptions.map(({ title, value }) => (
+                                                            
+                                                            <option key={value} value={value}>
+                                                                {title}
+                                                            </option>
+                                                        ))}
+                                                  </Input>
+                                                     
+                                          </FormGroup>
                                     </Col>
                                 </Row>
                                 <MatButton

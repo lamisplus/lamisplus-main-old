@@ -15,6 +15,7 @@ export const GENERAL_SERVICE = '25216afc-d158-4696-ada6-00df609b9a4c'
 
 export const VITAL_SIGNS_FORM = 'bc5d44b8-8ed1-4de0-85de-c3c6f2c91cd0'
 export const DRUG_PRESCRIPTION_FORM = '4ab293ff-6837-41e8-aa85-14f25ce59ef0'
+export const REGIMEN_PRESCRIPTION_FORM = 'e5b39440-13fc-4f61-82e9-c7bd74b44729'
 export const LAB_TEST_ORDER_FORM = '87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e'
 export const LAB_SAMPLE_ORDER_FORM = '7f60f2b1-4d33-4f2c-b8d5-4b7e60b592c8'
 export const CHECK_IN_FORM = '7f38c3e4-f765-4a9f-9a12-cbc1d26d9864'
@@ -32,7 +33,8 @@ export const LAB_SAMPLE_VERIFICATION_CODE_FORM = '8e3f8867-d5fc-4ddf-9972-004abe
 export const LAB_SAMPLE_TRANSFER_CODE_FORM = 'cca9fb2e-9f1e-4836-b982-705378b7b55e'
 export const LAB_SAMPLE_RESULT_CODE_FORM = '4fcabd08-5f7a-43fc-b246-da15e9a05f43'
 export const LAB_SAMPLE_DISPATCHED_CODE_FORM = '58220e59-e468-4a4b-91f1-53341068f0a1'
-
+export const PHARMARCY_DRUG_DISPENSE = '01a75846-83ed-4caa-9c78-136697742b72'
+export const PHARMARCY_DRUG_DISPENSE_REGIMEN = 'c9b1b50f-6544-42b6-a868-91a5bf320671'
 /**
  * @CODES
  * ==============================================

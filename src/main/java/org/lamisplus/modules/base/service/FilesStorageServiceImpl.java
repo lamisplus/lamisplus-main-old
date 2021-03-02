@@ -10,11 +10,9 @@ import java.util.stream.Stream;
 
 import lombok.RequiredArgsConstructor;
 import org.lamisplus.modules.base.util.upload.FilesStorageService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,8 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class FilesStorageServiceImpl implements FilesStorageService {
 
-    @Value("${uploadFile.location}")
-    private String path;
+    private String path = System.getProperty("user.dir");
 
     private Path root;
 

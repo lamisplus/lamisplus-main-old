@@ -1,84 +1,212 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
-import { Icon,  Statistic } from 'semantic-ui-react'
 import {
     Card,
-    CardBody, CardDeck, CardHeader
+    CardBody, CardDeck,  CardGroup,
 } from 'reactstrap';
-import {Bar, Pie} from "react-chartjs-2";
-import { getColor } from 'utils/colors';
-import { randomNum } from 'utils/demos';
-//TODO: Add patient appointment widget to dashboard
+import { IconWidget } from 'components/Widget';
+
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import { url } from "../../api";
+import axios from 'axios';
+import {basicColumn} from './AdminDashboardVisualisation/FacilitySync';
+import {Sms} from './AdminDashboardVisualisation/NumOfSms';
+import {
+    MdPersonPin,
+    MdPeople,
+    MdShowChart,
+    MdDelete
+  } from 'react-icons/md';
+
+
+
 function AdminDashboard(props) {
 
-    const genPieData = () => {
-        return {
-            datasets: [
-                {
-                    data: [randomNum(), randomNum(), randomNum(), randomNum(), randomNum()],
-                    backgroundColor: [
-                        getColor('primary'),
-                        getColor('secondary'),
-                        getColor('success'),
-                        getColor('info'),
-                        getColor('danger'),
-                    ],
-                    label: 'Test Order',
-                },
-            ],
-            labels: ['Chemistry', 'Haematology', 'Microbiology', 'Virology', 'Biochemistry'],
-        };
-    };
-    const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
 
-    const genLineData = (moreData = {}, moreData2 = {}) => {
-        return {
-            labels: MONTHS,
-            datasets: [
-                {
-                    label: 'Test Order',
-                    backgroundColor: getColor('primary'),
-                    borderColor: getColor('primary'),
-                    borderWidth: 1,
-                    data: [
-                        randomNum(),
-                        randomNum(),
-                        randomNum(),
-                        randomNum(),
-                        randomNum(),
-                        randomNum(),
-                        randomNum(),
-                    ],
-                    ...moreData,
-                },
-                {
-                    label: 'Test Result',
-                    backgroundColor: getColor('secondary'),
-                    borderColor: getColor('secondary'),
-                    borderWidth: 1,
-                    data: [
-                        randomNum(),
-                        randomNum(),
-                        randomNum(),
-                        randomNum(),
-                        randomNum(),
-                        randomNum(),
-                        randomNum(),
-                    ],
-                    ...moreData2,
-                },
-            ],
-        };
-    };
+
+
+    const [testOrderGroupData, settestOrderGroupData] = useState({})
+    const [testOrdersStackChart, settestOrdersStackChart] = useState({})
+    const [limsBarChart, setlimsBarChart] = useState({})
+    // APi request for Pie chart
+        useEffect(() => {
+            async function getCharacters() {
+                try {
+                    const response = await axios.get( url+ 'laboratory-dashboard/pie');
+                    const body = response.data && response.data!==null ? response.data : {}; 
+                    settestOrderGroupData(body)
+                        
+                } catch (error) {}
+            }
+            getCharacters();
+        }, []);  
+    // API request for stack bar chart    
+        useEffect(() => {
+            async function getCharacters() {
+                try {
+                    const response = await axios.get( url+ 'laboratory-dashboard/column/testOrders');
+                    const body = response.data && response.data!==null ? response.data : {}; 
+                    settestOrdersStackChart(body)
+                        
+                } catch (error) {}
+            }
+            getCharacters();
+        }, []); 
+    // API request for LIMS BAR CHART   
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+                const response = await axios.get( url+ 'laboratory-dashboard/column/lims');
+                const body = response.data && response.data!==null ? response.data : {}; 
+                setlimsBarChart(body)
+                    
+            } catch (error) {}
+        }
+        getCharacters();
+    }, []); 
+
+// Test Group Pie Chart 
+
+const testGroup = {
+
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: testOrderGroupData.type
+    },
+    title: {
+        text: 'LABORATORY TEST GROUP ANALYSIS FOR THE PAST 6'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: false
+            },
+            showInLegend: true
+        }
+    },
+    series: [{
+        name: 'Test Group',
+        colorByPoint: true,
+        data: testOrderGroupData.data
+    }]
+   
+  }
+
+
+  const testOrders =  {
+
+    chart: {
+        type: testOrdersStackChart.type
+    },
+  
+    title: {
+        text: testOrdersStackChart.subTitle
+    },
+  
+    xAxis: testOrdersStackChart.xAxis,
+  
+    yAxis: {
+        allowDecimals: false,
+        min: 0,
+        title: {
+            text: testOrdersStackChart.text
+        }
+    },
+  
+    tooltip: {
+        formatter: function () {
+            return '<b>' + this.x + '</b><br/>' +
+                this.series.name + ': ' + this.y + '<br/>' +
+                'Total: ' + this.point.stackTotal;
+        }
+    },
+  
+    plotOptions: {
+        column: {
+            stacking: 'normal'
+        }
+    },
+  
+    series: testOrdersStackChart.series
+  
+  };
+
+  const sync = {
+    chart: {
+        type: limsBarChart.type
+    },
+    title: {
+        text: limsBarChart.text
+    },
+    xAxis: limsBarChart.xAxis,
+    labels: {
+        items: [{
+            html: '',
+            style: {
+                left: '50px',
+                top: '18px',
+                color: ( // theme
+                    Highcharts.defaultOptions.title.style &&
+                    Highcharts.defaultOptions.title.style.color
+                ) || 'black'
+            }
+        }]
+    },
+    series: limsBarChart.series
+}
 
     return (
         <React.Fragment>
+
+<CardGroup style={{ marginBottom: '1rem' }}>
+          <IconWidget
+            bgColor="white"
+            inverse={false}
+            icon={MdDelete}
+            title="50"
+            subtitle="ACHIEVED RECORDS"
+          />
+          <IconWidget
+            bgColor="success"
+            inverse={false}
+            icon={MdPersonPin}
+            title="10"
+            subtitle="Active Users"
+          />
+          <IconWidget
+            bgColor="white"
+            inverse={false}
+            icon={MdPeople}
+            title="20"
+            subtitle="Login Users"
+          />
+          <IconWidget
+            bgColor="primary"
+            inverse={false}
+            icon={MdShowChart}
+            title="20"
+            subtitle="Facilities"
+          />
+        </CardGroup>
             <Card>
                 <CardBody>
-            <Statistic.Group widths='four'  size='mini'>
+            {/* <Statistic.Group widths='four'  size='mini'>
                 <Statistic>
                     <Statistic.Value> <Icon name='trash alternate outline' />22</Statistic.Value>
-                    <Statistic.Label>Archived Records</Statistic.Label>
+                    <Statistic.Label>Achieved Records</Statistic.Label>
                 </Statistic>
 
                 <Statistic>
@@ -86,37 +214,45 @@ function AdminDashboard(props) {
                         <Icon name='user outline' />
                         144
                     </Statistic.Value>
-                    <Statistic.Label>Users</Statistic.Label>
+                    <Statistic.Label>Active Users</Statistic.Label>
                 </Statistic>
 
                 <Statistic>
                     <Statistic.Value>
                         <Icon name='wpforms' />5
                     </Statistic.Value>
-                    <Statistic.Label>Forms</Statistic.Label>
+                    <Statistic.Label>Login Users</Statistic.Label>
                 </Statistic>
 
                 <Statistic>
                     <Statistic.Value >
                         <Icon name='chart bar' />  42
                     </Statistic.Value>
-                    <Statistic.Label>Reports</Statistic.Label>
+                    <Statistic.Label>Facilities</Statistic.Label>
                 </Statistic>
-            </Statistic.Group>
+            </Statistic.Group> */}
                 </CardBody>
             </Card>
             <br></br>
             <CardDeck>
                 <Card >
-                    <CardHeader> Sync Summary</CardHeader>
+                  
                     <CardBody>
-                        <Pie data={genPieData()} />
+                        <div>
+                           
+                            <HighchartsReact options={basicColumn} />
+                        </div> 
                     </CardBody>
                 </Card>
                 <Card >
-                    <CardHeader> User Summary</CardHeader>
+                  
                     <CardBody>
-                        <Bar data={genLineData()} />
+                    <div>
+                        <HighchartsReact
+                       
+                        options={Sms}
+                        />
+                    </div>
                     </CardBody>
                 </Card>
             </CardDeck>

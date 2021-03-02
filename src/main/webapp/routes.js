@@ -19,6 +19,9 @@ const PateintRegistationPage = React.lazy(() =>
 const PatientRegistrationFormio = React.lazy(() =>
     import("components/Patient/PatientRegistrationFormio")
 );
+const EditPatientFormio = React.lazy(() =>
+    import("components/Patient/EditPatientFormio")
+);
 const PateintUpdate= React.lazy(() => import("components/Patient/EditPatient"));
 
 /* Laboratory page loading */
@@ -66,13 +69,12 @@ const PharmacyDashboard = React.lazy(() => import("./components/Pharmacy/Pharmac
 
 // const CheckInPatientPage = React.lazy(() => import("components/CheckIn/CheckedInPatientPage"));
 // const ViewVitalsPage = React.lazy(() => import("components/Vitals/ViewVitalsPage"));
-//
-// =======
+
 // const CheckInModal = React.lazy(() => import('components/CheckIn/CheckInModal'));
 
 const EnrolledPatientsDashboard = React.lazy(() => import("components/PatientProfile/HomePage"));
 /* Data Visualisation */
-const TestPageForVisualisation = React.lazy(() => import("pages/TestPageForVisualisation"));
+const TestPageForVisualisation = React.lazy(() => import("pages/TestPage"));
 
 /* Sample table i design */
 const TestPage = React.lazy(() => import("pages/TestPage"));
@@ -123,9 +125,26 @@ class Routes extends Component {
               {/* The new routes are here  */}
               <PrivateRoute exact path="/" component={DashboardPage} />
               <PrivateRoute exact path="/dashboard" component={DashboardPage} />
-              <PrivateRoute exact path="/patient-registration" component={PateintRegistationPage}/>
-              <PrivateRoute exact path="/patient-registration-formio" component={PatientRegistrationFormio} roles={["patient_write", "patient_delete"]}/>
-              <PrivateRoute exact path="/patient-update" component={PateintUpdate}/>
+              <PrivateRoute
+                exact
+                path="/patient-registration"
+                component={PateintRegistationPage}
+
+              />
+                <PrivateRoute
+                    exact
+                    path="/patient-registration-formio"
+                    component={PatientRegistrationFormio}
+                    roles={["patient_write", "patient_delete"]}
+                />
+              <PrivateRoute
+                exact
+                path="/patient-update"
+                component={PateintUpdate}/>
+                <PrivateRoute
+                    exact
+                    path="/patient-update-formio"
+                    component={EditPatientFormio}/>
 
               {/* Laboratory Links */}
              <PrivateRoute exact path="/collect-result" component={LaboratorySampleResultPage} />
@@ -151,19 +170,18 @@ class Routes extends Component {
               <PrivateRoute exact path="/database-sync" component={DataBaseSync} />
               {/* OrganizationUnit */}
               <PrivateRoute exact path="/admin-organization-unit" component={OrganizationUnit} />
-              <PrivateRoute exact path="/admin/parent-organization-unit" component={ParentOrganizationUnit} />
-              <PrivateRoute exact path="/admin/parent-organization-unit-level" component={ParentOrganizationUnitLevel} />
+              <PrivateRoute exact path="/admin-parent-organization-unit" component={ParentOrganizationUnit} />
+              <PrivateRoute exact path="/admin-parent-organization-unit-level" component={ParentOrganizationUnitLevel} />
              
               {/* Pharmacy Links */}
               <PrivateRoute exact path="/pharmacy" component={PharmacyDashboard} />
               
               <PrivateRoute exact path="/prescriptions" component={Prescription}/>
               <PrivateRoute exact path="/appointment" component={AppointmentPage} />
-{/*// <<<<<<< HEAD*/}
-{/*//               <PrivateRoute exact path="/checkedin-patients" component={CheckInPatientPage}/>*/}
-{/*//*/}
-{/*//               <PrivateRoute exact path="/view-vitals" component={ViewVitalsPage} />*/}
-{/*// =======*/}
+
+              {/*<PrivateRoute exact path="/checkedin-patients" component={CheckInPatientPage}/>*/}
+
+
               <PrivateRoute exact path="/case-managers" component={CaseManagerPage} />
               <PrivateRoute exact path="/case-manager" component={CaseManagerPatientsPage} />
               <PrivateRoute exact path="/patients-managed-case" component={CaseManagerPatientsList} /> 
@@ -173,12 +191,15 @@ class Routes extends Component {
 
 
               {/* The rout to Hiv Module */}
-              <PrivateRoute exact path="/patient-dashboard" component={EnrolledPatientsDashboard}/>
-{/*// <<<<<<< HEAD*/}
-{/*//                 component={EnrolledPatientsDashboard}/>*/}
-{/*//               <PrivateRoute exact path="/form-dashboard" component={formDashboard} />*/}
-{/*// =======*/}
+              <PrivateRoute
+                exact
+                path="/patient-dashboard"
 
+                component={EnrolledPatientsDashboard}/>
+              {/*<PrivateRoute exact path="/form-dashboard" component={formDashboard} />*/}
+
+              {/*  component={EnrolledPatientsDashboard}*/}
+              {/*/>*/}
 
               <PrivateRoute exact path="/form-builder" component={FormBuilder} />
               <PrivateRoute exact path="/select" component={ReactSelect} />
@@ -187,7 +208,7 @@ class Routes extends Component {
                 <PrivateRoute exact path="/react-pivot" component={ReactPivot} />
                 <PrivateRoute exact path="/form-home" component={FormPage} />
                 <PrivateRoute exact path="/new-program" component={NewProgramManager} />
-                <PrivateRoute exact path="/admin/program-manager-home" component={ProgramManagerSeacrch}/>
+                <PrivateRoute exact path="/admin-program-manager-home" component={ProgramManagerSeacrch}/>
 
                 {/* The rout to that DataTabel */}
               <PrivateRoute exact path="/test-page" component={TestPage} />

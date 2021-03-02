@@ -6,6 +6,8 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.lamisplus.modules.base.util.converter.LocalDateConverter;
 import org.lamisplus.modules.base.util.converter.LocalTimeAttributeConverter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -55,7 +57,7 @@ public class Encounter implements Serializable  {
     private LocalTime timeCreated;
 
     @Basic
-    @Column(name = "uuid")
+    @Column(name = "uuid", updatable = false)
     @JsonIgnore
     private String uuid;
 
@@ -64,6 +66,7 @@ public class Encounter implements Serializable  {
     @JsonIgnore
     private Timestamp dateCreated;*/
 
+    @CreatedBy
     @Basic
     @Column(name = "created_by")
     @JsonIgnore
@@ -79,6 +82,7 @@ public class Encounter implements Serializable  {
     @UpdateTimestamp
     private Timestamp dateModified;
 
+    @LastModifiedBy
     @Basic
     @Column(name = "modified_by")
     @JsonIgnore

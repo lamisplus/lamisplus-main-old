@@ -1,5 +1,6 @@
 package org.lamisplus.modules.base.controller;
 
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.controller.vm.ManagedUserVM;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.domain.entity.User;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@Audit
 public class AccountController {
     private static class AccountResourceException extends RuntimeException {
         private AccountResourceException(String message) {
@@ -46,22 +48,19 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    @PreAuthorize("hasAuthority('user_write')")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
         //Check Password Length
-        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
+        userService.registerUser(managedUserVM, managedUserVM.getPassword());
     }
 
 
 
 
     @GetMapping("/users")
-    @PreAuthorize("hasAuthority('user_read')")
     public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {
         final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
-
 }
