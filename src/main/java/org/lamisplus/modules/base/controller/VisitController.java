@@ -5,12 +5,8 @@ import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.VisitDTO;
 import org.lamisplus.modules.base.domain.entity.Visit;
 import org.lamisplus.modules.base.service.VisitService;
-import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController

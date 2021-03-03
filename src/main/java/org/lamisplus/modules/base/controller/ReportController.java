@@ -1,4 +1,5 @@
 package org.lamisplus.modules.base.controller;
+
 import lombok.RequiredArgsConstructor;
 import org.lamisplus.modules.base.service.report.birt.OutputType;
 import org.lamisplus.modules.base.service.report.birt.BirtReportService;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController

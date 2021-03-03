@@ -45,7 +45,7 @@ public class Appointment extends Audit<String>{
     @Basic
     @Column(name = "archived")
     private Integer archived = 0;
-    
+
     @ManyToOne
     @JoinColumn(name = "patient_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore

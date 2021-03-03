@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.audit4j.core.annotation.Audit;
 import org.audit4j.core.annotation.IgnoreAudit;
-import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.dto.ModuleDTO;
 import org.lamisplus.modules.base.domain.entity.Module;
 import org.lamisplus.modules.base.service.ModuleService;
@@ -15,8 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 @Slf4j
