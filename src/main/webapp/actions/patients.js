@@ -196,12 +196,12 @@ export const fetchPatientLatestVitalSigns = (id, onSuccess, onError) => dispatch
       if(onSuccess){
         onSuccess();
       }
-      if(response.data.length > 0){
+
       dispatch({
         type: ACTION_TYPES.PATIENT_LATEST_VITAL_SIGNS,
-        payload: response.data[0]
+        payload: response.data.length > 0 ? response.data[0] : {}
       })
-    }
+
     })
     .catch(error => {
       dispatch({
