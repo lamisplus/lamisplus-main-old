@@ -3,19 +3,11 @@ package org.lamisplus.modules.base.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.audit4j.core.annotation.Audit;
-import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.dto.StandardCodesetSourceDTO;
-import org.lamisplus.modules.base.domain.entity.LabTest;
-import org.lamisplus.modules.base.domain.entity.LabTestGroup;
 import org.lamisplus.modules.base.domain.entity.StandardCodesetSource;
-import org.lamisplus.modules.base.service.LabTestGroupService;
 import org.lamisplus.modules.base.service.StandardCodesetSourceService;
-import org.lamisplus.modules.base.util.GenericSpecification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController

@@ -28,7 +28,6 @@ public class AppointmentService {
     private final AppointmentMapper appointmentMapper;
     private static final int ARCHIVED = 1;
     private static final int UN_ARCHIVED = 0;
-    private final GenericSpecification<Appointment> genericSpecification;
     private final UserService userService;
 
     public List<AppointmentDTO> getAllAppointment() {
@@ -49,6 +48,7 @@ public class AppointmentService {
 
     public Appointment save(AppointmentDTO appointmentDTO) {
         final Appointment appointment = appointmentMapper.toAppointment(appointmentDTO);
+        appointment.setOrganisationUnitId(userService.getUserWithRoles().get().getCurrentOrganisationUnitId());
         appointment.setArchived(UN_ARCHIVED);
         return appointmentRepository.save(appointment);
     }

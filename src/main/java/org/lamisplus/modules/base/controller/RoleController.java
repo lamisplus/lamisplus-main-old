@@ -1,23 +1,16 @@
 package org.lamisplus.modules.base.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.RoleDTO;
-import org.lamisplus.modules.base.domain.entity.Permission;
 import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.repository.RoleRepository;
 import org.lamisplus.modules.base.service.RoleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("api/roles")

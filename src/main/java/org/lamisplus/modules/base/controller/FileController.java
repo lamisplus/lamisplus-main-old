@@ -1,18 +1,14 @@
 package org.lamisplus.modules.base.controller;
 
-import java.io.File;
-import java.nio.file.Paths;
+
 import java.util.List;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.FileInfo;
 import org.lamisplus.modules.base.service.FilesStorageServiceImpl;
-import org.lamisplus.modules.base.util.FileStorage;
 import org.lamisplus.modules.base.util.upload.FilesStorageService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

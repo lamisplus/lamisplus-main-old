@@ -3,16 +3,11 @@ package org.lamisplus.modules.base.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.audit4j.core.annotation.Audit;
-import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.domain.entity.LabTest;
 import org.lamisplus.modules.base.domain.entity.LabTestGroup;
 import org.lamisplus.modules.base.service.LabTestGroupService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
