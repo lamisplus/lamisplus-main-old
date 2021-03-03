@@ -34,6 +34,7 @@ const UpdateReports = props => {
     const [formCode, setformCode] = React.useState();
     const [displayType, setDisplayType] = React.useState("")
 
+
     const row = props.location.row;
 
     useEffect (() => {
@@ -48,7 +49,7 @@ const UpdateReports = props => {
     useEffect(() => {
         async function getCharacters() {
             try {
-                const response = await axios.get(url +'jasper-reports');
+                const response = await axios.get(url +'reports');
                 const body =  response.data;
                 settemplate(body.map(({ display, id }) => ({ label: display, value: id })));
             } catch (error) {}
@@ -59,7 +60,7 @@ const UpdateReports = props => {
     useEffect(() => {
         async function getCharacters() {
             try {
-                const response = await axios.get(url +'jasper-reports');
+                const response = await axios.get(url +'reports');
                 const body =  response.data;
                 setdescription(body.map(({ display, id }) => ({ label: display, value: id })));
             } catch (error) {}
@@ -70,7 +71,7 @@ const UpdateReports = props => {
     useEffect(() => {
         async function getCharacters() {
             try {
-                const response = await axios.get(url +'jasper-reports');
+                const response = await axios.get(url +'reports');
                 const body =  response.data;
                 setname(body.map(({ display, id }) => ({ label: display, value: id })));
             } catch (error) {}
@@ -81,7 +82,7 @@ const UpdateReports = props => {
     useEffect(() => {
         async function getCharacters() {
             try {
-                const response = await axios.get(url +'jasper-reports');
+                const response = await axios.get(url +'reports');
                 const body =  response.data;
                 setprogramCode(body.map(({ display, id }) => ({ label: display, value: id })));
             } catch (error) {}
@@ -92,7 +93,7 @@ const UpdateReports = props => {
     useEffect(() => {
         async function getCharacters() {
             try {
-                const response = await axios.get(url +'jasper-reports');
+                const response = await axios.get(url +'reports');
                 const body =  response.data;
                 setDisplayType(body.map(({ display, id }) => ({ label: display, value: id })));
             } catch (error) {}
@@ -103,7 +104,7 @@ const UpdateReports = props => {
     useEffect(() => {
         async function getCharacters() {
             try {
-                const response = await axios.get(url +'jasper-reports');
+                const response = await axios.get(url +'reports');
                 const body =  response.data;
                 setdataSource(body.map(({ display, id }) => ({ label: display, value: id })));
             } catch (error) {}
@@ -148,11 +149,11 @@ const UpdateReports = props => {
                                 <Col md={4}> <FormGroup>
                                     <Label class="sr-only">Report Name</Label>
                                     <Input type="text" class="form-control"
-                                           id="name"
-                                           name="name"
-                                           value={name}
-                                           onChange={e => setname(e.target.value)}/>
-                                </FormGroup> </Col>
+                                        type="text"
+                                        name="name"
+                                        id="name"
+                                        value={name}/>
+                                            </FormGroup> </Col>
 
                                 <Col md={4}> <FormGroup>
                                     <Label class="sr-only">Description</Label>
@@ -200,7 +201,7 @@ const UpdateReports = props => {
                     <CardContent>
                         <h4>Build Query Parameter Form</h4>
                         { form2 ?
-                            <FormBuilder form={row.parameterResourceObject} {...props} onChange={(schema) => {
+                            <FormBuilder form={row.resourceObject} {...props} onChange={(schema) => {
                                 setRes(JSON.stringify(schema));
                             }} />
                             : ""

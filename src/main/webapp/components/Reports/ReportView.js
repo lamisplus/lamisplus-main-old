@@ -4,6 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import {fetchService} from '../../actions/formBuilder'
 import {fetchAll, generateReport} from '../../actions/report';
+import { url } from "api";
+import { authHeader } from '_helpers/auth-header';
+
+
 import _ from 'lodash';
 import {
     Card,
@@ -23,6 +27,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const GenerateReport = props => {
+    const [submission, setSubmission] = React.useState({ data: { authHeader: authHeader(), baseUrl: url }});
     const datanew = {
         reportId: "",
         parameters: "",
@@ -83,6 +88,7 @@ const GenerateReport = props => {
                     <CardBody>
                     { form2 ?
                         <Form form={row.resourceObject}
+                              submission={submission}
                               options={options}
                               {...props} onSubmit={(submission) => {
                             return submitForm(submission);
