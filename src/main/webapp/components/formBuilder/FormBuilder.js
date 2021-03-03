@@ -28,10 +28,9 @@ import "react-widgets/dist/css/react-widgets.css";
 import { Alert } from '@material-ui/lab';
 
 const Create = props => {
-
     const [res, setRes] = React.useState("");
     const [formData, setFormData] = React.useState({
-        resourceObject: "",
+        resourceObject: null,
         programCode: "",
         display: ""});
     const textAreaRef = useRef(null);
@@ -143,7 +142,7 @@ const Create = props => {
                     <Alert onClose={toggleShowFileImport} icon={false} className={"mb-3"}>
                         <h4>Import Form from a <b>(.json)</b> file</h4>
                     <input type="file" id="file" className="input-file mb-4" accept='.json'
-                                              onChange={e => handleFileChosen(e.target.files[0])}/>
+                           onChange={e => handleFileChosen(e.target.files[0])}/>
 
                     </Alert>
                     </>
@@ -153,7 +152,7 @@ const Create = props => {
                         <Row>
                             <Col md={4}> <FormGroup>
                                 <Label class="sr-only">Display Type</Label>
-                                <Input type="select"  id="displayType" value={formData.displayType} onChange={e => setFormData({...formData, displayType:e.target.value})}>
+                                <Input type="select"  id="display" value={formData.display} onChange={e => setFormData({...formData, display:e.target.value})}>
                                     <option value="form">Form</option>
                                     <option value="wizard">Wizard</option></Input>
                             </FormGroup></Col>

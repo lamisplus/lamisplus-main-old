@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import MaterialTable from "material-table";
 import { connect } from "react-redux";
-import {fetchAll, Delete as Del,} from '../../actions/report';
+import {fetchAll, Delete ,} from '../../actions/report';
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import "react-widgets/dist/css/react-widgets.css";
@@ -44,7 +44,7 @@ function ReportSearch(props) {
             }
         }
         if (window.confirm(`Are you sure you want to archive ${row.name} form ?`))
-            props.deleteForm(row.id, onSuccess, onError);
+            props.Delete(row.id, onSuccess, onError);
     }
 
     React.useEffect(() => {
@@ -75,7 +75,7 @@ function ReportSearch(props) {
                         programName: row.programName,
                         name: row.name,
                         description: row.description,
-                        parameterResourceObject: row.parameterResourceObject,
+                        resourceObject: row.resourceObject,
                         actions:
                             <div>
                                 <Menu>
@@ -83,15 +83,15 @@ function ReportSearch(props) {
                                         Actions <span aria-hidden>▾</span>
                                     </MenuButton>
                                     <MenuList style={{ color:"#000 !important"}} >
-                                        {/*<MenuItem style={{ color:"#000 !important"}}>*/}
-                                        {/*    <Link*/}
-                                        {/*        to={{*/}
-                                        {/*            pathname: "/template-update",*/}
-                                        {/*            row: row*/}
-                                        {/*        }}>*/}
-                                        {/*        <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Report</span>*/}
-                                        {/*    </Link>*/}
-                                        {/*</MenuItem>*/}
+                                        <MenuItem style={{ color:"#000 !important"}}>
+                                            <Link
+                                                to={{
+                                                    pathname: "/template-update",
+                                                    row: row
+                                                }}>
+                                                <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Report</span>
+                                            </Link>
+                                        </MenuItem>
                                         <MenuItem style={{ color:"#000 !important"}}>
                                             <Link
                                                 onClick={() => onDelete(row)}>
@@ -142,7 +142,7 @@ const mapStateToProps =  (state = { reportList:[], form:{}}) => {
 
 const mapActionToProps = {
     fetchAll: fetchAll,
-    deleteForm: Del
+    Delete: Delete
 };
 
 export default connect(mapStateToProps, mapActionToProps)(ReportSearch);
