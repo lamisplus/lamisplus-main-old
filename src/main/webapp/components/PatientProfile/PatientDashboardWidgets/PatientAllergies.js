@@ -43,7 +43,7 @@ chip: {
   const [loading, setLoading] = React.useState(false);
 
     React.useEffect(() => {
-      if(!props.patientAllergies || props.patientAllergies.length === 0){
+     // if(!props.patientAllergies || props.patientAllergies.length === 0){
         setLoading(true);
         const onSuccess = () => {
             setLoading(false);
@@ -52,8 +52,8 @@ chip: {
             setLoading(false);
           };
         props.fetchPatientAllergies(props.patientId, onSuccess, onError);
-      }
-    }, [])
+      //}
+    }, [props.patientId])
 
   const onSuccess = () => {
     toast.success('Form saved successfully!', { appearance: 'success' })

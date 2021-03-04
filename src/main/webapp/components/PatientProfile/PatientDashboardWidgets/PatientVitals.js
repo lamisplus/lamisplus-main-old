@@ -16,10 +16,11 @@ import {
   import { Label } from 'semantic-ui-react';
 import { authentication } from '../../../_services/authentication';
 
+
  function PatientVitals(props) {
     const [data, setData] = useState({pulse:'', height: '', systolic: '', diastolic: '', body_weight: ''});
     const [showModal, setShowModal] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [bmiStatus, setBMIStatus] = useState();
     const [bmi, setBMI] = useState();
     const toggle = () => {
@@ -48,18 +49,19 @@ import { authentication } from '../../../_services/authentication';
 
    useEffect(() => {    
     props.fetchPatientVitalSigns(props.patientId, ()=>{setLoading(false)}, ()=>{setLoading(false)})  
-    }, [props.patient]); 
+    }, [props.patientId]);
 
     useEffect(() => {
-        setData({});
+        setData(props.vitalSigns);
         setBMI()
         setBMIStatus()
+
       if(props.vitalSigns){
          setData(props.vitalSigns)
          calculateBMI() 
       } 
       
-    }, [props.vitalSigns])
+    }, [props.vitalSigns, props.patientId])
   return (
     
             <Card  >
@@ -69,7 +71,7 @@ import { authentication } from '../../../_services/authentication';
                                  onClick={toggle}><i className="fa fa-plus"></i> Add Vital Signs</button></CardHeader>
                         
                     <CardBody>
-                    {_.isEmpty(data) && 
+                    {_.isEmpty(data) &&
                              <Label>
                              No Vital Signs
                            </Label>

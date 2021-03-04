@@ -21,6 +21,8 @@ import { fetchApplicationCodeSet } from "actions/applicationCodeset";
 import {Modal, ModalBody, ModalHeader } from 'reactstrap';
 import AddVitalsPage from 'components/Vitals/AddVitalsPage';
 import { authentication } from '../../_services/authentication';
+import axios from "axios";
+import {url as baseUrl} from "../../api";
 
 
 Moment.locale("en");
@@ -42,7 +44,23 @@ function PatientDashboardSubMenu(props) {
   const toggleVitalSign = () => {
     return setShowVitalSignsModal(!showVitalSignsModal)
   }
-  //TODO: Add appointments to patient submenu
+  const saveAppointment = (submission) => {
+
+    const data = {
+      patientId: props.patient.patientId,
+      detail: submission.data
+    }
+    axios
+        .post(`${baseUrl}appointments`, data)
+        .then(response => {
+          onSuccess();
+        })
+        .catch(error => {
+              onError();
+            }
+
+        );
+  }
   const formInfo = [
     {
       code: CODES.ADMIT_PATIENT_FORM,
@@ -70,6 +88,10 @@ function PatientDashboardSubMenu(props) {
       code: CODES.APPOINTMENT_FORM,
       programCode: CODES.GENERAL_SERVICE,
       formName: "New Appointment",
+      onSubmit: saveAppointment,
+      options:{
+        modalSize: "modal-lg"
+      },
     },
   ];
   // const checkInPatient = () => {
@@ -168,232 +190,232 @@ function PatientDashboardSubMenu(props) {
   const id = open ? "simple-popover" : undefined;
 
   return (
-    <React.Fragment>
-      <Menu size="mini" color={"silver"} inverted>
-        {false && props.mainMenuTabIndex === 0 ?
-        <Dropdown simple className='link item' options={props.dashboardOptions}  value={props.currentDashboard} onChange={props.changeDashboard}/>
-            :""}
+      <React.Fragment>
+        <Menu size="mini" color={"silver"} inverted>
+          {false && props.mainMenuTabIndex === 0 ?
+              <Dropdown simple className='link item' options={props.dashboardOptions}  value={props.currentDashboard} onChange={props.changeDashboard}/>
+              :""}
 
-        <Menu.Item name="Alerts" active={false}>
-          Alerts &nbsp;
-          <Badge color="dark">0</Badge>
-        </Menu.Item>
-        <Menu.Item name="Relationships">
-          <div aria-describedby={id} onClick={handleClick}>
-            Relationships &nbsp;
-            <Badge color="dark">
-              {props.patient.personRelativeDTOs
-                ? props.patient.personRelativeDTOs.length
-                : 0}
-            </Badge>
-          </div>
-          <Popover
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handleClose}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "center",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "center",
-            }}
-          >
-            <List>
-              {props.patient.personRelativeDTOs &&
-              props.patient.personRelativeDTOs.length > 0 ? (
-                props.patient.personRelativeDTOs.map((relative, index) => (
-                  <RelativeList
-                    key={index}
-                    index={index}
-                    relative={relative}
-                    relationshipTypeName={getRelationshipName(
-                      relative.relationshipTypeId
-                    )}
-                  />
-                ))
-              ) : (
-                <Typography className={classes.navItemText}>
-                  No Relationship{" "}
-                </Typography>
-              )}
-            </List>
-          </Popover>
-        </Menu.Item>
+          <Menu.Item name="Alerts" active={false}>
+            Alerts &nbsp;
+            <Badge color="dark">0</Badge>
+          </Menu.Item>
+          <Menu.Item name="Relationships">
+            <div aria-describedby={id} onClick={handleClick}>
+              Relationships &nbsp;
+              <Badge color="dark">
+                {props.patient.personRelativeDTOs
+                    ? props.patient.personRelativeDTOs.length
+                    : 0}
+              </Badge>
+            </div>
+            <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+            >
+              <List>
+                {props.patient.personRelativeDTOs &&
+                props.patient.personRelativeDTOs.length > 0 ? (
+                    props.patient.personRelativeDTOs.map((relative, index) => (
+                        <RelativeList
+                            key={index}
+                            index={index}
+                            relative={relative}
+                            relationshipTypeName={getRelationshipName(
+                                relative.relationshipTypeId
+                            )}
+                        />
+                    ))
+                ) : (
+                    <Typography className={classes.navItemText}>
+                      No Relationship{" "}
+                    </Typography>
+                )}
+              </List>
+            </Popover>
+          </Menu.Item>
 
-        {/* Show visit actions only when patient is checked in */}
-        {props.patient  ? (
-          <Dropdown simple text="Actions" className='link item'>
+          {/* Show visit actions only when patient is checked in */}
+          {props.patient  ? (
+              <Dropdown simple text="Actions" className='link item'>
 
-            {props.patient.dateVisitStart && patientType && ( patientType === CODES.IN_PATIENT_UNBOOKED || patientType === CODES.IN_PATIENT_BOOKED)  ? (
-                <Dropdown.Menu>
-                <Dropdown.Item
-                  onClick={() => displayFormByFormName("Transfer Patient")}
-                  disabled={!authentication.userHasRole(["patient_write"])}
-                >
-                  Transfer Patient to Ward / Service
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => displayFormByFormName("Discharge Patient")}
-                  disabled={!authentication.userHasRole(["patient_write"])}
-                >
-                  Discharge Patient
-                </Dropdown.Item>
-                  <Dropdown.Item onClick={() => toggleVitalSign()}
-                                 disabled={!authentication.userHasRole(["patient_write"])}
-                  >Capture Vital Signs</Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item  onClick={() => displayFormByFormName("New Appointment")}
-                                  disabled={!authentication.userHasRole(["patient_write"])}
-                  >
-                    New Appointment
-                  </Dropdown.Item>
-              </Dropdown.Menu>
-            ) : (
-                <Dropdown.Menu>
-                {/*<Dropdown.Header>Visit Actions</Dropdown.Header>*/}
-                <Dropdown.Item
-                  onClick={() => displayFormByFormName("Admit Patient")}
-                  disabled={!authentication.userHasRole(["patient_write"])}
-                >
-                  Admit Patient
-                </Dropdown.Item>
-                  <Dropdown.Item onClick={() => toggleVitalSign()}
-                                 disabled={!authentication.userHasRole(["patient_write"])}
-                  >Capture Vital Signs</Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item  onClick={() => displayFormByFormName("New Appointment")}
-                                  disabled={!authentication.userHasRole(["patient_write"])}
-                  >
-                    New Appointment
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-            )}
-          </Dropdown>
-        ) : (
-          ""
-        )}
-
-        {/* Show visit actions only when patient is checked in */}
-        {false && props.patient  ? (
-            <Dropdown simple text="Actions" className='link item'>
-
-              {props.patient.dateVisitStart && patientType && ( patientType === CODES.IN_PATIENT_UNBOOKED || patientType === CODES.IN_PATIENT_BOOKED)  ? (
-                  <Dropdown.Menu>
-                    <Dropdown.Header>Visit Actions</Dropdown.Header>
-                    <Dropdown.Item
-                        onClick={() => displayFormByFormName("Transfer Patient")}
-                        disabled={!authentication.userHasRole(["patient_write"])}
-                    >
-                      Transfer Patient to Ward / Service
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                        onClick={() => displayFormByFormName("Discharge Patient")}
-                        disabled={!authentication.userHasRole(["patient_write"])}
-                    >
-                      Discharge Patient
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={() => toggleVitalSign()}
-                                   disabled={!authentication.userHasRole(["patient_write"])}
-                    >Capture Vital Signs</Dropdown.Item>
-                    <Dropdown.Header>Other Actions</Dropdown.Header>
-                    <Dropdown.Item  onClick={() => displayFormByFormName("New Appointment")}
-                                    disabled={!authentication.userHasRole(["patient_write"])}
-                    >
-                      New Appointment
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-              ) : (
-                  <Dropdown.Menu>
-                    <Dropdown.Header>Visit Actions</Dropdown.Header>
-                    <Dropdown.Item
-                        onClick={() => displayFormByFormName("Admit Patient")}
-                        disabled={!authentication.userHasRole(["patient_write"])}
-                    >
-                      Admit Patient
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={() => toggleVitalSign()}
-                                   disabled={!authentication.userHasRole(["patient_write"])}>Capture Vital Signs</Dropdown.Item>
-                    <Dropdown.Header>Other Actions</Dropdown.Header>
-                    <Dropdown.Item  onClick={() => displayFormByFormName("New Appointment")}
-                                    disabled={!authentication.userHasRole(["patient_write"])}
-                    >
-                      New Appointment
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-              )}
-            </Dropdown>
-        ) : (
-            ""
-        )}
-        <Menu.Menu position="right">
-          {props.patient && props.patient.dateVisitStart ? (
-            <Menu.Item>
-              Current Visit:&nbsp;{" "}
-              <b>
-                {props.patient.dateVisitStart} {props.patient.timeVisitStart}
-              </b>{" "}
-              | &nbsp; &nbsp;
-              <Button color="black" onClick={checkOutPatient}
-                      disabled={!authentication.userHasRole(["patient_write"])}
-              >
-                Check Out
-              </Button>
-            </Menu.Item>
+                {props.patient.dateVisitStart && patientType && ( patientType === CODES.IN_PATIENT_UNBOOKED || patientType === CODES.IN_PATIENT_BOOKED)  ? (
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                          onClick={() => displayFormByFormName("Transfer Patient")}
+                          disabled={!authentication.userHasRole(["patient_write"])}
+                      >
+                        Transfer Patient to Ward / Service
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                          onClick={() => displayFormByFormName("Discharge Patient")}
+                          disabled={!authentication.userHasRole(["patient_write"])}
+                      >
+                        Discharge Patient
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => toggleVitalSign()}
+                                     disabled={!authentication.userHasRole(["patient_write"])}
+                      >Capture Vital Signs</Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item  onClick={() => displayFormByFormName("New Appointment")}
+                                      disabled={!authentication.userHasRole(["patient_write"])}
+                      >
+                        New Appointment
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                ) : (
+                    <Dropdown.Menu>
+                      {/*<Dropdown.Header>Visit Actions</Dropdown.Header>*/}
+                      <Dropdown.Item
+                          onClick={() => displayFormByFormName("Admit Patient")}
+                          disabled={!authentication.userHasRole(["patient_write"])}
+                      >
+                        Admit Patient
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => toggleVitalSign()}
+                                     disabled={!authentication.userHasRole(["patient_write"])}
+                      >Capture Vital Signs</Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item  onClick={() => displayFormByFormName("New Appointment")}
+                                      disabled={!authentication.userHasRole(["patient_write"])}
+                      >
+                        New Appointment
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                )}
+              </Dropdown>
           ) : (
-            <Menu.Item>
-              <Button color="black" onClick={checkInPatient}
-                      disabled={!authentication.userHasRole(["patient_write"])}
-              >
-                Check In
-              </Button>
-            </Menu.Item>
+              ""
           )}
-        </Menu.Menu>
-      </Menu>
 
-      <FormRendererModal
-        patientId={props.patient.patientId}
-        showModal={showFormModal}
-        setShowModal={setShowFormModal}
-        currentForm={currentForm}
-        onSuccess={onSuccess}
-        onError={onError}
-        options={currentForm.options}
-      />
-      <Modal isOpen={showVitalSignsModal} toggle={toggleVitalSign} size='lg' zIndex={"9999"}>
-        <ModalHeader toggle={toggleVitalSign}>Take Patient Vitals</ModalHeader>
-        <ModalBody>
-          <AddVitalsPage patientId={props.patient.patientId} showModal={showVitalSignsModal} toggle={toggleVitalSign}/>
-        </ModalBody>
-      </Modal>
-      <ToastContainer />
-    </React.Fragment>
+          {/* Show visit actions only when patient is checked in */}
+          {false && props.patient  ? (
+              <Dropdown simple text="Actions" className='link item'>
+
+                {props.patient.dateVisitStart && patientType && ( patientType === CODES.IN_PATIENT_UNBOOKED || patientType === CODES.IN_PATIENT_BOOKED)  ? (
+                    <Dropdown.Menu>
+                      <Dropdown.Header>Visit Actions</Dropdown.Header>
+                      <Dropdown.Item
+                          onClick={() => displayFormByFormName("Transfer Patient")}
+                          disabled={!authentication.userHasRole(["patient_write"])}
+                      >
+                        Transfer Patient to Ward / Service
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                          onClick={() => displayFormByFormName("Discharge Patient")}
+                          disabled={!authentication.userHasRole(["patient_write"])}
+                      >
+                        Discharge Patient
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => toggleVitalSign()}
+                                     disabled={!authentication.userHasRole(["patient_write"])}
+                      >Capture Vital Signs</Dropdown.Item>
+                      <Dropdown.Header>Other Actions</Dropdown.Header>
+                      <Dropdown.Item  onClick={() => displayFormByFormName("New Appointment")}
+                                      disabled={!authentication.userHasRole(["patient_write"])}
+                      >
+                        New Appointment
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                ) : (
+                    <Dropdown.Menu>
+                      <Dropdown.Header>Visit Actions</Dropdown.Header>
+                      <Dropdown.Item
+                          onClick={() => displayFormByFormName("Admit Patient")}
+                          disabled={!authentication.userHasRole(["patient_write"])}
+                      >
+                        Admit Patient
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => toggleVitalSign()}
+                                     disabled={!authentication.userHasRole(["patient_write"])}>Capture Vital Signs</Dropdown.Item>
+                      <Dropdown.Header>Other Actions</Dropdown.Header>
+                      <Dropdown.Item  onClick={() => displayFormByFormName("New Appointment")}
+                                      disabled={!authentication.userHasRole(["patient_write"])}
+                      >
+                        New Appointment
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                )}
+              </Dropdown>
+          ) : (
+              ""
+          )}
+          <Menu.Menu position="right">
+            {props.patient && props.patient.dateVisitStart ? (
+                <Menu.Item>
+                  Current Visit:&nbsp;{" "}
+                  <b>
+                    {props.patient.dateVisitStart} {props.patient.timeVisitStart}
+                  </b>{" "}
+                  | &nbsp; &nbsp;
+                  <Button color="black" onClick={checkOutPatient}
+                          disabled={!authentication.userHasRole(["patient_write"])}
+                  >
+                    Check Out
+                  </Button>
+                </Menu.Item>
+            ) : (
+                <Menu.Item>
+                  <Button color="black" onClick={checkInPatient}
+                          disabled={!authentication.userHasRole(["patient_write"])}
+                  >
+                    Check In
+                  </Button>
+                </Menu.Item>
+            )}
+          </Menu.Menu>
+        </Menu>
+
+        <FormRendererModal
+            patientId={props.patient.patientId}
+            showModal={showFormModal}
+            setShowModal={setShowFormModal}
+            currentForm={currentForm}
+            onSuccess={onSuccess}
+            onError={onError}
+            options={currentForm.options}
+        />
+        <Modal isOpen={showVitalSignsModal} toggle={toggleVitalSign} size='lg' zIndex={"9999"}>
+          <ModalHeader toggle={toggleVitalSign}>Take Patient Vitals</ModalHeader>
+          <ModalBody>
+            <AddVitalsPage patientId={props.patient.patientId} showModal={showVitalSignsModal} toggle={toggleVitalSign}/>
+          </ModalBody>
+        </Modal>
+        <ToastContainer />
+      </React.Fragment>
   );
 }
 
 function RelativeList({ relative, relationshipTypeName }) {
   return (
-    <ListItem>
-      <ListItemText
-        primary={
-          <React.Fragment>
-            {relationshipTypeName}, {relative.firstName} {relative.otherNames}{" "}
-            {relative.lastName}
-          </React.Fragment>
-        }
-        secondary={
-          <React.Fragment>
-            <Typography component="span" variant="body2" color="textPrimary">
-              {relative.mobilePhoneNumber} {relative.email} <br></br>
-            </Typography>
-            {relative.address}
-          </React.Fragment>
-        }
-      />
-    </ListItem>
+      <ListItem>
+        <ListItemText
+            primary={
+              <React.Fragment>
+                {relationshipTypeName}, {relative.firstName} {relative.otherNames}{" "}
+                {relative.lastName}
+              </React.Fragment>
+            }
+            secondary={
+              <React.Fragment>
+                <Typography component="span" variant="body2" color="textPrimary">
+                  {relative.mobilePhoneNumber} {relative.email} <br></br>
+                </Typography>
+                {relative.address}
+              </React.Fragment>
+            }
+        />
+      </ListItem>
   );
 }
 
@@ -412,6 +434,6 @@ const mapActionToProps = {
 };
 
 export default connect(
-  mapStateToProps,
-  mapActionToProps
+    mapStateToProps,
+    mapActionToProps
 )(PatientDashboardSubMenu);
