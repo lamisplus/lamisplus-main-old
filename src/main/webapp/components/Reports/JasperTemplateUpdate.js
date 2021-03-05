@@ -5,28 +5,16 @@ import {Card,CardContent,} from '@material-ui/core';
 import {FormBuilder } from 'react-formio';
 import {fetchService} from '../../actions/formBuilder'
 import {creatReport, update, fetchAll} from '../../actions/report'
-import useForm from "../Functions/UseForm";
-
-import {
-    FormGroup,
-    Input,
-    Label,
-    Col,
-    Row,
-    Form
-} from 'reactstrap';
+import {FormGroup, Input, Label, Col, Row, Form} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import MatButton from '@material-ui/core/Button';
 import { TiArrowBack } from "react-icons/ti";
-import axios from 'axios';
-import {url} from '../../api';
-import {makeStyles} from '@material-ui/core/styles';
 import {toast} from 'react-toastify';
 
 const UpdateReports = (props) => {
 
     const [loading, setLoading] = useState(false)
-    const defaultValues = {programCode: "", template: "", name: "", description: "", format: "", setform2: ""}
+    const defaultValues = {programCode: "", template: "", name: "", description: "", format: "", resourceObject : ""}
     const [formData, setFormData] = useState(defaultValues)
     const [res, setRes] = React.useState("");
     const [form2, setform2] = React.useState();
@@ -34,10 +22,10 @@ const UpdateReports = (props) => {
 
     const row = props.location.row;
 
-    useEffect (() => {
-        props.fetchService()
-        props.fetchAll();
-    }, [])
+    // useEffect (() => {
+    //     props.fetchService()
+    //     props.fetchAll();
+    // }, [])
 
     useEffect(() => {
         setform2(row);
@@ -48,20 +36,6 @@ const UpdateReports = (props) => {
     }, [props.formData]);
 
     const handleInputChange = e => {
-        setFormData({...formData, [e.target.name]: e.target.value});
-    }
-
-    const handleDescriptiontChange = e => {
-        setFormData({...formData, [e.target.description]: e.target.value});
-    }
-
-    const handleNameInputChange = e => {
-
-        setFormData({...formData, [e.target.name]: e.target.value});
-    }
-
-    const handleProgramInputChange = e => {
-
         setFormData({...formData, [e.target.name]: e.target.value});
     }
 
@@ -76,23 +50,12 @@ const UpdateReports = (props) => {
             toast.success("Form variable saved successfully!")
             props.update(formData.id, formData, onSuccess, onError)
         }
+
         const onError = () => {
             setLoading(false);
             toast.error("Something went wrong, please contact administration");
+
         }
-
-        //     if(formData.id) {
-        //         props.update(formData.id, formData, onSuccess, onError)
-        //         return
-        //     }
-        // }
-
-
-        // const handleSubmit = e => {
-        //
-        //     e.preventDefault();
-        //     props.update(form2.id, form2);
-        // }
 
         return (
             <div className="PivotTable">
@@ -119,7 +82,7 @@ const UpdateReports = (props) => {
                                             id='name'
                                             placeholder=' '
                                             value={formData.programCode}
-                                            onChange={handleProgramInputChange}
+                                            onChange={handleInputChange}
                                             required
                                         />
                                     </FormGroup></Col>
@@ -131,7 +94,7 @@ const UpdateReports = (props) => {
                                             name='name'
                                             id='name'
                                             value={formData.name}
-                                            onChange={handleNameInputChange}
+                                            onChange={handleInputChange}
                                             required/>
                                     </FormGroup> </Col>
 
@@ -142,7 +105,7 @@ const UpdateReports = (props) => {
                                             name='description'
                                             id='description'
                                             value={formData.description}
-                                            onChange={handleDescriptiontChange}
+                                            onChange={handleInputChange}
                                             required
                                         />
                                     </FormGroup></Col>
@@ -170,14 +133,14 @@ const UpdateReports = (props) => {
                     </Card>
                     <hr></hr>
                     <Card>
-                        <CardContent>
-                            <h4>Build Query Parameter Form</h4>
-                            {form2 ?
-                                <FormBuilder form={row.resourceObject} {...props} onChange={(schema) => {
-                                    setRes(JSON.stringify(schema));
-                                }}/>
-                                : ""
-                            }
+                            <CardContent>
+                                <h4>Build Query Parameter Form</h4>
+                                { form2 ?
+                                    <FormBuilder form={row.resourceObject} {...props} onChange={(schema) => {
+                                        setRes(JSON.stringify(schema));
+                                    }} />
+                                    : ""
+                                }
                         </CardContent>
                     </Card>
                     <hr></hr>
