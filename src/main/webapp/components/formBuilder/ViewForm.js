@@ -190,7 +190,6 @@ const Update = props => {
                                 )}
                             />
                         </FormGroup></Col>
-
                         <Col md={2}> <FormGroup>
                             <label class="sr-only" ></label>
                             <button type="button"  class="form-control btn btn-primary mt-4" onClick={() => handleSubmit()}>Update Form</button>

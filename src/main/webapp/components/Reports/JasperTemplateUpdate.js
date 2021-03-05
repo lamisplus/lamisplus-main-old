@@ -20,20 +20,17 @@ import MatButton from '@material-ui/core/Button';
 import { TiArrowBack } from "react-icons/ti";
 import axios from 'axios';
 import {url} from '../../api';
+import {makeStyles} from '@material-ui/core/styles';
+import {toast} from 'react-toastify';
 
-const UpdateReports = props => {
-    // const [newData] = React.useState(formData);
-    const [programCode, setprogramCode] = React.useState("");
-    const [name, setname] = React.useState();
-    const [description, setdescription] = React.useState("");
-    const [dataSource, setdataSource] = React.useState("");
-    const [template, settemplate] = React.useState("");
+const UpdateReports = (props) => {
+
+    const [loading, setLoading] = useState(false)
+    const defaultValues = {programCode: "", template: "", name: "", description: "", format: "", setform2: ""}
+    const [formData, setFormData] = useState(defaultValues)
     const [res, setRes] = React.useState("");
     const [form2, setform2] = React.useState();
     const textAreaRef = useRef(null);
-    const [formCode, setformCode] = React.useState();
-    const [displayType, setDisplayType] = React.useState("")
-
 
     const row = props.location.row;
 
@@ -42,184 +39,160 @@ const UpdateReports = props => {
         props.fetchAll();
     }, [])
 
-    useEffect (() => {
+    useEffect(() => {
         setform2(row);
     }, [])
 
     useEffect(() => {
-        async function getCharacters() {
-            try {
-                const response = await axios.get(url +'reports');
-                const body =  response.data;
-                settemplate(body.map(({ display, id }) => ({ label: display, value: id })));
-            } catch (error) {}
-        }
-        getCharacters();
-    }, []);
+        setFormData(props.formData ? props.formData : defaultValues);
+    }, [props.formData]);
 
-    useEffect(() => {
-        async function getCharacters() {
-            try {
-                const response = await axios.get(url +'reports');
-                const body =  response.data;
-                setdescription(body.map(({ display, id }) => ({ label: display, value: id })));
-            } catch (error) {}
-        }
-        getCharacters();
-    }, []);
+    const handleInputChange = e => {
+        setFormData({...formData, [e.target.name]: e.target.value});
+    }
 
-    useEffect(() => {
-        async function getCharacters() {
-            try {
-                const response = await axios.get(url +'reports');
-                const body =  response.data;
-                setname(body.map(({ display, id }) => ({ label: display, value: id })));
-            } catch (error) {}
-        }
-        getCharacters();
-    }, []);
+    const handleDescriptiontChange = e => {
+        setFormData({...formData, [e.target.description]: e.target.value});
+    }
 
-    useEffect(() => {
-        async function getCharacters() {
-            try {
-                const response = await axios.get(url +'reports');
-                const body =  response.data;
-                setprogramCode(body.map(({ display, id }) => ({ label: display, value: id })));
-            } catch (error) {}
-        }
-        getCharacters();
-    }, []);
+    const handleNameInputChange = e => {
 
-    useEffect(() => {
-        async function getCharacters() {
-            try {
-                const response = await axios.get(url +'reports');
-                const body =  response.data;
-                setDisplayType(body.map(({ display, id }) => ({ label: display, value: id })));
-            } catch (error) {}
-        }
-        getCharacters();
-    }, []);
+        setFormData({...formData, [e.target.name]: e.target.value});
+    }
 
-    useEffect(() => {
-        async function getCharacters() {
-            try {
-                const response = await axios.get(url +'reports');
-                const body =  response.data;
-                setdataSource(body.map(({ display, id }) => ({ label: display, value: id })));
-            } catch (error) {}
-        }
-        getCharacters();
-    }, []);
+    const handleProgramInputChange = e => {
+
+        setFormData({...formData, [e.target.name]: e.target.value});
+    }
 
     const handleSubmit = e => {
 
-        e.preventDefault();
-        props.update(form2.id, form2);
+        e.preventDefault()
+
+        setLoading(true);
+
+        const onSuccess = () => {
+            setLoading(false);
+            toast.success("Form variable saved successfully!")
+            props.update(formData.id, formData, onSuccess, onError)
+        }
+        const onError = () => {
+            setLoading(false);
+            toast.error("Something went wrong, please contact administration");
+        }
+
+        //     if(formData.id) {
+        //         props.update(formData.id, formData, onSuccess, onError)
+        //         return
+        //     }
+        // }
+
+
+        // const handleSubmit = e => {
+        //
+        //     e.preventDefault();
+        //     props.update(form2.id, form2);
+        // }
+
+        return (
+            <div className="PivotTable">
+                <Page title="Jasper Template Upload ">
+                    <Card style={{width: '80rem'}}>
+                        <CardContent>
+                            <Link to="/admin">
+                                <MatButton
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    className=" float-right mr-1">
+                                    <TiArrowBack/> &nbsp; back
+                                </MatButton>
+                            </Link>
+                            <h4>Paste XML or JSON Template</h4>
+                            <hr/>
+                            <Form onSubmit={handleSubmit}>
+                                <Row>
+                                    <Col md={4}> <FormGroup>
+                                        <Input
+                                            type='text'
+                                            name='name'
+                                            id='name'
+                                            placeholder=' '
+                                            value={formData.programCode}
+                                            onChange={handleProgramInputChange}
+                                            required
+                                        />
+                                    </FormGroup></Col>
+
+                                    <Col md={4}> <FormGroup>
+                                        <Label class="sr-only">Report Name</Label>
+                                        <Input
+                                            type='text'
+                                            name='name'
+                                            id='name'
+                                            value={formData.name}
+                                            onChange={handleNameInputChange}
+                                            required/>
+                                    </FormGroup> </Col>
+
+                                    <Col md={4}> <FormGroup>
+                                        <Label class="sr-only">Description</Label>
+                                        <Input
+                                            type='textarea'
+                                            name='description'
+                                            id='description'
+                                            value={formData.description}
+                                            onChange={handleDescriptiontChange}
+                                            required
+                                        />
+                                    </FormGroup></Col>
+                                </Row>
+                                <Row>
+                                    <Col md={2}> <FormGroup>
+                                        <button type="submit" class="form-control btn btn-primary mt-4">Update Report
+                                        </button>
+                                    </FormGroup></Col>
+                                </Row>
+                                <Row>
+                                    <Col md={12}> <FormGroup>
+                                        <Label class="sr-only">Template(Paste XML or JSON Template)</Label>
+                                        <Input
+                                            type='textarea'
+                                            name='description'
+                                            id='description'
+                                            value={formData.template}
+                                            onChange={handleInputChange}
+                                            required/>
+                                    </FormGroup></Col>
+                                </Row>
+                            </Form>
+                        </CardContent>
+                    </Card>
+                    <hr></hr>
+                    <Card>
+                        <CardContent>
+                            <h4>Build Query Parameter Form</h4>
+                            {form2 ?
+                                <FormBuilder form={row.resourceObject} {...props} onChange={(schema) => {
+                                    setRes(JSON.stringify(schema));
+                                }}/>
+                                : ""
+                            }
+                        </CardContent>
+                    </Card>
+                    <hr></hr>
+                    <Card>
+                        <CardContent>
+                            <h4>Json Form</h4>
+                            <div>
+                                <textarea cols="50" ref={textAreaRef} value={res}/>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </Page>
+            </div>
+        )
     }
-
-    return (
-        <div className="PivotTable">
-            <Page title="Jasper Template Upload " >
-                <Card style={{ width: '80rem' }} >
-                    <CardContent>
-                        <Link to="/admin">
-                            <MatButton
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                className=" float-right mr-1">
-                                <TiArrowBack /> &nbsp; back
-                            </MatButton>
-                        </Link>
-                        <h4>Paste XML or JSON Template</h4>
-                        <hr />
-                        <Form onSubmit={handleSubmit} >
-                            <Row>
-                                <Col md={4}> <FormGroup>
-                                    <Label class="sr-only">Program Area</Label>
-                                    {props.services.length && props.services.length > 0 ?
-                                        <Input type="select" class="form-control" id="programCode" required value={programCode} onChange={e => setprogramCode(e.target.value)}>
-                                            {props.services.map(service => (<option key={service.name} value={service.code}>{service.name}</option>))}
-                                        </Input>:  <Input type="select" class="form-control" id="programCode" required value={programCode} onChange={e => setprogramCode(e.target.value)}>
-                                            <option>No Programs Found</option>
-                                        </Input>}
-                                </FormGroup></Col>
-
-                                <Col md={4}> <FormGroup>
-                                    <Label class="sr-only">Report Name</Label>
-                                    <Input type="text" class="form-control"
-                                        type="text"
-                                        name="name"
-                                        id="name"
-                                        value={name}/>
-                                            </FormGroup> </Col>
-
-                                <Col md={4}> <FormGroup>
-                                    <Label class="sr-only">Description</Label>
-                                    <Input type="text" class="form-control"
-                                           id="description"
-                                           name="description" value={description}
-                                           onChange={e => setdescription(e.target.value)}/>
-                                </FormGroup></Col>
-                            </Row>
-
-                            <Row>
-                                <Col md={4}> <FormGroup>
-                                    <Label class="sr-only">Date Source</Label>
-                                    <Input type="select"  id="dataSource"
-                                           value={dataSource} onChange={e => setdataSource(e.target.value)}>
-                                        <option></option>
-                                        <option value="0">XML</option>
-                                        <option value="1">JSON</option></Input>
-                                </FormGroup></Col>
-
-                                <Col md={4}> <FormGroup>
-                                    <Label class="sr-only">Display Type</Label>
-                                    <Input type="select"  id="displayType" value={displayType} onChange={e => setDisplayType(e.target.value)}>
-                                        <option value="form">Form</option>
-                                        <option value="wizard">Wizard</option></Input>
-                                </FormGroup></Col>
-
-                                <Col md={2}> <FormGroup>
-                                    <button type="submit"  class="form-control btn btn-primary mt-4" >Update Report</button>
-                                </FormGroup></Col>
-                            </Row>
-                            <Row>
-                                <Col md={12}> <FormGroup>
-                                    <Label class="sr-only">Template(Paste XML or JSON Template)</Label>
-                                    <Input type="textarea" name="text"
-                                           id="template" value={template}
-                                           rows="10" oonChange={e => settemplate(e.target.value)}/>
-                                </FormGroup></Col>
-                            </Row>
-                        </Form>
-                    </CardContent>
-                </Card>
-                <hr></hr>
-                <Card >
-                    <CardContent>
-                        <h4>Build Query Parameter Form</h4>
-                        { form2 ?
-                            <FormBuilder form={row.resourceObject} {...props} onChange={(schema) => {
-                                setRes(JSON.stringify(schema));
-                            }} />
-                            : ""
-                        }
-                    </CardContent>
-                </Card>
-                <hr></hr>
-                <Card >
-                    <CardContent>
-                        <h4>Json Form</h4>
-                        <div >
-                            <textarea cols="50" ref={textAreaRef} value={res}/>
-                        </div>
-                    </CardContent>
-                </Card>
-            </Page>
-        </div>
-    )
 }
 
 const mapStateToProps = (state = {  reportList:[], form:{}}) => {
