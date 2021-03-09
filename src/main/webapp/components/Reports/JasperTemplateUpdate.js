@@ -19,7 +19,7 @@ const UpdateReports = (props) => {
     const [res, setRes] = React.useState("");
     const [form2, setform2] = React.useState();
     const textAreaRef = useRef(null);
-    console.log(formData)
+
     const row = props.location.row;
 
     useEffect (() => {
@@ -37,15 +37,13 @@ const UpdateReports = (props) => {
     }
 
     const handleSubmit = e => {
-
         e.preventDefault()
-
+        console.log(e)
         setLoading(true);
-
         const onSuccess = () => {
-            setLoading(false);
+            // setLoading(false);
             toast.success("Report Updated successfully!")
-            props.update(formData.id, formData, onSuccess, onError)
+
         }
 
         const onError = () => {
@@ -53,12 +51,15 @@ const UpdateReports = (props) => {
             toast.error("Something went wrong, please contact administration");
 
         }
+        props.update(formData.id, formData, onSuccess, onError)
     }
+
         return (
-            <div className="PivotTable">
+            <div >
                 <ToastContainer />
                 <Page title="Jasper Template Upload ">
                     <Card style={{width: '80rem'}}>
+                        <Form onSubmit={handleSubmit}>
                         <CardContent>
                             <Link to="/admin">
                                 <MatButton
@@ -71,7 +72,7 @@ const UpdateReports = (props) => {
                             </Link>
                             <h4>Paste XML or JSON Template</h4>
                             <hr/>
-                            <Form onSubmit={handleSubmit}>
+
                                 <Row>
                                     <Col md={4}> <FormGroup>
                                         <Label class="sr-only">Program Name</Label>
@@ -79,14 +80,12 @@ const UpdateReports = (props) => {
                                             type='text'
                                             name='programCode'
                                             id='programCode'
-                                            placeholder=' '
                                             value={formData.programName}
                                             onChange={handleInputChange}
-                                            required
-                                        />
-                                    </FormGroup></Col>
+                                            required/>
+                                           </FormGroup></Col>
 
-                                    <Col md={4}> <FormGroup>
+                                       <Col md={4}> <FormGroup>
                                         <Label class="sr-only">Report Name</Label>
                                         <Input
                                             type='text'
@@ -95,8 +94,8 @@ const UpdateReports = (props) => {
                                             value={formData.name}
                                             onChange={handleInputChange}
                                             required/>
-                                    </FormGroup> </Col>
 
+                                    </FormGroup> </Col>
                                     <Col md={4}> <FormGroup>
                                         <Label class="sr-only">Description</Label>
                                         <Input
@@ -105,16 +104,17 @@ const UpdateReports = (props) => {
                                             id='description'
                                             value={formData.description}
                                             onChange={handleInputChange}
-                                            required
-                                        />
+                                            required/>
                                     </FormGroup></Col>
+
                                 </Row>
                                 <Row>
                                     <Col md={2}> <FormGroup>
-                                        <button type="submit" class="form-control btn btn-primary mt-4">Update Report
-                                        </button>
+                                        <label class="sr-only"></label>
+                                        <button type="submit"  class="form-control btn btn-primary mt-4" >Save Form</button>
                                     </FormGroup></Col>
                                 </Row>
+
                                 <Row>
                                     <Col md={12}> <FormGroup>
                                         <Label class="sr-only">Template(Paste XML or JSON Template)</Label>
@@ -128,8 +128,10 @@ const UpdateReports = (props) => {
                                             required/>
                                     </FormGroup></Col>
                                 </Row>
-                            </Form>
+
+
                         </CardContent>
+                        </Form>
                     </Card>
                     <hr></hr>
                     <Card>

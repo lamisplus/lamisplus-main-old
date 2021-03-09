@@ -46,9 +46,8 @@ const CreateReports = props => {
         newdata2['dataSource']=dataSource;
         newdata2['template']=template;
 
-
         e.preventDefault()
-        // console.log('programCode'+programCode);
+
         props.creatReport(newdata2);
     }
 
@@ -91,21 +90,6 @@ const CreateReports = props => {
                                     <Input type="text" class="form-control" id="description" name="description" value={description}   onChange={e => setdescription(e.target.value)} required/>
                                 </FormGroup></Col>
                             </Row>
-                            {/*<Row>*/}
-                            {/*    <Col md={4}> <FormGroup>*/}
-                            {/*    <Label class="sr-only">Date Source</Label>*/}
-                            {/*    <Input type="select"  id="dataSource" value={dataSource} onChange={e => setdataSource(e.target.value)}>*/}
-                            {/*        <option></option>*/}
-                            {/*        <option value="0">XML</option>*/}
-                            {/*        <option value="1">JSON</option></Input>*/}
-                            {/*        </FormGroup></Col>*/}
-                            {/*            <Col md={4}> <FormGroup>*/}
-                            {/*                <Label class="sr-only">Display Type</Label>*/}
-                            {/*                <Input type="select"  id="displayType" value={displayType} onChange={e => setDisplayType(e.target.value)}>*/}
-                            {/*                    <option value="form">Form</option>*/}
-                            {/*                    <option value="wizard">Wizard</option></Input>*/}
-                            {/*            </FormGroup></Col>*/}
-                            {/*            </Row>*/}
                                     <Row>
                                         <Col md={2}> <FormGroup>
                                             <button type="submit"  class="form-control btn btn-primary mt-4" >Save Template</button>
