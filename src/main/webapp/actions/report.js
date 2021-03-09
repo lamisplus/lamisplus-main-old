@@ -70,7 +70,7 @@ export const fetchAll = (onSuccess) => dispatch => {
         })
 }
 
-export const update = (id, data) => dispatch => {
+export const update = (id, data, onSuccess,) => dispatch => {
     axios
         .put(`${url}reports/${id}`, data)
         .then(response => {
@@ -78,7 +78,7 @@ export const update = (id, data) => dispatch => {
                 type: ACTION_TYPES.REPORTS_UPDATE,
                 payload: response.data
             });
-            toast.success("Report was updated successfully!");
+            onSuccess()
             console.log(response)
         })
         .catch(error => {

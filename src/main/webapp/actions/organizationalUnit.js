@@ -63,7 +63,7 @@ export const fetchAllParentOrganizationalUnit = (id, onSuccess, onError)=> dispa
 export const fetchAllParentOrganizationalUnitlevel = (id, onSuccess, onError)=> dispatch => {
   if(id){
   axios
-    .get(`${baseUrl}organisation-units/parent-org-unit/${id}`)
+    .get(`${baseUrl}organisation-units/organisation-unit-level/${id}`)
     .then(response => {
       dispatch({
         type: ACTION_TYPES.FETCH_ALL_PARENT_ORGANIZATIONAL_UNIT_LEVEL,
@@ -87,7 +87,7 @@ export const createOrganisationUnit = (data, onSuccess,onError) => dispatch => {
 console.log(data)
 
   axios
-    .post(`${baseUrl}organisation-units`, data)
+    .post(`${baseUrl}organisation-unit-levels`, data)
     .then(response => {
       dispatch({
         type: ACTION_TYPES.CREATE_ORGANISATION_UNIT,
@@ -110,6 +110,32 @@ console.log(data)
 };
 
 
+export const createOrgUnitLevel = (data, onSuccess,onError) => dispatch => {
+  
+    axios
+      .post(`${baseUrl}organisation-units`, data)
+      .then(response => {
+        dispatch({
+          type: ACTION_TYPES.CREATE_ORGANISATION_UNIT_LEVELS,
+          payload: response.data
+        });
+        onSuccess()
+        toast.success("Organisational Unit Created Successfully");
+      })
+      .catch(error =>{
+        
+        dispatch({
+          type: ACTION_TYPES.ERROR_ORGANISATION_UNIT_LEVELS,
+          payload: error
+        })
+        onError()
+        toast.error("Something went wrong, please try again");
+        
+      });
+    
+  };
+
+
 export const Delete = (id) => dispatch => {
   console.log(`${baseUrl}patients/${id}`);
   axios
@@ -130,11 +156,5 @@ export const Delete = (id) => dispatch => {
     });
     console.log(error)
     
-    // if(error.response.data.apierror.message===null || error.response.data.apierror.message===""){
-    //   toast.error("Something went wrong");
-    // }else{
-    //   toast.error(error.response.data.apierror.message);
-    // }
-   //console.log(error.response.data.apierror.message);
   });
 };

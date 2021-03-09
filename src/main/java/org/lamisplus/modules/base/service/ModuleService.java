@@ -14,27 +14,20 @@ import org.lamisplus.modules.base.domain.dto.ModuleDTO;
 import org.lamisplus.modules.base.domain.entity.*;
 import org.lamisplus.modules.base.domain.mapper.ModuleMapper;
 import org.lamisplus.modules.base.repository.*;
-import org.lamisplus.modules.base.util.CustomFileVisitorUtil;
 import org.lamisplus.modules.base.util.DataLoader;
-import org.lamisplus.modules.base.util.FileStorage;
-import org.lamisplus.modules.base.util.GenericSpecification;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -56,7 +49,6 @@ public class ModuleService {
     private final Set<String> classNames;
     private final String fileSeparator = File.separator;
     private final Set<Class> moduleClasses;
-    private final GenericSpecification<Module> genericSpecification;
     private final UserService userService;
     private final ProgramRepository programRepository;
     private final DataLoader<Form> formDataLoader;

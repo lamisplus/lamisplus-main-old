@@ -25,5 +25,8 @@ public interface ProgramRepository extends JpaRepository<Program, Long>, JpaSpec
     Optional<Program> findProgramByCodeAndArchived(String Code, int archived);
 
 
+    Optional<Program> findByIdAndArchived(Long id, int archived);
+
+    List<Program> findAllByArchivedOrderByIdDesc(int archived);
 }
 

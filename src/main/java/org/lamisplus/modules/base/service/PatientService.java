@@ -97,20 +97,16 @@ public class PatientService {
     }
 
     public List<PatientDTO> getAllPatients() {
-        GenericSpecification<Patient> genericSpecification = new GenericSpecification<Patient>();
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
 
-        Specification<Patient> specification = genericSpecification.findAllWithOrganisation(organisationUnitId);
-
-        List<Patient> patients = patientRepository.findAll(specification);
-        return getPatients(patients);
+        return getPatients(patientRepository.findAllByArchivedAndOrganisationUnitIdOrderByIdDesc(UN_ARCHIVED, organisationUnitId));
     }
 
 
-    public List<PatientDTO> getAllPatients(Page page) {
+    /*public List<PatientDTO> getAllPatients(Page page) {
         List<Patient> patients = page.getContent();
         return getPatients(patients);
-    }
+    }*/
 
     public PatientDTO getPatientByHospitalNumber(String hospitalNumber) {
         Optional<Patient> patientOptional = this.patientRepository.findByHospitalNumberAndOrganisationUnitIdAndArchived(hospitalNumber, getOrganisationUnitId(), UN_ARCHIVED);
@@ -517,23 +513,4 @@ public class PatientService {
 
         return patientDTOs;
     }
-
-    /*public Page findPage(Pageable pageable){
-        GenericSpecification<Patient> genericSpecification = new GenericSpecification<Patient>();
-        Specification<Patient> specification = genericSpecification.findAll(0);
-
-        Page<Patient> page = patientRepository.findAll(specification, pageable);
-        //HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-
-        return page;
-    }*/
-
-    /*private Page getPage(){
-        return page;
-    }
-
-    private void setPage(Page page){
-        this.page = page;
-    }*/
-
 }

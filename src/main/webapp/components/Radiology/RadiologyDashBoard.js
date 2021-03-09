@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import {Card, CardBody, CardDeck, CardHeader } from 'reactstrap';
-import UserProgressTable from 'components/UserProgressTable';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { url } from "../../api";
@@ -132,7 +130,8 @@ export default function LaboratoryDashBoard(props) {
             async function getCharacters() {
                 try {
                     const response = await axios.get( url+ 'laboratory-dashboard/pie');
-                    const body =  {}; 
+                    //console.log(response)
+                    const body = response.data && response.data!==null ? response.data : {}; 
                     settestOrderGroupData(body)
                         
                 } catch (error) {}
@@ -144,7 +143,8 @@ export default function LaboratoryDashBoard(props) {
             async function getCharacters() {
                 try {
                     const response = await axios.get( url+ 'laboratory-dashboard/column/testOrders');
-                    const body =  {}; 
+                   
+                    const body = response.data && response.data!==null ? response.data : {}; 
                     settestOrdersStackChart(body)
                         
                 } catch (error) {}
@@ -152,7 +152,8 @@ export default function LaboratoryDashBoard(props) {
             getCharacters();
         }, []); 
     
-
+console.log(testOrderGroupData)
+console.log(testOrdersStackChart)
 const testGroup = {
 
     chart: {

@@ -21,7 +21,6 @@ public class LabTestGroupService {
     private static final int ARCHIVED = 1;
     private static final int UN_ARCHIVED = 0;
     private final LabTestGroupRepository labTestGroupRepository;
-    private final UserService userService;
 
 
     public List<LabTestGroup> getAllLabTestGroups() {

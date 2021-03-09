@@ -8,13 +8,11 @@ import org.lamisplus.modules.base.domain.dto.FormDTO;
 import org.lamisplus.modules.base.domain.entity.Form;
 import org.lamisplus.modules.base.domain.entity.Permission;
 import org.lamisplus.modules.base.domain.entity.Program;
-import org.lamisplus.modules.base.domain.entity.User;
 import org.lamisplus.modules.base.domain.mapper.FormMapper;
 import org.lamisplus.modules.base.repository.FormRepository;
 import org.lamisplus.modules.base.repository.PermissionRepository;
 import org.lamisplus.modules.base.repository.ProgramRepository;
 import org.lamisplus.modules.base.repository.UserRepository;
-import org.lamisplus.modules.base.security.SecurityUtils;
 import org.lamisplus.modules.base.util.AccessRight;
 import org.lamisplus.modules.base.util.UuidGenerator;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,13 +72,6 @@ public class FormService {
 
         permissions.add(new Permission(formDTO.getCode()+delete, formDTO.getName() + delete));
         permissionRepository.saveAll(permissions);
-
-        //TODO:
-        Optional<User> optionalUser =  SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRoleByUserName);
-        if(optionalUser.isPresent()){
-            User user = optionalUser.get();
-            //Which role do we put the permission into?
-        }
 
         return formRepository.save(form);
     }

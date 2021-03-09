@@ -33,7 +33,12 @@ public class OrganisationUnitLevel implements Serializable {
     @JsonIgnore
     private Integer archived = 0;
 
+    @Basic
+    @Column(name = "status")
+    private int status;
+
     @OneToMany(mappedBy = "organisationUnitLevelByOrganisationUnitLevelId")
     @ToString.Exclude
+    @JsonIgnore
     public List<OrganisationUnitHierarchy> organisationUnitHierarchiesById;
 }

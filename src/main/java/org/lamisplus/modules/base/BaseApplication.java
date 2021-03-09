@@ -2,9 +2,8 @@ package org.lamisplus.modules.base;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jfree.util.Log;
-import org.lamisplus.modules.base.bootstrap.ClassLoaderTest;
+import org.lamisplus.modules.base.bootstrap.ClassPathHacker;
 import org.lamisplus.modules.base.service.ModuleService;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,13 +17,10 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.HashSet;
-import java.util.Set;
 
 @EnableScheduling
 @SpringBootApplication
@@ -41,7 +37,7 @@ public class BaseApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication application = new SpringApplication(BaseApplication.class);
-        addInitHooks(application);
+        //addInitHooks(application);
         context = application.run(args);
         Log.info("java.class.path - " + System.getProperty("java.class.path"));
         ModuleService moduleService = context.getBean(ModuleService.class);
@@ -56,18 +52,21 @@ public class BaseApplication extends SpringBootServletInitializer {
         ApplicationArguments args = context.getBean(ApplicationArguments.class);
 
         Thread thread = new Thread(() -> {
-            try {
+            /*try {
                 context.close();
-                //System.out.println("System is close");
-                context = SpringApplication.run(clz, args.getSourceArgs());
-
+                for(Class cs: clz){
+                    if(!cs.getName().equals("org.lamisplus.modules.base.BaseApplication")){
+                        loadClass(cs.getName());
+                    }
+                }
             }catch (Exception e){
                 e.printStackTrace();
-            }
+            }*/
+            context = SpringApplication.run(clz, args.getSourceArgs());
+
         });
 
         thread.setDaemon(false);
-        thread.setContextClassLoader(ModuleService.getClassLoader());
         thread.start();
     }
 
@@ -75,32 +74,23 @@ public class BaseApplication extends SpringBootServletInitializer {
         return context;
     }
 
-    /*static void addInitHooks(SpringApplication application) {
-        try {
-            System.setProperty("java.class.path", System.getProperty("user.dir")+ "\\runtime\\demo" +";"+System.getProperty("user.dir"));
-            System.out.println(System.getProperty("java.class.path"));
-            Set<String> classNames = new HashSet<>();
-            classNames.add("org.lamisplus.modules.demo.DemoModuleApplication");
-            ClassLoaderTest.getMain(classNames,System.getProperty("user.dir")+ "\\runtime\\demo");
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        *//*application.addListeners((ApplicationListener<ApplicationEnvironmentPreparedEvent>) event -> {
-            String version = event.getEnvironment().getProperty("java.runtime.version");
-            log.info("Running with Java {}", version);
-        });*//*
-    }*/
 
-    static void addInitHooks(SpringApplication application) {
+    /*static void addInitHooks(SpringApplication application) {
         application.addListeners((ApplicationListener<ApplicationEnvironmentPreparedEvent>) event -> {
             String version = event.getEnvironment().getProperty("java.runtime.version");
-            System.setProperty("java.class.path", System.getProperty("user.dir"));
+            System.setProperty("java.class.path", "C:\\Users\\Dell\\Dropbox\\My PC (DESKTOP-IC75349)\\Desktop\\lamisplus-main\\demo.jar");
             String classPath = event.getEnvironment().getProperty("java.class.path");
             log.info("Running with Java {}", version);
             log.info("Classpath {}", classPath);
-
+            try {
+                String filePath = System.getProperty("user.dir")+ File.separator + "demo.jar";
+                ClassPathHacker.addFile(filePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //loadClass("org.lamisplus.modules.demo.DemoModuleApplication");
         });
-    }
+    }*/
 
 
     @Bean
@@ -112,7 +102,7 @@ public class BaseApplication extends SpringBootServletInitializer {
         return properties;
     }
 
-    private void customClassLoader(){
+    /*private void customClassLoader(){
         ClassLoader oscl =  ModuleService.getClassLoader();
 
         Field scl = null;
@@ -125,5 +115,31 @@ public class BaseApplication extends SpringBootServletInitializer {
             e.printStackTrace();
         }
 
-    }
+    }*/
+
+    /*static void loadClass(String name){
+        MyClassLoader loader = new MyClassLoader(BaseApplication.class.getClassLoader());
+
+        System.out.println("loader name---- " +loader.getParent().getClass().getName());
+
+        //This Loads the Class we must always
+        //provide binary name of the class
+        Class<?> clazz = null;
+        try {
+            clazz = loader.loadClass(name);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Loaded class name: " + clazz.getName());
+
+        //Create instance Of the Class and invoke the particular method
+        try {
+            Object instance = clazz.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }*/
 }

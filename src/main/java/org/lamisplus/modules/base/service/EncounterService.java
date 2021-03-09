@@ -2,7 +2,6 @@ package org.lamisplus.modules.base.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.controller.apierror.AccessDeniedException;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.FormDataDTO;
@@ -20,7 +19,6 @@ import javax.persistence.criteria.Root;
 
 import org.lamisplus.modules.base.util.AccessRight;
 import org.lamisplus.modules.base.util.CustomDateTimeFormat;
-import org.lamisplus.modules.base.util.GenericSpecification;
 import org.lamisplus.modules.base.util.UuidGenerator;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 
 @org.springframework.stereotype.Service
 @Transactional
@@ -114,7 +111,6 @@ public class EncounterService {
 
     public Encounter update(Long id, EncounterDTO encounterDTO) {
         Optional<Encounter> optionalEncounter = encounterRepository.findByIdAndArchived(id, UNARCHIVED);
-
 
         accessRight.grantAccessByAccessType(optionalEncounter.get().getFormCode(),
                 Encounter.class, WRITE, checkForEncounterAndGetPermission(optionalEncounter, id));

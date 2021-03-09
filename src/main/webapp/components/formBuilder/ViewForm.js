@@ -72,9 +72,6 @@ const Update = props => {
                 setFormPrecedenceList(data);
                 body !== null ? setdisabledCheckBox(false) : setdisabledCheckBox(true)
                 setLoading(false);
-                // setformPrecedence(row.formPrecedence && row.formPrecedence.formCode ? row.formPrecedence.formCode.map(x =>data.filter(f => f.value === x)) : [])
-                // console.log(row.formPrecedence && row.formPrecedence.formCode ? row.formPrecedence.formCode.map(x => data.filter(f => f.value === x)) : [])
-                // console.log('formp')
             } catch (error) {
                 setLoading(false);
             }
@@ -111,12 +108,6 @@ const Update = props => {
         props.updateForm(form2.id, form2);
     }
 
-  //   if(loading){
-  //       return (<span className="text-center">
-  //   <Spinner style={{ width: "3rem", height: "3rem" }} type="grow" />{" "}
-  //           Loading form...
-  // </span>);
-  //   }
 
     return (
         <Page title={`Edit Form - ${row ? row.name : ""}`} >
@@ -142,7 +133,6 @@ const Update = props => {
                             <h4>Import Form from a <b>(.json)</b> file</h4>
                             <input type="file" id="file" className="input-file mb-4" accept='.json'
                                    onChange={e => handleFileChosen(e.target.files[0])}/>
-
                         </Alert>
                     </>
                     }
@@ -190,7 +180,6 @@ const Update = props => {
                                 )}
                             />
                         </FormGroup></Col>
-
                         <Col md={2}> <FormGroup>
                             <label class="sr-only" ></label>
                             <button type="button"  class="form-control btn btn-primary mt-4" onClick={() => handleSubmit()}>Update Form</button>

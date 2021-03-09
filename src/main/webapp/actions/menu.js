@@ -14,6 +14,7 @@ export const fetchAll = (onSuccess , onError) => dispatch => {
         if(onSuccess){
             onSuccess();
         }
+        return;
       })
       .catch(error => {
           if(onError){

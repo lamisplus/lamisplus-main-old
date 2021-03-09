@@ -21,7 +21,6 @@ import java.util.Optional;
 public class DrugGroupService {
     private static final int ARCHIVED = 1;
     private final DrugGroupRepository drugGroupRepository;
-    //private final UserService userService;
     private final DrugMapper drugMapper;
     private static final int UN_ARCHIVED = 0;
 
