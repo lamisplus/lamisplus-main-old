@@ -5,11 +5,13 @@ import {Card,CardContent,} from '@material-ui/core';
 import {FormBuilder } from 'react-formio';
 import {fetchService} from '../../actions/formBuilder'
 import {update, fetchAll} from '../../actions/report'
-import {FormGroup, Input, Label, Col, Row, Form} from 'reactstrap';
+import {FormGroup, Input, Label, Col, Row, Form, CardBody} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import MatButton from '@material-ui/core/Button';
 import { TiArrowBack } from "react-icons/ti";
 import {toast, ToastContainer} from 'react-toastify';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Typography from '@material-ui/core/Typography';
 
 const UpdateReports = (props) => {
 
@@ -57,22 +59,19 @@ const UpdateReports = (props) => {
         return (
             <div >
                 <ToastContainer />
-                <Page title="Jasper Template Upload ">
-                    <Card style={{width: '80rem'}}>
-                        <Form onSubmit={handleSubmit}>
-                        <CardContent>
-                            <Link to="/admin">
-                                <MatButton
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary"
-                                    className=" float-right mr-1">
-                                    <TiArrowBack/> &nbsp; back
-                                </MatButton>
+                <Card>
+                    <CardBody>
+                        <Breadcrumbs aria-label="breadcrumb">
+                            <Link color="inherit" to={{pathname: "/admin",
+                                state: 'report-builder'}} >
+                                Admin
                             </Link>
-                            <h4>Paste XML or JSON Template</h4>
-                            <hr/>
-
+                            <Typography color="textPrimary">Report Builder Update </Typography>
+                        </Breadcrumbs>
+                        <br/>
+                        <Form onSubmit={handleSubmit}>
+                            <Card >
+                                <CardBody>
                                 <Row>
                                     <Col md={4}> <FormGroup>
                                         <Label class="sr-only">Program Name</Label>
@@ -128,14 +127,14 @@ const UpdateReports = (props) => {
                                             required/>
                                     </FormGroup></Col>
                                 </Row>
-
-
-                        </CardContent>
+                                </CardBody>
+                            </Card>
                         </Form>
-                    </Card>
-                    <hr></hr>
-                    <Card>
-                            <CardContent>
+                    </CardBody>
+                </Card>
+                <hr></hr>
+                <Card >
+                    <CardBody>
                                 <h4>Build Query Parameter Form</h4>
                                 { form2 ?
                                     <FormBuilder form={row.resourceObject} {...props} onChange={(schema) => {
@@ -143,18 +142,18 @@ const UpdateReports = (props) => {
                                     }} />
                                     : ""
                                 }
-                        </CardContent>
-                    </Card>
-                    <hr></hr>
+                    </CardBody>
+                </Card>
+                <hr></hr>
                     <Card>
-                        <CardContent>
+                        <CardBody>
                             <h4>Json Form</h4>
                             <div>
                                 <textarea cols="50" ref={textAreaRef} value={res}/>
                             </div>
-                        </CardContent>
+                        </CardBody>
                     </Card>
-                </Page>
+
             </div>
         )
     }
