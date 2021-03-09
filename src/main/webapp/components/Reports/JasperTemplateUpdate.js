@@ -4,36 +4,33 @@ import { connect } from 'react-redux';
 import {Card,CardContent,} from '@material-ui/core';
 import {FormBuilder } from 'react-formio';
 import {fetchService} from '../../actions/formBuilder'
-import {creatReport, update, fetchAll} from '../../actions/report'
+import {update, fetchAll} from '../../actions/report'
 import {FormGroup, Input, Label, Col, Row, Form} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import MatButton from '@material-ui/core/Button';
 import { TiArrowBack } from "react-icons/ti";
-import {toast} from 'react-toastify';
+import {toast, ToastContainer} from 'react-toastify';
 
 const UpdateReports = (props) => {
 
     const [loading, setLoading] = useState(false)
-    const defaultValues = {programCode: "", template: "", name: "", description: "", format: "", resourceObject : ""}
-    const [formData, setFormData] = useState(defaultValues)
+    const defaultValues = {programName: "", template: "", name: "", description: "", format: "", form2 : ""}
+    const [formData, setFormData] = useState(props.location.row)
     const [res, setRes] = React.useState("");
     const [form2, setform2] = React.useState();
     const textAreaRef = useRef(null);
-
+    console.log(formData)
     const row = props.location.row;
 
-    // useEffect (() => {
-    //     props.fetchService()
-    //     props.fetchAll();
-    // }, [])
+    useEffect (() => {
+        props.fetchService()
+        props.fetchAll();
+    }, [])
 
     useEffect(() => {
         setform2(row);
     }, [])
 
-    useEffect(() => {
-        setFormData(props.formData ? props.formData : defaultValues);
-    }, [props.formData]);
 
     const handleInputChange = e => {
         setFormData({...formData, [e.target.name]: e.target.value});
@@ -47,7 +44,7 @@ const UpdateReports = (props) => {
 
         const onSuccess = () => {
             setLoading(false);
-            toast.success("Form variable saved successfully!")
+            toast.success("Report Updated successfully!")
             props.update(formData.id, formData, onSuccess, onError)
         }
 
@@ -56,9 +53,10 @@ const UpdateReports = (props) => {
             toast.error("Something went wrong, please contact administration");
 
         }
-
+    }
         return (
             <div className="PivotTable">
+                <ToastContainer />
                 <Page title="Jasper Template Upload ">
                     <Card style={{width: '80rem'}}>
                         <CardContent>
@@ -76,12 +74,13 @@ const UpdateReports = (props) => {
                             <Form onSubmit={handleSubmit}>
                                 <Row>
                                     <Col md={4}> <FormGroup>
+                                        <Label class="sr-only">Program Name</Label>
                                         <Input
                                             type='text'
-                                            name='name'
-                                            id='name'
+                                            name='programCode'
+                                            id='programCode'
                                             placeholder=' '
-                                            value={formData.programCode}
+                                            value={formData.programName}
                                             onChange={handleInputChange}
                                             required
                                         />
@@ -101,7 +100,7 @@ const UpdateReports = (props) => {
                                     <Col md={4}> <FormGroup>
                                         <Label class="sr-only">Description</Label>
                                         <Input
-                                            type='textarea'
+                                            type='text'
                                             name='description'
                                             id='description'
                                             value={formData.description}
@@ -120,6 +119,7 @@ const UpdateReports = (props) => {
                                     <Col md={12}> <FormGroup>
                                         <Label class="sr-only">Template(Paste XML or JSON Template)</Label>
                                         <Input
+                                            rows={10} cols={10}
                                             type='textarea'
                                             name='description'
                                             id='description'
@@ -156,7 +156,7 @@ const UpdateReports = (props) => {
             </div>
         )
     }
-}
+
 
 const mapStateToProps = (state = {  reportList:[], form:{}}) => {
     return {
@@ -166,7 +166,6 @@ const mapStateToProps = (state = {  reportList:[], form:{}}) => {
 
 const mapActionsToProps = ({
     fetchService: fetchService,
-    creatReport: creatReport,
     update: update,
     fetchAll:fetchAll
 })
