@@ -19,12 +19,9 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class OrganisationUnitLevelService {
-
     public static final int UN_ARCHIVED = 0;
     private final OrganisationUnitLevelRepository organisationUnitLevelRepository;
-
     private final OrganisationUnitLevelMapper organisationUnitLevelMapper;
-
 
     public OrganisationUnitLevelDTO save(OrganisationUnitLevelDTO organisationUnitLevelDTO) {
         Optional<OrganisationUnitLevel> organizationOptional = organisationUnitLevelRepository.findByNameAndArchived(organisationUnitLevelDTO.getName(), UN_ARCHIVED);
@@ -59,7 +56,6 @@ public class OrganisationUnitLevelService {
     }
 
     public List<OrganisationUnitLevelDTO> getAllOrganizationUnitLevel() {
-        //TODO: Order the list by id
         return organisationUnitLevelMapper.toOrganisationUnitLevelDTOList(organisationUnitLevelRepository.findAllByArchivedOrderByIdAsc(UN_ARCHIVED));
     }
 }

@@ -6,6 +6,7 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.AppointmentDTO;
 import org.lamisplus.modules.base.domain.dto.VisitDTO;
+import org.lamisplus.modules.base.domain.entity.Appointment;
 import org.lamisplus.modules.base.domain.entity.Patient;
 import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.domain.entity.Visit;
@@ -74,10 +75,17 @@ public class VisitService {
 
         Visit visit = visitMapper.toVisit(visitDTO);
         visit.setUuid(UuidGenerator.getUuid());
-        if(visitDTO.getAppointmentDTOList() != null && !visitDTO.getAppointmentDTOList().isEmpty()){
-            appointmentRepository.saveAll(appointmentMapper.toAppointmentList(visitDTO.getAppointmentDTOList()));
+
+        final Visit savedVisit = visitRepository.save(visit);
+
+        if(visitDTO.getAppointmentId()!= null){
+            Optional<Appointment> optionalAppointment = appointmentRepository.findByIdAndArchived(visitDTO.getAppointmentId(), UNARCHIVED);
+            optionalAppointment.ifPresent(appointment -> {
+                appointment.setVisitId(savedVisit.getId());
+                appointmentRepository.save(appointment);
+            });
         }
-        return this.visitRepository.save(visit);
+        return savedVisit;
     }
 
     public VisitDTO getVisit(Long id) {

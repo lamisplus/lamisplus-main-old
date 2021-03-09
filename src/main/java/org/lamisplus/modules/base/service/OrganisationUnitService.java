@@ -105,10 +105,10 @@ public class OrganisationUnitService {
     }
 
     public List<OrganisationUnit> getAllOrganisationUnitByOrganisationUnitLevelId(Long organisationUnitLevelId) {
-        List<Long> level = new ArrayList<>();
+        List<Long> levels = new ArrayList<>();
         for(Long i = FIRST_ORG_LEVEL; i < organisationUnitLevelId; i++){
-            level.add(i);
+            levels.add(i);
         }
-        return organisationUnitRepository.findAllByOrganisationUnitLevelIdIn(level);
+        return organisationUnitRepository.findAllByOrganisationUnitLevelIdIn(levels);
     }
 }

@@ -9,8 +9,6 @@ import org.lamisplus.modules.base.domain.entity.ApplicationUserOrganisationUnit;
 import org.lamisplus.modules.base.service.ApplicationUserPatientService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
