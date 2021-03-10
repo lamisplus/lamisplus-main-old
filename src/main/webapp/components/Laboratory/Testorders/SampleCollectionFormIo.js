@@ -60,11 +60,12 @@ const useStyles = makeStyles((theme) => ({
 const ModalSample = (props) => {
     const classes = useStyles()
     const datasample = props.datasample && props.datasample!==null ? props.datasample : {};
+    console.log(props.labnumber)
     const order_priority = datasample.data && datasample.data.order_priority && datasample.data.order_priority.display   ? datasample.data.order_priority.display : null;
     const lab_test_group = datasample.data ? datasample.data.lab_test_group : null ;
     const sample_ordered_by = datasample.data ? datasample.data.sample_ordered_by : null ;
     const description = datasample.data ? datasample.data.description : null ;
-    const lab_number = props.labnumber && props.labnumber["lab_number"]  ? props.labnumber["lab_number"] : null;
+    const lab_number = props.labnumber && props.labnumber!==null  ? props.labnumber : null;
    
     const labId = datasample.id
     const [loading, setLoading] = useState(false)

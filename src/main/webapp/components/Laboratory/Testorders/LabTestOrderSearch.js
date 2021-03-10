@@ -30,7 +30,7 @@ const PatientSearch = (props) => {
         if(value.formDataObj.data!==null) {
         for(var i=0; i<dataSamples.length; i++){
             for (var key in dataSamples[i]) {
-              if (dataSamples[i][key]!==null && dataSamples[i][key].lab_test_order_status < 1 )
+              if (dataSamples[i][key]!==null && dataSamples[i][key].lab_test_order_status >= 0 )
                 collectedSamples.push(value)
             }            
           }

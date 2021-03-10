@@ -177,7 +177,7 @@ const testGroup = {
             inverse={false}
             icon={MdDelete}
             title="50"
-            subtitle="ACHIEVED RECORDS"
+            subtitle="Achieved Records"
           />
           <IconWidget
             bgColor="success"

@@ -78,6 +78,7 @@ const TestPageForVisualisation = React.lazy(() => import("pages/TestPage"));
 
 /* Sample table i design */
 const TestPage = React.lazy(() => import("pages/TestPage"));
+const TabMenu = React.lazy(() => import("pages/TabMenu"));
 const FormRendererPage = React.lazy(() => import("components/FormManager/FormRendererPage"));
 //Reporting components
 const ReportPage = React.lazy(() => import("components/Reports/ReportingPage"));
@@ -244,6 +245,7 @@ class Routes extends Component {
               {/* The route to Visualization*/}
                 <PrivateRoute exact path={"/unauthorised"} component={UnauthorisedPage} />
                 <PrivateRoute  path="/external-modules" component={BootstrapPage} />
+                <PrivateRoute exact path={"/tabmenu"} component={TabMenu} />
             </React.Suspense>
           </MainLayout>
           

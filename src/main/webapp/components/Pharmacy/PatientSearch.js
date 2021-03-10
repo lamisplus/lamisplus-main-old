@@ -46,6 +46,11 @@ const PatientSearch = (props) => {
             filtering: false,
           },
           {
+            title: "Type",
+            field: "type",
+            filtering: false,
+          },
+          {
             title: "Action",
             field: "actions",
             filtering: false,
@@ -57,6 +62,7 @@ const PatientSearch = (props) => {
           date: prescription.dateEncounter,
           prescribedCount: prescription.formDataObj.length,
           dispensedCount: totalDrugsPrescribed(prescription.formDataObj),
+          type:  prescription.formDataObj.data && prescription.formDataObj.data.type===1 ? 'Regimen': 'Drug',
           actions: (
             
             <Link
