@@ -162,17 +162,17 @@ class Routes extends Component {
               {/* Radiology Link*/}
               <PrivateRoute exact path="/radiology-home" component={RadiologyPage} />
               {/* BootstrapConfiguration Link */}
-              <PrivateRoute exact path="/admin/bootstrap-configuration" component={BootStrapConfiguration} />
-              <PrivateRoute exact path="/admin/bootstrap-configuration-create-module" component={CreateModule} />
-              <PrivateRoute exact path="/admin/bootstrap-configuration-update-module" component={UpdateModule} />
+              <PrivateRoute exact path="/admin-bootstrap-configuration" component={BootStrapConfiguration} />
+              <PrivateRoute exact path="/admin-bootstrap-configuration-create-module" component={CreateModule} />
+              <PrivateRoute exact path="/admin-bootstrap-configuration-update-module" component={UpdateModule} />
               <PrivateRoute exact path="/updated-module" component={UpdatedModule} />
               {/* DataBaseManagement Link */}
               <PrivateRoute exact path="/database-management" component={DataBaseManagement} />
               <PrivateRoute exact path="/database-sync" component={DataBaseSync} />
               {/* OrganizationUnit */}
-              <PrivateRoute exact path="/admin/organization-unit" component={OrganizationUnit} />
-              <PrivateRoute exact path="/admin/parent-organization-unit" component={ParentOrganizationUnit} />
-              <PrivateRoute exact path="/admin/parent-organization-unit-level" component={ParentOrganizationUnitLevel} />
+              <PrivateRoute exact path="/admin-organization-unit" component={OrganizationUnit} />
+              <PrivateRoute exact path="/admin-parent-organization-unit" component={ParentOrganizationUnit} />
+              <PrivateRoute exact path="/admin-parent-organization-unit-level" component={ParentOrganizationUnitLevel} />
              
               {/* Pharmacy Links */}
               <PrivateRoute exact path="/pharmacy" component={PharmacyDashboard} />
@@ -209,7 +209,7 @@ class Routes extends Component {
                 <PrivateRoute exact path="/react-pivot" component={ReactPivot} />
                 <PrivateRoute exact path="/form-home" component={FormPage} />
                 <PrivateRoute exact path="/new-program" component={NewProgramManager} />
-                <PrivateRoute exact path="/admin/program-manager-home" component={ProgramManagerSeacrch}/>
+                <PrivateRoute exact path="/admin-program-manager-home" component={ProgramManagerSeacrch}/>
 
                 {/* The rout to that DataTabel */}
               <PrivateRoute exact path="/test-page" component={TestPage} />

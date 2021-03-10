@@ -4,16 +4,13 @@ package org.lamisplus.modules.base.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
-import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.AppointmentDTO;
 import org.lamisplus.modules.base.domain.entity.Appointment;
 import org.lamisplus.modules.base.domain.entity.Patient;
 import org.lamisplus.modules.base.domain.entity.Person;
-import org.lamisplus.modules.base.domain.entity.PersonContact;
 import org.lamisplus.modules.base.domain.mapper.AppointmentMapper;
 import org.lamisplus.modules.base.repository.AppointmentRepository;
 import org.lamisplus.modules.base.util.GenericSpecification;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

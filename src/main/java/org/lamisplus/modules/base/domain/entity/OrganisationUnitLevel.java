@@ -39,5 +39,6 @@ public class OrganisationUnitLevel implements Serializable {
 
     @OneToMany(mappedBy = "organisationUnitLevelByOrganisationUnitLevelId")
     @ToString.Exclude
+    @JsonIgnore
     public List<OrganisationUnitHierarchy> organisationUnitHierarchiesById;
 }

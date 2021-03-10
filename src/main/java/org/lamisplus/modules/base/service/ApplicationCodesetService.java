@@ -9,13 +9,9 @@ import org.lamisplus.modules.base.domain.dto.ApplicationCodesetDTO;
 import org.lamisplus.modules.base.domain.entity.ApplicationCodeSet;
 import org.lamisplus.modules.base.domain.mapper.ApplicationCodesetMapper;
 import org.lamisplus.modules.base.repository.ApplicationCodesetRepository;
-import org.lamisplus.modules.base.util.GenericSpecification;
 import org.lamisplus.modules.base.util.UuidGenerator;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

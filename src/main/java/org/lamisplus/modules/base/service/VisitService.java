@@ -6,7 +6,6 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.AppointmentDTO;
 import org.lamisplus.modules.base.domain.dto.VisitDTO;
-import org.lamisplus.modules.base.domain.entity.Appointment;
 import org.lamisplus.modules.base.domain.entity.Patient;
 import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.domain.entity.Visit;

@@ -6,16 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.WardDTO;
-import org.lamisplus.modules.base.domain.entity.User;
 import org.lamisplus.modules.base.domain.entity.Ward;
 import org.lamisplus.modules.base.domain.mapper.WardMapper;
 import org.lamisplus.modules.base.repository.WardRepository;
-import org.lamisplus.modules.base.util.GenericSpecification;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

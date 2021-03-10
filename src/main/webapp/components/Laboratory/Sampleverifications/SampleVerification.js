@@ -177,7 +177,7 @@ const SampleVerification = (props) => {
                     </Menu>
                 )    
             }
-            if(e.data.lab_test_order_status==="4"){
+            if(e.data.lab_test_order_status===4){
                 return (
                         <Menu>
                         <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px"}}>

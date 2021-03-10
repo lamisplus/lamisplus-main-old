@@ -5,8 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.entity.FormData;
-import org.lamisplus.modules.base.domain.entity.FormData;
-import org.lamisplus.modules.base.repository.FormDataRepository;
 import org.lamisplus.modules.base.repository.FormDataRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

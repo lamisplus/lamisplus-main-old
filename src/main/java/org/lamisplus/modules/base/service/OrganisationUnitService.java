@@ -7,10 +7,8 @@ import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.OrganisationUnitDTO;
 import org.lamisplus.modules.base.domain.entity.OrganisationUnit;
 import org.lamisplus.modules.base.domain.entity.OrganisationUnitHierarchy;
-import org.lamisplus.modules.base.domain.entity.OrganisationUnitLevel;
 import org.lamisplus.modules.base.domain.mapper.OrganisationUnitMapper;
 import org.lamisplus.modules.base.repository.OrganisationUnitHierarchyRepository;
-import org.lamisplus.modules.base.repository.OrganisationUnitLevelRepository;
 import org.lamisplus.modules.base.repository.OrganisationUnitRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 @Service
 @Transactional
@@ -27,7 +24,7 @@ import java.util.function.Consumer;
 public class OrganisationUnitService {
     private static final int UNARCHIVED = 0;
     private static final int ARCHIVED = 1;
-    private static final Long firstLevel = 1L;
+    private static final Long FIRST_ORG_LEVEL = 1L;
     private final OrganisationUnitRepository organisationUnitRepository;
     private final OrganisationUnitMapper organisationUnitMapper;
     private final OrganisationUnitHierarchyRepository organisationUnitHierarchyRepository;
@@ -109,7 +106,7 @@ public class OrganisationUnitService {
 
     public List<OrganisationUnit> getAllOrganisationUnitByOrganisationUnitLevelId(Long organisationUnitLevelId) {
         List<Long> level = new ArrayList<>();
-        for(Long i=firstLevel; i <= organisationUnitLevelId; i++){
+        for(Long i = FIRST_ORG_LEVEL; i < organisationUnitLevelId; i++){
             level.add(i);
         }
         return organisationUnitRepository.findAllByOrganisationUnitLevelIdIn(level);

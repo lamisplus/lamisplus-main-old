@@ -7,7 +7,6 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.DrugDTO;
 import org.lamisplus.modules.base.domain.entity.Drug;
-import org.lamisplus.modules.base.domain.entity.Regimen;
 import org.lamisplus.modules.base.domain.entity.RegimenDrug;
 import org.lamisplus.modules.base.domain.mapper.DrugMapper;
 import org.lamisplus.modules.base.repository.DrugRepository;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
