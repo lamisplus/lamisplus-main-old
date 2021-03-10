@@ -84,7 +84,6 @@ const ModalSample = (props) => {
         <div >
             <ToastContainer />
             <Modal isOpen={props.showModal} toggle={props.toggleModal} size="lg">
-
                 <Form onSubmit={createGlobalVariable}>
                     <ModalHeader toggle={props.toggleModal}>New Global Variable </ModalHeader>
                     <ModalBody>
@@ -101,9 +100,7 @@ const ModalSample = (props) => {
                                                 placeholder=' '
                                                 value={formData.name}
                                                 onChange={handleNameInputChange}
-                                                required
-                                            />
-
+                                                required/>
                                         </FormGroup>
                                     </Col>
                                     <Col md={12}>
