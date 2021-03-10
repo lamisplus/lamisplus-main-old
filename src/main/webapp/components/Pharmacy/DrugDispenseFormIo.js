@@ -123,7 +123,7 @@ const DispenseModal = (props) => {
         console.log(formData.data)
         props.updatePrescriptionStatus(formData.id, e);
         toggle()
-        //window.location.reload(true);
+        window.location.reload(true);
     };
 
 

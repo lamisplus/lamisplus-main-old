@@ -11,7 +11,7 @@ const PatientSearch = (props) => {
   const prescriptions = useSelector(state => state.pharmacy.allPrescriptions)
 
   const totalDrugsPrescribed = (drugsArray) => {
-    
+    console.log(prescriptions)
     const dispensed = []
 
     drugsArray.map(drugs => {
@@ -45,11 +45,7 @@ const PatientSearch = (props) => {
             field: "dispensedCount",
             filtering: false,
           },
-          {
-            title: "Type",
-            field: "type",
-            filtering: false,
-          },
+        
           {
             title: "Action",
             field: "actions",
@@ -62,7 +58,7 @@ const PatientSearch = (props) => {
           date: prescription.dateEncounter,
           prescribedCount: prescription.formDataObj.length,
           dispensedCount: totalDrugsPrescribed(prescription.formDataObj),
-          type:  prescription.formDataObj.data && prescription.formDataObj.data.type===1 ? 'Regimen': 'Drug',
+          // type:   prescription.formDataObj.data.type,
           actions: (
             
             <Link
