@@ -97,10 +97,8 @@ const DispenseModal = (props) => {
     const [optionsample, setOptionsample] = useState([]);
     const formData = props.formData ? props.formData : {}
     const [formValues, setFormValues] = useState({})
-    console.log(props.formData.data.status)
-    const handleInputChange = (e) => {
-        setFormValues ({ ...formValues, [e.target.name]: e.target.value });
-    }
+    console.log(props.formData)
+    
 
     useEffect(() => {
         async function getCharacters() {
@@ -121,7 +119,8 @@ const DispenseModal = (props) => {
 
     const handleDispense = (e) => {
         e.data.prescription_status = 1
-       // formData.data=e
+        formData.data=e.data
+        console.log(formData.data)
         props.updatePrescriptionStatus(formData.id, e);
         toggle()
         window.location.reload(true);

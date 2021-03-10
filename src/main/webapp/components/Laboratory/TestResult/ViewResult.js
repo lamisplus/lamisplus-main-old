@@ -98,7 +98,7 @@ const ModalViewResult = (props) => {
                                     <Col xs="4">
                                         <FormGroup>
                                           <br/>
-                                            <Label for="examplePassword"><span style={{ fontWeight: 'bold'}}> Result </span>: {x.test_result} </Label>
+                                            <Label for="examplePassword"><span style={{ fontWeight: 'bold'}}> Result </span>: {x.comment_sample_reported} </Label>
                                       
                                         </FormGroup>
                                     </Col>

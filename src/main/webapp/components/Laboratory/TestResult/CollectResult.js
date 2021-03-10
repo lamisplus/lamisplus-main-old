@@ -124,7 +124,7 @@ const ResultReporting = (props) => {
             const getNewTestOrder = testOrders.find(x => x.data.lab_test_group === getValue)
             setFetchTestOrders([getNewTestOrder]) 
         }else{
-            setFetchTestOrders([...newSample])
+            setFetchTestOrders(newSample)
         }
     };
     //This is function to check for the status of each collection to display on the tablist below 
@@ -220,14 +220,14 @@ return (
                                                   id="testgroup"
                                                   onChange={getGroup}
                                                 >
-                                                    <option value=""> </option>
+                                                    <option value="All"> All </option>
                                                     {
                                                       uniqueValues.map(x => 
                                                         <option key={x} value={x}>
                                                           {x}
                                                         </option>
                                                     )}
-                                                    <option value="All"> All </option>
+                                                    
                                               </Input>
                                         </FormGroup>
                                     </Col>
@@ -259,7 +259,7 @@ return (
                                             </thead>
                                             <tbody>
                                                
-                                                {!loading ? testOrders.map((row) => (
+                                                {!loading ? fetchTestOrders.map((row) => (
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>
                                                       <th className={classes.td}>{row.data.description===""?" ":row.data.description}</th>
                                                       <td className={classes.td}>{row.data.sample_type==="" ? " ":row.data.sample_type}</td>
