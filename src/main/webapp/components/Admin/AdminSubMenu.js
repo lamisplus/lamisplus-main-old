@@ -74,58 +74,46 @@ function AdminSubMenu(props) {
       <Menu size="mini" color={"silver"} inverted>
           <Dropdown text="System Configurations"   labeled simple    className='icon link item'>
               <Dropdown.Menu>
-                <Dropdown.Item>
-
-                  <Link to={{pathname: "/admin-application-codesets"}} >
-                 Application Codeset Manager
+              <Dropdown.Item>
+                  <Link to={{pathname: "/admin/program-manager-home"}} >
+                  Program Setup
                   </Link>
+                </Dropdown.Item>
+              
+                <Dropdown.Item>
+                  <Link to={{pathname: "/admin-application-codesets"}} >
+                 Application Codeset Setup
+                  </Link>
+                </Dropdown.Item>
+                
+                <Dropdown.Item >
+                  <Link to={{pathname: "/admin/standards"}}>Organization Unit setup</Link>
                 </Dropdown.Item>
                 <Dropdown.Item>
                   <Link
                       to={{
                         pathname: "/admin-global-variable"}}
                   >
-                  Global Variables
+                  Global Variables Setup 
                   </Link>
 
                 </Dropdown.Item>
                 <Dropdown.Item >
-                  <Link to={{pathname: "/admin/standards"}}>International Standard setup</Link>
+                  <Link to={{pathname: "/admin/standards"}}>International Standard Setup</Link>
                 </Dropdown.Item>
-                {/*<Dropdown.Item >*/}
-                {/*  <Link to={{pathname: "/organization-unit"}}>Organization Unit setup</Link>*/}
-                {/*</Dropdown.Item>*/}
-
-              {/*   <Dropdown.Item >
-                  <Link
-                      to={{
-                        pathname: "/admin/standards"}}
-                  >
-                  International Standard setup
-                  </Link>
-                </Dropdown.Item>
-                <Dropdown.Item >
-                  <Link
-                      to={{
-                        pathname: "/organization-unit"}}
-                  >
-                  Organization Unit setup
-                  </Link>
-                </Dropdown.Item>*/}
-
                 <Dropdown.Item >
 
                   <Link to={{
                         pathname: "/admin-wards"}}>
-                    Ward Manager
+                   Hospital Ward Setup
                   </Link>
                 </Dropdown.Item>
               </Dropdown.Menu>
           </Dropdown>
-        <Menu.Item>  <Link to={{pathname: "/admin-bootstrap-configuration"}} >Bootstrap Configuration </Link></Menu.Item>
-        <Menu.Item>  <Link to={{pathname: "/admin-organization-unit"}} >Organization Unit </Link></Menu.Item>
+        <Menu.Item>  <Link to={{pathname: "/admin/bootstrap-configuration"}} >Bootstrap Configuration </Link></Menu.Item>
+     
         {/*<Menu.Item>  <Link to={{pathname: "/case-managers"}} >Case Management </Link></Menu.Item>*/}
-        <Menu.Item>  <Link to={{pathname: "/admin-program-manager-home"}} >Program Setup </Link></Menu.Item>
+       
       </Menu>
       <ToastContainer />
     </React.Fragment>

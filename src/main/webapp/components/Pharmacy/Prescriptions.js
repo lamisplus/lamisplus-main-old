@@ -16,7 +16,6 @@ import { Menu, MenuList, MenuButton, MenuItem } from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import { Spinner } from 'reactstrap';
 import {
-  Alert,
   Card,
   CardBody,
   CardHeader,
@@ -92,13 +91,14 @@ const Prescriptions = (props) => {
   const [loading, setLoading] = useState('')
   const [modal, setModal] = useState(false);
   const [modal1, setModal1] = useState(false);
-  const [modalRegimen, setModalRegimen] = useState(false);
-  const [drugDetails, setDrugDetails] = useState({})
+  const [formData, setFormData] = useState(props.location.state ? prescriptionOrder : null );
+  const [drugDetails, setDrugDetails] = useState()
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleAction = () => setDropdownOpen((prevState) => !prevState);
 
   const toggle = (form) => {
+    console.log(form)
     setDrugDetails({ ...drugDetails, ...form });
     setModal(!modal);
     
@@ -120,9 +120,7 @@ const Prescriptions = (props) => {
      </button>
    );
 
-  const formData = props.location.state ? prescriptionOrder : null 
-  console.log(formData)
-
+  
  const Actions = (form) => {
    return (
      <Menu>
@@ -139,7 +137,9 @@ const Prescriptions = (props) => {
        <MenuList style={{ hover: "#eee" }}>
          {form.data.prescription_status === 0 ? (
 
-           <MenuItem onSelect={() => toggle(form)}
+           <MenuItem onSelect={() => 
+            toggle(form)
+          }
                      hidden={!authentication.userHasRole(["pharmacy_write"])}
            >
              <i
@@ -236,7 +236,7 @@ const Prescriptions = (props) => {
                               
                               
                                 <tbody >
-                                {!loading ? formData.map((form) => (
+                                {!loading ? prescriptionOrder.map((form) => (
                                   form.data!==null?
                                   <tr key={form.id}>
                                     <td>
@@ -244,7 +244,7 @@ const Prescriptions = (props) => {
                                     </td>
                                     <td>{form.data.duration && form.data.duration ? form.data.duration : ''}</td>
                                     <td>{Moment(form.data.date_prescribed).format("DD-MM-YYYY")}</td>
-                                    <td>{ Moment(form.data.date_dispensed).format("DD-MM-YYYY")}</td>
+                                    <td>{ form.data.prescription_status !==0 ? Moment(form.data.date_dispensed).format("DD-MM-YYYY") : '' }</td>
                                     <td>{Actions(form)}</td>
                                   </tr>
                                   :

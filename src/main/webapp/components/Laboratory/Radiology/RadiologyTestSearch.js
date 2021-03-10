@@ -35,7 +35,7 @@ const RadiologyTestSearch = (props) => {
         return maxVal.length;
         //return 2
       }
- 
+ console.log(props.patientsTestOrderList)
   return (
     <div>
       <MaterialTable
