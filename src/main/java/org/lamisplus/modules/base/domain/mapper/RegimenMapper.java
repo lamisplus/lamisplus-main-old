@@ -15,5 +15,4 @@ public interface RegimenMapper {
     RegimenDTO toRegimenDTO(Regimen regimen);
 
     List<RegimenDTO> toRegimenDTOList(List<Regimen> regimens);
-
 }

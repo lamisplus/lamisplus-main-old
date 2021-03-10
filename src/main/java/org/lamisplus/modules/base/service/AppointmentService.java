@@ -37,9 +37,7 @@ public class AppointmentService {
         List<AppointmentDTO> appointmentDTOS = new ArrayList<>();
         appointments.forEach(appointment -> {
             Patient patient = appointment.getPatientByPatientId();
-            Person person = patient.getPersonByPersonId();
-
-            final AppointmentDTO appointmentDTO = appointmentMapper.toAppointmentDTO(appointment, person, patient);
+            final AppointmentDTO appointmentDTO = appointmentMapper.toAppointmentDTO(appointment, patient.getPersonByPersonId(), patient);
 
             appointmentDTOS.add(appointmentDTO);
         });

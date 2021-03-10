@@ -24,8 +24,6 @@ public class DrugGroupService {
     private final DrugMapper drugMapper;
     private static final int UN_ARCHIVED = 0;
 
-
-
     public List<DrugGroup> getAllDrugGroups() {
         return this.drugGroupRepository.findAllByArchived(UN_ARCHIVED);
     }

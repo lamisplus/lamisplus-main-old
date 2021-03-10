@@ -23,7 +23,6 @@ public class ApplicationCodesetService {
 
     private final ApplicationCodesetRepository applicationCodesetRepository;
     private final ApplicationCodesetMapper applicationCodesetMapper;
-    //private final UserService userService;
     private static final int ARCHIVED = 1;
     private static final int UN_ARCHIVED = 0;
 

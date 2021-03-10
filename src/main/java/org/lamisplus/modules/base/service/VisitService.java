@@ -37,12 +37,8 @@ public class VisitService {
     public static final int UNARCHIVED = 0;
     private final VisitRepository visitRepository;
     private final VisitMapper visitMapper;
-    private final UserService userService;
     private final AppointmentService appointmentService;
-    private final AppointmentMapper appointmentMapper;
     private final AppointmentRepository appointmentRepository;
-
-
 
     public List<VisitDTO> getAllVisits() {
         List<VisitDTO> visitDTOS = new ArrayList<>();
@@ -70,7 +66,7 @@ public class VisitService {
     }
 
     public Visit save(VisitDTO visitDTO) {
-        Optional<Visit> visitOptional = this.visitRepository.findByPatientIdAndDateVisitStart(visitDTO.getPatientId(), visitDTO.getDateVisitStart());
+        Optional<Visit> visitOptional = this.visitRepository.findByPatientIdAndDateVisitEnd(visitDTO.getPatientId(), null);
         if(visitOptional.isPresent())throw new RecordExistException(Visit.class, "Patient", visitDTO.getPatientId()+"" + ", Visit Start Date =" + visitDTO.getDateVisitStart());
 
         Visit visit = visitMapper.toVisit(visitDTO);
@@ -89,9 +85,9 @@ public class VisitService {
     }
 
     public VisitDTO getVisit(Long id) {
-        Optional<Visit> visitOptional = this.visitRepository.findById(id);
+        Optional<Visit> visitOptional = this.visitRepository.findByIdAndArchived(id, UNARCHIVED);
 
-        if (!visitOptional.isPresent() || visitOptional.get().getArchived() == 1 ) throw new EntityNotFoundException(Visit.class, "Id", id + "");
+        if (!visitOptional.isPresent()) throw new EntityNotFoundException(Visit.class, "Id", id + "");
         Patient patient = visitOptional.get().getPatientByVisit();
         Person person = patient.getPersonByPersonId();
         List<AppointmentDTO> appointmentDTOS = appointmentService.getOpenAllAppointmentByPatientId(patient.getId());

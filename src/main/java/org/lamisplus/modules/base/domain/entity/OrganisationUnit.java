@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -39,10 +40,12 @@ public class OrganisationUnit implements Serializable {
 
     @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
     @JsonIgnore
+    @ToString.Exclude
     public List<Appointment> appointmentsById;
 
     @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
     @JsonIgnore
+    @ToString.Exclude
     public List<ApplicationUserPatient> applicationUserPatientsById;
 
     @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
@@ -51,17 +54,21 @@ public class OrganisationUnit implements Serializable {
 
     @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
     @JsonIgnore
+    @ToString.Exclude
     public List<OrganisationUnitHierarchy> organisationUnitHierarchiesById;
 
     @OneToMany(mappedBy = "organisationUnitByParentOrganisationUnitId")
     @JsonIgnore
+    @ToString.Exclude
     public List<OrganisationUnitHierarchy> organisationUnitHierarchiesById_0;
 
     @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
     @JsonIgnore
+    @ToString.Exclude
     public List<FormData> formDataById;
 
     @OneToMany(mappedBy = "organisationUnitByCurrentOrganisationUnitId")
     @JsonIgnore
+    @ToString.Exclude
     public List<User> users;
 }

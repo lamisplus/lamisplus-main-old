@@ -44,7 +44,7 @@ public class DrugInventory extends Audit<String> {
     @Basic
     @Column(name = "archived")
     @JsonIgnore
-    private Integer archived;
+    private Integer archived = 0;
 
     /*@ManyToOne
     @JoinColumn(name = "drug_id", referencedColumnName = "id", insertable = false, updatable = false)

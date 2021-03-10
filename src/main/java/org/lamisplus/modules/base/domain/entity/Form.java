@@ -62,14 +62,14 @@ public class Form extends JsonBEntity implements Serializable {
     private Object formPrecedence;
 
     @Basic
-    @Column(name = "date_created")
+    @Column(name = "date_created", updatable = false)
     @JsonIgnore
     @CreationTimestamp
     private Timestamp dateCreated;
 
     @CreatedBy
     @Basic
-    @Column(name = "created_by")
+    @Column(name = "created_by", updatable = false)
     @JsonIgnore
     private String createdBy;
 

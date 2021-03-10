@@ -13,6 +13,4 @@ public interface OrganisationUnitMapper {
     OrganisationUnitDTO toOrganisationUnitDTO(OrganisationUnit organisationUnit);
 
     List<OrganisationUnitDTO> toOrganisationUnitDTOList(List<OrganisationUnit> organisationUnits);
-
-
 }

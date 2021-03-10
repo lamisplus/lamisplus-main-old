@@ -1,6 +1,5 @@
 package org.lamisplus.modules.base.repository;
 
-import org.lamisplus.modules.base.domain.entity.OrganisationUnit;
 import org.lamisplus.modules.base.domain.entity.OrganisationUnitHierarchy;
 import org.springframework.data.jpa.repository.JpaRepository;
 
