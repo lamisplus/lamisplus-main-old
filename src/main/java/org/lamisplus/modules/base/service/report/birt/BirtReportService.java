@@ -115,9 +115,9 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
             } else {
                 //check facilityId belongs to user
-                List orgUnits = user.getApplicationUserOrganisationUnits().stream().map(ApplicationUserOrganisationUnit::getOrganisationUnitId).collect(Collectors.toList());
-                if(!orgUnits.contains(params.get("facilityId"))){
-                    throw new EntityNotFoundException(OrganisationUnit.class,"FacilityId:","User not in Organisation Unit");
+                List <Long> orgUnits = user.getApplicationUserOrganisationUnits().stream().map(ApplicationUserOrganisationUnit::getOrganisationUnitId).collect(Collectors.toList());
+                if(!orgUnits.contains(Long.valueOf((Integer)params.get("facilityId")))){
+                    throw new EntityNotFoundException(OrganisationUnit.class,"FacilityId","User not in Organisation Unit");
                 }
             }
         }
