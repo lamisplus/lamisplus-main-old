@@ -251,10 +251,12 @@
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.eclipse.emf.ecore_2.14.0.v20180529-1144:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.apache.batik.transcoder_1.7.0.v201011041433:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.apache.commons.codec_1.9.0.v20170208-1614:4.8.0" level="project" />
+    <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.sat4j.core_2.3.5.v201308161310:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.apache.batik.ext.awt_1.7.0.v201011041433:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.eclipse.equinox.frameworkadmin_2.1.0.v20180131-0638:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.w3c.dom.smil_1.0.1.v200903091627:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.tukaani.xz_1.8.0.v20180207-1613:4.8.0" level="project" />
+    <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.eclipse.datatools.connectivity.apache.derby_1.2.1.201712071719:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.eclipse.equinox.preferences_3.7.100.v20180510-1129:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.eclipse.equinox.app_1.3.500.v20171221-2204:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.apache.batik.dom_1.7.1.v201505191845:4.8.0" level="project" />
@@ -281,11 +283,13 @@
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.w3c.dom.svg_1.1.0.v201011041433:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.eclipse.datatools.connectivity.oda.design_3.5.1.201712071719:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:javax.xml_1.3.4.v201005080400:4.8.0" level="project" />
+    <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.sat4j.pb_2.3.5.v201404071733:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.eclipse.datatools.connectivity.sqm.core_1.4.1.201712071719:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.eclipse.datatools.connectivity.oda.profile_3.4.1.201712071719:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.eclipse.help_3.8.100.v20180512-1136:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.eclipse.emf.ecore.change_2.12.0.v20180125-1130:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.apache.poi_3.9.0.v201405241750:4.8.0" level="project" />
+    <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.apache.commons.logging_1.1.1.v201101211721:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.apache.lucene.queryparser_6.1.0.v20161115-1612:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.w3c.dom.events_3.0.0.draft20060413_v201105210656:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.apache.xml.resolver_1.2.0.v201005080400:4.8.0" level="project" />
@@ -304,6 +308,7 @@
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.eclipse.osgi.util_3.5.0.v20180219-1511:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.eclipse.datatools.connectivity_1.14.1.201712071719:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.apache.felix.scr_2.0.14.v20180117-1452:4.8.0" level="project" />
+    <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.eclipse.datatools.connectivity.apache.derby.dbdefinition_1.2.1.201712071719:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.eclipse.datatools.connectivity.db.generic_1.2.1.201712071719:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.apache.lucene.analyzers-common_6.1.0.v20161115-1612:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.apache.xml.serializer_2.7.1.v201005080400:4.8.0" level="project" />

@@ -77,7 +77,7 @@ function FormSearch(props) {
                         {title: "Action", field: "actions", filtering: false,},
                     ]}
                     isLoading={loading}
-                    data={props.formList.map((row) => ({
+                    data={!props.formList && !props.formList.length ? [] : props.formList.map((row) => ({
                         programName: row.programName,
                         name: row.name,
                         number: row.version,
