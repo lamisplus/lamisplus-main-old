@@ -160,21 +160,17 @@ function HomePage(props) {
 
                 {/* Begining of bootstrap  */}
                 <TabPanel value={value} index={1}>
-                    <FormPage/>
+                    <UserPage/> 
                 </TabPanel>
                 {/* End of boostrap */}
 
                 {/* user setup */}
                 <TabPanel value={value} index={2}>
-                    <UserPage/>
+                    <FormPage/>
                 </TabPanel>
                 {/* user setup */}
 
-                {/* db manager */}
-                {/*<TabPanel value={value} index={3}>*/}
-                {/*    <DatabaseManagement/>*/}
-                {/*</TabPanel>*/}
-                {/* db manager */}
+   
 
                 {/* service forms */}
                 <TabPanel value={value} index={3}>

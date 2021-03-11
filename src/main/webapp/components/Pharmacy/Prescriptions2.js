@@ -10,7 +10,7 @@ import Moment from "moment";
 import PatientDetailCard from 'components/PatientProfile/PatientDetailCard';
 import { Link } from "react-router-dom";
 //import DispenseModal from './DispenseModal'
-import DispenseModal from './DrugDispenseFormIos'
+import DispenseModal from './DrugDispenseFormIo'
 import ViewModal from './ViewModalForm'
 import { Menu, MenuList, MenuButton, MenuItem } from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
@@ -90,11 +90,9 @@ const Prescriptions = (props) => {
   const { buttonLabel, className } = props;
   const [loading, setLoading] = useState('')
   const [modal, setModal] = useState(false);
-  const toggleModal = () => setModal(!modal)
   const [modal1, setModal1] = useState(false);
-  const toggleModal1 = () => setModal1(!modal1)
   const [formData, setFormData] = useState(props.location.state ? prescriptionOrder : null );
-  const [drugDetails, setDrugDetails] = useState(props.location.state ? prescriptionOrder : null)
+  const [drugDetails, setDrugDetails] = useState()
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleAction = () => setDropdownOpen((prevState) => !prevState);
@@ -124,7 +122,6 @@ const Prescriptions = (props) => {
 
   
  const Actions = (form) => {
-   
    return (
      <Menu>
        <MenuButton
@@ -275,8 +272,27 @@ const Prescriptions = (props) => {
           </div>
         </Col>
       </Row>
-    
-      <DispenseModal modalstatus={modal} togglestatus={toggleModal} formData={drugDetails} />
+      {modal ? (
+        <DispenseModal
+          isOpen={modal}
+          toggle={toggle}
+          close={closeBtn}
+          formData={drugDetails}
+        ></DispenseModal>
+      ) : (
+        <div></div>
+      )}
+
+      {modal1 ? (
+        <ViewModal
+          isOpen={modal1}
+          toggle={toggle1}
+          close={closeBtn1}
+          formData={drugDetails}
+        ></ViewModal>
+      ) : (
+        <div></div>
+      )}
     </Page>
   );
 }

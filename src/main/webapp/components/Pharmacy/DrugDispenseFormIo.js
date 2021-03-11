@@ -1,29 +1,17 @@
 import React, {useState, useEffect} from 'react';
 import {  Modal, ModalHeader, ModalBody,
-    Form,
-    Row,
-    Col,Input,
-    FormGroup,
-    Label,Card, CardBody
+Card, CardBody
 } from 'reactstrap';
 import {
     updatePrescriptionStatus,
 } from "../../actions/pharmacy";
 import { makeStyles } from '@material-ui/core/styles'
-
 import { connect } from 'react-redux';
-import Chip from '@material-ui/core/Chip';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
-import { DateTimePicker } from 'react-widgets';
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
-import moment from "moment";
-import { Spinner } from 'reactstrap';
-import { useSelector, useDispatch } from 'react-redux';
 import './modal.css';
 import { url } from "../../api";
 import axios from "axios";
@@ -93,10 +81,9 @@ const DispenseModal = (props) => {
     const toggle = props.toggle
     const modal = props.isOpen
     const closeBtn = props.close
-    const classes = useStyles();
-    const [optionsample, setOptionsample] = useState([]);
+
     const formData = props.formData ? props.formData : {}
-    const [formValues, setFormValues] = useState({})
+
     console.log(props.formData)
     
 
@@ -121,7 +108,7 @@ const DispenseModal = (props) => {
         e.data.prescription_status = 1
         formData.data=e.data
         console.log(formData.data)
-        props.updatePrescriptionStatus(formData.id, e);
+        //props.updatePrescriptionStatus(formData.id, e);
         toggle()
         window.location.reload(true);
     };
