@@ -87,28 +87,12 @@ const DispenseModal = (props) => {
     console.log(props.formData)
     
 
-    useEffect(() => {
-        async function getCharacters() {
-            try {
-                const response = await axios(
-                    url + "drugs"
-                );
-                const body = response.data;
-                console.log(body)
-                setOptionsample(
-                    body.map(({ genericName, id }) => ({ title: genericName, value: id }))
-                );
-            } catch (error) {
-            }
-        }
-        getCharacters();
-    }, []);
 
     const handleDispense = (e) => {
         e.data.prescription_status = 1
         formData.data=e.data
         console.log(formData.data)
-        //props.updatePrescriptionStatus(formData.id, e);
+        props.updatePrescriptionStatus(formData.id, e);
         toggle()
         window.location.reload(true);
     };

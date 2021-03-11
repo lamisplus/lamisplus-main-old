@@ -75,7 +75,7 @@ function AdminSubMenu(props) {
           <Dropdown text="System Configurations"   labeled simple    className='icon link item'>
               <Dropdown.Menu>
               <Dropdown.Item>
-                  <Link to={{pathname: "/admin/program-manager-home"}} >
+                  <Link to={{pathname: "/admin-program-manager-home"}} >
                   Program Setup
                   </Link>
                 </Dropdown.Item>
@@ -110,7 +110,7 @@ function AdminSubMenu(props) {
                 </Dropdown.Item>
               </Dropdown.Menu>
           </Dropdown>
-        <Menu.Item>  <Link to={{pathname: "/admin/bootstrap-configuration"}} >Bootstrap Configuration </Link></Menu.Item>
+        <Menu.Item>  <Link to={{pathname: "/admin-bootstrap-configuration"}} >Bootstrap Configuration </Link></Menu.Item>
      
         {/*<Menu.Item>  <Link to={{pathname: "/case-managers"}} >Case Management </Link></Menu.Item>*/}
        
