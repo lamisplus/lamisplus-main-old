@@ -20,6 +20,9 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class VisitScheduler {
+    private static final int ONE_DAY = 1;
+    private static final int TWENTY_FOUR_HOURS = 24;
+    private static final String AUTOMATED = "Automated";
     private final VisitService visitService;
     private final VisitMapper visitMapper;
     private final VisitRepository visitRepository;
@@ -39,15 +42,15 @@ public class VisitScheduler {
                         return;
                     }
                     if (visit.getDateVisitEnd() == null || visit.getTimeVisitEnd() == null) {
-                        LocalDate localDate = visit.getDateVisitStart().plusDays(1);
-                        LocalTime localTime = visit.getTimeVisitStart().plusHours(24);
+                        LocalDate localDate = visit.getDateVisitStart().plusDays(ONE_DAY);
+                        LocalTime localTime = visit.getTimeVisitStart().plusHours(TWENTY_FOUR_HOURS);
                         LocalDate customNowLocalDate = CustomDateTimeFormat.LocalDateByFormat(LocalDate.now(), "dd-MM-yyyy");
                         LocalTime customNowLocalTime = CustomDateTimeFormat.LocalTimeByFormat(LocalTime.now(), "hh:mm a");
                         if ((customNowLocalDate.isAfter(localDate) || customNowLocalDate.isEqual(localDate)) &&
                                 (customNowLocalTime.isAfter(localTime) || customNowLocalTime.equals(localTime))) {
                             visit.setDateVisitEnd(localDate);
                             visit.setTimeVisitEnd(localTime);
-                            //visit.setModifiedBy("System");
+                            visit.setModifiedBy(AUTOMATED);
                             this.visitRepository.save(visit);
                         }
                     }
@@ -58,6 +61,4 @@ public class VisitScheduler {
             log.info(e.getMessage());
         }
     }
-
-
 }

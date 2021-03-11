@@ -72,7 +72,7 @@ export const updateForm = (id, data) => dispatch => {
                 type: FORMTYPES.FORMTYPES_UPDATE,
                 payload: response.data
             });
-            toast.success("Form was saved successfully!");
+            toast.success("Form was updated successfully!");
             console.log(response)
         })
         .catch(error => {

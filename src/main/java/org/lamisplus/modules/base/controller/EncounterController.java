@@ -7,11 +7,8 @@ import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.entity.Encounter;
 import org.lamisplus.modules.base.service.EncounterService;
 import org.lamisplus.modules.base.domain.dto.EncounterDTO;
-import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +18,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Audit
 public class EncounterController {
-    //private static String ENTITY_NAME = "Encounter";
     private final EncounterService encounterService;
 
     @PostMapping

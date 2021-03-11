@@ -18,13 +18,13 @@ public interface PatientMapper {
 
     Patient toPatient(PatientDTO patientDTO);
 
-
     @Mappings({
             @Mapping(source="person.id", target="personId"),
             @Mapping(source="visit.id", target="visitId"),
             @Mapping(source="patient.id", target="patientId")
     })
     PatientDTO toPatientDTO(Person person, Visit visit, PersonContact personContact, Patient patient);
+
     @Mappings({
             @Mapping(source="person.id", target="personId"),
             @Mapping(source="patient.id", target="patientId")

@@ -15,7 +15,4 @@ public interface WardMapper {
     WardDTO toWardDTO(Ward ward);
 
     List<WardDTO> toWardDTOList(List<Ward> wards);
-
-
-
 }

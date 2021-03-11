@@ -68,7 +68,7 @@ public class Encounter implements Serializable  {
 
     @CreatedBy
     @Basic
-    @Column(name = "created_by")
+    @Column(name = "created_by", updatable = false)
     @JsonIgnore
     private String createdBy;
 

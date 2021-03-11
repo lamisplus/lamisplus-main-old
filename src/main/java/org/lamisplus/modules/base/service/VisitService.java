@@ -6,6 +6,7 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.AppointmentDTO;
 import org.lamisplus.modules.base.domain.dto.VisitDTO;
+import org.lamisplus.modules.base.domain.entity.Appointment;
 import org.lamisplus.modules.base.domain.entity.Patient;
 import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.domain.entity.Visit;
@@ -36,12 +37,8 @@ public class VisitService {
     public static final int UNARCHIVED = 0;
     private final VisitRepository visitRepository;
     private final VisitMapper visitMapper;
-    private final UserService userService;
     private final AppointmentService appointmentService;
-    private final AppointmentMapper appointmentMapper;
     private final AppointmentRepository appointmentRepository;
-
-
 
     public List<VisitDTO> getAllVisits() {
         List<VisitDTO> visitDTOS = new ArrayList<>();
@@ -69,21 +66,28 @@ public class VisitService {
     }
 
     public Visit save(VisitDTO visitDTO) {
-        Optional<Visit> visitOptional = this.visitRepository.findByPatientIdAndDateVisitStart(visitDTO.getPatientId(), visitDTO.getDateVisitStart());
+        Optional<Visit> visitOptional = this.visitRepository.findByPatientIdAndDateVisitEnd(visitDTO.getPatientId(), null);
         if(visitOptional.isPresent())throw new RecordExistException(Visit.class, "Patient", visitDTO.getPatientId()+"" + ", Visit Start Date =" + visitDTO.getDateVisitStart());
 
         Visit visit = visitMapper.toVisit(visitDTO);
         visit.setUuid(UuidGenerator.getUuid());
-        if(visitDTO.getAppointmentDTOList() != null && !visitDTO.getAppointmentDTOList().isEmpty()){
-            appointmentRepository.saveAll(appointmentMapper.toAppointmentList(visitDTO.getAppointmentDTOList()));
+
+        final Visit savedVisit = visitRepository.save(visit);
+
+        if(visitDTO.getAppointmentId()!= null){
+            Optional<Appointment> optionalAppointment = appointmentRepository.findByIdAndArchived(visitDTO.getAppointmentId(), UNARCHIVED);
+            optionalAppointment.ifPresent(appointment -> {
+                appointment.setVisitId(savedVisit.getId());
+                appointmentRepository.save(appointment);
+            });
         }
-        return this.visitRepository.save(visit);
+        return savedVisit;
     }
 
     public VisitDTO getVisit(Long id) {
-        Optional<Visit> visitOptional = this.visitRepository.findById(id);
+        Optional<Visit> visitOptional = this.visitRepository.findByIdAndArchived(id, UNARCHIVED);
 
-        if (!visitOptional.isPresent() || visitOptional.get().getArchived() == 1 ) throw new EntityNotFoundException(Visit.class, "Id", id + "");
+        if (!visitOptional.isPresent()) throw new EntityNotFoundException(Visit.class, "Id", id + "");
         Patient patient = visitOptional.get().getPatientByVisit();
         Person person = patient.getPersonByPersonId();
         List<AppointmentDTO> appointmentDTOS = appointmentService.getOpenAllAppointmentByPatientId(patient.getId());

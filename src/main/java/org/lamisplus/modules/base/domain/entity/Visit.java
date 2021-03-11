@@ -76,6 +76,7 @@ public class Visit extends Audit<String> {
     @JoinColumn(name = "patient_id", insertable = false, updatable = false)
     @ManyToOne
     @JsonIgnore
+    @ToString.Exclude
     private Patient patientByVisit;
 
     /*@JoinColumn(name = "visit_type_id", insertable = false, updatable = false)

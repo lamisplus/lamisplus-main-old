@@ -9,11 +9,12 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ReportDetailDTO;
 import org.lamisplus.modules.base.domain.dto.ReportInfoDTO;
-import org.lamisplus.modules.base.domain.entity.ReportInfo;
-import org.lamisplus.modules.base.domain.entity.Program;
+import org.lamisplus.modules.base.domain.entity.*;
 import org.lamisplus.modules.base.domain.mapper.ReportInfoMapper;
 import org.lamisplus.modules.base.repository.ProgramRepository;
 import org.lamisplus.modules.base.repository.ReportInfoRepository;
+import org.lamisplus.modules.base.repository.UserRepository;
+import org.lamisplus.modules.base.security.SecurityUtils;
 import org.lamisplus.modules.base.util.GenericSpecification;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,12 +31,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.InputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class BirtReportService implements ApplicationContextAware, DisposableBean{
     private static final int UN_ARCHIVED = 0;
     private static final int ARCHIVED = 1;
+    private final UserRepository userRepository;
+    private static String name;
     /*@Value("${reports.relative.path}")
     private String reportsPath = System.getProperty("user.dir");
     @Value("${images.relative.path}")
@@ -99,7 +103,25 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
     public void generateReport(ReportDetailDTO reportDetailDTO, OutputType output, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
         ReportInfo reportInfo = getReport(reportDetailDTO.getReportId());
+        name = reportInfo.getName();
         InputStream stream = IOUtils.toInputStream(reportInfo.getTemplate());
+        User user;
+        Optional<User> optionalUser = SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRoleByUserName);
+        if(optionalUser.isPresent()){
+            user = optionalUser.get();
+            if(params.get("facilityId") == null){
+                //assign default facilityId
+                params.put("facilityId", user.getCurrentOrganisationUnitId());
+
+            } else {
+                //check facilityId belongs to user
+                List <Long> orgUnits = user.getApplicationUserOrganisationUnits().stream().map(ApplicationUserOrganisationUnit::getOrganisationUnitId).collect(Collectors.toList());
+                if(!orgUnits.contains(Long.valueOf((Integer)params.get("facilityId")))){
+                    throw new EntityNotFoundException(OrganisationUnit.class,"FacilityId","User not in Organisation Unit");
+                }
+            }
+        }
+
         try {
             loadReports(reportInfo.getName(), stream);
         } catch (EngineException e) {
@@ -119,6 +141,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
             default:
                 throw new IllegalArgumentException("Output type not recognized:" + output);
         }
+
     }
 
     /**
@@ -138,7 +161,6 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         runAndRenderTask.setRenderOption(htmlOptions);
 
         runAndRenderTask.setRenderOption(htmlOptions);
-        runAndRenderTask.getAppContext().put(EngineConstants.APPCONTEXT_BIRT_VIEWER_HTTPSERVET_REQUEST, request);
 
         customRunAndRenderTask(htmlOptions, runAndRenderTask, response);
         }
@@ -159,6 +181,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         runAndRenderTask.getAppContext().put(EngineConstants.APPCONTEXT_PDF_RENDER_CONTEXT, request);
 
         try {
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "\"");
             pdfRenderOption.setOutputStream(response.getOutputStream());
             runAndRenderTask.run();
         } catch (Exception e) {
@@ -182,7 +205,6 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         excelRenderOption.setOutputFormat("xlsx");
         runAndRenderTask.setRenderOption(excelRenderOption);
         runAndRenderTask.getAppContext().put(EngineConstants.APPCONTEXT_BIRT_VIEWER_HTTPSERVET_REQUEST, request);
-
 
         customRunAndRenderTask(excelRenderOption, runAndRenderTask, response);
     }

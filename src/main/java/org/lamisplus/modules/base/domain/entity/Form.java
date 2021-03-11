@@ -50,7 +50,7 @@ public class Form extends JsonBEntity implements Serializable {
 
     @Basic
     @Column(name = "usage_status")
-    private Integer usageCode;
+    private Integer usageCode=0;
 
     @Basic
     @Column(name = "name")
@@ -62,14 +62,14 @@ public class Form extends JsonBEntity implements Serializable {
     private Object formPrecedence;
 
     @Basic
-    @Column(name = "date_created")
+    @Column(name = "date_created", updatable = false)
     @JsonIgnore
     @CreationTimestamp
     private Timestamp dateCreated;
 
     @CreatedBy
     @Basic
-    @Column(name = "created_by")
+    @Column(name = "created_by", updatable = false)
     @JsonIgnore
     private String createdBy;
 
@@ -92,6 +92,7 @@ public class Form extends JsonBEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "program_code", referencedColumnName = "code", insertable = false, updatable = false)
+    @ToString.Exclude
     @JsonIgnore
     private Program programByProgramCode;
 

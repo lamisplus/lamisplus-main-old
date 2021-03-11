@@ -1,9 +1,7 @@
 package org.lamisplus.modules.base.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -34,13 +32,19 @@ public class OrganisationUnitHierarchy {
 
     @ManyToOne
     @JoinColumn(name = "organisation_unit_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
+    @ToString.Exclude
     private OrganisationUnit organisationUnitByOrganisationUnitId;
 
     @ManyToOne
     @JoinColumn(name = "parent_organisation_unit_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
+    @ToString.Exclude
     private OrganisationUnit organisationUnitByParentOrganisationUnitId;
 
     @ManyToOne
     @JoinColumn(name = "organisation_unit_level_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
+    @ToString.Exclude
     private OrganisationUnitLevel organisationUnitLevelByOrganisationUnitLevelId;
 }

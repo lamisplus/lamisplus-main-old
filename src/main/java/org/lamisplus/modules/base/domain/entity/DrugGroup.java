@@ -28,7 +28,7 @@ public class DrugGroup extends Audit<String> {
     @Basic
     @Column(name = "archived")
     @JsonIgnore
-    private Integer archived;
+    private Integer archived = 0;
 
     @OneToMany(mappedBy = "drugGroupByDrugGroupId")
     @JsonIgnore

@@ -25,7 +25,7 @@ public class Patient extends Audit<String> implements Serializable {
     private Long id;
 
     @Basic
-    @Column(name = "date_registration", nullable = false)
+    @Column(name = "date_registration")
     @NotNull
     private LocalDate dateRegistration;
     @Basic

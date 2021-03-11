@@ -93,7 +93,7 @@ function ServiceFormPage(props) {
     setPrograms(
       props.programList
         .map((x) => ({ ...x, label: x.name, value: x.code }))
-       // .filter((x) => x.value !== CODES.GENERAL_SERVICE)
+        .filter((x) => x.value === CODES.GENERAL_SERVICE)
     );
   }, [props.programList]);
 
@@ -240,9 +240,22 @@ function ServiceFormPage(props) {
   }, [efilterText, eresetPaginationToggle]);
 
   const handleProgramChange = (newValue, actionMeta) => {
-    fetchPatientServiceByProgram(props.patient.patientId, newValue.code);
+    fetchServiceByProgram(newValue.id);
   };
 
+  async function fetchServiceByProgram( programId) {
+    setShowServiceFormLoading(true);
+    await axios.get( url+ `programs/${programId}/forms`)
+        .then(response => {
+          setShowServiceFormLoading(false);
+          setServiceList(response.data.filter((x) => x.name.includes('Retrospective')));
+        })
+        .catch(error => {
+              setShowServiceFormLoading(false);
+              setServiceList([]);
+            }
+        );
+  }
   async function fetchPatientServiceByProgram(patientId, programCode) {
       setShowServiceFormLoading(true);
       await axios.get( url+ `patients/${patientId}/${programCode}/form`)
@@ -303,8 +316,7 @@ function ServiceFormPage(props) {
                     </FormGroup>{" "}
                   </Col>
                   <Col md={12}>
-                    <CheckedInValidation
-                      actionButton={
+
                         <Button
                           color="primary"
                           className=" mr-1"
@@ -313,9 +325,7 @@ function ServiceFormPage(props) {
                         >
                           Open Form
                         </Button>
-                      }
-                      visitId={props.patient.visitId}
-                    />
+
                   </Col>
                 </div>
               </CardBody>

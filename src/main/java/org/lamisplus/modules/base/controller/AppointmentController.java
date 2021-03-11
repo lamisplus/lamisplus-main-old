@@ -9,7 +9,6 @@ import org.lamisplus.modules.base.domain.entity.Appointment;
 import org.lamisplus.modules.base.service.AppointmentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController

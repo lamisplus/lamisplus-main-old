@@ -63,4 +63,5 @@ public class VisitDTO {
     private Long educationId;
     private Long occupationId;
     private List<AppointmentDTO> appointmentDTOList;
+    private Long appointmentId;
 }

@@ -53,5 +53,6 @@ public class Menu extends Audit<String> implements Serializable {
     @OneToOne
     @JoinColumn(name = "module_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
+    @ToString.Exclude
     private Module moduleByMenu;
 }

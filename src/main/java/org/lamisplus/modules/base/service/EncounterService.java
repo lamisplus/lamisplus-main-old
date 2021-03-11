@@ -44,10 +44,8 @@ public class EncounterService {
     private final FormDataMapper formDataMapper;
     private final FormDataRepository formDataRepository;
     private final UserService userService;
-    //private final GenericSpecification<Encounter> genericSpecification;
     private final AccessRight accessRight;
     private static final int ARCHIVED = 1;
-    //private static final String READ = "read";
     private static final String WRITE = "write";
     private static final String DELETE = "delete";
 
