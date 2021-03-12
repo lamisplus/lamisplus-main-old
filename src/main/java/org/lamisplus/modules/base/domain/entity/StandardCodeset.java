@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "standard_codeset")
 public class StandardCodeset extends Audit<String> {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

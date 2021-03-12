@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "module")
 public class Module implements Serializable {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

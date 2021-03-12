@@ -20,7 +20,7 @@ import java.util.*;
 @DynamicUpdate
 public class User {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

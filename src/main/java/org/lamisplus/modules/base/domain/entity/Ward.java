@@ -20,7 +20,7 @@ import java.util.Objects;
 @DynamicUpdate
 public class Ward extends Audit<String>{
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -38,7 +38,7 @@ public class Ward extends Audit<String>{
     private Integer archived = 0;
 
     @Basic
-    @Column(name = "organisation_unit_id")
+    @Column(name = "organisation_unit_id", updatable = false)
     @JsonIgnore
     private Long organisationUnitId;
 }

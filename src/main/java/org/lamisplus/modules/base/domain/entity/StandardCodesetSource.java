@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "standard_codeset_source")
 public class StandardCodesetSource {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

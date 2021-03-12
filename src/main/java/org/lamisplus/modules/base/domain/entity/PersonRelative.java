@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class PersonRelative implements Serializable {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
