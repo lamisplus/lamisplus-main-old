@@ -39,6 +39,7 @@ public class VisitService {
     private final VisitMapper visitMapper;
     private final AppointmentService appointmentService;
     private final AppointmentRepository appointmentRepository;
+    private final UserService userService;
 
     public List<VisitDTO> getAllVisits() {
         List<VisitDTO> visitDTOS = new ArrayList<>();
@@ -47,6 +48,7 @@ public class VisitService {
             public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), 0)));
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("organisationUnitId"), getOrganisationUnitId())));
                 criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("dateVisitEnd").as(LocalDate.class),
                         CustomDateTimeFormat.LocalDateByFormat(LocalDate.now(),"dd-MM-yyyy")));
                 criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
@@ -66,11 +68,12 @@ public class VisitService {
     }
 
     public Visit save(VisitDTO visitDTO) {
-        Optional<Visit> visitOptional = this.visitRepository.findDistinctFirstByPatientIdAndDateVisitEnd(visitDTO.getPatientId(), null);
+        Optional<Visit> visitOptional = this.visitRepository.findDistinctFirstByPatientIdAndDateVisitEndAndOrganisationUnitId(visitDTO.getPatientId(), null, getOrganisationUnitId());
         if(visitOptional.isPresent())throw new RecordExistException(Visit.class, "Patient", "Still checked In" + ", Visit Start Date =" + visitDTO.getDateVisitStart());
 
         Visit visit = visitMapper.toVisit(visitDTO);
         visit.setUuid(UuidGenerator.getUuid());
+        visit.setOrganisationUnitId(getOrganisationUnitId());
 
         final Visit savedVisit = visitRepository.save(visit);
 
@@ -85,7 +88,7 @@ public class VisitService {
     }
 
     public VisitDTO getVisit(Long id) {
-        Optional<Visit> visitOptional = this.visitRepository.findByIdAndArchived(id, UNARCHIVED);
+        Optional<Visit> visitOptional = this.visitRepository.findByIdAndArchivedAndOrganisationUnitId(id, UNARCHIVED, getOrganisationUnitId());
 
         if (!visitOptional.isPresent()) throw new EntityNotFoundException(Visit.class, "Id", id + "");
         Patient patient = visitOptional.get().getPatientByVisit();
@@ -98,14 +101,14 @@ public class VisitService {
     }
 
     public Visit update(Long id, Visit visit) {
-        Optional<Visit> visitOptional = this.visitRepository.findByIdAndArchived(id, UNARCHIVED);
+        Optional<Visit> visitOptional = this.visitRepository.findByIdAndArchivedAndOrganisationUnitId(id, UNARCHIVED, getOrganisationUnitId());
         if (!visitOptional.isPresent()) throw new EntityNotFoundException(Visit.class, "Id", id + "");
         visit.setId(id);
         return visitRepository.save(visit);
     }
 
     public Integer delete(Long id) {
-        Optional<Visit> visitOptional = this.visitRepository.findByIdAndArchived(id, UNARCHIVED);
+        Optional<Visit> visitOptional = this.visitRepository.findByIdAndArchivedAndOrganisationUnitId(id, UNARCHIVED, getOrganisationUnitId());
         if (!visitOptional.isPresent()) throw new EntityNotFoundException(Visit.class, "Id", id + "");
         visitOptional.get().setArchived(ARCHIVED);
         return visitOptional.get().getArchived();
@@ -113,10 +116,14 @@ public class VisitService {
 
     public Long getVisitType(){
         //Todo find by uuid code...
-        Long count = visitRepository.countByVisitTypeIdAndArchived(239L, 0);//Unbooked
-        count = count + visitRepository.countByVisitTypeIdAndArchived(238L, 0); //booked
-        count = count + visitRepository.countByVisitTypeIdAndArchived(373L, 0); //Emergency
+        Long count = visitRepository.countByVisitTypeIdAndArchivedAndOrganisationUnitId(239L, UNARCHIVED, getOrganisationUnitId());//Unbooked
+        count = count + visitRepository.countByVisitTypeIdAndArchivedAndOrganisationUnitId(238L, UNARCHIVED, getOrganisationUnitId()); //booked
+        count = count + visitRepository.countByVisitTypeIdAndArchivedAndOrganisationUnitId(373L, UNARCHIVED, getOrganisationUnitId()); //Emergency
 
         return count;
+    }
+
+    private Long getOrganisationUnitId(){
+        return userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
     }
 }

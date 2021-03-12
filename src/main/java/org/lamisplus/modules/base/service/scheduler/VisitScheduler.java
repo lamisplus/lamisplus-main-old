@@ -23,8 +23,9 @@ public class VisitScheduler {
     private static final int ONE_DAY = 1;
     private static final int TWENTY_FOUR_HOURS = 24;
     private static final String AUTOMATED = "Automated";
-    private final VisitService visitService;
-    private final VisitMapper visitMapper;
+    private static final int UN_ARCHIVED = 0;
+    //private final VisitService visitService;
+    //private final VisitMapper visitMapper;
     private final VisitRepository visitRepository;
 
     /**
@@ -33,11 +34,10 @@ public class VisitScheduler {
     @Scheduled(fixedDelay = 10000000, initialDelay = 50000)
     public void autoCheckOut() {
         try {
-            List<VisitDTO> visitDTOList = this.visitService.getAllVisits();
-            visitDTOList.forEach(visitDTO -> {
+            List<Visit> visitList = visitRepository.findAllByArchived(UN_ARCHIVED);
+            visitList.forEach(visit -> {
                 //Check patient type
-                if (visitDTO.getTypePatient() != null && visitDTO.getTypePatient() <= 2) {
-                    Visit visit = this.visitMapper.toVisit(visitDTO);
+                if (visit.getTypePatient() != null && visit.getTypePatient() <= 2) {
                     if (visit.getDateVisitStart() == null || visit.getTimeVisitStart() == null) {
                         return;
                     }
@@ -54,7 +54,6 @@ public class VisitScheduler {
                             this.visitRepository.save(visit);
                         }
                     }
-
                 }
             });
         }catch(NullPointerException e){

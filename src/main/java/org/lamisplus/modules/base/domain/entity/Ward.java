@@ -16,8 +16,7 @@ import java.util.Objects;
 @Entity
 @Data
 @EqualsAndHashCode
-@Table(name = "Ward")
-@DynamicUpdate
+@Table(name = "ward")
 public class Ward extends Audit<String>{
     @Id
     @Column(name = "id", updatable = false)
@@ -29,7 +28,7 @@ public class Ward extends Audit<String>{
     private String name;
 
     @Basic
-    @Column(name = "uuid")
+    @Column(name = "uuid", updatable = false)
     private String uuid = UuidGenerator.getUuid();
 
     @Basic
