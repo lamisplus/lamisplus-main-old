@@ -66,8 +66,8 @@ public class VisitService {
     }
 
     public Visit save(VisitDTO visitDTO) {
-        Optional<Visit> visitOptional = this.visitRepository.findByPatientIdAndDateVisitEnd(visitDTO.getPatientId(), null);
-        if(visitOptional.isPresent())throw new RecordExistException(Visit.class, "Patient", visitDTO.getPatientId()+"" + ", Visit Start Date =" + visitDTO.getDateVisitStart());
+        Optional<Visit> visitOptional = this.visitRepository.findDistinctFirstByPatientIdAndDateVisitEnd(visitDTO.getPatientId(), null);
+        if(visitOptional.isPresent())throw new RecordExistException(Visit.class, "Patient", "Still checked In" + ", Visit Start Date =" + visitDTO.getDateVisitStart());
 
         Visit visit = visitMapper.toVisit(visitDTO);
         visit.setUuid(UuidGenerator.getUuid());
@@ -112,6 +112,7 @@ public class VisitService {
     }
 
     public Long getVisitType(){
+        //Todo find by uuid code...
         Long count = visitRepository.countByVisitTypeIdAndArchived(239L, 0);//Unbooked
         count = count + visitRepository.countByVisitTypeIdAndArchived(238L, 0); //booked
         count = count + visitRepository.countByVisitTypeIdAndArchived(373L, 0); //Emergency
