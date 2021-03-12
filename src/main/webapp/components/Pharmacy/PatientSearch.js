@@ -65,8 +65,7 @@ const PatientSearch = (props) => {
               to={{
                 pathname: "/prescriptions",
                 state: prescription,
-                patientName: prescription.firstName + " " + prescription.lastName,
-                encounterId: prescription.encounterId,
+               
               }}
               style={{ cursor: "pointer", color: "blue", fontStyle: "bold" }}>
               <Tooltip title="View Prescription">
