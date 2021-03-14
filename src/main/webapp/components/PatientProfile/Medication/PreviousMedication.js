@@ -56,7 +56,9 @@ const columns = [
     name: 'Prescription Status',
     selector: 'prescription_status',
     sortable: false,
-    cell: row => <span><Badge  color="primary">{DRUG_ORDER_STATUS.find(x => x.id == row.prescription_status).name}</Badge></span>
+    cell: row => <span> 
+      <Badge  color="primary">{row.prescription_status ? DRUG_ORDER_STATUS.find(x => x.id == row.prescription_status).name : ''}</Badge>
+      </span>
   }
 ]
 function PreviousMedication (props) {

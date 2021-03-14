@@ -18,6 +18,8 @@ import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import RadiologyTestSearch from "./Radiology/RadiologyTestSearch";
 import {getQueryParams} from "components/Utils/PageUtils";
+import { capitalize } from "@material-ui/core";
+import { upperCase } from "lodash";
 
 //Dtate Picker package
 Moment.locale("en");
@@ -99,7 +101,7 @@ function HomePage(props) {
         >
           <Tab className={classes.title} label="Dashboard" icon={<MdDashboard />} {...a11yProps(0)} /> 
           <Tab className={classes.title} label="Sample Collection" icon={<GiTestTubes />} {...a11yProps(1)} />
-          <Tab className={classes.title} label="Sample Verification " icon={<GiDrippingTube style={{ color:'#fff'}}/>} {...a11yProps(2)} />
+          <Tab className={classes.title} label="Sample Verification " icon={<GiDrippingTube style={{ color:'#fff', textTransform:'lowercase' }}/>} {...a11yProps(2)} />
           <Tab className={classes.title} label="Results Reporting" icon={<GoRepoClone />} {...a11yProps(3)} />
           {/* <Tab className={classes.title} label="Radiology Uploads" icon={<MdFileUpload />} {...a11yProps(4)} /> */}
           {/* <Tab className={classes.title} label="Sample Dispatch " icon={<GiFiles />} {...a11yProps(4)} /> */}

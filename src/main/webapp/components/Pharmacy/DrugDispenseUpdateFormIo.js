@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
-import {Modal,ModalHeader, ModalBody,Form,FormFeedback,Row,Alert,Col,Input,FormGroup,Label,Card,CardBody,} from "reactstrap";
+import React, { useState } from "react";
+import {Modal,ModalHeader, ModalBody,Form,Card,CardBody,} from "reactstrap";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
-import moment from "moment";
+
 import {
     updatePrescriptionStatus,
 } from "../../actions/pharmacy";
 import * as CODES from "./../../api/codes";
-import FormRenderer from "components/FormManager/FormRenderer";
+import FormRendererUpdate from "components/FormManager/FormRendererUpdate";
 
 Moment.locale("en");
 momentLocalizer();
@@ -56,8 +56,10 @@ const useStyles = makeStyles((theme) => ({
 
 const ModalSample = (props) => {
     const classes = useStyles()
-    const formData = props.formData && props.formData!==null ? props.formData : {};
-    console.log(formData)
+    const datasample = props.datasample && props.datasample!==null ? props.datasample : {};
+    console.log(props)
+   
+    const DrugId = datasample.id
 
     const currentForm = {
         code: CODES.PHARMARCY_DRUG_DISPENSE,
@@ -79,15 +81,23 @@ const ModalSample = (props) => {
     };
 
 
-    const saveSample = (e) => {
-        e.data.prescription_status = 1
-        formData.data=e.data
-        console.log(formData.data)
-        props.updatePrescriptionStatus(formData.id, e);
-        props.togglestatus()
-        window.location.reload(true);
 
+
+    const saveSample = (e) => {
         
+        datasample.data.prescription_status = 1
+        //datasample.data = e.data
+        const onSuccess = () => {
+            props.togglestatus();
+        };
+        const onError = () => {
+            props.togglestatus();
+        };
+        const newData =  {...datasample.data, ... e.data}
+        datasample.data = newData
+       
+       props.updatePrescriptionStatus(DrugId, datasample, onSuccess, onError);
+       props.togglestatus();
         
     };
 
@@ -97,23 +107,24 @@ const ModalSample = (props) => {
             <Card >
                 <CardBody>
                     <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
-                        <Form onSubmit={saveSample}>
-                            <ModalHeader toggle={props.togglestatus}>Result Reporting</ModalHeader>
+                      
+                            <ModalHeader toggle={props.togglestatus}>Drug Dispensing </ModalHeader>
                             <ModalBody>
                             <Card >
-                                <CardBody>
-                                   
-                                    <FormRenderer
-                                        formCode={props.formData.data && props.formData.data.type !=0 ? currentForm.code : currentFormForRegimen.code }
-                                        programCode={currentForm.programCode}
-                                        options={props.formData.data}
-                                        onSubmit={saveSample}
-                                    />
-                                </CardBody>
-                            </Card>
+              <CardBody>
+                 
+                        <FormRendererUpdate
+                            formCode={datasample.data && datasample.data.type !=0 ? currentForm.code : currentFormForRegimen.code}
+                            programCode={currentForm.programCode}
+                            options={datasample.data}
+                            submission={props.datasample}
+                            onSubmit={saveSample}
+                        />
+                    </CardBody>
+                </Card>
                                 
-                            </ModalBody>
-                        </Form>
+                 </ModalBody>
+                  
                     </Modal>
                 </CardBody>
             </Card>

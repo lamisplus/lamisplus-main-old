@@ -21,6 +21,8 @@ import "@reach/menu-button/styles.css";
 import ModalViewResult from './ViewResult';
 import ModalSampleResult from './EnterResultFormIo';
 import {authentication} from '../../../_services/authentication';
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
 
 
 
@@ -169,8 +171,19 @@ const ResultReporting = (props) => {
   }
 console.log(testOrders)
 return (
-    <Page title='Result Reporting'>
-      <br/>
+    <div>
+    <Card>
+     <Breadcrumbs aria-label="breadcrumb">
+            <Link color="inherit" to={{pathname: "/laboratory", state: 'test-result'}} >
+                Laboratory
+            </Link>
+            
+            <Typography color="textPrimary">Result Reporting  </Typography>
+            
+         </Breadcrumbs>
+            
+        <br/>
+        <br/>
         <Row>
             <Col>
                 <div >
@@ -187,7 +200,8 @@ return (
                             to ={{ 
                               pathname: "/laboratory",  
                               state: 'test-result'
-                            }} >
+                            }} 
+                        >
                     
                             <MatButton
                                 type='submit'
@@ -283,10 +297,10 @@ return (
               </Card>
             </Col>
         </Row>
-      
+        </Card>
         <ModalSampleResult modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} />
         <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />    
-    </Page>
+    </div>
   )
   
 }

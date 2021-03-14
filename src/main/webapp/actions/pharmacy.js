@@ -96,6 +96,9 @@ export const fetchAll = (onSuccess, onError) => dispatch => {
        
 // axios.put(`${url}form-data/${formId}`)
 export const updatePrescriptionStatus = (formId, data, onSuccess, onError) => (dispatch) => {
+      console.log(data)
+      console.log(formId)
+      
          axios
            .put( `${url}form-data/${formId}`, data)
            .then((response) => {
