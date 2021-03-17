@@ -25,6 +25,9 @@ import ModalSample from './RecollectSample';
 import ModalViewResult from './../TestResult/ViewResult';
 import ModalSampleResult from './../TestResult/EnterResult'
 import {authentication} from '../../../_services/authentication';
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
+
 
 
 const useStyles = makeStyles({
@@ -206,9 +209,23 @@ const SampleVerification = (props) => {
             }
         
 return (
-    <Page title='Sample Verification'>
+    <div>
         <ToastContainer autoClose={2000} />
-      <br/>
+        <Card>
+        <Breadcrumbs aria-label="breadcrumb">
+            <Link color="inherit" to={{pathname: "/laboratory", state: 'sample-verification'
+        
+                }} 
+            >
+                Laboratory
+            </Link>
+            
+            <Typography color="textPrimary">Sample Verification  </Typography>
+            
+         </Breadcrumbs>
+            
+        <br/>
+        <br/>
         <Row>
             <Col>
                 <div >
@@ -321,11 +338,12 @@ return (
               </Card>
             </Col>
         </Row>
+        </Card>
       <ModalSampleVerify modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
       <ModalSample modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal}  labnumber={newSample[0].data.lab_number}/>
       <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} /> 
       <ModalSampleResult modalstatus={modal4} togglestatus={toggleModal4} datasample={collectModal} />   
-    </Page>
+    </div>
   )
   
 }

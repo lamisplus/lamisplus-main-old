@@ -95,7 +95,10 @@ export const fetchAll = (onSuccess, onError) => dispatch => {
 // };
        
 // axios.put(`${url}form-data/${formId}`)
-export const updatePrescriptionStatus = (formId, data) => (dispatch) => {
+export const updatePrescriptionStatus = (formId, data, onSuccess, onError) => (dispatch) => {
+      console.log(data)
+      console.log(formId)
+      
          axios
            .put( `${url}form-data/${formId}`, data)
            .then((response) => {
@@ -103,6 +106,7 @@ export const updatePrescriptionStatus = (formId, data) => (dispatch) => {
                type: ACTION_TYPES.UPDATE_PRESCRIPTION_STATUS,
                payload: response.data,
              });
+             onSuccess()
              toast.success("Drug was successful dispensed");
            })
            .catch((error) => {
@@ -111,7 +115,9 @@ export const updatePrescriptionStatus = (formId, data) => (dispatch) => {
                type: ACTION_TYPES.PHARMACY_ERROR,
                payload: "Something went wrong",
              });
-             toast.success("Failed to dispense drug, please try again");
+             onError()
+             
+             toast.error("Failed to dispense drug, please try again");
            });
        };
 

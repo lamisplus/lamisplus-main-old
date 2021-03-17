@@ -25,7 +25,8 @@ import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import ModalViewResult from './../TestResult/ViewResult';
 import {authentication} from '../../../_services/authentication';
-
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
 
 
 
@@ -194,8 +195,22 @@ const useStyles = makeStyles({
 
 
 return (
-    <div title='Collect Sample'>
-        <ToastContainer autoClose={2000} />
+    <div >
+      
+        <Card>
+        <Breadcrumbs aria-label="breadcrumb">
+            <Link color="inherit" 
+                to={{pathname: "/laboratory",
+                state: 'collect-sample'
+                }} 
+            >
+                    Laboratory
+            </Link>
+           
+            <Typography color="textPrimary">Sample Collection  </Typography>
+            
+         </Breadcrumbs>
+        <br/>    
         <br/>
         <Row>
             <Col>
@@ -312,10 +327,12 @@ return (
               </Card>
             </Col>
         </Row>
+        </Card>
       <SampleCollectionFormIo modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} labnumber={labNumber !=="" ? labNumber : labNum['lab_number'] }/>
       <ModalSampleTransfer modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} labnumber={labNumber!=="" ? labNumber : labNum}/>
       <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />
       <TransferModalConfirmation modalstatus={modal4} togglestatusConfirmation={toggleModal4} datasample={collectModal} actionButton={transferSample} labnumber={labNumber!=="" ? labNumber : labNum}/>
+   
     </div>
   )  
 }

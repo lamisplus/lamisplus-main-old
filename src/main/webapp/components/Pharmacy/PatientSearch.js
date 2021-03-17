@@ -23,6 +23,19 @@ const PatientSearch = (props) => {
     return dispensed.length
   }
  
+  const drugsPrescriptions = []
+  prescriptions.forEach(function(value, index, array) {
+   const dataSamples = value.formDataObj
+    if(value.formDataObj.data!==null) {
+    for(var i=0; i<dataSamples.length; i++){
+        for (var key in dataSamples[i]) {
+          if (dataSamples[i][key]!==null && dataSamples[i][key].prescription_status >= 0 )
+            drugsPrescriptions.push(value)
+        }            
+      }
+    }
+  });
+
   return (
     <div>
       <MaterialTable
@@ -65,8 +78,7 @@ const PatientSearch = (props) => {
               to={{
                 pathname: "/prescriptions",
                 state: prescription,
-                patientName: prescription.firstName + " " + prescription.lastName,
-                encounterId: prescription.encounterId,
+               
               }}
               style={{ cursor: "pointer", color: "blue", fontStyle: "bold" }}>
               <Tooltip title="View Prescription">
