@@ -33,31 +33,31 @@ public class PatientController {
 
     @GetMapping
     public ResponseEntity<List<PatientDTO>> getAllPatients() {
-        return ResponseEntity.ok(this.patientService.getAllPatients());
+        return ResponseEntity.ok(patientService.getAllPatients());
     }
 
     @GetMapping("/totalCount")
     public ResponseEntity<Long> getTotalCount() {
-        return ResponseEntity.ok(this.patientService.getTotalCount());
+        return ResponseEntity.ok(patientService.getTotalCount());
     }
 
 
     @GetMapping("/hospitalNumber")
     //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<PatientDTO> getPatientByHospitalNumber(@RequestParam String hospitalNumber) {
-        return ResponseEntity.ok(this.patientService.getPatientByHospitalNumber(hospitalNumber));
+        return ResponseEntity.ok(patientService.getPatientByHospitalNumber(hospitalNumber));
     }
 
     @GetMapping("/{hospitalNumber}")
     //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<PatientDTO> getPatientByHospitalNumber2(@PathVariable String hospitalNumber) {
-        return ResponseEntity.ok(this.patientService.getPatientByHospitalNumber(hospitalNumber));
+        return ResponseEntity.ok(patientService.getPatientByHospitalNumber(hospitalNumber));
     }
 
     @GetMapping("/{hospitalNumber}/exist")
     //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<Boolean> exist(@PathVariable String hospitalNumber) {
-        return ResponseEntity.ok(this.patientService.exist(hospitalNumber));
+        return ResponseEntity.ok(patientService.exist(hospitalNumber));
     }
   
     @GetMapping("/{id}/encounters/{formCode}")
@@ -66,7 +66,7 @@ public class PatientController {
                                                                     @PathVariable String formCode, @RequestParam(required = false) String sortOrder,
                                                                     @RequestParam (required = false) String sortField, @RequestParam(required = false) Integer limit,
                                                                     @PageableDefault(value = 100) Pageable pageable){
-        return ResponseEntity.ok(this.patientService.getEncountersByPatientIdAndFormCode(pageable, id, formCode, sortField, sortOrder, limit));
+        return ResponseEntity.ok(patientService.getEncountersByPatientIdAndFormCode(pageable, id, formCode, sortField, sortOrder, limit));
     }
 
     /*@GetMapping("/{id}/encounters/test/{fCode}")
@@ -82,13 +82,13 @@ public class PatientController {
     @GetMapping("/{id}/encounters/programCodeExclusionList")
     //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List> getEncountersByPatientIdAndProgramCodeExclusionList(@PathVariable Long id, @RequestParam(required = false) List<String> programCodeExclusionList) {
-        return ResponseEntity.ok(this.patientService.getEncountersByPatientIdAndProgramCodeExclusionList(id, programCodeExclusionList));
+        return ResponseEntity.ok(patientService.getEncountersByPatientIdAndProgramCodeExclusionList(id, programCodeExclusionList));
     }
 
     @GetMapping("/{programCode}/registered")
     //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List> getAllPatientsByProgramCode(@PathVariable String programCode) {
-        return ResponseEntity.ok(this.patientService.getAllPatientsByProgramCode(programCode));
+        return ResponseEntity.ok(patientService.getAllPatientsByProgramCode(programCode));
     }
 
 
@@ -117,22 +117,22 @@ public class PatientController {
     @GetMapping("/{id}/encounters")
     //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List> getAllEncounterByPatientId(@PathVariable Long id){
-        return ResponseEntity.ok(this.patientService.getAllEncountersByPatientId(id));
+        return ResponseEntity.ok(patientService.getAllEncountersByPatientId(id));
     }
 
     @GetMapping("/{id}/{programCode}/form")
     public ResponseEntity<List<Form>> getAllFormsByPatientIdAndProgramCode(@PathVariable Long id, @PathVariable String programCode){
-        return ResponseEntity.ok(this.patientService.getAllFormsByPatientIdAndProgramCode(id, programCode));
+        return ResponseEntity.ok(patientService.getAllFormsByPatientIdAndProgramCode(id, programCode));
     }
 
     @GetMapping("/{id}/{programCode}/filledForms")
     public ResponseEntity<List<Form>> getFilledFormsByPatientIdAndProgramCode(@PathVariable Long id, @PathVariable String programCode){
-        return ResponseEntity.ok(this.patientService.getFilledFormsByPatientIdAndProgramCode(id, programCode));
+        return ResponseEntity.ok(patientService.getFilledFormsByPatientIdAndProgramCode(id, programCode));
     }
 
     @GetMapping("/{id}/programEnrolled")
     public ResponseEntity<List> getAllProgramEnrolled(@PathVariable Long id){
-        return ResponseEntity.ok(this.patientService.getAllProgramEnrolled(id));
+        return ResponseEntity.ok(patientService.getAllProgramEnrolled(id));
     }
 
 /*    @ApiOperation(value="getFormsByPatientId", notes = " id=required, formCode=required\n\n")
@@ -151,16 +151,16 @@ public class PatientController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Person> save(@RequestBody PatientDTO patientDTO) {
-        return ResponseEntity.ok(this.patientService.save(patientDTO));
+        return ResponseEntity.ok(patientService.save(patientDTO));
     }
 
     @PutMapping("/{id}")
     public Person update(@PathVariable Long id, @RequestBody PatientDTO patientDTO) {
-        return this.patientService.update(id, patientDTO);
+        return patientService.update(id, patientDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
-        return ResponseEntity.ok(this.patientService.delete(id));
+        return ResponseEntity.ok(patientService.delete(id));
     }
 }

@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class RadiologyTest extends Audit<String> implements Serializable {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

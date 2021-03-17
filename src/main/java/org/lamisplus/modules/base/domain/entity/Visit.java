@@ -20,7 +20,7 @@ import java.util.List;
 @Table(name = "visit")
 public class Visit extends Audit<String> {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -52,15 +52,15 @@ public class Visit extends Audit<String> {
     private LocalDate dateNextAppointment;
 
     @Basic
-    @Column(name = "patient_id", nullable = false)
+    @Column(name = "patient_id", updatable = false)
     private Long patientId;
 
     @Basic
-    @Column(name = "visit_type_id", nullable = false)
+    @Column(name = "visit_type_id")
     private Long visitTypeId;
 
     @Basic
-    @Column(name = "uuid")
+    @Column(name = "uuid", updatable = false)
     @JsonIgnore
     private String uuid;
 
@@ -79,13 +79,12 @@ public class Visit extends Audit<String> {
     @ToString.Exclude
     private Patient patientByVisit;
 
-    /*@JoinColumn(name = "visit_type_id", insertable = false, updatable = false)
-    @ManyToOne
-    @JsonIgnore
-    private ApplicationCodeSet visit_Type;*/
-
     @OneToMany(mappedBy = "visitByVisitId")
     @ToString.Exclude
     @JsonIgnore
     private List<Encounter> encountersByVisit;
+
+    @Basic
+    @Column(name = "organisation_unit_id", updatable = false)
+    private Long organisationUnitId;
 }

@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 public class Appointment extends Audit<String>{
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -39,7 +39,7 @@ public class Appointment extends Audit<String>{
     private Object detail;
 
     @Basic
-    @Column(name = "organisation_unit_id")
+    @Column(name = "organisation_unit_id", updatable = false)
     private Long organisationUnitId;
 
     @Basic

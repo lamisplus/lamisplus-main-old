@@ -18,7 +18,7 @@ import java.sql.Timestamp;
 @Table(name = "lab_test")
 public class LabTest extends Audit<String> {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -35,7 +35,7 @@ public class LabTest extends Audit<String> {
     private String unitMeasurement;
 
     @Basic
-    @Column(name = "uuid")
+    @Column(name = "uuid", updatable = false)
     @JsonIgnore
     private String uuid;
 

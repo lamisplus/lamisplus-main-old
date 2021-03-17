@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Table(name = "report_info")
 public class ReportInfo extends JsonBEntity implements Serializable {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

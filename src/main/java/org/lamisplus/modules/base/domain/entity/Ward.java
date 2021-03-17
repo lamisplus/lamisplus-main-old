@@ -16,11 +16,10 @@ import java.util.Objects;
 @Entity
 @Data
 @EqualsAndHashCode
-@Table(name = "Ward")
-@DynamicUpdate
+@Table(name = "ward")
 public class Ward extends Audit<String>{
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -29,7 +28,7 @@ public class Ward extends Audit<String>{
     private String name;
 
     @Basic
-    @Column(name = "uuid")
+    @Column(name = "uuid", updatable = false)
     private String uuid = UuidGenerator.getUuid();
 
     @Basic
@@ -38,7 +37,7 @@ public class Ward extends Audit<String>{
     private Integer archived = 0;
 
     @Basic
-    @Column(name = "organisation_unit_id")
+    @Column(name = "organisation_unit_id", updatable = false)
     @JsonIgnore
     private Long organisationUnitId;
 }

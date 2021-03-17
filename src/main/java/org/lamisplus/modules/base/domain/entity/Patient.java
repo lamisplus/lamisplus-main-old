@@ -20,7 +20,7 @@ import java.util.List;
 public class Patient extends Audit<String> implements Serializable {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -34,8 +34,9 @@ public class Patient extends Audit<String> implements Serializable {
     @Basic
     @Column(name = "patient_number")
     private String hospitalNumber;
+
     @Basic
-    @Column(name = "uuid")
+    @Column(name = "uuid", updatable = false)
     @JsonIgnore
     private String uuid;
 
@@ -44,7 +45,7 @@ public class Patient extends Audit<String> implements Serializable {
     private Integer archived = 0;
 
     @Basic
-    @Column(name = "organisation_unit_id")
+    @Column(name = "organisation_unit_id", updatable = false)
     @JsonIgnore
     private Long organisationUnitId;
 
