@@ -26,7 +26,7 @@ import java.util.List;
 public class Encounter implements Serializable  {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -73,7 +73,7 @@ public class Encounter implements Serializable  {
     private String createdBy;
 
     @Basic
-    @Column(name = "organisation_unit_id")
+    @Column(name = "organisation_unit_id", updatable = false)
     private Long organisationUnitId;
 
     @Basic

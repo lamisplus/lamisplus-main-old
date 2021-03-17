@@ -17,7 +17,7 @@ import java.util.Objects;
 @Table(name = "form_data")
 public class FormData extends JsonBEntity implements Serializable {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

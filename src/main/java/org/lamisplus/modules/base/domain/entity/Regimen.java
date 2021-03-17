@@ -16,7 +16,7 @@ import java.util.Objects;
 @Table(name = "regimen")
 public class Regimen extends Audit<String> {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

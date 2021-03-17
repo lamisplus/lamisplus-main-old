@@ -22,7 +22,7 @@ import java.util.List;
 @Table(name = "form")
 public class Form extends JsonBEntity implements Serializable {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

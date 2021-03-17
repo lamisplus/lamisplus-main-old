@@ -24,6 +24,8 @@ import java.util.Map;
 public class AuditConfiguration {
 
     private final static String EMBEDDED = "false";
+    private static final String DB_DRIVER = "org.postgresql.Driver";
+
     @Value("${spring.datasource.username}")
     private String user;
 
@@ -54,10 +56,9 @@ public class AuditConfiguration {
         databaseHandler.setDb_user(user);
         databaseHandler.setDb_password(pd);
         databaseHandler.setDb_url(dbUrl);
-        databaseHandler.setDb_driver("org.postgresql.Driver");
+        databaseHandler.setDb_driver(DB_DRIVER);
         return databaseHandler;
     }
-
 
     /*@Bean
     public FileAuditHandler fileAuditHandler() {

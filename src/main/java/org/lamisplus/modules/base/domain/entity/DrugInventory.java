@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Table(name = "drug_inventory")
 public class DrugInventory extends Audit<String> {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -38,7 +38,7 @@ public class DrugInventory extends Audit<String> {
     private String dosageForm;
 
     @Basic
-    @Column(name = "uuid")
+    @Column(name = "uuid", updatable = false)
     private String uuid;
 
     @Basic

@@ -14,7 +14,7 @@ import java.util.Objects;
 @NoArgsConstructor
 public class OrganisationUnitHierarchy {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

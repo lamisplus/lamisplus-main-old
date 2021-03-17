@@ -20,7 +20,7 @@ import java.util.List;
 public class Person extends Audit<String> {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
