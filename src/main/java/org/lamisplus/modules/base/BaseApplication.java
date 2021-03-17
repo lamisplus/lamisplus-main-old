@@ -2,8 +2,9 @@ package org.lamisplus.modules.base;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jfree.util.Log;
-import org.lamisplus.modules.base.bootstrap.ClassPathHacker;
 import org.lamisplus.modules.base.service.ModuleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,10 +18,10 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import javax.annotation.PostConstruct;
-import java.io.File;
+import java.awt.*;
 import java.io.IOException;
-import java.lang.reflect.Field;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @EnableScheduling
 @SpringBootApplication
@@ -29,6 +30,8 @@ public class BaseApplication extends SpringBootServletInitializer {
     private static ConfigurableApplicationContext context;
 
     private static Boolean isStartUp = true;
+    @Value("${base.url}")
+    private static String url;
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -42,6 +45,13 @@ public class BaseApplication extends SpringBootServletInitializer {
         Log.info("java.class.path - " + System.getProperty("java.class.path"));
         ModuleService moduleService = context.getBean(ModuleService.class);
         moduleService.startModule(isStartUp);
+        /*MyClassLoader myClassLoader = new MyClassLoader();
+        try {
+            myClassLoader.loadClass("org.lamisplus.modules.demo.DemoModuleApplication");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }*/
+        browse(url +"/login");
     }
 
     public static void restart(Class[] clz, ConfigurableApplicationContext configurableApplicationContext) {
@@ -52,18 +62,8 @@ public class BaseApplication extends SpringBootServletInitializer {
         ApplicationArguments args = context.getBean(ApplicationArguments.class);
 
         Thread thread = new Thread(() -> {
-            /*try {
-                context.close();
-                for(Class cs: clz){
-                    if(!cs.getName().equals("org.lamisplus.modules.base.BaseApplication")){
-                        loadClass(cs.getName());
-                    }
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }*/
-            context = SpringApplication.run(clz, args.getSourceArgs());
 
+            context = SpringApplication.run(clz, args.getSourceArgs());
         });
 
         thread.setDaemon(false);
@@ -73,7 +73,6 @@ public class BaseApplication extends SpringBootServletInitializer {
     public static ConfigurableApplicationContext getContext() {
         return context;
     }
-
 
     /*static void addInitHooks(SpringApplication application) {
         application.addListeners((ApplicationListener<ApplicationEnvironmentPreparedEvent>) event -> {
@@ -142,4 +141,23 @@ public class BaseApplication extends SpringBootServletInitializer {
             e.printStackTrace();
         }
     }*/
+
+    //starting the default browser
+    public static void browse(String url) {
+        if(Desktop.isDesktopSupported()){
+            Desktop desktop = Desktop.getDesktop();
+            try {
+                desktop.browse(new URI(url));
+            } catch (IOException | URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }else{
+            Runtime runtime = Runtime.getRuntime();
+            try {
+                runtime.exec("rundll32 url.dll,FileProtocolHandler " + url);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

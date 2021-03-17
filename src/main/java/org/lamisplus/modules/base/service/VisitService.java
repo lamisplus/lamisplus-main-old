@@ -48,7 +48,6 @@ public class VisitService {
             public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), 0)));
-                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("organisationUnitId"), getOrganisationUnitId())));
                 criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("dateVisitEnd").as(LocalDate.class),
                         CustomDateTimeFormat.LocalDateByFormat(LocalDate.now(),"dd-MM-yyyy")));
                 criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));

@@ -20,12 +20,8 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class VisitScheduler {
-    private static final int ONE_DAY = 1;
-    private static final int TWENTY_FOUR_HOURS = 24;
-    private static final String AUTOMATED = "Automated";
-    private static final int UN_ARCHIVED = 0;
-    //private final VisitService visitService;
-    //private final VisitMapper visitMapper;
+    private final VisitService visitService;
+    private final VisitMapper visitMapper;
     private final VisitRepository visitRepository;
 
     /**
@@ -34,23 +30,24 @@ public class VisitScheduler {
     @Scheduled(fixedDelay = 10000000, initialDelay = 50000)
     public void autoCheckOut() {
         try {
-            List<Visit> visitList = visitRepository.findAllByArchived(UN_ARCHIVED);
-            visitList.forEach(visit -> {
+            List<VisitDTO> visitDTOList = this.visitService.getAllVisits();
+            visitDTOList.forEach(visitDTO -> {
                 //Check patient type
-                if (visit.getTypePatient() != null && visit.getTypePatient() <= 2) {
+                if (visitDTO.getTypePatient() != null && visitDTO.getTypePatient() <= 2) {
+                    Visit visit = this.visitMapper.toVisit(visitDTO);
                     if (visit.getDateVisitStart() == null || visit.getTimeVisitStart() == null) {
                         return;
                     }
                     if (visit.getDateVisitEnd() == null || visit.getTimeVisitEnd() == null) {
-                        LocalDate localDate = visit.getDateVisitStart().plusDays(ONE_DAY);
-                        LocalTime localTime = visit.getTimeVisitStart().plusHours(TWENTY_FOUR_HOURS);
+                        LocalDate localDate = visit.getDateVisitStart().plusDays(1);
+                        LocalTime localTime = visit.getTimeVisitStart().plusHours(24);
                         LocalDate customNowLocalDate = CustomDateTimeFormat.LocalDateByFormat(LocalDate.now(), "dd-MM-yyyy");
                         LocalTime customNowLocalTime = CustomDateTimeFormat.LocalTimeByFormat(LocalTime.now(), "hh:mm a");
                         if ((customNowLocalDate.isAfter(localDate) || customNowLocalDate.isEqual(localDate)) &&
                                 (customNowLocalTime.isAfter(localTime) || customNowLocalTime.equals(localTime))) {
                             visit.setDateVisitEnd(localDate);
                             visit.setTimeVisitEnd(localTime);
-                            visit.setModifiedBy(AUTOMATED);
+                            //visit.setModifiedBy("System");
                             this.visitRepository.save(visit);
                         }
                     }

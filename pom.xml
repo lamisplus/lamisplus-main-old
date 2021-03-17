@@ -11,7 +11,7 @@
 	<groupId>org.lamisplus.modules</groupId>
 	<artifactId>base-module</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>base-module</name>
 	<description>lamisplus base module</description>
 

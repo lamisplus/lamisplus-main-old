@@ -17,7 +17,6 @@ import java.util.*;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Table(name = "application_user")
-@DynamicUpdate
 public class User {
     @Id
     @Column(name = "id", updatable = false)
