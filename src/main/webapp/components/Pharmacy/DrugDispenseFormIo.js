@@ -118,7 +118,7 @@ const ModalSample = (props) => {
                         <FormRenderer
                             formCode={datasample.data && datasample.data.type !=0 ? currentForm.code : currentFormForRegimen.code}
                             programCode={currentForm.programCode}
- 
+                            submission={props.datasample}
                             onSubmit={saveSample}
                         />
                          

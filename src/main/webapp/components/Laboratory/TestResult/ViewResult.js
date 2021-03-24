@@ -96,14 +96,22 @@ const ModalViewResult = (props) => {
                                         <span style={{ fontWeight: 'bold'}}>Date Reported </span>: {x.date_result_reported}
                                         <br/>    
                                     </Col>
-                                    <br/>
+                                   
                                     <Col xs="4">
                                         <FormGroup>
-                                          <br/>
-                                            <Label for="examplePassword"><span style={{ fontWeight: 'bold'}}> Result </span>: {ReactHtmlParser(x.comment_sample_reported)} </Label>
+                                         
+                                            <Label for="examplePassword"><span style={{ fontWeight: 'bold'}}> Result </span>: {x.comment_sample_reported} </Label>
                                       
                                         </FormGroup>
                                     </Col>
+                                    <Col xs="12">
+                                        <FormGroup>
+                                         
+                                            <Label for="examplePassword"><span style={{ fontWeight: 'bold'}}> Notes </span>: {ReactHtmlParser(x.notes_sample_reported && x.notes_sample_reported!==undefined ? x.notes_sample_reported : "")} </Label>
+                                      
+                                        </FormGroup>
+                                        <br/>
+                                    </Col>  
                                                 </Row>)
                                         })
                                         
