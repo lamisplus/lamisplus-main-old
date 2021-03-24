@@ -9,7 +9,7 @@ import momentLocalizer from "react-widgets-moment";
 import Moment from "moment";
 import PatientDetailCard from 'components/PatientProfile/PatientDetailCard';
 import { Link } from "react-router-dom";
-import DispenseUpdateModal from './DrugDispenseUpdateFormIo'
+//import DispenseModal from './DispenseModal'
 import DispenseModal from './DrugDispenseFormIo';
 import ViewModal from './ViewModalForm';
 import { Menu, MenuList, MenuButton, MenuItem } from "@reach/menu-button";
@@ -23,8 +23,6 @@ import {
   Row,
 } from "reactstrap";
 import {authentication} from '../../_services/authentication';
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import Typography from "@material-ui/core/Typography";
 
 
 //
@@ -76,16 +74,14 @@ const Prescriptions = (props) => {
   const [modal, setModal] = useState(false);
   const toggleModal = () => setModal(!modal)
   const [modal1, setModal1] = useState(false);
-  const toggleModal1 = () => setModal1(!modal1)
-  const [modalUpdate, setModalUpdate] = useState(false);
-  const toggleModalUpdate = () => setModalUpdate(!modalUpdate)
+  const toggleModal1 = () => setModal(!modal1)
   const [formData, setFormData] = useState(prescriptionOrder);
   const [drugDetails, setDrugDetails] = useState()
 
 
 
   const toggle = (form) => {
-    console.log(form)
+
     setDrugDetails({ ...drugDetails, ...form });
     setModal(!modal);
     
@@ -95,11 +91,17 @@ const Prescriptions = (props) => {
     setModal1(!modal1)
   }
 
-  const toggleUpdate = (form) => {
-    setDrugDetails({ ...drugDetails, ...form });
-    setModalUpdate(!modalUpdate)
-  }
+  const closeBtn = (
+    <button className="close" onClick={toggle}>
+      &times;
+    </button>
+  );
 
+   const closeBtn1 = (
+     <button className="close" onClick={toggle1}>
+       &times;
+     </button>
+   );
 
   
  const Actions = (form) => {
@@ -135,7 +137,7 @@ const Prescriptions = (props) => {
 
         
          ) : (
-           <MenuItem onSelect={() => toggleUpdate(form)} hidden={!authentication.userHasRole(["pharmacy_write"])}>
+           <MenuItem onSelect={() => toggle(form)} hidden={!authentication.userHasRole(["pharmacy_write"])}>
              <i
                className="fa fa-pencil"
                aria-hidden="true"
@@ -167,18 +169,7 @@ const Prescriptions = (props) => {
  };
   return (
     <div>
-      <ToastContainer autoClose={2000} />
-      <Card body>
-          <Breadcrumbs aria-label="breadcrumb">
-            <Link color="inherit" to={{pathname: "/pharmacy"}} >
-                Pharmacy
-            </Link>
-            <Link color="inherit" to={{pathname: "prescriptions"}} >
-                Drug Prescription    
-            </Link>
-            <Typography color="textPrimary">{} </Typography>
-            </Breadcrumbs>
-            <br/>
+
       <Row>
         <Col>
           <div>
@@ -219,7 +210,7 @@ const Prescriptions = (props) => {
                               <thead style={{backgroundColor: "#9F9FA5",color: "#000",}}>
                                 <tr>
                                   <th>Name</th>
-                                  <th>Duration</th>
+                                  <th>Dosage</th>
                                   <th>Date Prescribed</th>
                                   <th>Date Dispensed</th>
                                   <th></th>
@@ -234,7 +225,7 @@ const Prescriptions = (props) => {
                                     <td>
                                       <b>{form.data && form.data.type!=0 ? form.data.drug.name :  form.data.regimen.name}</b>
                                     </td>
-                                    <td>{form.data.duration && form.data.duration ? form.data.duration + form.data.duration_unit : ''}</td>
+                                    <td>{form.data.duration && form.data.duration ? form.data.duration : ''}</td>
                                     <td>{Moment(form.data.date_prescribed).format("DD-MM-YYYY")}</td>
                                     <td>{ form.data.prescription_status !==0 ? Moment(form.data.date_dispensed).format("DD-MM-YYYY") : '' }</td>
                                     <td>{Actions(form)}</td>
@@ -264,9 +255,7 @@ const Prescriptions = (props) => {
           </div>
         </Col>
       </Row>
-      </Card>
      <DispenseModal  modalstatus={modal} togglestatus={toggleModal} datasample={drugDetails}/>
-     <DispenseUpdateModal  modalstatus={modalUpdate} togglestatus={toggleModalUpdate} datasample={drugDetails}/>
      <ViewModal modalstatus={modal1} togglestatus={toggleModal1} datasample={drugDetails}/> 
     </div>
   );

@@ -10,8 +10,6 @@ import {FaPlusSquare, FaRegEye} from 'react-icons/fa';
 import {GoChecklist} from 'react-icons/go';
 import 'react-widgets/dist/css/react-widgets.css';
 import { ToastContainer } from "react-toastify";
-//Date Picker
-import Page from './../../Page'
 import {  fetchById } from '../../../actions/patients'
 import {  fetchAllLabTestOrderOfPatient } from '../../../actions/laboratory'
 import ModalSampleVerify from './SampleVerificationFromIo';
@@ -210,7 +208,7 @@ const SampleVerification = (props) => {
         
 return (
     <div>
-        <ToastContainer autoClose={2000} />
+      
         <Card>
         <Breadcrumbs aria-label="breadcrumb">
             <Link color="inherit" to={{pathname: "/laboratory", state: 'sample-verification'

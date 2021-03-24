@@ -23,7 +23,7 @@ import ModalSampleResult from './EnterResultFormIo';
 import {authentication} from '../../../_services/authentication';
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Typography from "@material-ui/core/Typography";
-
+import ModalSample from './RecollectSample';
 
 
 const useStyles = makeStyles({
@@ -303,7 +303,8 @@ return (
         </Row>
         </Card>
         <ModalSampleResult modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} />
-        <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />    
+        <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} /> 
+        <ModalSample modalstatus={modal4} togglestatus={toggleModal4} datasample={collectModal}  labnumber={newSample[0].data.lab_number}/>   
     </div>
   )
   

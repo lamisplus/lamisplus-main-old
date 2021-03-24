@@ -1,5 +1,6 @@
-import React  from "react";
-import {Modal,ModalHeader, ModalBody,Card,CardBody,} from "reactstrap";
+import React, { useState } from "react";
+import {Modal,ModalHeader, ModalBody,Form,Card,CardBody,} from "reactstrap";
+import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
@@ -57,8 +58,13 @@ const useStyles = makeStyles((theme) => ({
 const ModalSample = (props) => {
     const classes = useStyles()
     const datasample = props.datasample && props.datasample!==null ? props.datasample : {};
-    console.log(datasample) 
+    console.log(datasample)
+   
     const DrugId = datasample.id
+    const [loading, setLoading] = useState(false)
+    const [visible, setVisible] = useState(true);
+    const onDismiss = () => setVisible(false);
+    //This is to get SAMPLE TYPE from application Codeset
 
     const currentForm = {
         code: CODES.PHARMARCY_DRUG_DISPENSE,
@@ -83,21 +89,17 @@ const ModalSample = (props) => {
 
 
     const saveSample = (e) => {
-        
+        const newData = e.data 
         datasample.data.prescription_status = 1
-        //datasample.data = e.data
         const onSuccess = () => {
             props.togglestatus();
         };
         const onError = () => {
             props.togglestatus();
         };
-        const newData =  {...datasample.data, ... e.data}
-        datasample.data = newData
-       console.log(datasample)
        
-       props.updatePrescriptionStatus(DrugId, datasample, onSuccess, onError);
-       props.togglestatus();
+        props.updatePrescriptionStatus(datasample.id, datasample, onSuccess, onError);
+      
         
     };
 
@@ -116,9 +118,10 @@ const ModalSample = (props) => {
                         <FormRenderer
                             formCode={datasample.data && datasample.data.type !=0 ? currentForm.code : currentFormForRegimen.code}
                             programCode={currentForm.programCode}
-                            submission={datasample}
+ 
                             onSubmit={saveSample}
                         />
+                         
                     </CardBody>
                 </Card>
                                 
