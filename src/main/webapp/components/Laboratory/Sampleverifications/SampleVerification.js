@@ -257,9 +257,7 @@ return (
                         </Link>
                   </CardHeader>
                 <CardBody>
-                    <Alert color="primary">
-                        Please make sure you enter Lab number before collecting sample 
-                    </Alert>
+                   
                 <br />
                     <Row>
                         <Col>

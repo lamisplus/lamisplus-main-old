@@ -4,7 +4,9 @@ import { Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Label,Card,CardBody
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import CancelIcon from '@material-ui/icons/Cancel';
-import PrintIcon from '@material-ui/icons/Print';
+//import PrintIcon from '@material-ui/icons/Print';
+import ReactHtmlParser from 'react-html-parser'
+//import RichTextEditor from 'html-to-react';
 
 
 const useStyles = makeStyles(theme => ({
@@ -98,7 +100,7 @@ const ModalViewResult = (props) => {
                                     <Col xs="4">
                                         <FormGroup>
                                           <br/>
-                                            <Label for="examplePassword"><span style={{ fontWeight: 'bold'}}> Result </span>: {x.comment_sample_reported} </Label>
+                                            <Label for="examplePassword"><span style={{ fontWeight: 'bold'}}> Result </span>: {ReactHtmlParser(x.comment_sample_reported)} </Label>
                                       
                                         </FormGroup>
                                     </Col>
@@ -110,16 +112,7 @@ const ModalViewResult = (props) => {
                     
                                 </Row>
                             <br/>
-                            {/* <MatButton
-                                type='submit'
-                                variant='contained'
-                                color='primary'
-                                className={classes.button}
-                                startIcon={<PrintIcon />}
-                                
-                            >
-                                Print 
-                            </MatButton> */}
+                          
                             <MatButton
                               variant='contained'
                               color='default'

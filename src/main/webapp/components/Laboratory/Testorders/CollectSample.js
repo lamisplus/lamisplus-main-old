@@ -145,9 +145,9 @@ const useStyles = makeStyles({
             return <p><Badge  color="light">Sample Collected</Badge></p>
         }else if(e===2){
             return <p><Badge  color="light">Sample Transfered</Badge></p>
-        }else if(e==="3"){
+        }else if(e===3){
             return <p><Badge  color="light">Sample Verified</Badge></p>
-        }else if(e==="4"){
+        }else if(e===4){
             return <p><Badge  color="light">Sample Rejected</Badge></p>
         }else if(e===5){
             return <p><Badge  color="light">Result Available</Badge></p>
@@ -186,7 +186,7 @@ const useStyles = makeStyles({
                                 Action <span aria-hidden>▾</span>
                             </MenuButton>
                                 <MenuList style={{hover:"#eee"}}>
-                                <MenuItem onSelect={() => handleSample(e,dateEncounter)}><FaPlusSquare size="15" style={{color: '#000'}}/>{" "}Collect Sample</MenuItem>
+                                <MenuItem onSelect={() => viewresult(e,dateEncounter)}><FaPlusSquare size="15" style={{color: '#000'}}/>{" "}View Result</MenuItem>
                                 </MenuList>
                             </Menu>    
                         )
@@ -195,7 +195,7 @@ const useStyles = makeStyles({
 
 
 return (
-    <div >
+    <div>
       
         <Card>
         <Breadcrumbs aria-label="breadcrumb">

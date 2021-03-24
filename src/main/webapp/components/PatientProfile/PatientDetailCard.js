@@ -95,7 +95,7 @@ function PatientDetailCard(props) {
             <Col md={4} className={classes.root2}>
               <span>
                 {" "}
-                Email Address : <b>{patient.email || "N/A"}</b>
+                 Address : <b>{patient.address || "N/A"}</b>
               </span>
             </Col>
             <Col md={12}>

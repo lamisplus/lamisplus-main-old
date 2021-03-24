@@ -69,7 +69,7 @@ function PatientDetailCard(props) {
             <Col md={4}>
               <span>
                 {" "}
-                Email Address : <b>{patientDetail.email || "N/A"}</b>
+                 Address : <b>{patientDetail.address || "N/A"}</b>
               </span>
             </Col>
           </Row>
