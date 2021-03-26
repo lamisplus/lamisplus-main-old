@@ -135,19 +135,6 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getAllProgramEnrolled(id));
     }
 
-/*    @ApiOperation(value="getFormsByPatientId", notes = " id=required, formCode=required\n\n")
-    @GetMapping("/{id}/{formCode}")
-    public ResponseEntity<List<EncounterDTO>> getFormsByPatientId(@PathVariable Long id, @PathVariable String formCode) throws BadRequestAlertException {
-        return ResponseEntity.ok(this.patientService.getFormsByPatientId(id, formCode));
-    }*/
-
-
-/*    @ApiOperation(value="getFormsByPatientId", notes = " id=required, formCode=required\n\n")
-    @GetMapping("/{id}/form")
-    public ResponseEntity<List<Form>> getFormsByPatientId(@PathVariable Long id) throws BadRequestAlertException {
-        return ResponseEntity.ok(this.patientService.getFormsByPatientId(id, formCode));
-    }*/
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Person> save(@RequestBody PatientDTO patientDTO) {
@@ -163,4 +150,18 @@ public class PatientController {
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
         return ResponseEntity.ok(patientService.delete(id));
     }
+
+    /*    @ApiOperation(value="getFormsByPatientId", notes = " id=required, formCode=required\n\n")
+    @GetMapping("/{id}/{formCode}")
+    public ResponseEntity<List<EncounterDTO>> getFormsByPatientId(@PathVariable Long id, @PathVariable String formCode) throws BadRequestAlertException {
+        return ResponseEntity.ok(this.patientService.getFormsByPatientId(id, formCode));
+    }*/
+
+
+/*    @ApiOperation(value="getFormsByPatientId", notes = " id=required, formCode=required\n\n")
+    @GetMapping("/{id}/form")
+    public ResponseEntity<List<Form>> getFormsByPatientId(@PathVariable Long id) throws BadRequestAlertException {
+        return ResponseEntity.ok(this.patientService.getFormsByPatientId(id, formCode));
+    }*/
+
 }

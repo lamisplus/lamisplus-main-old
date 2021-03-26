@@ -25,15 +25,13 @@ public class EncounterController {
         return ResponseEntity.ok(encounterService.save(encounterDTO));
     }
 
-    @ApiOperation(value="getAllEncounters", notes = "response is List of EncounterDTO\n\n" +
-            "Example - /api/encounters")
     @GetMapping
     public ResponseEntity<List<EncounterDTO>> getAllEncounters() {
         return ResponseEntity.ok(this.encounterService.getAllEncounters());
     }
 
-    @ApiOperation(value="getEncounterByFormCodeAndDateEncounter", notes = " formCode=required, dateStart=optional, dateEnd=optional\n\n" +
-            "Example - api/encounters/{formCode}?dateStart=01-01-2020&dateEnd=01-04-2020")
+    /*@ApiOperation(value="getEncounterByFormCodeAndDateEncounter", notes = " formCode=required, dateStart=optional, dateEnd=optional\n\n" +
+            "Example - api/encounters/{formCode}?dateStart=01-01-2020&dateEnd=01-04-2020")*/
     @GetMapping("/{formCode}/{dateStart}/{dateEnd}")
     public ResponseEntity<List<EncounterDTO>> getEncounterByFormCodeAndDateEncounter(@PathVariable String formCode,
                                                                  @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional<String> dateStart,

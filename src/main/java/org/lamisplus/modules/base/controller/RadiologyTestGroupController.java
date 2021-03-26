@@ -24,12 +24,12 @@ public class RadiologyTestGroupController {
 
     @GetMapping
     public ResponseEntity<List<RadiologyTestGroup>> getAllRadiologyTestGroups() {
-        return ResponseEntity.ok(this.radiologyTestGroupService.getAllRadiologyTestGroups());
+        return ResponseEntity.ok(radiologyTestGroupService.getAllRadiologyTestGroups());
     }
 
     @GetMapping("/radiology-tests/{groupId}")
     public ResponseEntity<List<RadiologyTest>> getRadiologyTestsByGroupId(@PathVariable Long groupId) {
-        return ResponseEntity.ok(this.radiologyTestGroupService.getRadiologyTestByGroupId(groupId));
+        return ResponseEntity.ok(radiologyTestGroupService.getRadiologyTestByGroupId(groupId));
     }
 
 }

@@ -42,19 +42,13 @@ public class UserMapper {
         Set<Role> roles = new HashSet<>();
 
         if (rolesAsString != null) {
-            roles =
-                    rolesAsString
-                            .stream()
-                            .map(
-                                    string -> {
-                                        Role auth = new Role();
-                                        auth.setName(string);
-                                        return auth;
-                                    }
-                            )
-                            .collect(Collectors.toSet());
+            roles = rolesAsString.stream().map(
+                string -> {
+                    Role auth = new Role();
+                    auth.setName(string);
+                    return auth;
+                }).collect(Collectors.toSet());
         }
-
         return roles;
     }
 
@@ -66,6 +60,4 @@ public class UserMapper {
         user.setId(id);
         return user;
     }
-
-
 }

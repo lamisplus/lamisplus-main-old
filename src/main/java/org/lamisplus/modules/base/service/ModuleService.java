@@ -129,7 +129,6 @@ public class ModuleService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            //System.out.println("modulePath - " + modulePath);
             log.info("modulePath -" + modulePath);
 
             storageService.setRootLocation(modulePath);
@@ -228,8 +227,6 @@ public class ModuleService {
                     }
                 }
             }
-            log.debug("We are here- ");
-
 
             //Getting all dependencies
             if(externalModule.getModuleDependencyByModule() != null && !externalModule.getModuleDependencyByModule().isEmpty()) {
@@ -363,8 +360,8 @@ public class ModuleService {
                 for (String className : classNames) {
                     try {
                         if (className.contains(module.getMain())) {
-                            Class c = Class.forName(className, true, loader);
-                            //loader.loadClass(className);
+                            //Class c = Class.forName(className, true, loader);
+                            Class c = loader.loadClass(className);
                             moduleClasses.add(c);
                         }
                     } catch (Exception e) {
@@ -377,7 +374,6 @@ public class ModuleService {
                 e.printStackTrace();
                 throw new RuntimeException("Server error module not loaded: " + e.getMessage());
             }
-            System.setProperty("java.class.path", System.getProperty("user.dir")+ "\\demo.jar");
 
             //changing module status
             if(isInitialized == null) {
@@ -397,25 +393,7 @@ public class ModuleService {
         return module;
     }
 
-    public void test(File file){
-        ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
-
-// Add the conf dir to the classpath
-// Chain the current thread classloader
-        URLClassLoader urlClassLoader = null;
-        try {
-            urlClassLoader = new URLClassLoader(new URL[]{file.toURL()},
-                    currentThreadClassLoader);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-// Replace the thread classloader - assumes
-// you have permissions to do so
-        Thread.currentThread().setContextClassLoader(urlClassLoader);
-    }
     public void startModule(Boolean isStartUp){
-        //Boolean startUp = false;
         System.out.println("STarting starting....");
         if(isStartUp){
             //startUp = isStartUp;
@@ -423,8 +401,6 @@ public class ModuleService {
         } else {
             loadAllExternalModules(STATUS_INSTALLED, MODULE_TYPE);
         }
-        //startUp = false;
-
         externalModules.forEach(module -> {
             if(!isStartUp){
                 if(module.getStatus() == STATUS_INSTALLED) {
@@ -507,11 +483,11 @@ public class ModuleService {
         externalModules.forEach(module -> {
             final Path moduleDependencyRuntimePath = Paths.get(properties.getModulePath(), "libs", module.getName());
             //Path libPath = Paths.get(properties.getModulePath(), "libs", module.getName());
-            if(module.getModuleDependencyByModule() != null && !module.getModuleDependencyByModule().isEmpty()) {
+            if(module.getModuleDependencyByModule() != null && !module.getModuleDependencyByModule().isEmpty() && moduleDependencyRuntimePath.toFile().exists()) {
                 for (File file : moduleDependencyRuntimePath.toFile().listFiles()) {
                     System.out.println(file.getName());
                     //Load dependencies
-                    System.out.println(module.getName() + " : " + file.exists());
+                    log.info(module.getName() + " : " + file.exists());
                     module.getModuleDependencyByModule().forEach(moduleDependency -> {
                         if (file.getName().contains(moduleDependency.getArtifactId())) {
                             try {

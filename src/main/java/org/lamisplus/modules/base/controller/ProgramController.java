@@ -20,7 +20,7 @@ public class ProgramController {
 
     @PostMapping
     public ResponseEntity<Program> save(@RequestBody ProgramDTO programDTO) {
-        return ResponseEntity.ok(this.programService.save(programDTO));
+        return ResponseEntity.ok(programService.save(programDTO));
     }
 
     @PutMapping("/{id}")
@@ -30,16 +30,16 @@ public class ProgramController {
 
     @GetMapping("{id}/forms")
     public ResponseEntity<List<Form>> getFormByProgramId(@PathVariable Long id) {
-            return ResponseEntity.ok(this.programService.getFormByProgramId(id));
+            return ResponseEntity.ok(programService.getFormByProgramId(id));
     }
 
     @GetMapping
     public ResponseEntity<List<Program>> getAllPrograms() {
-        return ResponseEntity.ok(this.programService.getAllPrograms());
+        return ResponseEntity.ok(programService.getAllPrograms());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
-        return ResponseEntity.ok(this.programService.delete(id));
+        return ResponseEntity.ok(programService.delete(id));
     }
 }

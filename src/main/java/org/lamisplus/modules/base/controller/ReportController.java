@@ -28,7 +28,7 @@ public class ReportController {
     @PostMapping
     public ResponseEntity<ReportInfo> save(@RequestBody ReportInfoDTO reportInfoDTO) {
         reportInfoDTO.setId(0L);
-        return ResponseEntity.ok(this.reportService.save(reportInfoDTO));
+        return ResponseEntity.ok(reportService.save(reportInfoDTO));
     }
 
     @PostMapping(value = "/generate")
@@ -42,16 +42,16 @@ public class ReportController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ReportInfo> update(@PathVariable Long id, @RequestBody ReportInfoDTO reportInfoDTO) {
-        return ResponseEntity.ok(this.reportService.update(id, reportInfoDTO));
+        return ResponseEntity.ok(reportService.update(id, reportInfoDTO));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
-        return ResponseEntity.ok(this.reportService.delete(id));
+        return ResponseEntity.ok(reportService.delete(id));
     }
 
     @GetMapping
     public ResponseEntity<List<ReportInfoDTO>> getAllJasperReports() {
-        return ResponseEntity.ok(this.reportService.getReports());
+        return ResponseEntity.ok(reportService.getReports());
     }
 }

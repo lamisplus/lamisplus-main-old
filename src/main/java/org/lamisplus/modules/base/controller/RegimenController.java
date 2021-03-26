@@ -45,6 +45,6 @@ public class RegimenController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> delete(@PathVariable Long id){
-        return ResponseEntity.ok(this.regimenService.delete(id));
+        return ResponseEntity.ok(regimenService.delete(id));
     }
 }

@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.lamisplus.modules.base.util.converter.LocalTimeAttributeConverter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -35,9 +36,10 @@ public class Visit extends Audit<String> {
     private LocalDate dateVisitStart;
 
     @Basic
-    @Column(name = "time_visit_start", nullable = true)
+    @Column(name = "time_visit_start")
     @Convert(converter = LocalTimeAttributeConverter.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "hh:mm a")
+    @NotNull(message = "timeVisitStart cannot be null")
     private LocalTime timeVisitStart;
 
     @Basic

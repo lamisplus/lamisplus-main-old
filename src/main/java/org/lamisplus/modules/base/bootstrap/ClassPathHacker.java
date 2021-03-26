@@ -2,7 +2,6 @@ package org.lamisplus.modules.base.bootstrap;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;

@@ -25,11 +25,6 @@ public class ApplicationCodesetController {
         return ResponseEntity.ok(this.applicationCodesetService.getApplicationCodeByCodesetGroup(codesetGroup));
     }
 
-   /* @GetMapping("/{id}")
-    public ResponseEntity<ApplicationCodesetDTO> getApplicationCodeset(@PathVariable Long id) {
-        return ResponseEntity.ok(this.applicationCodesetService.getApplicationCodeset(id));
-    }*/
-
     @GetMapping
     public ResponseEntity<List<ApplicationCodesetDTO>> getAllApplicationCodesets() {
         return ResponseEntity.ok(this.applicationCodesetService.getAllApplicationCodeset());

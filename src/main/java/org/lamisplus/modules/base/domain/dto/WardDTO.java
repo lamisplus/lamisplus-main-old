@@ -12,9 +12,4 @@ import java.util.Objects;
 public class WardDTO {
     private Long id;
     private String name;
-    //private String createdBy;
-/*  private Time dateCreated;
-    private Time dateModified;
-    private Time modifiedBy;
-    private String uuid;*/
 }

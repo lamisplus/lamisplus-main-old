@@ -19,6 +19,8 @@ import java.util.List;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "form")
 public class Form extends JsonBEntity implements Serializable {
     @Id
@@ -103,4 +105,15 @@ public class Form extends JsonBEntity implements Serializable {
 
     @Transient
     private String programName;
+
+    public Form(Long id, String name, String code, Integer usageCode, String resourcePath, Object formPrecedence, String programCode, String version){
+        this.id = id;
+        this.name = name;
+        this.code = code;
+        this.usageCode = usageCode;
+        this.resourcePath = resourcePath;
+        this.formPrecedence = formPrecedence;
+        this.programCode = programCode;
+        this.version = version;
+    }
 }

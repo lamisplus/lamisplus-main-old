@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
+import org.eclipse.birt.report.data.oda.jdbc.OdaJdbcDriver;
 import org.eclipse.birt.report.engine.api.*;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
@@ -40,6 +41,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
     private static final int ARCHIVED = 1;
     private final UserRepository userRepository;
     private static String name;
+
     /*@Value("${reports.relative.path}")
     private String reportsPath = System.getProperty("user.dir");
     @Value("${images.relative.path}")
@@ -271,5 +273,4 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         if(!optional.isPresent()) throw new EntityNotFoundException(ReportInfo.class, "Id", id+"");
         return optional.get();
     }
-
 }
