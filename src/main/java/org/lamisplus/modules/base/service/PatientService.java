@@ -103,10 +103,10 @@ public class PatientService {
     }
 
 
-    /*public List<PatientDTO> getAllPatients(Page page) {
+    public List<PatientDTO> getAllPatients(Page page) {
         List<Patient> patients = page.getContent();
         return getPatients(patients);
-    }*/
+    }
 
     public PatientDTO getPatientByHospitalNumber(String hospitalNumber) {
         Optional<Patient> patientOptional = this.patientRepository.findByHospitalNumberAndOrganisationUnitIdAndArchived(hospitalNumber, getOrganisationUnitId(), UN_ARCHIVED);
@@ -512,5 +512,9 @@ public class PatientService {
         });
 
         return patientDTOs;
+    }
+
+    public Page<Patient> findPage(Pageable pageable) {
+        return patientRepository.findAllByOrganisationUnitIdAndArchivedOrderByIdDesc(getOrganisationUnitId(), UN_ARCHIVED, pageable);
     }
 }

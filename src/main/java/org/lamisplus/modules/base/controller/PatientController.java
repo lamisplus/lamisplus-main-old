@@ -6,13 +6,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.*;
 import org.lamisplus.modules.base.domain.entity.Form;
+import org.lamisplus.modules.base.domain.entity.Patient;
 import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.service.PatientService;
+import org.lamisplus.modules.base.util.PaginationUtil;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -24,17 +30,17 @@ import java.util.Optional;
 public class PatientController {
     private final PatientService patientService;
 
-    /*@GetMapping
+    @GetMapping
     public ResponseEntity<List<PatientDTO>> getAllPatients(@PageableDefault(value = 100) Pageable pageable) {
-        Page<PatientDTO> page = patientService.findPage(pageable);
+        Page<Patient> page = patientService.findPage(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(patientService.getAllPatients(page), headers, HttpStatus.OK);
-    }*/
+    }
 
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<List<PatientDTO>> getAllPatients() {
         return ResponseEntity.ok(patientService.getAllPatients());
-    }
+    }*/
 
     @GetMapping("/totalCount")
     public ResponseEntity<Long> getTotalCount() {
