@@ -9,7 +9,7 @@ import {fetchByHospitalNumber} from '../../actions/patients'
 import MatButton from '@material-ui/core/Button';
 import { TiArrowBack } from "react-icons/ti";
 import { authHeader } from '_helpers/auth-header';
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
 import {
@@ -79,6 +79,19 @@ const Update = props => {
         fetchForms();
     }, []);
 
+    useEffect(() => {
+        async function fetchFormByCode() {
+            axios
+                .get(`${url}forms/${row.code}/formCode`)
+                .then(response => {
+                    setform2(response.data)
+                })
+                .catch(error => {
+                    toast.error('Could not load form resource, please contact admin.')
+                })
+        }
+    }, []);
+
     const handleFileRead = (e) => {
         const content = fileReader.result;
         setRow( {...JSON.parse(content), ...{id: row.id, code: row.code, name: row.name} });
@@ -94,9 +107,9 @@ const Update = props => {
 
     useEffect (() => {
         setformCode(row.code);
-        console.log(row);
+        //console.log(row);
 
-        setform2(row)
+       // setform2(row)
 
         props.fetchPatientByHospitalNumber('AD-0221', null, null)
     }, [])
@@ -167,8 +180,7 @@ const Update = props => {
                                                 icon={icon}
                                                 checkedIcon={checkedIcon}
                                                 style={{marginRight: 8}}
-                                                checked={selected}
-                                            />
+                                                checked={selected}/>
                                             : ""
                                         }
                                         {option.title}
@@ -189,7 +201,7 @@ const Update = props => {
                         </Col>
                     </Row>
                     { form2 ?
-                        <FormBuilder form={row.resourceObject || {}} {...props}
+                        <FormBuilder form={form2.resourceObject || {}} {...props}
                                      submission={{data :{baseUrl:url}}}
                                      onChange={(schema) => {
                             // console.log(JSON.stringify(schema));
@@ -220,6 +232,8 @@ const Update = props => {
                 </CardContent>
             </Card>
 
+
+            {/*preview modal start*/}
                 <Modal isOpen={showModal} toggle={toggleModal} size="lg">
                     <ModalHeader toggle={toggleModal}><h4>View Form</h4> </ModalHeader>
                     <ModalBody>

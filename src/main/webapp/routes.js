@@ -128,24 +128,10 @@ class Routes extends Component {
               <PrivateRoute
                 exact
                 path="/patient-registration"
-                component={PateintRegistationPage}
-
-              />
-                <PrivateRoute
-                    exact
-                    path="/patient-registration-formio"
-                    component={PatientRegistrationFormio}
-                    roles={["patient_write", "patient_delete"]}
-                />
-              <PrivateRoute
-                exact
-                path="/patient-update"
-                component={PateintUpdate}/>
-                <PrivateRoute
-                    exact
-                    path="/patient-update-formio"
-                    component={EditPatientFormio}/>
-
+                component={PateintRegistationPage}/>
+                <PrivateRoute exact path="/patient-registration-formio" component={PatientRegistrationFormio} roles={["patient_write", "patient_delete"]}/>
+                <PrivateRoute exact path="/patient-update" component={PateintUpdate}/>
+                <PrivateRoute exact path="/patient-update-formio" component={EditPatientFormio}/>
               {/* Laboratory Links */}
              <PrivateRoute exact path="/collect-result" component={LaboratorySampleResultPage} />
               <PrivateRoute exact path="/laboratory" component={LaboratoryPage} />

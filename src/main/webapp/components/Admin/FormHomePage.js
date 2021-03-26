@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MaterialTable from "material-table";
 import { connect } from "react-redux";
-import {fetchAllForms, Delete as Del,} from '../../actions/formBuilder';
+import {fetchAllForms, fetchByCode, Delete as Del,} from '../../actions/formBuilder';
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import "react-widgets/dist/css/react-widgets.css";
@@ -61,9 +61,6 @@ function FormSearch(props) {
             props.deleteForm(row.id)
     }
 
-
-
-
     return (
         <React.Fragment>
             <div>
@@ -99,12 +96,7 @@ function FormSearch(props) {
                                         </MenuItem>
                                         <MenuItem style={{ color:"#000 !important"}}>
                                             <Link
-                                                to={{
-                                                    pathname: "/view-form",
-                                                    state: {row:row}
-                                                }}
-
-                                            >
+                                                to={{pathname: "/view-form", state: {row:row}}}>
                                                 <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Form </span>
                                             </Link>
                                         </MenuItem>
@@ -124,7 +116,6 @@ function FormSearch(props) {
                                                    return JSON.stringify(row)
                                                 }}
                                             />
-
                                         </MenuItem>
                                     </MenuList>
                                 </Menu>
