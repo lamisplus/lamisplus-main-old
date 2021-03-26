@@ -11,6 +11,7 @@ import PatientDetailCard from 'components/PatientProfile/PatientDetailCard';
 import { Link } from "react-router-dom";
 //import DispenseModal from './DispenseModal'
 import DispenseModal from './DrugDispenseFormIo';
+import DispenseModalUpdate from './DrugDispenseUpdateFormIo';
 import ViewModal from './ViewModalForm';
 import { Menu, MenuList, MenuButton, MenuItem } from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
@@ -74,7 +75,9 @@ const Prescriptions = (props) => {
   const [modal, setModal] = useState(false);
   const toggleModal = () => setModal(!modal)
   const [modal1, setModal1] = useState(false);
-  const toggleModal1 = () => setModal(!modal1)
+  const toggleModal1 = () => setModal1(!modal1)
+  const [modal2, setModal2] = useState(false);
+  const toggleModal2 = () => setModal2(!modal2)
   const [formData, setFormData] = useState(prescriptionOrder);
   const [drugDetails, setDrugDetails] = useState()
 
@@ -91,6 +94,10 @@ const Prescriptions = (props) => {
     setModal1(!modal1)
   }
 
+  const toggle2 = (form) => {
+    setDrugDetails({ ...drugDetails, ...form });
+    setModal2(!modal2)
+  }
   const closeBtn = (
     <button className="close" onClick={toggle}>
       &times;
@@ -137,7 +144,7 @@ const Prescriptions = (props) => {
 
         
          ) : (
-           <MenuItem onSelect={() => toggle(form)} hidden={!authentication.userHasRole(["pharmacy_write"])}>
+           <MenuItem onSelect={() => toggle2(form)} hidden={!authentication.userHasRole(["pharmacy_write"])}>
              <i
                className="fa fa-pencil"
                aria-hidden="true"
@@ -256,6 +263,7 @@ const Prescriptions = (props) => {
         </Col>
       </Row>
      <DispenseModal  modalstatus={modal} togglestatus={toggleModal} datasample={drugDetails}/>
+     <DispenseModalUpdate  modalstatus={modal2} togglestatus={toggleModal2} datasample={drugDetails}/>
      <ViewModal modalstatus={modal1} togglestatus={toggleModal1} datasample={drugDetails}/> 
     </div>
   );

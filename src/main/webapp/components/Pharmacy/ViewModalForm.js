@@ -12,7 +12,7 @@ import {
     updatePrescriptionStatus,
 } from "../../actions/pharmacy";
 import * as CODES from "./../../api/codes";
-import FormRenderer from "components/FormManager/FormRenderer";
+import FormRendererView from "components/FormManager/FormRendererView";
 
 Moment.locale("en");
 momentLocalizer();
@@ -115,7 +115,7 @@ const ModalSample = (props) => {
                             <Card >
               <CardBody>
                  
-                        <FormRenderer
+                        <FormRendererView
                             formCode={datasample.data && datasample.data.type !=0 ? currentForm.code : currentFormForRegimen.code}
                             programCode={currentForm.programCode}
                             options={datasample.data}                           

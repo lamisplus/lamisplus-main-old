@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import { DropzoneAreaBase } from 'material-ui-dropzone';
-import { DropzoneArea } from 'material-ui-dropzone';
 import { connect } from "react-redux";
 import {fetchByHospitalNumber} from "actions/patients";
 import {fetchRadiologyTestOrdersByEncounterID, updateRadiologyByFormId} from "actions/laboratory"
@@ -132,15 +131,11 @@ const UploadResultPage = (props) => {
                                     }}
 
                                 />
-                                <br/>
-                                <DropzoneArea
-                                    onChange={(files) => console.log('Files:', files)}
-                                    />
                             </Col>
                             <Col md={6}>
                                 <Row><Col md={12}>
                                     <FormGroup>
-                                        <Label for="encounterDate">Uploadjj lllDate & Time*</Label>
+                                        <Label for="encounterDate">Upload Date & Time*</Label>
                                         <DateTimePicker
                                             name="encounterDate"
                                             id="encounterDate"

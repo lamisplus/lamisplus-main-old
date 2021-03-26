@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { DropzoneAreaBase } from 'material-ui-dropzone';
+import { DropzoneArea } from 'material-ui-dropzone';
 import { connect } from "react-redux";
 import {fetchByHospitalNumber} from "actions/patients";
 import {fetchRadiologyTestOrdersByEncounterID, updateRadiologyByFormId} from "actions/laboratory"
@@ -48,7 +49,8 @@ const UploadResultPage = (props) => {
 
     const uploadResult = e => {
         e.preventDefault();
-
+        console.log(testOrder.data)
+        return 
         if(testOrder.data.files.length == 0){
             toast.error("You must upload at least one file");
             return;
@@ -107,30 +109,27 @@ const UploadResultPage = (props) => {
                         </Row>
                         <Row>
                             <Col md={6}>
-                                <DropzoneAreaBase
+                               
+                                <br/>
+                                <DropzoneArea
+                                    onChange={(files) => {testOrder.data["files"] =files; console.log('Files:', files)}}
                                     acceptedFiles={[".jpg", ".png", ".jpeg", ".gif"]}
-                                    showPreviews={true}
-                                    showPreviewsInDropzone={false}
-                                    useChipsForPreview
-                                    previewGridProps={{container: {spacing: 1, direction: 'row'}}}
-                                    previewChipProps={{classes: {root: classes.previewChip}}}
-                                    previewText="Selected files"
-                                    fileObjects={testOrder.data.files}
-                                    onAdd={newFileObjs => {
-                                        console.log('onAdd', newFileObjs);
-                                        testOrder.data["files"] = [].concat(testOrder.data.files, newFileObjs);
-                                        setTestOrder(testOrder);
-                                    }}
-                                    onDelete={deleteFileObj => {
-                                        //delete file object from the array
-                                        const files = testOrder.data.files.filter(x => x.file.name !== deleteFileObj.file.name);
-                                        console.log(files)
-                                        testOrder.data["files"] = files;
-                                        setTestOrder(testOrder);
-                                        console.log('onDelete', deleteFileObj);
-                                    }}
-
-                                />
+                                   
+                                    // onAdd={newFileObjs => {
+                                        
+                                    //     testOrder.data["files"] = [].concat(testOrder.data.files, newFileObjs);
+                                    //     setTestOrder(testOrder);
+                                    // }}
+                                    // onDelete={deleteFileObj => {
+                                    //     //delete file object from the array
+                                    //     const files = testOrder.data.files.filter(x => x.file.name !== deleteFileObj.file.name);
+                                    //     console.log(files)
+                                    //     testOrder.data["files"] = files;
+                                    //     setTestOrder(testOrder);
+                                    //     console.log('onDelete', deleteFileObj);
+                                    // }}
+                                   
+                                    />
                             </Col>
                             <Col md={6}>
                                 <Row><Col md={12}>
@@ -153,10 +152,10 @@ const UploadResultPage = (props) => {
                                         />
                                     </FormGroup>
                                 </Col>
-                                    <Col md={"12"}>
-                                        <Label for="comment">Notes</Label>
-                                        <ReactQuill theme="snow" value={note} onChange={setNote}/>
-                                    </Col>
+                                <Col md={12}>
+                                    <Label for="comment">Notes</Label>
+                                    <ReactQuill theme="snow" value={note} onChange={setNote}/>
+                                </Col>
                                 </Row>
                             </Col>
                         </Row>

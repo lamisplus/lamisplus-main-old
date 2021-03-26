@@ -167,7 +167,12 @@ const ResultReporting = (props) => {
                     :""}
                     {e.data.lab_test_order_status===5 ?
                         <MenuItem onSelect={() => viewresult(e)}><FaRegEye size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>
+                        
                     :""}
+                    {e.data.lab_test_order_status===5 ?
+                        <MenuItem onSelect={() => addresult(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Add Result</MenuItem>
+                    :""}
+                    
                     {e.data.lab_test_order_status===4 ?
                         <MenuItem onSelect={() => handleRecollectSample(e)} hidden={!authentication.userHasRole(["laboratory_write"])}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Re-Collect Sample</MenuItem>
                     :""}   

@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import CancelIcon from '@material-ui/icons/Cancel';
 //import PrintIcon from '@material-ui/icons/Print';
 import ReactHtmlParser from 'react-html-parser'
-//import RichTextEditor from 'html-to-react';
+import Divider from '@material-ui/core/Divider';
 
 
 const useStyles = makeStyles(theme => ({
@@ -112,9 +112,11 @@ const ModalViewResult = (props) => {
                                             <Label for="examplePassword"><span style={{ fontWeight: 'bold'}}> Notes </span>: {ReactHtmlParser(x.notes_sample_reported && x.notes_sample_reported!==undefined ? x.notes_sample_reported : "")} </Label>
                                       
                                         </FormGroup>
-                                        <br/>
+                                      
+                                        <Divider  />
                                     </Col>  
-                                                </Row>)
+                                    </Row>)
+                                   
                                         })
                                         
                                     }

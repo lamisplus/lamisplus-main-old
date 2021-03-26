@@ -64,9 +64,10 @@ const GlobalVariableSearch = (props) => {
     }, [patientId]); //componentDidMount
 
     const openResultPage = (row) => {
+        console.log(row)
         if(row.data.files) {
             const files  = row.data.files.map(x => {
-                x.file["name"] = x.file.path;
+                x["name"] = x.path;
                 return x
             })
             row.data["files"] = files;
@@ -90,7 +91,7 @@ const GlobalVariableSearch = (props) => {
         setTestOrder(row);
         toggleModal();
     }
-
+console.log(props.list.formDataObj)
 
     return (
         <React.Fragment>

@@ -116,7 +116,7 @@ const ViewResultPage = (props) => {
                                             <ModalImage small={file.data}
                                             large={file.data}
                                                         className={"file-height"}
-                                            alt={file.file.path}
+                                            alt={file.path}
                                             /></Col>
                                         ))
                                         }
