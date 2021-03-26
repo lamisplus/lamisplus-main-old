@@ -175,8 +175,7 @@ const Prescriptions = (props) => {
    );
  };
   return (
-    <div>
-
+    <React.Fragment>
       <Row>
         <Col>
           <div>
@@ -262,10 +261,13 @@ const Prescriptions = (props) => {
           </div>
         </Col>
       </Row>
-     <DispenseModal  modalstatus={modal} togglestatus={toggleModal} datasample={drugDetails}/>
-     <DispenseModalUpdate  modalstatus={modal2} togglestatus={toggleModal2} datasample={drugDetails}/>
-     <ViewModal modalstatus={modal1} togglestatus={toggleModal1} datasample={drugDetails}/> 
-    </div>
+     
+        <DispenseModal  modalstatus={modal} togglestatus={toggleModal} datasample={drugDetails}/>
+      
+        <DispenseModalUpdate  modalstatus={modal2} togglestatus={toggleModal2} datasample={drugDetails}/>
+        
+      <ViewModal modalstatus={modal1} togglestatus={toggleModal1} datasample={drugDetails}/> 
+    </React.Fragment>
   );
 }
 

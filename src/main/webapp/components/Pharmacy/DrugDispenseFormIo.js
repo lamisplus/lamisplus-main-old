@@ -103,8 +103,9 @@ const ModalSample = (props) => {
         
     };
 
-
+ 
     return (
+        
         <div >
             <Card >
                 <CardBody>
@@ -131,7 +132,10 @@ const ModalSample = (props) => {
                 </CardBody>
             </Card>
         </div>
+    
+       
     );
+    
 };
 
 export default connect(null, { updatePrescriptionStatus })(
