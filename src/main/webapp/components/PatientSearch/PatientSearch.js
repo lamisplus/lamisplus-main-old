@@ -10,7 +10,8 @@ import "@reach/menu-button/styles.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
-
+import { APPLICATION_CODESET_GENDER } from "actions/types";
+import { fetchApplicationCodeSet } from "actions/applicationCodeset";
 
 
 
@@ -18,9 +19,18 @@ const PatientSearch = (props) => {
   const [loading, setLoading] = useState('')
   const [patients, setPatients] = useState()
 
+    /*# Get list of Gender parameter  #*/
+    React.useEffect(() => {
+        if(props.genderList.length === 0){
+            props.fetchApplicationCodeSet("GENDER", APPLICATION_CODESET_GENDER);
+        }
+    }, [props.genderList]);
 
+    function getGenderById(id) {
+        return id ? ( props.genderList.find((x) => x.id == id) ? props.genderList.find((x) => x.id == id).display : "" ) : "";
+    }
   useEffect(() => {
-      console.log(props.patientsList)
+    //  console.log(props.patientsList)
       setLoading('true');
       const onSuccess = () => {
 
@@ -68,6 +78,7 @@ const PatientSearch = (props) => {
                       },
                       { title: "Patient ID", field: "id" },
                       { title: "Age", field: "age", filtering: false },
+                      { title: "Gender", field: "gender", filtering: false },
                       { title: "Address", field: "address", filtering: false },
                       {title: "", field: "actions", filtering: false,},
                   ]}
@@ -80,8 +91,9 @@ const PatientSearch = (props) => {
                           }}
 
                           title={"Click to view patient dashboard"}
-                      >{row.firstName}  { ' '}  {row.lastName}</Link>,
+                      >{row.firstName}  { ' '}  {row.lastName ? row.lastName.toUpperCase() : ""}</Link>,
                       id: row.hospitalNumber,
+                      gender: getGenderById(row.genderId),
                       age: (row.dob === 0 ||
                       row.dob === undefined ||
                       row.dob === null ||
@@ -156,13 +168,15 @@ const PatientSearch = (props) => {
 
   const mapStateToProps = state => {
     return {
-        patientsList: state.patients.list
+        patientsList: state.patients.list,
+        genderList: state.applicationCodesets.genderList
     };
   };
 
   const mapActionToProps = {
       fetchAllPatients: fetchAll,
-      deletePatient: Del
+      deletePatient: Del,
+      fetchApplicationCodeSet: fetchApplicationCodeSet,
   };
 
 export default connect(mapStateToProps, mapActionToProps)(PatientSearch);

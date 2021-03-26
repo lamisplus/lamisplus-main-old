@@ -80,7 +80,7 @@ const FormRenderer = props => {
           setErrorMsg("Could not load encounter information");
           setShowErrorMsg(true);
         }
-        setSubmission(_.merge({ data: extractedData }, submission));
+        setSubmission(JSON.stringify(_.merge({ data: extractedData }, JSON.parse(submission))));
       })
       .catch((error) => {
         setErrorMsg("Could not load encounter information");
@@ -144,6 +144,7 @@ const FormRenderer = props => {
       <Alert color='danger' isOpen={showErrorMsg} toggle={onDismiss}>
             {errorMsg}
           </Alert>
+
       <Form
           form={form.resourceObject}
           submission={JSON.parse(submission)}

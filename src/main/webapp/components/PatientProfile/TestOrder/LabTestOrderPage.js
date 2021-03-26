@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import MatButton from "@material-ui/core/Button";
 import { connect } from "react-redux";
 import {
     Row,
@@ -7,7 +6,7 @@ import {
     FormGroup,
     Input,
     Label,
-    Alert} from "reactstrap";
+    Alert, Button} from "reactstrap";
 import moment from "moment";
 import Select from "react-select";
 import * as actions from "actions/laboratory";
@@ -237,13 +236,14 @@ function LabTestOrderPage(props) {
             <Col md={12}>
                 <CheckedInValidation
                     actionButton={
-                        <MatButton
+                        <Button
+                            color="primary"
                             className="btn btn-primary"
                             type="button"
                             onClick={addNewTest}
                         >
                             Add Test
-                        </MatButton>
+                        </Button>
                     }
                     visitId={props.patient.visitId}
                 />
