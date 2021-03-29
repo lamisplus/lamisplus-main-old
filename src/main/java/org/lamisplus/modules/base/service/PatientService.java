@@ -493,21 +493,11 @@ public class PatientService {
             Optional<Visit> visitOptional = visitRepository.findTopByPatientIdAndDateVisitEndIsNullOrderByDateVisitStartDesc(patient.getId());
             PatientDTO patientDTO = visitOptional.isPresent() ? patientMapper.toPatientDTO(person, visitOptional.get(), personContact, patient) : patientMapper.toPatientDTO(person, personContact, patient);
 
-            List<PersonRelative> personRelatives = person.getPersonRelativesByPerson();//personRelativeRepository.findByPersonId(person.getId());
-            //List<PersonRelativesDTO> personRelativeDTOs = new ArrayList<>();
+            List<PersonRelative> personRelatives = person.getPersonRelativesByPerson();
 
                 patientDTO.setPersonRelativeDTOs(personRelativeMapper.toPersonRelativeDTOList(personRelatives.stream().
                         filter(personRelative -> personRelative.getArchived() != ARCHIVED).
                         collect(Collectors.toList())));
-
-            /*if (personRelatives.size() > 0) {
-                personRelatives.forEach(personRelative -> {
-                    if(personRelative.getArchived() == archived) return;
-                    PersonRelativesDTO personRelativesDTO = personRelativeMapper.toPersonRelativeDTO(personRelative);
-                    personRelativeDTOs.add(personRelativesDTO);
-                });
-                patientDTO.setPersonRelativeDTOs(personRelativeDTOs);
-            }*/
             patientDTOs.add(patientDTO);
         });
 

@@ -24,8 +24,7 @@ public class RadiologyService {
 
 
 
-    public List<String> save(List<String> urlList, Long formId) {
-        final FormData formData = formDataService.getFormData(formId);
+    public List<String> save(List<String> urlList, Long formDataId, FormData formData) {
         List fileUrlList = new ArrayList();
         JSONArray jsonArray = new JSONArray();
 
@@ -44,6 +43,7 @@ public class RadiologyService {
             }
             jsonObject.put(FILE_URL, jsonArray);
             formData.setData(jsonObject.toString());
+            formData.setId(formDataId);
 
             //Update the form data
             formDataRepository.save(formData);

@@ -136,7 +136,9 @@ public class FormService {
 
         accessRight.grantAccessByAccessType(formOptional.get().getCode(), FormService.class, DELETE, permissions);
 
-        formOptional.get().setArchived(ARCHIVED);
-        return formOptional.get().getArchived();
+        Form form = formOptional.get();
+        form.setArchived(ARCHIVED);
+        formRepository.save(form);
+        return form.getArchived();
     }
 }
