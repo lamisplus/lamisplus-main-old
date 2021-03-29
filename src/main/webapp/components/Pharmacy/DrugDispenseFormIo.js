@@ -13,6 +13,7 @@ import {
 } from "../../actions/pharmacy";
 import * as CODES from "./../../api/codes";
 import FormRenderer from "components/FormManager/FormRenderer";
+import { useHistory } from "react-router-dom";
 
 Moment.locale("en");
 momentLocalizer();
@@ -57,8 +58,9 @@ const useStyles = makeStyles((theme) => ({
 
 const ModalSample = (props) => {
     const classes = useStyles()
+    let history = useHistory();
     const datasampleObj = props.datasample && props.datasample!==null ? props.datasample : {};
-   
+
     const DrugId = datasampleObj.id
     const [loading, setLoading] = useState(false)
     const [visible, setVisible] = useState(true);
@@ -73,7 +75,7 @@ const ModalSample = (props) => {
             hideHeader: true
         },
     };
-    
+
     const currentFormForRegimen = {
         code: CODES.PHARMARCY_DRUG_DISPENSE_REGIMEN,
         programCode: CODES.GENERAL_SERVICE,
@@ -81,14 +83,14 @@ const ModalSample = (props) => {
         options:{
             hideHeader: true
         },
-    
+
     };
 
 
 
 
     const saveSample = (e) => {
-        const newData = e.data 
+        const newData = e.data
         datasampleObj.data.prescription_status = 1
         const onSuccess = () => {
             props.togglestatus();
@@ -96,44 +98,46 @@ const ModalSample = (props) => {
         const onError = () => {
             props.togglestatus();
         };
+
         props.updatePrescriptionStatus(datasampleObj.id, datasampleObj, onSuccess, onError);
-      
-        
+        history.push("/pharmacy");
+
+
     };
 
- 
+
     return (
-        
+
         <div >
             <Card >
                 <CardBody>
                     <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
-                      
+
                             <ModalHeader toggle={props.togglestatus}>Drug Dispensing </ModalHeader>
                             <ModalBody>
                             <Card >
               <CardBody>
-                 
+
                         <FormRenderer
                             formCode={datasampleObj.data && datasampleObj.data.type !=0 ? currentForm.code : currentFormForRegimen.code}
                             programCode={currentForm.programCode}
-                            submission={props.datasample}
+                            submission={datasampleObj}
                             onSubmit={saveSample}
                         />
-                         
+
                     </CardBody>
                 </Card>
-                                
+
                  </ModalBody>
-                  
+
                     </Modal>
                 </CardBody>
             </Card>
         </div>
-    
-       
+
+
     );
-    
+
 };
 
 export default connect(null, { updatePrescriptionStatus })(
