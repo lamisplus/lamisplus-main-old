@@ -70,5 +70,4 @@ public class OrganisationUnitController {
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
         return ResponseEntity.ok(organisationUnitService.delete(id));
     }
-
 }

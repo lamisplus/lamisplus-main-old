@@ -25,8 +25,6 @@ public class DataSourceController {
     private final DataSourceService dataSourceService;
     private final DataSourceRepository dataSourceRepository;
 
-    private static final String ENTITY_NAME = "DataSource";
-
     @GetMapping
     public ResponseEntity<List<DataSource>> getDataSources() {
         List<DataSource>  dataSources = dataSourceRepository.findAll();

@@ -11,7 +11,7 @@ const PatientSearch = (props) => {
   const prescriptions = useSelector(state => state.pharmacy.allPrescriptions)
 
   const totalDrugsPrescribed = (drugsArray) => {
-    
+    console.log(prescriptions)
     const dispensed = []
 
     drugsArray.map(drugs => {
@@ -23,6 +23,19 @@ const PatientSearch = (props) => {
     return dispensed.length
   }
  
+  const drugsPrescriptions = []
+  prescriptions.forEach(function(value, index, array) {
+   const dataSamples = value.formDataObj
+    if(value.formDataObj.data!==null) {
+    for(var i=0; i<dataSamples.length; i++){
+        for (var key in dataSamples[i]) {
+          if (dataSamples[i][key]!==null && dataSamples[i][key].prescription_status >= 0 )
+            drugsPrescriptions.push(value)
+        }            
+      }
+    }
+  });
+
   return (
     <div>
       <MaterialTable
@@ -45,6 +58,7 @@ const PatientSearch = (props) => {
             field: "dispensedCount",
             filtering: false,
           },
+        
           {
             title: "Action",
             field: "actions",
@@ -57,14 +71,14 @@ const PatientSearch = (props) => {
           date: prescription.dateEncounter,
           prescribedCount: prescription.formDataObj.length,
           dispensedCount: totalDrugsPrescribed(prescription.formDataObj),
+          // type:   prescription.formDataObj.data.type,
           actions: (
             
             <Link
               to={{
                 pathname: "/prescriptions",
                 state: prescription,
-                patientName: prescription.firstName + " " + prescription.lastName,
-                encounterId: prescription.encounterId,
+               
               }}
               style={{ cursor: "pointer", color: "blue", fontStyle: "bold" }}>
               <Tooltip title="View Prescription">

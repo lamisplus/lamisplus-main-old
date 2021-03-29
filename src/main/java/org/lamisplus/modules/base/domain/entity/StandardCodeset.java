@@ -3,14 +3,10 @@ package org.lamisplus.modules.base.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 @Data
 @Entity
@@ -18,7 +14,7 @@ import java.util.Objects;
 @Table(name = "standard_codeset")
 public class StandardCodeset extends Audit<String> {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -36,14 +32,16 @@ public class StandardCodeset extends Audit<String> {
 
     @OneToMany(mappedBy = "standardCodesetByStandardCodesetId")
     @JsonIgnore
+    @ToString.Exclude
     private List<ApplicationCodesetStandardCodeset> applicationCodesetStandardCodesetsById;
 
     @ManyToOne
     @JoinColumn(name = "standard_codeset_source_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @ToString.Exclude
     private StandardCodesetSource standardCodesetSourceByStandardCodesetSourceId;
 
     @Basic
     @Column(name = "archived")
     @JsonIgnore
-    private Integer archived;
+    private Integer archived = 0;
 }

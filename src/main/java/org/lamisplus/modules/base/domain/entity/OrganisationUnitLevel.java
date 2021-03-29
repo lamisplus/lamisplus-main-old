@@ -16,7 +16,7 @@ import java.util.List;
 @Table(name = "organisation_unit_level")
 public class OrganisationUnitLevel implements Serializable {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -31,6 +32,7 @@ public class VisitScheduler {
     public void autoCheckOut() {
         try {
             List<VisitDTO> visitDTOList = this.visitService.getAllVisits();
+            List<Visit> visits = new ArrayList<>();
             visitDTOList.forEach(visitDTO -> {
                 //Check patient type
                 if (visitDTO.getTypePatient() != null && visitDTO.getTypePatient() <= 2) {
@@ -47,17 +49,17 @@ public class VisitScheduler {
                                 (customNowLocalTime.isAfter(localTime) || customNowLocalTime.equals(localTime))) {
                             visit.setDateVisitEnd(localDate);
                             visit.setTimeVisitEnd(localTime);
-                            //visit.setModifiedBy("System");
-                            this.visitRepository.save(visit);
+                            visit.setModifiedBy("System");
+                            visits.add(visit);
                         }
                     }
-
                 }
             });
+            if(visits.isEmpty()){
+                this.visitRepository.saveAll(visits);
+            }
         }catch(NullPointerException e){
             log.info(e.getMessage());
         }
     }
-
-
 }

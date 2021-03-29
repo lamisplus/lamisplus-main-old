@@ -19,7 +19,6 @@ import java.util.List;
 public class WardController {
     private final WardService wardService;
 
-
     @GetMapping("/{id}")
     public ResponseEntity<WardDTO> getWard(@PathVariable Long id) {
         return ResponseEntity.ok(this.wardService.getWard(id));
@@ -42,6 +41,6 @@ public class WardController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
-        return ResponseEntity.ok(this.wardService.delete(id));
+        return ResponseEntity.ok(wardService.delete(id));
     }
 }

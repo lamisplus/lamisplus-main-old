@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "drug_group")
 public class DrugGroup extends Audit<String> {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     private Long id;
 
     @Basic
@@ -22,13 +22,13 @@ public class DrugGroup extends Audit<String> {
     private String name;
 
     @Basic
-    @Column(name = "uuid")
+    @Column(name = "uuid", updatable = false)
     private String uuid;
 
     @Basic
     @Column(name = "archived")
     @JsonIgnore
-    private Integer archived;
+    private Integer archived = 0;
 
     @OneToMany(mappedBy = "drugGroupByDrugGroupId")
     @JsonIgnore

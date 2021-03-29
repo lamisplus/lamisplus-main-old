@@ -20,6 +20,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 //@Profile(value = {"development", "production"})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final TokenProvider tokenProvider;
+    //Swagger interface
+    private static final String[] AUTH_LIST = { //
+            "/v2/api-docs", //
+            "/configuration/ui", //
+            "/swagger-resources", //
+            "/configuration/security", //
+            "/swagger-ui.html", //
+            "/webjars/**" //
+    };
 
     public SecurityConfig(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
@@ -40,8 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/api/authenticate","/api/application-codesets/codesetGroup", "/swagger-ui.html/**").permitAll()
+                    .antMatchers("/api/authenticate","/api/application-codesets/codesetGroup").permitAll()
                     .antMatchers("/api/**").authenticated()
+                .antMatchers(AUTH_LIST).authenticated().and().httpBasic()
                 .and()
                     .apply(securityConfigurerAdapter())
                 .and().csrf().disable()

@@ -15,5 +15,4 @@ public interface DrugMapper {
     DrugDTO toDrugDTO(Drug drug);
 
     List<DrugDTO> toDrugDTOList(List<Drug> drugs);
-
 }

@@ -3,11 +3,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import LaboratoryDashBoard from "./LaboratoryDashBoard";
-import LabTestOrders from "./Testorders/LabTestOrderSearch";
-import LabTestResultSearch from './TestResult/LabTestResultSearch';
-import LabTestVerifySampleSearch from './Sampleverifications/LabTestVerifySampleSearch';
-import DispatchedManifestList from './DispatchedManifest/DispatchedManifest';
 import Typography from "@material-ui/core/Typography";
 import { MdDashboard , MdFileUpload} from "react-icons/md";
 import { GiTestTubes,GiFiles, GiDrippingTube } from "react-icons/gi";
@@ -16,10 +11,12 @@ import Box from "@material-ui/core/Box";
 import PropTypes from "prop-types";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
-import RadiologyTestSearch from "./Radiology/RadiologyTestSearch";
+
 import {getQueryParams} from "components/Utils/PageUtils";
-import { capitalize } from "@material-ui/core";
-import { upperCase } from "lodash";
+
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import Fade from '@material-ui/core/Fade'
 
 //Dtate Picker package
 Moment.locale("en");
@@ -35,7 +32,24 @@ const useStyles = makeStyles((theme) => ({
   inforoot: {
     margin: "5px",
   },
+
+  dropdown: {
+    marginTop :"50px"
+   
+  },
+  paper: {
+    marginRight: theme.spacing(2),
+  },
+  downmenu: {
+    display: 'flex'
+    },
 }));
+
+
+
+
+
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -86,6 +100,23 @@ function HomePage(props) {
     setValue(newValue);
   };
 
+
+/*Tab Dropdown   */
+const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+/*Tab Dropdown   */
+
+
+
   return (
     <>
     <div className={classes.root}>
@@ -99,32 +130,56 @@ function HomePage(props) {
           textColor="inherit"
           aria-label="scrollable force tabs example"
         >
-          <Tab className={classes.title} label="Dashboard" icon={<MdDashboard />} {...a11yProps(0)} /> 
-          <Tab className={classes.title} label="Sample Collection" icon={<GiTestTubes />} {...a11yProps(1)} />
-          <Tab className={classes.title} label="Sample Verification " icon={<GiDrippingTube style={{ color:'#fff', textTransform:'lowercase' }}/>} {...a11yProps(2)} />
-          <Tab className={classes.title} label="Results Reporting" icon={<GoRepoClone />} {...a11yProps(3)} />
+            
+          <Tab className={classes.title} label="Dashboard" icon={<MdDashboard />} {...a11yProps(0)}
+           
+          
+          /> 
+          
+          <Tab className={classes.title} label="System Configuration" icon={<GiTestTubes />} {...a11yProps(1)} 
+          aria-controls="fade-menu" aria-haspopup="true" onClick={handleClick}
+          
+          />
+          <Tab className={classes.title} label="User Management" icon={<GiDrippingTube style={{ color:'#fff'}}/>} {...a11yProps(2)} />
+          <Tab className={classes.title} label="Reports" icon={<GoRepoClone />} {...a11yProps(3)} />
           {/* <Tab className={classes.title} label="Radiology Uploads" icon={<MdFileUpload />} {...a11yProps(4)} /> */}
-          {/* <Tab className={classes.title} label="Sample Dispatch " icon={<GiFiles />} {...a11yProps(4)} /> */}
+          <Tab className={classes.title} label="Builder" icon={<GiFiles />} {...a11yProps(4)} />
       </Tabs>
       </AppBar>
 
+      <Menu
+        id="fade-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Fade}
+        className={classes.dropdown}
+      >
+        <MenuItem onClick={handleClose}>Application CodeSet</MenuItem>
+        <MenuItem onClick={handleClose}>Global veriable</MenuItem>
+        <MenuItem onClick={handleClose}>Interational Standard Setup</MenuItem>
+        <MenuItem onClick={handleClose}>Ward Manager</MenuItem>
+      </Menu>
+
+      
       <TabPanel value={value} index={0}>
-          <LaboratoryDashBoard />
+          
       </TabPanel>
       <TabPanel value={value} index={1}>
-          <LabTestOrders /> 
+          
       </TabPanel>
       <TabPanel value={value} index={2}>
-          <LabTestVerifySampleSearch />
+          
       </TabPanel>
       <TabPanel value={value} index={3}>
-          <LabTestResultSearch />
+         
       </TabPanel>
       {/* <TabPanel value={value} index={4}>
           <RadiologyTestSearch />
       </TabPanel> */}
       <TabPanel value={value} index={4}>
-        <DispatchedManifestList />
+        
       </TabPanel>
         
      </div> 

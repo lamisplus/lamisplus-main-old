@@ -1,5 +1,5 @@
-import React  from "react";
-import {Modal,ModalHeader, ModalBody,Card,CardBody,} from "reactstrap";
+import React, { useState } from "react";
+import {Modal,ModalHeader, ModalBody,Form,Card,CardBody,} from "reactstrap";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,7 +11,7 @@ import {
     updatePrescriptionStatus,
 } from "../../actions/pharmacy";
 import * as CODES from "./../../api/codes";
-import FormRenderer from "components/FormManager/FormRenderer";
+import FormRendererUpdate from "components/FormManager/FormRendererUpdate";
 
 Moment.locale("en");
 momentLocalizer();
@@ -57,7 +57,8 @@ const useStyles = makeStyles((theme) => ({
 const ModalSample = (props) => {
     const classes = useStyles()
     const datasample = props.datasample && props.datasample!==null ? props.datasample : {};
-    console.log(datasample) 
+    console.log(props)
+   
     const DrugId = datasample.id
 
     const currentForm = {
@@ -94,7 +95,6 @@ const ModalSample = (props) => {
         };
         const newData =  {...datasample.data, ... e.data}
         datasample.data = newData
-       console.log(datasample)
        
        props.updatePrescriptionStatus(DrugId, datasample, onSuccess, onError);
        props.togglestatus();
@@ -113,10 +113,11 @@ const ModalSample = (props) => {
                             <Card >
               <CardBody>
                  
-                        <FormRenderer
+                        <FormRendererUpdate
                             formCode={datasample.data && datasample.data.type !=0 ? currentForm.code : currentFormForRegimen.code}
                             programCode={currentForm.programCode}
-                            submission={datasample}
+                            options={datasample.data}
+                            submission={props.datasample}
                             onSubmit={saveSample}
                         />
                     </CardBody>

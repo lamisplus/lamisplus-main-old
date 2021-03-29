@@ -21,7 +21,7 @@ import java.util.List;
 @Table(name = "application_codeset")
 public class ApplicationCodeSet extends Audit<String> {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

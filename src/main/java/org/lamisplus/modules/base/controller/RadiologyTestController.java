@@ -23,6 +23,6 @@ public class RadiologyTestController {
 
     @GetMapping
     public ResponseEntity<List<RadiologyTest>> getAllLabTestGroups() {
-        return ResponseEntity.ok(this.radiologyTestService.getAllRadiologyTests());
+        return ResponseEntity.ok(radiologyTestService.getAllRadiologyTests());
     }
 }

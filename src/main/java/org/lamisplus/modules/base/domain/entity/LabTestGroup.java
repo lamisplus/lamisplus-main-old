@@ -19,7 +19,7 @@ import java.util.List;
 @Table(name = "lab_test_group")
 public class LabTestGroup extends Audit<String> {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -28,7 +28,7 @@ public class LabTestGroup extends Audit<String> {
     private String name;
 
     @Basic
-    @Column(name = "uuid")
+    @Column(name = "uuid", updatable = false)
     @JsonIgnore
     private String uuid;
 

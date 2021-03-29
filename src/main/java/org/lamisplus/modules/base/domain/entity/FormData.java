@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ import java.util.Objects;
 @Table(name = "form_data")
 public class FormData extends JsonBEntity implements Serializable {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -37,9 +38,11 @@ public class FormData extends JsonBEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "encounter_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
+    @ToString.Exclude
     private Encounter encounterByEncounterId;
 
     @ManyToOne
     @JoinColumn(name = "organisation_unit_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @ToString.Exclude
     public OrganisationUnit organisationUnitByOrganisationUnitId;
 }

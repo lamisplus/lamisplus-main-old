@@ -13,7 +13,7 @@ import java.util.Objects;
 public class ApplicationUserOrganisationUnit extends Audit<String> {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

@@ -25,7 +25,8 @@ import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import ModalViewResult from './../TestResult/ViewResult';
 import {authentication} from '../../../_services/authentication';
-
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
 
 
 
@@ -41,7 +42,7 @@ const useStyles = makeStyles({
 
 
   const CollectSample = (props) => {
-    console.log(props.location.state)
+    
     const testOrders = useSelector(state => state.laboratory.testorder);
     const sampleCollections = props.location.state && props.location.state.formDataObj  ? props.location.state.formDataObj : {};
     const encounterDate = props.location.state && props.location.state.dateEncounter ? props.location.state.dateEncounter : null ;
@@ -95,15 +96,16 @@ const useStyles = makeStyles({
         let  labNumber = "" //check if that key exist in the array
             testOrders.forEach(function(value, index, array) {
                 if(value['data']!==null && value['data'].hasOwnProperty("lab_number")){
+                   // setlabNum({lab_number:value['data'].lab_number})
                     if(value['data'].lab_number !== null){
                         labNumber = value['data'].lab_number
                     }
                 }               
             });
-    
     const handleLabNumber = e => {
         e.preventDefault();   
             setlabNum({ ...labNum, [e.target.name]: e.target.value })
+            labNumber = e.target.value
     }
 
     const handleSample = (row,dateEncounter) => { 
@@ -131,10 +133,10 @@ const useStyles = makeStyles({
         { 
             //const testOrders = fetchTestOrders.length >0 ? fetchTestOrders:{}
             const getNewTestOrder = testOrders.find(x => x.data!==null && x.data.lab_test_group === getValue)
-            console.log(getNewTestOrder)
-            //testOrders =[...getNewTestOrder] 
+           setFetchTestOrders([getNewTestOrder])
+           // testOrders =[...getNewTestOrder] 
         }else{
-            //testOrders = testOrders
+            setFetchTestOrders(testOrders)
         }
     };
     //This is function to check for the status of each collection to display on the tablist below 
@@ -193,8 +195,22 @@ const useStyles = makeStyles({
 
 
 return (
-    <Page title='Collect Sample'>
-        <ToastContainer autoClose={2000} />
+    <div >
+      
+        <Card>
+        <Breadcrumbs aria-label="breadcrumb">
+            <Link color="inherit" 
+                to={{pathname: "/laboratory",
+                state: 'collect-sample'
+                }} 
+            >
+                    Laboratory
+            </Link>
+           
+            <Typography color="textPrimary">Sample Collection  </Typography>
+            
+         </Breadcrumbs>
+        <br/>    
         <br/>
         <Row>
             <Col>
@@ -246,14 +262,14 @@ return (
                                                   id="testgroup"
                                                   onChange={getGroup}
                                                 >
-                                                    <option value=""> </option>
+                                                   <option value="All"> All </option>
                                                     {
                                                       uniqueValues.map(x => 
                                                         <option key={x} value={x}>
                                                           {x}
                                                         </option>
                                                     )}
-                                                    <option value="All"> All </option>
+                                                    
                                               </Input>
                                         </FormGroup>
                                     </Col>
@@ -284,7 +300,7 @@ return (
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {!loading ? testOrders.map((row) => (
+                                                {!loading ? fetchTestOrders.map((row) => (
                                                     row.data!==null?
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>
                                                       <th className={classes.td}>{row.data.description===""?" ":row.data.description}</th>
@@ -311,11 +327,13 @@ return (
               </Card>
             </Col>
         </Row>
-      <SampleCollectionFormIo modalstatus={modal} togglestatus={toggleModal} datasample={collectModal}  labnumber={labNum}/>
+        </Card>
+      <SampleCollectionFormIo modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} labnumber={labNumber !=="" ? labNumber : labNum['lab_number'] }/>
       <ModalSampleTransfer modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} labnumber={labNumber!=="" ? labNumber : labNum}/>
       <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />
       <TransferModalConfirmation modalstatus={modal4} togglestatusConfirmation={toggleModal4} datasample={collectModal} actionButton={transferSample} labnumber={labNumber!=="" ? labNumber : labNum}/>
-    </Page>
+   
+    </div>
   )  
 }
 

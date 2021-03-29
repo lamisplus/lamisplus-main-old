@@ -21,7 +21,7 @@ public class DrugController {
 
     @GetMapping
     public ResponseEntity<List<DrugDTO>> getAllDrugs() {
-        return ResponseEntity.ok(this.drugService.getAllDrugs());
+        return ResponseEntity.ok(drugService.getAllDrugs());
     }
 
     @GetMapping("/{id}")
@@ -47,6 +47,6 @@ public class DrugController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
-        return ResponseEntity.ok(this.drugService.delete(id));
+        return ResponseEntity.ok(drugService.delete(id));
     }
 }

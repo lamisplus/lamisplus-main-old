@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.lamisplus.modules.base.util.converter.LocalTimeAttributeConverter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -20,7 +21,7 @@ import java.util.List;
 @Table(name = "visit")
 public class Visit extends Audit<String> {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -35,9 +36,10 @@ public class Visit extends Audit<String> {
     private LocalDate dateVisitStart;
 
     @Basic
-    @Column(name = "time_visit_start", nullable = true)
+    @Column(name = "time_visit_start")
     @Convert(converter = LocalTimeAttributeConverter.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "hh:mm a")
+    @NotNull(message = "timeVisitStart cannot be null")
     private LocalTime timeVisitStart;
 
     @Basic
@@ -52,15 +54,15 @@ public class Visit extends Audit<String> {
     private LocalDate dateNextAppointment;
 
     @Basic
-    @Column(name = "patient_id", nullable = false)
+    @Column(name = "patient_id", updatable = false)
     private Long patientId;
 
     @Basic
-    @Column(name = "visit_type_id", nullable = false)
+    @Column(name = "visit_type_id")
     private Long visitTypeId;
 
     @Basic
-    @Column(name = "uuid")
+    @Column(name = "uuid", updatable = false)
     @JsonIgnore
     private String uuid;
 
@@ -76,15 +78,15 @@ public class Visit extends Audit<String> {
     @JoinColumn(name = "patient_id", insertable = false, updatable = false)
     @ManyToOne
     @JsonIgnore
+    @ToString.Exclude
     private Patient patientByVisit;
-
-    /*@JoinColumn(name = "visit_type_id", insertable = false, updatable = false)
-    @ManyToOne
-    @JsonIgnore
-    private ApplicationCodeSet visit_Type;*/
 
     @OneToMany(mappedBy = "visitByVisitId")
     @ToString.Exclude
     @JsonIgnore
     private List<Encounter> encountersByVisit;
+
+    @Basic
+    @Column(name = "organisation_unit_id", updatable = false)
+    private Long organisationUnitId;
 }

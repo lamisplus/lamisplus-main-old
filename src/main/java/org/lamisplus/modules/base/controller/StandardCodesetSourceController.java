@@ -20,7 +20,7 @@ public class StandardCodesetSourceController {
 
     @GetMapping
     public ResponseEntity<List<StandardCodesetSourceDTO>> getAllStandardCodesetSource() {
-        return ResponseEntity.ok(this.standardCodesetSourceService.getAllStandardCodesetSource());
+        return ResponseEntity.ok(standardCodesetSourceService.getAllStandardCodesetSource());
     }
 
     @GetMapping("/{id}")
@@ -35,11 +35,11 @@ public class StandardCodesetSourceController {
 
     @PutMapping("/{id}")
     public ResponseEntity<StandardCodesetSource> update(@PathVariable Long id, @RequestBody StandardCodesetSourceDTO standardCodesetSourceDTO) {
-        return ResponseEntity.ok(this.standardCodesetSourceService.update(id, standardCodesetSourceDTO));
+        return ResponseEntity.ok(standardCodesetSourceService.update(id, standardCodesetSourceDTO));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
-        return ResponseEntity.ok(this.standardCodesetSourceService.delete(id));
+        return ResponseEntity.ok(standardCodesetSourceService.delete(id));
     }
 }

@@ -112,7 +112,13 @@ function HomePage(props) {
                         icon={<MdDashboard />}
                         {...a11yProps(0)}
                     />
-
+                     <Tab
+                        className={classes.title}
+                        label="User Setup"
+                        disabled={!authentication.userHasRole(["user_read", "user_write", "user_delete", "admin_read"])}
+                        icon={<FaBriefcaseMedical />}
+                        {...a11yProps(2)}
+                    />{" "}
                     <Tab
                         className={classes.title}
                         label="Form Builder"
@@ -120,13 +126,7 @@ function HomePage(props) {
                         icon={<GiTestTubes />}
                         {...a11yProps(1)}
                     />
-                    <Tab
-                        className={classes.title}
-                        label="User Setup"
-                        disabled={!authentication.userHasRole(["user_read", "user_write", "user_delete", "admin_read"])}
-                        icon={<FaBriefcaseMedical />}
-                        {...a11yProps(2)}
-                    />{" "}
+                   
 
                     <Tab
                         className={classes.title}
@@ -160,21 +160,17 @@ function HomePage(props) {
 
                 {/* Begining of bootstrap  */}
                 <TabPanel value={value} index={1}>
-                    <FormPage/>
+                    <UserPage/> 
                 </TabPanel>
                 {/* End of boostrap */}
 
                 {/* user setup */}
                 <TabPanel value={value} index={2}>
-                    <UserPage/>
+                    <FormPage/>
                 </TabPanel>
                 {/* user setup */}
 
-                {/* db manager */}
-                {/*<TabPanel value={value} index={3}>*/}
-                {/*    <DatabaseManagement/>*/}
-                {/*</TabPanel>*/}
-                {/* db manager */}
+   
 
                 {/* service forms */}
                 <TabPanel value={value} index={3}>

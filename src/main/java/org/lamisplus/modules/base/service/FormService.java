@@ -39,11 +39,6 @@ public class FormService {
     private static final String WRITE = "write";
     private static final String DELETE = "delete";
     private static final String UNDERSCORE = "_";
-    private static final String SPACE = " ";
-
-    private final UserRepository userRepository;
-
-
 
     public List getAllForms() {
         List<Form> forms = formRepository.findAllByArchivedOrderByIdAsc(UN_ARCHIVED);
@@ -141,10 +136,9 @@ public class FormService {
 
         accessRight.grantAccessByAccessType(formOptional.get().getCode(), FormService.class, DELETE, permissions);
 
-        formOptional.get().setArchived(ARCHIVED);
-        //formOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
-        return formOptional.get().getArchived();
+        Form form = formOptional.get();
+        form.setArchived(ARCHIVED);
+        formRepository.save(form);
+        return form.getArchived();
     }
-
-
 }

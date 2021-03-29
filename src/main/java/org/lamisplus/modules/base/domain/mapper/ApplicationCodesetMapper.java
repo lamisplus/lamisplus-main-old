@@ -15,7 +15,4 @@ public interface ApplicationCodesetMapper {
     ApplicationCodesetDTO toApplicationCodesetDTO(ApplicationCodeSet applicationCodeset);
 
     List<ApplicationCodesetDTO> toApplicationCodesetDTOList(List<ApplicationCodeSet> applicationCodesets);
-
-
-
 }

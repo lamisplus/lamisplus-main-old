@@ -103,10 +103,10 @@ public class PatientService {
     }
 
 
-    /*public List<PatientDTO> getAllPatients(Page page) {
+    public List<PatientDTO> getAllPatients(Page page) {
         List<Patient> patients = page.getContent();
         return getPatients(patients);
-    }*/
+    }
 
     public PatientDTO getPatientByHospitalNumber(String hospitalNumber) {
         Optional<Patient> patientOptional = this.patientRepository.findByHospitalNumberAndOrganisationUnitIdAndArchived(hospitalNumber, getOrganisationUnitId(), UN_ARCHIVED);
@@ -493,24 +493,18 @@ public class PatientService {
             Optional<Visit> visitOptional = visitRepository.findTopByPatientIdAndDateVisitEndIsNullOrderByDateVisitStartDesc(patient.getId());
             PatientDTO patientDTO = visitOptional.isPresent() ? patientMapper.toPatientDTO(person, visitOptional.get(), personContact, patient) : patientMapper.toPatientDTO(person, personContact, patient);
 
-            List<PersonRelative> personRelatives = person.getPersonRelativesByPerson();//personRelativeRepository.findByPersonId(person.getId());
-            //List<PersonRelativesDTO> personRelativeDTOs = new ArrayList<>();
+            List<PersonRelative> personRelatives = person.getPersonRelativesByPerson();
 
                 patientDTO.setPersonRelativeDTOs(personRelativeMapper.toPersonRelativeDTOList(personRelatives.stream().
                         filter(personRelative -> personRelative.getArchived() != ARCHIVED).
                         collect(Collectors.toList())));
-
-            /*if (personRelatives.size() > 0) {
-                personRelatives.forEach(personRelative -> {
-                    if(personRelative.getArchived() == archived) return;
-                    PersonRelativesDTO personRelativesDTO = personRelativeMapper.toPersonRelativeDTO(personRelative);
-                    personRelativeDTOs.add(personRelativesDTO);
-                });
-                patientDTO.setPersonRelativeDTOs(personRelativeDTOs);
-            }*/
             patientDTOs.add(patientDTO);
         });
 
         return patientDTOs;
+    }
+
+    public Page<Patient> findPage(Pageable pageable) {
+        return patientRepository.findAllByOrganisationUnitIdAndArchivedOrderByIdDesc(getOrganisationUnitId(), UN_ARCHIVED, pageable);
     }
 }

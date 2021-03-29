@@ -25,6 +25,9 @@ import ModalSample from './RecollectSample';
 import ModalViewResult from './../TestResult/ViewResult';
 import ModalSampleResult from './../TestResult/EnterResult'
 import {authentication} from '../../../_services/authentication';
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
+
 
 
 const useStyles = makeStyles({
@@ -138,10 +141,11 @@ const SampleVerification = (props) => {
 
               //const testOrders = fetchTestOrders.length >0 ? fetchTestOrders:{}
               const getNewTestOrder = newSample.find(x => x.data !==null && x.data.lab_test_group === getValue)
-              setFetchTestOrders([getNewTestOrder]) 
+              setFetchTestOrders([getNewTestOrder])
               
           }else{
-              setFetchTestOrders([...newSample])
+             // setFetchTestOrders([...newSample])
+              setFetchTestOrders(newSample)
           }
     };
     //This is function to check for the status of each collection to display on the tablist below 
@@ -176,7 +180,7 @@ const SampleVerification = (props) => {
                     </Menu>
                 )    
             }
-            if(e.data.lab_test_order_status==="4"){
+            if(e.data.lab_test_order_status===4){
                 return (
                         <Menu>
                         <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px"}}>
@@ -205,9 +209,23 @@ const SampleVerification = (props) => {
             }
         
 return (
-    <Page title='Sample Verification'>
+    <div>
         <ToastContainer autoClose={2000} />
-      <br/>
+        <Card>
+        <Breadcrumbs aria-label="breadcrumb">
+            <Link color="inherit" to={{pathname: "/laboratory", state: 'sample-verification'
+        
+                }} 
+            >
+                Laboratory
+            </Link>
+            
+            <Typography color="textPrimary">Sample Verification  </Typography>
+            
+         </Breadcrumbs>
+            
+        <br/>
+        <br/>
         <Row>
             <Col>
                 <div >
@@ -257,14 +275,14 @@ return (
                                                   id="testgroup"
                                                   onChange={getGroup}
                                                 >
-                                                    <option value=""> </option>
+                                                    <option value="All"> All </option>
                                                     {
                                                       uniqueValues.map(x => 
                                                         <option key={x} value={x}>
                                                           {x}
                                                         </option>
                                                     )}
-                                                    <option value="All"> All </option>
+                                                    
                                               </Input>
                                         </FormGroup>
                                     </Col>
@@ -296,7 +314,7 @@ return (
                                             </thead>
                                             <tbody>
                                                
-                                                {!loading ? testOrders.map((row) => (
+                                                {!loading ? fetchTestOrders.map((row) => (
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>
                                                       <th className={classes.td}>{row.data.description===""?" ":row.data.description}</th>
                                                       <td className={classes.td}>{row.data.sample_type==="" ? " ":row.data.sample_type}</td>
@@ -320,11 +338,12 @@ return (
               </Card>
             </Col>
         </Row>
+        </Card>
       <ModalSampleVerify modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
       <ModalSample modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal}  labnumber={newSample[0].data.lab_number}/>
       <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} /> 
       <ModalSampleResult modalstatus={modal4} togglestatus={toggleModal4} datasample={collectModal} />   
-    </Page>
+    </div>
   )
   
 }
