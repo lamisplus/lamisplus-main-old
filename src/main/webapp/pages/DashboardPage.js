@@ -122,7 +122,7 @@ const genderChart = {
       }
   },
   title: {
-      text: 'Total Registered Patients (Male, Female and Pediatric) Pas 4 Months'
+      text: 'Total Registered Patients (Male, Female and Pediatric) Pass 4 Months'
   },
   accessibility: {
       point: {

@@ -12,7 +12,7 @@ import {
     updatePrescriptionStatus,
 } from "../../actions/pharmacy";
 import * as CODES from "./../../api/codes";
-import FormRendererUpdate from "components/FormManager/FormRendererUpdate";
+import FormRenderer from "components/FormManager/FormRenderer";
 
 Moment.locale("en");
 momentLocalizer();
@@ -89,16 +89,15 @@ const ModalSample = (props) => {
 
 
     const saveSample = (e) => {
-        const newData = e.data 
-        datasample.data.prescription_status = 1
+    
         const onSuccess = () => {
             props.togglestatus();
         };
         const onError = () => {
             props.togglestatus();
         };
-       
-        props.updatePrescriptionStatus(datasample.id, datasample, onSuccess, onError);
+       console.log(e)
+        props.updatePrescriptionStatus(e.id, e.data, onSuccess, onError);
       
         
     };
@@ -115,7 +114,7 @@ const ModalSample = (props) => {
                             <Card >
               <CardBody>
                  
-                        <FormRendererUpdate
+                        <FormRenderer
                             formCode={datasample.data && datasample.data.type !=0 ? currentForm.code : currentFormForRegimen.code}
                             programCode={currentForm.programCode}
                             submission={props.datasample}

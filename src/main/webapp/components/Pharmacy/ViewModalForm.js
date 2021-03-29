@@ -102,7 +102,7 @@ const ModalSample = (props) => {
       
         
     };
-
+if(datasample !== null){
 
     return (
         <div >
@@ -117,9 +117,8 @@ const ModalSample = (props) => {
                  
                         <FormRendererView
                             formCode={datasample.data && datasample.data.type !=0 ? currentForm.code : currentFormForRegimen.code}
-                            programCode={currentForm.programCode}
-                            options={datasample.data}                           
-                            submission={props.datasample}
+                            programCode={currentForm.programCode}                          
+                            submission={datasample}
                         />
                     </CardBody>
                 </Card>
@@ -131,6 +130,7 @@ const ModalSample = (props) => {
             </Card>
         </div>
     );
+}else {}
 };
 
 export default  ModalSample ;

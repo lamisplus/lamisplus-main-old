@@ -57,10 +57,9 @@ const useStyles = makeStyles((theme) => ({
 
 const ModalSample = (props) => {
     const classes = useStyles()
-    const datasample = props.datasample && props.datasample!==null ? props.datasample : {};
-    console.log(datasample)
+    const datasampleObj = props.datasample && props.datasample!==null ? props.datasample : {};
    
-    const DrugId = datasample.id
+    const DrugId = datasampleObj.id
     const [loading, setLoading] = useState(false)
     const [visible, setVisible] = useState(true);
     const onDismiss = () => setVisible(false);
@@ -90,15 +89,14 @@ const ModalSample = (props) => {
 
     const saveSample = (e) => {
         const newData = e.data 
-        datasample.data.prescription_status = 1
+        datasampleObj.data.prescription_status = 1
         const onSuccess = () => {
             props.togglestatus();
         };
         const onError = () => {
             props.togglestatus();
         };
-       
-        props.updatePrescriptionStatus(datasample.id, datasample, onSuccess, onError);
+        props.updatePrescriptionStatus(datasampleObj.id, datasampleObj, onSuccess, onError);
       
         
     };
@@ -117,7 +115,7 @@ const ModalSample = (props) => {
               <CardBody>
                  
                         <FormRenderer
-                            formCode={datasample.data && datasample.data.type !=0 ? currentForm.code : currentFormForRegimen.code}
+                            formCode={datasampleObj.data && datasampleObj.data.type !=0 ? currentForm.code : currentFormForRegimen.code}
                             programCode={currentForm.programCode}
                             submission={props.datasample}
                             onSubmit={saveSample}

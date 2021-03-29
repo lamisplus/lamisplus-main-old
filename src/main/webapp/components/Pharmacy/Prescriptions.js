@@ -81,8 +81,6 @@ const Prescriptions = (props) => {
   const [formData, setFormData] = useState(prescriptionOrder);
   const [drugDetails, setDrugDetails] = useState()
 
-
-
   const toggle = (form) => {
 
     setDrugDetails({ ...drugDetails, ...form });
@@ -233,7 +231,7 @@ const Prescriptions = (props) => {
                                     </td>
                                     <td>{form.data.duration && form.data.duration ? form.data.duration + form.data.duration_unit : ''}</td>
                                     <td>{Moment(form.data.date_prescribed).format("DD-MM-YYYY")}</td>
-                                    <td>{ form.data.prescription_status !==0 ? Moment(form.data.date_dispensed).format("DD-MM-YYYY") : '' }</td>
+                                    <td>{ form.data.prescription_status !==null && form.data.prescription_status !==0 ? Moment(form.data.date_dispensed).format("DD-MM-YYYY") : '' }</td>
                                     <td>{Actions(form)}</td>
                                   </tr>
                                   :
