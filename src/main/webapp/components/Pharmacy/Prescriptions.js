@@ -82,7 +82,16 @@ const Prescriptions = (props) => {
   const [formData, setFormData] = useState(prescriptionOrder);
   const [drugDetails, setDrugDetails] = useState()
 
+const updateFormData = (data) =>{
+      console.log('in update form data')
+    setLoading(true);
+      const index = formData.findIndex(x => x.id == data.id);
+      console.log('index is '+index)
 
+      formData[index] = data;
+      setFormData(formData);
+    setLoading(false);
+    }
 
   const toggle = (form) => {
     console.log(form)
@@ -135,7 +144,7 @@ const Prescriptions = (props) => {
 
         
          ) : (
-           <MenuItem onSelect={() => toggleUpdate(form)} hidden={!authentication.userHasRole(["pharmacy_write"])}>
+           <MenuItem onSelect={() => toggle(form)} hidden={!authentication.userHasRole(["pharmacy_write"])}>
              <i
                className="fa fa-pencil"
                aria-hidden="true"
@@ -236,7 +245,7 @@ const Prescriptions = (props) => {
                                     </td>
                                     <td>{form.data.duration && form.data.duration ? form.data.duration + form.data.duration_unit : ''}</td>
                                     <td>{Moment(form.data.date_prescribed).format("DD-MM-YYYY")}</td>
-                                    <td>{ form.data.prescription_status !==0 ? Moment(form.data.date_dispensed).format("DD-MM-YYYY") : '' }</td>
+                                    <td>{ form.data.date_dispensed ? Moment(form.data.date_dispensed).format("DD-MM-YYYY") : '' }</td>
                                     <td>{Actions(form)}</td>
                                   </tr>
                                   :
@@ -265,7 +274,7 @@ const Prescriptions = (props) => {
         </Col>
       </Row>
       </Card>
-     <DispenseModal  modalstatus={modal} togglestatus={toggleModal} datasample={drugDetails}/>
+     <DispenseModal  modalstatus={modal} togglestatus={toggleModal} datasample={drugDetails} updateFormData={updateFormData}/>
      <DispenseUpdateModal  modalstatus={modalUpdate} togglestatus={toggleModalUpdate} datasample={drugDetails}/>
      <ViewModal modalstatus={modal1} togglestatus={toggleModal1} datasample={drugDetails}/> 
     </div>

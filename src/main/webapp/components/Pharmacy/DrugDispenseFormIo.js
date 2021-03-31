@@ -83,20 +83,21 @@ const ModalSample = (props) => {
 
 
     const saveSample = (e) => {
-        
-        datasample.data.prescription_status = 1
+       // datasample.data.prescription_status = 1
         //datasample.data = e.data
         const onSuccess = () => {
             props.togglestatus();
+            props.updateFormData(datasample);
         };
         const onError = () => {
             props.togglestatus();
         };
         const newData =  {...datasample.data, ... e.data}
         datasample.data = newData
-       console.log(datasample)
-       
+        datasample.data['prescription_status'] = 1
+        console.log(datasample);
        props.updatePrescriptionStatus(DrugId, datasample, onSuccess, onError);
+
        props.togglestatus();
         
     };
@@ -112,7 +113,7 @@ const ModalSample = (props) => {
                             <ModalBody>
                             <Card >
               <CardBody>
-                 
+
                         <FormRenderer
                             formCode={datasample.data && datasample.data.type !=0 ? currentForm.code : currentFormForRegimen.code}
                             programCode={currentForm.programCode}
