@@ -20,7 +20,6 @@ export const fetchAll = (onSuccess , onError) => dispatch => {
                     onError();
                 }
             }
-
         );
 };
 

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {url} from '../api'
+import {url as baseUrl, url} from '../api'
 import * as FORMTYPES from './types'
 import {toast} from 'react-toastify';
 
@@ -127,6 +127,29 @@ export const fetchAll = (onSuccess, onError) => dispatch => {
                 payload: 'Something went wrong, please try again'
             })
 
+        })
+}
+
+export const  fetchByCode = (id, onSuccess, onError) => dispatch => {
+    dispatch({
+        type:FORMTYPES.FORM_FETCH_BY_CODE,
+        payload: {}
+    })
+    axios
+        .get(`${baseUrl}forms/${id}/formCode`)
+        .then(response => {
+            dispatch({
+                type: FORMTYPES.FORM_FETCH_BY_CODE,
+                payload: response.data
+            })
+            onSuccess()
+        })
+        .catch(error => {
+            onError()
+            dispatch({
+                type: FORMTYPES.FORMTYPES_ERROR,
+                payload: 'Error loading form, something went wrong. Please try again'
+            })
         })
 }
 
