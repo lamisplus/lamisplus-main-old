@@ -17,4 +17,7 @@ public interface ApplicationUserOrganisationUnitRepository extends JpaRepository
     Optional<ApplicationUserOrganisationUnit> findByIdAndArchived(Long id, int archived);
 
     List<ApplicationUserOrganisationUnit> findAllByArchived(int archived);
+
+    List<ApplicationUserOrganisationUnit> findAllByApplicationUserIdAndArchived(Long applicationUserId, int archived);
+
 }

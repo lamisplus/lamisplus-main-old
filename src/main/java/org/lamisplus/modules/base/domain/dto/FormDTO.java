@@ -1,10 +1,13 @@
 package org.lamisplus.modules.base.domain.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.lamisplus.modules.base.domain.entity.Form;
 
 import javax.persistence.Transient;
 
 @Data
+@NoArgsConstructor
 public class FormDTO {
     
     private Long id;
@@ -27,5 +30,4 @@ public class FormDTO {
 
     @Transient
     private String programName;
-
 }

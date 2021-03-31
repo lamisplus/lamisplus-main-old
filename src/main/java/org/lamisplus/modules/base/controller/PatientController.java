@@ -127,12 +127,12 @@ public class PatientController {
     }
 
     @GetMapping("/{id}/{programCode}/form")
-    public ResponseEntity<List<Form>> getAllFormsByPatientIdAndProgramCode(@PathVariable Long id, @PathVariable String programCode){
+    public ResponseEntity<List<FormDTO>> getAllFormsByPatientIdAndProgramCode(@PathVariable Long id, @PathVariable String programCode){
         return ResponseEntity.ok(patientService.getAllFormsByPatientIdAndProgramCode(id, programCode));
     }
 
     @GetMapping("/{id}/{programCode}/filledForms")
-    public ResponseEntity<List<Form>> getFilledFormsByPatientIdAndProgramCode(@PathVariable Long id, @PathVariable String programCode){
+    public ResponseEntity<List<FormDTO>> getFilledFormsByPatientIdAndProgramCode(@PathVariable Long id, @PathVariable String programCode){
         return ResponseEntity.ok(patientService.getFilledFormsByPatientIdAndProgramCode(id, programCode));
     }
 

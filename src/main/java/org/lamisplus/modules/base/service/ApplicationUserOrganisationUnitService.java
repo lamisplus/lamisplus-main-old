@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -23,20 +24,20 @@ public class ApplicationUserOrganisationUnitService {
     private static final int UN_ARCHIVED = 0;
     private final ApplicationUserOrganisationUnitRepository applicationUserOrganisationUnitRepository;
     private final ApplicationUserOrganisationUnitMapper applicationUserOrganisationUnitMapper;
+    private final UserService userService;
 
 
-    public List<ApplicationUserOrganisationUnit> save(List<ApplicationUserOrganisationUnitDTO> applicationUserOrganisationUnitDTO1) {
+    public List<ApplicationUserOrganisationUnit> save(Set<ApplicationUserOrganisationUnitDTO> applicationUserOrganisationUnitDTO1) {
         List<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitList = new ArrayList<>();
         applicationUserOrganisationUnitDTO1.forEach(applicationUserOrganisationUnitDTO -> {
             Optional<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitOptional = applicationUserOrganisationUnitRepository.
                     findByApplicationUserIdAndOrganisationUnitIdAndArchived(applicationUserOrganisationUnitDTO.getApplicationUserId(),
                             applicationUserOrganisationUnitDTO.getOrganisationUnitId(), UN_ARCHIVED);
 
-            applicationUserOrganisationUnitOptional.ifPresent(applicationUserOrganisationUnit -> {
-                throw new RecordExistException(ApplicationUserOrganisationUnit.class, "mapping",
-                        applicationUserOrganisationUnitDTO.getApplicationUserId() + " and " +
-                                applicationUserOrganisationUnitDTO.getOrganisationUnitId());
-            });
+            applicationUserOrganisationUnitRepository.findAllByApplicationUserIdAndArchived(userService.getUserWithRoles().get().getId(), UN_ARCHIVED)
+                    .forEach(applicationUserOrganisationUnit -> {
+                        applicationUserOrganisationUnitRepository.deleteById(applicationUserOrganisationUnit.getId());
+                    });
 
             ApplicationUserOrganisationUnit applicationUserOrganisationUnit = applicationUserOrganisationUnitMapper.toApplicationUserOrganisationUnit(applicationUserOrganisationUnitDTO);
             applicationUserOrganisationUnitList.add(applicationUserOrganisationUnit);

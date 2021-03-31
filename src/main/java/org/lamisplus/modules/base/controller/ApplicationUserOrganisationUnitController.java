@@ -10,6 +10,7 @@ import org.lamisplus.modules.base.service.ApplicationUserOrganisationUnitService
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/application_user_organisation_unit")
@@ -31,7 +32,7 @@ public class ApplicationUserOrganisationUnitController {
     }
 
     @PostMapping
-    public ResponseEntity<List<ApplicationUserOrganisationUnit>> save(@RequestBody List<ApplicationUserOrganisationUnitDTO> applicationUserOrganisationUnitDTO) {
+    public ResponseEntity<List<ApplicationUserOrganisationUnit>> save(@RequestBody Set<ApplicationUserOrganisationUnitDTO> applicationUserOrganisationUnitDTO) {
         return ResponseEntity.ok(applicationUserOrganisationUnitService.save(applicationUserOrganisationUnitDTO));
 
     }

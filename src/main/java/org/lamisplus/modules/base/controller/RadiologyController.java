@@ -7,6 +7,7 @@ import org.lamisplus.modules.base.bootstrap.StorageUtil;
 import org.lamisplus.modules.base.controller.apierror.IllegalTypeException;
 import org.lamisplus.modules.base.domain.entity.FormData;
 import org.lamisplus.modules.base.service.RadiologyService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,8 +28,9 @@ import java.util.UUID;
 public class RadiologyController {
     private final RadiologyService radiologyService;
 
-    @PostMapping("/api/radiologies")
-    public ResponseEntity<Long> save(@RequestParam Long formId, @RequestBody FormData formData, @RequestParam("file") MultipartFile file) {
-        return ResponseEntity.ok(radiologyService.save(formId, formData, file));
+    @PostMapping(value = "/api/radiologies/{formDataId}", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<List<Long>> save(@PathVariable Long formDataId, @RequestPart("formDataString") String formDataString,  @RequestParam("file") MultipartFile [] files) {
+
+        return ResponseEntity.ok(radiologyService.save(formDataId, radiologyService.getJson(formDataString), files));
     }
 }
