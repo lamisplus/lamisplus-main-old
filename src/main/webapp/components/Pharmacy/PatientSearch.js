@@ -11,7 +11,7 @@ const PatientSearch = (props) => {
   const prescriptions = useSelector(state => state.pharmacy.allPrescriptions)
 
   const totalDrugsPrescribed = (drugsArray) => {
-    console.log(prescriptions)
+
     const dispensed = []
 
     drugsArray.map(drugs => {
@@ -22,20 +22,23 @@ const PatientSearch = (props) => {
     
     return dispensed.length
   }
+  const drugType = (drugsArray) => {
+    console.log(prescriptions)
+    const type = []
+    drugsArray.map(drugs => {
+        if (drugs.data.type === 1){
+          type.push('Drug')
+        }else if(drugs.data.type === 0){
+          type.push('Regimen')
+        }else{
+          type.push('')
+        }
+       
+    })
+    
+    return type
+  }
  
-  const drugsPrescriptions = []
-  prescriptions.forEach(function(value, index, array) {
-   const dataSamples = value.formDataObj
-    if(value.formDataObj.data!==null) {
-    for(var i=0; i<dataSamples.length; i++){
-        for (var key in dataSamples[i]) {
-          if (dataSamples[i][key]!==null && dataSamples[i][key].prescription_status >= 0 )
-            drugsPrescriptions.push(value)
-        }            
-      }
-    }
-  });
-
   return (
     <div>
       <MaterialTable
@@ -58,20 +61,24 @@ const PatientSearch = (props) => {
             field: "dispensedCount",
             filtering: false,
           },
-        
+          {
+            title: "Drug Type",
+            field: "type",
+            filtering: false,
+          },
           {
             title: "Action",
             field: "actions",
             filtering: false,
           },
         ]}
-        data={prescriptions.map((prescription) => ({
+        data={ prescriptions.map((prescription) => ({
           Id: prescription.hospitalNumber,
           name: prescription.firstName + " " + prescription.lastName,
           date: prescription.dateEncounter,
           prescribedCount: prescription.formDataObj.length,
           dispensedCount: totalDrugsPrescribed(prescription.formDataObj),
-          // type:   prescription.formDataObj.data.type,
+          type:   drugType(prescription.formDataObj),
           actions: (
             
             <Link

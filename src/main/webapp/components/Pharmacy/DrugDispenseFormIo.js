@@ -1,5 +1,6 @@
-import React  from "react";
-import {Modal,ModalHeader, ModalBody,Card,CardBody,} from "reactstrap";
+import React, { useState } from "react";
+import {Modal,ModalHeader, ModalBody,Form,Card,CardBody,} from "reactstrap";
+import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,6 +13,7 @@ import {
 } from "../../actions/pharmacy";
 import * as CODES from "./../../api/codes";
 import FormRenderer from "components/FormManager/FormRenderer";
+import { useHistory } from "react-router-dom";
 
 Moment.locale("en");
 momentLocalizer();
@@ -56,9 +58,14 @@ const useStyles = makeStyles((theme) => ({
 
 const ModalSample = (props) => {
     const classes = useStyles()
-    const datasample = props.datasample && props.datasample!==null ? props.datasample : {};
-    console.log(datasample) 
-    const DrugId = datasample.id
+    let history = useHistory();
+    const datasampleObj = props.datasample && props.datasample!==null ? props.datasample : {};
+
+    const DrugId = datasampleObj.id
+    const [loading, setLoading] = useState(false)
+    const [visible, setVisible] = useState(true);
+    const onDismiss = () => setVisible(false);
+    //This is to get SAMPLE TYPE from application Codeset
 
     const currentForm = {
         code: CODES.PHARMARCY_DRUG_DISPENSE,
@@ -68,7 +75,7 @@ const ModalSample = (props) => {
             hideHeader: true
         },
     };
-    
+
     const currentFormForRegimen = {
         code: CODES.PHARMARCY_DRUG_DISPENSE_REGIMEN,
         programCode: CODES.GENERAL_SERVICE,
@@ -76,7 +83,7 @@ const ModalSample = (props) => {
         options:{
             hideHeader: true
         },
-    
+
     };
 
 
@@ -104,32 +111,37 @@ const ModalSample = (props) => {
 
 
     return (
+
         <div >
             <Card >
                 <CardBody>
                     <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
-                      
+
                             <ModalHeader toggle={props.togglestatus}>Drug Dispensing </ModalHeader>
                             <ModalBody>
                             <Card >
               <CardBody>
 
                         <FormRenderer
-                            formCode={datasample.data && datasample.data.type !=0 ? currentForm.code : currentFormForRegimen.code}
+                            formCode={datasampleObj.data && datasampleObj.data.type !=0 ? currentForm.code : currentFormForRegimen.code}
                             programCode={currentForm.programCode}
-                            submission={datasample}
+                            submission={datasampleObj}
                             onSubmit={saveSample}
                         />
+
                     </CardBody>
                 </Card>
-                                
+
                  </ModalBody>
-                  
+
                     </Modal>
                 </CardBody>
             </Card>
         </div>
+
+
     );
+
 };
 
 export default connect(null, { updatePrescriptionStatus })(

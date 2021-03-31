@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 const ModalSample = (props) => {
     const classes = useStyles()
     const datasample = props.datasample && props.datasample!==null ? props.datasample : {};
-    console.log(props.modalstatus)
+    console.log(datasample)
    
     const DrugId = datasample.id
     const [loading, setLoading] = useState(false)
@@ -88,7 +88,21 @@ const ModalSample = (props) => {
 
 
 
-
+    const saveSample = (e) => {
+        const newData = e.data 
+        datasample.data.prescription_status = 1
+        const onSuccess = () => {
+            props.togglestatus();
+        };
+        const onError = () => {
+            props.togglestatus();
+        };
+       
+        props.updatePrescriptionStatus(datasample.id, e, onSuccess, onError);
+      
+        
+    };
+if(datasample !== null){
 
     return (
         <div >
@@ -103,10 +117,8 @@ const ModalSample = (props) => {
                  
                         <FormRendererView
                             formCode={datasample.data && datasample.data.type !=0 ? currentForm.code : currentFormForRegimen.code}
-                            programCode={currentForm.programCode}
-                            options={datasample.data}                           
-                            submission={props.datasample}
-                            
+                            programCode={currentForm.programCode}                          
+                            submission={datasample}
                         />
                     </CardBody>
                 </Card>
@@ -118,6 +130,7 @@ const ModalSample = (props) => {
             </Card>
         </div>
     );
+}else {}
 };
 
 export default  ModalSample ;

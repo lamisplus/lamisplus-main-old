@@ -9,12 +9,14 @@ import momentLocalizer from "react-widgets-moment";
 import Moment from "moment";
 import PatientDetailCard from 'components/PatientProfile/PatientDetailCard';
 import { Link } from "react-router-dom";
-import DispenseUpdateModal from './DrugDispenseUpdateFormIo'
+//import DispenseModal from './DispenseModal'
 import DispenseModal from './DrugDispenseFormIo';
+import DispenseModalUpdate from './DrugDispenseUpdateFormIo';
 import ViewModal from './ViewModalForm';
 import { Menu, MenuList, MenuButton, MenuItem } from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import { Spinner } from 'reactstrap';
+import { connect } from "react-redux";
 import {
   Card,
   CardBody,
@@ -23,8 +25,7 @@ import {
   Row,
 } from "reactstrap";
 import {authentication} from '../../_services/authentication';
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import Typography from "@material-ui/core/Typography";
+import { fetchPatientPrescriptionsByEncounter } from "../../actions/pharmacy";
 
 
 //
@@ -70,15 +71,15 @@ const useStyles = makeStyles((theme) => ({
 
 const Prescriptions = (props) => {
  const prescriptionOrder  = props.location.state  && props.location.state.formDataObj  ? props.location.state.formDataObj : {}
-  console.log(prescriptionOrder)
+  console.log(props.location.state.formDataObj)
   const classes = useStyles();
   const [loading, setLoading] = useState('')
   const [modal, setModal] = useState(false);
   const toggleModal = () => setModal(!modal)
   const [modal1, setModal1] = useState(false);
   const toggleModal1 = () => setModal1(!modal1)
-  const [modalUpdate, setModalUpdate] = useState(false);
-  const toggleModalUpdate = () => setModalUpdate(!modalUpdate)
+  const [modal2, setModal2] = useState(false);
+  const toggleModal2 = () => setModal2(!modal2)
   const [formData, setFormData] = useState(prescriptionOrder);
   const [drugDetails, setDrugDetails] = useState()
 
@@ -94,7 +95,7 @@ const updateFormData = (data) =>{
     }
 
   const toggle = (form) => {
-    console.log(form)
+
     setDrugDetails({ ...drugDetails, ...form });
     setModal(!modal);
     
@@ -104,11 +105,21 @@ const updateFormData = (data) =>{
     setModal1(!modal1)
   }
 
-  const toggleUpdate = (form) => {
+  const toggle2 = (form) => {
     setDrugDetails({ ...drugDetails, ...form });
-    setModalUpdate(!modalUpdate)
+    setModal2(!modal2)
   }
+  const closeBtn = (
+    <button className="close" onClick={toggle}>
+      &times;
+    </button>
+  );
 
+   const closeBtn1 = (
+     <button className="close" onClick={toggle1}>
+       &times;
+     </button>
+   );
 
   
  const Actions = (form) => {
@@ -175,19 +186,7 @@ const updateFormData = (data) =>{
    );
  };
   return (
-    <div>
-      <ToastContainer autoClose={2000} />
-      <Card body>
-          <Breadcrumbs aria-label="breadcrumb">
-            <Link color="inherit" to={{pathname: "/pharmacy"}} >
-                Pharmacy
-            </Link>
-            <Link color="inherit" to={{pathname: "prescriptions"}} >
-                Drug Prescription    
-            </Link>
-            <Typography color="textPrimary">{} </Typography>
-            </Breadcrumbs>
-            <br/>
+    <React.Fragment>
       <Row>
         <Col>
           <div>
@@ -228,7 +227,7 @@ const updateFormData = (data) =>{
                               <thead style={{backgroundColor: "#9F9FA5",color: "#000",}}>
                                 <tr>
                                   <th>Name</th>
-                                  <th>Duration</th>
+                                  <th>Dosage</th>
                                   <th>Date Prescribed</th>
                                   <th>Date Dispensed</th>
                                   <th></th>
@@ -281,4 +280,15 @@ const updateFormData = (data) =>{
   );
 }
 
-export default Prescriptions
+const mapStateToProps = state => {
+  return {
+      prescriptionList: state.pharmacy.list
+  };
+};    
+
+const mapActionToProps = {
+  fetchPatientPrescriptionsByEncounter
+};
+  
+export default connect(mapStateToProps, mapActionToProps)(Prescriptions);
+
