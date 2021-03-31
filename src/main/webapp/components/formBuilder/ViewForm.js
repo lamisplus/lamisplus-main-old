@@ -71,9 +71,7 @@ const Update = props => {
                 const data = body.map(({ name, code }) => ({ title: name, value: code }));
                 setFormPrecedenceList(data);
                 body !== null ? setdisabledCheckBox(false) : setdisabledCheckBox(true)
-                setLoading(false);
             } catch (error) {
-                setLoading(false);
             }
         }
         fetchForms();
@@ -84,12 +82,15 @@ const Update = props => {
             axios
                 .get(`${url}forms/${row.code}/formCode`)
                 .then(response => {
-                    setform2(response.data)
+                    setform2(response.data);
+                    setLoading(false);
                 })
                 .catch(error => {
                     toast.error('Could not load form resource, please contact admin.')
+                    setLoading(false);
                 })
         }
+        fetchFormByCode();
     }, []);
 
     const handleFileRead = (e) => {
@@ -107,10 +108,6 @@ const Update = props => {
 
     useEffect (() => {
         setformCode(row.code);
-        //console.log(row);
-
-       // setform2(row)
-
         props.fetchPatientByHospitalNumber('AD-0221', null, null)
     }, [])
 
@@ -118,7 +115,7 @@ const Update = props => {
         if(formPrecedence.length > 0){
             form2["formPrecedence"] = {formCode: formPrecedence.map(x => x.value) ? formPrecedence.map(x => x.value)  : []}
         }
-        form2['resourceObject'] = res;
+        form2['resourceObject'] = JSON.parse(res);
         props.updateForm(form2.id, form2);
     }
 
@@ -201,7 +198,8 @@ const Update = props => {
                             <div onClick={toggleModal}  className="mt-5" style={{cursor:"pointer", color:"blue"}}>Preview Form</div>
                         </Col>
                     </Row>
-                    { form2 ?
+                    {/*only render form when loading is false and form2 has a value*/}
+                    { !loading && form2 ?
                         <FormBuilder form={form2.resourceObject || {}} {...props}
                                      submission={{data :{baseUrl:url}}}
                                      onChange={(schema) => {
