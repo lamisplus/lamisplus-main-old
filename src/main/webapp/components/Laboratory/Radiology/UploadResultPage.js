@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { DropzoneAreaBase } from 'material-ui-dropzone';
+import { DropzoneArea } from 'material-ui-dropzone';
 import { connect } from "react-redux";
 import {fetchByHospitalNumber} from "actions/patients";
 import {fetchRadiologyTestOrdersByEncounterID, updateRadiologyByFormId} from "actions/laboratory"
@@ -18,6 +18,9 @@ import moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import Progress from "../../Admin/BootstrapConfiguration/Progress";
+import axios from "axios";
+import {url} from "../../../api";
 //Dtate Picker package
 Moment.locale("en");
 momentLocalizer();
@@ -37,6 +40,9 @@ const UploadResultPage = (props) => {
     const defaultValues = {data:{files:[]}};
     const [testOrder, setTestOrder] = React.useState(defaultValues);
     const [note, setNote] = React.useState("");
+    const [uploadPercentage, setUploadPercentage] = useState(0);
+    const [uploadMessage, setUploadMessage] = useState("");
+    const [files, setFiles] = useState([]);
     const classes = useStyles()
 
     useEffect(() => {
@@ -46,10 +52,11 @@ const UploadResultPage = (props) => {
         }
     }, [props.formData]); //componentDidMount
 
-    const uploadResult = e => {
+
+    const uploadResult = async e => {
         e.preventDefault();
 
-        if(testOrder.data.files.length == 0){
+        if(files.length == 0){
             toast.error("You must upload at least one file");
             return;
         }
@@ -66,8 +73,42 @@ const UploadResultPage = (props) => {
             setSaving(false);
             toast.error("Something went wrong, please contact administration");
         };
-        props.updateRadiologyByFormId(testOrder, testOrder.id, onSuccess, onError)
+       // props.updateRadiologyByFormId(testOrder, testOrder.id, onSuccess, onError)
 
+        // sending radiology to backend
+        setUploadMessage('Processing, please wait...')
+        const formData = new FormData();
+        formData.append('file', files);
+        formData.append('formData', testOrder);
+        try {
+            const res = await axios.post(`${url}radiologies?formDataId=${testOrder.id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+
+                onUploadProgress: progressEvent => {
+                    setUploadPercentage(
+                        parseInt(
+                            Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                        )
+                    );
+                    // Clear percentage
+                    setTimeout(() => setUploadPercentage(0), 10000);
+                }
+            });
+
+            const { fileName, filePath } = res.data;
+            onSuccess();
+            setUploadMessage('File Uploaded');
+        } catch (err) {
+            console.log(err)
+            onError();
+            if (err.response && err.response.status === 500) {
+                setUploadMessage('There was a problem in uploading file! please try again...');
+            } else{
+                setUploadMessage('Something went wrong! please try again...');
+            }
+        }
     }
     return (
 
@@ -106,34 +147,7 @@ const UploadResultPage = (props) => {
                             </Col>
                         </Row>
                         <Row>
-                            <Col md={6}>
-                                <DropzoneAreaBase
-                                    acceptedFiles={[".jpg", ".png", ".jpeg", ".gif"]}
-                                    showPreviews={true}
-                                    showPreviewsInDropzone={false}
-                                    useChipsForPreview
-                                    previewGridProps={{container: {spacing: 1, direction: 'row'}}}
-                                    previewChipProps={{classes: {root: classes.previewChip}}}
-                                    previewText="Selected files"
-                                    fileObjects={testOrder.data.files}
-                                    onAdd={newFileObjs => {
-                                        console.log('onAdd', newFileObjs);
-                                        testOrder.data["files"] = [].concat(testOrder.data.files, newFileObjs);
-                                        setTestOrder(testOrder);
-                                    }}
-                                    onDelete={deleteFileObj => {
-                                        //delete file object from the array
-                                        const files = testOrder.data.files.filter(x => x.file.name !== deleteFileObj.file.name);
-                                        console.log(files)
-                                        testOrder.data["files"] = files;
-                                        setTestOrder(testOrder);
-                                        console.log('onDelete', deleteFileObj);
-                                    }}
-
-                                />
-                            </Col>
-                            <Col md={6}>
-                                <Row><Col md={12}>
+                                <Col md={12}>
                                     <FormGroup>
                                         <Label for="encounterDate">Upload Date & Time*</Label>
                                         <DateTimePicker
@@ -153,11 +167,45 @@ const UploadResultPage = (props) => {
                                         />
                                     </FormGroup>
                                 </Col>
+
+                            <Col md={12}>
+                                <DropzoneArea
+                                    acceptedFiles={[".jpg", ".png", ".jpeg", ".gif"]}
+                                    onChange={(files) => {
+                                        setFiles(files);
+                                       // uploadFileToServer(files);
+
+                                        console.log('Files:', files)}}
+
+                                    // fileObjects={testOrder.data.files}
+                                    // onAdd={newFileObjs => {
+                                    //     console.log('onAdd', newFileObjs);
+                                    //     testOrder.data["files"] = [].concat(testOrder.data.files, newFileObjs);
+                                    //     setTestOrder(testOrder);
+                                    // }}
+                                    // onDelete={deleteFileObj => {
+                                    //     //delete file object from the array
+                                    //     const files = testOrder.data.files.filter(x => x.file.name !== deleteFileObj.file.name);
+                                    //     console.log(files)
+                                    //     testOrder.data["files"] = files;
+                                    //     setTestOrder(testOrder);
+                                    //     console.log('onDelete', deleteFileObj);
+                                    // }}
+
+                                />
+
+<br/>
+                            </Col>
+
                                     <Col md={"12"}>
                                         <Label for="comment">Notes</Label>
                                         <ReactQuill theme="snow" value={note} onChange={setNote}/>
                                     </Col>
-                                </Row>
+                            <Col sm={12}>
+                                <br/>
+                                <Progress percentage={uploadPercentage} />
+                                <br/>
+                                <strong>{uploadMessage}</strong>
                             </Col>
                         </Row>
 

@@ -82,8 +82,8 @@ function HomePage(props) {
     const urlTabs = urlIndex !== null ? urlIndex : props.location.state ;
     useEffect ( () => {
         switch(urlTabs){
-            case "form-builder": return setValue(1)
-            case "users": return setValue(2)
+            case "form-builder": return setValue(2)
+            case "users": return setValue(1)
             case "report-builder": return setValue(3)
             case "bootstrap-configuration": return setValue(4)
 

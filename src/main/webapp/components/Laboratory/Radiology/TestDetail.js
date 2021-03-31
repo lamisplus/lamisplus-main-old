@@ -33,8 +33,8 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 const GlobalVariableSearch = (props) => {
-    const patientId = getQueryParams("hospitalNumber", props.location.search);
-    const encounterId = getQueryParams("encId", props.location.search);
+    const patientId = props.location.state.hospitalNumber;
+    const encounterId = props.location.state.encId;
     const [loading, setLoading] = React.useState(true);
     const [showModal, setShowModal] = React.useState(false);
     const [showViewModal, setShowViewModal] = React.useState(false);
@@ -101,7 +101,8 @@ const GlobalVariableSearch = (props) => {
         <Card>
             <CardHeader>Test Order Details
                 <Link
-                    to={{pathname: "/laboratory?tab=radiology" }}>
+                    to={{pathname: "/radiology-home",
+                    state:"results"}}>
 
                     <Button
                         type='submit'

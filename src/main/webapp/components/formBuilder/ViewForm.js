@@ -104,7 +104,8 @@ const Update = props => {
     const handleSubmit = e =>  {
         if(formPrecedence.length > 0){
             form2["formPrecedence"] = {formCode: formPrecedence.map(x => x.value) ? formPrecedence.map(x => x.value)  : []}
-        } 
+        }
+        form2['resourceObject'] = res;
         props.updateForm(form2.id, form2);
     }
 
