@@ -111,7 +111,7 @@ function PatientChart(props) {
         <CardHeader> Weight</CardHeader>
         <CardBody>
           <Line
-            data={!data ? {} : Weight(
+            data={Weight(
               data
                 .filter((x) => x.body_weight !== "")
                 .map((x) => x.date_encounter),

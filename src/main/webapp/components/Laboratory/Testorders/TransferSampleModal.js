@@ -75,9 +75,9 @@ const ModalSampleTransfer = (props) => {
         async function getCharacters() {
             try {
                 const response = await axios(
-                    url + "organisation-units/organisation-unit-level/7"
+                    url + "sample-manifests/pcrlab"
                 );
-                const body = response.data && response.data !==null ? response.data : {};
+                const body = response.data;
                 
                 setOptionPcr(
                      body.map(({ name, id }) => ({ title: name, value: id }))
@@ -90,6 +90,7 @@ const ModalSampleTransfer = (props) => {
 
     const handleOtherFieldInputChange = e => {
         setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
+        console.log(otherfields)
     }
 
 
@@ -148,7 +149,7 @@ const ModalSampleTransfer = (props) => {
           <Form onSubmit={saveSample}>
             <ModalHeader toggle={props.togglestatus}>Transfer Sample</ModalHeader>
                 <ModalBody>
-                    {/* {checklanumber(props.labnumber['lab_number']!==null ? props.labnumber['lab_number'] : null)} */}
+                    {checklanumber(props.labnumber['lab_number'])}
                         <Card >
                             <CardBody>
                                 <Row >
@@ -167,6 +168,7 @@ const ModalSampleTransfer = (props) => {
                                         </Alert>
                                     </Col>
                                     <Col md={6}>
+                                        {/* <p>Sample Type {datasample.data.description}  </p> */}
                                           <FormGroup>
                                               <Label for='maritalStatus'>Date Transfer</Label>
                                           
@@ -260,7 +262,18 @@ const ModalSampleTransfer = (props) => {
                                       <br/>
                                       {loading ? <Spinner /> : ""}
                                       <br/>
-                                      
+                                      {props.labnumber['lab_number']!==""?
+                                          <MatButton
+                                              type='submit'
+                                              variant='contained'
+                                              color='primary'
+                                              className={classes.button}
+                                              startIcon={<SaveIcon />}
+                                              disabled={loading}
+                                          >   
+                                              Save
+                                          </MatButton>
+                                              :
                                           <MatButton
                                               type='submit'
                                               variant='contained'
@@ -272,7 +285,7 @@ const ModalSampleTransfer = (props) => {
                                               Save
                                           </MatButton>
                                           
-                                      
+                                      }
                                           <MatButton
                                               variant='contained'
                                               color='default'

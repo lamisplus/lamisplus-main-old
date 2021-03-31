@@ -399,9 +399,11 @@ const handleSubmit = e => {
                                                             type="text"
                                                             name="firstName"
                                                             id="firstName"
+                                                            
                                                             value={values.firstName}
                                                             onChange={handleInputChange}
-                                                            {...(errors.firstName && { invalid: true})}/>
+                                                            {...(errors.firstName && { invalid: true})}
+                                                        />
                                                             <FormFeedback>{errors.firstName}</FormFeedback>
                                                 </FormGroup>
                                             </Col>
@@ -412,6 +414,7 @@ const handleSubmit = e => {
                                                             type="text"
                                                             name="otherNames"
                                                             id="otherNames"
+                                                          
                                                             onChange={handleInputChange}
                                                             value={values.otherNames}
                                                         />
@@ -461,7 +464,8 @@ const handleSubmit = e => {
                                                             name="occupationId"
                                                             id="occupationId"
                                                             value={values.occupationId}
-                                                            onChange={handleInputChange}>
+                                                            onChange={handleInputChange}
+                                                        >
                                                             <option  value=""> </option>
                                                             {occupation.map(({ label, value }) => (
                                                                 <option key={value} value={value}>
@@ -520,7 +524,8 @@ const handleSubmit = e => {
                                                                 dropUp
                                                                 value={values.dobDate}
                                                                 onChange ={value1 => handleDOb(value1)}
-                                                                max={new Date()}/>
+                                                                max={new Date()}
+                                                            />
                                                                 {values.dob ==="Invalid date" ? (
                                                                     <span className={classes.error}>{"This field is required"}</span>
                                                                 ) : "" }
@@ -539,7 +544,7 @@ const handleSubmit = e => {
                                                                 }
                                                             />
                                                                 
-                                                            <FormText ><span style={{color:"blue", fontWeight:"bolder"}}>Estimated Date of Birth </span></FormText>
+                                                                    <FormText ><span style={{color:"blue", fontWeight:"bolder"}}>Estimated Date of Birth </span></FormText>
                                                     </FormGroup>
 
                                                 )}

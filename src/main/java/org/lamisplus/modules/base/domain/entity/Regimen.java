@@ -3,20 +3,19 @@ package org.lamisplus.modules.base.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.List;
+import java.io.Serializable;
 import java.util.Objects;
 
-@Entity
 @Data
+@Entity
 @EqualsAndHashCode
 @Table(name = "regimen")
-public class Regimen extends Audit<String> {
+public class Regimen implements Serializable {
+
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -31,16 +30,11 @@ public class Regimen extends Audit<String> {
     @Basic
     @Column(name = "archived")
     @JsonIgnore
-    private Integer archived;
+    private Integer archived = 0;
 
     @ManyToOne
     @JoinColumn(name = "regimen_line_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
-    @ToString.Exclude
     private RegimenLine regimenLineByRegimenLineId;
 
-    @OneToMany(mappedBy = "regimenByRegimenId")
-    @JsonIgnore
-    @ToString.Exclude
-    private List<RegimenDrug> regimenDrugsById;
 }

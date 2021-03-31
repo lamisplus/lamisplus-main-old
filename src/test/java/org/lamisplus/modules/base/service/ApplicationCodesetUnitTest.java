@@ -10,7 +10,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.lamisplus.modules.base.BaseApplication;
 import org.lamisplus.modules.base.domain.dto.ApplicationCodesetDTO;
-import org.lamisplus.modules.base.domain.entity.ApplicationCodeSet;
+import org.lamisplus.modules.base.domain.entity.ApplicationCodeset;
+import org.lamisplus.modules.base.service.ApplicationCodesetService;
 import org.lamisplus.modules.base.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,7 +39,7 @@ public class ApplicationCodesetUnitTest {
     @Test
     public void testGetApplicationCodeset() throws IOException {
         // Parsing mock file
-        ApplicationCodeSet applicationCodesets = JsonUtils.jsonFile2Object("appCodeSet.json", ApplicationCodeSet.class);
+        ApplicationCodeset applicationCodesets = JsonUtils.jsonFile2Object("appCodeSet.json", ApplicationCodeset.class);
         // Mocking remote service
         when(template.getForEntity(any(String.class), any(Class.class))).thenReturn(new ResponseEntity(applicationCodesets, HttpStatus.OK));
 

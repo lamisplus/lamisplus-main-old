@@ -12,7 +12,6 @@ const UserCard = ({
   avatarSize,
   title,
   subtitle,
-                    subtitle2,
   text,
   children,
   className,
@@ -26,7 +25,6 @@ const UserCard = ({
         <Avatar src={avatar} size={avatarSize} className="mb-2" />
         <CardTitle>{title}</CardTitle>
         <CardSubtitle>{subtitle}</CardSubtitle>
-        <CardSubtitle>{subtitle2}</CardSubtitle>
         <CardText>
           <small>{text}</small>
         </CardText>

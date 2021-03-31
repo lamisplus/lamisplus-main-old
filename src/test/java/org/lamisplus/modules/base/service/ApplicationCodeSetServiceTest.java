@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.lamisplus.modules.base.BaseApplication;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.dto.ApplicationCodesetDTO;
-import org.lamisplus.modules.base.domain.entity.ApplicationCodeSet;
+import org.lamisplus.modules.base.domain.entity.ApplicationCodeset;
 import org.lamisplus.modules.base.repository.ApplicationCodesetRepository;
 import org.mockito.Mockito;
 import org.mockito.internal.verification.VerificationModeFactory;
@@ -42,7 +42,7 @@ public class ApplicationCodeSetServiceTest {
 
     @Before
     public void setUp() {
-        ApplicationCodeSet applicationCodeset= new ApplicationCodeSet();
+        ApplicationCodeset applicationCodeset= new ApplicationCodeset();
         applicationCodeset.setId(1L);
         applicationCodeset.setDisplay("FEMALE");
         applicationCodeset.setCodesetGroup("GENDER");
@@ -50,7 +50,7 @@ public class ApplicationCodeSetServiceTest {
         applicationCodeset.setDisplay("Male-male");
         applicationCodeset.setCode("34792968-e3df-4954-bd97-2f60d8fc1393");
 
-        ApplicationCodeSet applicationCodeset1= new ApplicationCodeSet();
+        ApplicationCodeset applicationCodeset1= new ApplicationCodeset();
         applicationCodeset1.setId(2L);
         applicationCodeset1.setDisplay("MALE");
         applicationCodeset1.setCodesetGroup("GENDER");
@@ -59,7 +59,7 @@ public class ApplicationCodeSetServiceTest {
         applicationCodeset1.setCode("34792968-e3df-4954-bd97-2f60d8fc1393");
 
 
-        List<ApplicationCodeSet> allApplicationCodeset = Arrays.asList(applicationCodeset, applicationCodeset1);
+        List<ApplicationCodeset> allApplicationCodeset = Arrays.asList(applicationCodeset, applicationCodeset1);
 
         Mockito.when(applicationCodesetRepository.findByDisplay(applicationCodeset.getDisplay())).thenReturn(applicationCodeset);
         Mockito.when(applicationCodesetRepository.findByDisplay("wrong_name")).thenReturn(null);
@@ -84,7 +84,7 @@ public class ApplicationCodeSetServiceTest {
     public void whenInValidName_thenApplicationCodesetShouldNotBeFound() {
         Long id = 3L;
         Throwable thrown = assertThrows(EntityNotFoundException.class, () -> applicationCodesetService.getApplicationCodeset(id));
-        assertThat(thrown.getMessage(), is("ApplicationCodeSet was not found for parameters {Display:="+id+"}"));
+        assertThat(thrown.getMessage(), is("ApplicationCodeset was not found for parameters {Display:="+id+"}"));
        // System.out.println(thrown.getCause()+"class is" +thrown.getClass());
 
     }

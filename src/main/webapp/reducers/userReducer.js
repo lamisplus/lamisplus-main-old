@@ -1,6 +1,6 @@
 import * as USERTYPES from '../actions/types'
 
-const userReducer = (state = { list:[] ,status: 0, user: {}, me: null }, action) => {
+const userReducer = (state = { list:[] ,status: 0, user: {} }, action) => {
     switch(action.type){
         case USERTYPES.FETCH_USERS:
             return {...state, list:action.payload}
@@ -14,9 +14,6 @@ const userReducer = (state = { list:[] ,status: 0, user: {}, me: null }, action)
 
         case USERTYPES.USERS_ERROR:
             return {...state, errors:action.payload}
-
-        case USERTYPES.FETCH_ME:
-            return {...state, me:action.payload}
 
         default:
             return state

@@ -61,12 +61,12 @@ function ReportSearch(props) {
                         programName: row.programName,
                         name: row.name,
                         description: row.description,
-                        resourceObject: row.resourceObject,
+                        parameterResourceObject: row.parameterResourceObject,
                         actions:  (
                             <Link
                                 to={{
                                     pathname: "/report-view",
-                                    state: row
+                                    row: row
                                 }}
                                 style={{ cursor: "pointer", color: "blue", fontStyle: "bold" }}>
                                 <Tooltip title="Generate Report">

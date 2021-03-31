@@ -11,8 +11,8 @@ import org.lamisplus.modules.base.domain.entity.*;
 import org.lamisplus.modules.base.domain.mapper.*;
 import org.lamisplus.modules.base.repository.*;
 
-import org.lamisplus.modules.base.util.AccessRight;
 import org.lamisplus.modules.base.util.GenericSpecification;
+import org.lamisplus.modules.base.util.PaginationUtil;
 import org.lamisplus.modules.base.util.UuidGenerator;
 
 import org.springframework.boot.configurationprocessor.json.JSONArray;
@@ -23,18 +23,26 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @Slf4j
 @RequiredArgsConstructor
 public class PatientService {
-
     private final EncounterRepository encounterRepository;
     private final PatientRepository patientRepository;
     private final PersonRepository personRepository;
@@ -46,25 +54,15 @@ public class PatientService {
     private final EncounterMapper encounterMapper;
     private final VisitMapper visitMapper;
     private final UserService userService;
-    private final AppointmentService appointmentService;
     private final ProgramRepository programRepository;
     private final Integer archived = 1;
     private final FormRepository formRepository;
-    private final AccessRight accessRight;
     public static final String FORM_CODE = "formCode";
-    private static final int UN_ARCHIVED = 0;
-    private static final int ARCHIVED = 1;
-    private static final String READ = "read";
-    private static final String WRITE = "write";
-    private static final String DELETE = "delete";
-
-    //private Page page;
+    private Page page;
 
 
     public Person save(PatientDTO patientDTO) {
-        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-
-        Optional<Patient> patient1 = this.patientRepository.findByHospitalNumberAndOrganisationUnitIdAndArchived(patientDTO.getHospitalNumber(), organisationUnitId, UN_ARCHIVED);
+        Optional<Patient> patient1 = this.patientRepository.findByHospitalNumber(patientDTO.getHospitalNumber());
         if(patient1.isPresent())throw new RecordExistException(Patient.class, "Hospital Number", patientDTO.getHospitalNumber()+"");
         log.info("patientDTO from front end - "+ patientDTO);
 
@@ -91,27 +89,98 @@ public class PatientService {
         patient.setPersonByPersonId(createdPerson);
         patient.setPersonId(createdPerson.getId());
         patient.setUuid(UuidGenerator.getUuid());
-        patient.setOrganisationUnitId(organisationUnitId);
+        patient.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         this.patientRepository.save(patient);
         return person;
     }
 
-    public List<PatientDTO> getAllPatients() {
-        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+    public Page findPage(Pageable pageable){
+        GenericSpecification<Patient> genericSpecification = new GenericSpecification<Patient>();
+        Specification<Patient> specification = genericSpecification.findAll(0);
 
-        return getPatients(patientRepository.findAllByArchivedAndOrganisationUnitIdOrderByIdDesc(UN_ARCHIVED, organisationUnitId));
+        Page<Patient> page = patientRepository.findAll(specification, pageable);
+        //HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+
+        return page;
+    }
+
+    private Page getPage(){
+        return page;
+    }
+
+    private void setPage(Page page){
+        this.page = page;
     }
 
 
-    /*public List<PatientDTO> getAllPatients(Page page) {
+    public List<PatientDTO> getAllPatients() {
+        GenericSpecification<Patient> genericSpecification = new GenericSpecification<Patient>();
+        Specification<Patient> specification = genericSpecification.findAll(0);
+
+        List<Patient> patients = patientRepository.findAll(specification);
+        List<PatientDTO> patientDTOs = new ArrayList<>();
+        patients.forEach(patient -> {
+            Person person = patient.getPersonByPersonId();
+            PersonContact personContact = person.getPersonContactsByPerson();
+
+            Optional<Visit> visitOptional = visitRepository.findTopByPatientIdAndDateVisitEndIsNullOrderByDateVisitStartDesc(patient.getId());
+            PatientDTO patientDTO = visitOptional.isPresent() ? patientMapper.toPatientDTO(person, visitOptional.get(), personContact, patient) : patientMapper.toPatientDTO(person, personContact, patient);
+
+            List<PersonRelative> personRelatives = person.getPersonRelativesByPerson();//personRelativeRepository.findByPersonId(person.getId());
+            List<PersonRelativesDTO> personRelativeDTOs = new ArrayList<>();
+
+            if (personRelatives.size() > 0) {
+                personRelatives.forEach(personRelative -> {
+                    if(personRelative.getArchived() == archived) return;
+                    PersonRelativesDTO personRelativesDTO = personRelativeMapper.toPersonRelativeDTO(personRelative);
+                    personRelativeDTOs.add(personRelativesDTO);
+                });
+                patientDTO.setPersonRelativeDTOs(personRelativeDTOs);
+            }
+            patientDTOs.add(patientDTO);
+        });
+        return patientDTOs;
+    }
+
+
+    public List<PatientDTO> getAllPatients(Page page) {
+/*
+        GenericSpecification<Patient> genericSpecification = new GenericSpecification<Patient>();
+        Specification<Patient> specification = genericSpecification.findAll(0);
+
+        page = patientRepository.findAll(specification, pageable);
+        //HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+*/
+
         List<Patient> patients = page.getContent();
-        return getPatients(patients);
-    }*/
+        List<PatientDTO> patientDTOs = new ArrayList<>();
+        patients.forEach(patient -> {
+            Person person = patient.getPersonByPersonId();
+            PersonContact personContact = person.getPersonContactsByPerson();
+
+            Optional<Visit> visitOptional = visitRepository.findTopByPatientIdAndDateVisitEndIsNullOrderByDateVisitStartDesc(patient.getId());
+            PatientDTO patientDTO = visitOptional.isPresent() ? patientMapper.toPatientDTO(person, visitOptional.get(), personContact, patient) : patientMapper.toPatientDTO(person, personContact, patient);
+
+            List<PersonRelative> personRelatives = person.getPersonRelativesByPerson();//personRelativeRepository.findByPersonId(person.getId());
+            List<PersonRelativesDTO> personRelativeDTOs = new ArrayList<>();
+
+            if (personRelatives.size() > 0) {
+                personRelatives.forEach(personRelative -> {
+                    if(personRelative.getArchived() == archived) return;
+                    PersonRelativesDTO personRelativesDTO = personRelativeMapper.toPersonRelativeDTO(personRelative);
+                    personRelativeDTOs.add(personRelativesDTO);
+                });
+                patientDTO.setPersonRelativeDTOs(personRelativeDTOs);
+            }
+            patientDTOs.add(patientDTO);
+        });
+        return patientDTOs;
+    }
 
     public PatientDTO getPatientByHospitalNumber(String hospitalNumber) {
-        Optional<Patient> patientOptional = this.patientRepository.findByHospitalNumberAndOrganisationUnitIdAndArchived(hospitalNumber, getOrganisationUnitId(), UN_ARCHIVED);
+        Optional<Patient> patientOptional = this.patientRepository.findByHospitalNumber(hospitalNumber);
 
-        if(!patientOptional.isPresent()){
+        if(!patientOptional.isPresent() || patientOptional.get().getArchived()==1){
             throw new EntityNotFoundException(Patient.class, "Hospital Number", hospitalNumber+"");
         }
 
@@ -122,13 +191,19 @@ public class PatientService {
         //Check for currently check-in patient
         PatientDTO patientDTO = visitOptional.isPresent() ? patientMapper.toPatientDTO(person, visitOptional.get(), personContact, patientOptional.get()) : patientMapper.toPatientDTO(person, personContact, patientOptional.get());
 
+        List<PersonRelativesDTO> personRelativeDTOs = new ArrayList<>();
         List<PersonRelative> personRelatives = person.getPersonRelativesByPerson();
 
-        //if (personRelatives.size() > 0) {
-            patientDTO.setPersonRelativeDTOs(personRelativeMapper.toPersonRelativeDTOList(personRelatives.stream().
-                    filter(personRelative -> personRelative.getArchived() != ARCHIVED).
-                    collect(Collectors.toList())));
-        //}
+        if (personRelatives.size() > 0) {
+            personRelatives.forEach(personRelative -> {
+                if(personRelative.getArchived() == archived)
+                    return;
+
+                PersonRelativesDTO personRelativesDTO = personRelativeMapper.toPersonRelativeDTO(personRelative);
+                personRelativeDTOs.add(personRelativesDTO);
+            });
+            patientDTO.setPersonRelativeDTOs(personRelativeDTOs);
+        }
         return patientDTO;
     }
 
@@ -170,7 +245,7 @@ public class PatientService {
         final Patient patient = patientMapper.toPatient(patientDTO);
         patient.setPersonId(updatedPerson.getId());
         patient.setId(id);
-        //patient.setModifiedBy(userService.getUserWithRoles().get().getUserName());
+        patient.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         this.patientRepository.save(patient);
 
         return person;
@@ -178,27 +253,29 @@ public class PatientService {
 
 
     public List getEncountersByPatientIdAndDateEncounter(Long patientId, String formCode, Optional<String> dateStart, Optional<String> dateEnd) {
-        Set<String> permissions = accessRight.getAllPermission();
-
-        accessRight.grantAccessByAccessType(formCode, Patient.class, READ, permissions);
-        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-
-        Specification<Encounter> specification = new GenericSpecification<Encounter>().findAllEncountersByPatientIdAndDateEncounter(patientId, formCode, dateStart, dateEnd, organisationUnitId);
-
-        List<Encounter> encounters = encounterRepository.findAll(specification);
-
+        List<Encounter> encounters = encounterRepository.findAll(new Specification<Encounter>() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+                if(dateStart.isPresent()&& !dateStart.get().equals("{dateStart}")){
+                    predicates.add(getPredicate(root, criteriaBuilder,"dateEncounter", dateStart, "greaterThanOrEqualTo"));
+                }
+                if(dateEnd.isPresent() && !dateEnd.get().equals("{dateEnd}")){
+                    predicates.add(getPredicate(root, criteriaBuilder,"dateEncounter", dateEnd,"lessThanOrEqualTo"));
+                }
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("patientId"), patientId)));
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("formCode"), formCode)));
+                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("dateEncounter")));
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        });
         return getFormData(encounters, null);
     }
 
     public List getAllEncountersByPatientId(Long patientId) {
         List<Encounter> encounters = getEncounterByPatientIdDesc(patientId);
         List<Object> formDataList = new ArrayList<>();
-        Set<String> permissions = accessRight.getAllPermission();
-
-        encounters.forEach(encounter -> {
-                if(!accessRight.grantAccessForm(encounter.getFormCode(), permissions)){
-                    return;
-                }
+            encounters.forEach(encounter -> {
                 encounter.getFormDataByEncounter().forEach(formData1 -> {
                     formDataList.add(formData1.getData());
                 });
@@ -207,28 +284,26 @@ public class PatientService {
     }
 
     public List getEncountersByPatientIdAndFormCode(Pageable pageable, Long patientId, String formCode, String sortField, String sortOrder, Integer limit) {
-        Set<String> permissions = accessRight.getAllPermission();
-
-        accessRight.grantAccessByAccessType(formCode, Patient.class, READ, permissions);
         Pageable pageableSorter = createPageRequest(pageable, sortField, sortOrder, limit);
-        List<Encounter> encountersList = this.encounterRepository.findAllByPatientIdAndFormCodeAndOrganisationUnitId(patientId,formCode, getOrganisationUnitId(),pageableSorter);
+        List<Encounter> encountersList = this.encounterRepository.findAllByPatientIdAndFormCode(patientId,formCode,pageableSorter);
         return this.getFormData(encountersList, null);
     }
+
+    /*@Transactional(readOnly = true)
+    public Page<Encounter> getEncountersByPatientIdAndFCode(Pageable pageable, Long patientId, String formCode, String sortField, String sortOrder, int limit) {
+        Pageable pageable1 = createPageRequest(pageable, sortField, sortOrder, limit);
+
+        return encounterRepository.findAllByPatientIdAndFormCodeAndArchived(pageable1, patientId,formCode, 0);
+    }*/
 
     public List getEncountersByPatientIdAndProgramCodeExclusionList(Long patientId, List<String> programCodeExclusionList) {
         List<Encounter> encounters = getEncounterByPatientIdDesc(patientId);
         List<EncounterDTO> encounterDTOS = new ArrayList<>();
-        Set<String> permissions = accessRight.getAllPermission();
 
-
-        if (programCodeExclusionList != null && programCodeExclusionList.size() > 0)
+            if (programCodeExclusionList != null && programCodeExclusionList.size() > 0)
                 programCodeExclusionList.forEach(programCode -> {
-
                     //log.info("Exclusion list is" + programCode);
                     encounters.forEach(singleEncounter -> {
-                        if(!accessRight.grantAccessForm(singleEncounter.getFormCode(), permissions)){
-                            return;
-                        }
                         if (singleEncounter.getProgramCode().equals(programCode)) return;
                         Patient patient = singleEncounter.getPatientByPatientId();
                         Person person = patient.getPersonByPersonId();
@@ -247,52 +322,53 @@ public class PatientService {
      * @return integer to confirm archive
      */
     public Integer delete(Long id) {
-        //String username = userService.getUserWithRoles().get().getUserName();
-        Optional<Patient> patientOptional = this.patientRepository.findByIdAndArchivedAndOrganisationUnitId(id, UN_ARCHIVED, getOrganisationUnitId());
-        if(!patientOptional.isPresent())throw new EntityNotFoundException(Patient.class, "Id", id+"");
+        String username = userService.getUserWithRoles().get().getUserName();
+        Optional<Patient> patientOptional = this.patientRepository.findById(id);
+        if(!patientOptional.isPresent() || patientOptional.get().getArchived()==1)throw new EntityNotFoundException(Patient.class, "Id", id+"");
         //setting all patient archive to 1
-        Patient patient = patientOptional.get();
-        patient.setArchived(ARCHIVED);
-        //patientOptional.get().setModifiedBy(username);
+        patientOptional.get().setArchived(archived);
+        patientOptional.get().setModifiedBy(username);
         //For person
-        Person person = patientOptional.get().getPersonByPersonId();
-        person.setArchived(ARCHIVED);
-        //patientOptional.get().getPersonByPersonId().setModifiedBy(username);
+        patientOptional.get().getPersonByPersonId().setArchived(1);
+        patientOptional.get().getPersonByPersonId().setModifiedBy(username);
         //For encounter
-        List<Encounter> encounters = new ArrayList<>();
         patientOptional.get().getEncountersByPatient().forEach(encounter -> {
-            encounter.setArchived(ARCHIVED);
-            encounters.add(encounter);
-            //encounter.setModifiedBy(username);
-
+            encounter.setArchived(1);
+            encounter.setModifiedBy(username);
         });
         //For visit
-        List<Visit> visits = new ArrayList<>();
         patientOptional.get().getVisitsByPatient().forEach(visit -> {
-            visit.setArchived(ARCHIVED);
-            visits.add(visit);
+            visit.setArchived(1);
+            visit.setModifiedBy(username);
         });
-        patientRepository.save(patient);
-        personRepository.save(person);
-        encounterRepository.saveAll(encounters);
-        visitRepository.saveAll(visits);
-
-        return ARCHIVED;
+        return patientOptional.get().getArchived();
     }
 
     public List<VisitDTO> getVisitByPatientIdAndVisitDate(Optional <Long> patientId, Optional<String> dateStart, Optional<String> dateEnd) {
         List<VisitDTO> visitDTOS = new ArrayList<>();
-
-        Specification<Visit> specification = new GenericSpecification<Visit>().findAllVisitByPatientIdAndVisitDate(patientId, dateStart, dateEnd);
-
-        List<Visit> visitList = visitRepository.findAll(specification);
+        List<Visit> visitList = visitRepository.findAll(new Specification<Visit>() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+                if (patientId.isPresent()) {
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("patientId").as(Long.class), patientId.get())));
+                }
+                if (dateStart.isPresent() && !dateStart.get().equals("{dateStart}")) {
+                    predicates.add(getPredicate(root, criteriaBuilder,"dateVisitStart", dateStart, "greaterThanOrEqualTo"));
+                }
+                if (dateEnd.isPresent() && !dateEnd.get().equals("{dateEnd}")) {
+                    predicates.add(getPredicate(root, criteriaBuilder,"dateVisitStart", dateEnd, "lessThanOrEqualTo"));
+                }
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), 0)));
+                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("dateVisitStart")));
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        });
 
         visitList.forEach(visit -> {
             Patient patient = visit.getPatientByVisit();
             Person person = patient.getPersonByPersonId();
-            List<AppointmentDTO> appointmentDTOS = appointmentService.getOpenAllAppointmentByPatientId(patient.getId());
             final VisitDTO visitDTO = visitMapper.toVisitDTO(visit, person);
-            visitDTO.setAppointmentDTOList(appointmentDTOS);
             visitDTOS.add(visitDTO);
         });
 
@@ -365,60 +441,75 @@ public class PatientService {
         return formDataList;
     }
 
-    /**Get a list of Encounter By PatientId in Desc order
-     *
-     * @param patientId
-     * @return Encounter List
-     */
-    private List<Encounter> getEncounterByPatientIdDesc(Long patientId){
-        Specification<Encounter> specification = new GenericSpecification<Encounter>().findAllEncounterByPatientIdDesc(patientId, getOrganisationUnitId());
-
-        return encounterRepository.findAll(specification);
+    //Predicate for date
+    private Predicate getPredicate(Root root, CriteriaBuilder criteriaBuilder,String entityField, Optional<String> date,String operation){
+        LocalDate localDate = LocalDate.parse(date.get(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        if(operation.equals("greaterThanOrEqualTo")) {
+            return criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get(entityField).as(LocalDate.class), localDate));
+        }else {
+            return criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get(entityField).as(LocalDate.class), localDate));
+        }
     }
 
-    public List<Form> getAllFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
+    private List<Encounter> getEncounterByPatientIdDesc(Long patientId){
+        List<Encounter> encounters = encounterRepository.findAll(new Specification<Encounter>() {
+            @Override
+            public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
 
-        //ArrayList<EncounterDistinctDTO> encounterDistinctDTOS = new ArrayList<>();
-        Optional<Program> optionalProgram = programRepository.findProgramByCodeAndArchived(programCode, UN_ARCHIVED);
-        if(!optionalProgram.isPresent()){
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("patientId"), patientId)));
+                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), 0)));
+                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("dateEncounter")));
+
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        });
+
+        return encounters;
+    }
+
+    //TODO: In progress...
+    public List<Form> getAllFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
+        ArrayList<EncounterDistinctDTO> encounterDistinctDTOS = new ArrayList<>();
+        Optional<Program> optionalProgram = programRepository.findProgramByCode(programCode);
+        if(!optionalProgram.isPresent() || optionalProgram.get().getArchived() == 1){
             throw new EntityNotFoundException(Program.class, "programCode", programCode+"");
         }
         Program program = optionalProgram.get();
         List <Form> forms = new ArrayList<>();
-        HashSet <String> filledFormSet = new HashSet<>();
-        HashSet <String> formCodeSet = new HashSet<>();
+        HashSet <String>formCodeSet = new HashSet<>();
 
         //Check for filled forms by the patient in that program
-        encounterRepository.findDistinctPatientIdAndProgramCodeAndOrganisationUnitIdAndArchived(patientId, programCode, getOrganisationUnitId(), UN_ARCHIVED).forEach(encounterDistinctDTO -> {
-            filledFormSet.add(encounterDistinctDTO.getFormCode());
+        encounterRepository.findDistinctPatientIdAndProgramCode(patientId, programCode).forEach(encounterDistinctDTO -> {
+            formCodeSet.add(encounterDistinctDTO.getFormCode());
         });
 
-        if(filledFormSet.size() > 0) {
+        if(formCodeSet.size() > 0) {
             program.getFormsByProgram().forEach(form -> {
-                //if form has been filled, then return
-                if (filledFormSet.contains(form.getCode())) {
-                   // filledFormSet.add(form.getCode());
+                //if form has been filled
+                if (formCodeSet.remove(form.getCode())) {
                     formCodeSet.add(form.getCode());
                     return;
-                }
-                    //form not filled
+                }else {
                     //Check for formPrecedence
-                if(form.getFormPrecedence() == null){
-                    //form doesnt have precedence, so return form
-                    formCodeSet.add(form.getCode());
-                    return;
-                }
-
-                Set<String> formPrecedence = getFormPrecedence(form);
-                //if all formPrecedence have been filled, return form.
-                if(filledFormSet.containsAll(formPrecedence)){
-                    formCodeSet.add(form.getCode());
-                    return;
+                    if (form.getFormPrecedence() != null) {
+                        getFormPrecedence(form).forEach(formPrecedenceCode -> {
+                            //if precedence form has been filled
+                            if (formCodeSet.remove(formPrecedenceCode)) {
+                                formCodeSet.add(formPrecedenceCode);
+                                return;
+                            }else{
+                                formCodeSet.add(formPrecedenceCode);
+                            }
+                        });
+                    } else {
+                        formCodeSet.add(form.getCode());
+                    }
                 }
             });
 
             formCodeSet.forEach(formCode ->{
-                forms.add(formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED).get());
+                forms.add(formRepository.findByCode(formCode).get());
             });
 
         }else {
@@ -434,8 +525,8 @@ public class PatientService {
     public List<Form> getFilledFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
         List<Form> forms = new ArrayList<>();
         //Check for filled forms by the patient in that program
-        encounterRepository.findDistinctPatientIdAndProgramCodeAndOrganisationUnitIdAndArchived(patientId, programCode, getOrganisationUnitId(), UN_ARCHIVED).forEach(encounterDistinctDTO -> {
-            forms.add(formRepository.findByCodeAndArchived(encounterDistinctDTO.getFormCode(), UN_ARCHIVED).get());
+        encounterRepository.findDistinctPatientIdAndProgramCode(patientId, programCode).forEach(encounterDistinctDTO -> {
+            forms.add(formRepository.findByCode(encounterDistinctDTO.getFormCode()).get());
         });
         return forms;
     }
@@ -469,48 +560,9 @@ public class PatientService {
     }
 
     public Long getTotalCount(){
-        return patientRepository.countByOrganisationUnitIdAndArchived(getOrganisationUnitId(), UN_ARCHIVED);
+        return patientRepository.count();
     }
 
-    public List<PatientDTO> getAllPatientsByProgramCode(String programCode ) {
-        List<PatientDTO> patientDTOList = new ArrayList<>();
-        encounterRepository.findDistinctProgramCodeAndOrganisationUnitIdAndArchived(programCode, getOrganisationUnitId(), UN_ARCHIVED).forEach(encounterDistinctDTO -> {
-            patientDTOList.add(getPatientByHospitalNumber(patientRepository.findById(encounterDistinctDTO.getPatientId()).get().getHospitalNumber()));
-        });
-        return patientDTOList;
-    }
+    //TOdo add a method to get patient Relative - to avoid duplicate codes
 
-    private Long getOrganisationUnitId(){
-        return  userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-    }
-
-    public List<PatientDTO> getPatients(List<Patient> patients){
-        List<PatientDTO> patientDTOs = new ArrayList<>();
-        patients.forEach(patient -> {
-            Person person = patient.getPersonByPersonId();
-            PersonContact personContact = person.getPersonContactsByPerson();
-
-            Optional<Visit> visitOptional = visitRepository.findTopByPatientIdAndDateVisitEndIsNullOrderByDateVisitStartDesc(patient.getId());
-            PatientDTO patientDTO = visitOptional.isPresent() ? patientMapper.toPatientDTO(person, visitOptional.get(), personContact, patient) : patientMapper.toPatientDTO(person, personContact, patient);
-
-            List<PersonRelative> personRelatives = person.getPersonRelativesByPerson();//personRelativeRepository.findByPersonId(person.getId());
-            //List<PersonRelativesDTO> personRelativeDTOs = new ArrayList<>();
-
-                patientDTO.setPersonRelativeDTOs(personRelativeMapper.toPersonRelativeDTOList(personRelatives.stream().
-                        filter(personRelative -> personRelative.getArchived() != ARCHIVED).
-                        collect(Collectors.toList())));
-
-            /*if (personRelatives.size() > 0) {
-                personRelatives.forEach(personRelative -> {
-                    if(personRelative.getArchived() == archived) return;
-                    PersonRelativesDTO personRelativesDTO = personRelativeMapper.toPersonRelativeDTO(personRelative);
-                    personRelativeDTOs.add(personRelativesDTO);
-                });
-                patientDTO.setPersonRelativeDTOs(personRelativeDTOs);
-            }*/
-            patientDTOs.add(patientDTO);
-        });
-
-        return patientDTOs;
-    }
 }

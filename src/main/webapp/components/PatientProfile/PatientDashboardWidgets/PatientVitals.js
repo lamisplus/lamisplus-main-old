@@ -14,13 +14,11 @@ import {
   import {connect} from 'react-redux';
   import * as _ from "lodash";
   import { Label } from 'semantic-ui-react';
-import { authentication } from '../../../_services/authentication';
-
 
  function PatientVitals(props) {
     const [data, setData] = useState({pulse:'', height: '', systolic: '', diastolic: '', body_weight: ''});
     const [showModal, setShowModal] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [bmiStatus, setBMIStatus] = useState();
     const [bmi, setBMI] = useState();
     const toggle = () => {
@@ -49,29 +47,25 @@ import { authentication } from '../../../_services/authentication';
 
    useEffect(() => {    
     props.fetchPatientVitalSigns(props.patientId, ()=>{setLoading(false)}, ()=>{setLoading(false)})  
-    }, [props.patientId]);
+    }, [props.patient]); 
 
     useEffect(() => {
-        setData(props.vitalSigns);
+        setData({});
         setBMI()
         setBMIStatus()
-
       if(props.vitalSigns){
          setData(props.vitalSigns)
          calculateBMI() 
       } 
       
-    }, [props.vitalSigns, props.patientId])
+    }, [props.vitalSigns])
   return (
     
             <Card  >
-                    <CardHeader> Recent Vital Signs
-                         <button type="button" className="float-right ml-3"
-                                 disabled={!authentication.userHasRole(["patient_write"])}
-                                 onClick={toggle}><i className="fa fa-plus"></i> Add Vital Signs</button></CardHeader>
+                    <CardHeader> Recent Vital Signs  <button type="button" className="float-right ml-3" onClick={toggle}><i className="fa fa-plus"></i> Add Vital Signs</button></CardHeader>
                         
                     <CardBody>
-                    {_.isEmpty(data) &&
+                    {_.isEmpty(data) && 
                              <Label>
                              No Vital Signs
                            </Label>

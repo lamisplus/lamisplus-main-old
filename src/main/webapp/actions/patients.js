@@ -196,12 +196,12 @@ export const fetchPatientLatestVitalSigns = (id, onSuccess, onError) => dispatch
       if(onSuccess){
         onSuccess();
       }
-
+      if(response.data.length > 0){
       dispatch({
         type: ACTION_TYPES.PATIENT_LATEST_VITAL_SIGNS,
-        payload: response.data.length > 0 ? response.data[0] : {}
+        payload: response.data[0]
       })
-
+    }
     })
     .catch(error => {
       dispatch({
@@ -287,30 +287,27 @@ export const fetchPatientVitalSigns = (id, onSuccess, onError) => dispatch => {
  }
 
  export const fetchByHospitalNumber = (id, onSuccess, onError) => dispatch => {
-    console.log(id);
-    if(id) {
-        axios
-            .get(`${baseUrl}patients/${id}`)
-            .then(response => {
-                dispatch({
-                    type: ACTION_TYPES.PATIENTS_FETCH_BY_ID,
-                    payload: response.data
-                });
-                if (onSuccess) {
-                    onSuccess();
-                }
-            })
-            .catch(error => {
-                    dispatch({
-                        type: ACTION_TYPES.PATIENTS_ERROR,
-                        payload: "Something went wrong, please try again"
-                    })
-                    if (onError) {
-                        onError();
-                    }
-                }
-            );
+  axios
+    .get(`${baseUrl}patients/${id}`)
+    .then(response => {
+      dispatch({
+        type: ACTION_TYPES.PATIENTS_FETCH_BY_ID,
+        payload: response.data
+      });
+      if(onSuccess){
+      onSuccess();
+      }
+    })
+    .catch(error => {
+      dispatch({
+        type: ACTION_TYPES.PATIENTS_ERROR,
+        payload: "Something went wrong, please try again"
+      })
+      if(onError){
+      onError();
+      }
     }
+    );
 };
  
 export const fetchPatientEncounterProgramCodeExclusionList = (id, onSuccess, onError) => dispatch => {
@@ -474,5 +471,4 @@ export const fetchPatientRadiologyTestOrder = (id, onSuccess, onError) => dispat
             )
     }
 }
-
 

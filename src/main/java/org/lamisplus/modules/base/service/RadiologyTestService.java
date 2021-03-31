@@ -16,15 +16,14 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class RadiologyTestService {
-    public static final int UN_ARCHIVED = 0;
     private final RadiologyTestRepository radiologyTestRepository;
     public List<RadiologyTest> getAllRadiologyTests() {
-        return this.radiologyTestRepository.findAllByArchived(UN_ARCHIVED);
+        return this.radiologyTestRepository.findAll();
     }
 
     public RadiologyTest getRadiologyTest(Long id) {
-        Optional<RadiologyTest> radiologyTestOptional = this.radiologyTestRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if (!radiologyTestOptional.isPresent()) throw new EntityNotFoundException(RadiologyTest.class, "Id", id + "");
+        Optional<RadiologyTest> radiologyTestOptional = this.radiologyTestRepository.findById(id);
+        if (!radiologyTestOptional.isPresent() || radiologyTestOptional.get().getArchived() == 1) throw new EntityNotFoundException(RadiologyTest.class, "Id", id + "");
         return radiologyTestOptional.get();
     }
 }

@@ -11,13 +11,13 @@ const PatientSearch = (props) => {
   const prescriptions = useSelector(state => state.pharmacy.allPrescriptions)
 
   const totalDrugsPrescribed = (drugsArray) => {
-    
     const dispensed = []
 
     drugsArray.map(drugs => {
-        if (drugs.data.prescription_status === 1)
-          dispensed.push(drugs.data)
-       
+      for (let drug in drugs) {
+        if (drugs[drug].prescription_status === 1)
+          dispensed.push(drugs[drug])
+      }
     })
     
     return dispensed.length
@@ -26,7 +26,6 @@ const PatientSearch = (props) => {
   return (
     <div>
       <MaterialTable
-      
         title="Drug Prescriptions"
         columns={[
           { title: "Patient ID", field: "Id" },
@@ -58,12 +57,12 @@ const PatientSearch = (props) => {
           prescribedCount: prescription.formDataObj.length,
           dispensedCount: totalDrugsPrescribed(prescription.formDataObj),
           actions: (
-            
             <Link
               to={{
                 pathname: "/prescriptions",
-                state: prescription,
-                patientName: prescription.firstName + " " + prescription.lastName,
+                form: prescription,
+                patientName:
+                  prescription.firstName + " " + prescription.lastName,
                 encounterId: prescription.encounterId,
               }}
               style={{ cursor: "pointer", color: "blue", fontStyle: "bold" }}>
@@ -76,7 +75,6 @@ const PatientSearch = (props) => {
           ),
         }))}
         options={{
-          pageSizeOptions: [50,100,150,200],
           actionsColumnIndex: -1,
           headerStyle: {
             backgroundColor: "#9F9FA5",

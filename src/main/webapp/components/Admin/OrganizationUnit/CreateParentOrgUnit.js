@@ -1,14 +1,10 @@
-import React, { useState, useEffect }   from 'react';
-import { Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Input,FormFeedback,Label,Card,CardBody,Form
+import React, { useState }   from 'react';
+import { Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Input,FormFeedback,Label,Card,CardBody
 } from 'reactstrap';
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import axios from "axios";
-import {url} from '../../../api'
-import TextField from '@material-ui/core/TextField';
-import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
-import {createOrgUnitLevel} from './../../../actions/organizationalUnit'
-import { connect } from "react-redux";
+import { Alert, AlertTitle } from '@material-ui/lab';
+import CreateParentOrgUnitByUpload from "./CreateParentOrgUnitByUpload";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -45,149 +41,88 @@ const useStyles = makeStyles(theme => ({
     } 
 }))
 
-const filterOptions = createFilterOptions({
-    matchFrom: 'start',
-    stringify: (option) => option.title,
-  });
-  
+
 
 const CreateParentOrgUnit = (props) => {
     const classes = useStyles()
-    const orgUnitIDParam = props.orgUnitID ? props.orgUnitID :{};
-    console.log(props)
-    const [otherfields, setOtherFields] = useState({parentOrganisationUnitId:"", name:"", description:"", organisationUnitLevelId:""});
-    const defaultValues = {name:"",id:"" }
-    const [formData, setFormData] = useState(defaultValues)
+    const datasample = props.datasample ? props.datasample : {};
+    const [otherfields, setOtherFields] = useState({fileName:""});
     const [errors, setErrors] = useState({});
     const [modal3, setModal3] = useState(false) //
     const toggleModal3 = () => setModal3(!modal3)
-    const [pcrOptions, setOptionPcr] = useState([]);
-    const [loading, setLoading] = useState(false)
     const handleOtherFieldInputChange = e => {
       setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
-      console.log(otherfields)
+      //console.log(otherfields)
   }
   const validate = () => {
       let temp = { ...errors }
-      temp.name = otherfields.name ? "" : "This field is required"
-      temp.parentOrganisationUnitId = otherfields.parentOrganisationUnitId ? "" : "This field is required"
-      temp.description = otherfields.description ? "" : "This field is required"
+      temp.fileName = otherfields.fileName ? "" : "This field is required"
       setErrors({
           ...temp
           })    
       return Object.values(temp).every(x => x == "")
 }
 
-useEffect(() => {
-    async function getCharacters() {
-        try {
-            const response = await axios(
-                url + "organisation-units"
-            );
-            const body = response.data && response.data !==null ? response.data : {};
-            
-            setOptionPcr(
-                 body.map(({ name, id }) => ({ title: name, value: id }))
-             );
-        } catch (error) {
-        }
-    }
-    getCharacters();
-}, []);
-
-
-const createOrgUnit = (e) => {
-    e.preventDefault();
-    setOtherFields({ ...otherfields, organisationUnitLevelId: props.orgUnitID });
-    otherfields['organisationUnitLevelId'] = props.orgUnitID.id
-    otherfields['parentOrganisationUnitId'] = props.orgUnitID.id ===1 ? 0 : otherfields.parentOrganisationUnitId
-   //check if the Org Unit Level ID is 1 which is country
-  
-    
-    console.log(otherfields)
- 
-    const onSuccess = () => {
-        setLoading(false);
-        props.togglestatus();
-    };
-    const onError = () => {
-        setLoading(false);
-        props.togglestatus();
-    };
-
-    props.createOrgUnitLevel(otherfields,onSuccess, onError);
+const createUploadBatch = () => {
+    console.log('code get here good')
+    props.togglestatus();
+    setModal3(!modal3)
 }
 
   return (      
       <div >
               <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
-                  <ModalHeader toggle={props.togglestatus}>Create Organization Unit</ModalHeader>
+                  <ModalHeader toggle={props.togglestatus}>Create Parent Organization Unit</ModalHeader>
                       <ModalBody>
                           <Card>
                             <CardBody>
                               <br />
-                              <Form onSubmit={createOrgUnit}>
+                              <Row>
+                                  <Col>
+                                  <Alert severity="info">
+                                    <AlertTitle>Instructions to Batch in more than one record please click the link below</AlertTitle>
+                                      <ul>
+                                       <a style={{ cursor: 'pointer'}}><li onClick={() => createUploadBatch()}>* Download the template and upload  <strong>(only *.csv)</strong></li></a> 
+                                       
+                                      </ul>
+                                      
+                                  </Alert>
+                                </Col>
+                              </Row>
                                 <Row>
-                               {orgUnitIDParam.id!= 1 ? (
-                                <Col md={6}>
-                                          <FormGroup>
-                                              <Label for="">Parent Organisation  Unit</Label>
-
-                                                  <Autocomplete
-                                                    id="filter-orgUnit"
-                                                    options={pcrOptions}
-                                                    getOptionLabel={(option) => option.title}
-                                                    filterOptions={filterOptions}
-                                                    size="small"
-                                                    onChange={(e, i) => {
-                                                        console.log(1)
-                                                        setOtherFields({ ...otherfields, parentOrganisationUnitId: i.value });
-                                                    }}
-                                                    renderInput={(params) => <TextField {...params} variant="outlined" />}
-                                                    />
-                                          </FormGroup>
-                                      </Col>
-                               ):
-
-                               ""
-                             }
                                   <Col md={6}>
                                     <FormGroup>
-                                        <Label for=""> Name</Label>
+                                        <Label for="">Parent name</Label>
                                               <Input
                                                   type="text"
-                                                  name="name"
-                                                  id="name"
+                                                  name="fileName"
+                                                  id="fileName"
                                                   
-                                                  value={otherfields.name}
+                                                  value={otherfields.fileName}
                                                   onChange={handleOtherFieldInputChange}
-                                                  {...(errors.name && { invalid: true})}
+                                                  {...(errors.fileName && { invalid: true})}
                                                   
                                               />
-                                                <FormFeedback>{errors.name}</FormFeedback>
+                                                <FormFeedback>{errors.fileName}</FormFeedback>
                                       </FormGroup>
                                   </Col>
-                                  <Col md={6}>
-                                    <FormGroup>
-                                        <Label for="">Description</Label>
-                                              <Input
-                                                  type="text"
-                                                  name="description"
-                                                  id="description"
-                                                  
-                                                  value={otherfields.description}
-                                                  onChange={handleOtherFieldInputChange}
-                                                  {...(errors.description && { invalid: true})}
-                                                  
-                                              />
-                                                <FormFeedback>{errors.description}</FormFeedback>
-                                      </FormGroup>
-                                  </Col>
+                                
                                 </Row>
                             <br/>
                             <Row>
                                 <Col sm={12}>
-                                <MatButton
+                                    <MatButton
+                                        type='submit'
+                                        variant='contained'
+                                        color='primary'
+                                        className={classes.button}
+                                        
+                                        className=" float-right mr-1"
+                                        
+                                    >
+                                        Save 
+                                    </MatButton>
+                                    <MatButton
                                         variant='contained'
                                         color='default'
                                         onClick={props.togglestatus}
@@ -197,33 +132,16 @@ const createOrgUnit = (e) => {
                                     >
                                         Cancel
                                    </MatButton>
-                                    <MatButton
-                                        type='submit'
-                                        variant='contained'
-                                        color='primary'
-                                        className={classes.button}
-                                        disabled={loading}
-                                        className=" float-right mr-1"
-                                        
-                                    >
-                                        Save 
-                                    </MatButton>
-                                    
                             </Col>
                             </Row>
-                        </Form>
                       </CardBody>
                 </Card>
           </ModalBody>
       </Modal>
-      
+      <CreateParentOrgUnitByUpload modalstatus={modal3} togglestatus={toggleModal3}  />
  
     </div>
   );
 }
 
-
-export default connect(null, { createOrgUnitLevel })(
-    CreateParentOrgUnit
-);
-
+export default CreateParentOrgUnit;

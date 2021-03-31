@@ -12,7 +12,6 @@ import IconButton from '@material-ui/core/IconButton';
 
 const PatientSearch = (props) => {
     const [loading, setLoading] = useState('')
-    console.log(props.patientsTestOrderList)
     useEffect(() => {
     setLoading('true');
         const onSuccess = () => {
@@ -23,21 +22,9 @@ const PatientSearch = (props) => {
         }
             props.fetchAllLabTestOrderToday(onSuccess, onError);
     }, []); //componentDidMount
-    const collectedSamples = []
-
-    props.patientsTestOrderList.forEach(function(value, index, array) {
-        const dataSamples = value.formDataObj
-        if(value.formDataObj.data!==null) {
-        for(var i=0; i<dataSamples.length; i++){
-            for (var key in dataSamples[i]) {
-              if (dataSamples[i][key]!==null && dataSamples[i][key].lab_test_order_status < 1 )
-                collectedSamples.push(value)
-            }            
-          }
-        }
-    });
-
-    function totalSampleConllected (test){
+    console.log(props.patientsTestOrderList)
+function totalSampleConllected (test){
+        console.log(test)
         const  maxVal = []
           for(var i=0; i<test.length; i++){
               for (var key in test[i]) {
@@ -48,6 +35,7 @@ const PatientSearch = (props) => {
           }
         return maxVal.length;
     }
+ 
     
   return (
       <div>
@@ -77,7 +65,7 @@ const PatientSearch = (props) => {
                   },
               ]}
               isLoading={loading}
-              data={collectedSamples.map((row) => ({
+              data={props.patientsTestOrderList.map((row) => ({
                   Id: row.hospitalNumber,
                   name: row.firstName +  ' ' + row.lastName,
                   date: row.dateEncounter,
@@ -98,8 +86,8 @@ const PatientSearch = (props) => {
 
               }))}
               options={{
-                  
-                  pageSizeOptions: [5,10,50,100,150,200],
+                  pageSize:100,
+                  pageSizeOptions: [50,100,150,200],
                   headerStyle: {
                   backgroundColor: "#9F9FA5",
                   color: "#000",

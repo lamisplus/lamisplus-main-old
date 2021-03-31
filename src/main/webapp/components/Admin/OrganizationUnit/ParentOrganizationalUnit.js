@@ -1,12 +1,16 @@
 import React from 'react'
-import {Card} from 'reactstrap'
+import {Card, CardBody,CardHeader,Col,Row} from 'reactstrap'
 import { useState, useEffect} from 'react'
-import { FaPlus } from 'react-icons/fa'
-import Button from '@material-ui/core/Button'
+import { TiPlus } from 'react-icons/ti'
+import MatButton from '@material-ui/core/Button'
 import 'react-datepicker/dist/react-datepicker.css'
 import { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
+import { TiArrowBack} from 'react-icons/ti';
 import 'react-widgets/dist/css/react-widgets.css'
+//Date Picker
+import Page from '../../Page'
+//import { Spinner } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import MaterialTable from 'material-table';
@@ -14,11 +18,8 @@ import {  MdDelete, MdModeEdit, MdRemoveRedEye } from "react-icons/md";
 import DeleteModule from "./DeleteModule";
 import CreateParentOrgUnit from "./CreateParentOrgUnit";
 import { useSelector, useDispatch } from 'react-redux';
-import {  fetchAllParentOrganizationalUnitlevel } from '../../../actions/organizationalUnit';
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import Typography from "@material-ui/core/Typography";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import {  fetchAllParentOrganizationalUnit } from '../../../actions/organizationalUnit';
+
 
 
 const useStyles = makeStyles({
@@ -36,10 +37,8 @@ const useStyles = makeStyles({
 
 
   const ParentOrganizationUnit = (props) => {
-  
-    const parentOrganisationUnitId = props.location.state && props.location.state.orgUnitLevel  ? props.location.state.orgUnitLevel : {};
+    const parentOrganisationUnitId = props.location.state && props.location.state.parentOrganisationUnitId  ? props.location.state.parentOrganisationUnitId : {};
     const [collectModal, setcollectModal] = useState([])
-    const [orgUnitID, setorgUnitID] = useState([])
     const [modal, setModal] = useState(false) // 
     const toggleModal = () => setModal(!modal)
     const [modal2, setModal2] = useState(false) //
@@ -58,7 +57,7 @@ const useStyles = makeStyles({
       const onError = () => {
           setLoading(false)     
       }
-        const fetchAllOrgUnit = dispatch(fetchAllParentOrganizationalUnitlevel(parentOrganisationUnitId.id, onSuccess,onError ));
+        const fetchAllOrgUnit = dispatch(fetchAllParentOrganizationalUnit(parentOrganisationUnitId, onSuccess,onError ));
 
   }, []); //componentDidMount
     const deleteModule = (row) => {  
@@ -67,40 +66,56 @@ const useStyles = makeStyles({
     }
 
     const createParentOrgUnit = () => {  
-      console.log(parentOrganisationUnitId)
-      setorgUnitID(parentOrganisationUnitId)  
       setModal2(!modal2) 
     }
-
+console.log(props.location.state)
     
 
 return (
-    <div >
-       <ToastContainer autoClose={3000} hideProgressBar />
+    <Page >
+      
+        <Row>
+            <Col>
+              <h1>Parent Organization Unit
+              <Link 
+                  to ={{ 
+                  pathname: "/admin/organization-unit"
+                  }} 
+                > 
+                  <MatButton
+                    type='submit'
+                    variant='contained'
+                    color='primary'
+                    className={classes.button}                        
+                    className=" float-right mr-1"
+                    
+                  >
+                    <TiArrowBack/>{" "} Back 
+                  </MatButton>
+                </Link>
+                <MatButton
+                  type='submit'
+                  variant='contained'
+                  color='primary'
+                  className={classes.button}                        
+                  className=" float-right mr-1"
+                  onClick={() => createParentOrgUnit()}
+                >
+                  <TiPlus/>{" "} New 
+                </MatButton>
+                </h1>
+                <Card className="mb-12">
+                
+                <CardBody>
 
+                <br />
+                    <Row>
+                        <Col>
                             <Card body>
-                            <Breadcrumbs aria-label="breadcrumb">
-                              <Link color="inherit" to={{pathname: "/admin"}} >
-                                  Admin
-                              </Link>
-                              <Link color="inherit" to={{pathname: "organization-unit"}} >
-                                 Organisational Unit Level Manager
-                              </Link>
-                              <Typography color="textPrimary">{parentOrganisationUnitId.name} </Typography>
-                             </Breadcrumbs>
+                            
                                
-                               
-                                <br/>
-                                  <div className={"d-flex justify-content-end pb-2"}>
-                                      <Button variant="contained"
-                                              color="primary"
-                                              startIcon={<FaPlus />}
-                                              onClick={() => createParentOrgUnit()}>
-                                          <span style={{textTransform: 'capitalize'}}>New</span>
-                                      </Button>
-                               </div>
                             <MaterialTable
-                              title="Find"
+                              title="Parent Org. Unit"
                               columns={[
                                 { title: 'Parent Name', field: 'name' },
                                 { title: 'Description', field: 'description' },
@@ -119,17 +134,19 @@ return (
                                               Actions <span aria-hidden>▾</span>
                                             </MenuButton>
                                                 <MenuList style={{ color:"#000 !important"}} > 
+                                                      <MenuItem style={{ color:"#000 !important"}}>
+                                                            <Link
+                                                                
+                                                            >
+                                                              <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit  Unit  </span>                   
+                                                            </Link>
+                                                      </MenuItem> 
+                                                      <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule('module to delete')}>                      
                                                       
-                                            <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule('module to delete')}>                      
-                                                      
-                                                            <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit </span>
+                                                            <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Delete Unit</span>
                                                                                 
-                                              </MenuItem>                                    
-                                              <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule('module to delete')}>                      
+                                                      </MenuItem>                                    
                                                       
-                                                            <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Delete </span>
-                                                                                
-                                              </MenuItem>      
                                               </MenuList>
                                         </Menu>
                                   </div>        
@@ -140,23 +157,21 @@ return (
                                   color: "#000",
                                   margin: "auto"
                                   },
-                                  searchFieldStyle: {
-                                    width : '300%',
-                                    margingLeft: '250px',
-                                },
-                                filtering: true,
-                                exportButton: false,
-                                searchFieldAlignment: 'left',
-                                actionsColumnIndex: -1
+                                filtering: true
                               }}
                             />
                             </Card>
-                   
+                        </Col>
+                  </Row>
+                </CardBody>
+              </Card>
+            </Col>
+        </Row>
        <DeleteModule modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
-       <CreateParentOrgUnit modalstatus={modal2} togglestatus={toggleModal2} orgUnitID={orgUnitID} />
+       <CreateParentOrgUnit modalstatus={modal2} togglestatus={toggleModal2}  />
 
        
-    </div>
+    </Page>
   )
   
 }

@@ -17,13 +17,10 @@ import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { useSelector, useDispatch } from 'react-redux';
-import {  samplesManifestById, sampleDispatchedByManifestID } from '../actions/laboratory'
+import {  samplesManifestById } from '../actions/laboratory'
 import { Spinner } from 'reactstrap';
 import { Badge } from 'reactstrap';
-import { TiPrinter,TiArrowBack} from 'react-icons/ti';
-import {getQueryParams} from "components/Utils/PageUtils";
-import LabManifestDetails from 'components/Functions/LabManifestDetails';
-
+import { TiPrinter,TiArrowBack} from 'react-icons/ti'
 
 
 const useStyles = makeStyles(theme => ({
@@ -64,28 +61,17 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
-const convertArrayToObject = (array) => 
-array.reduce((acc, curr) => {
-  acc = curr;
-  return acc;
-}, {});
-
 
 const PrintManifest = (props) => {
   const history = useHistory();
   const classes = useStyles();
-  const manifestId = getQueryParams("maniFest", props.location.search);
   const [error, setError] = useState(false);
-  //const manifestId = manifestDetail.manifestId
+  const manifestDetail = props.location.ManifestDetail.samplesDispatched ;
+  const manifestId = manifestDetail.manifestId
   if(manifestId ===null || manifestId ===''){
     history.go(-1)
   }
   const sampleManifestList = useSelector(state => state.laboratory.samplesmanifest);
-  const manifestDetailByID = useSelector(state => state.laboratory.manifestDetail);
-  console.log(manifestDetailByID)
-  const modifyManifestDetail = convertArrayToObject(manifestDetailByID)
-  console.log(modifyManifestDetail);
-  const manifestDetail = manifestDetailByID && manifestDetailByID!==null ? modifyManifestDetail : {};
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false)
   const [collectManifest, setcollectManifest] = useState([])
@@ -102,7 +88,6 @@ const PrintManifest = (props) => {
                         setLoading(false)     
                     }
                 dispatch(samplesManifestById(manifestId,onSuccess,onError));
-                dispatch(sampleDispatchedByManifestID(manifestId, onSuccess,onError));
            
         }
     }, []); //componentDidMount 
@@ -146,12 +131,58 @@ const PrintManifest = (props) => {
 
           <br/><br/>
           <div className={classes.root2}>
-          {!loading ?
-                        <LabManifestDetails manifestDetail={ manifestDetail }/>  
-                    :
-                        <p> <Spinner color="primary" /> Loading Please Wait..</p>
-           }
-            
+            <ExpansionPanel>
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1c-content"
+                id="panel1c-header"
+              >
+                <Row>
+                  <Col md={4} className={classes.root2}>
+                    <span>
+                      {" "}
+                      Manifest ID : <b>{manifestDetail.courierName}</b>
+                    </span>
+                  </Col>
+
+                  <Col md={4} className={classes.root2}>
+                    <span>
+                      Courier Name : <b>{manifestDetail.courierName}</b>
+                    </span>
+                  </Col>
+                  <Col md={4} className={classes.root2}>
+                    <span>
+                      {" "}
+                      Courier Phone Number : <b>{manifestDetail.CardHeadercourierPhoneNumber}</b>
+                    </span>
+                  </Col>
+                  <Col md={4} className={classes.root2}>
+                    <span>
+                      {" "}
+                      Receiving Laboratory  :{manifestDetail.receivingLabName}
+                      <b>
+                      {"LIMS Lab. "}
+                      </b>
+                    </span>
+                  </Col>
+                  <Col md={4}>
+                    <span>
+                      {" "}
+                      Total Shipment :{manifestDetail.totalSampleShipment}
+                      <b>{7}</b>
+                    </span>
+                  </Col>
+                  <Col md={4} className={classes.root2}>
+                    <span>
+                      {" "}
+                      Package By : <b>{manifestDetail.sampleDispatchedBy}</b>
+                    </span>
+                  </Col>
+                  
+                
+                </Row>
+              </ExpansionPanelSummary>
+            </ExpansionPanel>
           </div>
 
           <form className={classes.form} noValidate>

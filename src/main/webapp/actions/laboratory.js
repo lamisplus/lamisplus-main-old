@@ -82,7 +82,8 @@ export const fetchLabTestOrdersByEncounterID = (id)=> dispatch => {
     }
 };
 export const createCollectedSample = (data, lab_id, onSuccess, onError ) => dispatch => {
-  if(lab_id){   
+  if(lab_id){
+    
   axios
     .put(`${baseUrl}form-data/${lab_id}`, data)
     .then(response => {
@@ -91,16 +92,16 @@ export const createCollectedSample = (data, lab_id, onSuccess, onError ) => disp
         payload: response.data
       });
       onSuccess()
-      toast.success("Sample Collection successful");
+      //toast.success("Sample Collection was successful");
     })
     .catch(error =>{
-      console.log(error)
+      
       dispatch({
         type: ACTION_TYPES.ERROR_CREATE_COLLECT_SAMPLE,
         payload: error
       })
       onError()
-      toast.error("Something went wrong, please try again");
+      //toast.error("Something went wrong, please try again");
       
     });
   }else{
@@ -177,27 +178,7 @@ export const sampleDispatched = (onSuccess, onError) => dispatch => {
     });
 
 };
-// Sample Dispatched Detail by a particular ID MANIFEST_DETAIL_BY_ID
-export const sampleDispatchedByManifestID = (manifestId, onSuccess, onError) => dispatch => {
 
-  axios
-    .get(`${baseUrl}sample-manifests/dispatched-manifest/true`)
-    .then(response => {
-      dispatch({
-        type: ACTION_TYPES.MANIFEST_DETAIL_BY_ID,
-        payload: response.data.filter((x) => x.manifestId === manifestId)
-      })
-      onSuccess();
-    })
-    .catch(error => {
-      dispatch({
-        type: ACTION_TYPES.ERROR_MANIFEST_DETAIL_BY_ID,
-        payload: 'Something went wrong, please try again'
-      })
-      onError();
-    });
-
-};
 //Get list of samples Manifest by ID 
 export const samplesManifestById = (id,onSuccess, onError) => dispatch => {
   if(id){
@@ -232,7 +213,7 @@ export const sampleVerification = (data, lab_id, onSuccess, onError ) => dispatc
         payload: response.data
       });
       onSuccess()
-      toast.success("Sample verified successful");
+      //toast.success("Sample verified successful");
       //setInterval(window.location.reload(false), 80000);
     })
     .catch(error =>{
@@ -243,6 +224,8 @@ export const sampleVerification = (data, lab_id, onSuccess, onError ) => dispatc
       })
       onError()
       toast.error("Something went wrong, please try again");
+      //setInterval(window.location.reload(false), 80000);
+      //window.location.reload()
       
     });
   }else{
@@ -250,17 +233,16 @@ export const sampleVerification = (data, lab_id, onSuccess, onError ) => dispatc
   }
 };
 
-export const transferSample = (data, lab_id, onSuccess, onError ) => dispatch => {
+export const transferSample = (samples, lab_id) => dispatch => {
  
   axios
-    .put(`${baseUrl}form-data/${lab_id}`, data)
+    .put(`${baseUrl}form-data/`, samples)
     .then(response => {
       dispatch({
         type: ACTION_TYPES.TRANSFER_SAMPLE,
         payload: response.data
       });
-      onSuccess()
-      toast.success("Sample Transfer  successful");
+      //toast.success("Sample Transfer was successful");
     })
     .catch(error =>{
       
@@ -268,7 +250,6 @@ export const transferSample = (data, lab_id, onSuccess, onError ) => dispatch =>
         type: ACTION_TYPES.ERROR_TRANSFER_SAMPLE,
         payload: error
       })
-      onError()
       toast.error("Something went wrong, please try again");
 
     });
@@ -434,13 +415,11 @@ export const updateRadiologyByFormId = (data, id, onSuccess, onError ) => dispat
             .then(response => {
                 if(onSuccess){
                     onSuccess()
-                   
                 }
             })
             .catch(error =>{
                 if(onError){
                     onError()
-                    
                 }
             });
 };

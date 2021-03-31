@@ -2,7 +2,6 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.service.PharmacyDashboardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/pharmacy-dashboard")
 @Slf4j
 @RequiredArgsConstructor
-@Audit
 public class PharmacyDashboardController {
     private final PharmacyDashboardService pharmacyDashboardService;
 

@@ -30,9 +30,6 @@ const formReducer = (state = {  services:  [], form:[]}, action) => {
             return {...state, form: state.form.filter((x) => x.formId != action.payload),
             };
 
-        case FORMTYPES.FORM_FETCH_BY_CODE:
-            return {...state, form:action.payload}
-
         case FORMTYPES.FORMTYPES_ERROR:
             return {...state, errors:action.payload}
         default:

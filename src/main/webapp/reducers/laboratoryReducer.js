@@ -12,8 +12,7 @@ const initialState = {
   radiologyTests: [],
   radiologySearchList: [],
   radiologyTestGroup: [],
-  radiologyTestTypes: [],
-  manifestDetail: []
+  radiologyTestTypes: []
 }
 
 const laboratoryReducer = (state = initialState, action) => {
@@ -49,12 +48,6 @@ const laboratoryReducer = (state = initialState, action) => {
         return { ...state, samplesmanifest: action.payload }  
     case ACTION_TYPES.FETCH_ALL_RADIOLOGY_TESTS_BY_ENCOUNTER_ID:
       return { ...state, radiologyTests: action.payload }
-
-    case ACTION_TYPES.MANIFEST_DETAIL_BY_ID:
-      return {
-        ...state,
-        manifestDetail: action.payload,
-      };  
 
     case ACTION_TYPES.RADIOLOGY_TEST_ORDERS:
       return {...state, radiologySearchList: action.payload}

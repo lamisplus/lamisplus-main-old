@@ -28,7 +28,6 @@ import DualListBox from "react-dual-listbox";
 import "react-dual-listbox/lib/react-dual-listbox.css";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
-import AssignFacilityModal from "./AssignFacilityModal";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -37,13 +36,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 let userId = 0;
-let currentUser = {};
 
 const UserList = (props) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(false);
-  const [assignFacilityModal, setAssignFacilityModal] = useState(false);
   const [roles, setRoles] = useState([]);
   const [selectedRoles, setselectedRoles] = useState([]);
   const [saving, setSaving] = useState(false);
@@ -83,14 +80,6 @@ const UserList = (props) => {
   const onRoleSelect = (selectedValues) => {
     setselectedRoles(selectedValues);
   };
-
-  const toggleAssignModal = (user) => {
-    console.log(user);
-    currentUser = user;
-    setAssignFacilityModal(!assignFacilityModal);
-    console.log(assignFacilityModal);
-    console.log("Modal should open")
-  }
 
   const toggleEditRoles = (id) => {
     userId = id;
@@ -165,7 +154,7 @@ const UserList = (props) => {
                   Actions <span aria-hidden>▾</span>
                 </MenuButton>
                 <MenuList style={{ color: "#000 !important" }}>
-                  <MenuItem style={{ color: "#000 !important" }} >
+                  <MenuItem style={{ color: "#000 !important" }}>
                     <Button
                       size="sm"
                       color="link"
@@ -173,16 +162,6 @@ const UserList = (props) => {
                     >
                       <MdModeEdit size="15" />{" "}
                       <span style={{ color: "#000" }}>Edit Roles </span>
-                    </Button>
-                  </MenuItem>
-                  <MenuItem style={{ color: "#000 !important" }}>
-                    <Button
-                        size="sm"
-                        color="link"
-                        onClick={() => toggleAssignModal(row)}
-                    >
-                      <MdModeEdit size="15" />{" "}
-                      <span style={{ color: "#000" }}>Assign Facilities </span>
                     </Button>
                   </MenuItem>
                 </MenuList>
@@ -194,7 +173,6 @@ const UserList = (props) => {
                     <FormGroup>
                       <Label for="roles">Roles</Label>
                       <DualListBox
-                          canFilter
                         options={roles}
                         onChange={onRoleSelect}
                         selected={selectedRoles}
@@ -235,7 +213,6 @@ const UserList = (props) => {
                 </Form>
               </Modal>
             </div>
-
           ),
         }))}
         options={{
@@ -252,8 +229,6 @@ const UserList = (props) => {
           searchFieldAlignment: "left",
         }}
       />
-      <AssignFacilityModal
-          showModal={assignFacilityModal} toggleModal={() => setAssignFacilityModal(!assignFacilityModal)} user={currentUser}/>
     </div>
   );
 };

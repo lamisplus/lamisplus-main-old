@@ -185,8 +185,8 @@ export default function ScrollableTabsButtonForce(props) {
                     indicatorColor="primary"
                     textColor="white"
                     aria-label="scrollable force tabs example">
-                    <Tab className={classes.title} label="Reports" icon={<GiFiles />} {...a11yProps(2)} />
-                    {/*<Tab className={classes.title} label="Reports" icon={<GiFiles />} {...a11yProps(4)} />*/}
+                    <Tab className={classes.title} label="Pivot Table" icon={<GiFiles />} {...a11yProps(2)} />
+                    <Tab className={classes.title} label="Reports" icon={<GiFiles />} {...a11yProps(4)} />
                     {/*<Tab className={classes.title} label="Service Report" icon={<GiFiles />} {...a11yProps(3)} />*/}
                 </Tabs>
                 <div>
@@ -198,17 +198,71 @@ export default function ScrollableTabsButtonForce(props) {
 
             {/* The DashBoad Tab  */}
             <TabPanel value={value} index={0}>
+                <Pivot/>
+            </TabPanel>
+            <TabPanel value={value} index={1}>
                 <GeneralReport/>
             </TabPanel>
-            {/*<TabPanel value={value} index={1}>*/}
-            {/*    <Pivot/>*/}
-            {/*</TabPanel>*/}
             <TabPanel value={value} index={2}>
 
             </TabPanel>
             <TabPanel value={value} index={3}>
             </TabPanel>
             <TabPanel value={value} index={5}>
+                <Grid container spacing={7} >
+                    <Grid item xs='7'>
+                        <Card >
+                            <CardBody>
+                                <Typography className={classes.title} color="primary" gutterBottom>
+                                </Typography>
+                                <Grid >
+                                    <Grid item xs='6'>
+                                        <Typography className={classes.pos} color="textSecondary" >
+                                            Pulse : <span style={{fontSize: 'bold'}}>56pm</span>
+                                        </Typography>
+                                    </Grid>
+
+                                </Grid>
+                            </CardBody>
+                        </Card>
+                    </Grid>
+
+                    <Grid item xs='5'>
+                        <Card >
+                            <CardBody>
+                                <Typography className={classes.title} color="primary" gutterBottom>
+
+                                </Typography>
+                                <Grid container >
+                                    <Grid item >
+                                        <Typography className={classes.pos} color="textSecondary" >
+                                            Pulse : <span style={{fontSize: 'bold'}}>56pm</span>
+                                        </Typography>
+                                    </Grid>
+
+                                </Grid>
+                            </CardBody>
+                        </Card>
+                    </Grid>
+                    <br/>
+                    <Grid item xs='7'>
+                        <Card >
+                            <CardBody>
+                                <Typography className={classes.title} color="primary" gutterBottom>
+
+                                </Typography>
+                                <Grid container >
+                                    <Grid item >
+                                        <Typography className={classes.pos} color="textSecondary" >
+                                            Pulse : <span style={{fontSize: 'bold'}}>56pm</span>
+                                        </Typography>
+                                    </Grid>
+
+                                </Grid>
+                            </CardBody>
+                        </Card>
+                    </Grid>
+                </Grid>
             </TabPanel>
         </div>
     );

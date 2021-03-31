@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.repository;
 
 
+import org.lamisplus.modules.base.domain.entity.ApplicationCodeset;
 import org.lamisplus.modules.base.domain.entity.StandardCodesetSource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -13,6 +14,4 @@ import java.util.Optional;
 public interface StandardCodesetSourceRepository extends JpaRepository<StandardCodesetSource, Long>, JpaSpecificationExecutor {
 
     Optional<StandardCodesetSource> findByIdAndAndArchived(Long id, int archive);
-
-    List<StandardCodesetSource> findAllByArchivedOrderByIdDesc(int archived);
 }

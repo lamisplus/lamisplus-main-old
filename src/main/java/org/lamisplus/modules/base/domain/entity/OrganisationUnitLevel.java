@@ -3,12 +3,9 @@ package org.lamisplus.modules.base.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
 
 @Data
 @Entity
@@ -16,7 +13,7 @@ import java.util.List;
 @Table(name = "organisation_unit_level")
 public class OrganisationUnitLevel implements Serializable {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -32,13 +29,4 @@ public class OrganisationUnitLevel implements Serializable {
     @Column(name = "archived")
     @JsonIgnore
     private Integer archived = 0;
-
-    @Basic
-    @Column(name = "status")
-    private int status;
-
-    @OneToMany(mappedBy = "organisationUnitLevelByOrganisationUnitLevelId")
-    @ToString.Exclude
-    @JsonIgnore
-    public List<OrganisationUnitHierarchy> organisationUnitHierarchiesById;
 }

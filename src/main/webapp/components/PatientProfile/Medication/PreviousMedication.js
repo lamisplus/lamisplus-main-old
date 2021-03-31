@@ -17,15 +17,8 @@ const columns = [
   },
   {
     name: 'Drug Name (Generic)',
-    selector: 'drug',
+    selector: 'generic_name',
     sortable: false,
-    cell: row => (
-      <span>
-        {row.drug && row.drug.name ? row.drug.name 
-         : row.regimen && row.regimen.name ? row.regimen.name : ''} 
-       
-      </span>
-    )
   },
   {
     name: 'Dose',
@@ -33,7 +26,7 @@ const columns = [
     sortable: false,
     cell: row => (
         <span>
-          {row.dosage_strength || ''} {row.dosage_strength_unit && row.dosage_strength_unit.display ? row.dosage_strength_unit.display : ''} {' to be taken '}{row.dosage_frequency || ''}{' time(s) a day'}
+          {row.dosage || ''} {' unit(s) to be taken '}{row.dosage_frequency || ''}{' time(s) a day'}
         </span>
       )
   },

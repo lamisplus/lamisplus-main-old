@@ -1,31 +1,33 @@
 package org.lamisplus.modules.base;
 
-import lombok.extern.slf4j.Slf4j;
-import org.jfree.util.Log;
-import org.lamisplus.modules.base.bootstrap.ClassPathHacker;
+import org.lamisplus.modules.base.domain.entity.Permission;
+import org.lamisplus.modules.base.domain.entity.Role;
+import org.lamisplus.modules.base.security.PermissionConstants;
+import org.lamisplus.modules.base.security.RolesConstants;
 import org.lamisplus.modules.base.service.ModuleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.RollbackException;
+import javax.transaction.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @EnableScheduling
 @SpringBootApplication
-@Slf4j
-public class BaseApplication extends SpringBootServletInitializer {
+public class BaseApplication extends SpringBootServletInitializer implements CommandLineRunner {
     private static ConfigurableApplicationContext context;
 
     private static Boolean isStartUp = true;
@@ -36,10 +38,7 @@ public class BaseApplication extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
-        SpringApplication application = new SpringApplication(BaseApplication.class);
-        //addInitHooks(application);
-        context = application.run(args);
-        Log.info("java.class.path - " + System.getProperty("java.class.path"));
+        context = SpringApplication.run(BaseApplication.class, args);
         ModuleService moduleService = context.getBean(ModuleService.class);
         moduleService.startModule(isStartUp);
     }
@@ -52,18 +51,8 @@ public class BaseApplication extends SpringBootServletInitializer {
         ApplicationArguments args = context.getBean(ApplicationArguments.class);
 
         Thread thread = new Thread(() -> {
-            /*try {
-                context.close();
-                for(Class cs: clz){
-                    if(!cs.getName().equals("org.lamisplus.modules.base.BaseApplication")){
-                        loadClass(cs.getName());
-                    }
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }*/
+            context.close();
             context = SpringApplication.run(clz, args.getSourceArgs());
-
         });
 
         thread.setDaemon(false);
@@ -74,72 +63,85 @@ public class BaseApplication extends SpringBootServletInitializer {
         return context;
     }
 
+    @PersistenceContext
+    EntityManager em;
 
-    /*static void addInitHooks(SpringApplication application) {
-        application.addListeners((ApplicationListener<ApplicationEnvironmentPreparedEvent>) event -> {
-            String version = event.getEnvironment().getProperty("java.runtime.version");
-            System.setProperty("java.class.path", "C:\\Users\\Dell\\Dropbox\\My PC (DESKTOP-IC75349)\\Desktop\\lamisplus-main\\demo.jar");
-            String classPath = event.getEnvironment().getProperty("java.class.path");
-            log.info("Running with Java {}", version);
-            log.info("Classpath {}", classPath);
-            try {
-                String filePath = System.getProperty("user.dir")+ File.separator + "demo.jar";
-                ClassPathHacker.addFile(filePath);
-            } catch (IOException e) {
-                e.printStackTrace();
+    @Transactional
+    @Override
+    public void run(String... args) throws Exception {
+
+        HashSet createdPermissions = new HashSet<>();
+
+        // Seed permissions
+        List<Permission> permissionsObject = em.createQuery("SELECT a FROM Permission a", Permission.class).getResultList();
+        List<String> permissions = permissionsObject.stream()
+                .map(Permission::getName)
+                .collect(Collectors.toList());
+        for (PermissionConstants.PermissionsEnum _permission : PermissionConstants.PermissionsEnum.values()) {
+            if (!permissions.contains(_permission.toString())) {
+                Permission permission = new Permission(_permission.toString());
+                createdPermissions.add(permission);
+                em.persist(permission);
             }
-            //loadClass("org.lamisplus.modules.demo.DemoModuleApplication");
-        });
-    }*/
+        }
+        List<Role> RolesObject = em.createQuery("SELECT a FROM Role a", Role.class).getResultList();
+        List<String> Roles = RolesObject.stream()
+                .map(Role::getName)
+                .collect(Collectors.toList());
+        if (!Roles.contains(RolesConstants.SUPER_ADMIN)) {
+            Role admin = new Role(RolesConstants.SUPER_ADMIN);
+            admin.setPermissions(createdPermissions);
+            em.persist(admin);
+        }
 
-
-    @Bean
-    public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        PropertySourcesPlaceholderConfigurer properties =
-                new PropertySourcesPlaceholderConfigurer();
-        properties.setLocation(new FileSystemResource("config.properties"));
-        properties.setIgnoreResourceNotFound(true);
-        return properties;
+        if (!Roles.contains(RolesConstants.COUNTRY_ADMIN)) {
+            Role role = new Role(RolesConstants.COUNTRY_ADMIN);
+            em.persist(role);
+        }
+        if (!Roles.contains(RolesConstants.STATE_ADMIN)) {
+            Role role = new Role(RolesConstants.STATE_ADMIN);
+            em.persist(role);
+        }
+        if (!Roles.contains(RolesConstants.FACILITY_ADMIN)) {
+            Role role = new Role(RolesConstants.FACILITY_ADMIN);
+            em.persist(role);
+        }
+        if (!Roles.contains(RolesConstants.CLINICIAN)) {
+            Role role = new Role(RolesConstants.CLINICIAN);
+            em.persist(role);
+        }
+        if (!Roles.contains(RolesConstants.NURSE)) {
+            Role role = new Role(RolesConstants.NURSE);
+            em.persist(role);
+        }
+        if (!Roles.contains(RolesConstants.PHARMACIST)) {
+            Role role = new Role(RolesConstants.PHARMACIST);
+            em.persist(role);
+        }
+        if (!Roles.contains(RolesConstants.LABORATORY_SCIENTIST)) {
+            Role role = new Role(RolesConstants.LABORATORY_SCIENTIST);
+            em.persist(role);
+        }
+        if (!Roles.contains(RolesConstants.DATA_CLERK)) {
+            Role role = new Role(RolesConstants.DATA_CLERK);
+            em.persist(role);
+        }
+        if (!Roles.contains(RolesConstants.USER)) {
+            Role role = new Role(RolesConstants.USER);
+            em.persist(role);
+        }
     }
 
-    /*private void customClassLoader(){
-        ClassLoader oscl =  ModuleService.getClassLoader();
-
-        Field scl = null;
-        try {
-            scl = ClassLoader.class.getDeclaredField("scl");
-            scl.setAccessible(true);
-            scl.set(null, oscl);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }*/
-
-    /*static void loadClass(String name){
-        MyClassLoader loader = new MyClassLoader(BaseApplication.class.getClassLoader());
-
-        System.out.println("loader name---- " +loader.getParent().getClass().getName());
-
-        //This Loads the Class we must always
-        //provide binary name of the class
-        Class<?> clazz = null;
-        try {
-            clazz = loader.loadClass(name);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("Loaded class name: " + clazz.getName());
-
-        //Create instance Of the Class and invoke the particular method
-        try {
-            Object instance = clazz.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }*/
+    /**
+     * Refresh the given application context, if necessary.
+     */
+	/*protected void refreshApplicationContext(ApplicationContext applicationContext) {
+		if (applicationContext instanceof ConfigurableApplicationContext) {
+			ConfigurableApplicationContext cac = (ConfigurableApplicationContext) applicationContext;
+			if (!cac.isActive()) {
+				cac.refresh();
+			}
+		}
+	}*/
 }
+

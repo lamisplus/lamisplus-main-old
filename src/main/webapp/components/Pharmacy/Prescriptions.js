@@ -7,14 +7,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import { ToastContainer } from "react-toastify";
 import momentLocalizer from "react-widgets-moment";
 import Moment from "moment";
-import PatientDetailCard from 'components/PatientProfile/PatientDetailCard';
+import PatientDetailCard from "./PatientDetailCard";
 import { Link } from "react-router-dom";
-//import DispenseModal from './DispenseModal'
-import DispenseModal from './DrugDispenseFormIo'
-import ViewModal from './ViewModalForm'
+import DispenseModal from './DispenseModal'
+import ViewModal from './ViewModal'
 import { Menu, MenuList, MenuButton, MenuItem } from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
-import { Spinner } from 'reactstrap';
+
 import {
   Alert,
   Card,
@@ -23,17 +22,18 @@ import {
   Col,
   Row,
 } from "reactstrap";
-import { useSelector, useDispatch } from 'react-redux';
-import {  fetchPatientPrescriptionsByEncounter } from './../../actions/pharmacy'
-import {authentication} from '../../_services/authentication';
 
-
-//
 Moment.locale("en");
 momentLocalizer();
 
 const useStyles = makeStyles((theme) => ({
 
+  // root: {
+  //   width: "100%",
+  // },
+  // container: {
+  //   maxHeight: 440,
+  // },
   card: {
     margin: theme.spacing(20),
     display: "flex",
@@ -70,29 +70,31 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Prescriptions = (props) => {
-  const dispatch = useDispatch();
-  const prescriptionOrder = useSelector(state => state.pharmacy.list);
- 
-  useEffect(() => {
-        
-    if(props.location.state.encounterId !="" ){         
-            setLoading(true);
-                const onSuccess = () => {
-                    setLoading(false) 
 
-                }
-                const onError = () => {
-                    setLoading(false)     
-                }
-        dispatch(fetchPatientPrescriptionsByEncounter(props.location.state.encounterId,onSuccess,onError ));
+  const getId = () => {
+    let Id
+    if (props.location.form) {
+      localStorage.setItem("Id", props.location.form.formDataObj.length);
+      Id = props.location.form.formDataObj.length;
+    } else {
+      Id = localStorage.getItem(Id);
     }
-}, [props.location.state.encounterId]); //componentDidMount 
+    console.log(Id)
+    return Id;
+    
+  }
+
+  useEffect(() => {
+    // console.log(props.location.form.formDataObj);
+    getId()
+  }, [])
+
+
   const classes = useStyles();
   const { buttonLabel, className } = props;
-  const [loading, setLoading] = useState('')
+
   const [modal, setModal] = useState(false);
   const [modal1, setModal1] = useState(false);
-  const [modalRegimen, setModalRegimen] = useState(false);
   const [drugDetails, setDrugDetails] = useState({})
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -101,7 +103,6 @@ const Prescriptions = (props) => {
   const toggle = (form) => {
     setDrugDetails({ ...drugDetails, ...form });
     setModal(!modal);
-    
   } 
   const toggle1 = (form) => {
     setDrugDetails({ ...drugDetails, ...form });
@@ -120,8 +121,7 @@ const Prescriptions = (props) => {
      </button>
    );
 
-  const formData = props.location.state ? prescriptionOrder : null 
-  console.log(formData)
+  const formData = props.location.form ? props.location.form.formDataObj : null 
 
  const Actions = (form) => {
    return (
@@ -138,10 +138,7 @@ const Prescriptions = (props) => {
        </MenuButton>
        <MenuList style={{ hover: "#eee" }}>
          {form.data.prescription_status === 0 ? (
-
-           <MenuItem onSelect={() => toggle(form)}
-                     hidden={!authentication.userHasRole(["pharmacy_write"])}
-           >
+           <MenuItem onSelect={() => toggle(form)}>
              <i
                className="fa fa-pencil"
                aria-hidden="true"
@@ -151,10 +148,8 @@ const Prescriptions = (props) => {
                &nbsp; {""} Dispense drugs
              </i>
            </MenuItem>
-
-        
          ) : (
-           <MenuItem onSelect={() => toggle(form)} hidden={!authentication.userHasRole(["pharmacy_write"])}>
+           <MenuItem onSelect={() => toggle(form)}>
              <i
                className="fa fa-pencil"
                aria-hidden="true"
@@ -165,21 +160,16 @@ const Prescriptions = (props) => {
              </i>
            </MenuItem>
          )}
-         {form.data.prescription_status !=0 ? (
-            <MenuItem onSelect={() => toggle1(form)}>
-              <i
-                className="fa fa-eye"
-                aria-hidden="true"
-                size="15"
-                style={{ cursor: "pointer", color: "#000" }}
-              >
-                &nbsp; {""}View details
-              </i>
-            </MenuItem>
-         )
-         :
-         ""
-      }
+         <MenuItem onSelect={() => toggle1(form)}>
+           <i
+             className="fa fa-eye"
+             aria-hidden="true"
+             size="15"
+             style={{ cursor: "pointer", color: "#000" }}
+           >
+             &nbsp; {""}View details
+           </i>
+         </MenuItem>
        </MenuList>
      </Menu>
    );
@@ -192,12 +182,7 @@ const Prescriptions = (props) => {
           <div>
             {formData ? (
               <Fragment>
-                {!loading ?
-                        <PatientDetailCard getpatientdetails={ props.location.state }/>  
-                    :
-                        <p> <Spinner color="primary" /> Loading Please Wait..</p>
-                    }
-                
+                <PatientDetailCard getpatientdetails={props.location.form} />
                 <br />
                 <Card className="mb-12">
                   <CardHeader>
@@ -223,8 +208,19 @@ const Prescriptions = (props) => {
                     <Row>
                       <Col>
                         <Card body>
-                            <Table striped responsive >
-                              <thead style={{backgroundColor: "#9F9FA5",color: "#000",}}>
+                            <Table
+                              style={{
+                                fontWeight: "bolder",
+                                borderColor: "#000",
+                              }}
+                              responsive
+                            >
+                              <thead
+                                style={{
+                                  backgroundColor: "#9F9FA5",
+                                  color: "#000",
+                                }}
+                              >
                                 <tr>
                                   <th>Name</th>
                                   <th>Dosage</th>
@@ -233,27 +229,20 @@ const Prescriptions = (props) => {
                                   <th></th>
                                 </tr>
                               </thead>
-                              
-                              
-                                <tbody >
-                                {!loading ? formData.map((form) => (
-                                  form.data!==null?
-                                  <tr key={form.id}>
+
+                              {formData.map((form) => (
+                                <tbody key={form.id}>
+                                  <tr>
                                     <td>
-                                      <b>{form.data && form.data.type!=0 ? form.data.drug.name :  form.data.regimen.name}</b>
+                                      <b>{form.data.generic_name}</b>
                                     </td>
-                                    <td>{form.data.duration && form.data.duration ? form.data.duration : ''}</td>
-                                    <td>{Moment(form.data.date_prescribed).format("DD-MM-YYYY")}</td>
-                                    <td>{ Moment(form.data.date_dispensed).format("DD-MM-YYYY")}</td>
+                                    <td>{form.data.dosage}</td>
+                                    <td>{form.data.date_prescribed}</td>
+                                    <td>{form.data.date_dispensed}</td>
                                     <td>{Actions(form)}</td>
                                   </tr>
-                                  :
-                                   <tr></tr>
-                                  ))
-                                  :<p> <Spinner color="primary" /> Loading Please Wait</p>
-                                } 
                                 </tbody>
-                               
+                              ))}
                             </Table>
                             <br />
                         </Card>

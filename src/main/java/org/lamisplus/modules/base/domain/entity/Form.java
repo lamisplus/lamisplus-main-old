@@ -1,12 +1,11 @@
 package org.lamisplus.modules.base.domain.entity;
 
+
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.LastModifiedBy;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,13 +13,13 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
-
 @Data
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @EqualsAndHashCode
 @Table(name = "form")
 public class Form extends JsonBEntity implements Serializable {
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,7 +49,7 @@ public class Form extends JsonBEntity implements Serializable {
 
     @Basic
     @Column(name = "usage_status")
-    private Integer usageCode=0;
+    private Integer usageCode;
 
     @Basic
     @Column(name = "name")
@@ -67,7 +66,6 @@ public class Form extends JsonBEntity implements Serializable {
     @CreationTimestamp
     private Timestamp dateCreated;
 
-    @CreatedBy
     @Basic
     @Column(name = "created_by")
     @JsonIgnore
@@ -79,7 +77,6 @@ public class Form extends JsonBEntity implements Serializable {
     @UpdateTimestamp
     private Timestamp dateModified;
 
-    @LastModifiedBy
     @Basic
     @Column(name = "modified_by")
     @JsonIgnore
@@ -92,7 +89,6 @@ public class Form extends JsonBEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "program_code", referencedColumnName = "code", insertable = false, updatable = false)
-    @ToString.Exclude
     @JsonIgnore
     private Program programByProgramCode;
 

@@ -177,12 +177,7 @@ const UserRegistration = (props) => {
   return (
     <Page title="User Registration">
       <Title>
-        <Link
-              to ={{
-                pathname: "/admin",
-                state: 'users'
-              }}
-        >
+        <Link to="/users">
           <Button
             variant="contained"
             color="primary"

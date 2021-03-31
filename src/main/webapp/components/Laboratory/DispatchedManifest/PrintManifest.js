@@ -9,12 +9,13 @@ import { Dialog } from '@material-ui/core';
 import 'react-widgets/dist/css/react-widgets.css'
 //Date Picker
 import Page from './../../Page'
-import {  fetchAllLabTestOrder, samplesManifestById } from '../../../actions/laboratory'
+import {  fetchAllLabTestOrder } from '../../../actions/laboratory'
 import { useSelector, useDispatch } from 'react-redux';
 import LabManifestDetails from 'components/Functions/LabManifestDetails';
 import { Spinner } from 'reactstrap';
 import { Badge } from 'reactstrap';
-import {getQueryParams} from "components/Utils/PageUtils";
+
+
 
 
 const useStyles = makeStyles({
@@ -28,9 +29,10 @@ const useStyles = makeStyles({
 })
 
 
-  const PrintManiFest = (props) => {
-    const manifestId = getQueryParams("maniFest", props.location.search);
-    console.log(props);
+
+
+
+  const CollectSample = (props) => {
     const sampleCollections = props.location.state && props.location.state.formDataObj  ? props.location.state.formDataObj : {};
     const encounterDate = props.location.state && props.location.state.dateEncounter ? props.location.state.dateEncounter : null ;
     const hospitalNumber = props.location.state && props.location.state.hospitalNumber ? props.location.state.hospitalNumber: null;
@@ -40,6 +42,7 @@ const useStyles = makeStyles({
     const [loading, setLoading] = useState('')
     const [fetchTestOrders, setFetchTestOrders] = useState(testOrders)
     const classes = useStyles()
+    console.log(sampleCollections)
 
     useEffect(() => {
         
@@ -57,33 +60,22 @@ const useStyles = makeStyles({
         }
     }, []); //componentDidMount 
 
-    useEffect(() => {        
-        if(manifestId){         
-                setLoading(true);
-                    const onSuccess = () => {
-                        setLoading(false)
-                        
-                    }
-                    const onError = () => {
-                        setLoading(false)     
-                    }
-                dispatch(samplesManifestById(manifestId,onSuccess,onError));
-           
-        }
-    }, []); //componentDidMount 
-
     const labTestType = [];    
     
     testOrders.forEach(function(value, index, array) {
         const getList = value['formDataObj']!==null && value['formDataObj'].find(x => { 
-
+            console.log(value)
             if(x.data && x.data!==null && x.data.manifest_status===1){
+                console.log(value);
+            //return console.log(x)
             labTestType.push(x);
             }
+        // return console.log(x)
         
         })         
     });
 
+    console.log(labTestType)
     //This is function to check for the status of each collection to display on the tablist below 
     const sampleStatus = e =>{
          if(e===2){
@@ -150,6 +142,7 @@ return (
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                {console.log(fetchTestOrders)}
                                                 {!loading ? labTestType.map((row) => (
                                                     row.data!==null?
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>
@@ -186,4 +179,4 @@ return (
 }
 
 
-export default PrintManiFest
+export default CollectSample

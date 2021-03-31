@@ -99,7 +99,7 @@ public class Module implements Serializable {
     @Column(name = "main")
     private String main;
 
-    @OneToMany(mappedBy = "moduleByDependency", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "moduleByDependency")
     @JsonIgnore
     @ToString.Exclude
     public List<ModuleDependency> moduleDependencyByModule;
@@ -108,9 +108,4 @@ public class Module implements Serializable {
     @JsonIgnore
     @ToString.Exclude
     private List<Program> programsByModule;
-
-    @OneToOne(mappedBy = "moduleByMenu", fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-    @JsonIgnore
-    @ToString.Exclude
-    public Menu menuByModule;
 }

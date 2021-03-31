@@ -5,64 +5,53 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
-import org.lamisplus.modules.base.domain.dto.DrugDTO;
 import org.lamisplus.modules.base.domain.entity.Drug;
-import org.lamisplus.modules.base.domain.entity.RegimenDrug;
-import org.lamisplus.modules.base.domain.mapper.DrugMapper;
 import org.lamisplus.modules.base.repository.DrugRepository;
-import org.lamisplus.modules.base.repository.RegimenDrugRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @Slf4j
 @RequiredArgsConstructor
 public class DrugService {
-    private static final int ARCHIVED = 1;
-    private static final int UN_ARCHIVED = 0;
     private final DrugRepository drugRepository;
-    private final RegimenDrugRepository regimenDrugRepository;
-    private final DrugMapper drugMapper;
+    private final UserService userService;
 
-
-    public List<DrugDTO> getAllDrugs() {
-        return drugMapper.toDrugDTOList(drugRepository.findAllByArchived(UN_ARCHIVED));
+    public List<Drug> getAllDrugs() {
+        return this.drugRepository.findAll();
     }
 
     public Drug save(Drug drug) {
-        Optional<Drug> DrugOptional = drugRepository.findByNameAndArchived(drug.getName(), UN_ARCHIVED);
-        if (DrugOptional.isPresent()) throw new RecordExistException(Drug.class, "Name", drug.getName());
+        Optional<Drug> DrugOptional = drugRepository.findByBrandName(drug.getBrandName());
+        if (DrugOptional.isPresent()) throw new RecordExistException(Drug.class, "Brand Name", drug.getBrandName());
+        drug.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         return drugRepository.save(drug);
     }
 
-    public DrugDTO getDrug(Long id) {
-        Optional<Drug> drugOptional = this.drugRepository.findByIdAndArchived(id, UN_ARCHIVED);
+    public Drug getDrug(Long id) {
+        Optional<Drug> drugOptional = this.drugRepository.findById(id);
         if (!drugOptional.isPresent()) throw new EntityNotFoundException(Drug.class, "Id", id + "");
-        return drugMapper.toDrugDTO(drugOptional.get());
+        return drugOptional.get();
     }
 
-    public Drug update(Long id, DrugDTO drugDTo) {
-        Optional<Drug> drugOptional = drugRepository.findByIdAndArchived(id, UN_ARCHIVED);
+    public Drug update(Long id, Drug drug) {
+        Optional<Drug> drugOptional = drugRepository.findById(id);
         if(!drugOptional.isPresent())throw new EntityNotFoundException(Drug.class, "Id", id +"");
-        drugDTo.setId(id);
-        Drug drug = drugMapper.toDrug(drugDTo);
+        drug.setId(id);
+        drug.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return drugRepository.save(drug);
     }
 
     public Integer delete(Long id) {
-        Optional<Drug> drugOptional = drugRepository.findByIdAndArchived(id, UN_ARCHIVED);
+        Optional<Drug> drugOptional = drugRepository.findById(id);
         if(!drugOptional.isPresent()) throw new EntityNotFoundException(Drug.class,"Display:",id+"");
-        drugOptional.get().setArchived(ARCHIVED);
+        drugOptional.get().setArchived(1);
+        drugOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return drugOptional.get().getArchived();
     }
 
-    public List<DrugDTO> getDrugsByRegimenId(Long regimenId) {
-        List<Drug> drug = regimenDrugRepository.findAllByRegimenId(regimenId).stream().map(RegimenDrug::getDrugByDrugId).collect(Collectors.toList());
-        return drugMapper.toDrugDTOList(drug);
-    }
 }

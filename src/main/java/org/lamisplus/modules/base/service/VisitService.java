@@ -4,13 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
-import org.lamisplus.modules.base.domain.dto.AppointmentDTO;
 import org.lamisplus.modules.base.domain.dto.VisitDTO;
-import org.lamisplus.modules.base.domain.entity.Appointment;
 import org.lamisplus.modules.base.domain.entity.Patient;
 import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.domain.entity.Visit;
-import org.lamisplus.modules.base.domain.mapper.AppointmentMapper;
 import org.lamisplus.modules.base.domain.mapper.VisitMapper;
 import org.lamisplus.modules.base.repository.*;
 import org.lamisplus.modules.base.util.CustomDateTimeFormat;
@@ -33,16 +30,9 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class VisitService {
-    public static final int ARCHIVED = 1;
-    public static final int UNARCHIVED = 0;
     private final VisitRepository visitRepository;
     private final VisitMapper visitMapper;
     private final UserService userService;
-    private final AppointmentService appointmentService;
-    private final AppointmentMapper appointmentMapper;
-    private final AppointmentRepository appointmentRepository;
-
-
 
     public List<VisitDTO> getAllVisits() {
         List<VisitDTO> visitDTOS = new ArrayList<>();
@@ -60,10 +50,8 @@ public class VisitService {
         visits.forEach(visit -> {
             Patient patient = visit.getPatientByVisit();
             Person person = patient.getPersonByPersonId();
-            List<AppointmentDTO> appointmentDTOS = appointmentService.getOpenAllAppointmentByPatientId(patient.getId());
 
             VisitDTO visitDTO = visitMapper.toVisitDTO(visit,person,patient);
-            visitDTO.setAppointmentDTOList(appointmentDTOS);
             visitDTOS.add(visitDTO);
         });
         return visitDTOS;
@@ -75,51 +63,37 @@ public class VisitService {
 
         Visit visit = visitMapper.toVisit(visitDTO);
         visit.setUuid(UuidGenerator.getUuid());
-
-        final Visit savedVisit = visitRepository.save(visit);
-
-        if(visitDTO.getAppointmentId()!= null){
-            Optional<Appointment> optionalAppointment = appointmentRepository.findByIdAndArchived(visitDTO.getAppointmentId(), UNARCHIVED);
-            optionalAppointment.ifPresent(appointment -> {
-                appointment.setVisitId(savedVisit.getId());
-                appointmentRepository.save(appointment);
-            });
-        }
-        return savedVisit;
+        visit.setCreatedBy(userService.getUserWithRoles().get().getUserName());
+        return this.visitRepository.save(visit);
     }
 
     public VisitDTO getVisit(Long id) {
         Optional<Visit> visitOptional = this.visitRepository.findById(id);
-
         if (!visitOptional.isPresent() || visitOptional.get().getArchived() == 1 ) throw new EntityNotFoundException(Visit.class, "Id", id + "");
         Patient patient = visitOptional.get().getPatientByVisit();
         Person person = patient.getPersonByPersonId();
-        List<AppointmentDTO> appointmentDTOS = appointmentService.getOpenAllAppointmentByPatientId(patient.getId());
-
         VisitDTO visitDTO = visitMapper.toVisitDTO(visitOptional.get(), person, patient);
-        visitDTO.setAppointmentDTOList(appointmentDTOS);
         return visitDTO;
     }
 
     public Visit update(Long id, Visit visit) {
-        Optional<Visit> visitOptional = this.visitRepository.findByIdAndArchived(id, UNARCHIVED);
-        if (!visitOptional.isPresent()) throw new EntityNotFoundException(Visit.class, "Id", id + "");
+        Optional<Visit> visitOptional = this.visitRepository.findById(id);
+        if (!visitOptional.isPresent() || visitOptional.get().getArchived() == 1 ) throw new EntityNotFoundException(Visit.class, "Id", id + "");
         visit.setId(id);
+        visit.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return visitRepository.save(visit);
     }
 
     public Integer delete(Long id) {
-        Optional<Visit> visitOptional = this.visitRepository.findByIdAndArchived(id, UNARCHIVED);
-        if (!visitOptional.isPresent()) throw new EntityNotFoundException(Visit.class, "Id", id + "");
-        visitOptional.get().setArchived(ARCHIVED);
+        Optional<Visit> visitOptional = this.visitRepository.findById(id);
+        if (!visitOptional.isPresent() || visitOptional.get().getArchived() == 1 ) throw new EntityNotFoundException(Visit.class, "Id", id + "");
+        visitOptional.get().setArchived(1);
+        visitOptional.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
         return visitOptional.get().getArchived();
     }
 
-    public Long getVisitType(){
-        Long count = visitRepository.countByVisitTypeIdAndArchived(239L, 0);//Unbooked
-        count = count + visitRepository.countByVisitTypeIdAndArchived(238L, 0); //booked
-        count = count + visitRepository.countByVisitTypeIdAndArchived(373L, 0); //Emergency
-
-        return count;
+    public int getVisitType(Long visitTypeId){
+        List<Visit> visits = visitRepository.findAllByVisitTypeIdAndArchived(visitTypeId, 0);
+        return visits.size();
     }
 }

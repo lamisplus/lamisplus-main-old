@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class Program implements Serializable {
     private String name;
 
     @Basic
-    @Column(name = "code", updatable = false)
+    @Column(name = "code")
     private String code;
 
     @Basic
@@ -35,7 +34,7 @@ public class Program implements Serializable {
 
     @Basic
     @Column(name = "archived")
-    @NotNull(message = "Archived is null")
+    @JsonIgnore
     private Integer archived;
 
     @OneToMany(mappedBy = "programForEncounterByProgramCode")
@@ -51,6 +50,5 @@ public class Program implements Serializable {
     @ManyToOne
     @JoinColumn(name = "module_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
-    @ToString.Exclude
     public Module moduleByModuleId;
 }

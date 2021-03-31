@@ -102,7 +102,6 @@ function ConsultationPage(props) {
   <Alert color="success" isOpen={showSuccessMsg} toggle={onDismissSuccess}>
     {successMsg}
   </Alert>
-
     <FormRenderer
     patientId={props.patient.patientId}
     formCode={currentForm.code}

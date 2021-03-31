@@ -25,36 +25,33 @@ import {url} from '../../api';
 import {ToastContainer} from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
-import { Alert } from '@material-ui/lab';
 
 const Create = props => {
-    const [res, setRes] = React.useState("");
-    const [formData, setFormData] = React.useState({
-        resourceObject: null,
+    const datanew = {
+        resourceObject: "",
         programCode: "",
-        display: ""});
+    }
+
+    const [newdata2] = React.useState(datanew);
+    const [res, setRes] = React.useState("");
+    const [displayType, setDisplayType] = React.useState("");
+    const [programCode, setprogramCode] = React.useState("");
+    const [name, setname] = React.useState();
+    const [usageCode, setusageCode] = React.useState("");
+    const [usageOrder, setusageOrder] = React.useState("");
+    const [version, setversion] = React.useState();
     const textAreaRef = useRef(null);
     const [form, setform] = useState([{title: 'Loading', value: ''}]);
     const [useFor, setuseFor] = useState([{title: 'Loading', value: ''}]);
     const [disabledCheckBox, setdisabledCheckBox] = useState(true)
-    const [showFileImport, setShowFileImport] = useState(true);
-    const toggleShowFileImport = () => setShowFileImport(!showFileImport);
+    const [formPrecedence, setformPrecedence] = useState({});
+    const [queryOption, setqueryOption] = useState({});
 
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
-    let fileReader;
 
-    const handleFileRead = (e) => {
-        const content = fileReader.result;
-        setFormData(JSON.parse(content));
-        setRes(content.resourceObject);
-    }
 
-    const handleFileChosen = (file) => {
-        fileReader = new FileReader();
-        fileReader.onloadend = handleFileRead;
-        fileReader.readAsText(file);
-    };
+    let myform;
 
     useEffect(() => {
         async function getCharacters() {
@@ -65,11 +62,13 @@ const Create = props => {
                 );
                 const body = response.data;
 
+
                 setform(
                     body.map(({ name, code }) => ({ title: name, value: code }))
                 );
                 body !==null ? setdisabledCheckBox(false) : setdisabledCheckBox(true)
 
+                console.log(response)
             } catch (error) {
             }
         }
@@ -105,23 +104,39 @@ const Create = props => {
 
 
     const handleSubmit = e => {
-        formData['resourceObject']=res;
-        formData['id'] = "";
+
+        newdata2['programCode']=programCode;
+        newdata2['resourceObject']=res;
+        newdata2['name']=name;
+        newdata2['version']=version;
+        newdata2['usageCode']=usageCode;
+        newdata2['usageOrder']=usageOrder;
+        newdata2['formPrecedence']=formPrecedence;
+        newdata2['queryOption']=queryOption;
+        // console.log('formPrecedence'+JSON.stringify(formPrecedence));
+        //
+        // if (formPrecedence.code.length > 0) {
+        //     const arr = [];
+        //     formPrecedence.code.forEach(function (code, index, array) {
+        //         arr.push(value["code"]);
+        //     });
+        //     const formPrecedenceString = arr.toString();
+        //     newdata2['formPrecedence']=formPrecedenceString;
+        //
+        // } else {
+        //     //datasample.data.sample_type = datasample.data.sample_type;
+        // }
+
         e.preventDefault()
-        props.createForm(formData);
+        props.createForm(newdata2);
     }
-
-
 
     return (
         <Page title="Form Builder" >
             <ToastContainer autoClose={3000} hideProgressBar />
             <Card >
                 <CardContent>
-                    <Link to ={{
-                        pathname: "/admin",
-                        state: 'form-builder'
-                    }}>
+                    <Link to="/admin">
                         <MatButton
                             type="submit"
                             variant="contained"
@@ -133,26 +148,11 @@ const Create = props => {
                     <h4>Create Form</h4>
                     <hr />
                     <Errors errors={props.errors} />
-                    {/*<Alert color="info" icon={false} className={"mb-3"}>*/}
-                    {/*<h4>To create a form </h4>*/}
-                    {/*    <p onClick={toggleShowFileImport} style={{cursor:"pointer"}}>- Click to <b>import</b> form from a <b>.json</b> file OR </p>*/}
-                    {/*    <p>- <b>Fill</b> the form below</p>*/}
-                    {/*</Alert>*/}
-                    {showFileImport && <>
-                    <Alert onClose={toggleShowFileImport} icon={false} className={"mb-3"}>
-                        <h4>Import Form from a <b>(.json)</b> file</h4>
-                    <input type="file" id="file" className="input-file mb-4" accept='.json'
-                           onChange={e => handleFileChosen(e.target.files[0])}/>
-
-                    </Alert>
-                    </>
-                    }
-
                     <Form onSubmit={handleSubmit} >
                         <Row>
                             <Col md={4}> <FormGroup>
                                 <Label class="sr-only">Display Type</Label>
-                                <Input type="select"  id="display" value={formData.display} onChange={e => setFormData({...formData, display:e.target.value})}>
+                                <Input type="select"  id="displayType" value={displayType} onChange={e => setDisplayType(e.target.value)}>
                                     <option value="form">Form</option>
                                     <option value="wizard">Wizard</option></Input>
                             </FormGroup></Col>
@@ -160,27 +160,27 @@ const Create = props => {
                             <Col md={4}> <FormGroup>
                                 <Label class="sr-only">Program Area</Label>
                                 {props.services.length && props.services.length > 0 ?
-                                    <Input type="select" class="form-control" id="programCode" required value={formData.programCode} onChange={e => setFormData({...formData, programCode:e.target.value})}>
+                                    <Input type="select" class="form-control" id="programCode" required value={programCode} onChange={e => setprogramCode(e.target.value)}>
                                         {props.services.map(service => (<option key={service.name} value={service.code}>{service.name}</option>))}
-                                    </Input>:  <Input type="select" class="form-control" id="programCode" required >
+                                    </Input>:  <Input type="select" class="form-control" id="programCode" required value={programCode} onChange={e => setprogramCode(e.target.value)}>
                                         <option>No Programs Found</option>
                                     </Input>}
                             </FormGroup></Col>
 
                             <Col md={4}> <FormGroup>
                                 <Label class="sr-only">Form Name</Label>
-                                <Input type="text" class="form-control" id="name" name="name" value={formData.name}   onChange={e => setFormData({...formData, name:e.target.value})} required/>
+                                <Input type="text" class="form-control" id="name" name="name" value={name}   onChange={e => setname(e.target.value)} required/>
                             </FormGroup> </Col>
                         </Row>
                         <Row>
                             <Col md={4}> <FormGroup>
                                 <Label class="sr-only">Version</Label>
-                                <Input type="text" class="form-control" id="version" name="version" value={formData.version}   onChange={e => setFormData({...formData, version:e.target.value})} required/>
+                                <Input type="text" class="form-control" id="version" name="version" value={version}   onChange={e => setversion(e.target.value)} required/>
                             </FormGroup> </Col>
 
                             <Col md={4}> <FormGroup>
                                 <Label class="sr-only">Frequency of Usage</Label>
-                                <Input type="select"  id="usageCode" value={formData.usageCode} onChange={e => setFormData({...formData, usageCode:e.target.value})}>
+                                <Input type="select"  id="usageCode" value={usageCode} onChange={e => setusageCode(e.target.value)}>
                                     <option></option>
                                     <option value="0">Once per Patient</option>
                                     <option value="1">Periodically</option></Input>
@@ -195,10 +195,9 @@ const Create = props => {
                                     options={useFor !==null ? useFor : "LOADING"}
                                     disableCloseOnSelect
                                     getOptionLabel={(option) => option.title}
-                                    defaultValue={formData.queryOption}
                                     onChange={(e, i) => {
-                                        setFormData({...formData, queryOption: i});
-                                        }}
+                                        setqueryOption({ ...queryOption, id: i });
+                                    }}
                                     renderOption={(option, { selected }) => (
                                         <React.Fragment>
                                             { disabledCheckBox===false ?
@@ -233,9 +232,8 @@ const Create = props => {
                                     disableCloseOnSelect
                                     getOptionLabel={(option) => option.title}
                                     onChange={(e, i) => {
-                                        setFormData({...formData, formPrecedence: i});
-                                        }}
-                                    defaultValue={formData.queryOption}
+                                        setformPrecedence({ ...formPrecedence, code: i });
+                                    }}
                                     renderOption={(option, { selected }) => (
                                         <React.Fragment>
                                             { disabledCheckBox===false ?
@@ -264,11 +262,9 @@ const Create = props => {
                         </Row>
 
                     </Form>
-                    {/*display the resource object if the form is imported else display the default formData object*/}
-                    <FormBuilder form={formData.resourceObject || formData}
-                                 submission={{data :{baseUrl:url}}}
-                                 saveText={'Create Form'} onChange={(schema) => {
+                    <FormBuilder form={{display: displayType}} saveText={'Create Form'} onChange={(schema) => {
                         setRes(JSON.stringify(schema));
+                        console.log(res)
                     }} />
                     <br></br>
                     <div>

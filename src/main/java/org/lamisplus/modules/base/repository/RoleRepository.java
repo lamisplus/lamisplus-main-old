@@ -9,9 +9,9 @@ import java.util.Optional;
 
 public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificationExecutor {
 
-    @EntityGraph(attributePaths = "permission")
+    @EntityGraph(attributePaths = "permissions")
     Optional<Role> findByName(String name);
 
-    @EntityGraph(attributePaths = "permission")
+    @EntityGraph(attributePaths = "permissions")
     Optional<Role> findById(Long id);
 }

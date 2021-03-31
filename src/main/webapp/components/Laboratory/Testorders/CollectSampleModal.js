@@ -65,14 +65,12 @@ const useStyles = makeStyles((theme) => ({
 
 const ModalSample = (props) => {
     const classes = useStyles()
-
     const datasample = props.datasample && props.datasample!==null ? props.datasample : {};
     const order_priority = datasample.data && datasample.data.order_priority && datasample.data.order_priority.display   ? datasample.data.order_priority.display : null;
     const lab_test_group = datasample.data ? datasample.data.lab_test_group : null ;
     const sample_ordered_by = datasample.data ? datasample.data.sample_ordered_by : null ;
     const description = datasample.data ? datasample.data.description : null ;
     const lab_number = props.labnumber && props.labnumber["lab_number"]  ? props.labnumber["lab_number"] : null;
-   
     const labId = datasample.id
     const [loading, setLoading] = useState(false)
     const [visible, setVisible] = useState(true);
@@ -166,12 +164,15 @@ const ModalSample = (props) => {
             datasample.data["time_sample_collected"] = newTimeSampleCollected;
             datasample.data["comment_sample_collected"] = samples["comment"];
             datasample.data["date_sample_ordered"] = datasample.dateEncounter;
+            console.log(datasample)
             props.createCollectedSample(datasample, labId, onSuccess, onError);
         }
     };
 
-    function checklanumber(lab_num) {       
+    function checklanumber(lab_num) {
+        
         if (lab_num === "" || lab_num===null) {
+            console.log('the code get here')
             return (
                 <Alert color="danger" isOpen={visible} toggle={onDismiss}>
                     Please make sure you enter a lab number
@@ -337,7 +338,8 @@ const ModalSample = (props) => {
                                                 )}
                                             </Col>
                                         </Row>
-                                        {lab_number && lab_number !== null ? (
+                                        {console.log(lab_number)}
+                                        {lab_number !== "" || lab_number !== null ? (
                                             <MatButton
                                                 type="submit"
                                                 variant="contained"

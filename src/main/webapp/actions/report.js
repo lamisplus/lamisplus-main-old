@@ -7,7 +7,7 @@ import {toast} from 'react-toastify';
 export const creatReport = (data, onSuccess, onError) => dispatch => {
     console.log(data)
     axios
-        .post(`${url}reports/`, data)
+        .post(`${url}jasper-reports/`, data)
         .then(response => {
             dispatch({
                 type: ACTION_TYPES.REPORTS_CREATE_REPORT,
@@ -29,30 +29,28 @@ export const creatReport = (data, onSuccess, onError) => dispatch => {
 };
 
 
-export const generateReport = (data, onError) => dispatch => {
-    const reportFormat = 'application/'+(data.reportFormat).toLowerCase();
+export const generateReport = (data) => dispatch => {
+    const reportType = 'application/'+(data.reportType).toLowerCase();
     axios
-        .post(`${url}reports/generate`, data, {responseType: 'arraybuffer'})
+        .post(`${url}jasper-reports/generate`, data, {responseType: 'arraybuffer'})
         .then(response => {
         //Create a Blob from the PDF Stream
             const file = new Blob(
                 [response.data],
-                {type: reportFormat});
+                {type: reportType});
             //Build a URL from the file
             const fileURL = URL.createObjectURL(file);
         //Open the URL on new Window
             window.open(fileURL);
         })
         .catch(error => {
-            if(onError){
-                onError();
-            }
+            console.log(error);
         });
 }
 
 export const fetchAll = (onSuccess) => dispatch => {
     axios
-        .get(`${url}reports`)
+        .get(`${url}jasper-reports`)
         .then(response => {
             dispatch({
                 type: ACTION_TYPES.REPORTS_FETCH_ALL,
@@ -70,15 +68,15 @@ export const fetchAll = (onSuccess) => dispatch => {
         })
 }
 
-export const update = (id, data, onSuccess,) => dispatch => {
+export const update = (id, data) => dispatch => {
     axios
-        .put(`${url}reports/${id}`, data)
+        .put(`${url}jasper-reports/${id}`, data)
         .then(response => {
             dispatch({
                 type: ACTION_TYPES.REPORTS_UPDATE,
                 payload: response.data
             });
-            onSuccess()
+            toast.success("Report was updated successfully!");
             console.log(response)
         })
         .catch(error => {
@@ -90,28 +88,27 @@ export const update = (id, data, onSuccess,) => dispatch => {
 }
 
 
-export const Delete = (id, onSuccess, onError) => dispatch => {
-    console.log(`${url}reports/${id}`);
+export const Delete = (id) => dispatch => {
+    console.log(`${url}jasper-reports/${id}`);
     axios
-        .delete(`${url}reports/${id}`)
+        .delete(`${url}jasper-reports/${id}`)
         .then(response => {
 
             dispatch({
                 type: ACTION_TYPES.REPORTS_DELETE,
                 payload: id
             });
-            if(onSuccess){
-                onSuccess();
-            }
-
+            toast.success("Report was deleted successfully!");
         })
         .catch(error => {
             dispatch({
                 type: ACTION_TYPES.REPORTS_ERROR,
                 payload:error.response.data
             });
-            if(onError){
-                onError(error);
+            if(error.response.data.apierror.message===null || error.response.data.apierror.message===""){
+                toast.error("Something went wrong");
+            }else{
+                toast.error(error.response.data.apierror.message);
             }
         });
 };

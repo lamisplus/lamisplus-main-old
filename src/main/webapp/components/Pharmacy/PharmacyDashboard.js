@@ -182,7 +182,7 @@ const ScrollableTabsButtonForce = (props) => {
           async function getCharacters() {
               try {
                   const response = await axios.get( url+ 'pharmacy-dashboard/pie');
-                  const body = response.data && response.data!==null ? response.data : {}; 
+                  const body = response.data; 
                   setdrugPieChart(body)                         
               } catch (error) {}
           }
@@ -193,7 +193,7 @@ const ScrollableTabsButtonForce = (props) => {
       async function getCharacters() {
           try {
               const response = await axios.get( url+ 'pharmacy-dashboard/column');
-              const body2 = response.data && response.data!==null ? response.data : {}; 
+              const body2 = response.data; 
               setdrugBarChart(body2)                         
           } catch (error) {}
       }

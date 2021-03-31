@@ -137,7 +137,7 @@ return (
 
           <Link 
               to ={{ 
-              pathname: "/admin-bootstrap-configuration-create-module",
+              pathname: "/admin/bootstrap-configuration/create-module",
               activetab: 1
               }} 
             >

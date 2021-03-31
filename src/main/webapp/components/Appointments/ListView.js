@@ -42,7 +42,13 @@ function ListViewPage(props) {
       <MaterialTable
         title="Find Appointments"
         columns={[
-          { title: "Patient", field: "fullInfo", filtering: true },
+          { title: "Patient ID", field: "id", filtering: true },
+          {
+            title: "Patient Name",
+            field: "name",
+            filtering: true,
+          },
+
           {
             title: "Appointment Date",
             field: "appointmentDate",
@@ -57,27 +63,19 @@ function ListViewPage(props) {
           },
           { title: "Service", field: "service", filtering: true },
             { title: "Service Provider", field: "serviceProvider", filtering: true },
-            {
-                title: "Status",
-                field: "visitStatus",
-                filtering: true,
-            },
         ]}
         isLoading={props.loading}
         data={props.appointments.map((row) => ({
           name: row.firstName + " " + row.lastName,
-          fullInfo: row.firstName + " " + row.lastName + " (" +row.hospitalNumber+")",
           id: row.hospitalNumber,
           phoneNumber: row.phoneNumber,
-          service: row.detail.service && row.detail.service.name ? row.detail.service.name : '',
-            serviceProvider: row.detail.service_provider || '',
-          appointmentDate: row.detail.appointment_date ,
-          appointmentTime: row.detail.appointment_time ,
+          service: row.formDataObj[0].data.service && row.formDataObj[0].data.service.name ? row.formDataObj[0].data.service.name : '',
+            serviceProvider: row.formDataObj[0].data.service_provider || '',
+          appointmentDate: row.formDataObj[0].data.appointment_date ,
+          appointmentTime: row.formDataObj[0].data.appointment_time ,
           patientId: row.patientId,
           visitId: row.visitId,
-            visitStatus: row.visitId ? 'Closed' : 'Open',
-          appointmentId: row.id,
-            detail: row.detail
+          encounterId: row.encounterId,
         }))}
         actions={[
           {
@@ -87,8 +85,8 @@ function ListViewPage(props) {
             onClick: (event, rowData) =>
               props.viewAppointment(
                 rowData.patientId,
-                rowData.appointmentId,
-                rowData.detail
+                rowData.visitId,
+                rowData.encounterId
               ),
           },
           {
@@ -98,8 +96,8 @@ function ListViewPage(props) {
             onClick: (event, rowData) =>
                 props.editAppointment(
                     rowData.patientId,
-                    rowData.appointmentId,
-                    rowData.detail
+                    rowData.visitId,
+                    rowData.encounterId
                 ),
           },
         ]}

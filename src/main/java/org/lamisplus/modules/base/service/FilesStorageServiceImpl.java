@@ -1,6 +1,5 @@
 package org.lamisplus.modules.base.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -8,30 +7,22 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-import lombok.RequiredArgsConstructor;
 import org.lamisplus.modules.base.util.upload.FilesStorageService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-
-@Component
-@RequiredArgsConstructor
+@Service
 public class FilesStorageServiceImpl implements FilesStorageService {
 
-    private String path = System.getProperty("user.dir");
-
-    private Path root;
+    private final Path root = Paths.get("src", "main", "resources", "images");
 
 
     @Override
     public void init() {
         try {
-            root = Paths.get(path);
             Files.createDirectory(root);
         } catch (IOException e) {
             throw new RuntimeException("Could not initialize folder for upload!");
@@ -75,26 +66,5 @@ public class FilesStorageServiceImpl implements FilesStorageService {
         } catch (IOException e) {
             throw new RuntimeException("Could not load the files!");
         }
-    }
-
-    public String uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest request){
-
-        if (file == null || file.isEmpty()) {
-            return  "Upload file is empty...";
-        }
-        // After the basePath is spliced, it looks like this: http://192.168.1.20:8080/fileServer
-        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-        System.out.println("basePath=" + basePath);
-
-        String fileName = file.getOriginalFilename();
-        File saveFile = new File(path, fileName);
-        System.out.println("File saved successfully:" + saveFile.getPath());
-        try {
-            file.transferTo(saveFile);//File save
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return saveFile.getPath().toString();
     }
 }

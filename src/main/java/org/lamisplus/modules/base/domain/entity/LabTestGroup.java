@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 @EqualsAndHashCode
 @Table(name = "lab_test_group")
-public class LabTestGroup extends Audit<String> {
+public class LabTestGroup implements Serializable {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,9 +33,31 @@ public class LabTestGroup extends Audit<String> {
     private String uuid;
 
     @Basic
+    @Column(name = "date_created")
+    @JsonIgnore
+    @CreationTimestamp
+    private Timestamp dateCreated;
+
+    @Basic
+    @Column(name = "created_by")
+    @JsonIgnore
+    private String createdBy;
+
+    @Basic
+    @Column(name = "date_modified")
+    @JsonIgnore
+    @UpdateTimestamp
+    private Timestamp dateModified;
+
+    @Basic
+    @Column(name = "modified_by")
+    @JsonIgnore
+    private String modifiedBy;
+
+    @Basic
     @Column(name = "archived")
     @JsonIgnore
-    private Integer archived = 0;
+    private Integer archived;
 
     @JsonIgnore
     @OneToMany(mappedBy = "labTestGroupByLabTestGroupId")

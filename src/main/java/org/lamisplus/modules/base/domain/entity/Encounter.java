@@ -6,8 +6,6 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.lamisplus.modules.base.util.converter.LocalDateConverter;
 import org.lamisplus.modules.base.util.converter.LocalTimeAttributeConverter;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.LastModifiedBy;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,7 +18,6 @@ import java.util.List;
 
 @Entity
 @EqualsAndHashCode
-@ToString
 @Table(name = "encounter")
 @Data
 public class Encounter implements Serializable  {
@@ -57,7 +54,7 @@ public class Encounter implements Serializable  {
     private LocalTime timeCreated;
 
     @Basic
-    @Column(name = "uuid", updatable = false)
+    @Column(name = "uuid")
     @JsonIgnore
     private String uuid;
 
@@ -66,15 +63,10 @@ public class Encounter implements Serializable  {
     @JsonIgnore
     private Timestamp dateCreated;*/
 
-    @CreatedBy
     @Basic
     @Column(name = "created_by")
     @JsonIgnore
     private String createdBy;
-
-    @Basic
-    @Column(name = "organisation_unit_id")
-    private Long organisationUnitId;
 
     @Basic
     @Column(name = "date_modified")
@@ -82,7 +74,6 @@ public class Encounter implements Serializable  {
     @UpdateTimestamp
     private Timestamp dateModified;
 
-    @LastModifiedBy
     @Basic
     @Column(name = "modified_by")
     @JsonIgnore
@@ -96,29 +87,24 @@ public class Encounter implements Serializable  {
     @ManyToOne
     @JoinColumn(name = "patient_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
-    @ToString.Exclude
     private Patient patientByPatientId;
 
     @ManyToOne
     @JoinColumn(name = "visit_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
-    @ToString.Exclude
     private Visit visitByVisitId;
 
     @ManyToOne
     @JoinColumn(name = "form_code", referencedColumnName = "code", insertable = false, updatable = false)
     @JsonIgnore
-    @ToString.Exclude
     private Form formForEncounterByFormCode;
 
     @ManyToOne
     @JoinColumn(name = "program_code", referencedColumnName = "code", insertable = false, updatable = false)
     @JsonIgnore
-    @ToString.Exclude
     private Program programForEncounterByProgramCode;
 
     @OneToMany(mappedBy = "encounterByEncounterId")
     @JsonIgnore
-    @ToString.Exclude
     private List<FormData> formDataByEncounter;
     }

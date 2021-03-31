@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import MaterialTable from "material-table";
 import { connect } from "react-redux";
-import {fetchAll, Delete ,} from '../../actions/report';
+import {fetchAll, Delete as Del,} from '../../actions/report';
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import "react-widgets/dist/css/react-widgets.css";
@@ -31,20 +31,8 @@ function ReportSearch(props) {
     };
 
     const onDelete = row => {
-        const onSuccess = () => {
-            toast.success("Report was deleted successfully!");
-            props.fetchAll();
-        }
-
-        const onError = (error) => {
-            if(error.response.data.apierror.message===null || error.response.data.apierror.message===""){
-                toast.error("Something went wrong");
-            }else{
-                toast.error(error.response.data.apierror.message);
-            }
-        }
         if (window.confirm(`Are you sure you want to archive ${row.name} form ?`))
-            props.Delete(row.id, onSuccess, onError);
+            props.deleteForm(row.id)
     }
 
     React.useEffect(() => {
@@ -71,11 +59,11 @@ function ReportSearch(props) {
                         {title: "Action", field: "actions", filtering: false,},
                     ]}
                     isLoading={loading}
-                    data={!props.reportList && !props.reportList.length ? [] : props.reportList.map((row) => ({
+                    data={props.reportList.map((row) => ({
                         programName: row.programName,
                         name: row.name,
                         description: row.description,
-                        resourceObject: row.resourceObject,
+                        parameterResourceObject: row.parameterResourceObject,
                         actions:
                             <div>
                                 <Menu>
@@ -142,7 +130,7 @@ const mapStateToProps =  (state = { reportList:[], form:{}}) => {
 
 const mapActionToProps = {
     fetchAll: fetchAll,
-    Delete: Delete
+    deleteForm: Del
 };
 
 export default connect(mapStateToProps, mapActionToProps)(ReportSearch);

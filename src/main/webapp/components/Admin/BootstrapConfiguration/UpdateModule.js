@@ -39,7 +39,7 @@ return (
               <h1>Update Module - HST Service Module
                 <Link 
                     to ={{ 
-                    pathname: "/admin-bootstrap-configuration",
+                    pathname: "/admin/bootstrap-configuration",
                     activetab: 1
                     }} 
                   >  

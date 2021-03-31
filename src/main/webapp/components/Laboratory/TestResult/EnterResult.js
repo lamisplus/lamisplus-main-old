@@ -79,6 +79,7 @@ const ModalSampleResult = (props) => {
 
   const handleOtherFieldInputChange = e => {
       setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
+      //console.log(otherfields)
   }
 
   const validate = () => {
@@ -119,6 +120,7 @@ const ModalSampleResult = (props) => {
 
       }
     }
+    //console.log(formdata)
     const textstyle = {
         fontSize: '14px',
         fontWeight: 'bolder'

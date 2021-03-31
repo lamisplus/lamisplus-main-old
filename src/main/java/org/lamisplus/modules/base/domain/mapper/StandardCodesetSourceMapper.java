@@ -8,12 +8,8 @@ import org.lamisplus.modules.base.domain.entity.LabTest;
 import org.lamisplus.modules.base.domain.entity.StandardCodesetSource;
 import org.mapstruct.Mapper;
 
-import java.util.List;
-
 @Mapper(componentModel = "spring")
 public interface StandardCodesetSourceMapper {
     StandardCodesetSourceDTO toStandardCodesetSourceDTO(StandardCodesetSource standardCodesetSource);
     StandardCodesetSource toStandardCodesetSource(StandardCodesetSourceDTO standardCodesetSourceDTO);
-    List<StandardCodesetSourceDTO> toStandardCodesetSourceDTOList(List<StandardCodesetSource> standardCodesetSource);
-
 }

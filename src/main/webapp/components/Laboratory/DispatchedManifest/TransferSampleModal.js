@@ -60,8 +60,10 @@ const useStyles = makeStyles(theme => ({
 const ModalSampleTransfer = (props) => {
     const classes = useStyles()
     const datasample = props.datasample ? props.datasample : {};
+    //console.log(datasample)
     const lab_test_group = datasample.data ? datasample.data.lab_test_group : null ;
     const description = datasample.data ? datasample.data.description : null ;
+    console.log(props.labnumber['lab_number'])
     const labId = datasample.id
     const [loading, setLoading] = useState(false)
     const [visible, setVisible] = useState(true);
@@ -71,6 +73,7 @@ const ModalSampleTransfer = (props) => {
 
     const handleOtherFieldInputChange = e => {
         setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
+        console.log(otherfields)
     }
     const validate = () => {
         let temp = { ...errors }

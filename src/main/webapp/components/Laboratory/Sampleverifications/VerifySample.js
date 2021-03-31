@@ -62,10 +62,12 @@ momentLocalizer();
 
 const ModalSample = (props) => {
   const classes = useStyles()
+  console.log()
   const dataSample = props.datasample ? props.datasample : {};
   const lab_test_group = dataSample.data ? dataSample.data.lab_test_group : null ;
   const description = dataSample.data ? dataSample.data.description : null ;
   const date_sample_collected = dataSample.data ? dataSample.data.date_sample_collected : null ;
+  console.log(lab_test_group)
   const labId = dataSample.id
   const [loading, setLoading] = useState(false)
   const [samples, setSamples] = useState({}) 
@@ -84,6 +86,7 @@ const ModalSample = (props) => {
 
     const handleOtherFieldInputChange = e => {
       setotherFields ({ ...otherFields, [e.target.name]: e.target.value });
+      console.log(otherFields)
     }
 
     const validate = () => {
@@ -96,6 +99,7 @@ const ModalSample = (props) => {
       setErrors({
           ...temp
       })
+      console.log(temp)
       return Object.values(temp).every(x => x == "")
     }
     const saveSample = e => {

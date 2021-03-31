@@ -83,26 +83,3 @@ export const updateUserRole = (id, data, onSuccess, onError) => (dispatch) => {
       console.log(error);
     });
 };
-
-export const fetchMe = (onSuccess, onError) => (dispatch) => {
-    axios
-        .get(`${baseUrl}account/`)
-        .then((response) => {
-            if (onSuccess) {
-                onSuccess();
-            }
-            dispatch({
-                type: ACTION_TYPES.FETCH_ME,
-                payload: response.data,
-            });
-        })
-        .catch((error) => {
-            if (onError) {
-                onError();
-            }
-            dispatch({
-                type: ACTION_TYPES.FETCH_ME,
-                payload: null,
-            });
-        });
-};

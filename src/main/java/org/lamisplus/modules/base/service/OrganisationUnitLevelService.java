@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
-import org.lamisplus.modules.base.domain.dto.OrganisationUnitLevelDTO;
 import org.lamisplus.modules.base.domain.entity.OrganisationUnitLevel;
-import org.lamisplus.modules.base.domain.mapper.OrganisationUnitLevelMapper;
 import org.lamisplus.modules.base.repository.OrganisationUnitLevelRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,43 +17,38 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class OrganisationUnitLevelService {
-    public static final int UN_ARCHIVED = 0;
-    private final OrganisationUnitLevelRepository organisationUnitLevelRepository;
-    private final OrganisationUnitLevelMapper organisationUnitLevelMapper;
 
-    public OrganisationUnitLevelDTO save(OrganisationUnitLevelDTO organisationUnitLevelDTO) {
-        Optional<OrganisationUnitLevel> organizationOptional = organisationUnitLevelRepository.findByNameAndArchived(organisationUnitLevelDTO.getName(), UN_ARCHIVED);
-        if(organizationOptional.isPresent())throw new RecordExistException(OrganisationUnitLevel.class, "Name", organisationUnitLevelDTO.getName() +"");
-        OrganisationUnitLevel organisationUnitLevel = organisationUnitLevelMapper.toOrganisationUnitLevel(organisationUnitLevelDTO);
-        organisationUnitLevel.setArchived(UN_ARCHIVED);
-        organisationUnitLevelRepository.save(organisationUnitLevel);
-        return organisationUnitLevelMapper.toOrganisationUnitLevelDTO(organisationUnitLevel);
+    private final OrganisationUnitLevelRepository organisationUnitLevelRepository;
+
+    public OrganisationUnitLevel save(OrganisationUnitLevel organisationUnitLevel) {
+        Optional<OrganisationUnitLevel> organizationOptional = organisationUnitLevelRepository.findById(organisationUnitLevel.getId());
+        if(organizationOptional.isPresent())throw new RecordExistException(OrganisationUnitLevel.class, "Id", organisationUnitLevel.getId() +"");
+        return organisationUnitLevelRepository.save(organisationUnitLevel);
     }
 
-    public OrganisationUnitLevelDTO update(Long id, OrganisationUnitLevelDTO organisationUnitLevelDTO) {
-        Optional<OrganisationUnitLevel> organizationOptional = organisationUnitLevelRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if(!organizationOptional.isPresent())throw new EntityNotFoundException(OrganisationUnitLevel.class, "Id", id +"");
-        OrganisationUnitLevel organisationUnitLevel = organisationUnitLevelMapper.toOrganisationUnitLevel(organisationUnitLevelDTO);
+    public OrganisationUnitLevel update(Long id, OrganisationUnitLevel organisationUnitLevel) {
+        Optional<OrganisationUnitLevel> organizationOptional = organisationUnitLevelRepository.findById(id);
+        if(!organizationOptional.isPresent() || organizationOptional.get().getArchived() == 1)throw new EntityNotFoundException(OrganisationUnitLevel.class, "Id", id +"");
         organisationUnitLevel.setId(id);
-        organisationUnitLevel.setArchived(UN_ARCHIVED);
-        organisationUnitLevelRepository.save(organisationUnitLevel);
-        return organisationUnitLevelMapper.toOrganisationUnitLevelDTO(organisationUnitLevel);
+        return organisationUnitLevelRepository.save(organisationUnitLevel);
     }
 
     public Integer delete(Long id) {
-        Optional<OrganisationUnitLevel> organizationOptional = organisationUnitLevelRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if (!organizationOptional.isPresent())throw new EntityNotFoundException(OrganisationUnitLevel.class, "Id", id +"");
+        Optional<OrganisationUnitLevel> organizationOptional = organisationUnitLevelRepository.findById(id);
+        if (!organizationOptional.isPresent() || organizationOptional.get().getArchived() == 1)throw new EntityNotFoundException(OrganisationUnitLevel.class, "Id", id +"");
+        organizationOptional.get().setArchived(1);
         return organizationOptional.get().getArchived();
     }
 
-    public OrganisationUnitLevelDTO getOrganizationUnitLevel(Long id){
-        Optional<OrganisationUnitLevel> organizationOptional = organisationUnitLevelRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if (!organizationOptional.isPresent())throw new EntityNotFoundException(OrganisationUnitLevel.class, "Id", id +"");
-        OrganisationUnitLevelDTO organisationUnitLevelDTO = organisationUnitLevelMapper.toOrganisationUnitLevelDTO(organizationOptional.get());
-        return organisationUnitLevelDTO;
+    public OrganisationUnitLevel getOrganizationUnitLevel(Long id){
+        Optional<OrganisationUnitLevel> organizationOptional = organisationUnitLevelRepository.findById(id);
+        if (!organizationOptional.isPresent() || organizationOptional.get().getArchived() == 1)throw new EntityNotFoundException(OrganisationUnitLevel.class, "Id", id +"");
+        return organizationOptional.get();
     }
 
-    public List<OrganisationUnitLevelDTO> getAllOrganizationUnitLevel() {
-        return organisationUnitLevelMapper.toOrganisationUnitLevelDTOList(organisationUnitLevelRepository.findAllByArchivedOrderByIdAsc(UN_ARCHIVED));
+    public List<OrganisationUnitLevel> getAllOrganizationUnitLevel() {
+        //TODO: Order the list by id
+        return organisationUnitLevelRepository.findAll();
     }
+
 }

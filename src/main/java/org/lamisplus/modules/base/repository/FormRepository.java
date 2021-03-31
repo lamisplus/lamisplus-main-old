@@ -10,19 +10,16 @@ import java.util.Optional;
 
 @Repository
 public interface FormRepository extends JpaRepository<Form, Long> , JpaSpecificationExecutor {
-    Optional<Form> findByCodeAndArchived(String code, int archived);
-
-    Optional<Form> findByIdAndArchived(Long id, int archived);
-
+    Optional<Form> findByCode(String code);
+    //List<Form> findByProgramCode(String programCode);
     Optional<Form> findByIdAndProgramCode(Long formId, String programCode);
 
     List<Form> findAllByUsageCodeAndArchived(Integer usageCode, Integer archived);
 
-    Optional<Form> findByNameAndProgramCodeAndArchived(String name, String programCode, int archived);
+    //Optional<Form> findByName(String formName);
 
-    List<Form> findAllByArchivedOrderByIdAsc(int archived);
+   // Optional<Form> findByNameAndProgramCode(String name, String programCode);
 
-    List<Form> findAllByCodeNotIn(List<String> permissionName);
-
+    Optional<Form> findByNameAndProgramCodeAndArchived(String name, String programCode, int unArchived);
 }
 

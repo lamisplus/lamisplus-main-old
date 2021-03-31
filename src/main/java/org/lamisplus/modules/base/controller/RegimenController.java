@@ -3,44 +3,49 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.audit4j.core.annotation.Audit;
-import org.lamisplus.modules.base.domain.dto.RegimenDTO;
+import org.lamisplus.modules.base.domain.dto.HeaderUtil;
+import org.lamisplus.modules.base.domain.entity.Regimen;
+import org.lamisplus.modules.base.domain.entity.RegimenLine;
+import org.lamisplus.modules.base.repository.RegimenRepository;
 import org.lamisplus.modules.base.service.RegimenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/regimens")
 @Slf4j
 @RequiredArgsConstructor
-@Audit
 public class RegimenController {
     private final RegimenService regimenService;
+    private static final String ENTITY_NAME = "Regimen";
 
     @PostMapping
-    public ResponseEntity<RegimenDTO> save(@RequestBody RegimenDTO regimenDTO) {
-        return ResponseEntity.ok(regimenService.save(regimenDTO));
+    public ResponseEntity<Regimen> save(@RequestBody Regimen regimen) throws URISyntaxException {
+        Regimen result = regimenService.save(regimen);
+        return ResponseEntity.created(new URI("/api/regimens/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId()))).body(result);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<RegimenDTO> update(@PathVariable Long id, @RequestBody RegimenDTO regimenDTO) {
-        return ResponseEntity.ok(regimenService.update(id, regimenDTO));
+    public ResponseEntity<Regimen> update(@PathVariable Long id, @RequestBody Regimen regimen) throws URISyntaxException {
+        Regimen result = regimenService.update(id, regimen);
+        return ResponseEntity.created(new URI("/api/regimens/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId())))
+                .body(result);
     }
 
     @GetMapping
-    public ResponseEntity<List<RegimenDTO>> getAllRegimens() {
+    public ResponseEntity<List<Regimen>> getAllRegimens() {
         return ResponseEntity.ok(regimenService.getAllRegimens());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RegimenDTO> getRegimen(@PathVariable Long id) {
+    public ResponseEntity<Regimen> getRegimen(@PathVariable Long id) {
         return ResponseEntity.ok(regimenService.getRegimen(id));
-    }
-
-    @GetMapping("/regimenLine/{regimenLineId}")
-    public ResponseEntity<List<RegimenDTO>> getRegimensByRegimenLineId(@PathVariable Long regimenLineId) {
-        return ResponseEntity.ok(regimenService.getRegimensByRegimenLineId(regimenLineId));
     }
 
     @DeleteMapping("/{id}")

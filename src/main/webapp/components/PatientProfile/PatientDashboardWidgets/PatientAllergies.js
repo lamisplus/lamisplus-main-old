@@ -6,7 +6,7 @@ import {
   CardBody,
   Modal, ModalBody, ModalHeader
 } from 'reactstrap';
-import {Dropdown, Label} from 'semantic-ui-react';
+import { Label } from 'semantic-ui-react';
 import FormRendererModal from 'components/FormManager/FormRendererModal';
 import * as CODES from "api/codes";
 import { ToastContainer, toast } from 'react-toastify';
@@ -14,7 +14,6 @@ import {connect} from 'react-redux';
 import AllergyList from '../Allergy/AllergyList';
 import LinearProgress from "@material-ui/core/LinearProgress";
 import {fetchPatientAllergies} from "actions/patients";
-import { authentication } from '../../../_services/authentication';
 
 
 const useStyles = makeStyles(theme => ({
@@ -43,7 +42,7 @@ chip: {
   const [loading, setLoading] = React.useState(false);
 
     React.useEffect(() => {
-     // if(!props.patientAllergies || props.patientAllergies.length === 0){
+      if(!props.patientAllergies || props.patientAllergies.length === 0){
         setLoading(true);
         const onSuccess = () => {
             setLoading(false);
@@ -52,8 +51,8 @@ chip: {
             setLoading(false);
           };
         props.fetchPatientAllergies(props.patientId, onSuccess, onError);
-      //}
-    }, [props.patientId])
+      }
+    }, [])
 
   const onSuccess = () => {
     toast.success('Form saved successfully!', { appearance: 'success' })
@@ -84,10 +83,7 @@ const toggleAllergyList = () => {
   return (
 <React.Fragment>
             <Card >
-              <CardHeader>Allergies
-                  <button type="button" className="float-right ml-3" onClick={addAllergy}  disabled={!authentication.userHasRole(["patient_write"])}><i className="fa fa-plus"></i> Add Allergies</button>
-                  &nbsp; <button type="button" className="float-right ml-3" onClick={toggleAllergyList} ><i className="fa fa-list"></i> List All</button>
-              </CardHeader>
+              <CardHeader>Allergies <button type="button" className="float-right ml-3" onClick={addAllergy}><i className="fa fa-plus"></i> Add Allergies</button> &nbsp; <button type="button" className="float-right ml-3" onClick={toggleAllergyList}><i className="fa fa-list"></i> List All</button></CardHeader>
              {loading && <LinearProgress color="primary" thickness={1}/>}
                     <CardBody>
                                 

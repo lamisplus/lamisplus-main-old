@@ -19,7 +19,7 @@ import { toast } from "react-toastify";
 export const fetchAllOrganizationalUnit = (onSuccess, onError) => dispatch => {
 
   axios
-    .get(`${baseUrl}organisation-unit-levels`)
+    .get(`${baseUrl}organisation-units`)
     .then(response => {
       dispatch({
         type: ACTION_TYPES.FETCH_ALL_ORGANIZATIONAL_UNIT_MODULE,
@@ -41,8 +41,9 @@ export const fetchAllOrganizationalUnit = (onSuccess, onError) => dispatch => {
 export const fetchAllParentOrganizationalUnit = (id, onSuccess, onError)=> dispatch => {
   if(id){
   axios
-    .get(`${baseUrl}organisation-units/organisation-unit-level/${id}`)
+    .get(`${baseUrl}organisation-units/parent-org-unit/${id}`)
     .then(response => {
+       console.log(response)
       dispatch({
         type: ACTION_TYPES.FETCH_ALL_PARENT_ORGANIZATIONAL_UNIT,
         payload: response.data
@@ -50,6 +51,7 @@ export const fetchAllParentOrganizationalUnit = (id, onSuccess, onError)=> dispa
       onSuccess && onSuccess();
     })
     .catch(error => {
+      console.log(error)
       dispatch({
         type: ACTION_TYPES.ERROR_FETCH_ALL_PARENT_ORGANIZATIONAL_UNIT,
         payload: error
@@ -59,82 +61,65 @@ export const fetchAllParentOrganizationalUnit = (id, onSuccess, onError)=> dispa
     );
     }
 };
-
-export const fetchAllParentOrganizationalUnitlevel = (id, onSuccess, onError)=> dispatch => {
-  if(id){
-  axios
-    .get(`${baseUrl}organisation-units/organisation-unit-level/${id}`)
-    .then(response => {
-      dispatch({
-        type: ACTION_TYPES.FETCH_ALL_PARENT_ORGANIZATIONAL_UNIT_LEVEL,
-        payload: response.data
-      })
-      onSuccess && onSuccess();
-    })
-    .catch(error => {
-      dispatch({
-        type: ACTION_TYPES.ERROR_FETCH_ALL_PARENT_ORGANIZATIONAL_UNIT_LEVEL,
-        payload: error
-      })
-      onError && onError();
-    }
-    );
-    }
-};
-
-
-export const createOrganisationUnit = (data, onSuccess,onError) => dispatch => {
+export const createBootstrapModule = (data) => dispatch => {
 console.log(data)
 
+const options = {
+  headers: {
+      'Content-Type': ' multipart/form-data',
+  }
+};
   axios
-    .post(`${baseUrl}organisation-unit-levels`, data)
+    .post(`${baseUrl}modules/upload`, data,options)
     .then(response => {
+      console.log(response)
       dispatch({
-        type: ACTION_TYPES.CREATE_ORGANISATION_UNIT,
+        type: ACTION_TYPES.CREATE_BOOTSTRAP_MODULE,
         payload: response.data
       });
-      onSuccess()
-      toast.success("Organisational Unit Created Successfully");
+      //onSuccess()
+      toast.success("Module Uploaded Successfully");
     })
     .catch(error =>{
       
       dispatch({
-        type: ACTION_TYPES.ERROR_CREATE_ORGANISATION_UNIT,
+        type: ACTION_TYPES.ERROR_CREATE_BOOTSTRAP_MODULE,
         payload: error
       })
-      onError()
+      //onError()
+      console.log(error)
       toast.error("Something went wrong, please try again");
       
     });
   
 };
 
+export const startBootstrapModule = (onSuccess, onError)=> dispatch => {
 
-export const createOrgUnitLevel = (data, onSuccess,onError) => dispatch => {
-  
-    axios
-      .post(`${baseUrl}organisation-units`, data)
-      .then(response => {
-        dispatch({
-          type: ACTION_TYPES.CREATE_ORGANISATION_UNIT_LEVELS,
-          payload: response.data
-        });
-        onSuccess()
-        toast.success("Organisational Unit Created Successfully");
+  axios
+    .post(`${baseUrl}modules/start/all`)
+    .then(response => {
+       console.log(response)
+      dispatch({
+        type: ACTION_TYPES.START_BOOSTRAP_MODULE,
+        payload: response.data
       })
-      .catch(error =>{
-        
-        dispatch({
-          type: ACTION_TYPES.ERROR_ORGANISATION_UNIT_LEVELS,
-          payload: error
-        })
-        onError()
-        toast.error("Something went wrong, please try again");
-        
-      });
-    
-  };
 
+      onSuccess && onSuccess();
+      toast.success("Module Restarted successfully!");
+    })
+    .catch(error => {
+      console.log(error)
+      dispatch({
+        type: ACTION_TYPES.ERROR_START_BOOSTRAP_MODULE,
+        payload: error
+      })
+      onError && onError();
+      toast.error("Something went wrong! please try again..");
+    }
+    );
+
+};
 
 export const Delete = (id) => dispatch => {
   console.log(`${baseUrl}patients/${id}`);
@@ -156,5 +141,11 @@ export const Delete = (id) => dispatch => {
     });
     console.log(error)
     
+    // if(error.response.data.apierror.message===null || error.response.data.apierror.message===""){
+    //   toast.error("Something went wrong");
+    // }else{
+    //   toast.error(error.response.data.apierror.message);
+    // }
+   //console.log(error.response.data.apierror.message);
   });
 };

@@ -32,7 +32,6 @@ import Select from "react-select";
 import CheckedInValidation from "components/Utils/CheckedInValidation";
 import axios from 'axios';
 import { url } from "../../../api";
-import {authentication} from '../../../_services/authentication';
 
 
 const cardStyle = {
@@ -211,7 +210,6 @@ function ServiceFormPage(props) {
             aria-label="Edit Form"
             title="Edit Form"
             onClick={() => editForm(row)}
-            disabled={!authentication.userHasRole(["patient_write"])}
           >
             <EditIcon />
           </IconButton>
@@ -309,7 +307,6 @@ function ServiceFormPage(props) {
                           color="primary"
                           className=" mr-1"
                           onClick={loadForm}
-                          disabled={!authentication.userHasRole(["patient_write"])}
                         >
                           Open Form
                         </Button>

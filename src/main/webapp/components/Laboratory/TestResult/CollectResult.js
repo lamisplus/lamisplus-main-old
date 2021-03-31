@@ -7,20 +7,20 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
 import {FaPlusSquare, FaRegEye} from 'react-icons/fa';
+import {GoChecklist} from 'react-icons/go';
 import 'react-widgets/dist/css/react-widgets.css'
 //Date Picker
 import Page from './../../Page'
 import {  fetchById } from '../../../actions/patients'
 import {  fetchAllLabTestOrderOfPatient } from '../../../actions/laboratory'
 import { useSelector, useDispatch } from 'react-redux';
-import PatientDetailCard from 'components/PatientProfile/PatientDetailCard';
+import PatientDetailCard from 'components/Functions/PatientDetailCard';
 import { Spinner } from 'reactstrap';
 import { Badge } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import ModalViewResult from './ViewResult';
-import ModalSampleResult from './EnterResultFormIo';
-import {authentication} from '../../../_services/authentication';
+import ModalSampleResult from './EnterResult';
 
 
 
@@ -68,6 +68,9 @@ const ResultReporting = (props) => {
         }
     }, []); //componentDidMount 
 
+       
+        
+
         //Get list of test type
         const labTestType = [];
             if(sampleCollections !== null || sampleCollections ===""){
@@ -110,19 +113,16 @@ const ResultReporting = (props) => {
         setcollectModal({...collectModal, ...row});
         setModal3(!modal3) 
     }
-    const addresult = (row) => {  
-        setcollectModal({...collectModal, ...row});
-        setModal2(!modal2) 
-    }
-
 
     const getGroup = e => {
         const getValue =e.target.value;
         if(getValue!=='All' || getValue ===null)
         {
+            console.log(getValue)
             //const testOrders = fetchTestOrders.length >0 ? fetchTestOrders:{}
             const getNewTestOrder = testOrders.find(x => x.data.lab_test_group === getValue)
             setFetchTestOrders([getNewTestOrder]) 
+            console.log(fetchTestOrders)
         }else{
             setFetchTestOrders([...newSample])
         }
@@ -140,7 +140,7 @@ const ResultReporting = (props) => {
         }else if(e===5){
           return <p><Badge  color="light">Result Available</Badge></p>
         }else{
-          return <p>{""}</p>
+          return <p>{"---"}</p>
         }
     }
 
@@ -155,19 +155,17 @@ const ResultReporting = (props) => {
                 </MenuButton>
                     <MenuList style={{hover:"#eee"}}>
                     {e.data.lab_test_order_status!==5 ?
-                        <MenuItem onSelect={() => handleResult(e)} hidden={!authentication.userHasRole(["laboratory_write"])}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Enter Result</MenuItem>
+                        <MenuItem onSelect={() => handleResult(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Enter Result</MenuItem>
                     :""}
                     {e.data.lab_test_order_status===5 ?
                         <MenuItem onSelect={() => viewresult(e)}><FaRegEye size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>
-                    :""}
-                    {e.data.lab_test_order_status===5 ?
-                        <MenuItem onSelect={() => handleResult(e)} hidden={!authentication.userHasRole(["laboratory_write"])}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Add Result</MenuItem>
                     :""}   
                     </MenuList>
             </Menu>
           )
   }
-console.log(testOrders)
+
+
 return (
     <Page title='Result Reporting'>
       <br/>
@@ -203,7 +201,7 @@ return (
                   </CardHeader>
                 <CardBody>
                     <Alert color="primary">
-                        Please make sure you enter Lab number before collecting sample 
+                        Please make sure you enter Lab number before collecting sample {console.log(labNum)}
                     </Alert>
                 <br />
                     <Row>
@@ -240,7 +238,7 @@ return (
                                             name='lab_number'
                                             id='lab_number'
                                             value={labNumber!=="" ? labNumber : labNum.lab_number}
-                                            disabled='true'
+                                            
                                             onChange={handleLabNumber}
                                         />
                                         </FormGroup>                            
@@ -259,7 +257,7 @@ return (
                                             </thead>
                                             <tbody>
                                                
-                                                {!loading ? testOrders.map((row) => (
+                                                {!loading ? fetchTestOrders.map((row) => (
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>
                                                       <th className={classes.td}>{row.data.description===""?" ":row.data.description}</th>
                                                       <td className={classes.td}>{row.data.sample_type==="" ? " ":row.data.sample_type}</td>

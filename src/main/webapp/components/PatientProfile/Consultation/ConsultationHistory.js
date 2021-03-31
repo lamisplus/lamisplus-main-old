@@ -10,7 +10,6 @@ import FormRendererModal from "components/FormManager/FormRendererModal";
 import { ToastContainer, toast } from "react-toastify";
 import IconButton from '@material-ui/core/IconButton'
 import { Edit, ViewList  } from '@material-ui/icons'
-import {authentication} from '../../../_services/authentication';
 
 const columns = (editConsultation, viewConsultation) => [
   {
@@ -77,7 +76,6 @@ const columns = (editConsultation, viewConsultation) => [
           onClick={() => editConsultation(row)}
           aria-label='Edit Consultation'
           title='Edit Consultation'
-          disabled={!authentication.userHasRole("patient_write")}
         >
           {' '}
           <Edit />

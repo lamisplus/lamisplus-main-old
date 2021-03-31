@@ -2,7 +2,6 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.bootstrap.StorageUtil;
 import org.lamisplus.modules.base.controller.apierror.IllegalTypeException;
 import org.lamisplus.modules.base.service.RadiologyService;
@@ -22,10 +21,10 @@ import java.util.UUID;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@Audit
 public class RadiologyController {
     private final StorageUtil storageService;
     private final RadiologyService radiologyService;
+    //private final ImageFormat imageFormat;
 
 
     @PostMapping("/api/radiologies")

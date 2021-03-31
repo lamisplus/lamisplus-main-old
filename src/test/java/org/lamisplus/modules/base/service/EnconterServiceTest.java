@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.lamisplus.modules.base.BaseApplication;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.dto.EncounterDTO;
+import org.lamisplus.modules.base.domain.entity.ApplicationCodeset;
 import org.lamisplus.modules.base.domain.entity.Encounter;
 import org.lamisplus.modules.base.repository.EncounterRepository;
 import org.lamisplus.modules.base.util.JsonUtils;
@@ -25,7 +26,10 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -55,7 +59,7 @@ public class EnconterServiceTest {
 
 
         Mockito.when(encounterRepository.findAll()).thenReturn(encounters);
-        //Mockito.when(encounterRepository.findByPatientIdAndProgramCodeAndFormCodeAndDateEncounter(1L, "wrong_program_code", "invalid_form_name", LocalDate.now())).thenReturn(null);
+        Mockito.when(encounterRepository.findByPatientIdAndProgramCodeAndFormCodeAndDateEncounter(1L, "wrong_program_code", "invalid_form_name", LocalDate.now())).thenReturn(null);
 
         Mockito.when(encounterService.getAllEncounters()).thenReturn(null);
 

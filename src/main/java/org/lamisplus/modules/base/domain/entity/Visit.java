@@ -18,7 +18,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode
 @Table(name = "visit")
-public class Visit extends Audit<String> {
+public class Visit implements Serializable {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,6 +65,28 @@ public class Visit extends Audit<String> {
     private String uuid;
 
     @Basic
+    @Column(name = "date_created")
+    @JsonIgnore
+    @CreationTimestamp
+    private Timestamp dateCreated;
+
+    @Basic
+    @Column(name = "created_by")
+    @JsonIgnore
+    private String createdBy;
+
+    @Basic
+    @Column(name = "date_modified")
+    @JsonIgnore
+    @UpdateTimestamp
+    private Timestamp dateModified;
+
+    @Basic
+    @Column(name = "modified_by")
+    @JsonIgnore
+    private String modifiedBy;
+
+    @Basic
     @Column(name = "archived")
     @JsonIgnore
     private Integer archived = 0;
@@ -81,10 +103,15 @@ public class Visit extends Audit<String> {
     /*@JoinColumn(name = "visit_type_id", insertable = false, updatable = false)
     @ManyToOne
     @JsonIgnore
-    private ApplicationCodeSet visit_Type;*/
+    private ApplicationCodeset visit_Type;*/
 
     @OneToMany(mappedBy = "visitByVisitId")
     @ToString.Exclude
     @JsonIgnore
     private List<Encounter> encountersByVisit;
+
+    @OneToMany(mappedBy = "VisitByVisitId")
+    @ToString.Exclude
+    @JsonIgnore
+    private List<ClinicianPatient> clinicianPatientByVisit;
 }

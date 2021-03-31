@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@Transactional
 @Slf4j
 @RequiredArgsConstructor
 public class DependencyLoader {

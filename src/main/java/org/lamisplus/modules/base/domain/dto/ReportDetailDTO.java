@@ -5,12 +5,10 @@ import org.lamisplus.modules.base.domain.entity.Parameter;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 @Data
 public class ReportDetailDTO implements Serializable {
     private Long reportId;
-    private String reportName;
-    private String reportFormat;
-    Map<String, Object> parameters;
+    private String reportType;
+    private List<Parameter> parameters;
 }

@@ -104,7 +104,8 @@ const PatientSearch = (props) => {
                                                 </MenuItem>                                      
                                                 <MenuItem style={{ color:"#000 !important"}}>
                                                     <Link
-                                                        onClick={() => onDelete(row.patientId)}>
+                                                        onClick={() => onDelete(row.patientId)}
+                                                    >
                                                       <MdDeleteForever size="15"  />{" "}
                                                       <span style={{color: '#000'}}>Delete Patient</span>
                                                   </Link>                                  

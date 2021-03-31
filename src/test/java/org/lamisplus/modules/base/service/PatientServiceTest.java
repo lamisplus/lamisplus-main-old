@@ -81,22 +81,34 @@ class PatientServiceTest {
         patient1.setId(1L);
         patient1.setHospitalNumber("Test1");
         patient1.setPersonId(1L);
-        //patient1.setFacilityId(200L);
-
+        patient1.setFacilityId(200L);
+        patient1.setDateCreated(timestamp);
+        patient1.setCreatedBy("Emeka");
+        patient1.setDateModified(timestamp);
+        patient1.setModifiedBy("Emeka");
         patient1.setArchived(0);
 
         patient2 = new Patient();
         patient2.setId(2L);
         patient2.setHospitalNumber("Test2");
         patient2.setPersonId(2L);
-        //patient2.setFacilityId(200L);
-
+        patient2.setFacilityId(200L);
+        patient2.setDateCreated(timestamp);
+        patient2.setCreatedBy("Emeka");
+        patient2.setDateModified(timestamp);
+        patient2.setModifiedBy("Emeka");
+        patient2.setArchived(0);
 
         patient3 = new Patient();
         patient3.setId(3L);
         patient3.setHospitalNumber("Test3");
         patient3.setPersonId(3L);
-        //patient3.setFacilityId(200L);
+        patient3.setFacilityId(200L);
+        patient3.setDateCreated(timestamp);
+        patient3.setCreatedBy("Emeka");
+        patient3.setDateModified(timestamp);
+        patient3.setModifiedBy("Emeka");
+        patient3.setArchived(0);
 
         System.out.println(patient1);
 
@@ -114,6 +126,11 @@ class PatientServiceTest {
         person1.setOccupationId(19L);
         person1.setMaritalStatusId(13L);
         person1.setPersonTitleId(1L);
+        person1.setDateCreated(timestamp);
+        person1.setCreatedBy("Emeka");
+        person1.setModifiedBy("Emeka");
+        person1.setDateModified(timestamp);
+        person1.setArchived(0);
 
         person2 = new Person();
         person2.setId(2L);
@@ -126,6 +143,11 @@ class PatientServiceTest {
         person2.setOccupationId(19L);
         person2.setMaritalStatusId(13L);
         person2.setPersonTitleId(1L);
+        person2.setDateCreated(timestamp);
+        person2.setCreatedBy("Emeka");
+        person2.setModifiedBy("Emeka");
+        person2.setDateModified(timestamp);
+        person2.setArchived(0);
 
 
         personContact1 = new PersonContact();

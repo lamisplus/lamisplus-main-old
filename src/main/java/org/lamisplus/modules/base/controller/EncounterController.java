@@ -3,12 +3,14 @@ package org.lamisplus.modules.base.controller;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.entity.Encounter;
 import org.lamisplus.modules.base.service.EncounterService;
 import org.lamisplus.modules.base.domain.dto.EncounterDTO;
+import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,13 +18,15 @@ import java.util.Optional;
 @RequestMapping("/api/encounters")
 @Slf4j
 @RequiredArgsConstructor
-@Audit
 public class EncounterController {
+    private static String ENTITY_NAME = "Encounter";
     private final EncounterService encounterService;
 
     @PostMapping
-    public ResponseEntity<Encounter> save(@RequestBody EncounterDTO encounterDTO) {
-        return ResponseEntity.ok(encounterService.save(encounterDTO));
+    public ResponseEntity<Encounter> save(@RequestBody EncounterDTO encounterDTO) throws URISyntaxException {
+        Encounter encounter = encounterService.save(encounterDTO);
+        return ResponseEntity.created(new URI("/api/encounters/" + encounter.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(encounter.getId()))).body(encounter);
     }
 
     @ApiOperation(value="getAllEncounters", notes = "response is List of EncounterDTO\n\n" +
@@ -37,8 +41,9 @@ public class EncounterController {
     @GetMapping("/{formCode}/{dateStart}/{dateEnd}")
     public ResponseEntity<List<EncounterDTO>> getEncounterByFormCodeAndDateEncounter(@PathVariable String formCode,
                                                                  @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional<String> dateStart,
-                                                                            @ApiParam(value = "", required = false) @PathVariable(required = false) Optional<String> dateEnd) {
-        return ResponseEntity.ok(this.encounterService.getEncounterByFormCodeAndDateEncounter(formCode, dateStart, dateEnd));
+                                                                            @ApiParam(value = "", required = false) @PathVariable(required = false) Optional<String> dateEnd) throws URISyntaxException {
+        List<EncounterDTO> encounterDTOS = this.encounterService.getEncounterByFormCodeAndDateEncounter(formCode, dateStart, dateEnd);
+        return ResponseEntity.ok(encounterDTOS);
     }
 
     @GetMapping("/{id}")
@@ -51,15 +56,11 @@ public class EncounterController {
         return ResponseEntity.ok(this.encounterService.getFormDataByEncounterId(id));
     }
 
-    @GetMapping("/{programCode}/totalCount")
-    public ResponseEntity<Long> getTotalCount(@PathVariable String programCode) {
-        return ResponseEntity.ok(this.encounterService.getTotalCount(programCode));
-    }
-
-
     @PutMapping("/{id}")
-    public ResponseEntity<Encounter> update(@PathVariable Long id, @RequestBody EncounterDTO encounterDTO){
-        return ResponseEntity.ok(this.encounterService.update(id, encounterDTO));
+    public ResponseEntity<Encounter> update(@PathVariable Long id, @RequestBody EncounterDTO encounterDTO) throws URISyntaxException {
+        Encounter encounter1 = this.encounterService.update(id, encounterDTO);
+        return ResponseEntity.created(new URI("/api/encounters/" + id))
+                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(id))).body(encounter1);
     }
 
     @DeleteMapping("/{id}")
