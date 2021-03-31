@@ -26,8 +26,8 @@ public class FormController {
     }
 
     @GetMapping ("/{formCode}/formCode")
-    public ResponseEntity<Form> getFormsByFormCode(@PathVariable String formCode) {
-            return ResponseEntity.ok(this.formService.getFormsByFormCode(formCode));
+    public ResponseEntity<Form> getFormByFormCode(@PathVariable String formCode) {
+            return ResponseEntity.ok(this.formService.getFormByFormCode(formCode));
     }
 
     @GetMapping ("/{id}")

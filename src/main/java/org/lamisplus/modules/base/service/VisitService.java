@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -71,7 +72,7 @@ public class VisitService {
         if(visitOptional.isPresent())throw new RecordExistException(Visit.class, "Patient", "Still checked In" + ", Visit Start Date =" + visitDTO.getDateVisitStart());
 
         Visit visit = visitMapper.toVisit(visitDTO);
-        visit.setUuid(UuidGenerator.getUuid());
+        visit.setUuid(UUID.randomUUID().toString());
         visit.setOrganisationUnitId(getOrganisationUnitId());
 
         final Visit savedVisit = visitRepository.save(visit);

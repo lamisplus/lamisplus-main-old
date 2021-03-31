@@ -69,7 +69,7 @@ public class PatientService {
         log.info("patientDTO from front end - "+ patientDTO);
 
         final Person person = patientMapper.toPerson(patientDTO);
-        person.setUuid(UuidGenerator.getUuid());
+        person.setUuid(UUID.randomUUID().toString());
         final Person createdPerson = this.personRepository.save(person);
 
         final PersonContact personContact = patientMapper.toPersonContact(patientDTO);
@@ -90,7 +90,7 @@ public class PatientService {
         final Patient patient = patientMapper.toPatient(patientDTO);
         patient.setPersonByPersonId(createdPerson);
         patient.setPersonId(createdPerson.getId());
-        patient.setUuid(UuidGenerator.getUuid());
+        patient.setUuid(UUID.randomUUID().toString());
         patient.setOrganisationUnitId(organisationUnitId);
         this.patientRepository.save(patient);
         return person;

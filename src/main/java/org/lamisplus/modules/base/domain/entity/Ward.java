@@ -29,7 +29,7 @@ public class Ward extends Audit<String>{
 
     @Basic
     @Column(name = "uuid", updatable = false)
-    private String uuid = UuidGenerator.getUuid();
+    private String uuid;
 
     @Basic
     @Column(name = "archived")

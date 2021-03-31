@@ -20,7 +20,6 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class ApplicationUserOrganisationUnitService {
-
     private static final int UN_ARCHIVED = 0;
     private final ApplicationUserOrganisationUnitRepository applicationUserOrganisationUnitRepository;
     private final ApplicationUserOrganisationUnitMapper applicationUserOrganisationUnitMapper;
@@ -43,21 +42,19 @@ public class ApplicationUserOrganisationUnitService {
             applicationUserOrganisationUnitList.add(applicationUserOrganisationUnit);
         });
 
-
         return applicationUserOrganisationUnitRepository.saveAll(applicationUserOrganisationUnitList);
     }
 
     public ApplicationUserOrganisationUnit update(Long id, ApplicationUserOrganisationUnit applicationUserOrganisationUnit) {
-        Optional<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitOptional = applicationUserOrganisationUnitRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if(!applicationUserOrganisationUnitOptional.isPresent())throw new EntityNotFoundException(ApplicationUserOrganisationUnit.class, "Id", id +"");
+        applicationUserOrganisationUnitRepository.findByIdAndArchived(id, UN_ARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(ApplicationUserOrganisationUnit.class, "Id", id +""));
         applicationUserOrganisationUnit.setId(id);
         return applicationUserOrganisationUnitRepository.save(applicationUserOrganisationUnit);
     }
 
     public ApplicationUserOrganisationUnit getApplicationUserOrganisationUnit(Long id){
-        Optional<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitOptional = this.applicationUserOrganisationUnitRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if (!applicationUserOrganisationUnitOptional.isPresent())throw new EntityNotFoundException(ApplicationUserOrganisationUnit.class, "Id", id +"");
-        return applicationUserOrganisationUnitOptional.get();
+        return applicationUserOrganisationUnitRepository.findByIdAndArchived(id, UN_ARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(ApplicationUserOrganisationUnit.class, "Id", id +""));
     }
 
     public List<ApplicationUserOrganisationUnit> getAllApplicationUserOrganisationUnit() {
