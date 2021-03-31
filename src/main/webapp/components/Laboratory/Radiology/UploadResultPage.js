@@ -81,7 +81,7 @@ const UploadResultPage = (props) => {
         formData.append('file', files);
         formData.append('formData', testOrder);
         try {
-            const res = await axios.post(`${url}radiologies?formDataId=${testOrder.id}`, formData, {
+            const res = await axios.post(`${url}radiologies?formId=${testOrder.id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
