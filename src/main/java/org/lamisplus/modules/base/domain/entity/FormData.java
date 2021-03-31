@@ -31,7 +31,7 @@ public class FormData extends JsonBEntity implements Serializable {
     private Long encounterId;
 
     @Basic
-    @Column(name = "organisation_unit_id")
+    @Column(name = "organisation_unit_id", updatable = false)
     @JsonIgnore
     private Long organisationUnitId;
 

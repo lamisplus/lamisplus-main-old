@@ -9,11 +9,11 @@ import org.lamisplus.modules.base.domain.dto.ApplicationCodesetDTO;
 import org.lamisplus.modules.base.domain.entity.ApplicationCodeSet;
 import org.lamisplus.modules.base.domain.mapper.ApplicationCodesetMapper;
 import org.lamisplus.modules.base.repository.ApplicationCodesetRepository;
-import org.lamisplus.modules.base.util.UuidGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -27,9 +27,7 @@ public class ApplicationCodesetService {
     private static final int UN_ARCHIVED = 0;
 
     public List<ApplicationCodesetDTO> getAllApplicationCodeset(){
-        List<ApplicationCodeSet> applicationCodesets = applicationCodesetRepository.findAllByArchivedOrderByIdAsc(UN_ARCHIVED);
-
-        return applicationCodesetMapper.toApplicationCodesetDTOList(applicationCodesets);
+        return applicationCodesetMapper.toApplicationCodesetDTOList(applicationCodesetRepository.findAllByArchivedOrderByIdAsc(UN_ARCHIVED));
     }
 
     public ApplicationCodeSet save(ApplicationCodesetDTO applicationCodesetDTO){
@@ -40,7 +38,7 @@ public class ApplicationCodesetService {
         }
 
         final ApplicationCodeSet applicationCodeset = applicationCodesetMapper.toApplicationCodeset(applicationCodesetDTO);
-        applicationCodeset.setCode(UuidGenerator.getUuid());
+        applicationCodeset.setCode(UUID.randomUUID().toString());
         applicationCodeset.setArchived(UN_ARCHIVED);
 
         return applicationCodesetRepository.save(applicationCodeset);
@@ -53,17 +51,16 @@ public class ApplicationCodesetService {
     }
 
     public ApplicationCodesetDTO getApplicationCodeset(Long id){
-        Optional<ApplicationCodeSet> applicationCodeset = applicationCodesetRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if(!applicationCodeset.isPresent()) throw new EntityNotFoundException(ApplicationCodeSet.class,"Display:",id+"");
+        final ApplicationCodeSet applicationCodeset = applicationCodesetRepository.findByIdAndArchived(id, UN_ARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(ApplicationCodeSet.class,"Display:",id+""));
 
-        return  applicationCodesetMapper.toApplicationCodesetDTO(applicationCodeset.get());
+        return  applicationCodesetMapper.toApplicationCodesetDTO(applicationCodeset);
     }
 
     public ApplicationCodeSet update(Long id, ApplicationCodesetDTO applicationCodesetDTO){
-        Optional<ApplicationCodeSet> applicationCodesetOptional = applicationCodesetRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if(!applicationCodesetOptional.isPresent()) {
-            throw new EntityNotFoundException(ApplicationCodeSet.class,"Display:",id+"");
-        }
+        applicationCodesetRepository.findByIdAndArchived(id, UN_ARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(ApplicationCodeSet.class,"Display:",id+""));
+
         final ApplicationCodeSet applicationCodeset = applicationCodesetMapper.toApplicationCodeset(applicationCodesetDTO);
         applicationCodeset.setId(id);
         applicationCodeset.setArchived(UN_ARCHIVED);
@@ -71,11 +68,11 @@ public class ApplicationCodesetService {
     }
 
     public Integer delete(Long id){
-        Optional<ApplicationCodeSet> applicationCodesetOptional = applicationCodesetRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if(!applicationCodesetOptional.isPresent()) throw new EntityNotFoundException(ApplicationCodeSet.class,"Display:",id+"");
-        applicationCodesetOptional.get().setArchived(ARCHIVED);
+        ApplicationCodeSet applicationCodeset = applicationCodesetRepository.findByIdAndArchived(id, UN_ARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(ApplicationCodeSet.class,"Display:",id+""));
+        applicationCodeset.setArchived(ARCHIVED);
 
-        return applicationCodesetOptional.get().getArchived();
+        return applicationCodeset.getArchived();
     }
 
     public Boolean exist(String display, String codesetGroup){
