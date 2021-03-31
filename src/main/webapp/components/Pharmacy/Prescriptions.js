@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Prescriptions = (props) => {
  const prescriptionOrder  = props.location.state  && props.location.state.formDataObj  ? props.location.state.formDataObj : {}
-  console.log(props.location.state.formDataObj.id)
+  console.log(props.location.state.formDataObj)
   const classes = useStyles();
   const [loading, setLoading] = useState('')
   const [modal, setModal] = useState(false);
@@ -248,7 +248,7 @@ const Prescriptions = (props) => {
                                     </td>
                                     <td>{form.data.duration && form.data.duration ? form.data.duration + form.data.duration_unit : ''}</td>
                                     <td>{Moment(form.data.date_prescribed).format("DD-MM-YYYY")}</td>
-                                    <td>{ form.data.prescription_status !==null && form.data.prescription_status !==0 ? Moment(form.data.date_dispensed).format("DD-MM-YYYY") : '' }</td>
+                                    <td>{ form.data.prescription_status !==0  ? Moment(form.data.date_dispensed).format("DD-MM-YYYY") : '' }</td>
                                     <td>{Actions(form)}</td>
                                   </tr>
                                   :
