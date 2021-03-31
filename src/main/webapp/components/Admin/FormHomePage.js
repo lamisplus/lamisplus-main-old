@@ -74,7 +74,7 @@ function FormSearch(props) {
                         {title: "Action", field: "actions", filtering: false,},
                     ]}
                     isLoading={loading}
-                    data={!props.formList && !props.formList.length ? [] : props.formList.map((row) => ({
+                    data={!props.formList && props.formList.length <= 0 ? [] : props.formList.map((row) => ({
                         programName: row.programName,
                         name: row.name,
                         number: row.version,
@@ -153,10 +153,10 @@ function FormSearch(props) {
         </React.Fragment>
     );
 }
-const mapStateToProps =  (state = { form:{}}) => {
+const mapStateToProps =  (state = { form:[]}) => {
     // console.log(state.forms)
     return {
-        formList: state.formReducers.form !==null ? state.formReducers.form : {},
+        formList: state.formReducers.form !==null ? state.formReducers.form : [],
     }}
 
 const mapActionToProps = {

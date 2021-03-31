@@ -64,7 +64,10 @@ export const createForm = (data, onSuccess, onError) => dispatch => {
         });
 };
 
-export const updateForm = (id, data) => dispatch => {
+export const updateForm = (id, data, setLoading) => dispatch => {
+    if(setLoading){
+        setLoading(true);
+    }
     axios
         .put(`${url}forms/${id}`, data)
         .then(response => {
@@ -73,6 +76,9 @@ export const updateForm = (id, data) => dispatch => {
                 payload: response.data
             });
             toast.success("Form was updated successfully!");
+            if(setLoading){
+                setLoading(false);
+            }
             console.log(response)
         })
         .catch(error => {
@@ -80,6 +86,9 @@ export const updateForm = (id, data) => dispatch => {
                 type: FORMTYPES.FORMTYPES_ERROR,
                 payload: 'Something went wrong, please try again'
             })
+            if(setLoading){
+                setLoading(false);
+            }
         })
 }
 

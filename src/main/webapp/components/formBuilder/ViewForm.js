@@ -31,6 +31,9 @@ import {url} from '../../api';
 import CancelIcon from "@material-ui/icons/Cancel";
 import DownloadLink  from "react-download-link";
 import { Alert } from '@material-ui/lab';
+import LinearProgress from "@material-ui/core/LinearProgress";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles(theme => ({
     root2: {
@@ -116,28 +119,25 @@ const Update = props => {
             form2["formPrecedence"] = {formCode: formPrecedence.map(x => x.value) ? formPrecedence.map(x => x.value)  : []}
         }
         form2['resourceObject'] = JSON.parse(res);
-        props.updateForm(form2.id, form2);
+        props.updateForm(form2.id, form2, setLoading);
     }
 
 
+
     return (
-        <Page title={`Edit Form - ${row ? row.name : ""}`} >
-            <ToastContainer autoClose={3000} hideProgressBar />
+        <Card>
+            <ToastContainer />
+            <CardBody>
+                <Breadcrumbs aria-label="breadcrumb">
+                    <Link color="inherit" to={{  pathname: "/admin",
+                        state: 'form-builder'}} >
+                        Form Manager
+                    </Link>
+                    <Typography color="textPrimary">Edit Form -  {row ? row.name : ""}</Typography>
+                </Breadcrumbs>
+                <br/>
+
             <Row>
-                <Col md={12}>
-            <Link to ={{
-                pathname: "/admin",
-                state: 'form-builder'
-            }}>
-                <MatButton
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    className=" float-right mr-1">
-                    <TiArrowBack /> &nbsp; back
-                </MatButton>
-            </Link>
-                </Col>
                 <Col md={12}>
                     {showFileImport && <>
                         <Alert onClose={toggleShowFileImport} icon={false} className={"mb-3"}>
@@ -146,6 +146,9 @@ const Update = props => {
                                    onChange={e => handleFileChosen(e.target.files[0])}/>
                         </Alert>
                     </>
+                    }
+                    {loading &&
+                    <LinearProgress color="primary" thickness={5}/>
                     }
             <Card >
                 <CardContent>
@@ -280,7 +283,9 @@ const Update = props => {
                     </ModalFooter>
                 </Modal>
                 <hr></hr>
-        </Page>
+
+            </CardBody>
+        </Card>
     );
 }
 
