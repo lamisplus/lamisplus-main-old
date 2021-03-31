@@ -272,11 +272,10 @@ const updateFormData = (data) =>{
           </div>
         </Col>
       </Row>
-      </Card>
+
      <DispenseModal  modalstatus={modal} togglestatus={toggleModal} datasample={drugDetails} updateFormData={updateFormData}/>
-     <DispenseUpdateModal  modalstatus={modalUpdate} togglestatus={toggleModalUpdate} datasample={drugDetails}/>
-     <ViewModal modalstatus={modal1} togglestatus={toggleModal1} datasample={drugDetails}/> 
-    </div>
+     <ViewModal modalstatus={modal1} togglestatus={toggleModal1} datasample={drugDetails}/>
+    </React.Fragment>
   );
 }
 

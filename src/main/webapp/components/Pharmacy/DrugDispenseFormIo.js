@@ -94,16 +94,16 @@ const ModalSample = (props) => {
         //datasample.data = e.data
         const onSuccess = () => {
             props.togglestatus();
-            props.updateFormData(datasample);
+            props.updateFormData(datasampleObj);
         };
         const onError = () => {
             props.togglestatus();
         };
-        const newData =  {...datasample.data, ... e.data}
-        datasample.data = newData
-        datasample.data['prescription_status'] = 1
-        console.log(datasample);
-       props.updatePrescriptionStatus(DrugId, datasample, onSuccess, onError);
+        const newData =  {...datasampleObj.data, ... e.data}
+        datasampleObj.data = newData
+        datasampleObj.data['prescription_status'] = 1
+        console.log(datasampleObj);
+       props.updatePrescriptionStatus(DrugId, datasampleObj, onSuccess, onError);
 
        props.togglestatus();
         
