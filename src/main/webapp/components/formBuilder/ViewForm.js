@@ -1,5 +1,4 @@
 import React, {useRef, useEffect, useState} from 'react';
-import Page from 'components/Page';
 import {  Errors, Form, FormBuilder } from 'react-formio';
 import {Card,CardContent,} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,7 +6,6 @@ import { connect } from 'react-redux';
 import {fetchById, updateForm, fetchFormByCode} from '../../actions/formBuilder'
 import {fetchByHospitalNumber} from '../../actions/patients'
 import MatButton from '@material-ui/core/Button';
-import { TiArrowBack } from "react-icons/ti";
 import { authHeader } from '_helpers/auth-header';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

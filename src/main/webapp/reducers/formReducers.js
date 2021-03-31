@@ -6,13 +6,13 @@ const initialState = {
 };
 
 
-const formReducer = (state = {  services:  [], form:[]}, action) => {
+const formReducer = (state = {  services:  [], formList:[], form:{}}, action) => {
     switch(action.type){
         case FORMTYPES.FORMTYPES_FETCH_ALL:
             return {...state, form:action.payload}
 
         case FORMTYPES.FORMTYPES_FETCH_ALL_FORMS:
-            return {...state, form:action.payload}
+            return {...state, formList:action.payload}
 
         case FORMTYPES.FORMTYPES_FETCH_SERVICES:
             return {...state, services: action.payload}

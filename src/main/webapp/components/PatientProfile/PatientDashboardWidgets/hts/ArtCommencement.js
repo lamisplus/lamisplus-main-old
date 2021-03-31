@@ -11,7 +11,8 @@ import {
   import AddVitalsPage from 'components/Vitals/AddVitalsPage';
   import * as actions from "actions/patients";
   import * as encounterAction from "actions/encounter";
-  import {connect} from 'react-redux';
+  import {fetchAllRegimen, fetchAllRegimenLine} from "../../../../actions/medication";
+import {connect} from 'react-redux';
 import axios from 'axios';
 import {url as baseUrl, url} from '../../../../api';
 import * as CODES from "api/codes";
@@ -29,6 +30,16 @@ import moment from 'moment';
 
 
         useEffect(() => {
+            if(props.regimenList.length <= 0) {
+                props.fetchAllRegimen(() => {
+                }, () => {
+                });
+            }
+            if(props.regimenLineList.length <= 0) {
+                props.fetchAllRegimenLine(() => {
+                }, () => {
+                });
+            }
             setLoading(true);
             async function fetchFormData() {
                 axios
@@ -62,7 +73,7 @@ import moment from 'moment';
               <Row xs='12'>
                   <Col xs='6'>
 
-                      ART Start Date :< span> <b>{data.date_enrollment ? moment(data.date_enrollment).format('DD MMM yyyy') : 'N/A'}</b></span>
+                      ART Start Date :< span> <b>{data.date_art_start ? moment(data.date_art_start).format('DD MMM yyyy') : 'N/A'}</b></span>
 
                   </Col>
 
@@ -71,14 +82,14 @@ import moment from 'moment';
                       Stage: <span><b>{data.clinic_stage && data.clinic_stage.display ? data.clinic_stage.display : 'N/A'}</b></span>
                   </Col>
                   <Col xs='6'>
-                      Original Regimen Line: <span><b>{data.regimen || 'N/A'}</b></span>
+                      Original Regimen Line: <span><b>{data.regimenId ? (props.regimenLineList.find(x => x.id == data.regimenId) ? props.regimenLineList.find(x => x.id === data.regimenId).name: 'N/A') : 'N/A'}</b></span>
                   </Col>
                   <Col xs='6'>
                       TB
                       Status: <span><b>{data.tb_status && data.tb_status.display ? data.tb_status.display : 'N/A'}</b></span>
                   </Col>
                   <Col xs='6'>
-                      Original Regimen: <span><b>{data.regimen || 'N/A'}</b></span>
+                      Original Regimen: <span><b>{data.regimen ? (props.regimenList.find(x => x.id == data.regimen) ? props.regimenList.find(x => x.id === data.regimen).name: 'N/A') : 'N/A'}</b></span>
                   </Col>
 
                   <Col xs='6'>
@@ -103,6 +114,8 @@ import moment from 'moment';
 const mapStateToProps = state => {
   return {
   patient: state.patients.patient,
+      regimenList: state.medication.regimenList,
+      regimenLineList: state.medication.regimenLineList,
   vitalSigns: state.patients.vitalSigns
   }
 }
@@ -110,7 +123,9 @@ const mapStateToProps = state => {
 const mapActionToProps = {
   fetchPatientByHospitalNumber: actions.fetchById,
   createVitalSigns: encounterAction.create,
-  fetchPatientVitalSigns: actions.fetchPatientLatestVitalSigns
+  fetchPatientVitalSigns: actions.fetchPatientLatestVitalSigns,
+    fetchAllRegimen:fetchAllRegimen,
+    fetchAllRegimenLine: fetchAllRegimenLine
 }
 
 export default connect(mapStateToProps, mapActionToProps)(ArtCommencement)

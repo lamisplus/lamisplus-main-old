@@ -399,6 +399,8 @@ function ServiceFormPage(props) {
                   programCode={currentForm.programCode}
                   visitId={props.patient.visitId}
                   onSuccess={onSuccess}
+                  options={true}
+                  hideHeader={true}
                 />
               )}
               {currentForm && currentForm.type === "VIEW" && (
