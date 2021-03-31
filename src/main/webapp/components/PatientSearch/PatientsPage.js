@@ -49,7 +49,7 @@ const GeneralPatientSearch = props => {
                   startIcon={<FaUserPlus />}
                   disabled={!authentication.userHasRole(["patient_write"])}
               >
-                <span style={{textTransform: 'capitalize'}}>Add Patienjjt</span>
+                <span style={{textTransform: 'capitalize'}}>Add Patient</span>
               </Button>
             </Link>
             <br />

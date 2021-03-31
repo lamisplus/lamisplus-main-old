@@ -16,6 +16,7 @@ import ViewModal from './ViewModalForm';
 import { Menu, MenuList, MenuButton, MenuItem } from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import { Spinner } from 'reactstrap';
+import { connect } from "react-redux";
 import {
   Card,
   CardBody,
@@ -24,6 +25,7 @@ import {
   Row,
 } from "reactstrap";
 import {authentication} from '../../_services/authentication';
+import { fetchPatientPrescriptionsByEncounter } from "../../actions/pharmacy";
 
 
 //
@@ -69,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Prescriptions = (props) => {
  const prescriptionOrder  = props.location.state  && props.location.state.formDataObj  ? props.location.state.formDataObj : {}
-  console.log(prescriptionOrder)
+  console.log(props.location.state.formDataObj.id)
   const classes = useStyles();
   const [loading, setLoading] = useState('')
   const [modal, setModal] = useState(false);
@@ -80,6 +82,21 @@ const Prescriptions = (props) => {
   const toggleModal2 = () => setModal2(!modal2)
   const [formData, setFormData] = useState(prescriptionOrder);
   const [drugDetails, setDrugDetails] = useState()
+
+  
+//   useEffect(() => {
+
+//     setLoading('true');
+//     const onSuccess = () => {      
+//     setLoading(false)
+//     console.log(props.prescriptionList)
+//     setFormData(props.prescriptionList)
+//   }
+//     const onError = () => {
+//     setLoading(false)     
+//   }
+//    props.fetchPatientPrescriptionsByEncounter(props.location.state.encounterId,onSuccess, onError);
+// }, [props.location.state.encounterId]); //componentDidMount
 
   const toggle = (form) => {
 
@@ -269,4 +286,15 @@ const Prescriptions = (props) => {
   );
 }
 
-export default Prescriptions
+const mapStateToProps = state => {
+  return {
+      prescriptionList: state.pharmacy.list
+  };
+};    
+
+const mapActionToProps = {
+  fetchPatientPrescriptionsByEncounter
+};
+  
+export default connect(mapStateToProps, mapActionToProps)(Prescriptions);
+

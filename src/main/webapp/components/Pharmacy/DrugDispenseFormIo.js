@@ -100,7 +100,7 @@ const ModalSample = (props) => {
         };
 
         props.updatePrescriptionStatus(datasampleObj.id, datasampleObj, onSuccess, onError);
-        history.push("/pharmacy");
+        //history.push("/pharmacy");
 
 
     };
