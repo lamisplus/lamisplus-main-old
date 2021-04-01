@@ -22,11 +22,27 @@ import moment from 'moment';
     const [data, setData] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [appointment, setAppointment] = useState();
     const [bmiStatus, setBMIStatus] = useState();
     const [bmi, setBMI] = useState();
     const toggle = () => {
       return setShowModal(!showModal)
    }
+     const fetchAppointment = () => {
+
+
+         axios
+             .get(`${baseUrl}appointments/${props.patientId}`)
+             .then(response => {
+                 console.log(response.data);
+                 setAppointment(response.data.length > 0 ? response.data[0] : null);
+             })
+             .catch(error => {
+
+                 }
+
+             );
+     }
 
 
         useEffect(() => {
@@ -40,6 +56,7 @@ import moment from 'moment';
                 }, () => {
                 });
             }
+            fetchAppointment();
             setLoading(true);
             async function fetchFormData() {
                 axios
@@ -93,7 +110,7 @@ import moment from 'moment';
                   </Col>
 
                   <Col xs='6'>
-                      Next Appointment: <span><b>{data.next_appointment ? moment(data.next_appointment).format('DD MMM yyyy') : ''}</b></span>
+                      Next Appointment: <span><b>{appointment && appointment.detail && appointment.detail.appointment_date ?  moment(appointment.detail.appointment_date).format('DD MMM yyyy') : ''} {appointment && appointment.detail && appointment.detail.appointment_type ? appointment.detail.appointment_type.toString() : ''}</b></span>
                   </Col>
 
               </Row>

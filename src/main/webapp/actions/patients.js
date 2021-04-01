@@ -24,7 +24,7 @@ import { toast } from "react-toastify";
  */
 export const fetchAll = (onSuccess, onError) => dispatch => {
   axios
-    .get(`${baseUrl}patients/`)
+    .get(`${baseUrl}patients?size=200`)
     .then(response => {
       console.log(response.data);
       if(onSuccess){

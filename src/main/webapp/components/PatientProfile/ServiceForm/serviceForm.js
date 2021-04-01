@@ -369,7 +369,8 @@ function ServiceFormPage(props) {
                           searchFieldAlignment: "left",
                           padding: 'dense',
                           header: false,
-                          showTitle: false
+                          showTitle: false,
+                          pageSize: 15
                         }}
                     />
 
