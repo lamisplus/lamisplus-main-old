@@ -28,7 +28,7 @@ public class BaseApplication extends SpringBootServletInitializer {
         context = SpringApplication.run(BaseApplication.class, args);
     }
 
-    public static void restart(Class[] clz) {
+    /*public static void restart(Class[] clz) {
         ApplicationArguments args = context.getBean(ApplicationArguments.class);
 
         Thread thread = new Thread(() -> {
@@ -38,10 +38,10 @@ public class BaseApplication extends SpringBootServletInitializer {
 
         thread.setDaemon(false);
         thread.start();
-    }
+    }*/
 
-    public static ConfigurableApplicationContext getContext() {
+    /*public static ConfigurableApplicationContext getContext() {
         return context;
-    }
+    }*/
 }
 
