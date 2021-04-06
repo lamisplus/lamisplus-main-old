@@ -60,7 +60,7 @@ const ModalSample = (props) => {
     const classes = useStyles()
     let history = useHistory();
     const datasampleObj = props.datasample && props.datasample!==null ? props.datasample : {};
-
+    const datasample = props.datasample && props.datasample!==null ? props.datasample : {};
     const DrugId = datasampleObj.id
     const [loading, setLoading] = useState(false)
     const [visible, setVisible] = useState(true);
@@ -90,18 +90,32 @@ const ModalSample = (props) => {
 
 
     const saveSample = (e) => {
-        const newData = e.data
-        datasampleObj.data.prescription_status = 1
+        // const newData = e.data
+        // datasampleObj.data.prescription_status = 1
+        // const onSuccess = () => {
+        //     props.togglestatus();
+        // };
+        // const onError = () => {
+        //     props.togglestatus();
+        // };
+
+        // props.updatePrescriptionStatus(datasampleObj.id, datasampleObj, onSuccess, onError);
+        // //history.push("/pharmacy");
+
+        datasample.data.prescription_status = 1
+        //datasample.data = e.data
         const onSuccess = () => {
             props.togglestatus();
         };
         const onError = () => {
             props.togglestatus();
         };
-
-        props.updatePrescriptionStatus(datasampleObj.id, datasampleObj, onSuccess, onError);
-        //history.push("/pharmacy");
-
+        const newData =  {...datasample.data, ... e.data}
+        datasample.data = newData
+       console.log(datasample)
+       
+       props.updatePrescriptionStatus(DrugId, datasample, onSuccess, onError);
+       props.togglestatus();
 
     };
 
