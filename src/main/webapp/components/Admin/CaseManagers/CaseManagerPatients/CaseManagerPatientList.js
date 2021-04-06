@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import MaterialTable from 'material-table';
 import { Link } from 'react-router-dom'
 import { connect } from "react-redux";
-import {Col,Input,FormGroup,Label} from "reactstrap";
+import {Col, Input, FormGroup, Label, CardBody, Card} from "reactstrap";
 import { fetchAllLabTestOrder } from "../../../../actions/laboratory";
 import "../casemanager.css";
 import {GiFiles} from 'react-icons/gi'; 
@@ -12,8 +12,11 @@ import Button from "@material-ui/core/Button";
 import AddPatientModal from './AddPatientModal';
 import {authentication} from '../../../../_services/authentication';
 import Page from '../../../Page';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Typography from '@material-ui/core/Typography';
 
 const CaseManagerPatientList = (props) => {
+    const row = props.location.state
   const [loading, setLoading] = useState('')
   const [modal3, setModal3] = useState(false)//modal to View Result
   const togglemodal3 = () => setModal3(!modal3)
@@ -70,39 +73,22 @@ useEffect(() => {
   }
 
   return (
-    
-    <Page title='Case Manager Patients List - (Dr Dorcas)'>
-        <br/>
-        <br/>
-      <>
-        <Col md={3}>
-          <FormGroup>
-              <Label for="">Program Type </Label>
-
-              <Input
-                  type="select"
-                  name="sample_collected_by"
-                  id="sample_collected_by"
-                  vaule=""
-                  className=" float-left mr-1"
-              >
-                  <option value=""> </option>
-                  <option value="eid"> Hiv </option>
-                  <option value="viral Load"> Tb </option>
-                 
-              </Input>
-              
-          </FormGroup>
-      </Col>
-       </>            
+      <Card>
+          <CardBody>
+      <Breadcrumbs aria-label="breadcrumb">
+          <Link color="inherit" to={{pathname: "/admin"}} >
+          Case Managers
+          </Link>
+          <Typography color="textPrimary">Assign/Reassign Client to Case Manager - {row.firstName +  ' ' + row.lastName || ''} </Typography>
+      </Breadcrumbs>
+      <br/>
       <Link to="/patients-managed-case">
         {/* <Link to="/dispatched-sample"> */}
             <Button
               color="primary"
               variant="contained"
               className=" float-right mr-1"
-              size="large"
-            >
+              size="large">
               {<GiFiles />} &nbsp;&nbsp;
               <span style={{textTransform: 'capitalize'}}>List of Case Manger  </span>
                   &nbsp;&nbsp;
@@ -110,13 +96,11 @@ useEffect(() => {
             </Button>
       </Link>
       <Link to="/switch-patients">
-        {/* <Link to="/dispatched-sample"> */}
             <Button
               color="primary"
               variant="contained"
               className=" float-right mr-1"
-              size="large"
-            >
+              size="large">
               {<GiFiles />} &nbsp;&nbsp;
               <span style={{textTransform: 'capitalize'}}>Re-assign</span>
                   &nbsp;&nbsp;
@@ -128,68 +112,27 @@ useEffect(() => {
         <br/>
         <br/>
       <MaterialTable
-        title="List of Samples to Dispatch "
+        title="List of Patients to assign and reassign "
         columns={[
-        
-          { title: "FormDataObj ", 
-            field: "formDataObj",
-            hidden: true
-          },
-          
           {
-              title: "Sample Type",
-              field: "sampleType",
+              title: "Patient Name",
+              field: "row.firstName +  ' ' + row.lastName ",
           },
 
           {
-            title: "Date Sample Ordered ",
-            field: "dateSampleOrdered",
+            title: "Patient ID",
+            field: "patientId",
           },
           { 
-            title: "Time Sample Ordered", 
-            field: "timeSampleOrdered"
+            title: "Age",
+            field: "age",
+              filtering: false
           },
           { 
-            title: "Date Sample Collected", 
-            field: "dateSampleCollected", 
-            type: "date" , 
+            title: "Address",
+            field: "address",
             filtering: false
           },
-          {
-            title: "Time Sample Collected",
-            field: "timeSampleCollected",
-          },
-          { 
-            title: "Sample Ordered By", 
-            field: "sampleOrderedBy"
-          },   
-          { 
-            title: "Sample Transferred By", 
-            field: "sampleTransferredBy",            
-          },    
-          { 
-            title: "Date Sample Transferred", 
-            field: "dateSampleTransferred",hidden: true             
-          },
-          
-          {
-            title: "Date Sample Transfered",
-            field: "dateSampleTransferred",  hidden: true          
-          },
-          {
-            title: "Sample Collected By",
-            field: "sampleCollectedBy",  hidden: true 
-          }, 
-          {
-            title: "Sample Transfered By",
-            field: "sampleTransferredBy",  hidden: true           
-          },      
-          {
-              title: "Viral Load Indication",
-              field: "viralLoadIndication", hidden: true  
-          },
-          
-          
         ]}
         isLoading={loading}
         data={labTestType.map((row) => ({
@@ -229,9 +172,8 @@ useEffect(() => {
         ]}       
       />
       <AddPatientModal modalstatus={modal3} togglestatus={togglemodal3} manifestSamples={collectmodal} />
-
-    </Page>
-    
+          </CardBody>
+      </Card>
   );
 }
 
