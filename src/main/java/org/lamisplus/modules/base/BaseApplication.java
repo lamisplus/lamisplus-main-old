@@ -1,44 +1,47 @@
 package org.lamisplus.modules.base;
 
-import org.lamisplus.modules.base.service.ModuleService;
+import com.foreach.across.config.AcrossApplication;
+import com.foreach.across.modules.web.AcrossWebModule;
+import org.lamisplus.modules.base.base.BaseModule;
+import org.lamisplus.modules.base.base.service.ModuleService;
+import org.lamisplus.modules.bootstrap.BootstrapModule;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
-@SpringBootApplication
+@AcrossApplication(modules = {
+    AcrossWebModule.NAME
+})
 public class BaseApplication extends SpringBootServletInitializer {
-	private static ConfigurableApplicationContext context;
+    private static ConfigurableApplicationContext context;
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(BaseApplication.class);
-	}
-	public static void main(String[] args) {
-		context = SpringApplication.run(BaseApplication.class, args);
-		ModuleService moduleService = context.getBean(ModuleService.class);
-		moduleService.startModule();
-	}
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(BaseApplication.class);
+    }
 
-	public static void restart(Class [] clz) {
-		ApplicationArguments args = context.getBean(ApplicationArguments.class);
+    public static void main(String[] args) {
+        context = SpringApplication.run(BaseApplication.class, args);
+    }
 
-		Thread thread = new Thread(() -> {
-			context.close();
-			context = SpringApplication.run(clz, args.getSourceArgs());
-		});
+    public static void restart(Class[] clz) {
+        ApplicationArguments args = context.getBean(ApplicationArguments.class);
 
-		thread.setDaemon(false);
-		thread.start();
-	}
+        Thread thread = new Thread(() -> {
+            context.close();
+            context = SpringApplication.run(clz, args.getSourceArgs());
+        });
 
-	public static ConfigurableApplicationContext getContext(){
-		return context;
-	}
+        thread.setDaemon(false);
+        thread.start();
+    }
 
+    public static ConfigurableApplicationContext getContext() {
+        return context;
+    }
 }
 

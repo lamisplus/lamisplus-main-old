@@ -1,0 +1,100 @@
+package org.lamisplus.modules.base.base.service;
+
+import org.lamisplus.modules.base.base.domain.dto.UserDTO;
+import org.lamisplus.modules.base.base.domain.entity.Authority;
+import org.lamisplus.modules.base.base.domain.entity.Person;
+import org.lamisplus.modules.base.base.domain.entity.User;
+import org.lamisplus.modules.base.base.repository.AuthorityRepository;
+import org.lamisplus.modules.base.base.repository.PersonRepository;
+import org.lamisplus.modules.base.base.repository.UserRepository;
+import org.lamisplus.modules.base.base.security.AuthoritiesConstants;
+import org.lamisplus.modules.base.base.security.SecurityUtils;
+import org.lamisplus.modules.base.base.util.UuidGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+
+
+@Service
+@Transactional
+public class UserService {
+
+    @Autowired
+    private PersonRepository personRepository;
+
+    private final Logger log = LoggerFactory.getLogger(UserService.class);
+
+    private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
+    private final AuthorityRepository authorityRepository;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authorityRepository = authorityRepository;
+    }
+
+    @Transactional
+    public Optional<User> getUserWithAuthoritiesByUsername(String userName){
+        return userRepository.findOneWithAuthoritiesByUserName(userName);
+    }
+
+    @Transactional(readOnly = true)
+    public  Optional<User> getUserWithAuthorities(){
+       return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithAuthoritiesByUserName);
+    }
+
+    public User registerUser(UserDTO userDTO, String password){
+        userRepository
+                .findOneByUserName(userDTO.getUserName().toLowerCase())
+                .ifPresent(existingUser-> {
+                    throw new UsernameAlreadyUsedException();
+                        }
+                );
+        Person person = new Person();
+        person.setUuid(UuidGenerator.getUuid());
+        person.setFirstName(userDTO.getFirstName());
+        person.setLastName(userDTO.getLastName());
+        Person newPerson = personRepository.save(person);
+
+
+        User newUser = new User();
+        String encryptedPassword = passwordEncoder.encode(password);
+        newUser.setUserName(userDTO.getUserName());
+        newUser.setPassword(encryptedPassword);
+        newUser.setPersonByPersonId(newPerson);
+        newUser.setPersonId(newPerson.getId());
+        Set<Authority> authorities = new HashSet<>();
+        authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
+        newUser.setAuthorities(authorities);
+        userRepository.save(newUser);
+        log.debug("User Created: {}", newUser);
+        return newUser;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UserDTO> getAllManagedUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).map(UserDTO::new);
+    }
+
+
+}
+
+class UsernameAlreadyUsedException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+
+    public UsernameAlreadyUsedException() {
+        super("Login name already used!");
+    }
+}
