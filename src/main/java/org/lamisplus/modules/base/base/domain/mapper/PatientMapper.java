@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.base.domain.mapper;
 
 import org.lamisplus.modules.base.base.domain.dto.PatientDTO;
+import org.lamisplus.modules.base.base.domain.dto.PatientList;
 import org.lamisplus.modules.base.base.domain.entity.Patient;
 import org.lamisplus.modules.base.base.domain.entity.Person;
 import org.lamisplus.modules.base.base.domain.entity.PersonContact;
@@ -17,17 +18,30 @@ public interface PatientMapper {
 
     Patient toPatient(PatientDTO patientDTO);
 
-
     @Mappings({
             @Mapping(source="person.id", target="personId"),
             @Mapping(source="visit.id", target="visitId"),
-            @Mapping(source="patient.id", target="patientId")
+            @Mapping(source="patient.id", target="patientId"),
+            @Mapping(source="patient.organisationUnitId", target="organisationUnitId")
     })
     PatientDTO toPatientDTO(Person person, Visit visit, PersonContact personContact, Patient patient);
+
     @Mappings({
             @Mapping(source="person.id", target="personId"),
-            @Mapping(source="patient.id", target="patientId")
+            @Mapping(source="patient.id", target="patientId"),
+            @Mapping(source="patient.organisationUnitId", target="organisationUnitId")
     })
-    PatientDTO toPatientDTO(Person person,PersonContact personContact, Patient patient);
+    PatientDTO toPatientDTO(Person person, PersonContact personContact, Patient patient);
 
+    @Mappings({
+            @Mapping(source="person.id", target="personId"),
+            @Mapping(source="patient.id", target="patientId"),
+    })
+    PatientList toPatientListDTO(Person person, PersonContact personContact, Patient patient);
+
+    @Mappings({
+            @Mapping(source="person.id", target="personId"),
+            @Mapping(source="patient.id", target="patientId"),
+    })
+    PatientList toPatientListDTO(Person person, Visit visit, PersonContact personContact, Patient patient);
 }

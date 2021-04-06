@@ -2,6 +2,7 @@ package org.lamisplus.modules.base.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.base.domain.entity.RadiologyTest;
 import org.lamisplus.modules.base.base.service.RadiologyTestService;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +16,13 @@ import java.util.List;
 @RequestMapping("/api/radiology-tests")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class RadiologyTestController {
 
     private final RadiologyTestService radiologyTestService;
 
     @GetMapping
     public ResponseEntity<List<RadiologyTest>> getAllLabTestGroups() {
-        return ResponseEntity.ok(this.radiologyTestService.getAllRadiologyTests());
+        return ResponseEntity.ok(radiologyTestService.getAllRadiologyTests());
     }
 }

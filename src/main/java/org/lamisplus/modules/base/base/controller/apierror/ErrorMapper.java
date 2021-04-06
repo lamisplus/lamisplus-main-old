@@ -1,5 +1,7 @@
 package org.lamisplus.modules.base.base.controller.apierror;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;

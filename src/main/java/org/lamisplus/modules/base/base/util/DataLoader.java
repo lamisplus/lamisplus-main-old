@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.base.util;
 import java.io.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
+import org.lamisplus.modules.base.base.controller.apierror.EntityNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;

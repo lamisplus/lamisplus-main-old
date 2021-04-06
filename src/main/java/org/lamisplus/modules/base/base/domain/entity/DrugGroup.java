@@ -1,22 +1,20 @@
 package org.lamisplus.modules.base.base.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
 @Data
 @EqualsAndHashCode
 @Table(name = "drug_group")
-public class DrugGroup implements Serializable {
+public class DrugGroup extends Audit<String> {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false)
     private Long id;
 
     @Basic
@@ -24,40 +22,16 @@ public class DrugGroup implements Serializable {
     private String name;
 
     @Basic
-    @Column(name = "uuid")
-    @JsonIgnore
+    @Column(name = "uuid", updatable = false)
     private String uuid;
-
-    @Basic
-    @Column(name = "date_created")
-    @CreationTimestamp
-    @JsonIgnore
-    private Timestamp dateCreated;
-
-    @Basic
-    @Column(name = "created_by")
-    @JsonIgnore
-    private String createdBy;
-
-    @Basic
-    @Column(name = "date_modified")
-    @UpdateTimestamp
-    @JsonIgnore
-    private Timestamp dateModified;
-
-    @Basic
-    @Column(name = "modified_by")
-    @JsonIgnore
-    private String modifiedBy;
 
     @Basic
     @Column(name = "archived")
     @JsonIgnore
-    private Integer archived;
+    private Integer archived = 0;
 
     @OneToMany(mappedBy = "drugGroupByDrugGroupId")
     @JsonIgnore
     @ToString.Exclude
-    private List<Drug> drugsByDrugGroup;
-
+    private List<Drug> drugsById;
 }

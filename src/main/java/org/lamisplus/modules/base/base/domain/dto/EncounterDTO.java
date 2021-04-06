@@ -2,12 +2,16 @@ package org.lamisplus.modules.base.base.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import org.hibernate.annotations.Type;
+import org.lamisplus.modules.base.base.domain.entity.FormData;
 import org.lamisplus.modules.base.base.util.converter.LocalDateConverter;
 import org.lamisplus.modules.base.base.util.converter.LocalTimeAttributeConverter;
 
 import javax.persistence.Convert;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;

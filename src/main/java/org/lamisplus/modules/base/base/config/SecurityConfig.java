@@ -5,6 +5,7 @@ import org.lamisplus.modules.base.base.security.jwt.TokenProvider;
 import org.lamisplus.modules.base.base.service.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,8 +17,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+//@Profile(value = {"development", "production"})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final TokenProvider tokenProvider;
+    //Swagger interface
+    private static final String[] AUTH_LIST = { //
+            "/v2/api-docs", //
+            "/configuration/ui", //
+            "/swagger-resources", //
+            "/configuration/security", //
+            "/swagger-ui.html", //
+            "/webjars/**" //
+    };
 
     public SecurityConfig(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
@@ -39,7 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .authorizeRequests()
                     .antMatchers("/api/authenticate","/api/application-codesets/codesetGroup").permitAll()
-                    .antMatchers("/api/**").permitAll()
+                    .antMatchers("/api/**").authenticated()
+                .antMatchers(AUTH_LIST).authenticated().and().httpBasic()
                 .and()
                     .apply(securityConfigurerAdapter())
                 .and().csrf().disable()
@@ -53,5 +65,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
 }

@@ -1,7 +1,9 @@
 package org.lamisplus.modules.base.base.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.lamisplus.modules.base.base.util.converter.LocalDateConverter;
 import org.lamisplus.modules.base.base.util.converter.LocalTimeAttributeConverter;
 
 import javax.persistence.Convert;
@@ -17,6 +19,7 @@ public class PatientDTO {
     private Long visitId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate dateRegistration;
+    private Long organisationUnitId;
 
     private String hospitalNumber;
     private String firstName;

@@ -2,25 +2,31 @@ package org.lamisplus.modules.base.base.domain.entity;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.lamisplus.modules.base.base.util.converter.LocalDateConverter;
 import org.lamisplus.modules.base.base.util.converter.LocalTimeAttributeConverter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @EqualsAndHashCode
+@ToString
 @Table(name = "encounter")
 @Data
 public class Encounter implements Serializable  {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -37,6 +43,7 @@ public class Encounter implements Serializable  {
     @Basic
     @Column(name = "program_code", nullable = false)
     private String programCode;
+
     @Basic
     @Column(name = "date_encounter")
     @Convert(converter = LocalDateConverter.class)
@@ -50,7 +57,7 @@ public class Encounter implements Serializable  {
     private LocalTime timeCreated;
 
     @Basic
-    @Column(name = "uuid")
+    @Column(name = "uuid", updatable = false)
     @JsonIgnore
     private String uuid;
 
@@ -59,10 +66,15 @@ public class Encounter implements Serializable  {
     @JsonIgnore
     private Timestamp dateCreated;*/
 
+    @CreatedBy
     @Basic
-    @Column(name = "created_by")
+    @Column(name = "created_by", updatable = false)
     @JsonIgnore
     private String createdBy;
+
+    @Basic
+    @Column(name = "organisation_unit_id", updatable = false)
+    private Long organisationUnitId;
 
     @Basic
     @Column(name = "date_modified")
@@ -70,6 +82,7 @@ public class Encounter implements Serializable  {
     @UpdateTimestamp
     private Timestamp dateModified;
 
+    @LastModifiedBy
     @Basic
     @Column(name = "modified_by")
     @JsonIgnore
@@ -83,24 +96,29 @@ public class Encounter implements Serializable  {
     @ManyToOne
     @JoinColumn(name = "patient_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
+    @ToString.Exclude
     private Patient patientByPatientId;
 
     @ManyToOne
     @JoinColumn(name = "visit_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
+    @ToString.Exclude
     private Visit visitByVisitId;
 
     @ManyToOne
     @JoinColumn(name = "form_code", referencedColumnName = "code", insertable = false, updatable = false)
     @JsonIgnore
+    @ToString.Exclude
     private Form formForEncounterByFormCode;
 
     @ManyToOne
-    @JoinColumn(name = "program_code", referencedColumnName = "uuid", insertable = false, updatable = false)
+    @JoinColumn(name = "program_code", referencedColumnName = "code", insertable = false, updatable = false)
     @JsonIgnore
+    @ToString.Exclude
     private Program programForEncounterByProgramCode;
 
     @OneToMany(mappedBy = "encounterByEncounterId")
     @JsonIgnore
+    @ToString.Exclude
     private List<FormData> formDataByEncounter;
     }

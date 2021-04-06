@@ -1,14 +1,12 @@
 package org.lamisplus.modules.base.base.controller;
 
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.base.controller.vm.ManagedUserVM;
 import org.lamisplus.modules.base.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.base.domain.entity.User;
 import org.lamisplus.modules.base.base.repository.UserRepository;
-import org.lamisplus.modules.base.base.security.AuthoritiesConstants;
 import org.lamisplus.modules.base.base.service.UserService;
 import org.lamisplus.modules.base.base.util.PaginationUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -19,18 +17,18 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@Audit
 public class AccountController {
     private static class AccountResourceException extends RuntimeException {
         private AccountResourceException(String message) {
             super(message);
         }
     }
-
-    private final Logger log = LoggerFactory.getLogger(AccountController.class);
 
     private final UserRepository userRepository;
 
@@ -42,9 +40,9 @@ public class AccountController {
     }
 
     @GetMapping("/account")
-    public UserDTO getAccount(){
+    public UserDTO getAccount(Principal principal){
         return userService
-                .getUserWithAuthorities()
+                .getUserWithRoles()
                 .map(UserDTO::new)
                 .orElseThrow(() -> new AccountResourceException("User could not be found"));
     }
@@ -53,15 +51,16 @@ public class AccountController {
     @ResponseStatus(HttpStatus.CREATED)
     public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
         //Check Password Length
-        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
+        userService.registerUser(managedUserVM, managedUserVM.getPassword());
     }
 
+
+
+
     @GetMapping("/users")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {
         final Page<UserDTO> page = userService.getAllManagedUsers(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
-
 }

@@ -11,9 +11,9 @@ import java.io.Serializable;
 @Entity
 @EqualsAndHashCode
 @Table(name = "radiology_test_group")
-public class RadiologyTestGroup implements Serializable {
+public class RadiologyTestGroup extends Audit<String>  implements Serializable {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -24,4 +24,5 @@ public class RadiologyTestGroup implements Serializable {
     @Basic
     @Column(name = "archived")
     @JsonIgnore
-    private Integer archived;}
+    private Integer archived;
+}

@@ -4,8 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.base.controller.apierror.RecordExistException;
-import org.lamisplus.modules.base.base.domain.entity.Drug;
+import org.lamisplus.modules.base.base.domain.dto.DrugDTO;
 import org.lamisplus.modules.base.base.domain.entity.DrugGroup;
+import org.lamisplus.modules.base.base.domain.mapper.DrugMapper;
 import org.lamisplus.modules.base.base.repository.DrugGroupRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,48 +19,43 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class DrugGroupService {
+    private static final int ARCHIVED = 1;
+    private static final int UN_ARCHIVED = 0;
     private final DrugGroupRepository drugGroupRepository;
-    private final UserService userService;
+    private final DrugMapper drugMapper;
 
     public List<DrugGroup> getAllDrugGroups() {
-        return this.drugGroupRepository.findAll();
+        return this.drugGroupRepository.findAllByArchived(UN_ARCHIVED);
     }
 
     public DrugGroup save(DrugGroup drugGroup) {
-        Optional<DrugGroup> drugGroupOptional = drugGroupRepository.findById(drugGroup.getId());
+        Optional<DrugGroup> drugGroupOptional = drugGroupRepository.findByIdAndArchived(drugGroup.getId(), UN_ARCHIVED);
         if (drugGroupOptional.isPresent()) throw new RecordExistException(DrugGroup.class, "Id", drugGroup.getId() + "");
-        drugGroup.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
         return drugGroupRepository.save(drugGroup);
     }
 
     public DrugGroup getDrugGroup(Long id) {
-        Optional<DrugGroup> drugGroupOptional = this.drugGroupRepository.findById(id);
-        if (!drugGroupOptional.isPresent()) throw new EntityNotFoundException(DrugGroup.class, "Id", id + "");
-        return drugGroupOptional.get();
+        return drugGroupRepository.findByIdAndArchived(id, UN_ARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(DrugGroup.class, "Id", id + ""));
     }
 
     public DrugGroup update(Long id, DrugGroup drugGroup) {
-        Optional<DrugGroup> drugGroupOptional = drugGroupRepository.findById(id);
-        if(!drugGroupOptional.isPresent())throw new EntityNotFoundException(DrugGroup.class, "Id", id +"");
+        drugGroupRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(DrugGroup.class, "Id", id +""));
         drugGroup.setId(id);
-        drugGroup.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
         return drugGroupRepository.save(drugGroup);
     }
 
-    public List<Drug> getDrugByDrugGroupId(Long id){
-        Optional<DrugGroup> drugGroupOptional = drugGroupRepository.findById(id);
-        if(!drugGroupOptional.isPresent())throw new EntityNotFoundException(DrugGroup.class, "Id", id +"");
-        List<Drug> drugs = drugGroupOptional.get().getDrugsByDrugGroup();
-        return drugs;
+    public List<DrugDTO> getDrugsByDrugGroupId(Long id){
+        DrugGroup drugGroup = drugGroupRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(DrugGroup.class, "Id", id +""));
+
+        return drugMapper.toDrugDTOList(drugGroup.getDrugsById());
     }
 
     public Integer delete(Long id) {
-        Optional<DrugGroup> drugGroupOptional = drugGroupRepository.findById(id);
-        if(!drugGroupOptional.isPresent())throw new EntityNotFoundException(DrugGroup.class, "Id", id +"");
-        drugGroupOptional.get().setArchived(1);
-        drugGroupOptional.get().setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        DrugGroup drugGroup = drugGroupRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(DrugGroup.class, "Id", id +""));
+        drugGroup.setArchived(ARCHIVED);
+        drugGroupRepository.save(drugGroup);
 
-        return drugGroupOptional.get().getArchived();
+        return drugGroup.getArchived();
     }
-
 }

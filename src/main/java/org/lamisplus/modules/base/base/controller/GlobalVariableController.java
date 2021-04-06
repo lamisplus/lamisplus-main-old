@@ -2,37 +2,32 @@ package org.lamisplus.modules.base.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.base.domain.dto.GlobalVariableDTO;
-import org.lamisplus.modules.base.base.domain.dto.HeaderUtil;
 import org.lamisplus.modules.base.base.domain.entity.GlobalVariable;
 import org.lamisplus.modules.base.base.service.GlobalVariableService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/global-variables")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class GlobalVariableController {
     private final GlobalVariableService globalVariableService;
-    private static final String ENTITY_NAME = "GlobalVariable";
 
     @PostMapping
-    public ResponseEntity<GlobalVariable> save(@RequestBody GlobalVariableDTO globalVariableDTO) throws URISyntaxException {
-        GlobalVariable globalVariable = this.globalVariableService.save(globalVariableDTO);
-        return ResponseEntity.created(new URI("/api/global-variables/" + globalVariable.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(globalVariable.getId()))).body(globalVariable);
+    public ResponseEntity<GlobalVariable> save(@RequestBody GlobalVariableDTO globalVariableDTO) {
+        return ResponseEntity.ok(this.globalVariableService.save(globalVariableDTO));
+
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GlobalVariable> update(@PathVariable Long id, @RequestBody GlobalVariableDTO globalVariableDTO) throws URISyntaxException {
-        GlobalVariable globalVariable = this.globalVariableService.update(id, globalVariableDTO);
-        return ResponseEntity.created(new URI("/api/global-variables/" + id))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(id))).body(globalVariable);
+    public ResponseEntity<GlobalVariable> update(@PathVariable Long id, @RequestBody GlobalVariableDTO globalVariableDTO) {
+        return ResponseEntity.ok(this.globalVariableService.update(id, globalVariableDTO));
+
     }
 
     @DeleteMapping("/{id}")

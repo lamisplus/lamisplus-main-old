@@ -10,15 +10,16 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.List;
 
 @Data
 @Entity
 @EqualsAndHashCode
 @Table(name = "lab_test_group")
-public class LabTestGroup implements Serializable {
+public class LabTestGroup extends Audit<String> {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -27,36 +28,14 @@ public class LabTestGroup implements Serializable {
     private String name;
 
     @Basic
-    @Column(name = "uuid")
+    @Column(name = "uuid", updatable = false)
     @JsonIgnore
     private String uuid;
 
     @Basic
-    @Column(name = "date_created")
-    @JsonIgnore
-    @CreationTimestamp
-    private Timestamp dateCreated;
-
-    @Basic
-    @Column(name = "created_by")
-    @JsonIgnore
-    private String createdBy;
-
-    @Basic
-    @Column(name = "date_modified")
-    @JsonIgnore
-    @UpdateTimestamp
-    private Timestamp dateModified;
-
-    @Basic
-    @Column(name = "modified_by")
-    @JsonIgnore
-    private String modifiedBy;
-
-    @Basic
     @Column(name = "archived")
     @JsonIgnore
-    private Integer archived;
+    private Integer archived = 0;
 
     @JsonIgnore
     @OneToMany(mappedBy = "labTestGroupByLabTestGroupId")

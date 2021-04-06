@@ -65,7 +65,7 @@ public class JasperReportService {
 
     public List<JasperReportInfoDTO> getJasperReports() {
         GenericSpecification<JasperReportInfo> genericSpecification = new GenericSpecification<JasperReportInfo>();
-        Specification<JasperReportInfo> specification = genericSpecification.findAll();
+        Specification<JasperReportInfo> specification = genericSpecification.findAll(0);
         List<JasperReportInfo> jasperReportInfos = jasperReportInfoRepository.findAll(specification);
 
         List<JasperReportInfoDTO> jasperReportInfoDTOS = new ArrayList<>();

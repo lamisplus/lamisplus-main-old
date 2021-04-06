@@ -9,13 +9,9 @@ public class ApplicationCodesetDTO {
 
     private String codesetGroup;
 
-    private String version;
-
     private String language;
 
     private String display;
-
-    private Integer active;
 
     private String code;
 

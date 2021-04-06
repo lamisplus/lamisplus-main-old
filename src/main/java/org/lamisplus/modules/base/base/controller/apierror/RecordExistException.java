@@ -4,8 +4,9 @@ package org.lamisplus.modules.base.base.controller.apierror;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
 import java.util.Map;
-
+import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class RecordExistException extends RuntimeException {
 

@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
 public class Program implements Serializable {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -25,8 +26,8 @@ public class Program implements Serializable {
     private String name;
 
     @Basic
-    @Column(name = "uuid")
-    private String uuid;
+    @Column(name = "code", updatable = false)
+    private String code;
 
     @Basic
     @Column(name = "module_id")
@@ -34,7 +35,7 @@ public class Program implements Serializable {
 
     @Basic
     @Column(name = "archived")
-    @JsonIgnore
+    @NotNull(message = "Archived is null")
     private Integer archived;
 
     @OneToMany(mappedBy = "programForEncounterByProgramCode")
@@ -50,5 +51,6 @@ public class Program implements Serializable {
     @ManyToOne
     @JoinColumn(name = "module_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
+    @ToString.Exclude
     public Module moduleByModuleId;
 }

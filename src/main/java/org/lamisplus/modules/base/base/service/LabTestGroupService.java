@@ -18,8 +18,9 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class LabTestGroupService {
+    private static final int ARCHIVED = 1;
+    private static final int UN_ARCHIVED = 0;
     private final LabTestGroupRepository labTestGroupRepository;
-    private final UserService userService;
 
 
     public List<LabTestGroup> getAllLabTestGroups() {
@@ -27,40 +28,36 @@ public class LabTestGroupService {
     }
 
     public LabTestGroup save(LabTestGroup labTestGroup) {
-        Optional<LabTestGroup> labTestGroupOptional = labTestGroupRepository.findById(labTestGroup.getId());
+        Optional<LabTestGroup> labTestGroupOptional = labTestGroupRepository.findByIdAndArchived(labTestGroup.getId(), UN_ARCHIVED);
         if (labTestGroupOptional.isPresent()) throw new RecordExistException(LabTestGroup.class, "Id", labTestGroup.getId() + "");
-        labTestGroup.setCreatedBy(userService.getUserWithAuthorities().get().getUserName());
         return labTestGroupRepository.save(labTestGroup);
     }
 
     public LabTestGroup getLabTestGroup(Long id) {
-        Optional<LabTestGroup> labTestGroupOptional = this.labTestGroupRepository.findById(id);
-        if (!labTestGroupOptional.isPresent() || labTestGroupOptional.get().getArchived() == 1) throw new EntityNotFoundException(LabTestGroup.class, "Id", id + "");
+        Optional<LabTestGroup> labTestGroupOptional = this.labTestGroupRepository.findByIdAndArchived(id, UN_ARCHIVED);
+        if (!labTestGroupOptional.isPresent()) throw new EntityNotFoundException(LabTestGroup.class, "Id", id + "");
         return labTestGroupOptional.get();
     }
 
     public LabTestGroup update(Long id, LabTestGroup labTestGroup) {
-        Optional<LabTestGroup> labTestGroupOptional = labTestGroupRepository.findById(id);
-        if(!labTestGroupOptional.isPresent() || labTestGroupOptional.get().getArchived() == 1)throw new EntityNotFoundException(LabTestGroup.class, "Id", id +"");
+        Optional<LabTestGroup> labTestGroupOptional = labTestGroupRepository.findByIdAndArchived(id, UN_ARCHIVED);
+        if(!labTestGroupOptional.isPresent())throw new EntityNotFoundException(LabTestGroup.class, "Id", id +"");
         labTestGroup.setId(id);
-        labTestGroup.setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
         return labTestGroupRepository.save(labTestGroup);
     }
 
     public List<LabTest> getLabTestsByLabTestGroupId(Long id){
-        Optional<LabTestGroup> labTestGroupOptional = labTestGroupRepository.findById(id);
-        if (!labTestGroupOptional.isPresent() || labTestGroupOptional.get().getArchived() == 1) throw new EntityNotFoundException(LabTestGroup.class, "Id", id + "");
+        Optional<LabTestGroup> labTestGroupOptional = labTestGroupRepository.findByIdAndArchived(id, UN_ARCHIVED);
+        if (!labTestGroupOptional.isPresent()) throw new EntityNotFoundException(LabTestGroup.class, "Id", id + "");
         List<LabTest> labTests = labTestGroupOptional.get().getLabTestsByLabTestGroup();
         return labTests;
     }
 
     public Integer delete(Long id) {
-        Optional<LabTestGroup> labTestGroupOptional = labTestGroupRepository.findById(id);
-        if (!labTestGroupOptional.isPresent() || labTestGroupOptional.get().getArchived() == 1) throw new EntityNotFoundException(LabTestGroup.class, "Id", id + "");
-        labTestGroupOptional.get().setArchived(1);
-        labTestGroupOptional.get().setModifiedBy(userService.getUserWithAuthorities().get().getUserName());
+        Optional<LabTestGroup> labTestGroupOptional = labTestGroupRepository.findByIdAndArchived(id, UN_ARCHIVED);
+        if (!labTestGroupOptional.isPresent()) throw new EntityNotFoundException(LabTestGroup.class, "Id", id + "");
+        labTestGroupOptional.get().setArchived(ARCHIVED);
 
         return labTestGroupOptional.get().getArchived();
     }
-
 }

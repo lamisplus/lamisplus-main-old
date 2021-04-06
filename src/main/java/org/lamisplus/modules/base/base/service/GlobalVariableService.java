@@ -55,7 +55,7 @@ public class GlobalVariableService {
 
     public List<GlobalVariable> getGlobalVariables() {
         GenericSpecification<GlobalVariable> genericSpecification = new GenericSpecification<GlobalVariable>();
-        Specification<GlobalVariable> specification = genericSpecification.findAll();
+        Specification<GlobalVariable> specification = genericSpecification.findAll(0);
         return globalVariableRepository.findAll(specification);
     }
 

@@ -8,6 +8,7 @@ import org.lamisplus.modules.base.base.util.converter.LocalTimeAttributeConverte
 import javax.persistence.Convert;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 
 @Data
@@ -59,7 +60,6 @@ public class VisitDTO {
     private Long genderId;
     private Long educationId;
     private Long occupationId;
-
-
-
+    private List<AppointmentDTO> appointmentDTOList;
+    private Long appointmentId;
 }

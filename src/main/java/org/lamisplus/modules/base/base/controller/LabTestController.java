@@ -2,23 +2,20 @@ package org.lamisplus.modules.base.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.base.domain.dto.HeaderUtil;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.base.domain.entity.LabTest;
 import org.lamisplus.modules.base.base.service.LabTestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/lab-tests")
 @Slf4j
 @RequiredArgsConstructor
+@Audit
 public class LabTestController {
     private final LabTestService labTestService;
-    private final String ENTITY_NAME = "LabTest";
 
     @GetMapping
     public ResponseEntity<List<LabTest>> getAllLabTests() {
@@ -31,18 +28,13 @@ public class LabTestController {
     }
 
     @PostMapping
-    public ResponseEntity<LabTest> save(@RequestBody LabTest labTest) throws URISyntaxException {
-        LabTest result = labTestService.save(labTest);
-        return ResponseEntity.created(new URI("/api/lab-test-groups/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.getId()))).body(result);
+    public ResponseEntity<LabTest> save(@RequestBody LabTest labTest) {
+        return ResponseEntity.ok(labTestService.save(labTest));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<LabTest> update(@PathVariable Long id, @RequestBody LabTest labTest) throws URISyntaxException {
-        LabTest result = labTestService.update(id, labTest);
-        return ResponseEntity.created(new URI("/api/lab-test-groups/" + id))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(id)))
-                .body(result);
+    public ResponseEntity<LabTest> update(@PathVariable Long id, @RequestBody LabTest labTest) {
+        return ResponseEntity.ok(labTestService.update(id, labTest));
     }
 
     @DeleteMapping("/{id}")

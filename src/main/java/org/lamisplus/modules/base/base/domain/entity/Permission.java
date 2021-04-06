@@ -1,31 +1,26 @@
 package org.lamisplus.modules.base.base.domain.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
+import lombok.*;
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Data
 @Entity
 @EqualsAndHashCode
-@Table(name = "permission")
-public class Permission implements Serializable {
-
+@NoArgsConstructor
+@RequiredArgsConstructor
+public class Permission {
     @Id
-    @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
-    @Basic
-    @Column(name = "level", nullable = true, length = 255)
-    private String permissionLevel;
+    @NonNull
+    private String name;
 
-    @Basic
-    @Column(name = "menu_name")
-    private String menuName;
-
-    @Basic
-    @Column(name = "description")
+    @NonNull
     private String description;
+
+    /*@OneToMany(mappedBy = "permissionByPermissionId")
+    @ToString.Exclude
+    @JsonIgnore
+    public List<RolePermission> rolePermissionsById;*/
 }

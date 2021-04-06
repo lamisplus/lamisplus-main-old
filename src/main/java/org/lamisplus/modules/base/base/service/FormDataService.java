@@ -24,27 +24,33 @@ public class FormDataService {
     public FormData save(FormData formData) {
         Optional<FormData> formDataOptional = formDataRepository.findById(formData.getId());
         if(formDataOptional.isPresent())throw new RecordExistException(FormData.class, "Id", formData.getId() +"");
-
+        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+        formData.setOrganisationUnitId(organisationUnitId);
 
         return formDataRepository.save(formData);
     }
 
     public FormData update(Long id, FormData formData) {
-        Optional<FormData> formDataOptional = formDataRepository.findById(id);
-        if(!formDataOptional.isPresent())throw new EntityNotFoundException(FormData.class, "Id", id +"");
+        FormData formData1 = formDataRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(FormData.class, "Id", id +""));
+        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+        formData.setOrganisationUnitId(organisationUnitId);
         formData.setId(id);
-        formData.setEncounterId(formDataOptional.get().getEncounterId());
+        formData.setEncounterId(formData1.getEncounterId());
         return formDataRepository.save(formData);
     }
 
     public FormData getFormData(Long id){
-        Optional<FormData> formData = this.formDataRepository.findById(id);
-        if (!formData.isPresent())throw new EntityNotFoundException(FormData.class, "Id", id +"");
-        return formData.get();
+        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+        FormData formData = formDataRepository.findByIdAndOrganisationUnitId(id, organisationUnitId)
+                .orElseThrow(() -> new EntityNotFoundException(FormData.class, "Id", id +""));
+        return formData;
     }
 
     public List<FormData> getAllFormData() {
-        return formDataRepository.findAll();
+        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+
+        return formDataRepository.findAllByOrganisationUnitId(organisationUnitId);
     }
 
     public Boolean delete(Long id, FormData formData) {

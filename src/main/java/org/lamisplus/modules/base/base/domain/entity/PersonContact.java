@@ -2,6 +2,8 @@ package org.lamisplus.modules.base.base.domain.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,7 +15,7 @@ import java.io.Serializable;
 public class PersonContact implements Serializable {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -60,18 +62,6 @@ public class PersonContact implements Serializable {
     @Basic
     @Column(name = "person_id", updatable = false)
     private Long personId;
-
-    @ManyToOne
-    @JoinColumn(name = "country_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Country countryByCountryId;
-
-    @ManyToOne
-    @JoinColumn(name = "state_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private State stateByStateId;
-
-    @ManyToOne
-    @JoinColumn(name = "province_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Province provinceByProvinceId;
 
     @OneToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id", insertable = false, updatable = false)
