@@ -54,7 +54,6 @@ useEffect(() => {
         setcollectmodal({...collectmodal, ...data});
         setModal3(!modal3) 
      }
-     
          //This is function to check for the status of each collection to display on the tablist below 
     const sampleStatus = e =>{
       if(e===1){
@@ -90,9 +89,9 @@ useEffect(() => {
               className=" float-right mr-1"
               size="large">
               {<GiFiles />} &nbsp;&nbsp;
-              <span style={{textTransform: 'capitalize'}}>List of Case Manger  </span>
-                  &nbsp;&nbsp;
-              <span style={{textTransform: 'capitalize'}}> Patients </span>              
+              <span style={{textTransform: 'capitalize'}}>list of case manger  </span>
+                  &nbsp;
+              <span style={{textTransform: 'capitalize'}}>Patients</span>
             </Button>
       </Link>
       <Link to="/switch-patients">
@@ -102,9 +101,9 @@ useEffect(() => {
               className=" float-right mr-1"
               size="large">
               {<GiFiles />} &nbsp;&nbsp;
-              <span style={{textTransform: 'capitalize'}}>Re-assign</span>
-                  &nbsp;&nbsp;
-              <span style={{textTransform: 'capitalize'}}> Patients </span>              
+              <span style={{textTransform: 'capitalize'}}>Assign</span>
+                  &nbsp;
+              <span style={{textTransform: 'capitalize'}}>Patients</span>
             </Button>
       </Link>
         <br/>
@@ -112,7 +111,7 @@ useEffect(() => {
         <br/>
         <br/>
       <MaterialTable
-        title="List of Patients to assign and reassign "
+        title="List of Patients to assign"
         columns={[
           {
               title: "Patient Name",
@@ -156,7 +155,6 @@ useEffect(() => {
                 color: "#000",
                 margin: "auto"
             },
-         
         }}
         actions={[         
             {
@@ -165,9 +163,7 @@ useEffect(() => {
               icon: 'add' ,
               label: 'Add Manifest',
               onClick: (evt, data) =>
-                //alert('You want to dispatch ' + evt + data),
-                getDispatch(evt, data)   
-            
+                getDispatch(evt, data)
             }
         ]}       
       />
@@ -176,8 +172,6 @@ useEffect(() => {
       </Card>
   );
 }
-
-
 
 const mapStateToProps = state => {
     return {

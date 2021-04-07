@@ -120,8 +120,8 @@ const UpdateReports = (props) => {
                                         <Input
                                             rows={10} cols={10}
                                             type='textarea'
-                                            name='description'
-                                            id='description'
+                                            name='template'
+                                            id='template'
                                             value={formData.template}
                                             onChange={handleInputChange}
                                             required/>

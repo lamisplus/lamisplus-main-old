@@ -38,8 +38,7 @@ useEffect(() => {
     const labTestType = [];    
     
     props.testOrder.forEach(function(value, index, array) {
-          const getList = value['formDataObj'].find(x => { 
-            
+          const getList = value['formDataObj'].find(x => {
             if(x.data && x.data!==null && x.data.lab_test_order_status===2 && x.data.manifest_status==null){
               x['hospitalNumber'] = value.hospitalNumber;
               x['firstName'] = value.firstName ;
