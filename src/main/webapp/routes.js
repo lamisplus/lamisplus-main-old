@@ -216,7 +216,7 @@ class Routes extends Component {
               <PrivateRoute exact path="/add-role" component={addRole} />
 
               <PrivateRoute exact path="/appointments" component={AppointmentPage} />
-                <PrivateRoute exact path="/admin" component={AdministrativeDashboard}
+              <PrivateRoute exact path="/admin" component={AdministrativeDashboard}
                               roles={["user_write", "user_delete", "user_read", "admin_read"]}
                 />
                 <PrivateRoute exact path={"/admin-global-variable"} component={GlobalVariableSearchPage} />
