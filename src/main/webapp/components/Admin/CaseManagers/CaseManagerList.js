@@ -84,7 +84,6 @@ const CaseManager = (props) => {
               ]}
               isLoading={loading}
               data={collectedSamples.map((row) => ({
-                  Id: row.hospitalNumber,
                   name: row.firstName +  ' ' + row.lastName,
                   date: row.dateEncounter,
                   count: row.formDataObj.length,
