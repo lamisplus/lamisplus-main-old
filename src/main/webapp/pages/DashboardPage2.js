@@ -1,24 +1,28 @@
-
-import React, {  useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import { TabContent, TabPane, Nav, NavItem, NavLink, Card } from 'reactstrap';
+import classnames from 'classnames';
 import axios from 'axios';
 import { connect } from "react-redux";
 import { FaUserPlus, FaCalendarAlt, FaUserCheck} from 'react-icons/fa'; 
 import { MdAirlineSeatIndividualSuite} from 'react-icons/md';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import {Card,CardBody,CardHeader,CardTitle,Col,Row,} from 'reactstrap';
+import {CardBody,CardTitle,Col,Row,} from 'reactstrap';
 import { Link } from 'react-router-dom'
 import { fetchAllRegisteredPatients } from "./../actions/generalUserDashboard";
 import { url } from "../api";
 
 
 const cardStyle = {
-  borderColor: '#fff',
-};
+    borderColor: '#fff',
+  };
 
+const Example = (props) => {
+  const [activeTab, setActiveTab] = useState('1');
 
-
-const  DashboardPage = (props) => {
+  const toggle = tab => {
+    if(activeTab !== tab) setActiveTab(tab);
+  }
   window.scrollTo(0, 0);
   const [genderData, setGenderData] = useState({})
   const [combineChartData, setcombineChartData] = useState({})
@@ -265,9 +269,30 @@ const deathChart = {
 
 
   return (
-      <>
-               {/* Card stats */}
-               <Row className={"p-3"}>
+    <div>
+      <Nav tabs>
+        <NavItem>
+          <NavLink
+            className={classnames({ active: activeTab === '1' })}
+            onClick={() => { toggle('1'); }}
+          >
+           <span style={{color:'#000'}} color="dark">General Dashboard</span> 
+          </NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink
+            className={classnames({ active: activeTab === '2' })}
+            onClick={() => { toggle('2'); }}
+          >
+            <span style={{color:'#000'}} color="dark">User Dashboard</span>
+          </NavLink>
+        </NavItem>
+      </Nav>
+      <TabContent activeTab={activeTab}>
+        <TabPane tabId="1">
+          <Row>
+            <Col sm="12">
+            <Row className={"p-3"}>
                 <Col lg={3} md={6} sm={6} xs={12}>
                   <Card  style={cardStyle} className="card-stats mb-4 mb-xl-0 p-3">
                     <CardBody>
@@ -450,19 +475,57 @@ const deathChart = {
           </Col>
         </Row>
        
-      </>
-  ); 
+            </Col>
+          </Row>
+        </TabPane>
+        <TabPane tabId="2">
+        <br/><br/>
+          <Row className={"pl-3 pr-3 "}>
+                    
+          <Col md="6" sm="12" xs="12" xl="6" lg="6">
+            <Card>
+             
+              <CardBody>
+                <HighchartsReact
+                  highcharts={Highcharts}
+                  options={deathChart}
+                />
+                
+              </CardBody>
+            </Card>
+          </Col>
+
+          <Col md="6" sm="12" xs="12" xl="6" lg="6">
+            <Card>
+              
+              <CardBody>
+                <HighchartsReact
+                  highcharts={Highcharts}
+                  options={birthChart}
+                />
+              
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+       
+            
+        </TabPane>
+      </TabContent>
+    </div>
+  );
 }
+
 
 //export default DashboardPage;
 
 const mapStateToProps = state => {
-  return {
-      genderPieChartList: state.generalUsersDashboardModuleReducer.list
+    return {
+        genderPieChartList: state.generalUsersDashboardModuleReducer.list
+    };
   };
-};
-const mapActionToProps = {
-  fetchAllGender: fetchAllRegisteredPatients
-};
-
-export default connect(mapStateToProps, mapActionToProps)(DashboardPage);
+  const mapActionToProps = {
+    fetchAllGender: fetchAllRegisteredPatients
+  };
+  
+  export default connect(mapStateToProps, mapActionToProps)(Example);

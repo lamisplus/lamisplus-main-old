@@ -1,15 +1,15 @@
 import React from 'react'
-import {Card, CardBody,CardHeader,Col,Row} from 'reactstrap'
+import {Card, CardBody,Col,Row} from 'reactstrap'
 import { useState} from 'react'
 import { TiPlus } from 'react-icons/ti'
-import MatButton from '@material-ui/core/Button'
+import Button from '@material-ui/core/Button'
 import 'react-datepicker/dist/react-datepicker.css'
 import { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
-import { TiArrowBack} from 'react-icons/ti';
 import 'react-widgets/dist/css/react-widgets.css'
-//Date Picker
-import Page from '../../Page'
+
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
 //import { Spinner } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
@@ -55,7 +55,26 @@ const useStyles = makeStyles({
     
 
 return (
-    <React.Fragment >
+  <Card>
+  <CardBody>
+      <Breadcrumbs aria-label="breadcrumb">
+          <Link color="inherit" to={{pathname: "/admin"}} >
+              Admin
+          </Link>
+          <Typography color="textPrimary">Database Management</Typography>
+      </Breadcrumbs>
+      <br/>
+      <div className={"d-flex justify-content-end pb-2"}>
+          {/* <Button variant="contained"
+                  color="primary"
+                  startIcon={<TiPlus />}
+                 // onClick={() => openProgram(null)}
+                 >
+              <span style={{textTransform: 'capitalize'}}>Add New Program</span>
+          </Button> */}
+
+      </div>
+    <div>
                     <Row>
                         <Col>
 
@@ -86,16 +105,22 @@ return (
                                                             <MdRestore size="15" color="blue" />{" "}<span style={{color: '#000'}}>Restore Database</span>
                                                                                 
                                                       </MenuItem>
+                                                     
                                                       <MenuItem style={{ color:"#000 !important"}}>
                                                             <Link
                                                                 to={{
-                                                                  pathname: "/database-sync",
+                                                                  pathname: "/admin-database-sync",
                                                                   currentId: {}
                                                                 }}
                                                             >
                                                             <MdSync size="15" color="blue" />{" "}<span style={{color: '#000'}}>Sync Database  </span>                   
                                                           </Link>
-                                                      </MenuItem>                                      
+                                                      </MenuItem> 
+                                                      <MenuItem  style={{ color:"#000 !important"}} onSelect={() => restoreModule('module to delete')}>                      
+                                                      
+                                                      <MdRestore size="15" color="blue" />{" "}<span style={{color: '#000'}}>Reverse Database Restore</span>
+                                                                          
+                                                  </MenuItem>                                     
                                                       
                                               </MenuList>
                                         </Menu>
@@ -115,10 +140,12 @@ return (
                             
                         </Col>
                   </Row>
-
+                 
        <RestoreDatabase modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
        <BackupDatabase modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} />
-    </React.Fragment>
+    </div>
+    </CardBody>
+    </Card>
   )
   
 }
