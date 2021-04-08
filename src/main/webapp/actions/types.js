@@ -277,3 +277,14 @@ export const TOTAL_PATIENTS_ERROR = 'TOTAL_PATIENTS_ERROR'
 
 export const MENU_FETCH_ALL = 'MENU_FETCH_ALL'
 
+/**
+ * @TYPES
+ * ==============================================
+ * USERS
+ */
+
+export const USERS_FETCH_ALL = 'USERS_FETCH_ALL'
+export const USERS_FETCH_BY_ID = 'USERS_FETCH_BY_ID'
+export const USERSS_ERROR = 'USERS_ERROR'
+
+

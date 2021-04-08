@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MaterialTable from "material-table";
 import { connect } from "react-redux";
-import {fetchAllForms, fetchByCode, Delete as Del,} from '../../actions/formBuilder';
+import {fetchAllForms, Delete as Del,} from '../../actions/formBuilder';
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import "react-widgets/dist/css/react-widgets.css";

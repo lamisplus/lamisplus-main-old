@@ -1,17 +1,16 @@
-
 import React, {useEffect, useState} from 'react';
 import MaterialTable from 'material-table';
 import { Link } from 'react-router-dom'
 import { connect } from "react-redux";
-import { fetchAllLabTestOrder } from "../../../actions/laboratory";
+import { fetchById } from "../../../actions/caseManager";
 import "./casemanager.css";
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
-import {Col, Input, FormGroup, Label, Card, CardBody} from "reactstrap";
-import Page from '../../Page';
+import {Card, CardBody} from "reactstrap";
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Typography from '@material-ui/core/Typography';
+
 
 const CaseManager = (props) => {
     const [loading, setLoading] = useState('')
@@ -23,34 +22,10 @@ const CaseManager = (props) => {
         const onError = () => {
             setLoading(false)     
         }
-            props.fetchAllLabTestOrderToday(onSuccess, onError);
+            props.fetchById(onSuccess, onError);
     }, []); //componentDidMount
-    const collectedSamples = []
 
-    props.patientsTestOrderList.forEach(function(value, index, array) {
-        const dataSamples = value.formDataObj
-        if(value.formDataObj.data!==null) {
-        for(var i=0; i<dataSamples.length; i++){
-            for (var key in dataSamples[i]) {
-              if (dataSamples[i][key]!==null && dataSamples[i][key].lab_test_order_status < 1 )
-                collectedSamples.push(value)
-            }            
-          }
-        }
-    });
-
-    function totalSampleConllected (test){
-        const  maxVal = []
-          for(var i=0; i<test.length; i++){
-              for (var key in test[i]) {
-                  if ( test[i][key]!==null && test[i][key].lab_test_order_status)
-                        if(test[i][key].lab_test_order_status >=1)
-                            maxVal.push(test[i][key])
-              }
-          }
-        return maxVal.length;
-    }
-    
+    console.log(props.list)
   return (
       <Card>
           <CardBody>
@@ -64,36 +39,18 @@ const CaseManager = (props) => {
           <MaterialTable
               title="Case Managers"
               columns={[
-                  { title: "Name", field: "Id" },
-                  {
-                    title: "Programme",
-                    field: "name",
-                  },
-                  { title: "Date", field: "date", type: "date" , filtering: false},          
-                  {
-                    title: "Total Patients ",
-                    field: "count",
-                    filtering: false
-                  },
-                  
-                  {
-                    title: "Action",
-                    field: "actions",
-                    filtering: false,
-                  },
+                  { title: "ID", field: "id" },
+                  {title: "name", field: "name",},
+                  {title: "Action", field: "actions", filtering: false,},
               ]}
               isLoading={loading}
-              data={collectedSamples.map((row) => ({
+              data={props.list.map((row) => ({
+                  Id: row.id,
                   name: row.firstName +  ' ' + row.lastName,
-                  date: row.dateEncounter,
                   count: row.formDataObj.length,
-                  
-                  actions:  <Link to ={{ 
-                                  pathname: "/case-manager",  
-                                  state: row
-                              }} 
+                  actions:<Link to ={{pathname: "/case-manager", state: row}}
                                   style={{ cursor: "pointer", color: "blue", fontStyle: "bold"}}>
-                                <Tooltip title="Collect Sample">
+                                <Tooltip title="assign client">
                                     <IconButton aria-label="Assign client" >
                                         <VisibilityIcon color="primary"/>
                                     </IconButton>
@@ -101,7 +58,6 @@ const CaseManager = (props) => {
                             </Link>
                           }))}
                           options={{
-
                   pageSizeOptions: [5,10,50,100,150,200],
                   headerStyle: {
                   backgroundColor: "#9F9FA5",
@@ -116,7 +72,6 @@ const CaseManager = (props) => {
                   exportButton: true,
                   searchFieldAlignment: 'left',          
               }}
-
           />
           </CardBody>
       </Card>
@@ -125,11 +80,12 @@ const CaseManager = (props) => {
 
 const mapStateToProps = state => {
     return {
-        patientsTestOrderList: state.laboratory.list
+        list: state.caseManager.list
     };
 };
 const mapActionToProps = {
-    fetchAllLabTestOrderToday: fetchAllLabTestOrder
+    fetchById: fetchById
 };
-  
+
+
 export default connect(mapStateToProps, mapActionToProps)(CaseManager);
