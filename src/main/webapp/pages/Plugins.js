@@ -86,10 +86,16 @@ return (
                     </Card.Description>
                 </Card.Content>
                 <Card.Content extra>
-                <Button icon labelPosition='right' color='blue'>
-                            Next
-                        <Icon name='right arrow' />
-                </Button>
+                <Link 
+                    to ={{ 
+                        pathname: "/nims-sample-list", 
+                    }} 
+                >
+                    <Button icon labelPosition='right' color='blue'>
+                                Next
+                            <Icon name='right arrow' />
+                    </Button>
+                </Link>
                 </Card.Content>
                 </Card>
                 <Card>

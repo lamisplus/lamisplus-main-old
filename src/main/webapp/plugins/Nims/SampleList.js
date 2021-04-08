@@ -83,7 +83,7 @@ useEffect(() => {
           <Link color="inherit" to={{pathname: "/plug-in"}} >
               Plugins
           </Link>          
-         <Typography color="textPrimary">LIMS </Typography> 
+         <Typography color="textPrimary">NIMS </Typography> 
         </Breadcrumbs>
         <br/>
         <br/>
@@ -108,7 +108,20 @@ useEffect(() => {
           </FormGroup>
       </Col>
        </>            
-      <Link to="/dispatched-sample">
+     
+            <Button
+              color="primary"
+              variant="contained"
+              className=" float-right mr-1"
+              size="large"
+              onClick={() => window.print()}
+            >
+              {<GiFiles />} &nbsp;&nbsp;
+              <span style={{textTransform: 'capitalize'}}>Send  </span>
+                  &nbsp;&nbsp;
+              <span style={{textTransform: 'capitalize'}}> Notification</span>              
+            </Button>
+          <Link to="/view-order-status-nims">
         
             <Button
               color="primary"
@@ -117,16 +130,16 @@ useEffect(() => {
               size="large"
             >
               {<GiFiles />} &nbsp;&nbsp;
-              <span style={{textTransform: 'capitalize'}}>Dispatched  </span>
+              <span style={{textTransform: 'capitalize'}}>View  </span>
                   &nbsp;&nbsp;
-              <span style={{textTransform: 'capitalize'}}> Samples</span>              
+              <span style={{textTransform: 'capitalize'}}> Order Status</span>              
             </Button>
       </Link>
         <br/>
         <br/>
         <br/>
       <MaterialTable
-        title="List of Samples to Dispatch "
+        title="List of Samples for Dispatch "
         columns={[
         
           { title: "FormDataObj ", 

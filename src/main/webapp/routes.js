@@ -30,14 +30,18 @@ const CollectSample = React.lazy(() =>import("components/Laboratory/Testorders/C
 const LaboratorySampleResultPage = React.lazy(() =>import("components/Laboratory/TestResult/CollectResult"));
 const SampleVerification = React.lazy(() => import("components/Laboratory/Sampleverifications/SampleVerification"));
 
-const DispatchedSamples = React.lazy(() => import("plugins/Lims/DispatchedSamplesList"))
+
 const PatientsPage = React.lazy(() => import("components/PatientSearch/HomePage"));
 const PrintSamples = React.lazy(() => import("components/Laboratory/DispatchedManifest/PrintSample"));
 const PrintManifest = React.lazy(() => import("components/Laboratory/DispatchedManifest/PrintManifest"));
-const ViewSampleDispatched = React.lazy(() => import("components/Laboratory/DispatchedManifest/ViewPrintManifest"));
+
 //Lamis
 const SampleList = React.lazy(() => import("plugins/Lims/SampleList"))
+const DispatchedSamples = React.lazy(() => import("plugins/Lims/DispatchedSamplesList"))
 const DispatchedSamplesLims = React.lazy(() => import("plugins/Lims/DispatchedSamplesList"))
+const ViewSampleDispatched = React.lazy(() => import("plugins/Lims/ViewPrintManifest"));
+//NIMS
+const NimsSampleList = React.lazy(() => import("plugins/Nims/SampleList"))
 
 const Dashboard2 = React.lazy(() => import("pages/DashboardPage2"))
 /* Radiology */
@@ -149,8 +153,11 @@ class Routes extends Component {
               <PrivateRoute exact path="/patients" component={PatientsPage} />
               <PrivateRoute exact path="/print-sample" component={PrintSamples} />
               <PrivateRoute exact path="/view-sample-dispatched" component={ViewSampleDispatched} />
-              
+              {/* LIMS Link*/}
               <PrivateRoute exact path="/sample-list" component={SampleList} />
+               {/* NIMS Link*/}
+              <PrivateRoute exact path="/nims-sample-list" component={NimsSampleList} />
+              
               {/* Radiology Link*/}
               <PrivateRoute exact path="/radiology-home" component={RadiologyPage} />
               {/* BootstrapConfiguration Link */}
