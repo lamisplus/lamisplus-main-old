@@ -42,7 +42,8 @@ export const EMERGENCY_PATIENT = 4
  * ==============================================
  * LAB ORDER STATUS CODES
  */
-export const LAB_ORDER_STATUS = [{name:"Sample Collected", id: 1},
+export const LAB_ORDER_STATUS = [
+{name:"Sample Collected", id: 1},
 {name:"Sample Transfer", id: 2},
 {name:"Sample Verified", id: 3},
 {name:"Sample Rejected", id: 4},

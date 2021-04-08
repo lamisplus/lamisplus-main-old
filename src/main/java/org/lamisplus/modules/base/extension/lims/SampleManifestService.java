@@ -23,7 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SampleManifestService {
     private final SampleManifestRepository sampleManifestRepository;
-    private final PcrLabRespository pcrLabRespository;
+    //private final PcrLabRespository pcrLabRespository;
     private final SampleManifestMapper sampleManifestMapper;
     private final PersonRepository personRepository;
     private final PatientRepository patientRepository;
@@ -82,10 +82,6 @@ public class SampleManifestService {
 
     public  List<ManifestDTO> getDispatchedSampleManifest(Boolean dispatched) {
         return this.sampleManifestRepository.findSampleManifestsDistinct(dispatched);
-    }
-
-    public  List<PcrLab> getPcrLab() {
-        return this.pcrLabRespository.findAll();
     }
 
     public String generateManifestId(int length) {

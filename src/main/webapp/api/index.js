@@ -11,4 +11,5 @@ export const PHARMACYSERVICECODE = "";
 
 
 export const url =  'http://lamisplus.org/base-module/api/';
-//export const url =  'http://192.168.43.58:8081/api/';
+
+//export const url =  'http://localhost:8081/api/';
