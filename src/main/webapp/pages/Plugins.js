@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import {Col,Row,} from 'reactstrap';
-import Paper from '@material-ui/core/Paper';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -45,6 +45,7 @@ return (
                 floated='right'
                 name='exchange'
                 />
+               
                 <Card.Header>
                 <Header as='h2' >
                     LIMS
@@ -103,7 +104,7 @@ return (
                 <Icon
                     size='big'
                     floated='right'
-                    name='servicestack'
+                    name='exchange'
                     />
                     <Card.Header>
                         <Header as='h2' >
@@ -122,7 +123,30 @@ return (
                 </Button>
                 </Card.Content>
                 </Card>
-                
+                <Card>
+                <Card.Content>
+                <Icon
+                    size='big'
+                    floated='right'
+                    name='exchange'
+                    />
+                    <Card.Header>
+                        <Header as='h2' >
+                            NDR
+                        </Header>
+                    </Card.Header>
+                    
+                    <Card.Description>
+                    <strong>APPR Information Management System</strong>
+                    </Card.Description>
+                </Card.Content>
+                <Card.Content extra>
+                <Button icon labelPosition='right' color='blue'>
+                            Next
+                        <Icon name='right arrow' />
+                </Button>
+                </Card.Content>
+                </Card>
             </Card.Group>
         </Col>
     </Row>

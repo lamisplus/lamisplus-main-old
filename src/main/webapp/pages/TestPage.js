@@ -1,134 +1,147 @@
-import React from "react";
-import PropTypes from "prop-types";
-import _ from "lodash";
-import { Responsive, WidthProvider } from "react-grid-layout";
-const ResponsiveReactGridLayout = WidthProvider(Responsive);
+import React, {useState, useEffect} from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Checkbox from '@material-ui/core/Checkbox';
+import Avatar from '@material-ui/core/Avatar';
+import {url} from './../api';
+import axios from "axios";
+import { authentication } from "./../_services/authentication";
+import { Link } from 'react-router-dom';
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
+import { CardBody, Card} from 'reactstrap';
+import { Alert, AlertTitle } from '@material-ui/lab';
+import {GiFiles} from 'react-icons/gi'; 
+import Button from "@material-ui/core/Button";
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 
-export default class ShowcaseLayout extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      currentBreakpoint: "lg",
-      compactType: "vertical",
-      mounted: false,
-      layouts: { lg: props.initialLayout }
-    };
 
-    this.onBreakpointChange = this.onBreakpointChange.bind(this);
-    this.onCompactTypeChange = this.onCompactTypeChange.bind(this);
-    this.onLayoutChange = this.onLayoutChange.bind(this);
-    this.onNewLayout = this.onNewLayout.bind(this);
-  }
 
-  componentDidMount() {
-    this.setState({ mounted: true });
-  }
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
+}));
 
-  generateDOM() {
-    return _.map(this.state.layouts.lg, function(l, i) {
-      return (
-        <div key={i} className={l.static ? "static" : ""}>
-          {l.static ? (
-            <span
-              className="text"
-              title="This item is static and cannot be removed or resized."
-            >
-              Static - {i}
-            </span>
-          ) : (
-            <span className="text">{i}</span>
-          )}
-        </div>
-      );
-    });
-  }
 
-  onBreakpointChange(breakpoint) {
-    this.setState({
-      currentBreakpoint: breakpoint
-    });
-  }
 
-  onCompactTypeChange() {
-    const { compactType: oldCompactType } = this.state;
-    const compactType =
-      oldCompactType === "horizontal"
-        ? "vertical"
-        : oldCompactType === "vertical"
-          ? null
-          : "horizontal";
-    this.setState({ compactType });
-  }
 
-  onLayoutChange(layout, layouts) {
-    this.props.onLayoutChange(layout, layouts);
-  }
+export default function CheckboxListSecondary() {
+  const classes = useStyles();
+  const [facilities, setFacilities] = useState( [])
+  const [checked, setChecked] = React.useState([]);
+  const currentUser = authentication.getCurrentUser();
+  const [user, setUser] = useState(null);
+  
+  
 
-  onNewLayout() {
-    this.setState({
-      layouts: { lg: generateLayout() }
-    });
-  }
+async function fetchMe() {
+  if( authentication.currentUserValue != null ) {
+    axios
+        .get(`${url}account`)
+        .then((response) => {
+          setUser(response.data);
+          console.log(response.data.applicationUserOrganisationUnits);
+          setFacilities(response.data.applicationUserOrganisationUnits);
+          // set user permissions in local storage for easy retrieval, when user logs out it will be removed from the local storage
+          localStorage.setItem('currentUser_Permission', JSON.stringify(response.data.permissions));
+        })
+        .catch((error) => {
 
-  render() {
-    return (
-      <div>
-        <div>
-          Current Breakpoint: {this.state.currentBreakpoint} ({
-            this.props.cols[this.state.currentBreakpoint]
-          }{" "}
-          columns)
-        </div>
-        <div>
-          Compaction type:{" "}
-          {_.capitalize(this.state.compactType) || "No Compaction"}
-        </div>
-        <button onClick={this.onNewLayout}>Generate New Layout</button>
-        <button onClick={this.onCompactTypeChange}>
-          Change Compaction Type
-        </button>
-        <ResponsiveReactGridLayout
-          {...this.props}
-          layouts={this.state.layouts}
-          onBreakpointChange={this.onBreakpointChange}
-          onLayoutChange={this.onLayoutChange}
-          // WidthProvider option
-          measureBeforeMount={false}
-          // I like to have it animate on mount. If you don't, delete `useCSSTransforms` (it's default `true`)
-          // and set `measureBeforeMount={true}`.
-          useCSSTransforms={this.state.mounted}
-          compactType={this.state.compactType}
-          preventCollision={!this.state.compactType}
-        >
-          {this.generateDOM()}
-        </ResponsiveReactGridLayout>
-      </div>
-    );
+        });
   }
 }
 
-ShowcaseLayout.propTypes = {
-  onLayoutChange: PropTypes.func.isRequired
-};
+useEffect(() => {
+  fetchMe()
+}, []);
 
-ShowcaseLayout.defaultProps = {
-  className: "layout",
-  rowHeight: 30,
-  onLayoutChange: function() {},
-  cols: { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
-  initialLayout: generateLayout()
-};
 
-function generateLayout() {
-  return _.map(_.range(0, 2), function(item, i) {
-    var y = Math.ceil(Math.random() * 4) + 1;
-    return {
-      x: (_.random(0, 5) * 2) % 12,
-      y: Math.floor(i / 6) * y,
-      w: 2,
-      h: y,
-      i: i.toString(),
-      static: Math.random() < 0.05
-    };
-  });
+  const handleToggle = (value) => () => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+    
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setChecked(newChecked);
+  };
+
+  console.log(checked)
+  return (
+
+    <div >
+     
+      <Card>
+        <CardBody>
+ 
+        <br/>
+        <br/>
+        <Breadcrumbs aria-label="breadcrumb">
+          <Link color="inherit" to={{pathname: "/plug-in"}} >
+              Plugins
+          </Link>          
+         <Typography color="textPrimary">NDR </Typography> 
+        </Breadcrumbs>
+        <br/>
+        <br/>
+        <Alert severity="info">
+        <AlertTitle>Info</AlertTitle>
+          Please check the Facilities you want  — <strong>List of Facilities!</strong>
+        </Alert>
+        <br/><br/>
+          <Button
+              color="primary"
+              variant="contained"
+              className=" float-right mr-1"
+              size="large"
+            >
+              {<GiFiles />} &nbsp;&nbsp;
+              <span style={{textTransform: 'capitalize'}}>Generate  </span>
+                  &nbsp;&nbsp;
+              <span style={{textTransform: 'capitalize'}}> NDR</span>              
+            </Button>
+
+     <List dense >
+     
+      <br/>
+      {facilities.map((value) => {
+        //console.log(value)
+        const labelId = `checkbox-list-secondary-label-${value.id}`;
+        return (
+          <ListItem key={value.id} button>
+            <ListItemAvatar>
+              <AccountBalanceIcon />
+            </ListItemAvatar>
+            <ListItemText id={labelId} primary={`${value.organisationUnitName }`} />
+            <ListItemText id={labelId} primary={'Date of Download'} />
+            <ListItemText id={labelId} primary={'Number of Files Generated'} />
+            <ListItemSecondaryAction>
+              <Checkbox
+                edge="end"
+                onChange={handleToggle(value)}
+                checked={checked.indexOf(value) !== -1}
+                inputProps={{ 'aria-labelledby': labelId }}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+        );
+      })}
+    </List>
+    </CardBody>
+    </Card>
+    </div>
+  );
 }
