@@ -1,13 +1,10 @@
 package org.lamisplus.modules.base.repository;
 
 import org.lamisplus.modules.base.domain.entity.Patient;
-import org.lamisplus.modules.base.domain.entity.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,7 +15,5 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
     Optional<Patient> findByHospitalNumber(String number);
     //Optional<Patient> findByPersonId(Long PersonId);
     Optional<Patient> findById(Long patientId);
-
-
     Boolean existsByHospitalNumber(String patientNumber);
 }
