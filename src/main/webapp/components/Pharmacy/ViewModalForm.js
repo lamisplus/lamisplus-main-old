@@ -116,7 +116,7 @@ if(datasample !== null){
               <CardBody>
                  
                         <FormRendererView
-                            formCode={datasample.data && datasample.data.type !=0 ? currentForm.code : currentFormForRegimen.code}
+                            formCode={currentForm.code}
                             programCode={currentForm.programCode}                          
                             submission={datasample}
                         />

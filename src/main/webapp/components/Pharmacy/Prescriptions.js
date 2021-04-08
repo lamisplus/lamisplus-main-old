@@ -244,7 +244,7 @@ const updateFormData = (data) =>{
                                       <b> {form.data.drugs && form.data.drugs.length > 0 ? form.data.drugs.map(x=>x.drug.name).toString() : ''}</b>
                                           {/*{form.data && form.data.type!=0 ? form.data.drug.name :  form.data.regimen.name}*/}
                                     </td>
-                                    <td>{form.data.duration && form.data.duration ? form.data.duration + form.data.duration_unit : ''}</td>
+                                    <td>{form.data.duration && form.data.duration ? form.data.duration + ' ' + form.data.duration_unit : ''}</td>
                                     <td>{Moment(form.data.date_prescribed).format("DD-MM-YYYY")}</td>
                                     <td>{ form.data.date_dispensed ? Moment(form.data.date_dispensed).format("DD-MM-YYYY") : '' }</td>
                                     <td>{Actions(form)}</td>
