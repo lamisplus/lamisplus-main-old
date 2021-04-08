@@ -110,8 +110,8 @@ useEffect(() => {
           </FormGroup>
       </Col>
        </>            
-      <Link to="/sample-list">
-        {/* <Link to="/dispatched-sample"> */}
+      <Link to="/dispatched-sample">
+        
             <Button
               color="primary"
               variant="contained"

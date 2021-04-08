@@ -30,7 +30,7 @@ const CollectSample = React.lazy(() =>import("components/Laboratory/Testorders/C
 const LaboratorySampleResultPage = React.lazy(() =>import("components/Laboratory/TestResult/CollectResult"));
 const SampleVerification = React.lazy(() => import("components/Laboratory/Sampleverifications/SampleVerification"));
 
-const DispatchedSamples = React.lazy(() => import("components/Laboratory/DispatchedManifest/DispatchedSamplesList"))
+const DispatchedSamples = React.lazy(() => import("plugins/Lims/DispatchedSamplesList"))
 const PatientsPage = React.lazy(() => import("components/PatientSearch/HomePage"));
 const PrintSamples = React.lazy(() => import("components/Laboratory/DispatchedManifest/PrintSample"));
 const PrintManifest = React.lazy(() => import("components/Laboratory/DispatchedManifest/PrintManifest"));

@@ -3,12 +3,11 @@ import MaterialTable from 'material-table';
 import { Link } from 'react-router-dom'
 import { connect } from "react-redux";
 import { sampleDispatched } from "./../../actions/laboratory";
-
+import { Card,CardBody} from "reactstrap";
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import { TiArrowBack } from 'react-icons/ti';
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import Page from './../../components/Page';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 
@@ -41,14 +40,14 @@ const PatientSearch = (props) => {
 
     
   return (
-    <Page title='Dispatched Samples '>
-      
+    <Card>
+       <CardBody>
       <div>
       <br/>
       <Link 
         to ={{ 
-            pathname: "/laboratory",  
-            state: 'dispatched-sample-list'
+            pathname: "/sample-list",  
+           
         }} >
 
         <MatButton
@@ -143,8 +142,8 @@ const PatientSearch = (props) => {
 
           />
     </div>
-    
-  </Page>
+    </CardBody>
+  </Card>
   );
 }
 

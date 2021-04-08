@@ -11,6 +11,7 @@ import {CardBody,CardTitle,Col,Row,} from 'reactstrap';
 import { Link } from 'react-router-dom'
 import { fetchAllRegisteredPatients } from "./../actions/generalUserDashboard";
 import { url } from "../api";
+import GridLayout from 'react-grid-layout';
 
 
 const cardStyle = {
@@ -480,9 +481,11 @@ const deathChart = {
         </TabPane>
         <TabPane tabId="2">
         <br/><br/>
-          <Row className={"pl-3 pr-3 "}>
-                    
-          <Col md="6" sm="12" xs="12" xl="6" lg="6">
+       
+        <GridLayout className="layout" cols={12} rowHeight={30} width={1200}>
+        
+        <div key="b" data-grid={{x: 1, y: 4, w: 4, h: 4, minW: 4, maxW: 4}}>
+        {/* <Col md="6" sm="12" xs="12" xl="6" lg="6"> */}
             <Card>
              
               <CardBody>
@@ -493,23 +496,26 @@ const deathChart = {
                 
               </CardBody>
             </Card>
-          </Col>
+          {/* </Col> */}
+        </div>
+        <div key="c" data-grid={{x: 4, y: 0, w: 1, h: 2}}>
 
-          <Col md="6" sm="12" xs="12" xl="6" lg="6">
+        {/* <Col md="6" sm="12" xs="12" xl="6" lg="6"> */}
             <Card>
               
               <CardBody>
                 <HighchartsReact
                   highcharts={Highcharts}
                   options={birthChart}
+                  style={{width: '100%', height: '400px', display: 'block'}}
                 />
               
               </CardBody>
             </Card>
-          </Col>
-        </Row>
-       
-            
+          {/* </Col> */}
+        </div>
+      </GridLayout>
+
         </TabPane>
       </TabContent>
     </div>
