@@ -4,7 +4,6 @@ package org.lamisplus.modules.base.bootstrap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.lamisplus.modules.base.config.ApplicationProperties;
 import org.lamisplus.modules.base.domain.entity.Module;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
@@ -58,9 +57,6 @@ public class ModuleUtil {
                     } else {
                         isStatic = false;
                     }
-                    /*if(currentTarget.toFile().isDirectory() && currentTarget.toFile().getPath().contains("modules/demo")){
-
-                    }*/
                     return FileVisitResult.CONTINUE;
                 }
 
@@ -78,15 +74,6 @@ public class ModuleUtil {
                     } else if (theFile.getName().endsWith("properties") && !theFile.getName().contains("pom")) {
                         if (theFile.getName().contains(APPLICATION_PROPERTIES)) {
                             theFile.delete();
-                        } else {
-                            /*String path1 = String.format("%s/webapps/ROOT/WEB-INF/classes/", ApplicationProperties.tomcatBase);
-                            System.out.println("path1 is" + path1);
-                            File file1 = new File(path1 + theFile.getName());
-                            if(file1 != null){
-                                file1.delete();
-                            }
-                            System.out.println(file1.getName());
-                            FileUtils.copyFile(theFile, file1);*/
                         }
                     }
                     if(isStatic){

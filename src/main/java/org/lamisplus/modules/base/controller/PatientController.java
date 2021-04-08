@@ -6,13 +6,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.*;
 import org.lamisplus.modules.base.domain.entity.Form;
+import org.lamisplus.modules.base.domain.entity.Patient;
 import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.service.PatientService;
+import org.lamisplus.modules.base.util.PaginationUtil;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -24,17 +30,17 @@ import java.util.Optional;
 public class PatientController {
     private final PatientService patientService;
 
-    /*@GetMapping
+    @GetMapping
     public ResponseEntity<List<PatientDTO>> getAllPatients(@PageableDefault(value = 100) Pageable pageable) {
-        Page<PatientDTO> page = patientService.findPage(pageable);
+        Page<Patient> page = patientService.findPage(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(patientService.getAllPatients(page), headers, HttpStatus.OK);
-    }*/
+    }
 
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<List<PatientDTO>> getAllPatients() {
         return ResponseEntity.ok(patientService.getAllPatients());
-    }
+    }*/
 
     @GetMapping("/totalCount")
     public ResponseEntity<Long> getTotalCount() {
@@ -121,12 +127,12 @@ public class PatientController {
     }
 
     @GetMapping("/{id}/{programCode}/form")
-    public ResponseEntity<List<Form>> getAllFormsByPatientIdAndProgramCode(@PathVariable Long id, @PathVariable String programCode){
+    public ResponseEntity<List<FormDTO>> getAllFormsByPatientIdAndProgramCode(@PathVariable Long id, @PathVariable String programCode){
         return ResponseEntity.ok(patientService.getAllFormsByPatientIdAndProgramCode(id, programCode));
     }
 
     @GetMapping("/{id}/{programCode}/filledForms")
-    public ResponseEntity<List<Form>> getFilledFormsByPatientIdAndProgramCode(@PathVariable Long id, @PathVariable String programCode){
+    public ResponseEntity<List<FormDTO>> getFilledFormsByPatientIdAndProgramCode(@PathVariable Long id, @PathVariable String programCode){
         return ResponseEntity.ok(patientService.getFilledFormsByPatientIdAndProgramCode(id, programCode));
     }
 
@@ -134,19 +140,6 @@ public class PatientController {
     public ResponseEntity<List> getAllProgramEnrolled(@PathVariable Long id){
         return ResponseEntity.ok(patientService.getAllProgramEnrolled(id));
     }
-
-/*    @ApiOperation(value="getFormsByPatientId", notes = " id=required, formCode=required\n\n")
-    @GetMapping("/{id}/{formCode}")
-    public ResponseEntity<List<EncounterDTO>> getFormsByPatientId(@PathVariable Long id, @PathVariable String formCode) throws BadRequestAlertException {
-        return ResponseEntity.ok(this.patientService.getFormsByPatientId(id, formCode));
-    }*/
-
-
-/*    @ApiOperation(value="getFormsByPatientId", notes = " id=required, formCode=required\n\n")
-    @GetMapping("/{id}/form")
-    public ResponseEntity<List<Form>> getFormsByPatientId(@PathVariable Long id) throws BadRequestAlertException {
-        return ResponseEntity.ok(this.patientService.getFormsByPatientId(id, formCode));
-    }*/
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -163,4 +156,18 @@ public class PatientController {
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
         return ResponseEntity.ok(patientService.delete(id));
     }
+
+    /*    @ApiOperation(value="getFormsByPatientId", notes = " id=required, formCode=required\n\n")
+    @GetMapping("/{id}/{formCode}")
+    public ResponseEntity<List<EncounterDTO>> getFormsByPatientId(@PathVariable Long id, @PathVariable String formCode) throws BadRequestAlertException {
+        return ResponseEntity.ok(this.patientService.getFormsByPatientId(id, formCode));
+    }*/
+
+
+/*    @ApiOperation(value="getFormsByPatientId", notes = " id=required, formCode=required\n\n")
+    @GetMapping("/{id}/form")
+    public ResponseEntity<List<Form>> getFormsByPatientId(@PathVariable Long id) throws BadRequestAlertException {
+        return ResponseEntity.ok(this.patientService.getFormsByPatientId(id, formCode));
+    }*/
+
 }

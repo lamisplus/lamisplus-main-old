@@ -2,17 +2,20 @@ import React from 'react'
 import {Card, CardBody,CardHeader,Col,Row} from 'reactstrap'
 import { useState} from 'react'
 import { TiPlus } from 'react-icons/ti'
+import Button from '@material-ui/core/Button'
 import MatButton from '@material-ui/core/Button'
 import 'react-datepicker/dist/react-datepicker.css'
 import { makeStyles } from '@material-ui/core/styles'
 import 'react-widgets/dist/css/react-widgets.css'
-//Date Picker
-import Page from '../../Page'
+
 import "@reach/menu-button/styles.css";
+import { TiArrowBack} from 'react-icons/ti';
 import MaterialTable from 'material-table';
 import {MdSync} from 'react-icons/md';
 import DatabaseSyncModal from "./DatabaseSyncModal";
-
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
+import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles({
     root: {
@@ -38,17 +41,23 @@ const useStyles = makeStyles({
     
 
 return (
-    <Page >
+  <Card>
+  <CardBody>
+      <Breadcrumbs aria-label="breadcrumb">
+          <Link color="inherit" to={{pathname: "/admin"}} >
+              Admin
+          </Link>
+           <Typography color="textPrimary"><Link color="inherit" to={{pathname: "/admin-database-management"}} >Database Management</Link></Typography>
+          <Typography color="textPrimary">DataBase Syncronnization</Typography>
+      </Breadcrumbs>
+      <br/>
+      <div className={"d-flex justify-content-end pb-2"}>
+         
+      </div>
       
         <Row>
             <Col>
-              <h1>Database Syn Manager : LamisPlus</h1>
-                
-                <ul>
-                  <li><strong>Total Unsynced Objects : 156 </strong></li>
-                  <li><strong>Estimated Sync Time 20min.</strong></li>
-                </ul>
-                
+              <h3>Database Sync Manager : LamisPlus</h3>
                 </Col>
               </Row>
               <Row>
@@ -106,7 +115,8 @@ return (
             
         </Row>
           <DatabaseSyncModal modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} />
-    </Page>
+    </CardBody>
+    </Card>
   )
   
 }

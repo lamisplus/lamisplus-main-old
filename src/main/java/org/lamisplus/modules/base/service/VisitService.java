@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -48,7 +49,6 @@ public class VisitService {
             public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), 0)));
-                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("organisationUnitId"), getOrganisationUnitId())));
                 criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("dateVisitEnd").as(LocalDate.class),
                         CustomDateTimeFormat.LocalDateByFormat(LocalDate.now(),"dd-MM-yyyy")));
                 criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
@@ -72,7 +72,7 @@ public class VisitService {
         if(visitOptional.isPresent())throw new RecordExistException(Visit.class, "Patient", "Still checked In" + ", Visit Start Date =" + visitDTO.getDateVisitStart());
 
         Visit visit = visitMapper.toVisit(visitDTO);
-        visit.setUuid(UuidGenerator.getUuid());
+        visit.setUuid(UUID.randomUUID().toString());
         visit.setOrganisationUnitId(getOrganisationUnitId());
 
         final Visit savedVisit = visitRepository.save(visit);

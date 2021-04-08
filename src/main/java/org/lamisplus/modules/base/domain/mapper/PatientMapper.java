@@ -21,25 +21,27 @@ public interface PatientMapper {
     @Mappings({
             @Mapping(source="person.id", target="personId"),
             @Mapping(source="visit.id", target="visitId"),
-            @Mapping(source="patient.id", target="patientId")
+            @Mapping(source="patient.id", target="patientId"),
+            @Mapping(source="patient.organisationUnitId", target="organisationUnitId")
     })
     PatientDTO toPatientDTO(Person person, Visit visit, PersonContact personContact, Patient patient);
 
     @Mappings({
             @Mapping(source="person.id", target="personId"),
-            @Mapping(source="patient.id", target="patientId")
+            @Mapping(source="patient.id", target="patientId"),
+            @Mapping(source="patient.organisationUnitId", target="organisationUnitId")
     })
     PatientDTO toPatientDTO(Person person, PersonContact personContact, Patient patient);
 
     @Mappings({
             @Mapping(source="person.id", target="personId"),
-            @Mapping(source="patient.id", target="patientId")
+            @Mapping(source="patient.id", target="patientId"),
     })
     PatientList toPatientListDTO(Person person, PersonContact personContact, Patient patient);
 
     @Mappings({
             @Mapping(source="person.id", target="personId"),
-            @Mapping(source="patient.id", target="patientId")
+            @Mapping(source="patient.id", target="patientId"),
     })
     PatientList toPatientListDTO(Person person, Visit visit, PersonContact personContact, Patient patient);
 }

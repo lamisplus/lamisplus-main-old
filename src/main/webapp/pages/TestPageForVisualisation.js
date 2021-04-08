@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Dropdown, Icon, Menu } from 'semantic-ui-react'
-import {Form,FormFeedback,Row,Col,FormGroup,Label,Input} from 'reactstrap';
+import { Dropdown, Icon, Menu, Button, Breadcrumb} from 'semantic-ui-react';
+import {Form,Row,Col,FormGroup,Label,Input} from 'reactstrap';
 import { Card, CardContent } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Highcharts from 'highcharts';
@@ -35,7 +35,7 @@ const Example = (props) => {
 
   const toggle = () => setDropdownOpen(!dropdownOpen);
   const [state, setState] = useState({ activeItem: 'gamepad' })
- 
+
   const handleItemClick = (e, { name }) => setState({ activeItem: name })
   const { activeItem } = state
   const chartPage  = e => {
@@ -44,10 +44,10 @@ const Example = (props) => {
   }
 
   return (
-    <div className={classes.root}>
+    <div  spacing={5} style={{ padding: 20 }} >
 
-   
-      
+
+
       <Menu icon='labeled'>
         <Menu.Item
           name='gamepad'
@@ -55,16 +55,16 @@ const Example = (props) => {
           onClick={handleItemClick}
         >
           <Icon name='upload' />
-          Export
+          Generate Chart
         </Menu.Item>
 
         <Menu.Item>
-        
+
             {/* <SettingsIcon fontSize="large" className={'text-center'}/> */}
             <Icon name='chart bar' />
-            <span >Charts</span>
-        <Dropdown   >  
-                
+            <span >Dashboard Charts</span>
+        <Dropdown   >
+
         <Dropdown.Menu >
             <Dropdown.Item icon='pie chart' text='Pie Chart '  onClick={() => chartPage('pie')} />
             <Dropdown.Item icon='chart bar outline' text='Bar Chart' onClick={() => chartPage('bar')}  />
@@ -76,16 +76,16 @@ const Example = (props) => {
         </Menu.Item>
 
         <Menu.Item>
-        
+
             {/* <SettingsIcon fontSize="large" className={'text-center'}/> */}
             <Icon name='chart bar outline' />
             <span >Other Visuals</span>
-        <Dropdown   >  
-                
+        <Dropdown   >
+
         <Dropdown.Menu >
             <Dropdown.Item icon='chart line' text='Tableu ' />
             <Dropdown.Item icon='globe' text='Power BI ' />
-            
+
           </Dropdown.Menu>
         </Dropdown>
         </Menu.Item>
@@ -93,29 +93,63 @@ const Example = (props) => {
       </Menu>
       <Card >
       <CardContent>
-      <Row style={{ marginTop: '20px'}}>                         
-                                    
-          <Col md="4">
+      <Row style={{ marginTop: '20px'}}>
+
+          <Col md="3">
             <FormGroup>
-                <Label>Parameters </Label>
+                <Label>Data Category </Label>
                     <Input
                       type="select"
                       name="result_reported_by"
                       id="result_reported_by"
-                        
+
                     >
                         <option value=""></option>
                         <option value="Dorcas"> Data 1 </option>
                         <option value="Jeph"> Data </option>
                         <option value="Debora"> Data </option>
                     </Input>
-                        
+
             </FormGroup>
-        </Col> 
-      
-          <Col md="4">
+        </Col>
+        <Col md="3">
             <FormGroup>
-                <Label>Indicators</Label>
+                <Label>Data Type </Label>
+                    <Input
+                      type="select"
+                      name="result_reported_by"
+                      id="result_reported_by"
+
+                    >
+                        <option value=""></option>
+                        <option value="Dorcas"> Data 1 </option>
+                        <option value="Jeph"> Data </option>
+                        <option value="Debora"> Data </option>
+                    </Input>
+
+            </FormGroup>
+        </Col>
+        <Col md="3">
+            <FormGroup>
+                <Label>Period </Label>
+                    <Input
+                      type="select"
+                      name="result_reported_by"
+                      id="result_reported_by"
+
+                    >
+                        <option value=""></option>
+                        <option value="Dorcas"> Data 1 </option>
+                        <option value="Jeph"> Data </option>
+                        <option value="Debora"> Data </option>
+                    </Input>
+
+            </FormGroup>
+        </Col>
+
+          <Col md="3">
+            <FormGroup>
+                <Label>Org. Level </Label>
                     <Input
                       type="select"
                       name="result_reported_by"
@@ -126,9 +160,31 @@ const Example = (props) => {
                         <option value="Jeph"> Indicator </option>
                         <option value="Debora"> Indicator </option>
                     </Input>
-                        
+
             </FormGroup>
-        </Col> 
+        </Col>
+        <Col md="3">
+            <FormGroup>
+                <Label>Chart Type </Label>
+                    <Input
+                      type="select"
+                      name="result_reported_by"
+                      id="result_reported_by"
+                    >
+                        <option value=""></option>
+                        <option value="Dorcas"> Indicator 1 </option>
+                        <option value="Jeph"> Indicator </option>
+                        <option value="Debora"> Indicator </option>
+                    </Input>
+
+            </FormGroup>
+        </Col>
+        <Col style={{ marginTop: '20px'}}>
+          <Button icon labelPosition='right' color='blue' >
+              Generate
+          <Icon name='right arrow' />
+          </Button>
+        </Col>
       </Row>
 
       <br/>
@@ -178,7 +234,7 @@ const Example = (props) => {
     }
       </CardContent>
       </Card>
-      
+
     </div>
   );
 }

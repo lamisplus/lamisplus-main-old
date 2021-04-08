@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MaterialTable from "material-table";
 import { connect } from "react-redux";
-import {fetchAllForms, Delete as Del,} from '../../actions/formBuilder';
+import {fetchAllForms, fetchByCode, Delete as Del,} from '../../actions/formBuilder';
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import "react-widgets/dist/css/react-widgets.css";
@@ -61,9 +61,6 @@ function FormSearch(props) {
             props.deleteForm(row.id)
     }
 
-
-
-
     return (
         <React.Fragment>
             <div>
@@ -77,7 +74,7 @@ function FormSearch(props) {
                         {title: "Action", field: "actions", filtering: false,},
                     ]}
                     isLoading={loading}
-                    data={!props.formList && !props.formList.length ? [] : props.formList.map((row) => ({
+                    data={!props.formList && props.formList.length <= 0 ? [] : props.formList.map((row) => ({
                         programName: row.programName,
                         name: row.name,
                         number: row.version,
@@ -99,12 +96,7 @@ function FormSearch(props) {
                                         </MenuItem>
                                         <MenuItem style={{ color:"#000 !important"}}>
                                             <Link
-                                                to={{
-                                                    pathname: "/view-form",
-                                                    state: {row:row}
-                                                }}
-
-                                            >
+                                                to={{pathname: "/view-form", state: {row:row}}}>
                                                 <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Form </span>
                                             </Link>
                                         </MenuItem>
@@ -124,7 +116,6 @@ function FormSearch(props) {
                                                    return JSON.stringify(row)
                                                 }}
                                             />
-
                                         </MenuItem>
                                     </MenuList>
                                 </Menu>
@@ -162,10 +153,10 @@ function FormSearch(props) {
         </React.Fragment>
     );
 }
-const mapStateToProps =  (state = { form:{}}) => {
+const mapStateToProps =  (state = { form:[]}) => {
     // console.log(state.forms)
     return {
-        formList: state.formReducers.form !==null ? state.formReducers.form : {},
+        formList: state.formReducers.formList !==null ? state.formReducers.formList : [],
     }}
 
 const mapActionToProps = {

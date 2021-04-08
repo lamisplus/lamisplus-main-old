@@ -90,33 +90,23 @@ const ModalSample = (props) => {
 
 
     const saveSample = (e) => {
-        // const newData = e.data
-        // datasampleObj.data.prescription_status = 1
-        // const onSuccess = () => {
-        //     props.togglestatus();
-        // };
-        // const onError = () => {
-        //     props.togglestatus();
-        // };
-
-        // props.updatePrescriptionStatus(datasampleObj.id, datasampleObj, onSuccess, onError);
-        // //history.push("/pharmacy");
-
-        datasample.data.prescription_status = 1
+       // datasample.data.prescription_status = 1
         //datasample.data = e.data
         const onSuccess = () => {
             props.togglestatus();
+            props.updateFormData(datasampleObj);
         };
         const onError = () => {
             props.togglestatus();
         };
-        const newData =  {...datasample.data, ... e.data}
-        datasample.data = newData
-       console.log(datasample)
-       
-       props.updatePrescriptionStatus(DrugId, datasample, onSuccess, onError);
-       props.togglestatus();
+        const newData =  {...datasampleObj.data, ... e.data}
+        datasampleObj.data = newData
+        datasampleObj.data['prescription_status'] = 1
+        console.log(datasampleObj);
+       props.updatePrescriptionStatus(DrugId, datasampleObj, onSuccess, onError);
 
+       props.togglestatus();
+        
     };
 
 

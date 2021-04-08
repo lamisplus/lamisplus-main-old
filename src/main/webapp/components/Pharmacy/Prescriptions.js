@@ -83,20 +83,16 @@ const Prescriptions = (props) => {
   const [formData, setFormData] = useState(prescriptionOrder);
   const [drugDetails, setDrugDetails] = useState()
 
-  
-//   useEffect(() => {
+const updateFormData = (data) =>{
+      console.log('in update form data')
+    setLoading(true);
+      const index = formData.findIndex(x => x.id == data.id);
+      console.log('index is '+index)
 
-//     setLoading('true');
-//     const onSuccess = () => {      
-//     setLoading(false)
-//     console.log(props.prescriptionList)
-//     setFormData(props.prescriptionList)
-//   }
-//     const onError = () => {
-//     setLoading(false)     
-//   }
-//    props.fetchPatientPrescriptionsByEncounter(props.location.state.encounterId,onSuccess, onError);
-// }, [props.location.state.encounterId]); //componentDidMount
+      formData[index] = data;
+      setFormData(formData);
+    setLoading(false);
+    }
 
   const toggle = (form) => {
 
@@ -159,7 +155,7 @@ const Prescriptions = (props) => {
 
         
          ) : (
-           <MenuItem onSelect={() => toggle2(form)} hidden={!authentication.userHasRole(["pharmacy_write"])}>
+           <MenuItem onSelect={() => toggle(form)} hidden={!authentication.userHasRole(["pharmacy_write"])}>
              <i
                className="fa fa-pencil"
                aria-hidden="true"
@@ -248,7 +244,7 @@ const Prescriptions = (props) => {
                                     </td>
                                     <td>{form.data.duration && form.data.duration ? form.data.duration + form.data.duration_unit : ''}</td>
                                     <td>{Moment(form.data.date_prescribed).format("DD-MM-YYYY")}</td>
-                                    <td>{ form.data.prescription_status !==0  ? Moment(form.data.date_dispensed).format("DD-MM-YYYY") : '' }</td>
+                                    <td>{ form.data.date_dispensed ? Moment(form.data.date_dispensed).format("DD-MM-YYYY") : '' }</td>
                                     <td>{Actions(form)}</td>
                                   </tr>
                                   :
@@ -276,12 +272,9 @@ const Prescriptions = (props) => {
           </div>
         </Col>
       </Row>
-     
-        <DispenseModal  modalstatus={modal} togglestatus={toggleModal} datasample={drugDetails}/>
-      
-        <DispenseModalUpdate  modalstatus={modal2} togglestatus={toggleModal2} datasample={drugDetails}/>
-        
-      <ViewModal modalstatus={modal1} togglestatus={toggleModal1} datasample={drugDetails}/> 
+
+     <DispenseModal  modalstatus={modal} togglestatus={toggleModal} datasample={drugDetails} updateFormData={updateFormData}/>
+     <ViewModal modalstatus={modal1} togglestatus={toggleModal1} datasample={drugDetails}/>
     </React.Fragment>
   );
 }

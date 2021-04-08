@@ -13,8 +13,6 @@ import {
   Label,
   Button,
 } from "reactstrap";
-import DataTable from "react-data-table-component";
-import Spinner from "react-bootstrap/Spinner";
 import { connect } from "react-redux";
 import * as actions from "actions/formManager";
 import * as patientActions from "actions/patients";
@@ -33,6 +31,10 @@ import CheckedInValidation from "components/Utils/CheckedInValidation";
 import axios from 'axios';
 import { url } from "../../../api";
 import {authentication} from '../../../_services/authentication';
+import "./ServiceForm.css";
+import MaterialTable from 'material-table';
+import { Paper } from '@material-ui/core';
+
 
 
 const cardStyle = {
@@ -65,6 +67,7 @@ function ServiceFormPage(props) {
           item.formName &&
           item.formName.toLowerCase().includes(efilterText.toLowerCase())
       );
+
 
   const togglePage = () => {
     if (showFormPage) {
@@ -170,7 +173,21 @@ function ServiceFormPage(props) {
       </Card>
     </Form>
   );
-
+  const encounterColumnsNoAction = (viewForm, editForm, viewAllForm) => [
+    {
+      name: "Service Form",
+      selector: "formName",
+      sortable: false,
+      cell: (row) => (
+          <p>
+            {row.formName} -{" "}
+            <small>
+              {row.dateEncounter || ""} {row.timeCreated || ""}
+            </small>
+          </p>
+      ),
+    }
+      ];
   const encounterColumns = (viewForm, editForm, viewAllForm) => [
     {
       name: "Service Form",
@@ -223,21 +240,6 @@ function ServiceFormPage(props) {
     },
   ];
 
-  const esubHeaderComponentMemo = React.useMemo(() => {
-    const handleClear = () => {
-      if (efilterText) {
-        setEResetPaginationToggle(!eresetPaginationToggle);
-        setEFilterText("");
-      }
-    };
-    return (
-      <EncounterFilterComponent
-        onFilter={(e) => setEFilterText(e.target.value)}
-        onClear={handleClear}
-        efilterText={efilterText}
-      />
-    );
-  }, [efilterText, eresetPaginationToggle]);
 
   const handleProgramChange = (newValue, actionMeta) => {
     fetchPatientServiceByProgram(props.patient.patientId, newValue.code);
@@ -260,6 +262,7 @@ function ServiceFormPage(props) {
   const handleChange = (newValue, actionMeta) => {
     setCurrentForm({ ...newValue, type: "NEW" });
   };
+
 
   return (
     <div>
@@ -323,52 +326,54 @@ function ServiceFormPage(props) {
           </Col>
 
           <Col lg={7}>
+
             <Card style={cardStyle} className=" p-3">
               <CardHeader>Service Forms History</CardHeader>
               <CardBody>
+
                 {encounterMessage ? (
                   <Alert color="primary">{encounterMessage}</Alert>
                 ) : (
                   ""
                 )}
-                {showEncounterLoading ? (
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <span> Fetching Service Form History &nbsp; </span>{" "}
-                    <Spinner animation="border" role="status">
-                      <span className="sr-only"></span>
-                    </Spinner>
-                  </div>
-                ) : (
-                  ""
-                )}
-                {(patientEncounters && patientEncounters.length) > 0 ? (
-                  <div>
-                    <DataTable
-                      columns={encounterColumns(
-                        viewForm,
-                        editForm,
-                        viewAllForm
-                      )}
-                      data={encounterFilteredItems}
-                      pagination
-                      paginationResetDefaultPage={eresetPaginationToggle}
-                      subHeader
-                      subHeaderComponent={esubHeaderComponentMemo}
-                      highlightOnHover={true}
-                      subHeaderAlign={"left"}
-                      noTableHead={true}
-                      noHeader={true}
+                    <MaterialTable
+                        components={{
+                          Container: props => <Paper {...props} elevation={0}/>
+                        }}
+                        isLoading={showEncounterLoading}
+                        title="Services Form History"
+                        columns={[
+                          { title: 'Form Name', field: 'formName' },
+                          { title: 'Date', field: 'date' },
+                        ]}
+                        data={patientEncounters}
+                        actions={[
+                          rowData => ({
+                            icon: 'visibility',
+                            tooltip: 'View Form',
+                            onClick: (event, rowData) => viewForm(rowData),
+                            disabled: !authentication.userHasRole(["patient_write"]),
+                          }),
+                          {
+                            icon: 'edit',
+                            tooltip: 'Edit Form',
+                            onClick: (event, rowData) => editForm(rowData)
+                          },
+                        ]}
+                        options={{
+                          actionsColumnIndex: -1,
+                          searchFieldStyle: {
+                            width : '250%',
+                            marginTop: '-25px',
+                          },
+                          searchFieldAlignment: "left",
+                          padding: 'dense',
+                          header: false,
+                          showTitle: false,
+                          pageSize: 15
+                        }}
                     />
-                  </div>
-                ) : (
-                  ""
-                )}
+
               </CardBody>
             </Card>
           </Col>
@@ -395,6 +400,8 @@ function ServiceFormPage(props) {
                   programCode={currentForm.programCode}
                   visitId={props.patient.visitId}
                   onSuccess={onSuccess}
+                  options={true}
+                  hideHeader={true}
                 />
               )}
               {currentForm && currentForm.type === "VIEW" && (

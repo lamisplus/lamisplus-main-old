@@ -2,7 +2,6 @@ package org.lamisplus.modules.base.extension.lims;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.domain.dto.HeaderUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +19,7 @@ public class SampleManifestController {
 
     @PostMapping
     public ResponseEntity<List<SampleManifestDTO>>  save(@RequestBody SampleManifestDTOs sampleManifestDTOs) throws URISyntaxException {
-        List<SampleManifestDTO> result = sampleManifestService.save(sampleManifestDTOs);
-        return ResponseEntity.created(new URI("/api/sample-manifests/" + result.get(0).getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, String.valueOf(result.get(0).getId()))).body(result);
+        return ResponseEntity.ok(sampleManifestService.save(sampleManifestDTOs));
     }
 
     @GetMapping ("/manifest/{manifestId}")

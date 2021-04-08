@@ -31,20 +31,20 @@ public class FormDataService {
     }
 
     public FormData update(Long id, FormData formData) {
-        Optional<FormData> formDataOptional = formDataRepository.findById(id);
-        if(!formDataOptional.isPresent())throw new EntityNotFoundException(FormData.class, "Id", id +"");
+        FormData formData1 = formDataRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(FormData.class, "Id", id +""));
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
         formData.setOrganisationUnitId(organisationUnitId);
         formData.setId(id);
-        formData.setEncounterId(formDataOptional.get().getEncounterId());
+        formData.setEncounterId(formData1.getEncounterId());
         return formDataRepository.save(formData);
     }
 
     public FormData getFormData(Long id){
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-        Optional<FormData> formData = this.formDataRepository.findByIdAndOrganisationUnitId(id, organisationUnitId);
-        if (!formData.isPresent())throw new EntityNotFoundException(FormData.class, "Id", id +"");
-        return formData.get();
+        FormData formData = formDataRepository.findByIdAndOrganisationUnitId(id, organisationUnitId)
+                .orElseThrow(() -> new EntityNotFoundException(FormData.class, "Id", id +""));
+        return formData;
     }
 
     public List<FormData> getAllFormData() {

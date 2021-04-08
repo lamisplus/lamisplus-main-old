@@ -19,17 +19,13 @@ import javax.persistence.criteria.Root;
 
 import org.lamisplus.modules.base.util.AccessRight;
 import org.lamisplus.modules.base.util.CustomDateTimeFormat;
-import org.lamisplus.modules.base.util.UuidGenerator;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @org.springframework.stereotype.Service
 @Transactional
@@ -78,15 +74,10 @@ public class EncounterService {
     }
 
     public EncounterDTO getEncounter(Long id) {
-        Optional<Encounter> encounterOptional = encounterRepository.findById(id);
-        if(!encounterOptional.isPresent() || encounterOptional.get().getArchived()== ARCHIVED) {
-            throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
-        }
+        Encounter encounter = encounterRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Encounter.class, "Id",id+"" ));
         Set<String> permissions = accessRight.getAllPermission();
 
-        accessRight.grantAccess(encounterOptional.get().getFormCode(), Encounter.class, permissions);
-
-        Encounter encounter = encounterOptional.get();
+        accessRight.grantAccess(encounter.getFormCode(), Encounter.class, permissions);
 
         Patient patient = encounter.getPatientByPatientId();
 
@@ -108,14 +99,14 @@ public class EncounterService {
     }
 
     public Encounter update(Long id, EncounterDTO encounterDTO) {
-        Optional<Encounter> optionalEncounter = encounterRepository.findByIdAndArchived(id, UNARCHIVED);
+        Encounter encounter = encounterRepository.findByIdAndArchived(id, UNARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(Encounter.class, "Id",id+"" ));
 
-        accessRight.grantAccessByAccessType(optionalEncounter.get().getFormCode(),
-                Encounter.class, WRITE, checkForEncounterAndGetPermission(optionalEncounter, id));
+        accessRight.grantAccessByAccessType(encounter.getFormCode(),
+                Encounter.class, WRITE, checkForEncounterAndGetPermission(id));
 
-        Encounter encounter = encounterMapper.toEncounter(encounterDTO);
+        encounter = encounterMapper.toEncounter(encounterDTO);
         encounter.setId(id);
-        //encounter.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         encounterRepository.save(encounter);
         return encounter;
     }
@@ -134,22 +125,11 @@ public class EncounterService {
             throw new RecordExistException(Encounter.class, "Patient Id ", encounterDTO.getPatientId() + ", " +
                     "Program Code = " + encounterDTO.getProgramCode() + ", Form Code =" + encounterDTO.getFormCode() + ", Date =" + encounterDTO.getDateEncounter());
         }
-
-        /*Optional <Patient> patientOptional = this.patientRepository.findById(encounterDTO.getPatientId());
-        if(!patientOptional.isPresent()) throw new EntityNotFoundException(Patient.class,"Patient Id", patientOptional.get().getId().toString());
-
-        Optional<Form> formOptional = formRepository.findByCode(encounterDTO.getFormCode());
-        if(!formOptional.isPresent()) throw new EntityNotFoundException(Form.class,"Form Code", encounterDTO.getFormCode());
-
-        Optional<Program> programOptional = this.programRepository.findByCode(encounterDTO.getProgramCode());
-        if(!programOptional.isPresent())throw new EntityNotFoundException(Program.class,"Program Code", encounterDTO.getProgramCode());
-        */
-
         Optional<Visit> visitOptional = this.visitRepository.findById(encounterDTO.getVisitId());
         if(!visitOptional.isPresent())throw new EntityNotFoundException(Visit.class,"Visit Id", encounterDTO.getVisitId()+"");
 
         final Encounter encounter = encounterMapper.toEncounter(encounterDTO);
-        encounter.setUuid(UuidGenerator.getUuid());
+        encounter.setUuid(UUID.randomUUID().toString());
         encounter.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         encounter.setOrganisationUnitId(organisationUnitId);
 
@@ -166,6 +146,7 @@ public class EncounterService {
                 FormData formData = new FormData();
                 formData.setEncounterId(savedEncounter.getId());
                 formData.setData(formDataList);
+                formData.setOrganisationUnitId(organisationUnitId);
                 this.formDataRepository.save(formData);
             });
         }
@@ -173,15 +154,14 @@ public class EncounterService {
     }
 
     public Integer delete(Long id) {
-        Optional<Encounter> optionalEncounter = encounterRepository.findByIdAndArchived(id, UNARCHIVED);
+        Encounter encounter = encounterRepository.findByIdAndArchived(id, UNARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(Encounter.class, "Id",id+"" ));
 
-        accessRight.grantAccessByAccessType(optionalEncounter.get().getFormCode(),
-                Encounter.class, DELETE, checkForEncounterAndGetPermission(optionalEncounter, id));
+        accessRight.grantAccessByAccessType(encounter.getFormCode(), Encounter.class, DELETE, checkForEncounterAndGetPermission(id));
 
-        optionalEncounter.get().setArchived(ARCHIVED);
-        //optionalEncounter.get().setModifiedBy(userService.getUserWithRoles().get().getUserName());
-
-        return optionalEncounter.get().getArchived();
+        encounter.setArchived(ARCHIVED);
+        encounterRepository.save(encounter);
+        return encounter.getArchived();
     }
 
     public List<EncounterDTO> getEncounterByFormCodeAndDateEncounter(String formCode, Optional<String> dateStart, Optional<String> dateEnd) {
@@ -227,11 +207,12 @@ public class EncounterService {
     }
 
     public List getFormDataByEncounterId(Long encounterId) {
-        Optional<Encounter> optionalEncounter = encounterRepository.findById(encounterId);
+        Encounter encounter = encounterRepository.findById(encounterId)
+                .orElseThrow(() -> new EntityNotFoundException(Encounter.class, "Id",encounterId+"" ));
 
-        accessRight.grantAccess(optionalEncounter.get().getFormCode(), Encounter.class, checkForEncounterAndGetPermission(optionalEncounter, encounterId));
+        accessRight.grantAccess(encounter.getFormCode(), Encounter.class, checkForEncounterAndGetPermission(encounterId));
 
-        List<FormData> formDataList = optionalEncounter.get().getFormDataByEncounter();
+        List<FormData> formDataList = encounter.getFormDataByEncounter();
         return formDataList;
     }
 
@@ -241,10 +222,7 @@ public class EncounterService {
         return encounterRepository.countByProgramCodeAndArchivedAndOrganisationUnitId(programCode, UNARCHIVED, organisationUnitId);
     }
 
-    private Set<String> checkForEncounterAndGetPermission(Optional<Encounter> optionalEncounter, Long id){
-        if(!optionalEncounter.isPresent()) {
-            throw new EntityNotFoundException(Encounter.class, "Id",id+"" );
-        }
+    private Set<String> checkForEncounterAndGetPermission(Long id){
         return accessRight.getAllPermission();
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -38,21 +39,22 @@ public class WardService {
         if (wardOptional.isPresent()) throw new RecordExistException(Ward.class,"Name:",wardDTO.getName());
         Ward ward = wardMapper.toWard(wardDTO);
         ward.setOrganisationUnitId(getOrganisationUnitId());
+        ward.setUuid(UUID.randomUUID().toString());
         return wardRepository.save(ward);
     }
 
 
     public WardDTO getWard(Long id){
         Long orgUnitId = getOrganisationUnitId();
-        Optional<Ward> wardOptional = wardRepository.findByIdAndArchivedAndOrganisationUnitId(id, UN_ARCHIVED, orgUnitId);
-        if(!wardOptional.isPresent()) throw new EntityNotFoundException(Ward.class,"Id:",id+"");
-        return wardMapper.toWardDTO(wardOptional.get());
+        Ward ward = wardRepository.findByIdAndArchivedAndOrganisationUnitId(id, UN_ARCHIVED, orgUnitId)
+                .orElseThrow(() -> new EntityNotFoundException(Ward.class,"Id:",id+""));
+        return wardMapper.toWardDTO(ward);
     }
 
     public Ward update(Long id, WardDTO wardDTO){
         Long orgUnitId = getOrganisationUnitId();
-        Optional<Ward> wardOptional = wardRepository.findByIdAndArchivedAndOrganisationUnitId(id, UN_ARCHIVED, orgUnitId);
-        if(!wardOptional.isPresent()) throw new EntityNotFoundException(Ward.class,"Id:",id+"");
+        wardRepository.findByIdAndArchivedAndOrganisationUnitId(id, UN_ARCHIVED, orgUnitId)
+                .orElseThrow(() -> new EntityNotFoundException(Ward.class,"Id:",id+""));
         final Ward ward = wardMapper.toWard(wardDTO);
         ward.setId(id);
         return wardRepository.save(ward);
@@ -60,10 +62,11 @@ public class WardService {
 
     public Integer delete(Long id){
         Long orgUnitId = getOrganisationUnitId();
-        Optional<Ward> wardOptional = wardRepository.findByIdAndArchivedAndOrganisationUnitId(id, UN_ARCHIVED, orgUnitId);
-        if(!wardOptional.isPresent()) throw new EntityNotFoundException(Ward.class,"Id:",id+"");
-        wardOptional.get().setArchived(ARCHIVED);
-        return wardOptional.get().getArchived();
+        Ward ward = wardRepository.findByIdAndArchivedAndOrganisationUnitId(id, UN_ARCHIVED, orgUnitId)
+                .orElseThrow(() -> new EntityNotFoundException(Ward.class,"Id:",id+""));
+        ward.setArchived(ARCHIVED);
+        wardRepository.save(ward);
+        return ward.getArchived();
     }
 
     public Boolean exist(String name){
