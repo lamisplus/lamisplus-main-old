@@ -42,6 +42,7 @@ const DispatchedSamplesLims = React.lazy(() => import("plugins/Lims/DispatchedSa
 const ViewSampleDispatched = React.lazy(() => import("plugins/Lims/ViewPrintManifest"));
 //NIMS
 const NimsSampleList = React.lazy(() => import("plugins/Nims/SampleList"))
+const ViewOrderStatusNims = React.lazy(() => import("plugins/Nims/DispatchedSamplesList"))
 
 const Dashboard2 = React.lazy(() => import("pages/DashboardPage2"))
 /* Radiology */
@@ -157,7 +158,7 @@ class Routes extends Component {
               <PrivateRoute exact path="/sample-list" component={SampleList} />
                {/* NIMS Link*/}
               <PrivateRoute exact path="/nims-sample-list" component={NimsSampleList} />
-              
+              <PrivateRoute exact path="/view-order-status-nims" component={ViewOrderStatusNims} />
               {/* Radiology Link*/}
               <PrivateRoute exact path="/radiology-home" component={RadiologyPage} />
               {/* BootstrapConfiguration Link */}

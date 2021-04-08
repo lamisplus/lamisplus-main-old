@@ -53,14 +53,14 @@ const PatientSearch = (props) => {
         <Link color="inherit" to={{pathname: "/plug-in"}} >
             Plugins
         </Link>          
-        <Typography color="textPrimary">LIMS </Typography> 
+        <Typography color="textPrimary">NIMS </Typography> 
         </Breadcrumbs>
         <br/>
         <br/>
       <br/>
       <Link 
         to ={{ 
-            pathname: "/sample-list",  
+            pathname: "/nims-sample-list",  
            
         }} >
 
@@ -77,7 +77,7 @@ const PatientSearch = (props) => {
         </Link>
         <br/><br/>
           <MaterialTable
-              title="Dispatched samples list"
+              title="Orders Status list"
               columns={[
                   { title: "Manifest ID", field: "manifestId" },
                 
@@ -102,7 +102,7 @@ const PatientSearch = (props) => {
                   },
                   {
                     title: "Action",
-                    field: "action",
+                    field: "actions",
                     filtering: false,
                   },
               ]}
