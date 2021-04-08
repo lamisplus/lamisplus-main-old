@@ -2,7 +2,6 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.GlobalVariableDTO;
 import org.lamisplus.modules.base.domain.entity.GlobalVariable;
 import org.lamisplus.modules.base.service.GlobalVariableService;
@@ -14,7 +13,6 @@ import java.util.List;
 @RequestMapping("/api/global-variables")
 @Slf4j
 @RequiredArgsConstructor
-@Audit
 public class GlobalVariableController {
     private final GlobalVariableService globalVariableService;
 

@@ -1,7 +1,6 @@
 package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.entity.Permission;
 import org.lamisplus.modules.base.repository.PermissionRepository;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/permissions")
 @RequiredArgsConstructor
-@Audit
 public class PermissionController {
     private final PermissionRepository permissionRepository;
 

@@ -2,7 +2,6 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.entity.LabTest;
 import org.lamisplus.modules.base.service.LabTestService;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import java.util.List;
 @RequestMapping("/api/lab-tests")
 @Slf4j
 @RequiredArgsConstructor
-@Audit
 public class LabTestController {
     private final LabTestService labTestService;
 

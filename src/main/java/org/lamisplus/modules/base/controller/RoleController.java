@@ -1,6 +1,5 @@
 package org.lamisplus.modules.base.controller;
 
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.RoleDTO;
 import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.repository.RoleRepository;
@@ -14,8 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/roles")
-//@RequiredArgsConstructor
-@Audit
 public class RoleController {
     private final RoleService roleService;
     private final RoleRepository roleRepository;

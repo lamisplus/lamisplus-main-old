@@ -1,0 +1,3 @@
+name: BaseModule
+version: 1.0.0
+basePackage: org.lamisplus.modules.base
