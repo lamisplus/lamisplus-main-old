@@ -85,13 +85,9 @@ const PatientSearch = (props) => {
                   isLoading={loading}
                   data={props.patientsList.map((row) => ({
                       name: <Link
-                          to ={{
-                              pathname: "/patient-dashboard",
-                              state: row.hospitalNumber
-                          }}
-
-                          title={"Click to view patient dashboard"}
-                      >{row.firstName}  { ' '}  {row.lastName ? row.lastName.toUpperCase() : ""}</Link>,
+                          to ={{pathname: "/patient-dashboard", state: row.hospitalNumber}}
+                          title={"Click to view patient dashboard"}>
+                          {row.firstName}  { ' '}  {row.lastName ? row.lastName.toUpperCase() : ""}</Link>,
                       id: row.hospitalNumber,
                       gender: getGenderById(row.genderId),
                       age: (row.dob === 0 ||

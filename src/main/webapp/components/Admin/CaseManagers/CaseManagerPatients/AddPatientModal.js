@@ -61,6 +61,7 @@ momentLocalizer();
 
 const ModalViewResult = (props) => {
     const classes = useStyles()
+    console.log(props.manifestSamples)
     const manifestSamples = props.manifestSamples && props.manifestSamples !==null ? props.manifestSamples : {};
     const manifestSample= Object.values(manifestSamples);
     const manifestSampleForUpDateFormDataObj= Object.values(manifestSamples);
@@ -89,7 +90,6 @@ const ModalViewResult = (props) => {
         }
         getCharacters();
     }, []);
-
 
 
     useEffect(() => {
@@ -218,38 +218,28 @@ const ModalViewResult = (props) => {
                                             <p style={{marginTop: '.7rem' }}>
                                                Are you Sure, you want to add patients to case manager &nbsp;&nbsp;&nbsp;<span style={{ fontWeight: 'bolder'}}>Dr Dorcas</span>
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                               
                                             </p>
-
                                         </Alert>
                                     </Col>
-                                    
-
-                                      
-                                                        
                                   </Row>
                                       <br/>
                                       {loading ? <Spinner /> : ""}
                                       <br/>
-                                      
                                           <MatButton
                                               type='submit'
                                               variant='contained'
                                               color='primary'
                                               className={classes.button}
                                               startIcon={<SaveIcon />}
-                                              disabled={loading}
-                                          >   
+                                              disabled={loading}>
                                               Yes
                                           </MatButton>
-                                           
                                           <MatButton
                                               variant='contained'
                                               color='default'
                                               onClick={props.togglestatus}
                                               className={classes.button}
-                                              startIcon={<CancelIcon />}
-                                          >
+                                              startIcon={<CancelIcon />}>
                                               No
                                           </MatButton>
                             </CardBody>

@@ -10,6 +10,8 @@ import IconButton from '@material-ui/core/IconButton';
 import {Card, CardBody} from "reactstrap";
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Typography from '@material-ui/core/Typography';
+import { APPLICATION_CODESET_GENDER } from "../../../actions/types";
+import { fetchApplicationCodeSet } from "../../../actions/applicationCodeset";
 
 
 const CaseManager = (props) => {
@@ -22,9 +24,18 @@ const CaseManager = (props) => {
         const onError = () => {
             setLoading(false)     
         }
-            props.fetchById(onSuccess, onError);
+            props.fetchById(598, onSuccess, onError);
     }, []); //componentDidMount
 
+    React.useEffect(() => {
+        if(props.genderList.length === 0){
+            props.fetchApplicationCodeSet("GENDER", APPLICATION_CODESET_GENDER);
+        }
+    }, [props.genderList]);
+
+    function getGenderById(id) {
+        return id ? ( props.genderList.find((x) => x.id == id) ? props.genderList.find((x) => x.id == id).display : "" ) : "";
+    }
     console.log(props.list)
   return (
       <Card>
@@ -39,15 +50,16 @@ const CaseManager = (props) => {
           <MaterialTable
               title="Case Managers"
               columns={[
-                  { title: "ID", field: "id" },
                   {title: "name", field: "name",},
+                  { title: "Gender", field: "gender", filtering: false },
+                  {title: "Role", field: "roles",},
                   {title: "Action", field: "actions", filtering: false,},
               ]}
               isLoading={loading}
               data={props.list.map((row) => ({
-                  Id: row.id,
                   name: row.firstName +  ' ' + row.lastName,
-                  count: row.formDataObj.length,
+                  gender: getGenderById(row.genderId),
+                  roles: row.roles,
                   actions:<Link to ={{pathname: "/case-manager", state: row}}
                                   style={{ cursor: "pointer", color: "blue", fontStyle: "bold"}}>
                                 <Tooltip title="assign client">
@@ -80,11 +92,13 @@ const CaseManager = (props) => {
 
 const mapStateToProps = state => {
     return {
+        genderList: state.applicationCodesets.genderList,
         list: state.caseManager.list
     };
 };
 const mapActionToProps = {
-    fetchById: fetchById
+    fetchById: fetchById,
+    fetchApplicationCodeSet: fetchApplicationCodeSet
 };
 
 
