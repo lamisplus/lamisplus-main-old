@@ -1,9 +1,7 @@
 package org.lamisplus.modules.base.controller;
 
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.controller.vm.ManagedUserVM;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
-import org.lamisplus.modules.base.domain.entity.User;
 import org.lamisplus.modules.base.repository.UserRepository;
 import org.lamisplus.modules.base.service.UserService;
 import org.lamisplus.modules.base.util.PaginationUtil;
@@ -12,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -22,7 +19,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@Audit
 public class AccountController {
     private static class AccountResourceException extends RuntimeException {
         private AccountResourceException(String message) {

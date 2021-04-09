@@ -21,7 +21,7 @@ public class Biometric {
     @ManyToOne(optional = false)
     private Patient patient;
     @ManyToOne(optional = false)
-    private Facility facility;
+    private OrganisationUnit organisationUnit;
     @NotNull
     private byte[] template;
     private String biometricType;
