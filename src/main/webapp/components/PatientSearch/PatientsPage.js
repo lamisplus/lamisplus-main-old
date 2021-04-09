@@ -9,7 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Title from "components/Title/CardTitle";
 import PatientSearch from "./PatientSearch";
 import { authentication } from '../../_services/authentication';
-
+import FingerprintIcon from '@material-ui/icons/Fingerprint';
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -52,6 +52,18 @@ const GeneralPatientSearch = props => {
                 <span style={{textTransform: 'capitalize'}}>Add Patient</span>
               </Button>
             </Link>
+            <Link to="/patient-registration-formio">
+              <Button
+                  variant="contained"
+                  color="primary"
+                  className=" float-right mr-1"
+                  startIcon={<FingerprintIcon />}
+                  disabled={!authentication.userHasRole(["patient_write"])}
+              >
+                <span style={{textTransform: 'capitalize'}}>Search by Fingerprint</span>
+              </Button>
+            </Link>
+
             <br />
           </Title>
           <br />

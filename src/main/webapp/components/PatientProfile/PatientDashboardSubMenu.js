@@ -23,6 +23,8 @@ import AddVitalsPage from 'components/Vitals/AddVitalsPage';
 import { authentication } from '../../_services/authentication';
 import axios from "axios";
 import {url as baseUrl} from "../../api";
+import {BIOMETRICS_CAPTURE_FORM} from "../../api/codes";
+import CaptureBiometrics from "../Biometrics/CaptureBiometrics";
 
 
 Moment.locale("en");
@@ -41,6 +43,7 @@ function PatientDashboardSubMenu(props) {
   const [patientType, setPatientType] = useState();
   const [showVitalSignsModal, setShowVitalSignsModal] = useState(false);
   const userRoles = authentication.getCurrentUserRole();
+  const [biometricsModal, setBiometricsModal] = useState(false);
   const toggleVitalSign = () => {
     return setShowVitalSignsModal(!showVitalSignsModal)
   }
@@ -60,6 +63,9 @@ function PatientDashboardSubMenu(props) {
             }
 
         );
+  }
+  const saveBiometrics = (submission) => {
+    onSuccess();
   }
   const formInfo = [
     {
@@ -89,6 +95,15 @@ function PatientDashboardSubMenu(props) {
       programCode: CODES.GENERAL_SERVICE,
       formName: "New Appointment",
       onSubmit: saveAppointment,
+      options:{
+        modalSize: "modal-lg"
+      },
+    },
+    {
+      code: CODES.BIOMETRICS_CAPTURE_FORM,
+      programCode: CODES.GENERAL_SERVICE,
+      formName: "Capture Patient Biometrics",
+      onSubmit: saveBiometrics,
       options:{
         modalSize: "modal-lg"
       },
@@ -350,6 +365,13 @@ function PatientDashboardSubMenu(props) {
           ) : (
               ""
           )}
+          <Menu.Item name="Capture Biometrics"
+                    // onClick={() => displayFormByFormName("Capture Patient Biometrics")}
+                     onClick={() => setBiometricsModal(!biometricsModal)}
+
+          >
+            Capture Biometrics
+          </Menu.Item>
           <Menu.Menu position="right">
             {props.patient && props.patient.dateVisitStart ? (
                 <Menu.Item>
@@ -385,6 +407,7 @@ function PatientDashboardSubMenu(props) {
             onError={onError}
             options={currentForm.options}
         />
+        <CaptureBiometrics show={biometricsModal} toggle={() => setBiometricsModal(!biometricsModal)}/>
         <Modal isOpen={showVitalSignsModal} toggle={toggleVitalSign} size='lg' zIndex={"9999"}>
           <ModalHeader toggle={toggleVitalSign}>Take Patient Vitals</ModalHeader>
           <ModalBody>

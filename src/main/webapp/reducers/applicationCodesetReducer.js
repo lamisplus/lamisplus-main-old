@@ -7,7 +7,8 @@ const initialState = {
   applicationCodesetList: [],
   wardList: [],
   bookingStatusList: [],
-  genderList: []
+  genderList: [],
+  biometricsFinger: []
 }
 
 const applicationCodesetReducer = (state = initialState, action) => {
@@ -29,6 +30,9 @@ const applicationCodesetReducer = (state = initialState, action) => {
 
     case ACTION_TYPES.APPLICATION_CODESET_BOOKING_STATUS:
       return { ...state, bookingStatusList: [...action.payload] }
+
+    case ACTION_TYPES.APPLICATION_CODESET_BIOMETRICS_FINGERPRINT:
+      return { ...state, biometricsFinger: [...action.payload] }
 
     case ACTION_TYPES.WARD_LIST:
       return { ...state, wardList: [...action.payload] }
