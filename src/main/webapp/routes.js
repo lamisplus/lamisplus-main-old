@@ -84,7 +84,7 @@ const Plugins = React.lazy(() => import("pages/Plugins"));
 const EnrolledPatientsDashboard = React.lazy(() => import("components/PatientProfile/HomePage"));
 /* Data Visualisation */
 const TestPageForVisualisation = React.lazy(() => import("pages/TestPageForVisualisation"));
-
+const DataVisualizationDashboard = React.lazy(() => import("components/Admin/DataVisualisation/Index"));
 /* Sample table i design */
 const TestPage = React.lazy(() => import("pages/TestPage"));
 const TabMenu = React.lazy(() => import("pages/TabMenu"));
@@ -241,7 +241,8 @@ class Routes extends Component {
               {/* The route to Appointment*/}
               {/* The route to Visualization*/}
                 <PrivateRoute exact path={"/visual"} component={TestPageForVisualisation} />
-                <PrivateRoute exact path={"/data-visualisation"} component={TestPageForVisualisation} />
+                <PrivateRoute exact path={"/data-visualisation"} component={DataVisualizationDashboard} />
+
                 
               {/* The route to Visualization*/}
                 <PrivateRoute exact path={"/unauthorised"} component={UnauthorisedPage} />

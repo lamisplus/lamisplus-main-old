@@ -53,41 +53,27 @@ const Example = (props) => {
           name='gamepad'
           active={activeItem === 'gamepad'}
           onClick={handleItemClick}
+          key='dashboard'
         >
           <Icon name='upload' />
          Dashboard
         </Menu.Item>
 
-        <Menu.Item>
+        <Menu.Item  key='chart'>
 
             {/* <SettingsIcon fontSize="large" className={'text-center'}/> */}
             <Icon name='chart bar' />
             <span >Generate Charts</span>
-        <Dropdown   >
 
-        <Dropdown.Menu >
-            <Dropdown.Item icon='pie chart' text='Pie Chart '  onClick={() => chartPage('pie')} />
-            <Dropdown.Item icon='chart bar outline' text='Bar Chart' onClick={() => chartPage('bar')}  />
-            <Dropdown.Item icon='chart line' text='Line Chart' onClick={() => chartPage('line')}  />
-            <Dropdown.Item icon='area chart' text='Area Chart' onClick={() => chartPage('area')} />
-            <Dropdown.Item icon='columns' text='Column Chart' onClick={() => chartPage('column')} />
-          </Dropdown.Menu>
-        </Dropdown>
+
         </Menu.Item>
 
-        <Menu.Item>
+        <Menu.Item  key='list'>
 
             {/* <SettingsIcon fontSize="large" className={'text-center'}/> */}
             <Icon name='chart bar outline' />
             <span >Charts List</span>
-        <Dropdown   >
-
-        <Dropdown.Menu >
-            <Dropdown.Item icon='chart line' text='Tableu ' />
-            <Dropdown.Item icon='globe' text='Power BI ' />
-
-          </Dropdown.Menu>
-        </Dropdown>
+       
         </Menu.Item>
 
       </Menu>

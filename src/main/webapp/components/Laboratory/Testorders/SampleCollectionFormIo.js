@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {Modal,ModalHeader, ModalBody,Form,FormFeedback,Row,Alert,Col,Input,FormGroup,Label,Card,CardBody,} from "reactstrap";
-import axios from "axios";
+import React, { useState } from "react";
+import {Modal,ModalHeader, ModalBody,Form,Alert,Col,Card,CardBody,} from "reactstrap";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,7 +7,6 @@ import "react-widgets/dist/css/react-widgets.css";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import moment from "moment";
-import { url } from "../../../api";
 import {
     createCollectedSample,
     fetchFormById,
