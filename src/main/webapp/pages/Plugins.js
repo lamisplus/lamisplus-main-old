@@ -137,14 +137,20 @@ return (
                     </Card.Header>
                     
                     <Card.Description>
-                    <strong>APPR Information Management System</strong>
+                    <strong>NDR Information Management System</strong>
                     </Card.Description>
                 </Card.Content>
                 <Card.Content extra>
+                <Link 
+                    to ={{ 
+                        pathname: "/ndr", 
+                    }} 
+                >
                 <Button icon labelPosition='right' color='blue'>
                             Next
                         <Icon name='right arrow' />
                 </Button>
+                </Link>
                 </Card.Content>
                 </Card>
             </Card.Group>

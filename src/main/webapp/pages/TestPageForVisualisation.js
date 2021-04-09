@@ -7,9 +7,8 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import {basicColumn} from '../components/Highcharts/BasicColumn';
 import {columnDrillDown} from './../components/Highcharts/ColumnDrillDown';
-import {columnPlacement} from './../components/Highcharts/ColumnPlacement';
 import {pieChart} from './../components/Highcharts/PieChart';
-import {pieChartWithLegend} from './../components/Highcharts/PieChartWithLegend';
+
 import {dualAxisLineColumn} from './../components/Highcharts/DualAxisLineColumn'
 import {barColumnDualAxis} from './../components/Highcharts/BarColumnDualAxis'
 
