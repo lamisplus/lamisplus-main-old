@@ -2,7 +2,7 @@ package org.lamisplus.modules.base;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jfree.util.Log;
-import org.lamisplus.modules.base.service.ModuleService;
+//import org.lamisplus.modules.base.service.ModuleService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
@@ -42,8 +42,8 @@ public class BaseApplication extends SpringBootServletInitializer {
         SpringApplication application = new SpringApplication(BaseApplication.class);
         context = application.run(args);
         Log.info("java.class.path - " + System.getProperty("java.class.path"));
-        ModuleService moduleService = context.getBean(ModuleService.class);
-        moduleService.startModule(isStartUp);
+      //  ModuleService moduleService = context.getBean(ModuleService.class);
+       // moduleService.startModule(isStartUp);
         if(url == null){
             url = "http://localhost:8080";
         }

@@ -12,6 +12,7 @@ import org.lamisplus.modules.base.controller.apierror.IllegalTypeException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ModuleDTO;
 import org.lamisplus.modules.base.domain.entity.*;
+import org.lamisplus.modules.base.domain.entity.Module;
 import org.lamisplus.modules.base.domain.mapper.ModuleMapper;
 import org.lamisplus.modules.base.repository.*;
 import org.lamisplus.modules.base.util.DataLoader;
@@ -354,7 +355,8 @@ public class ModuleService {
                 ClassPathHacker.addFile(rootFile.getAbsolutePath());
                 List<URL> classURL = showFiles(filePath.listFiles(), rootFile, module.getMain());
                 ClassLoader loader = new URLClassLoader(classURL.toArray(
-                        new URL[classURL.size()]), sun.misc.Launcher.getLauncher().getClassLoader());
+                        new URL[classURL.size()]),
+                        null);//sun.misc.Launcher.getLauncher().getClassLoader());
                 setClassLoader(loader);
 
                 for (String className : classNames) {

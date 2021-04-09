@@ -14,4 +14,7 @@ import java.nio.file.Paths;
 @Setter
 public class ApplicationProperties {
     private String modulePath = System.getProperty("user.dir");
+    private String databaseDir;
+    private String tempDir;
+    private String serverUrl;
 }
