@@ -8,6 +8,7 @@ import org.lamisplus.modules.base.domain.dto.ApplicationUserOrganisationUnitDTO;
 import org.lamisplus.modules.base.domain.entity.ApplicationUserOrganisationUnit;
 import org.lamisplus.modules.base.domain.mapper.ApplicationUserOrganisationUnitMapper;
 import org.lamisplus.modules.base.repository.ApplicationUserOrganisationUnitRepository;
+import org.lamisplus.modules.base.util.Constant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,20 +22,15 @@ import java.util.Set;
 @Slf4j
 @RequiredArgsConstructor
 public class ApplicationUserOrganisationUnitService {
-    private static final int UN_ARCHIVED = 0;
     private final ApplicationUserOrganisationUnitRepository applicationUserOrganisationUnitRepository;
     private final ApplicationUserOrganisationUnitMapper applicationUserOrganisationUnitMapper;
     private final UserService userService;
-
+    private final Constant constant;
 
     public List<ApplicationUserOrganisationUnit> save(Set<ApplicationUserOrganisationUnitDTO> applicationUserOrganisationUnitDTO1) {
         List<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitList = new ArrayList<>();
         applicationUserOrganisationUnitDTO1.forEach(applicationUserOrganisationUnitDTO -> {
-            Optional<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitOptional = applicationUserOrganisationUnitRepository.
-                    findByApplicationUserIdAndOrganisationUnitIdAndArchived(applicationUserOrganisationUnitDTO.getApplicationUserId(),
-                            applicationUserOrganisationUnitDTO.getOrganisationUnitId(), UN_ARCHIVED);
-
-            applicationUserOrganisationUnitRepository.findAllByApplicationUserIdAndArchived(userService.getUserWithRoles().get().getId(), UN_ARCHIVED)
+            applicationUserOrganisationUnitRepository.findAllByApplicationUserIdAndArchived(userService.getUserWithRoles().get().getId(), constant.UN_ARCHIVED)
                     .forEach(applicationUserOrganisationUnit -> {
                         applicationUserOrganisationUnitRepository.deleteById(applicationUserOrganisationUnit.getId());
                     });
@@ -47,19 +43,19 @@ public class ApplicationUserOrganisationUnitService {
     }
 
     public ApplicationUserOrganisationUnit update(Long id, ApplicationUserOrganisationUnit applicationUserOrganisationUnit) {
-        applicationUserOrganisationUnitRepository.findByIdAndArchived(id, UN_ARCHIVED)
+        applicationUserOrganisationUnitRepository.findByIdAndArchived(id, constant.UN_ARCHIVED)
                 .orElseThrow(() -> new EntityNotFoundException(ApplicationUserOrganisationUnit.class, "Id", id +""));
         applicationUserOrganisationUnit.setId(id);
         return applicationUserOrganisationUnitRepository.save(applicationUserOrganisationUnit);
     }
 
     public ApplicationUserOrganisationUnit getApplicationUserOrganisationUnit(Long id){
-        return applicationUserOrganisationUnitRepository.findByIdAndArchived(id, UN_ARCHIVED)
+        return applicationUserOrganisationUnitRepository.findByIdAndArchived(id, constant.UN_ARCHIVED)
                 .orElseThrow(() -> new EntityNotFoundException(ApplicationUserOrganisationUnit.class, "Id", id +""));
     }
 
     public List<ApplicationUserOrganisationUnit> getAllApplicationUserOrganisationUnit() {
-        return applicationUserOrganisationUnitRepository.findAllByArchived(UN_ARCHIVED);
+        return applicationUserOrganisationUnitRepository.findAllByArchived(constant.UN_ARCHIVED);
     }
 
     public Boolean delete(Long id, ApplicationUserOrganisationUnit applicationUserOrganisationUnit) {

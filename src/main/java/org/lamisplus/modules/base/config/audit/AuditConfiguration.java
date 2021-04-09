@@ -1,9 +1,7 @@
 package org.lamisplus.modules.base.config.audit;
 
 import org.audit4j.core.MetaData;
-import org.audit4j.core.handler.ConsoleAuditHandler;
 import org.audit4j.core.handler.Handler;
-import org.audit4j.core.handler.file.FileAuditHandler;
 import org.audit4j.core.layout.Layout;
 import org.audit4j.core.layout.SimpleLayout;
 import org.audit4j.handler.db.DatabaseAuditHandler;
