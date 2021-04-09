@@ -6,7 +6,6 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Checkbox from '@material-ui/core/Checkbox';
-import Avatar from '@material-ui/core/Avatar';
 import {url} from './../api';
 import axios from "axios";
 import { authentication } from "./../_services/authentication";
@@ -86,9 +85,7 @@ useEffect(() => {
      
       <Card>
         <CardBody>
- 
-        <br/>
-        <br/>
+
         <Breadcrumbs aria-label="breadcrumb">
           <Link color="inherit" to={{pathname: "/plug-in"}} >
               Plugins
@@ -109,9 +106,18 @@ useEffect(() => {
               size="large"
             >
               {<GiFiles />} &nbsp;&nbsp;
-              <span style={{textTransform: 'capitalize'}}>Generate  </span>
-                  &nbsp;&nbsp;
-              <span style={{textTransform: 'capitalize'}}> NDR</span>              
+              <span style={{textTransform: 'capitalize'}}>Download  </span>
+                         
+            </Button>
+            <Button
+              color="primary"
+              variant="contained"
+              className=" float-right mr-1"
+              size="large"
+            >
+              {<GiFiles />} &nbsp;&nbsp;
+              <span style={{textTransform: 'capitalize'}}> Generate </span>
+              
             </Button>
 
      <List dense >
@@ -126,8 +132,6 @@ useEffect(() => {
               <AccountBalanceIcon />
             </ListItemAvatar>
             <ListItemText id={labelId} primary={`${value.organisationUnitName }`} />
-            <ListItemText id={labelId} primary={'Date of Download'} />
-            <ListItemText id={labelId} primary={'Number of Files Generated'} />
             <ListItemSecondaryAction>
               <Checkbox
                 edge="end"

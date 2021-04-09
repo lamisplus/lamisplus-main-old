@@ -55,14 +55,14 @@ const Example = (props) => {
           onClick={handleItemClick}
         >
           <Icon name='upload' />
-          Generate Chart
+         Dashboard
         </Menu.Item>
 
         <Menu.Item>
 
             {/* <SettingsIcon fontSize="large" className={'text-center'}/> */}
             <Icon name='chart bar' />
-            <span >Dashboard Charts</span>
+            <span >Generate Charts</span>
         <Dropdown   >
 
         <Dropdown.Menu >
@@ -79,7 +79,7 @@ const Example = (props) => {
 
             {/* <SettingsIcon fontSize="large" className={'text-center'}/> */}
             <Icon name='chart bar outline' />
-            <span >Other Visuals</span>
+            <span >Charts List</span>
         <Dropdown   >
 
         <Dropdown.Menu >
