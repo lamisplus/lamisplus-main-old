@@ -93,8 +93,8 @@ const ReportPage = React.lazy(() => import("components/Reports/ReportingPage"));
 const JasperTemplate = React.lazy(() => import("components/Reports/JasperTemplate"));
 const ReportView = React.lazy(() => import("components/Reports/ReportView"));
 const JasperTemplateUpdate = React.lazy(() => import("components/Reports/JasperTemplateUpdate"));
-//const getBasename = () => {return `/${process.env.PUBLIC_URL.split("/").pop()}`;};
-const getBasename = () => {return window.SOURCE_URL;};
+const getBasename = () => {return `/${process.env.PUBLIC_URL.split("/").pop()}`;};
+//const getBasename = () => {return window.SOURCE_URL;};
 //SOURCE_URL
 const Prescription = React.lazy(() => import("components/Pharmacy/Prescriptions"))
 
