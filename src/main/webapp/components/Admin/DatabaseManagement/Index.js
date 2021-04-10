@@ -88,7 +88,7 @@ return (
                     <br/><br/>
                     <Col sm={12}>
                       <Segment placeholder>
-                      <Grid columns={3} stackable textAlign='center'>
+                      <Grid columns={4} stackable textAlign='center'>
                         
 
                         <Grid.Row >
@@ -122,6 +122,21 @@ return (
                                   }}
                               >
                               <Button primary >Sync</Button>
+                            </Link>
+                          </Grid.Column>
+                          <Grid.Column>
+                            <Header icon>
+                            <MdSync size="50" color="dark" />
+                            <br/> 
+                              Revert Database
+                            </Header>
+                              <Link
+                                  to={{
+                                    pathname: "/admin-database-sync",
+                                    currentId: {}
+                                  }}
+                              >
+                              <Button primary >Revert</Button>
                             </Link>
                           </Grid.Column>
                         </Grid.Row>

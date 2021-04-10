@@ -1,42 +1,21 @@
-import React from 'react';
+import React, {useState} from 'react';
 import MaterialTable from 'material-table';
 import { useSelector} from 'react-redux';
-import { Link } from 'react-router-dom'
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
+import DeleteChart from './DeleteChart';
 
 const PatientSearch = (props) => {
   const prescriptions = useSelector(state => state.pharmacy.allPrescriptions)
+  const [modal3, setModal3] = useState(false)//modal to View Result
+  const togglemodal3 = () => setModal3(!modal3)
+  const [collectmodal, setcollectmodal] = useState([])
 
-  const totalDrugsPrescribed = (drugsArray) => {
-
-    const dispensed = []
-
-    drugsArray.map(drugs => {
-        if (drugs.data.prescription_status === 1)
-          dispensed.push(drugs.data)
-       
-    })
-    
-    return dispensed.length
-  }
-  const drugType = (drugsArray) => {
-    console.log(prescriptions)
-    const type = []
-    drugsArray.map(drugs => {
-        if (drugs.data.type === 1){
-          type.push('Drug')
-        }else if(drugs.data.type === 0){
-          type.push('Regimen')
-        }else{
-          type.push('')
-        }
-       
-    })
-    
-    return type
-  }
+const deleteButton = (data) =>{
+        setcollectmodal({...collectmodal, ...data});
+        setModal3(!modal3)
+}
  
   return (
     <div>
@@ -44,27 +23,23 @@ const PatientSearch = (props) => {
       
         title="User Charts List"
         columns={[
-          { title: "Patient ID", field: "Id" },
+          { title: "ID", field: "Id" },
           {
-            title: "Patient Name",
+            title: "Chart Name",
             field: "name",
           },
-          { title: "Prescription Date", field: "date", type: "date" },
+          { title: " Date Created", field: "date", type: "date" },
           {
-            title: "Total Prescribed",
-            field: "prescribedCount",
+            title: "Chart Title",
+            field: "chartTitle",
             filtering: false,
           },
           {
-            title: "Total Dispensed",
-            field: "dispensedCount",
+            title: "Chart Type",
+            field: "chartType",
             filtering: false,
           },
-          {
-            title: "Drug Type",
-            field: "type",
-            filtering: false,
-          },
+         
           {
             title: "Action",
             field: "actions",
@@ -73,26 +48,18 @@ const PatientSearch = (props) => {
         ]}
         data={ prescriptions.map((prescription) => ({
           Id: prescription.hospitalNumber,
-          name: prescription.firstName + " " + prescription.lastName,
+          name: 'Sample Types',
           date: prescription.dateEncounter,
-          prescribedCount: prescription.formDataObj.length,
-          dispensedCount: totalDrugsPrescribed(prescription.formDataObj),
-          type:   drugType(prescription.formDataObj),
+          chartTitle: 'Laboratory',
+          chartType: 'Bar Chart',
           actions: (
-            
-            <Link
-              to={{
-                pathname: "/prescriptions",
-                state: prescription,
-               
-              }}
-              style={{ cursor: "pointer", color: "blue", fontStyle: "bold" }}>
+
               <Tooltip title="View Prescription">
-                <IconButton aria-label="View Prescription">
-                  <VisibilityIcon color="primary" />
+                <IconButton aria-label="View Prescription" onClick= {()=>deleteButton()}>
+                  <DeleteIcon color="primary" />
                 </IconButton>
               </Tooltip>
-            </Link>
+
           ),
         }))}
         options={{
@@ -114,6 +81,7 @@ const PatientSearch = (props) => {
           searchFieldAlignment: "left",
         }}
       />
+       <DeleteChart modalstatus={modal3} togglestatus={togglemodal3} manifestSamples={collectmodal} />
     </div>
   );
 }

@@ -20,7 +20,7 @@ import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import MaterialTable from 'material-table';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -220,7 +220,7 @@ useEffect(() => {
                
                 actions:  <Tooltip title="Download">
                               <IconButton aria-label="Download" >
-                                  <VisibilityIcon color="primary"/>
+                                  <CloudDownloadIcon color="primary"/>
                               </IconButton>
                           </Tooltip>
 

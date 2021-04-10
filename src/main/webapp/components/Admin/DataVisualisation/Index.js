@@ -7,7 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { MdDashboard, MdContacts } from 'react-icons/md';
-import {Card, CardBody, CardDeck, CardHeader} from 'reactstrap';
+import {Card, CardBody, CardDeck, } from 'reactstrap';
 import ChartList from './ChartList';
 import { fetchPrescriptions } from "../../../actions/dataVisualisation";
 import { connect } from 'react-redux';
@@ -16,6 +16,9 @@ import { url } from "../../../api";
 import axios from 'axios';
 import {getQueryParams} from "components/Utils/PageUtils";
 import GenerateChart from './GenerateChart';
+import AddBoxIcon from '@material-ui/icons/AddBox';
+import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
+
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -154,12 +157,10 @@ const useStyles = makeStyles(theme => ({
 
 
 const ScrollableTabsButtonForce = (props) => {
-    useEffect(() => {
-      props.fetchPrescriptions();
-    }, []);
-    const classes = useStyles();
-    const [value, setValue] = useState(0);
-    const urlIndex = getQueryParams("tab", props.location.search); 
+
+const classes = useStyles();
+const [value, setValue] = useState(0);
+const urlIndex = getQueryParams("tab", props.location.search); 
   const urlTabs = urlIndex !== null ? urlIndex : props.location.state ;
   useEffect ( () => {
     switch(urlTabs){  
@@ -171,112 +172,29 @@ const ScrollableTabsButtonForce = (props) => {
         setValue(newValue);
     };
 
-    const [drugPieChart, setdrugPieChart] = useState({})
-    const [drugBarChart, setdrugBarChart] = useState({})
+    const [chart, setChart] = useState({})
 
     // APi request for Pie chart
       useEffect(() => {
           async function getCharacters() {
               try {
-                  const response = await axios.get( url+ 'pharmacy-dashboard/pie');
+                  const response = await axios.get( '192.168.0.101/api/'+ 'dashboard');
+                  console.log(response)
                   const body = response.data && response.data!==null ? response.data : {}; 
-                  setdrugPieChart(body)                         
+                  //setChart(response.json())                         
               } catch (error) {}
           }
           getCharacters();
       }, []); 
-     // APi request for Bar chart
-     useEffect(() => {
-      async function getCharacters() {
-          try {
-              const response = await axios.get( url+ 'pharmacy-dashboard/column');
-              const body2 = response.data && response.data!==null ? response.data : {}; 
-              setdrugBarChart(body2)                         
-          } catch (error) {}
+
+    
+     console.log()
+    function getList() {
+        return fetch('192.168.0.101/api/dashboard')
+          .then(data => data.json())
       }
-      getCharacters();
-    }, []);
-    console.log(drugBarChart.categories)
-    /// This is for the Pie Chart
-    const drugChart = {
-          chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: 0,
-            plotShadow: false,
-            type: drugPieChart.type
-        },
-        title: {
-            text: ' Total Prescriptions and Dispensed Drugs in last 7days',
-            align: 'center',
-            // verticalAlign: 'middle',
-            // y: 60
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        accessibility: {
-            point: {
-                valueSuffix: '%'
-            }
-        },
-        plotOptions: {
-            pie: {
-                dataLabels: {
-                    enabled: true,
-                    distance: -50,
-                    style: {
-                        fontWeight: 'bold',
-                        color: 'white'
-                    }
-                },
-                startAngle: -90,
-                endAngle: 90,
-                center: ['50%', '75%'],
-                size: '110%'
-            }
-        },
-        series: [{
-            name: drugPieChart.name,
-            innerSize: '50%',
-            data: drugPieChart.data
-        }]
-        }
-    // This is for the BAR chart
-        const basicColumn = {
-          chart: {
-              type: drugBarChart.type
-          },
-          title: {
-              text: drugBarChart.text
-          },
-          subtitle: {
-              text: drugBarChart.subtitle
-          },
-          xAxis: drugBarChart.xAxis,
-          yAxis: {
-              min: 0,
-              title: {
-                  text: ' '
-              }
-          },
-          tooltip: {
-              headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-              pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                  '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
-              footerFormat: '</table>',
-              shared: true,
-              useHTML: true
-          },
-          plotOptions: {
-              column: {
-                  pointPadding: 0.2,
-                  borderWidth: 0
-              }
-          },
-          series: drugBarChart.series
-        };
-        
-        
+      console.log(getList())
+
     return (
       <div className={classes.root}>
         <div className={classes.inforoot}>
@@ -302,13 +220,13 @@ const ScrollableTabsButtonForce = (props) => {
             <Tab
               className={classes.title}
               label="Generate Charts"
-              icon={<MdContacts />}
+              icon={<AddBoxIcon />}
               {...a11yProps(1)}
             />
             <Tab
               className={classes.title}
               label="Chart Lists"
-              icon={<MdContacts />}
+              icon={<FormatListBulletedIcon />}
               {...a11yProps(2)}
             />
           </Tabs>
@@ -316,20 +234,18 @@ const ScrollableTabsButtonForce = (props) => {
         </AppBar>
 
         <TabPanel value={value} index={0}>
+            
+        {/* {!facilities && facilities!==null ? facilities : {}.map((value) => {  
+            <p>Test Chart List</p>
+         })
+         } */}
           <CardDeck>
-            <Card>
-              
-              <CardBody>
-                <div>
-                    <HighchartsReact options={drugChart} />
-                </div> 
-              </CardBody>
-            </Card>
+            
             <Card>
              
               <CardBody>
                 <div>
-                    <HighchartsReact options={basicColumn} />
+                    {/* <HighchartsReact options={basicColumn} /> */}
                 </div> 
               
               </CardBody>

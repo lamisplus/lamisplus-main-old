@@ -54,6 +54,9 @@ useEffect(() => {
         setModal3(!modal3) 
      }
      
+     const sendNotification = () =>{
+       alert('Sending to the NIMS API Backend ')
+     }
          //This is function to check for the status of each collection to display on the tablist below 
     const sampleStatus = e =>{
       if(e===1){
@@ -114,7 +117,7 @@ useEffect(() => {
               variant="contained"
               className=" float-right mr-1"
               size="large"
-              onClick={() => window.print()}
+              onClick={() => sendNotification()}
             >
               {<GiFiles />} &nbsp;&nbsp;
               <span style={{textTransform: 'capitalize'}}>Send  </span>

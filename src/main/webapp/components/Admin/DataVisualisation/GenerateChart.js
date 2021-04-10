@@ -16,29 +16,64 @@ import * as CODES from "./../../../api/codes";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { DateTimePicker } from 'react-widgets';
+import SaveIcon from '@material-ui/icons/Save';
+import MatButton from '@material-ui/core/Button';
 
 Moment.locale('en');
 momentLocalizer();
+const useStyles = makeStyles(theme => ({
+    card: {
+        margin: theme.spacing(20),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+    form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing(3)
+    },
+    submit: {
+        margin: theme.spacing(3, 0, 2)
+    },
+    cardBottom: {
+        marginBottom: 20
+    },
+    Select: {
+        height: 45,
+        width: 350
+    },
+    button: {
+        margin: theme.spacing(1)
+    },
+    root: {
+        '& > *': {
+          margin: theme.spacing(1)
+        }
+    },
+    input: {
+        display: 'none'
+    },
+    error:{
+        color: '#f85032',
+        fontSize: '12.8px'
+    }
+}))
 
 const GenerateCharts = (props) => {
-   // const datasample = datasample.data && datasample.data.order_priority && datasample.data.order_priority.display   ? datasample.data.order_priority.display : null;
+    const classes = useStyles()
     const [loading, setLoading] = useState(false)
-    const [visible, setVisible] = useState(true);
-    const onDismiss = () => setVisible(false);
-    //This is to get SAMPLE TYPE from application Codeset
+    const [visibleChart, setvisibleChart] = useState(0);
+    //const onDismiss = () => setVisible(false);
+    const [otherfields, setOtherFields] = useState({start_date:"",end_date:"",facility:"",title:"",category:"",
+    chart_type:"", age_disaggregation:"" , gender:"", data_element:""});
 
-    const currentForm = {
-          code: CODES.DATA_VISUALIZATION,
-          programCode: CODES.GENERAL_SERVICE,
-          formName: "Data Visualisation",
-          options:{
-              hideHeader: true
-          },
-      };
 
-    const saveSample = (e) => {
-        const newData = e.data    
-    };
+
+      const handleOtherFieldInputChange = e => {
+        setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
+    }
+
+
     const basicColumn  = {"plotOptions":{"pointPadding":0.2,"borderWidth":0.0},"xAxis":[{"name":"1-4","y":125.0},{"name":"5-9","y":30.0},{"name":"10-15","y":250.0}],"series":{"name":"Chart Title","type":"column","data":[{"name":"1-4","y":125.0},{"name":"5-9","y":30.0},{"name":"10-15","y":250.0}]},"subtitle":{"text":""},"tooltip":{"headerFormat":"\u003chtml\u003e\n \u003chead\u003e\u003c/head\u003e\n \u003cbody\u003e\n  \u003cspan style\u003d\"font-size:10px\"\u003e{point.key}\u003c/span\u003e\n  \u003ctable\u003e\u003c/table\u003e\n \u003c/body\u003e\n\u003c/html\u003e","pointFormat":"\u003chtml\u003e\n \u003chead\u003e\u003c/head\u003e\n \u003cbody\u003e\n  {series.name}:  \u003cb\u003e{point.y}\u003c/b\u003e\n \u003c/body\u003e\n\u003c/html\u003e","footerFormat":"\u003chtml\u003e\n \u003chead\u003e\u003c/head\u003e\n \u003cbody\u003e\u003c/body\u003e\n\u003c/html\u003e","shared":true,"useHTML":true},"title":{"text":"Chart Title","align":"center"},"chart":{"type":"column"}}
     const options = {
         chart: {
@@ -54,25 +89,28 @@ const GenerateCharts = (props) => {
         ]
       };
 
-const generatechart = () =>  () => {
-    alert('generate Chart')
+const generatechart =  () => () => {
+    setvisibleChart(1)
+    console.log(visibleChart)
 }
+const saveChart = (e) => {
+    e.preventDefault()
+    const newData = e 
+    alert ('saving chart')
+    setvisibleChart(0) 
+    console.log(otherfields) 
+};
+
   return (
     <div >
         <Card >
          <CardBody>
-            
-                {/* <FormRenderer
-                    formCode={currentForm.code }
-                    programCode={currentForm.programCode}
-                    //submission={datasample}
-                    onSubmit={saveSample}
-                /> */}
+
                  <Row style={{ marginTop: '20px'}}>
                  <Col md="3">
                      <FormGroup>
                             <Label for="exampleSelect">Title</Label>
-                                <Input type="text" name="receivingLabName" id="receivingLabName"  >
+                                <Input type="text" name="title" id="title" onChange={handleOtherFieldInputChange} >
                                     
                                 </Input>
                                     <FormFeedback></FormFeedback>
@@ -83,14 +121,13 @@ const generatechart = () =>  () => {
                         <Label>Data Category </Label>
                             <Input
                                 type="select"
-                                name="result_reported_by"
-                                id="result_reported_by"
-
+                                name="category"
+                                id="category"
+                                onChange={handleOtherFieldInputChange}
                             >
                                 <option value=""></option>
-                                <option value="Dorcas"> Data 1 </option>
-                                <option value="Jeph"> Data </option>
-                                <option value="Debora"> Data </option>
+                                <option value="indicator"> Indicator </option>
+
                             </Input>
 
                     </FormGroup>
@@ -100,14 +137,16 @@ const generatechart = () =>  () => {
                         <Label>Chart Type </Label>
                             <Input
                                 type="select"
-                                name="result_reported_by"
-                                id="result_reported_by"
-
+                                name="chart_type"
+                                id="chart_type"
+                                onChange={handleOtherFieldInputChange}
                             >
                                 <option value=""></option>
-                                <option value="Dorcas"> Data 1 </option>
-                                <option value="Jeph"> Data </option>
-                                <option value="Debora"> Data </option>
+                                <option value="column"> Pie Chart</option>
+                                <option value="column"> Bar Chart</option>
+                                <option value="column"> Column Chart </option>
+                                <option value="column"> Line Chart</option>
+                                <option value="column"> Area Chart </option>
                             </Input>
 
                     </FormGroup>
@@ -117,12 +156,13 @@ const generatechart = () =>  () => {
                         <Label>Gender </Label>
                             <Input
                                 type="select"
-                                name="result_reported_by"
-                                id="result_reported_by"
+                                name="gender"
+                                id="gender"
+                                onChange={handleOtherFieldInputChange}
                             >
                                 <option value=""></option>
-                                <option value="Dorcas">Male </option>
-                                <option value="Jeph"> Female </option>
+                                <option value="Male">Male </option>
+                                <option value="Female"> Female </option>
                                
                             </Input>
 
@@ -131,7 +171,7 @@ const generatechart = () =>  () => {
                     <Col md="3">
                      <FormGroup>
                             <Label for="exampleSelect">Age Disaggregation</Label>
-                                <Input type="text" name="receivingLabName" id="receivingLabName"  >
+                                <Input type="text" name="age_disaggregation" id="age_disaggregation"  onChange={handleOtherFieldInputChange}>
                                     
                                 </Input>
                                     <FormFeedback></FormFeedback>
@@ -139,16 +179,22 @@ const generatechart = () =>  () => {
                     </Col>
                     <Col md="3">
                     <FormGroup>
-                        <Label>Date Element </Label>
+                        <Label>Data Element </Label>
                             <Input
                                 type="select"
-                                name="result_reported_by"
-                                id="result_reported_by"
+                                name="data_element"
+                                id="data_element"
+                                onChange={handleOtherFieldInputChange}
                             >
+
                                 <option value=""></option>
-                                <option value="Dorcas">Male </option>
-                                <option value="Jeph"> Female </option>
-                               
+                                <option value="TX_CURR">TX_CURR </option>
+                                <option value="TX_NEW">TX_NEW </option>
+                                <option value="PVLS_D">PVLS_D </option>
+                                <option value="PVLS_N">PVLS_N </option>
+                                <option value="HTS_POS">HTS_POS </option>
+                                <option value="HTS">HTS </option>
+
                             </Input>
 
                     </FormGroup>
@@ -159,8 +205,11 @@ const generatechart = () =>  () => {
                         <Label>Start Date </Label>
                         <DateTimePicker
                             time={false}
-                            name="date_sample_transfered"
-                            id="date_sample_transfered"
+                            name="start_date"
+                            id="start_date"
+                            onChange={start_date =>
+                                setOtherFields({ ...otherfields, start_date: start_date })
+                              }
                             required
                         /> 
                     </FormGroup>
@@ -170,8 +219,11 @@ const generatechart = () =>  () => {
                         <Label>End Date </Label>
                         <DateTimePicker
                             time={false}
-                            name="date_sample_transfered"
-                            id="date_sample_transfered"
+                            name="end_date"
+                            id="end_date"
+                            onChange={end_date =>
+                                setOtherFields({ ...otherfields, end_date: end_date })
+                              }
                             required
                         /> 
 
@@ -182,13 +234,12 @@ const generatechart = () =>  () => {
                         <Label>Facility </Label>
                             <Input
                                 type="select"
-                                name="result_reported_by"
-                                id="result_reported_by"
+                                name="facility"
+                                id="facility"
+                                onChange={handleOtherFieldInputChange}
                             >
                                 <option value=""></option>
-                                <option value="Dorcas"> Indicator 1 </option>
-                                <option value="Jeph"> Indicator </option>
-                                <option value="Debora"> Indicator </option>
+                                <option value="1132"> Uyo </option>
                             </Input>
 
                     </FormGroup>
@@ -200,8 +251,27 @@ const generatechart = () =>  () => {
                     </Button>
                     </Col>
                     </Row>
-
-            <HighchartsReact highcharts={Highcharts}  options={options} />
+                {visibleChart ===1 ? (
+                    <>
+                    <br/><br/>
+                        <MatButton
+                            type='submit'
+                            variant='contained'
+                            color='primary'
+                            className={classes.button}                        
+                            className=" float-right mr-1"
+                            size='large'
+                            onClick={ () =>saveChart()}
+                            
+                        >
+                            <SaveIcon />{" "} Save chart
+                        </MatButton>
+                    <HighchartsReact highcharts={Highcharts}  options={options} />
+                    </>
+                    ) : ( "")
+                
+                }
+                 
             </CardBody>
         </Card>
     </div>
