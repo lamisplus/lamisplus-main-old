@@ -23,6 +23,7 @@
         <jjwt.version>0.11.2</jjwt.version>
         <maven.test.skip>true</maven.test.skip>
         <maven.lamisplus-baseui.skip>true</maven.lamisplus-baseui.skip>
+        <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
     </properties>
 
     <repositories>
@@ -245,13 +246,18 @@
             <artifactId>jhipster-framework</artifactId>
             <version>3.9.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.lamisplus.modules</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
         <finalName>${project.artifactId}</finalName>
         <defaultGoal>spring-boot:run</defaultGoal>
         <plugins>
-            <!--<plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <executions>
@@ -261,7 +267,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -278,7 +284,7 @@
                         <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
-                            <version>${mapstruct.version}</version>
+                            <version>1.4.2.Final</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
