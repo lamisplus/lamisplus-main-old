@@ -30,6 +30,7 @@ const CaptureBiometrics = (props) => {
     const [showModal, setShowModal] = React.useState(false);
     const [status, setStatus] = React.useState('Pending');
     const toggleModal = () => setShowModal(!showModal);
+
     const placeFingerMsg = 'Please place your hand on scanner';
     const fingerIdentified = 'This finger has already been captured! Click Recapture to capture finger again.';
     const errorMessage = 'Could not capture fingerprint, try again';
