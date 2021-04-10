@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 
@@ -10,6 +10,7 @@ import Title from "components/Title/CardTitle";
 import PatientSearch from "./PatientSearch";
 import { authentication } from '../../_services/authentication';
 import FingerprintIcon from '@material-ui/icons/Fingerprint';
+import SearchPatientByFingerprint from "../Biometrics/SearchByPatient";
 
 const useStyles = makeStyles(theme => ({
   card: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 
 const GeneralPatientSearch = props => {
   const classes = useStyles();
-
+  const [showFingerprintModal, setFingerprintModal] = useState(false);
   return (
     <div>
       <Card className={classes.cardBottom}>
@@ -52,17 +53,18 @@ const GeneralPatientSearch = props => {
                 <span style={{textTransform: 'capitalize'}}>Add Patient</span>
               </Button>
             </Link>
-            <Link to="/patient-registration-formio">
+
               <Button
                   variant="contained"
                   color="primary"
                   className=" float-right mr-1"
                   startIcon={<FingerprintIcon />}
+                  onClick={() => setFingerprintModal(!showFingerprintModal)}
                   disabled={!authentication.userHasRole(["patient_write"])}
               >
                 <span style={{textTransform: 'capitalize'}}>Search by Fingerprint</span>
               </Button>
-            </Link>
+
 
             <br />
           </Title>
@@ -70,6 +72,7 @@ const GeneralPatientSearch = props => {
           <PatientSearch />
         </CardContent>
       </Card>
+      <SearchPatientByFingerprint showModal={showFingerprintModal} toggleModal={() => setFingerprintModal(!showFingerprintModal)}/>
     </div>
   );
 };

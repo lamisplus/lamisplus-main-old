@@ -7,12 +7,15 @@ import ErrorIcon from "@material-ui/icons/Error";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import CancelIcon from "@material-ui/icons/Cancel";
 import {CircularProgress} from "@material-ui/core";
+import {fetchApplicationCodeSet} from "../../actions/applicationCodeset";
+import {fetchByHospitalNumber} from "../../actions/patients";
+import {connect} from "react-redux";
 
 const SearchPatientByFingerprint = (props) => {
     const [devices, setDevices] = React.useState([]);
     const [device, setDevice] = React.useState();
     const [loading, setLoading] = React.useState(true);
-    const [status, setStatus] = React.useState('Pending');
+    const [status, setStatus] = React.useState('');
     const placeFingerMsg = 'Please place your hand on scanner';
     const fingerIdentified = 'This finger has already been captured! Click view patient to view patient.';
     const errorMessage = 'Could not capture fingerprint, try again';
@@ -88,7 +91,7 @@ const SearchPatientByFingerprint = (props) => {
                 <ModalHeader toggle={props.toggleModal}>Search Patient By Fingerprint</ModalHeader>
                 <ModalBody>
                     <Row form>
-                        <Col md={4}>
+                        <Col md={12}>
                             <FormGroup>
                                 <Label for='device'>Select Device <span onClick={fetchDevice} style={{cursor:'pointer'}}>(click to refresh)</span></Label>
                                 <Select
@@ -97,7 +100,7 @@ const SearchPatientByFingerprint = (props) => {
                                     value={device}
                                     onChange={value => {
                                         setDevice(value);
-
+                                        findPatient();
                                     }}
                                     options={devices.map((x) => ({
                                         label: x.name,
@@ -107,13 +110,13 @@ const SearchPatientByFingerprint = (props) => {
                             </FormGroup>
                         </Col>
 
-                        <Col md={4} className={'text-center'}>
+                        <Col md={12} className={'text-center'}>
                             <h4 className={'text-center'}>{fingerCaptureMessage}</h4>
                             {status && status === 'Duplicate' && <ErrorIcon color={'secondary'} fontSize={'large'}/>}
                             {status && status === 'Success' && <ThumbUpIcon color={'success'} fontSize={'large'}/>}
                             {status && status === 'Error' && <>
                                 <CancelIcon color={'secondary'} fontSize={'large'}/>
-                                <p style={{cursor:'pointer'}} onClick={addToFingerprintList}>Click to Capture Again</p>
+                                <p style={{cursor:'pointer'}} onClick={findPatient}>Click to Capture Again</p>
                             </>
                             }
                             {status && status === 'Pending' && <CircularProgress />}
@@ -126,4 +129,14 @@ const SearchPatientByFingerprint = (props) => {
     )
 
 }
-
+const mapStateToProps = (state) => {
+    return {
+        patient: state.patients.patient,
+    };
+};
+const mapActionToProps = {
+};
+export default connect(
+    mapStateToProps,
+    mapActionToProps
+)(SearchPatientByFingerprint);
