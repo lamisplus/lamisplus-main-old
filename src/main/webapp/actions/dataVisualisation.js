@@ -13,27 +13,27 @@ import {toast} from "react-toastify"
  *================================================================================
  */
 
-export const fetchPrescriptions = () => dispatch => {
+export const createChart = () => dispatch => {
   axios
-    .get(
+    .post(
       `${url}encounters/4ab293ff-6837-41e8-aa85-14f25ce59ef0/{dateStart}/{dateEnd}`
     )
     .then((response) => {
       console.log(response)
       dispatch({
-        type: ACTION_TYPES.PHARMACY_FETCH_PRESCRIPTIONS,
+        type: ACTION_TYPES.CREATE_CHART,
         payload: response.data,
       });
     })
     .catch((error) => {
       dispatch({
-        type: ACTION_TYPES.PHARMACY_ERROR,
+        type: ACTION_TYPES.CREATE_CHART_ERROR,
         payload: "Something went wrong",
       });
     });
 };
 
-export const fetchPatientPrescriptions = (patientId) => dispatch => {
+export const fetchChartsById = (patientId) => dispatch => {
   console.log(patientId)
   axios
     .get(
@@ -41,106 +41,35 @@ export const fetchPatientPrescriptions = (patientId) => dispatch => {
     )
     .then((response) => {
       dispatch({
-        type: ACTION_TYPES.FETCH_PATIENT_PRESCRIPTIONS,
+        type: ACTION_TYPES.FETCH_CHART_BY_ID,
         payload: response.data,
       });
     })
     .catch((error) => {
       console.log("Pharmacy Error: ", error);
       dispatch({
-        type: ACTION_TYPES.PHARMACY_ERROR,
+        type: ACTION_TYPES.FETCH_CHART_BY_ID_ERROR,
         payload: "Something went wrong",
       });
     });
 
 }
 
-export const fetchAll = (onSuccess, onError) => dispatch => {
+export const deleteChartById = (onSuccess, onError) => dispatch => {
   axios
-      .get(`${url}drugs/`)
+      .put(`${url}drugs/`)
       .then(response => {
         dispatch({
-          type: ACTION_TYPES.MEDICATION_FETCH,
+          type: ACTION_TYPES.DELETE_CHART_BY_ID,
           payload: response.data
         })
         onSuccess()
       })
       .catch(error => {
         dispatch({
-          type: ACTION_TYPES.MEDICATION_ERROR,
+          type: ACTION_TYPES.DELETE_CHART_BY_ID_ERROR,
           payload: 'Something went wrong, please try again'
         })
         onError(error.response)
       })
 }
-// export const fetchEncounterById = (encounterId) => (dispatch) => {
-//          console.log(encounterId);
-//          axios
-//            .get(
-//              `${url}encounters/${encounterId}/form-data`
-//            )
-//            .then((response) => {
-//              dispatch({
-//                type: ACTION_TYPES.FETCH_ENCOUNTER_BY_ID,
-//                payload: response.data,
-//              });
-//            })
-//            .catch((error) => {
-//              console.log("Pharmacy Error: ", error);
-//              dispatch({
-//                type: ACTION_TYPES.PHARMACY_ERROR,
-//                payload: "Something went wrong",
-//              });
-//            });
-// };
-       
-// axios.put(`${url}form-data/${formId}`)
-export const updatePrescriptionStatus = (formId, data, onSuccess, onError) => (dispatch) => {
-      console.log(data)
-      console.log(formId)
-      
-         axios
-           .put( `${url}form-data/${formId}`, data)
-           .then((response) => {
-             dispatch({
-               type: ACTION_TYPES.UPDATE_PRESCRIPTION_STATUS,
-               payload: response.data,
-             });
-             onSuccess()
-             toast.success("Drug was successful dispensed");
-           })
-           .catch((error) => {
-             console.log("Pharmacy Error: ", error);
-             dispatch({
-               type: ACTION_TYPES.PHARMACY_ERROR,
-               payload: "Something went wrong",
-             });
-             onError()
-             
-             toast.error("Failed to dispense drug, please try again");
-           });
-       };
-
-       export const fetchPatientPrescriptionsByEncounter = (id, onSuccess, onError )=> dispatch => {
-        if(id){
-        axios
-          .get(`${url}form-data/${id}`)
-          .then(response => {
-           
-            dispatch({
-              type: ACTION_TYPES.PHARMACY_PRESCRIPTION_FOR_PATIENT,
-              payload: response.data
-            })
-            onSuccess();
-            
-          })
-          .catch(error => {
-            dispatch({
-              type: ACTION_TYPES.ERROR_PHARMACY_PRESCRIPTION_FOR_PATIENT,
-              payload: error
-            })
-            onError();
-          }
-          );
-      }
-      };

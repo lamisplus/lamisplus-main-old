@@ -9,7 +9,7 @@ import Box from '@material-ui/core/Box';
 import { MdDashboard, MdContacts } from 'react-icons/md';
 import {Card, CardBody, CardDeck, } from 'reactstrap';
 import ChartList from './ChartList';
-import { fetchPrescriptions } from "../../../actions/dataVisualisation";
+import { fetchChartsById } from "../../../actions/dataVisualisation";
 import { connect } from 'react-redux';
 import HighchartsReact from 'highcharts-react-official';
 import { url } from "../../../api";
@@ -270,4 +270,4 @@ const mapStateToProps = state => ({
   patients: state.pharmacy.allPrescriptions
 });
 
-export default connect(mapStateToProps , { fetchPrescriptions })(ScrollableTabsButtonForce);
+export default connect(mapStateToProps , { fetchChartsById })(ScrollableTabsButtonForce);

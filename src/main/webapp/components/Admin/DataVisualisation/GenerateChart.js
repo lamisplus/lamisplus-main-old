@@ -9,9 +9,7 @@ import "react-widgets/dist/css/react-widgets.css";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import moment from "moment";
-import {
-    createCollectedSample,
-} from "../../../actions/laboratory";
+import {createChart} from './../../../actions/dataVisualisation'
 import * as CODES from "./../../../api/codes";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -278,6 +276,9 @@ const saveChart = (e) => {
   );
 }
 
-export default GenerateCharts;
+export default connect(null, { createChart })(
+    GenerateCharts
+);
+
 
 
