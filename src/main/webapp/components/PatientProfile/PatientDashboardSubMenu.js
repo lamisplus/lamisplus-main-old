@@ -25,6 +25,7 @@ import axios from "axios";
 import {url as baseUrl} from "../../api";
 import {BIOMETRICS_CAPTURE_FORM} from "../../api/codes";
 import CaptureBiometrics from "../Biometrics/CaptureBiometrics";
+import {Link} from "react-router-dom";
 
 
 Moment.locale("en");
@@ -370,7 +371,10 @@ function PatientDashboardSubMenu(props) {
                      onClick={() => setBiometricsModal(!biometricsModal)}
 
           >
-            Capture Biometrics
+            <Link to={{pathname: "/patients/biometrics", state: props.patient.hospitalNumber}} >
+              Capture Biometrics
+            </Link>
+
           </Menu.Item>
           <Menu.Menu position="right">
             {props.patient && props.patient.dateVisitStart ? (
@@ -407,7 +411,6 @@ function PatientDashboardSubMenu(props) {
             onError={onError}
             options={currentForm.options}
         />
-        <CaptureBiometrics show={biometricsModal} toggle={() => setBiometricsModal(!biometricsModal)}/>
         <Modal isOpen={showVitalSignsModal} toggle={toggleVitalSign} size='lg' zIndex={"9999"}>
           <ModalHeader toggle={toggleVitalSign}>Take Patient Vitals</ModalHeader>
           <ModalBody>
