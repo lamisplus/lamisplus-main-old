@@ -123,7 +123,7 @@ const ModalSample = (props) => {
               <CardBody>
 
                         <FormRenderer
-                            formCode={datasampleObj.data && datasampleObj.data.type !=0 ? currentForm.code : currentFormForRegimen.code}
+                            formCode={ currentForm.code }
                             programCode={currentForm.programCode}
                             submission={datasampleObj}
                             onSubmit={saveSample}

@@ -9,6 +9,9 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import Page from '../../../Page';
+import {Card, CardBody} from 'reactstrap';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Typography from '@material-ui/core/Typography';
 
 const CaseManager = (props) => {
     const [loading, setLoading] = useState('')
@@ -49,11 +52,15 @@ const CaseManager = (props) => {
     }
     
   return (
-    <Page title='Case Manager Patients'>
-      
-        <br/>
-         
-        <br/>
+      <Card>
+          <CardBody>
+              <Breadcrumbs aria-label="breadcrumb">
+                  <Link color="inherit" to={{pathname: "/admin"}} >
+                      Admin
+                  </Link>
+                  <Typography color="textPrimary">Patients List</Typography>
+              </Breadcrumbs>
+              <br/>
           <MaterialTable
               title="Patient List"
               columns={[
@@ -114,7 +121,8 @@ const CaseManager = (props) => {
               }}
 
           />
-    </Page>
+          </CardBody>
+      </Card>
   );
 }
 
