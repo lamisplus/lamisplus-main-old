@@ -9,7 +9,6 @@ import {GiFiles} from 'react-icons/gi';
 import Button from "@material-ui/core/Button";
 import AddPatientModal from './AddPatientModal';
 import {authentication} from '../../../../_services/authentication';
-import Page from '../../../Page';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Typography from '@material-ui/core/Typography';
 import { APPLICATION_CODESET_GENDER } from "../../../../actions/types";
@@ -135,7 +134,7 @@ const CaseManagerPatientList = (props) => {
             }
         ]}       
       />
-      <AddPatientModal modalstatus={modal3} togglestatus={togglemodal3} manifestSamples={collectmodal} />
+      <AddPatientModal modalstatus={modal3} togglestatus={togglemodal3} listOfPatient={collectmodal} userId={row.id}/>
           </CardBody>
       </Card>
   );

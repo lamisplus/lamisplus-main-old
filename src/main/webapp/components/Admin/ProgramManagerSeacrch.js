@@ -2,11 +2,7 @@ import React, {useEffect} from 'react';
 import MaterialTable from 'material-table';
 import { connect } from "react-redux";
 import { fetchAll, deleteProgram, updateProgram, } from "actions/programManager";
-
-import {
-    Card,
-    CardBody, Modal, ModalBody, ModalFooter, ModalHeader, Spinner
-} from 'reactstrap';
+import {Card, CardBody, Modal, ModalBody, ModalFooter, ModalHeader, Spinner} from 'reactstrap';
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Typography from "@material-ui/core/Typography";
 import { Link } from 'react-router-dom';
@@ -78,7 +74,7 @@ const ProgramManagerSearch = (props) => {
             toast.error("Something went wrong, please contact administration");
         };
         row['archived'] =1;
-        props.updateProgram(row.id, row)
+        props.updateProgram(row.id, row, onSuccess, onError)
 
     }
 
@@ -94,9 +90,6 @@ const ProgramManagerSearch = (props) => {
         toggleDeleteModal();
     }
 
-    // const activateAndDeactavitePrograms = (row)  => {
-    //     props.updateProgram(row.id, row)
-    // }
 
     const processDelete = (id) => {
         setDeleting(true);
@@ -151,7 +144,6 @@ const ProgramManagerSearch = (props) => {
                             onClick={() => openProgram(null)}>
                         <span style={{textTransform: 'capitalize'}}>Add New Program</span>
                     </Button>
-
                 </div>
                 {console.log(props.list)}
                 <MaterialTable
@@ -172,7 +164,6 @@ const ProgramManagerSearch = (props) => {
                     actions:<div>{actionButton(row, row.archived)} </div>
                          
                 }))}
-                    //overriding action menu with props.actions
                     components={props.actions}
                     options={{
                         headerStyle: {

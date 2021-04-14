@@ -4,15 +4,7 @@ import { connect } from 'react-redux';
 import {Card,CardContent,} from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import {fetchService, createForm} from '../../actions/formBuilder'
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import {
-    FormGroup,
-    Input,
-    Label,
-    Col,
-    Row,
-    Form
-} from 'reactstrap';
+import {FormGroup, Input, Label, Col, Row, Form} from 'reactstrap';
 import MatButton from '@material-ui/core/Button';
 import { TiArrowBack } from "react-icons/ti";
 
@@ -34,15 +26,9 @@ const Create = props => {
         props.fetchService()
     }, [])
 
-// const handleSetModule = (e) => {
-//   props.fetchService(e.target.value)
-// }
-
     const handleSubmit = e => {
         newdata2['programCode']=programCode;
-        // newdata2['resourceObject']=res;
         newdata2['name']=name;
-        // newdata2['version']=version;
         newdata2['usageCode']=usageCode;
         newdata2['usageOrder']=usageOrder;
 
@@ -104,12 +90,10 @@ const Create = props => {
 const mapStateToProps = (state) => {
     console.log(state.forms)
     return {
-        // modules: state.forms.modules,
         services: state.formReducers.services
     }}
 
 const mapActionsToProps = ({
-    // fetchModules: fetchModules,
     fetchService: fetchService,
     createForm: createForm
 })

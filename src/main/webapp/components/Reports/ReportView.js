@@ -6,13 +6,8 @@ import {fetchService} from '../../actions/formBuilder'
 import {fetchAll, generateReport} from '../../actions/report';
 import { url } from "api";
 import { authHeader } from '_helpers/auth-header';
-
-
 import _ from 'lodash';
-import {
-    Card,
-    CardBody
-} from 'reactstrap';
+import {Card, CardBody} from 'reactstrap';
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Typography from "@material-ui/core/Typography";
 import { Link } from 'react-router-dom';

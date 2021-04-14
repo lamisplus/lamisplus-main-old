@@ -1,21 +1,20 @@
 import React, {useState, useEffect} from 'react';
 import { Modal, ModalHeader, ModalBody,Form,FormFeedback,
-Row,Col,FormGroup,Label,Input, Card,CardBody} from 'reactstrap';
+Row,Col,Card,CardBody} from 'reactstrap';
 import { connect } from 'react-redux';
 import MatButton from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
 import SaveIcon from '@material-ui/icons/Save'
 import CancelIcon from '@material-ui/icons/Cancel'
-import { DateTimePicker } from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
-import moment from "moment";
 import {url} from '../../../../api'
 import { Alert } from 'reactstrap';
-import { dispatchedManifestSamples, updateFormDataObj } from '../../../../actions/laboratory';
+import { fetchPatientUser } from '../../../../actions/caseManager';
 import { Spinner } from 'reactstrap';
 import axios from "axios";
+import Typography from '@material-ui/core/Typography';
 
 Moment.locale('en');
 momentLocalizer();
@@ -60,8 +59,11 @@ momentLocalizer();
 
 
 const ModalViewResult = (props) => {
+    // const row = props.location.state location.state
+    console.log(props.listOfPatient)
+    const listOfPatient =  props.listOfPatient
     const classes = useStyles()
-    console.log(props.manifestSamples)
+    console.log(listOfPatient)
     const manifestSamples = props.manifestSamples && props.manifestSamples !==null ? props.manifestSamples : {};
     const manifestSample= Object.values(manifestSamples);
     const manifestSampleForUpDateFormDataObj= Object.values(manifestSamples);
@@ -73,24 +75,16 @@ const ModalViewResult = (props) => {
     const [manifestObj, setManifestObj] = useState(manifestSample)
     const [errors, setErrors] = useState({});
     const [pcrOptions, setOptionPcr] = useState([]);
-    ///const [formdataObjUpdate, setformdataObjUpdate] = useState(manifestSampleForUpDateFormDataObj);
-    const [sampleManifest, setSampleManifest] = useState({sampleManifests: []})
+    const [sampleManifest, setSampleManifest] = useState({patientIds:"" , userId:""})
+    const [setPatientObj, setsetPatientObj] = useState([listOfPatient])
 
-    useEffect(() => {
-        async function getCharacters() {
-            try {
-                const response = await axios(
-                    url + "sample-manifests/generate-manifest-id/{length}?length=5"
-                );
-                const body = response.data;
-                setManifestId(body);
-            } catch (error) {
-                setManifestId(null);
-            }
-        }
-        getCharacters();
-    }, []);
 
+    let tifOptions = [];
+
+    Object.keys(listOfPatient).forEach(function(key) {
+        tifOptions.push(listOfPatient[key].patientId);
+    });
+    console.log(tifOptions)
 
     useEffect(() => {
         async function getCharacters() {
@@ -111,113 +105,41 @@ const ModalViewResult = (props) => {
     const handleOtherFieldInputChange = e => {
         setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
     }
-    const validate = () => {
-        let temp = { ...errors }
-        temp.dateSampleDispatched = otherfields.dateSampleDispatched ? "" : "Date is required"
-        temp.timeSampleDispatched = otherfields.timeSampleDispatched ? "" : "Time  is required."
-        temp.courierName = otherfields.courierName ? "" : "This field is required."
-        temp.sampleDispatchedBy = otherfields.sampleDispatchedBy ? "" : "This field is required."
-        temp.receivingLabName = otherfields.receivingLabName ? "" : "This is required." 
-        temp.courierPhoneNumber = otherfields.courierPhoneNumber ? "" : "This is required." 
-        setErrors({
-            ...temp
-            })    
-        return Object.values(temp).every(x => x == "")
-  }
 
-  //const samplesdispatched ={"sampleManifests": [] };
-    const saveSample = e => {
+    //Assign case manager
+
+    const assignCaseManager = e => {
+
       e.preventDefault()
 
-            const modifyFormDataObj= manifestSampleForUpDateFormDataObj.map(formobj => {                       
-                
-                formobj.formDataObj.data['manifest_status']=1;
-                return formobj;
-            })
-            // Modifying manifest samples by forming the object
-            const modifyManifestSample= manifestSample.map(item => {                       
+        sampleManifest["patientIds"] = tifOptions
 
-                item['labNumber'] = '67484';
-            
-                item['clientId'] = item.formDataObj.data['patient_id']
-                item['timeSampleTransferred'] = "10:10"//item.formDataObj.data['time_sample_transfered']
-                item['dateSampleTransferred'] = item.formDataObj.data['date_sample_transfered']
-                item['labOrderPriority'] = item.formDataObj.data.order_priority['display']
-                item['sampleTransferredBy'] = item.formDataObj.data['sample_transfered_by']
-                item['sampleOrderedBy'] = item.formDataObj.data['sample_ordered_by']
-                item['viralLoadIndication'] = item.formDataObj.data.viral_load_indication['display']
-                item['dateSampleDispatched'] = otherfields['dateSampleDispatched'];
-                item['timeSampleOrdered'] = "10:10"; //item.formDataObj.data['time_sample_collected]
-                item['timeSampleCollected'] = "10:10"//item.formDataobj.data['time_sample_collected]                
-                item['timeSampleDispatched'] = "10:10"//otherfields['timeSampleDispatched'];
-                item['courierName'] = otherfields['courierName'];
-                item['courierPhoneNumber'] = otherfields['courierPhoneNumber'];
-                item['sampleDispatchedBy'] = otherfields['sampleDispatchedBy'];
-                //item['sampleDispatchedByPhoneNumber'] = otherfields['sampleDispatchedByPhoneNumber'];
-                item['manifestId'] = manifestId;
-                item['receivingLabId'] = 'c5ty'
-                item['receivingLabName'] = otherfields['receivingLabName'];
-                item['totalSampleShipment'] = totalSampleShipment;
-                item['sendingFacilityId'] = 'lamis567';
-                item['sendingFacilityName'] = 'Lamisplus'
-                item['dispatched'] = true
-                item['id'] = 0;
-                item['visitDate'] = item.formDataObj.data['date_sample_ordered'];
-                item['dateResultReported'] = null
-                item['dateAssayed'] = null
-                item['dateResultDispatched'] = null
-                item['sampleStatus'] = null
-                item['sampleTestable'] = null
-                item['testResult'] = null
-                item['dateSampleReceivedLab'] = null
-                item['pcrLabSampleNumber'] = null
-                //delete item['formDataObj'];
-                delete item['tableData'];
-                
-                return item;
-            })
-            //Manipulating the formDataObj to update the lab_test_status            
-                if(validate()){
-                    //Updating the FormDataObj informations
-                    modifyFormDataObj.forEach(function(value, index, array) {
-                        props.updateFormDataObj(value.formDataObj, value.formDataObj.id)
-                    });
-                    
-                    const modifyFormObj= manifestSample.map(item => { 
-                        delete item['formDataObj'];
-                        return item;
-                    })
+        sampleManifest["userId"] = props.userId
 
-                    //Process the Samples to be dispatched 
-                    sampleManifest['sampleManifests'] = modifyManifestSample;
-                    
-                    props.dispatchedManifestSamples(sampleManifest)
-                                       
-                    //Closing of the modal 
-                    props.togglestatus();
-                    
+        console.log(sampleManifest)
 
-          }
+        props.fetchPatientUser(sampleManifest)
+
+        //Closing of the modal
+        props.togglestatus();
+        //console.log(tifOptions)
+
   }
 
 
-      
   return (      
       <div >
-         
               <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
-              <Form onSubmit={saveSample}>
+              <Form onSubmit={assignCaseManager}>
             <ModalHeader toggle={props.togglestatus}>Assign Case Manager</ModalHeader>
                 <ModalBody>
-                    
                         <Card >
                             <CardBody>
                                 <Row >
                                     <Col md={12} >
                                         <Alert color="dark" style={{backgroundColor:'#9F9FA5', color:"#000" , fontWeight: 'bolder', fontSize:'14px'}}>
                                             <p style={{marginTop: '.7rem' }}>
-                                               Are you Sure, you want to add patients to case manager &nbsp;&nbsp;&nbsp;<span style={{ fontWeight: 'bolder'}}>Dr Dorcas</span>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                {/*<Typography color="textPrimary">Are you sure you want to assign patient to this case manager - {row.firstName +  ' ' + row.lastName || ''} </Typography>*/}
                                             </p>
                                         </Alert>
                                     </Col>
@@ -245,11 +167,10 @@ const ModalViewResult = (props) => {
                             </CardBody>
                         </Card> 
                     </ModalBody>
-        
                 </Form>
       </Modal>
     </div>
   );
 }
 
-export default connect(null, { dispatchedManifestSamples, updateFormDataObj })(ModalViewResult);
+export default connect(null, { fetchPatientUser })(ModalViewResult);

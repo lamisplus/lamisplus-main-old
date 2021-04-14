@@ -6,22 +6,9 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-
-
-// {/* Auto textfield complete */}
-import {
-    MdDashboard,
-    MdContacts
-} from 'react-icons/md';
 import {GiFiles} from 'react-icons/gi';
-
-import {
-    Card, CardBody } from 'reactstrap';
-import Pivot from "components/PivotTable/Pivot";
 import AdminSubMenu from "components/Reports/AdminSubMenu";
 import GeneralReport from "components/Reports/GeneralReport";
-import JasperTemplate from './JasperTemplate';
 
 
 function TabPanel(props) {
@@ -200,9 +187,6 @@ export default function ScrollableTabsButtonForce(props) {
             <TabPanel value={value} index={0}>
                 <GeneralReport/>
             </TabPanel>
-            {/*<TabPanel value={value} index={1}>*/}
-            {/*    <Pivot/>*/}
-            {/*</TabPanel>*/}
             <TabPanel value={value} index={2}>
 
             </TabPanel>

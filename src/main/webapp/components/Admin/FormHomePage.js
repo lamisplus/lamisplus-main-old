@@ -11,7 +11,7 @@ import {Menu, MenuButton, MenuItem, MenuList} from '@reach/menu-button';
 import {Link} from 'react-router-dom';
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import DownloadLink  from "react-download-link";
-import {CardContent} from "@material-ui/core";
+
 
 //Dtate Picker package
 Moment.locale("en");
@@ -154,7 +154,7 @@ function FormSearch(props) {
     );
 }
 const mapStateToProps =  (state = { form:[]}) => {
-    // console.log(state.forms)
+
     return {
         formList: state.formReducers.form !==null ? state.formReducers.form : [],
     }}

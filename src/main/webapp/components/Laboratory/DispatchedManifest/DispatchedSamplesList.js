@@ -5,8 +5,6 @@ import { connect } from "react-redux";
 import { sampleDispatched } from "./../../../actions/laboratory";
 import "./../laboratory.css";
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
 import { TiArrowBack } from 'react-icons/ti';
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
@@ -40,8 +38,6 @@ const PatientSearch = (props) => {
                 props.fetchAllSampleDispatched(onSuccess, onError);
     }, []); //componentDidMount
 
-
-    
   return (
     <Page title='Dispatched Samples '>
       
@@ -58,8 +54,7 @@ const PatientSearch = (props) => {
             variant='contained'
             color='primary'
             className={classes.button}                        
-            className=" float-right mr-1"
-        >
+            className=" float-right mr-1">
             <TiArrowBack/>{" "} Back
         </MatButton>
         
