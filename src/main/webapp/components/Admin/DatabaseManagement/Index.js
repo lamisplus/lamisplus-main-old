@@ -17,6 +17,7 @@ import {   MdSync, MdRestore } from "react-icons/md";
 import {FcDataBackup} from 'react-icons/fc';
 import RestoreDatabase from "./RestoreDatabase";
 import BackupDatabase from "./BackupDatabase";
+import RevertDatabase from './RevertDatabase'
 import {
   Button,
   Divider,
@@ -48,6 +49,8 @@ const useStyles = makeStyles({
     const toggleModal = () => setModal(!modal)
     const [modal2, setModal2] = useState(false) //Modal  
     const toggleModal2 = () => setModal2(!modal2)
+    const [modal3, setModal3] = useState(false) //Modal  
+    const toggleModal3 = () => setModal3(!modal3)
     const classes = useStyles()
 
     const restoreModule = (row) => {  
@@ -55,9 +58,13 @@ const useStyles = makeStyles({
       setModal(!modal) 
     }
 
-    const backupModule = (row) => {  
+      const backupModule = (row) => {  
       setcollectModal({...collectModal, ...row});
       setModal2(!modal2) 
+    }
+    const revertDatabase = (row) => {  
+      setcollectModal({...collectModal, ...row});
+      setModal3(!modal3) 
     }
 
     
@@ -130,14 +137,9 @@ return (
                             <br/> 
                               Revert Database
                             </Header>
-                              <Link
-                                  to={{
-                                    pathname: "/admin-database-sync",
-                                    currentId: {}
-                                  }}
-                              >
-                              <Button primary >Revert</Button>
-                            </Link>
+                              
+                              <Button primary onClick={() => revertDatabase('')}>Restore</Button>
+                           
                           </Grid.Column>
                         </Grid.Row>
                       </Grid>
@@ -148,6 +150,7 @@ return (
                  
        <RestoreDatabase modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
        <BackupDatabase modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} />
+       <RevertDatabase modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />
     </div>
     </CardBody>
     </Card>

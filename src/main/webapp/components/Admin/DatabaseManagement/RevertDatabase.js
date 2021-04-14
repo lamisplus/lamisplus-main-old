@@ -53,7 +53,7 @@ const RestoreDatabase = (props) => {
   return (      
       <div >
               <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
-                  <ModalHeader toggle={props.togglestatus}>Restore Database</ModalHeader>
+                  <ModalHeader toggle={props.togglestatus}>Revert Database</ModalHeader>
                       <ModalBody>
                           <Card>
                             <CardBody>
@@ -87,7 +87,7 @@ const RestoreDatabase = (props) => {
                                         className=" float-right mr-1"
                                         
                                     >
-                                        Save 
+                                        Revert and Save 
                                     </MatButton>
                                     <MatButton
                                         variant='contained'
