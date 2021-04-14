@@ -8,6 +8,7 @@
         <version>5.1.0.RELEASE</version>
         <relativePath/>
     </parent>
+
     <groupId>org.lamisplus.modules</groupId>
     <artifactId>base-module</artifactId>
     <version>1.0.0</version>

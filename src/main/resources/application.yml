@@ -13,8 +13,8 @@ acrossHibernate:
         hibernate.show_sql: false
         hibernate.event.merge.enty_copy_observer: allow
 applicationInfo:
-    applicationId: lamis
-    applicationName: LAMIS
+    applicationId: lamisplus
+    applicationName: LAMISPLUS
     buildDate: "@timestamp@"
     buildId: "@pom.version@-@build.revision@"
 build:
