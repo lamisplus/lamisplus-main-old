@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Modal, ModalHeader, ModalBody,Form,FormFeedback,
+import { Modal, ModalHeader, ModalBody,Form,
 Row,Col,Card,CardBody} from 'reactstrap';
 import { connect } from 'react-redux';
 import MatButton from '@material-ui/core/Button'
@@ -11,14 +11,12 @@ import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
 import {url} from '../../../../api'
 import { Alert } from 'reactstrap';
-import { fetchPatientUser } from '../../../../actions/caseManager';
+import { create } from '../../../../actions/caseManager';
 import { Spinner } from 'reactstrap';
 import axios from "axios";
-import Typography from '@material-ui/core/Typography';
 
 Moment.locale('en');
 momentLocalizer();
-
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -28,7 +26,7 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center'
     },
     form: {
-        width: '100%', // Fix IE 11 issue.
+        width: '100%',
         marginTop: theme.spacing(3)
     },
     submit: {
@@ -59,30 +57,26 @@ momentLocalizer();
 
 
 const ModalViewResult = (props) => {
-    // const row = props.location.state location.state
-    console.log(props.listOfPatient)
+    // const row = props.location.state.row;
+    // console.log(props.listOfPatient)
     const listOfPatient =  props.listOfPatient
     const classes = useStyles()
-    console.log(listOfPatient)
-    const manifestSamples = props.manifestSamples && props.manifestSamples !==null ? props.manifestSamples : {};
+    // console.log(listOfPatient)
+    const manifestSamples = props.manifestSamples && props.manifestSamples !==null ? props.manifestSamples : [];
     const manifestSample= Object.values(manifestSamples);
-    const manifestSampleForUpDateFormDataObj= Object.values(manifestSamples);
-    const  totalSampleShipment = Object.keys(manifestSamples).length;
     const labId = manifestSamples.id
     const [loading, setLoading] = useState(false);
     const [manifestId, setManifestId] = useState();
-    const [otherfields, setOtherFields] = useState({dateSampleDispatched:"",sampleDispatchedBy:"",courierPhoneNumber:"",timeSampleDispatched:"",sampleDispatchedByPhoneNumber:"", courierName:"", receivingLabName:"", manifest_status:""});
     const [manifestObj, setManifestObj] = useState(manifestSample)
     const [errors, setErrors] = useState({});
     const [pcrOptions, setOptionPcr] = useState([]);
     const [sampleManifest, setSampleManifest] = useState({patientIds:"" , userId:""})
     const [setPatientObj, setsetPatientObj] = useState([listOfPatient])
 
-
     let tifOptions = [];
 
     Object.keys(listOfPatient).forEach(function(key) {
-        tifOptions.push(listOfPatient[key].patientId);
+        tifOptions.push(listOfPatient[key].id);
     });
     console.log(tifOptions)
 
@@ -102,28 +96,14 @@ const ModalViewResult = (props) => {
         getCharacters();
     }, []);
 
-    const handleOtherFieldInputChange = e => {
-        setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
-    }
-
-    //Assign case manager
 
     const assignCaseManager = e => {
-
-      e.preventDefault()
-
+        e.preventDefault()
         sampleManifest["patientIds"] = tifOptions
-
         sampleManifest["userId"] = props.userId
-
         console.log(sampleManifest)
-
-        props.fetchPatientUser(sampleManifest)
-
-        //Closing of the modal
+        props.create(sampleManifest)
         props.togglestatus();
-        //console.log(tifOptions)
-
   }
 
 
@@ -138,8 +118,8 @@ const ModalViewResult = (props) => {
                                 <Row >
                                     <Col md={12} >
                                         <Alert color="dark" style={{backgroundColor:'#9F9FA5', color:"#000" , fontWeight: 'bolder', fontSize:'14px'}}>
+                                          Are you sure you want to assign patient to this case manager
                                             <p style={{marginTop: '.7rem' }}>
-                                                {/*<Typography color="textPrimary">Are you sure you want to assign patient to this case manager - {row.firstName +  ' ' + row.lastName || ''} </Typography>*/}
                                             </p>
                                         </Alert>
                                     </Col>
@@ -173,4 +153,4 @@ const ModalViewResult = (props) => {
   );
 }
 
-export default connect(null, { fetchPatientUser })(ModalViewResult);
+export default connect(null, { create })(ModalViewResult);

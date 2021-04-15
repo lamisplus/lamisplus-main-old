@@ -2,41 +2,36 @@
 // import MaterialTable from 'material-table';
 // import { Link } from 'react-router-dom'
 // import { connect } from "react-redux";
+// import {CardBody, Card} from "reactstrap";
 // import { fetchPatientUser } from "../../../../actions/caseManager";
 // import "../casemanager.css";
-// import VisibilityIcon from '@material-ui/icons/Visibility';
-// import Tooltip from '@material-ui/core/Tooltip';
-// import IconButton from '@material-ui/core/IconButton';
-// import {Card, CardBody} from 'reactstrap';
+// import {GiFiles} from 'react-icons/gi';
+// import Button from "@material-ui/core/Button";
+// import AddPatientModal from './AddPatientModal';
+// import {authentication} from '../../../../_services/authentication';
 // import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 // import Typography from '@material-ui/core/Typography';
-// import { APPLICATION_CODESET_GENDER } from "../../../actions/types";
+// import { APPLICATION_CODESET_GENDER } from "../../../../actions/types";
 // import { fetchApplicationCodeSet } from "../../../../actions/applicationCodeset";
 //
-//
-// const CaseManager = (props) => {
+// const CaseManagerPatient = (props) => {
+//     const row = props.location.state
 //     const [loading, setLoading] = useState('')
+//     const [modal3, setModal3] = useState(false)//modal to View Result
+//     const togglemodal3 = () => setModal3(!modal3)
+//
+//     const [collectmodal, setcollectmodal] = useState([])//to collect array of datas into the modal and pass it as props
+//
 //     useEffect(() => {
-//     setLoading('true');
+//         setLoading('true');
 //         const onSuccess = () => {
 //             setLoading(false)
 //         }
 //         const onError = () => {
 //             setLoading(false)
 //         }
-//             props.fetchPatientUser(10, onSuccess, onError);
-//     }, []);
-//
-//     React.useEffect(() => {
-//         if(props.genderList.length === 0){
-//             props.fetchApplicationCodeSet("GENDER", APPLICATION_CODESET_GENDER);
-//         }
-//     }, [props.genderList]);
-//
-//     function getGenderById(id) {
-//         return id ? ( props.genderList.find((x) => x.id == id) ? props.genderList.find((x) => x.id == id).display : "" ) : "";
-//     }
-//     console.log(props.list)
+//         props.fetchAllPatients(onSuccess, onError);
+//     }, []); //componentDidMount
 //
 //     const calculate_age = dob => {
 //         var today = new Date();
@@ -54,71 +49,106 @@
 //         return age_now + " year(s)";
 //     };
 //
-//   return (
-//       <Card>
-//           <CardBody>
-//               <Breadcrumbs aria-label="breadcrumb">
-//                   <Link color="inherit" to={{pathname: "/admin"}} >
-//                       Admin
-//                   </Link>
-//                   <Typography color="textPrimary">Patients List</Typography>
-//               </Breadcrumbs>
-//               <br/>
-//           <MaterialTable
-//               title="Patient List"
-//               columns={[
-//                   {title: "Patient Name", field: "name",},
-//                   { title: "Patient ID", field: "id" },
-//                   { title: "Gender", field: "gender", filtering: false },
-//                   { title: "Age", field: "age", filtering: false },
-//                   {title: "Address", field: "address", filtering: false},
-//               ]}
-//               isLoading={loading}
-//               data={list.map((row) => ({
-//                   name: row.firstName +  ' ' + row.lastName,
-//                   id: row.hospitalNumber,
-//                   gender: getGenderById(row.genderId),
-//                   age: (row.dob === 0 ||
-//                       row.dob === undefined ||
-//                       row.dob === null ||
-//                       row.dob === "" )
-//                       ? 0
-//                       : calculate_age(row.dob),
-//                   address: row.street || '',
-//                   actions:  <Link to ={{pathname: "/case-manager", state: row}}
-//                                   style={{ cursor: "pointer", color: "blue", fontStyle: "bold"}}>
-//                                 <Tooltip title="Collect Sample">
-//                                     <IconButton aria-label="Collect Sample" >
-//                                         <VisibilityIcon color="primary"/>
-//                                     </IconButton>
-//                                 </Tooltip>
-//                             </Link>
-//                         }))}
-//                options={{
-//                   pageSizeOptions: [5,10,50,100,150,200],
-//                   headerStyle: {
-//                   backgroundColor: "#9F9FA5",
-//                   color: "#000",
-//                   margin: "auto"},
-//                   filtering: true,
-//                   searchFieldStyle: {width : '300%', margingLeft: '250px',},
-//                   exportButton: true,
-//                   searchFieldAlignment: 'left',
-//               }}/>
-//           </CardBody>
-//       </Card>
-//   );
+//     React.useEffect(() => {
+//         if(props.genderList.length === 0){
+//             props.fetchApplicationCodeSet("GENDER", APPLICATION_CODESET_GENDER);
+//         }
+//     }, [props.genderList]);
+//
+//     function getGenderById(id) {
+//         return id ? ( props.genderList.find((x) => x.id == id) ? props.genderList.find((x) => x.id == id).display : "" ) : "";
+//     }
+//
+//     function getDispatch (evt, data){
+//         setcollectmodal({...collectmodal, ...data});
+//         setModal3(!modal3)
+//     }
+//
+//     return (
+//         <Card>
+//             <CardBody>
+//                 <Breadcrumbs aria-label="breadcrumb">
+//                     <Link color="inherit" to={{pathname: "/admin"}} >
+//                         Case Managers Patient List
+//                     </Link>
+//                 </Breadcrumbs>
+//                 <br/>
+//                 <Link to="/patients-managed-case">
+//                     <Button
+//                         color="primary"
+//                         variant="contained"
+//                         className=" float-right mr-1"
+//                         size="large">
+//                         {<GiFiles />} &nbsp;&nbsp;
+//                         <span style={{textTransform: 'capitalize'}}>list of case manger  </span>
+//                         &nbsp;
+//                         <span style={{textTransform: 'capitalize'}}>Patients</span>
+//                     </Button>
+//                 </Link>
+//                 <br/>
+//                 <br/>
+//                 <br/>
+//                 <br/>
+//                 <MaterialTable
+//                     title="List of Patients to assign"
+//                     columns={[
+//                         {title: "Patient Name", field: "name",},
+//                         { title: "Patient ID", field: "id" },
+//                         { title: "Gender", field: "gender", filtering: false },
+//                         { title: "Age", field: "age", filtering: false },
+//                         {title: "Address", field: "address", filtering: false},
+//                     ]}
+//                     isLoading={loading}
+//                     data={props.list.map((row) => ({
+//                         name: row.firstName +  ' ' + row.lastName,
+//                         id: row.hospitalNumber,
+//                         gender: getGenderById(row.genderId),
+//                         age: (row.dob === 0 ||
+//                             row.dob === undefined ||
+//                             row.dob === null ||
+//                             row.dob === "" )
+//                             ? 0
+//                             : calculate_age(row.dob),
+//                         address: row.street || '',
+//                     }))}
+//                     options={{
+//                         search: false,
+//                         selection: true,
+//                         pageSizeOptions: [5,10,50,100,150,200],
+//                         headerStyle: {
+//                             backgroundColor: "#9F9FA5",
+//                             color: "#000",
+//                             margin: "auto"
+//                         },
+//                     }}
+//                     actions={[
+//                         {
+//                             tooltip: 'Dispatch All Selected Sample',
+//                             disabled: !authentication.userHasRole(["laboratory_write"]),
+//                             icon: 'add' ,
+//                             label: 'Add Manifest',
+//                             onClick: (evt, data) =>
+//
+//                                 getDispatch(evt, data)
+//                         }
+//                     ]}
+//                 />
+//                 <AddPatientModal modalstatus={modal3} togglestatus={togglemodal3} listOfPatient={collectmodal} userId={row.id}/>
+//             </CardBody>
+//         </Card>
+//     );
 // }
 //
 // const mapStateToProps = state => {
 //     return {
-//         list: state.caseManager.list,
 //         genderList: state.applicationCodesets.genderList,
+//         list: state.caseManager.list,
 //     };
 // };
+//
 // const mapActionToProps = {
 //     fetchPatientUser: fetchPatientUser,
 //     fetchApplicationCodeSet: fetchApplicationCodeSet
 // };
 //
-// export default connect(mapStateToProps, mapActionToProps)(CaseManager);
+// export default connect(mapStateToProps, mapActionToProps)(CaseManagerPatient);

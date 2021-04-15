@@ -34,23 +34,6 @@ const UpdateReports = (props) => {
         setform2(row);
     }, [])
 
-    // useEffect(() => {
-    //     async function getCharacters() {
-    //         try {
-    //             const response = await axios(
-    //                 url + "fetchService"
-    //             );
-    //             const body = response.data && response.data !==null ? response.data : {};
-    //             console.log(response)
-    //             setprogramCode(
-    //                 body.map(({ programName, programCode }) => ({ title: programName, value: programCode }))
-    //             );
-    //         } catch (error) {
-    //         }
-    //     }
-    //     getCharacters();
-    // }, []);
-
     const handleInputChange = e => {
         setFormData({...formData, [e.target.name]: e.target.value});
     }
@@ -91,25 +74,9 @@ const UpdateReports = (props) => {
                                 <CardBody>
                                 <Row>
                                     <Col md={4}> <FormGroup>
-                                        {/*<Label for="">Program Area</Label>*/}
-                                        {/*<Input type="select" name="programCode" id="programCode"*/}
-                                        {/*       vaule={formData.programCode}*/}
-                                        {/*       onChange={handleInputChange}>*/}
-                                        {/*    <option> </option>*/}
-                                        {/*    {programCode.map(({ title, value }) => (*/}
-                                        {/*        <option key={value} value={value}>*/}
-                                        {/*            {title}*/}
-                                        {/*        </option>*/}
-                                        {/*    ))}*/}
-                                        {/*</Input>*/}
-                                        <Label class="sr-only">Program Area</Label>
-                                        {props.services.length && props.services.length > 0 ?
-                                            <Input type="select" class="form-control" id="programCode" required value={formData.programName}  onChange={handleInputChange}>
-                                                {props.services.map(service => (<option key={service.name} value={formData.programCode}>{service.name}</option>))}
-                                            </Input>:  <Input type="select" class="form-control" id="programCode" required value={formData.programName} onChange={handleInputChange}>
-                                                <option>No Programs Found</option>
-                                            </Input>}
-                                           </FormGroup></Col>
+                                        <Label class="sr-only">Program Name</Label>
+                                        <Input type='text' name='programCode' id='programCode' value={formData.programName} onChange={handleInputChange} required/>
+                                    </FormGroup></Col>
 
                                        <Col md={4}> <FormGroup>
                                         <Label class="sr-only">Report Name</Label>
