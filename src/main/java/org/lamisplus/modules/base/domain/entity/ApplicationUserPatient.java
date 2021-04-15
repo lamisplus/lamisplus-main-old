@@ -29,6 +29,10 @@ public class ApplicationUserPatient extends Audit<String>{
     @Column(name = "patient_id")
     private Long patientId;
 
+    @Basic
+    @Column(name = "archived")
+    private Long archived;
+
     @ManyToOne
     @JoinColumn(name = "application_user_id", referencedColumnName = "id", insertable = false, updatable = false)
     @ToString.Exclude
