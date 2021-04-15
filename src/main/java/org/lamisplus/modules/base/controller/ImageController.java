@@ -1,7 +1,6 @@
 package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.entity.Image;
 import org.lamisplus.modules.base.repository.ImageDbRepository;
@@ -16,7 +15,6 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-@Audit
 public class ImageController {
 
     private final ImageDbRepository imageRepository;

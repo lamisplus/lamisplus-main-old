@@ -2,8 +2,10 @@ package org.lamisplus.modules.base.domain.dto;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class EncounterDistinctDTO {
+public class EncounterDistinctDTO implements Serializable {
     private String formCode;
     private Long patientId;
     private String programCode;

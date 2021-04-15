@@ -10,13 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface ProgramRepository extends JpaRepository<Program, Long>, JpaSpecificationExecutor {
-    List<Program> findByModuleId(Long moduleId);
 
-    //String findByCode(String Code);
-
-    //Optional<Program> findProgramByName(String Name);
-
-    Optional<Program> findProgramByModuleIdAndName(Long moduleId, String name);
+    //Optional<Program> findProgramByModuleIdAndName(Long moduleId, String name);
 
     //Optional<Program> findByModuleId(Long moduleId);
 

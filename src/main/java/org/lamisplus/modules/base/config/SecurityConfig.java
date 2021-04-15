@@ -51,10 +51,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()
                     .antMatchers("/api/authenticate","/api/application-codesets/codesetGroup").permitAll()
                     .antMatchers("/api/**").authenticated()
-                .antMatchers(AUTH_LIST).authenticated().and().httpBasic()
+                .antMatchers(AUTH_LIST).permitAll()
+                .and().headers().frameOptions().sameOrigin()
                 .and()
                     .apply(securityConfigurerAdapter())
                 .and().csrf().disable()
+
         ;
     }
     private JWTConfigurer securityConfigurerAdapter() {

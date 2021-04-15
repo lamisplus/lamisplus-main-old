@@ -21,8 +21,8 @@ import java.util.Optional;
 public class StandardCodesetSourceService {
     private final StandardCodesetSourceRepository standardCodesetSourceRepository;
     private final StandardCodesetSourceMapper standardCodesetSourceMapper;
-    public static final int UN_ARCHIVED = 0;
-    public static final int ARCHIVED = 1;
+    private static final int UN_ARCHIVED = 0;
+    private static final int ARCHIVED = 1;
 
 
     public List<StandardCodesetSourceDTO> getAllStandardCodesetSource() {

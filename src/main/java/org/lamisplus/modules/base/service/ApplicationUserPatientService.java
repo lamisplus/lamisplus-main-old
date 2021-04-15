@@ -26,12 +26,9 @@ public class ApplicationUserPatientService {
     private final PatientService patientService;
     private final UserMapper userMapper;
 
-
-
     public List<PatientDTO> getAllPatientByUserId(Long userId) {
-        List<ApplicationUserPatient> applicationUserPatients = applicationUserPatientRepository.findAllByUserId(userId);
         List<Patient> patients = new ArrayList<>();
-        applicationUserPatients.forEach(applicationUserPatient -> {
+        applicationUserPatientRepository.findAllByUserId(userId).forEach(applicationUserPatient -> {
             patients.add(applicationUserPatient.getPatientByPatientId());
         });
             return patientService.getPatients(patients);

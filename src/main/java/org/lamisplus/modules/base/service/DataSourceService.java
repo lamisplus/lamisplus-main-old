@@ -3,11 +3,12 @@ package org.lamisplus.modules.base.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.dto.DataSourceDTO;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-@org.springframework.stereotype.Service
+@Service
 @Transactional
 @Slf4j
 @RequiredArgsConstructor
