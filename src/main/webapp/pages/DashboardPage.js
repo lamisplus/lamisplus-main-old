@@ -46,7 +46,9 @@ const  DashboardPage = (props) => {
                 const body2 = response.data && response.data!==null ? response.data :0.00;
                 setTotalPatients(body2) 
                 
-        } catch (error) {}
+        } catch (error) {
+
+        }
       }
       getCharacters();
   }, []);

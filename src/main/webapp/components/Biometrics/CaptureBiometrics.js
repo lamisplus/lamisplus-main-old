@@ -26,7 +26,7 @@ const CaptureBiometrics = (props) => {
     const [formData, setFormData] = React.useState([]);
     const [devices, setDevices] = React.useState([]);
     const [device, setDevice] = React.useState();
-    const [loading, setLoading] = React.useState(true);
+    const [loading, setLoading] = React.useState(false);
     const [showModal, setShowModal] = React.useState(false);
     const [status, setStatus] = React.useState('Pending');
     const toggleModal = () => setShowModal(!showModal);
@@ -61,16 +61,22 @@ const CaptureBiometrics = (props) => {
     }, []);
 
     const fetchDevice = () => {
+        if(loading){
+            return;
+        }
+        setLoading(true);
         axios
             .get(`http://localhost:8888/api/biometrics/readers`)
             .then((response) => {
+                setLoading(false);
                 setDevices(response.data);
                 if(response.data && response.data.length == 0){
                     toast.info("There are no devices. Plug a device and try again");
                 }
             })
             .catch((error) => {
-                toast.error("Could not fetch list of devices");
+                setLoading(false);
+                toast.error("Could not fetch list of devices, please make sure the biometrics service is running.");
             });
     }
 
@@ -168,6 +174,7 @@ const CaptureBiometrics = (props) => {
                                     required
                                     isMulti={false}
                                     value={device}
+                                    isLoading={loading}
                                     onChange={value => {setDevice(value)}}
                                     options={devices.map((x) => ({
                                         label: x.name,
@@ -201,7 +208,7 @@ const CaptureBiometrics = (props) => {
                             className={'mt-4'}
                             startIcon={<FingerprintIcon />}
                         >
-                            Capture Finger {loading && <Spinner />}
+                            Capture Finger
                         </MatButton>
 
                         </Col>
