@@ -28,6 +28,8 @@ public class FormDTO {
 
     private String version;
 
+    private String type;
+
     @Transient
     private String programName;
 }

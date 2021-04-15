@@ -79,12 +79,17 @@ public class FormService {
         return form;
     }
 
-    public Form getFormByFormCode(String formCode) {
+    public Form getFormByFormCode(String formCode, Optional<Integer> type) {
         Set<String> permissions = accessRight.getAllPermission();
+        Optional<Form> optionalForm;
 
         accessRight.grantAccess(formCode, FormService.class, permissions);
-        Form form = formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED)
-                .orElseThrow(() -> new EntityNotFoundException(Form.class, "Form Code", formCode));
+        if(type.isPresent()){
+            optionalForm = formRepository.findByCodeAndArchivedAndType(formCode, UN_ARCHIVED, type.get());
+        } else {
+            optionalForm = formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED);
+        }
+        Form form = optionalForm.orElseThrow(() -> new EntityNotFoundException(Form.class, "Form Code", formCode));
         return form;
     }
 
@@ -116,7 +121,6 @@ public class FormService {
         accessRight.grantAccessByAccessType(formDTO.getCode(), FormService.class, WRITE, permissions);
         Form form = formRepository.findByIdAndArchived(id, UN_ARCHIVED)
                 .orElseThrow(() -> new EntityNotFoundException(Form.class, "Id", id +""));
-        log.info("form {}" + form);
 
         form = formMapper.toFormDTO(formDTO);
         form.setId(id);
