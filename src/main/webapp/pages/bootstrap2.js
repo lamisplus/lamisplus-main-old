@@ -9,7 +9,12 @@ import ScriptTag from 'react-script-tag';
 import Container from "@material-ui/core/Container";
 import logo200Image from "assets/img/logo/logo_200.png";
 import { FaArrowLeft } from "react-icons/fa";
+import { BehaviorSubject } from 'rxjs';
 
+const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
+
+const userToken = "Bearer "+currentUserSubject.value;
+console.log(userToken.id_token)
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -53,7 +58,7 @@ export default function ExternalModules(props) {
   return (
 
       <>
-      <iframe  style={{width:"100%", height:"100%", border:"none", margin:0, padding:0}} src={src} ></iframe>
+      <iframe  style={{width:"100%", height:"100%", border:"none", margin:0, padding:0}} src={src + "?jwt="+userToken} ></iframe>
 </>
   );
 }

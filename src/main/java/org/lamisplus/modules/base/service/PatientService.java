@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -54,6 +55,7 @@ public class PatientService {
     public static final String FORM_CODE = "formCode";
     private static final int UN_ARCHIVED = 0;
     private static final int ARCHIVED = 1;
+    private final ApplicationUserPatientRepository applicationUserPatientRepository;
     private static final String READ = "read";
     private static final String WRITE = "write";
     private static final String DELETE = "delete";
@@ -468,7 +470,7 @@ public class PatientService {
         return patientRepository.countByOrganisationUnitIdAndArchived(getOrganisationUnitId(), UN_ARCHIVED);
     }
 
-    public List<PatientDTO> getAllPatientsByProgramCode(String programCode ) {
+    public List<PatientDTO> getAllPatientsByProgramCode(String programCode) {
         List<PatientDTO> patientDTOList = new ArrayList<>();
         encounterRepository.findDistinctProgramCodeAndOrganisationUnitIdAndArchived(programCode, getOrganisationUnitId(), UN_ARCHIVED).forEach(encounterDistinctDTO -> {
             patientDTOList.add(getPatientByHospitalNumber(patientRepository.findById(encounterDistinctDTO.getPatientId()).get().getHospitalNumber()));

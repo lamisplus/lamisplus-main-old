@@ -26,7 +26,6 @@ public class SinglePageAppConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        log.info("in addResourceHandlers");
             registry.addResourceHandler("/**")
                     .addResourceLocations("classpath:/static/")
                     .resourceChain(false)

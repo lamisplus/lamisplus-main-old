@@ -23,6 +23,10 @@ public class ApplicationUserPatientController {
         return ResponseEntity.ok(applicationUserPatientService.getAllApplicationUserByPatientId(patientId));
     }
 
+    @GetMapping("/patientsNotManaged/{programCode}")
+    public ResponseEntity<List<PatientDTO>> getPatientsNotCaseManaged(@PathVariable String programCode) {
+        return ResponseEntity.ok(applicationUserPatientService.getPatientsNotCaseManaged(programCode));
+    }
     @GetMapping("/users/{userId}")
     public ResponseEntity<List<PatientDTO>> getAllApplicationUserPatientByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(applicationUserPatientService.getAllPatientByUserId(userId));
