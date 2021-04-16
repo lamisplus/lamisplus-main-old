@@ -9,11 +9,9 @@ import CancelIcon from '@material-ui/icons/Cancel'
 import "react-widgets/dist/css/react-widgets.css";
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
-import {url} from '../../../../api'
 import { Alert } from 'reactstrap';
 import { create } from '../../../../actions/caseManager';
-import { Spinner } from 'reactstrap';
-import axios from "axios";
+import Spinner from 'react-bootstrap/Spinner';
 
 Moment.locale('en');
 momentLocalizer();
@@ -57,52 +55,31 @@ momentLocalizer();
 
 
 const ModalViewResult = (props) => {
-    // const row = props.location.state.row;
-    // console.log(props.listOfPatient)
+    const [loading, setLoading] = useState('')
     const listOfPatient =  props.listOfPatient
     const classes = useStyles()
-    // console.log(listOfPatient)
-    const manifestSamples = props.manifestSamples && props.manifestSamples !==null ? props.manifestSamples : [];
-    const manifestSample= Object.values(manifestSamples);
-    const labId = manifestSamples.id
-    const [loading, setLoading] = useState(false);
-    const [manifestId, setManifestId] = useState();
-    const [manifestObj, setManifestObj] = useState(manifestSample)
-    const [errors, setErrors] = useState({});
-    const [pcrOptions, setOptionPcr] = useState([]);
-    const [sampleManifest, setSampleManifest] = useState({patientIds:"" , userId:""})
+    const PatientList = props.PatientList && props.PatientList !==null ? props.PatientList : [];
+    const PatientLists= Object.values(PatientList);
+    const labId = PatientLists.id
+    const [patientObj, setpatientObj] = useState(PatientList)
+    const [PatientListsArray, setPatientListsArray] = useState({patientIds:"" , userId:""})
     const [setPatientObj, setsetPatientObj] = useState([listOfPatient])
 
-    let tifOptions = [];
+    let patientArray = [];
 
     Object.keys(listOfPatient).forEach(function(key) {
-        tifOptions.push(listOfPatient[key].id);
+        patientArray.push(listOfPatient[key].patientId);
+        console.log((listOfPatient[key].patientId))
     });
-    console.log(tifOptions)
-
-    useEffect(() => {
-        async function getCharacters() {
-            try {
-                const response = await axios(
-                    url + "organisation-units/organisation-unit-level/7"
-                );
-                const body = response.data && response.data !==null ? response.data : {};
-                setOptionPcr(
-                     body.map(({ name, id }) => ({ title: name, value: id }))
-                 );
-            } catch (error) {
-            }
-        }
-        getCharacters();
-    }, []);
+    console.log(patientArray)
 
 
     const assignCaseManager = e => {
         e.preventDefault()
-        sampleManifest["patientIds"] = tifOptions
-        sampleManifest["userId"] = props.userId
-        console.log(sampleManifest)
-        props.create(sampleManifest)
+        PatientListsArray["patientIds"] = patientArray
+        PatientListsArray["userId"] = props.userId
+        console.log(PatientListsArray)
+        props.create(PatientListsArray)
         props.togglestatus();
   }
 

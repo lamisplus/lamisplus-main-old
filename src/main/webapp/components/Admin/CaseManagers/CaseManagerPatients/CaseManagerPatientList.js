@@ -68,7 +68,8 @@ const CaseManagerPatientList = (props) => {
       <Card>
           <CardBody>
       <Breadcrumbs aria-label="breadcrumb">
-          <Link color="inherit" to={{pathname: "/admin"}} >
+          <Link color="inherit" to={{pathname: "/admin",
+              state: 'case-managers'}} >
           Case Managers
           </Link>
           <Typography color="textPrimary">Assign Clients to Case Manager - {row.firstName +  ' ' + row.lastName || ''} </Typography>

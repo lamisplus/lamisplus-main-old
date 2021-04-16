@@ -9,8 +9,7 @@ import {Link} from 'react-router-dom';
 import {toast, ToastContainer} from 'react-toastify';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Typography from '@material-ui/core/Typography';
-import axios from 'axios';
-import {url} from '../../api';
+
 
 const UpdateReports = (props) => {
 
@@ -26,7 +25,6 @@ const UpdateReports = (props) => {
     const row = props.location.row;
 
     useEffect (() => {
-        // props.fetchService()
         props.fetchAll();
     }, [])
 
@@ -128,7 +126,6 @@ const UpdateReports = (props) => {
                             </div>
                         </CardBody>
                     </Card>
-
             </div>
         )
     }
