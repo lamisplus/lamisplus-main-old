@@ -29,7 +29,7 @@ const CaseManagerPatient = (props) => {
         const onError = () => {
             setLoading(false)
         }
-        props.fetchPatientUser(598, onSuccess, onError);
+        props.fetchPatientUser(10, onSuccess, onError);
     }, []); //componentDidMount
 
     const calculate_age = dob => {
@@ -73,18 +73,18 @@ const CaseManagerPatient = (props) => {
                 </Breadcrumbs>
                 <br/>
                 <MaterialTable
-                    title="List of Patients to assign"
+                    title="List of Patients to Reassign"
                     columns={[
+                        { title: "Patient ID", field: "hospitalNumber" },
                         {title: "Patient Name", field: "name",},
-                        { title: "Patient ID", field: "id" },
                         { title: "Gender", field: "gender", filtering: false },
                         { title: "Age", field: "age", filtering: false },
                         {title: "Address", field: "address", filtering: false},
                     ]}
                     isLoading={loading}
                     data={props.listPatient.map((row) => ({
+                        hospitalNumber: row.hospitalNumber,
                         name: row.firstName +  ' ' + row.lastName,
-                        id: row.hospitalNumber,
                         gender: getGenderById(row.genderId),
                         age: (row.dob === 0 ||
                             row.dob === undefined ||
@@ -116,7 +116,7 @@ const CaseManagerPatient = (props) => {
                         }
                     ]}
                 />
-                AddPatientModal modalstatus={modal3} togglestatus={togglemodal3} listOfPatient={collectmodal} userId={row.id}/>
+                {/*AddPatientModal modalstatus={modal3} togglestatus={togglemodal3} listOfPatient={collectmodal} userId={row.id}/>*/}
             </CardBody>
         </Card>
     );
