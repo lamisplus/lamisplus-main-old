@@ -7,14 +7,11 @@ import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.FormDTO;
 import org.lamisplus.modules.base.domain.entity.Form;
 import org.lamisplus.modules.base.domain.entity.Permission;
-import org.lamisplus.modules.base.domain.entity.Program;
 import org.lamisplus.modules.base.domain.mapper.FormMapper;
 import org.lamisplus.modules.base.repository.FormRepository;
 import org.lamisplus.modules.base.repository.PermissionRepository;
 import org.lamisplus.modules.base.repository.ProgramRepository;
-import org.lamisplus.modules.base.repository.UserRepository;
 import org.lamisplus.modules.base.util.AccessRight;
-import org.lamisplus.modules.base.util.UuidGenerator;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -119,8 +116,7 @@ public class FormService {
         Set<String> permissions = accessRight.getAllPermission();
 
         accessRight.grantAccessByAccessType(formDTO.getCode(), FormService.class, WRITE, permissions);
-        Form form = formRepository.findByIdAndArchived(id, UN_ARCHIVED)
-                .orElseThrow(() -> new EntityNotFoundException(Form.class, "Id", id +""));
+        Form form = formRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(Form.class, "Id", id +""));
 
         form = formMapper.toFormDTO(formDTO);
         form.setId(id);

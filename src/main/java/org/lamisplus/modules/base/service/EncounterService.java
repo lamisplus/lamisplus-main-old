@@ -35,15 +35,18 @@ public class EncounterService {
 
     private static final int UNARCHIVED = 0;
     private final EncounterRepository encounterRepository;
+    private final ApplicationCodesetRepository applicationCodesetRepository;
     private final VisitRepository visitRepository;
     private final EncounterMapper encounterMapper;
     private final FormDataMapper formDataMapper;
     private final FormDataRepository formDataRepository;
     private final UserService userService;
+    private final AppointmentService appointmentService;
     private final AccessRight accessRight;
     private static final int ARCHIVED = 1;
     private static final String WRITE = "write";
     private static final String DELETE = "delete";
+
 
 
 
@@ -112,33 +115,55 @@ public class EncounterService {
     }
 
     public Encounter save(EncounterDTO encounterDTO) {
+        //Get all permissions
         Set<String> permissions = accessRight.getAllPermission();
 
+        //Grant access by access type = WRITE
         accessRight.grantAccessByAccessType(encounterDTO.getFormCode(), Encounter.class, WRITE, permissions);
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
 
         encounterDTO.setTimeCreated(CustomDateTimeFormat.LocalTimeByFormat(LocalTime.now(),"hh:mm a"));
-        Optional<Encounter> encounterOptional = this.encounterRepository.findByPatientIdAndProgramCodeAndFormCodeAndDateEncounterAndOrganisationUnitId(encounterDTO.getPatientId(), encounterDTO.getFormCode(),
-                encounterDTO.getProgramCode(), encounterDTO.getDateEncounter(), organisationUnitId);
 
-        if (encounterOptional.isPresent()) {
-            throw new RecordExistException(Encounter.class, "Patient Id ", encounterDTO.getPatientId() + ", " +
-                    "Program Code = " + encounterDTO.getProgramCode() + ", Form Code =" + encounterDTO.getFormCode() + ", Date =" + encounterDTO.getDateEncounter());
-        }
-        Optional<Visit> visitOptional = this.visitRepository.findById(encounterDTO.getVisitId());
-        if(!visitOptional.isPresent())throw new EntityNotFoundException(Visit.class,"Visit Id", encounterDTO.getVisitId()+"");
+        encounterRepository.findByPatientIdAndProgramCodeAndFormCodeAndDateEncounterAndOrganisationUnitId(
+                encounterDTO.getPatientId(), encounterDTO.getFormCode(), encounterDTO.getProgramCode(),
+                encounterDTO.getDateEncounter(), organisationUnitId).ifPresent(encounter -> {
+            throw new RecordExistException(Encounter.class, "Patient Id ",
+                    encounterDTO.getPatientId() + ", " + "Program Code = " +
+                            encounterDTO.getProgramCode() + ", Form Code =" + encounterDTO.getFormCode() + ", Date =" +
+                            encounterDTO.getDateEncounter());
+        });
 
         final Encounter encounter = encounterMapper.toEncounter(encounterDTO);
+        Visit visit = new Visit();
+
+        //For retrospective data entry formType is 1
+        if(encounter.getFormForEncounterByFormCode() != null){
+            if(encounter.getFormForEncounterByFormCode().getType() == 1){
+                visit.setDateVisitEnd(encounter.getDateEncounter());
+                visit.setDateVisitStart(encounter.getDateEncounter());
+                visit.setTimeVisitStart(LocalTime.now());
+                visit.setTimeVisitEnd(LocalTime.now());
+                visit.setDateNextAppointment(null);
+                visit.setPatientId(encounter.getPatientId());
+                visit.setTypePatient(0);
+                visit.setOrganisationUnitId(organisationUnitId);
+                visit = visitRepository.save(visit);
+
+                encounterDTO.setVisitId(visit.getId());
+            }
+        }
+        visit = visitRepository.findById(encounterDTO.getVisitId()).orElseThrow(() ->
+                new EntityNotFoundException(Visit.class,"Visit Id", encounterDTO.getVisitId()+""));
+
         encounter.setUuid(UUID.randomUUID().toString());
         encounter.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         encounter.setOrganisationUnitId(organisationUnitId);
 
         Encounter savedEncounter = this.encounterRepository.save(encounter);
 
-        Visit visit = visitOptional.get();
-        if(encounterDTO.getTypePatient() != null){
+        if(encounterDTO.getTypePatient() != null & encounter.getFormForEncounterByFormCode().getType() != 1){
             visit.setTypePatient(encounterDTO.getTypePatient());
-            this.visitRepository.save(visit);
+            visitRepository.save(visit);
         }
 
         if(encounterDTO.getData().size() >0){
@@ -147,7 +172,7 @@ public class EncounterService {
                 formData.setEncounterId(savedEncounter.getId());
                 formData.setData(formDataList);
                 formData.setOrganisationUnitId(organisationUnitId);
-                this.formDataRepository.save(formData);
+                formDataRepository.save(formData);
             });
         }
         return savedEncounter;
