@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.util.upload.FilesStorageService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class FilesStorageServiceImpl implements FilesStorageService {
 
     private String path = System.getProperty("user.dir");
@@ -84,11 +86,11 @@ public class FilesStorageServiceImpl implements FilesStorageService {
         }
         // After the basePath is spliced, it looks like this: http://192.168.1.20:8080/fileServer
         String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
-        System.out.println("basePath=" + basePath);
+        log.info("basePath=" + basePath);
 
         String fileName = file.getOriginalFilename();
         File saveFile = new File(path, fileName);
-        System.out.println("File saved successfully:" + saveFile.getPath());
+        log.info("File saved successfully:" + saveFile.getPath());
         try {
             file.transferTo(saveFile);//File save
         } catch (IOException e) {

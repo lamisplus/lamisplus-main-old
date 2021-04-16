@@ -45,10 +45,10 @@ public class PatientService {
     private final PersonRelativeMapper personRelativeMapper;
     private final EncounterMapper encounterMapper;
     private final VisitMapper visitMapper;
+    private final FormMapper formMapper;
     private final UserService userService;
     private final AppointmentService appointmentService;
     private final ProgramRepository programRepository;
-    private final Integer archived = 1;
     private final FormRepository formRepository;
     private final AccessRight accessRight;
     public static final String FORM_CODE = "formCode";
@@ -58,18 +58,15 @@ public class PatientService {
     private static final String WRITE = "write";
     private static final String DELETE = "delete";
 
-    //private Page page;
-
-
     public Person save(PatientDTO patientDTO) {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
 
         Optional<Patient> patient1 = this.patientRepository.findByHospitalNumberAndOrganisationUnitIdAndArchived(patientDTO.getHospitalNumber(), organisationUnitId, UN_ARCHIVED);
         if(patient1.isPresent())throw new RecordExistException(Patient.class, "Hospital Number", patientDTO.getHospitalNumber()+"");
-        log.info("patientDTO from front end - "+ patientDTO);
+        log.info("patientDTO from front end {} ", patientDTO);
 
         final Person person = patientMapper.toPerson(patientDTO);
-        person.setUuid(UuidGenerator.getUuid());
+        person.setUuid(UUID.randomUUID().toString());
         final Person createdPerson = this.personRepository.save(person);
 
         final PersonContact personContact = patientMapper.toPersonContact(patientDTO);
@@ -90,7 +87,7 @@ public class PatientService {
         final Patient patient = patientMapper.toPatient(patientDTO);
         patient.setPersonByPersonId(createdPerson);
         patient.setPersonId(createdPerson.getId());
-        patient.setUuid(UuidGenerator.getUuid());
+        patient.setUuid(UUID.randomUUID().toString());
         patient.setOrganisationUnitId(organisationUnitId);
         this.patientRepository.save(patient);
         return person;
@@ -124,11 +121,9 @@ public class PatientService {
 
         List<PersonRelative> personRelatives = person.getPersonRelativesByPerson();
 
-        //if (personRelatives.size() > 0) {
             patientDTO.setPersonRelativeDTOs(personRelativeMapper.toPersonRelativeDTOList(personRelatives.stream().
                     filter(personRelative -> personRelative.getArchived() != ARCHIVED).
                     collect(Collectors.toList())));
-        //}
         return patientDTO;
     }
 
@@ -376,7 +371,7 @@ public class PatientService {
         return encounterRepository.findAll(specification);
     }
 
-    public List<Form> getAllFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
+    public List<FormDTO> getAllFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
 
         //ArrayList<EncounterDistinctDTO> encounterDistinctDTOS = new ArrayList<>();
         Optional<Program> optionalProgram = programRepository.findProgramByCodeAndArchived(programCode, UN_ARCHIVED);
@@ -428,16 +423,17 @@ public class PatientService {
                 }
             });
         }
-        return forms;
+
+        return formMapper.FormToFormDTOs(forms);
     }
 
-    public List<Form> getFilledFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
+    public List<FormDTO> getFilledFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
         List<Form> forms = new ArrayList<>();
         //Check for filled forms by the patient in that program
         encounterRepository.findDistinctPatientIdAndProgramCodeAndOrganisationUnitIdAndArchived(patientId, programCode, getOrganisationUnitId(), UN_ARCHIVED).forEach(encounterDistinctDTO -> {
             forms.add(formRepository.findByCodeAndArchived(encounterDistinctDTO.getFormCode(), UN_ARCHIVED).get());
         });
-        return forms;
+        return formMapper.FormToFormDTOs(forms);
     }
 
     private Set<String> getFormPrecedence(Form form) {

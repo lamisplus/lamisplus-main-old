@@ -51,6 +51,7 @@ const UpdateReports = (props) => {
             toast.error("Something went wrong, please contact administration");
 
         }
+        formData['resourceObject'] = JSON.parse(res);
         props.update(formData.id, formData, onSuccess, onError)
     }
 

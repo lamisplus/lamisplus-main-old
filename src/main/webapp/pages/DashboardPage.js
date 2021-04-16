@@ -46,7 +46,9 @@ const  DashboardPage = (props) => {
                 const body2 = response.data && response.data!==null ? response.data :0.00;
                 setTotalPatients(body2) 
                 
-        } catch (error) {}
+        } catch (error) {
+
+        }
       }
       getCharacters();
   }, []);
@@ -122,7 +124,7 @@ const genderChart = {
       }
   },
   title: {
-      text: ''
+      text: 'Total Registered Patients (Male, Female and Pediatric) Pass 4 Months'
   },
   accessibility: {
       point: {
@@ -157,7 +159,7 @@ const combineChart = {
       type: combineChartData.type
   },
 title: {
-  text: ""
+  text: "Total Appointment , Attendance and Emergencies"
 },
 xAxis: combineChartData.xAxis,
 labels: {
@@ -295,11 +297,7 @@ const deathChart = {
                             {totalPatients}
                           </span>
                         </div>
-                        {/*<Col className="col-auto">*/}
-                        {/*  <div className="icon icon-shape  text-primary " >*/}
-                        {/*    <FaUserPlus size={10} />*/}
-                        {/*  </div>*/}
-                        {/*</Col>*/}
+                        
                         </Link>
                       </Row>
                       <p className="mt-1 mb-0 text-muted text-sm">
@@ -363,11 +361,7 @@ const deathChart = {
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">924</span>
                         </div>
-                        {/*<Col className="col-auto">*/}
-                        {/*  <div className="icon icon-shape text-black ">*/}
-                        {/*    <FaUserCheck size={10} />*/}
-                        {/*  </div>*/}
-                        {/*</Col>*/}
+                        
                         </Link>
                       </Row>
                       <p className="mt-1 mb-0 text-muted text-sm">
@@ -417,10 +411,7 @@ const deathChart = {
           
           <Col md="6" sm="12" xs="12" xl="6" lg="6" className={"pb-1"}>
             <Card>
-              <CardHeader>Total Registered Patients (Male, Female and Pediatric)  {' '}
-              
-                <small className="text-muted text-capitalize">In the last 4 Months</small>
-              </CardHeader>
+             
               <CardBody>
                 <div>
                     <HighchartsReact options={genderChart} />
@@ -430,7 +421,7 @@ const deathChart = {
           </Col>
           <Col md="6" sm="12" xs="12" xl="6" lg="6">
             <Card>
-              <CardHeader>Total Appointment , Attendance and Emergencies</CardHeader>
+             
               <CardBody>
                 <div>
                     <HighchartsReact options={combineChart} />
@@ -442,7 +433,7 @@ const deathChart = {
 
           <Col md="6" sm="12" xs="12" xl="6" lg="6">
             <Card>
-              <CardHeader></CardHeader>
+             
               <CardBody>
                 <HighchartsReact
                   highcharts={Highcharts}
@@ -455,7 +446,7 @@ const deathChart = {
 
           <Col md="6" sm="12" xs="12" xl="6" lg="6">
             <Card>
-              <CardHeader></CardHeader>
+              
               <CardBody>
                 <HighchartsReact
                   highcharts={Highcharts}

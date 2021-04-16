@@ -23,7 +23,7 @@ import ModalSampleResult from './EnterResultFormIo';
 import {authentication} from '../../../_services/authentication';
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Typography from "@material-ui/core/Typography";
-
+import ModalSample from './RecollectSample';
 
 
 const useStyles = makeStyles({
@@ -88,6 +88,8 @@ const ResultReporting = (props) => {
         const toggleModal3 = () => setModal3(!modal3)
         const [collectModal, setcollectModal] = useState([])//to collect array of datas into the modal and pass it as props
         const [labNum, setlabNum] = useState({lab_number:""})
+        const [modal4, setModal4] = useState(false)//modal to Enter Result
+        const toggleModal4 = () => setModal4(!modal4)
 
 
         let  labNumber = "" //check if that key exist in the array
@@ -117,6 +119,10 @@ const ResultReporting = (props) => {
         setModal2(!modal2) 
     }
 
+    const handleRecollectSample = (row) => { 
+        setcollectModal({...collectModal, ...row});
+        setModal4(!modal4) 
+    }
 
     const getGroup = e => {
         const getValue =e.target.value;
@@ -135,9 +141,9 @@ const ResultReporting = (props) => {
           return <p><Badge  color="light">Sample Collected</Badge></p>
         }else if(e===2){
           return <p><Badge  color="light">Sample Transfered</Badge></p>
-        }else if(e==="3"){
+        }else if(e===3){
           return <p><Badge  color="light">Sample Verified</Badge></p>
-        }else if(e==="4"){
+        }else if(e===4){
           return <p><Badge  color="light">Sample Rejected</Badge></p>
         }else if(e===5){
           return <p><Badge  color="light">Result Available</Badge></p>
@@ -156,20 +162,25 @@ const ResultReporting = (props) => {
                     Action <span aria-hidden>▾</span>
                 </MenuButton>
                     <MenuList style={{hover:"#eee"}}>
-                    {e.data.lab_test_order_status!==5 ?
+                    {e.data.lab_test_order_status ===3 ?
                         <MenuItem onSelect={() => handleResult(e)} hidden={!authentication.userHasRole(["laboratory_write"])}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Enter Result</MenuItem>
                     :""}
                     {e.data.lab_test_order_status===5 ?
                         <MenuItem onSelect={() => viewresult(e)}><FaRegEye size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>
+                        
                     :""}
                     {e.data.lab_test_order_status===5 ?
-                        <MenuItem onSelect={() => handleResult(e)} hidden={!authentication.userHasRole(["laboratory_write"])}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Add Result</MenuItem>
+                        <MenuItem onSelect={() => addresult(e)}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Add Result</MenuItem>
+                    :""}
+                    
+                    {e.data.lab_test_order_status===4 ?
+                        <MenuItem onSelect={() => handleRecollectSample(e)} hidden={!authentication.userHasRole(["laboratory_write"])}><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Re-Collect Sample</MenuItem>
                     :""}   
                     </MenuList>
             </Menu>
           )
   }
-console.log(testOrders)
+
 return (
     <div>
     <Card>
@@ -216,9 +227,7 @@ return (
                         </Link>
                   </CardHeader>
                 <CardBody>
-                    <Alert color="primary">
-                        Please make sure you enter Lab number before collecting sample 
-                    </Alert>
+                  
                 <br />
                     <Row>
                         <Col>
@@ -299,7 +308,8 @@ return (
         </Row>
         </Card>
         <ModalSampleResult modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} />
-        <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />    
+        <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} /> 
+        <ModalSample modalstatus={modal4} togglestatus={toggleModal4} datasample={collectModal}  labnumber={newSample[0].data.lab_number}/>   
     </div>
   )
   

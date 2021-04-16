@@ -38,10 +38,10 @@ public class ApplicationUserPatientService {
     }
 
     public UserDTO getAllApplicationUserByPatientId(Long patientId) {
-        Optional<ApplicationUserPatient> optionalApplicationUserPatient = applicationUserPatientRepository.findAllByPatientId(patientId);
-        if(!optionalApplicationUserPatient.isPresent()) throw new EntityNotFoundException(ApplicationUserPatient.class,"patientId:",patientId+"");
+        ApplicationUserPatient applicationUserPatient = applicationUserPatientRepository.findAllByPatientId(patientId)
+                .orElseThrow(() ->new EntityNotFoundException(ApplicationUserPatient.class,"patientId:",patientId+""));
 
-        return userMapper.userToUserDTO(optionalApplicationUserPatient.get().getApplicationUserByApplicationUserId());
+        return userMapper.userToUserDTO(applicationUserPatient.getApplicationUserByApplicationUserId());
     }
 
     public List save(ApplicationUserPatientDTO applicationUserPatientDTO) {
@@ -53,8 +53,7 @@ public class ApplicationUserPatientService {
     }
 
     public ApplicationUserPatientDTO update(Long id, ApplicationUserPatientDTO applicationUserPatientDTO) {
-        Optional<ApplicationUserPatient> optionalApplicationUserPatient = applicationUserPatientRepository.findById(id);
-        if(!optionalApplicationUserPatient.isPresent()) throw new EntityNotFoundException(ApplicationUserPatient.class,"id:",id+"");
+        applicationUserPatientRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ApplicationUserPatient.class,"id:",id+""));
 
         List<ApplicationUserPatient> applicationUserPatients  = new ArrayList<>();
         applicationUserPatientDTO.getPatientIds().forEach(patientId ->{

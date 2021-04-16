@@ -20,9 +20,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DrugGroupService {
     private static final int ARCHIVED = 1;
+    private static final int UN_ARCHIVED = 0;
     private final DrugGroupRepository drugGroupRepository;
     private final DrugMapper drugMapper;
-    private static final int UN_ARCHIVED = 0;
 
     public List<DrugGroup> getAllDrugGroups() {
         return this.drugGroupRepository.findAllByArchived(UN_ARCHIVED);
@@ -35,29 +35,27 @@ public class DrugGroupService {
     }
 
     public DrugGroup getDrugGroup(Long id) {
-        Optional<DrugGroup> drugGroupOptional = this.drugGroupRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if (!drugGroupOptional.isPresent()) throw new EntityNotFoundException(DrugGroup.class, "Id", id + "");
-        return drugGroupOptional.get();
+        return drugGroupRepository.findByIdAndArchived(id, UN_ARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(DrugGroup.class, "Id", id + ""));
     }
 
     public DrugGroup update(Long id, DrugGroup drugGroup) {
-        Optional<DrugGroup> drugGroupOptional = drugGroupRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if(!drugGroupOptional.isPresent())throw new EntityNotFoundException(DrugGroup.class, "Id", id +"");
+        drugGroupRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(DrugGroup.class, "Id", id +""));
         drugGroup.setId(id);
         return drugGroupRepository.save(drugGroup);
     }
 
     public List<DrugDTO> getDrugsByDrugGroupId(Long id){
-        Optional<DrugGroup> drugGroupOptional = drugGroupRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if(!drugGroupOptional.isPresent())throw new EntityNotFoundException(DrugGroup.class, "Id", id +"");
-        return drugMapper.toDrugDTOList(drugGroupOptional.get().getDrugsById());
+        DrugGroup drugGroup = drugGroupRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(DrugGroup.class, "Id", id +""));
+
+        return drugMapper.toDrugDTOList(drugGroup.getDrugsById());
     }
 
     public Integer delete(Long id) {
-        Optional<DrugGroup> drugGroupOptional = drugGroupRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if(!drugGroupOptional.isPresent())throw new EntityNotFoundException(DrugGroup.class, "Id", id +"");
-        drugGroupOptional.get().setArchived(ARCHIVED);
+        DrugGroup drugGroup = drugGroupRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(DrugGroup.class, "Id", id +""));
+        drugGroup.setArchived(ARCHIVED);
+        drugGroupRepository.save(drugGroup);
 
-        return drugGroupOptional.get().getArchived();
+        return drugGroup.getArchived();
     }
 }

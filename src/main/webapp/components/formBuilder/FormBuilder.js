@@ -1,8 +1,6 @@
 import React, {useRef, useEffect, useState} from 'react';
-import Page from 'components/Page';
 import { connect } from 'react-redux';
 import {  Errors, FormBuilder } from 'react-formio';
-import {Card,CardContent,} from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import {fetchService, createForm, fetchAllForms} from '../../actions/formBuilder'
 import {
@@ -11,10 +9,8 @@ import {
     Label,
     Col,
     Row,
-    Form
+    Form,Card, CardBody
 } from 'reactstrap';
-import MatButton from '@material-ui/core/Button';
-import { TiArrowBack } from "react-icons/ti";
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -26,6 +22,8 @@ import {ToastContainer} from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
 import { Alert } from '@material-ui/lab';
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
 
 const Create = props => {
     const [res, setRes] = React.useState("");
@@ -109,24 +107,17 @@ const Create = props => {
     }
 
     return (
-        <Page title="Form Builder" >
-            <ToastContainer autoClose={3000} hideProgressBar />
-            <Card >
-                <CardContent>
-                    <Link to ={{
-                        pathname: "/admin",
-                        state: 'form-builder'
-                    }}>
-                        <MatButton
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            className=" float-right mr-1">
-                            <TiArrowBack /> &nbsp; back
-                        </MatButton>
+        <Card>
+            <ToastContainer />
+            <CardBody>
+                <Breadcrumbs aria-label="breadcrumb">
+                    <Link color="inherit" to={{  pathname: "/admin",
+                        state: 'form-builder'}} >
+                        Form Manager
                     </Link>
-                    <h4>Create Form</h4>
-                    <hr />
+                    <Typography color="textPrimary">Create Form</Typography>
+                </Breadcrumbs>
+                <br/>
                     <Errors errors={props.errors} />
                     {/*<Alert color="info" icon={false} className={"mb-3"}>*/}
                     {/*<h4>To create a form </h4>*/}
@@ -270,9 +261,8 @@ const Create = props => {
                         <h4>Json Form</h4>
                         <textarea cols="50" ref={textAreaRef} value={res}/>
                     </div>
-                </CardContent>
+            </CardBody>
             </Card>
-        </Page>
     );
 
 }

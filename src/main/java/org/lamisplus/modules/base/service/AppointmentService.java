@@ -23,7 +23,6 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class AppointmentService {
-
     private final AppointmentRepository appointmentRepository;
     private final AppointmentMapper appointmentMapper;
     private static final int ARCHIVED = 1;
@@ -61,18 +60,14 @@ public class AppointmentService {
     }
 
     public AppointmentDTO getAppointment(Long id) {
-        Optional<Appointment> optionalAppointment = appointmentRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if (!optionalAppointment.isPresent()) throw new EntityNotFoundException(Appointment.class, "Display:", id + "");
-        Appointment appointment = optionalAppointment.get();
+        Appointment appointment = appointmentRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(Appointment.class, "Display:", id + ""));
 
         return getAppointmentDTO(appointment);
     }
 
     public Appointment update(Long id, AppointmentDTO appointmentDTO) {
-        Optional<Appointment> appointmentOptional = appointmentRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if (!appointmentOptional.isPresent()) {
-            throw new EntityNotFoundException(Appointment.class, "Display:", id + "");
-        }
+        appointmentRepository.findByIdAndArchived(id, UN_ARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(Appointment.class, "Display:", id + ""));
         final Appointment appointment = appointmentMapper.toAppointment(appointmentDTO);
         appointment.setId(id);
         appointment.setArchived(UN_ARCHIVED);
@@ -81,11 +76,10 @@ public class AppointmentService {
     }
 
     public Integer delete(Long id) {
-        Optional<Appointment> appointmentOptional = appointmentRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if (!appointmentOptional.isPresent()) throw new EntityNotFoundException(Appointment.class, "Display:", id + "");
-        appointmentOptional.get().setArchived(ARCHIVED);
-
-        return appointmentOptional.get().getArchived();
+        Appointment appointment =  appointmentRepository.findByIdAndArchived(id, UN_ARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(Appointment.class, "Display:", id + ""));
+        appointment.setArchived(ARCHIVED);
+        return appointment.getArchived();
     }
 
     private AppointmentDTO getAppointmentDTO(Appointment appointment){

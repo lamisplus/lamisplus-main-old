@@ -37,11 +37,12 @@ function MedicationPage(props) {
       <Col lg={6}>
         <Card>
           <CardHeader>
-            <Button.Group >
-              <Button toggle active={showDrugOrderForm} onClick={handleToggle}>Drug</Button>
-              <Button.Or />
-              <Button toggle active={!showDrugOrderForm} onClick={handleToggle}>Regimen</Button>
-            </Button.Group>
+            Drug / Regimen Prescription
+            {/*<Button.Group >*/}
+            {/*  <Button toggle active={showDrugOrderForm} onClick={handleToggle}>Drug</Button>*/}
+            {/*  <Button.Or />*/}
+            {/*  <Button toggle active={!showDrugOrderForm} onClick={handleToggle}>Regimen</Button>*/}
+            {/*</Button.Group>*/}
           </CardHeader>
           <CardBody>
 

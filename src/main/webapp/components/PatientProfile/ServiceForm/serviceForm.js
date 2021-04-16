@@ -369,7 +369,8 @@ function ServiceFormPage(props) {
                           searchFieldAlignment: "left",
                           padding: 'dense',
                           header: false,
-                          showTitle: false
+                          showTitle: false,
+                          pageSize: 15
                         }}
                     />
 
@@ -399,6 +400,8 @@ function ServiceFormPage(props) {
                   programCode={currentForm.programCode}
                   visitId={props.patient.visitId}
                   onSuccess={onSuccess}
+                  options={true}
+                  hideHeader={true}
                 />
               )}
               {currentForm && currentForm.type === "VIEW" && (

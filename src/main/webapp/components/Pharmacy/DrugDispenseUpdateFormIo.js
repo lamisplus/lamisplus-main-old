@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {Modal,ModalHeader, ModalBody,Form,Card,CardBody,} from "reactstrap";
+import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,7 +12,7 @@ import {
     updatePrescriptionStatus,
 } from "../../actions/pharmacy";
 import * as CODES from "./../../api/codes";
-import FormRendererUpdate from "components/FormManager/FormRendererUpdate";
+import FormRenderer from "components/FormManager/FormRenderer";
 
 Moment.locale("en");
 momentLocalizer();
@@ -57,9 +58,13 @@ const useStyles = makeStyles((theme) => ({
 const ModalSample = (props) => {
     const classes = useStyles()
     const datasample = props.datasample && props.datasample!==null ? props.datasample : {};
-    console.log(props)
+    console.log(datasample)
    
     const DrugId = datasample.id
+    const [loading, setLoading] = useState(false)
+    const [visible, setVisible] = useState(true);
+    const onDismiss = () => setVisible(false);
+    //This is to get SAMPLE TYPE from application Codeset
 
     const currentForm = {
         code: CODES.PHARMARCY_DRUG_DISPENSE,
@@ -84,20 +89,16 @@ const ModalSample = (props) => {
 
 
     const saveSample = (e) => {
-        
-        datasample.data.prescription_status = 1
-        //datasample.data = e.data
+    
         const onSuccess = () => {
             props.togglestatus();
         };
         const onError = () => {
             props.togglestatus();
         };
-        const newData =  {...datasample.data, ... e.data}
-        datasample.data = newData
-       
-       props.updatePrescriptionStatus(DrugId, datasample, onSuccess, onError);
-       props.togglestatus();
+       console.log(e)
+        props.updatePrescriptionStatus(e.id, e.data, onSuccess, onError);
+      
         
     };
 
@@ -113,13 +114,13 @@ const ModalSample = (props) => {
                             <Card >
               <CardBody>
                  
-                        <FormRendererUpdate
+                        <FormRenderer
                             formCode={datasample.data && datasample.data.type !=0 ? currentForm.code : currentFormForRegimen.code}
                             programCode={currentForm.programCode}
-                            options={datasample.data}
                             submission={props.datasample}
                             onSubmit={saveSample}
                         />
+                         
                     </CardBody>
                 </Card>
                                 

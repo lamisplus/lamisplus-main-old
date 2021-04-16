@@ -31,3 +31,42 @@ export const fetchAll = (onSuccess, onError) => dispatch => {
     })
 }
 
+
+export const fetchAllRegimen = (onSuccess, onError) => dispatch => {
+    axios
+        .get(`${baseUrl}regimens/`)
+        .then(response => {
+            dispatch({
+                type: ACTION_TYPES.REGIMEN_FETCH,
+                payload: response.data
+            })
+            onSuccess()
+        })
+        .catch(error => {
+            dispatch({
+                type: ACTION_TYPES.MEDICATION_ERROR,
+                payload: 'Something went wrong, please try again'
+            })
+            onError(error.response)
+        })
+}
+
+
+export const fetchAllRegimenLine = (onSuccess, onError) => dispatch => {
+    axios
+        .get(`${baseUrl}regimen-lines`)
+        .then(response => {
+            dispatch({
+                type: ACTION_TYPES.REGIMEN_LINE_FETCH,
+                payload: response.data
+            })
+            onSuccess()
+        })
+        .catch(error => {
+            dispatch({
+                type: ACTION_TYPES.MEDICATION_ERROR,
+                payload: 'Something went wrong, please try again'
+            })
+            onError(error.response)
+        })
+}

@@ -124,7 +124,7 @@ export const updatePrescriptionStatus = (formId, data, onSuccess, onError) => (d
        export const fetchPatientPrescriptionsByEncounter = (id, onSuccess, onError )=> dispatch => {
         if(id){
         axios
-          .get(`${url}encounters/${id}/form-data`)
+          .get(`${url}form-data/${id}`)
           .then(response => {
            
             dispatch({

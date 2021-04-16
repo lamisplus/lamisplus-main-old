@@ -219,8 +219,8 @@ const Update = props => {
                     <h4>Json Form</h4>
                     <DownloadLink
                         label="Export as a json file"
-                        filename={row ? row.name+".json" : "lamisplus-form.json"}
-                        exportFile={() => JSON.stringify(row)}
+                        filename={form2 ? form2.name+".json" : "lamisplus-form.json"}
+                        exportFile={() => JSON.stringify(form2)}
                     /> Or Copy the json object below. <br/>
 
                     <div >

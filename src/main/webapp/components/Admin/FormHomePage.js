@@ -107,7 +107,7 @@ function FormSearch(props) {
                                                 <span style={{color: '#000'}}>Delete Form</span>
                                             </Link>
                                         </MenuItem>
-                                        <MenuItem style={{ color:"#000 !important"}}>
+                                        {/*<MenuItem style={{ color:"#000 !important"}}>
                                             <DownloadLink
                                                 label="Export as a json file"
                                                 filename={row ? row.name+".json" : "lamisplus-form.json"}
@@ -116,7 +116,7 @@ function FormSearch(props) {
                                                    return JSON.stringify(row)
                                                 }}
                                             />
-                                        </MenuItem>
+                                        </MenuItem>*/}
                                     </MenuList>
                                 </Menu>
                             </div>
@@ -156,7 +156,7 @@ function FormSearch(props) {
 const mapStateToProps =  (state = { form:[]}) => {
 
     return {
-        formList: state.formReducers.form !==null ? state.formReducers.form : [],
+        formList: state.formReducers.formList !==null ? state.formReducers.formList : [],
     }}
 
 const mapActionToProps = {
