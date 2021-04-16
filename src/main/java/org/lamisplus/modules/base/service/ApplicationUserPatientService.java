@@ -6,6 +6,8 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.dto.ApplicationUserPatientDTO;
 import org.lamisplus.modules.base.domain.dto.PatientDTO;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
+import org.lamisplus.modules.base.domain.entity.ApplicationCodeSet;
+import org.lamisplus.modules.base.domain.entity.ApplicationUserOrganisationUnit;
 import org.lamisplus.modules.base.domain.entity.ApplicationUserPatient;
 import org.lamisplus.modules.base.domain.entity.Patient;
 import org.lamisplus.modules.base.domain.mapper.UserMapper;
@@ -75,7 +77,7 @@ public class ApplicationUserPatientService {
         List<Long> patientList = getPatientIds(programCode);
 
         applicationUserPatientRepository.findAllByPatientIdIn(getPatientIds(programCode)).forEach(appUserPatient ->{
-            if(appUserPatient.getArchived() != null && appUserPatient.getArchived() != 0){
+            if(appUserPatient.getArchived() != 0){
                 return;
             } else {
                 patientList.remove(appUserPatient.getPatientId());
@@ -83,5 +85,13 @@ public class ApplicationUserPatientService {
         });
 
         return patientService.getPatients(patientRepository.findAllByIdIn(patientList));
+    }
+
+    public Integer delete(Long id){
+        ApplicationUserPatient applicationUserPatient = applicationUserPatientRepository.findByIdAndArchived(id, UN_ARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(ApplicationUserPatient.class,"Id:",id+""));
+        applicationUserPatient.setArchived(1);
+        applicationUserPatientRepository.save(applicationUserPatient);
+        return applicationUserPatient.getArchived();
     }
 }

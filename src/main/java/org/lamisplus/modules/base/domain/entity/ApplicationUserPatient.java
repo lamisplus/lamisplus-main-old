@@ -31,7 +31,8 @@ public class ApplicationUserPatient extends Audit<String>{
 
     @Basic
     @Column(name = "archived")
-    private Long archived;
+    @JsonIgnore
+    private int archived;
 
     @ManyToOne
     @JoinColumn(name = "application_user_id", referencedColumnName = "id", insertable = false, updatable = false)
