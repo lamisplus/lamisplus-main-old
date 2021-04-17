@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -23,16 +24,18 @@ public class ApplicationUserPatient extends Audit<String>{
 
     @Basic
     @Column(name = "application_user_id")
+    @NotNull(message = "userId cannot be null")
     private Long userId;
 
     @Basic
     @Column(name = "patient_id")
+    @NotNull(message = "patientId cannot be null")
     private Long patientId;
 
     @Basic
     @Column(name = "archived")
     @JsonIgnore
-    private int archived;
+    private int archived = 0;
 
     @ManyToOne
     @JoinColumn(name = "application_user_id", referencedColumnName = "id", insertable = false, updatable = false)

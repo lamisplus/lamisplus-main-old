@@ -44,12 +44,11 @@ public class UserDTO {
         user.getRole().forEach(roles1 ->{
             permissions.addAll(roles1.getPermission().stream().map(Permission::getName).collect(Collectors.toSet()));
         });
-        this.firstName = user.getPerson().getFirstName();
-        this.lastName = user.getPerson().getLastName();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
         this.email = user.getEmail();
         this.phoneNumber = user.getPhoneNumber();
         this.gender = user.getGender();
-        this.dateOfBirth = user.getPerson().getDob();
         this.currentOrganisationUnitId = user.getCurrentOrganisationUnitId();
         this.applicationUserOrganisationUnits = user.getApplicationUserOrganisationUnits();
         currentOrganisationUnitName = user.getOrganisationUnitByCurrentOrganisationUnitId() != null ? user.getOrganisationUnitByCurrentOrganisationUnitId().getName() : null;
@@ -66,7 +65,6 @@ public class UserDTO {
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", gender='" + gender + '\'' +
-                ", dateOfBirth='" + dateOfBirth + '\'' +
                 ", currentOrganisationUnitId='" + currentOrganisationUnitId + '\'' +
                 ", roles=" + roles + '\'' +
                 ", permissions=" + permissions + '\'' +
