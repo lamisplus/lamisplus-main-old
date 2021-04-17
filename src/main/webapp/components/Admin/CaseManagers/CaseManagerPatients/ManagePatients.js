@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import {CardBody, Card} from "reactstrap";
 import { fetchPatientUser } from "../../../../actions/caseManager";
 import "../casemanager.css";
-import AddPatientModal from './AddPatientModal';
+// import AddPatientModal from './AddPatientModal';
 import {authentication} from '../../../../_services/authentication';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import { APPLICATION_CODESET_GENDER } from "../../../../actions/types";
