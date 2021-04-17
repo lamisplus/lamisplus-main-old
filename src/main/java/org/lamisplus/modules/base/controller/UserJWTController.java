@@ -41,7 +41,6 @@ public class UserJWTController {
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        //System.out.println("userService - "+userService.getUserWithRoles().get());
         boolean rememberMe = (loginVM.isRememberMe() == null) ? false : loginVM.isRememberMe();
         String jwt = tokenProvider.createToken(authentication, userService, rememberMe);
         HttpHeaders httpHeaders = new HttpHeaders();

@@ -1,8 +1,14 @@
+${Ansi.YELLOW}***********************************************************************************************************************
+${Ansi.RED}         
+${Ansi.RED}				,--.     ,---.  ,--.   ,--.,--. ,---.  ,------. ,--.
+${Ansi.RED}				|  |    /  O  \ |   `.'   ||  |'   .-' |  .--. '|  |,--.,--. ,---.
+${Ansi.RED}				|  |   |  .-.  ||  |'.'|  ||  |`.  `-. |  '--' ||  ||  ||  |(  .-'
+${Ansi.RED}				|  '--.|  | |  ||  |   |  ||  |.-'    ||  | --' |  |'  ''  '.-'  `)
+${Ansi.RED}				`-----'`--' `--'`--'   `--'`--'`-----' `--'     `--' `----' `----'
+${Ansi.GREEN}Application: ${applicationInfo.applicationName}
+${Ansi.GREEN}Application Version : ${build.number}
+${Ansi.GREEN}Application Title : ${applicationInfo.applicationId}
+${Ansi.GREEN}Spring Boot Version : ${spring-boot.version}
+${Ansi.GREEN}Spring Boot Formatted Version : ${spring-boot.formatted-version}
 
-${AnsiBackground.BRIGHT_YELLOW}
-,--.     ,---.  ,--.   ,--.,--. ,---.  ,------. ,--.${AnsiBackground.RED}
-|  |    /  O  \ |   `.'   ||  |'   .-' |  .--. '|  |,--.,--. ,---.${AnsiBackground.BRIGHT_YELLOW}
-|  |   |  .-.  ||  |'.'|  ||  |`.  `-. |  '--' ||  ||  ||  |(  .-'${AnsiBackground.RED}
-|  '--.|  | |  ||  |   |  ||  |.-'    ||  | --' |  |'  ''  '.-'  `)${AnsiBackground.WHITE}
-`-----'`--' `--'`--'   `--'`--'`-----' `--'     `--' `----' `----'${AnsiBackground.DEFAULT}
-
+${Ansi.YELLOW}***********************************************************************************************************************

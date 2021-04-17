@@ -6,7 +6,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
-          <factory-entry name="Entities" />
+          <factory-entry name="Entities" value="dd8d8cc9-ad65-4b68-9afb-9033b6da7ef6" />
           <factory-entry name="entityManagerFactory" value="dd8d8cc9-ad65-4b68-9afb-9033b6da7ef6" />
           <factory-entry name="noname-a.xml@0" value="dd8d8cc9-ad65-4b68-9afb-9033b6da7ef6" />
         </datasource-mapping>
@@ -350,5 +350,11 @@
     <orderEntry type="library" name="Maven: io.github.jhipster:jhipster-framework:3.9.1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context-support:5.2.10.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: net.logstash.logback:logstash-logback-encoder:6.3" level="project" />
+    <orderEntry type="library" name="Maven: org.lamisplus.modules:bootstrap:1.0.0" level="project" />
+    <orderEntry type="library" name="Maven: com.github.zafarkhaja:java-semver:0.9.0" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.3" level="project" />
+    <orderEntry type="library" name="Maven: com.networknt:json-schema-validator:1.0.47" level="project" />
+    <orderEntry type="library" name="Maven: jakarta.validation:jakarta.validation-api:2.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-core:5.3.5.RELEASE" level="project" />
   </component>
 </module>

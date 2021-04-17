@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.repository;
 import org.lamisplus.modules.base.domain.entity.Program;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,6 +23,6 @@ public interface ProgramRepository extends JpaRepository<Program, Long>, JpaSpec
 
     Optional<Program> findByIdAndArchived(Long id, int archived);
 
-    List<Program> findAllByArchivedOrderByIdDesc(int archived);
+    List<Program> findAllByArchivedIsNotOrderByIdDesc(int archived);
 }
 
