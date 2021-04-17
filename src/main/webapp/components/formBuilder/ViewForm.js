@@ -3,7 +3,7 @@ import {  Errors, Form, FormBuilder } from 'react-formio';
 import {Card,CardContent,} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import {fetchById, updateForm, fetchFormByCode} from '../../actions/formBuilder'
+import {fetchById, updateForm} from '../../actions/formBuilder'
 import {fetchByHospitalNumber} from '../../actions/patients'
 import MatButton from '@material-ui/core/Button';
 import { authHeader } from '_helpers/auth-header';
@@ -16,7 +16,7 @@ import {
     Label,
     Col,
     Row,
-    Spinner, Modal, ModalBody, ModalHeader, CardBody, ModalFooter
+    Modal, ModalBody, ModalHeader, CardBody, ModalFooter
 } from 'reactstrap';
 import {Link} from 'react-router-dom';
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
@@ -119,7 +119,6 @@ const Update = props => {
         form2['resourceObject'] = JSON.parse(res);
         props.updateForm(form2.id, form2, setLoading);
     }
-
 
 
     return (

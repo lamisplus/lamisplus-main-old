@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MaterialTable from "material-table";
 import { connect } from "react-redux";
-import {fetchAllForms, fetchByCode, Delete as Del,} from '../../actions/formBuilder';
+import {fetchAllForms, Delete as Del,} from '../../actions/formBuilder';
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import "react-widgets/dist/css/react-widgets.css";
@@ -11,7 +11,7 @@ import {Menu, MenuButton, MenuItem, MenuList} from '@reach/menu-button';
 import {Link} from 'react-router-dom';
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import DownloadLink  from "react-download-link";
-import {CardContent} from "@material-ui/core";
+
 
 //Dtate Picker package
 Moment.locale("en");
@@ -154,7 +154,7 @@ function FormSearch(props) {
     );
 }
 const mapStateToProps =  (state = { form:[]}) => {
-    // console.log(state.forms)
+
     return {
         formList: state.formReducers.formList !==null ? state.formReducers.formList : [],
     }}

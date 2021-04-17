@@ -21,6 +21,7 @@ import organizationalUnitReducer from './organizationalUnitReducer';
 import rolesReducer from './rolesReducer';
 import generalUsersDashboardModuleReducer from './generalUserDashboardReducer';
 import programManagerReducer from './programManagerReducer';
+import caseManagerReducer from './caseManagerReducer'
 
 import menuReducer from "./menu";
 
@@ -47,6 +48,7 @@ export default combineReducers({
   organizationalUnitReducer : organizationalUnitReducer,
   roles: rolesReducer,
   generalUsersDashboardModuleReducer : generalUsersDashboardModuleReducer,
-  menu: menuReducer
+  menu: menuReducer,
+  caseManager: caseManagerReducer
 })
 
