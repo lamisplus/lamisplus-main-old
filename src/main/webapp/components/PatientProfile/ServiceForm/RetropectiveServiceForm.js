@@ -49,6 +49,7 @@ function ServiceFormPage(props) {
   const [showFormPage, setShowFormPage] = useState(false);
   const [currentForm, setCurrentForm] = useState();
   const [patientEncounters, setPatientEncouters] = useState([]);
+  const [dateEncounter, setDateEncounter] = useState(null);
 
   const togglePage = () => {
     if (showFormPage) {
@@ -77,7 +78,7 @@ function ServiceFormPage(props) {
     setPrograms(
       props.programList
         .map((x) => ({ ...x, label: x.name, value: x.code }))
-        .filter((x) => x.value === CODES.GENERAL_SERVICE)
+        //.filter((x) => x.value === CODES.GENERAL_SERVICE)
     );
   }, [props.programList]);
 
@@ -111,6 +112,9 @@ function ServiceFormPage(props) {
   }, [props.patientEncounterList]);
 
   const loadForm = () => {
+    if(!dateEncounter){
+      toast.error('Enter encounter date');
+    }
     if (!currentForm) {
       return;
     }
@@ -148,7 +152,9 @@ function ServiceFormPage(props) {
     await axios.get( url+ `programs/${programId}/forms`)
         .then(response => {
           setShowServiceFormLoading(false);
-          setServiceList(response.data.filter((x) => x.name.includes('Retrospective')));
+         // let list = response.data.filter((x) => (x.programCode === CODES.GENERAL_SERVICE && x.name.includes('Retrospective')) || x.programCode !== CODES.GENERAL_SERVICE);
+         // let otherList = response.data.filter((x) => x.name.includes('Retrospective'))
+          setServiceList(response.data.filter((x) => (x.programCode === CODES.GENERAL_SERVICE && x.name.includes('Retrospective')) || x.programCode !== CODES.GENERAL_SERVICE));
         })
         .catch(error => {
               setShowServiceFormLoading(false);
@@ -194,7 +200,7 @@ function ServiceFormPage(props) {
                           defaultValue={new Date()}
                           max={new Date()}
                           required
-                          onChange={(e) => {}
+                          onChange={(e) => {setDateEncounter(e)}
                               // setTestOrder({
                               //   ...testOrder,
                               //   ...{
@@ -327,6 +333,8 @@ function ServiceFormPage(props) {
                   programCode={currentForm.programCode}
                   visitId={props.patient.visitId}
                   onSuccess={onSuccess}
+                  dateEncounter={dateEncounter}
+                  formType={1}
                 />
               )}
               {currentForm && currentForm.type === "VIEW" && (
