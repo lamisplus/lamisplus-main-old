@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import MaterialTable from "material-table";
 import { connect } from "react-redux";
-import {fetchAll, Delete as Del,} from '../../actions/report';
+import {fetchAll} from '../../actions/report';
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import "react-widgets/dist/css/react-widgets.css";
@@ -116,7 +116,6 @@ const mapStateToProps =  (state = { reportList:[], form:{}}) => {
 
 const mapActionToProps = {
     fetchAll: fetchAll,
-    deleteForm: Del
 };
 
 export default connect(mapStateToProps, mapActionToProps)(ReportSearch);

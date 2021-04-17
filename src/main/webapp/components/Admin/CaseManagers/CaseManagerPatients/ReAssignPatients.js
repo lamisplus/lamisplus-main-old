@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import MaterialTable from 'material-table';
 import { Link } from 'react-router-dom'
 import { connect } from "react-redux";
-import {Col,Input,FormGroup,Label} from "reactstrap";
+import {Col, Input, FormGroup, Label, Card, CardBody} from "reactstrap";
 import { fetchAllLabTestOrder } from "../../../../actions/laboratory";
 import "../casemanager.css";
 import {GiFiles} from 'react-icons/gi'; 
@@ -12,8 +12,11 @@ import Button from "@material-ui/core/Button";
 import SwitchPatientModal from './SwitchPatientModal';
 import {authentication} from '../../../../_services/authentication';
 import Page from '../../../Page';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Typography from '@material-ui/core/Typography';
 
 const CaseManagerPatientList = (props) => {
+    const row = props.location.state
   const [loading, setLoading] = useState('')
   const [modal3, setModal3] = useState(false)//modal to View Result
   const togglemodal3 = () => setModal3(!modal3)
@@ -35,8 +38,7 @@ useEffect(() => {
     const labTestType = [];    
     
     props.testOrder.forEach(function(value, index, array) {
-          const getList = value['formDataObj'].find(x => { 
-            
+          const getList = value['formDataObj'].find(x => {
             if(x.data && x.data!==null && x.data.lab_test_order_status===2 && x.data.manifest_status==null){
               x['hospitalNumber'] = value.hospitalNumber;
               x['firstName'] = value.firstName ;
@@ -70,58 +72,39 @@ useEffect(() => {
   }
 
   return (
-    
-    <Page title='Re-Assign Patients'>
-        <br/>
-        <br/>
-      <>
-        <Col md={3}>
-          <FormGroup>
-              <Label for="">Program Type </Label>
-
-              <Input
-                  type="select"
-                  name="sample_collected_by"
-                  id="sample_collected_by"
-                  vaule=""
-                  className=" float-left mr-1"
-              >
-                  <option value=""> </option>
-                  <option value="eid"> Hiv </option>
-                  <option value="viral Load"> Tb </option>
-                 
-              </Input>
-              
-          </FormGroup>
-      </Col>
-       </>            
+      <Card>
+          <CardBody>
+              <Breadcrumbs aria-label="breadcrumb">
+                  <Link color="inherit" to={{pathname: "/admin"}} >
+                      Admin
+                  </Link>
+                  <Typography color="textPrimary">Assign Patient to Case Managers</Typography>
+              </Breadcrumbs>
+              <br/>
       <Link to="/patients-managed-case">
         {/* <Link to="/dispatched-sample"> */}
             <Button
               color="primary"
               variant="contained"
               className=" float-right mr-1"
-              size="large"
-            >
+              size="large">
               {<GiFiles />} &nbsp;&nbsp;
               <span style={{textTransform: 'capitalize'}}>Back </span>
                   &nbsp;&nbsp;
-                          
             </Button>
       </Link>
-      
         <br/>
         <br/>
         <br/>
       <MaterialTable
         title="List of Samples to Dispatch "
         columns={[
-        
-          { title: "FormDataObj ", 
+
+          { title: "FormDataObj ",
             field: "formDataObj",
             hidden: true
           },
-          
+
           {
               title: "Sample Type",
               field: "sampleType",
@@ -131,28 +114,28 @@ useEffect(() => {
             title: "Date Sample Ordered ",
             field: "dateSampleOrdered",
           },
-          { 
-            title: "Time Sample Ordered", 
+          {
+            title: "Time Sample Ordered",
             field: "timeSampleOrdered"
           },
-          { 
-            title: "Date Sample Collected", 
-            field: "dateSampleCollected", 
-            type: "date" , 
+          {
+            title: "Date Sample Collected",
+            field: "dateSampleCollected",
+            type: "date" ,
             filtering: false
           },
           {
             title: "Time Sample Collected",
             field: "timeSampleCollected",
           },
-          { 
-            title: "Sample Ordered By", 
+          {
+            title: "Sample Ordered By",
             field: "sampleOrderedBy"
-          },   
-          { 
-            title: "Sample Transferred By", 
-            field: "sampleTransferredBy",            
-          },    
+          },
+          {
+            title: "Sample Transferred By",
+            field: "sampleTransferredBy",
+          },
           { 
             title: "Date Sample Transferred", 
             field: "dateSampleTransferred",hidden: true             
@@ -174,8 +157,8 @@ useEffect(() => {
               title: "Viral Load Indication",
               field: "viralLoadIndication", hidden: true  
           },
-          
-          
+
+
         ]}
         isLoading={loading}
         data={labTestType.map((row) => ({
@@ -215,13 +198,10 @@ useEffect(() => {
         ]}       
       />
       <SwitchPatientModal modalstatus={modal3} togglestatus={togglemodal3} manifestSamples={collectmodal} />
-
-    </Page>
-    
+          </CardBody>
+      </Card>
   );
 }
-
-
 
 const mapStateToProps = state => {
     return {

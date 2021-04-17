@@ -9,12 +9,14 @@ import momentLocalizer from "react-widgets-moment";
 import Moment from "moment";
 import PatientDetailCard from 'components/PatientProfile/PatientDetailCard';
 import { Link } from "react-router-dom";
-import DispenseUpdateModal from './DrugDispenseUpdateFormIo'
+//import DispenseModal from './DispenseModal'
 import DispenseModal from './DrugDispenseFormIo';
+import DispenseModalUpdate from './DrugDispenseUpdateFormIo';
 import ViewModal from './ViewModalForm';
 import { Menu, MenuList, MenuButton, MenuItem } from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import { Spinner } from 'reactstrap';
+import { connect } from "react-redux";
 import {
   Card,
   CardBody,
@@ -23,8 +25,7 @@ import {
   Row,
 } from "reactstrap";
 import {authentication} from '../../_services/authentication';
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
-import Typography from "@material-ui/core/Typography";
+import { fetchPatientPrescriptionsByEncounter } from "../../actions/pharmacy";
 
 
 //
@@ -70,22 +71,31 @@ const useStyles = makeStyles((theme) => ({
 
 const Prescriptions = (props) => {
  const prescriptionOrder  = props.location.state  && props.location.state.formDataObj  ? props.location.state.formDataObj : {}
-  console.log(prescriptionOrder)
+  console.log(props.location.state.formDataObj)
   const classes = useStyles();
   const [loading, setLoading] = useState('')
   const [modal, setModal] = useState(false);
   const toggleModal = () => setModal(!modal)
   const [modal1, setModal1] = useState(false);
   const toggleModal1 = () => setModal1(!modal1)
-  const [modalUpdate, setModalUpdate] = useState(false);
-  const toggleModalUpdate = () => setModalUpdate(!modalUpdate)
+  const [modal2, setModal2] = useState(false);
+  const toggleModal2 = () => setModal2(!modal2)
   const [formData, setFormData] = useState(prescriptionOrder);
   const [drugDetails, setDrugDetails] = useState()
 
+const updateFormData = (data) =>{
+      console.log('in update form data')
+    setLoading(true);
+      const index = formData.findIndex(x => x.id == data.id);
+      console.log('index is '+index)
 
+      formData[index] = data;
+      setFormData(formData);
+    setLoading(false);
+    }
 
   const toggle = (form) => {
-    console.log(form)
+
     setDrugDetails({ ...drugDetails, ...form });
     setModal(!modal);
     
@@ -95,11 +105,21 @@ const Prescriptions = (props) => {
     setModal1(!modal1)
   }
 
-  const toggleUpdate = (form) => {
+  const toggle2 = (form) => {
     setDrugDetails({ ...drugDetails, ...form });
-    setModalUpdate(!modalUpdate)
+    setModal2(!modal2)
   }
+  const closeBtn = (
+    <button className="close" onClick={toggle}>
+      &times;
+    </button>
+  );
 
+   const closeBtn1 = (
+     <button className="close" onClick={toggle1}>
+       &times;
+     </button>
+   );
 
   
  const Actions = (form) => {
@@ -135,7 +155,7 @@ const Prescriptions = (props) => {
 
         
          ) : (
-           <MenuItem onSelect={() => toggleUpdate(form)} hidden={!authentication.userHasRole(["pharmacy_write"])}>
+           <MenuItem onSelect={() => toggle(form)} hidden={!authentication.userHasRole(["pharmacy_write"])}>
              <i
                className="fa fa-pencil"
                aria-hidden="true"
@@ -166,19 +186,7 @@ const Prescriptions = (props) => {
    );
  };
   return (
-    <div>
-      <ToastContainer autoClose={2000} />
-      <Card body>
-          <Breadcrumbs aria-label="breadcrumb">
-            <Link color="inherit" to={{pathname: "/pharmacy"}} >
-                Pharmacy
-            </Link>
-            <Link color="inherit" to={{pathname: "prescriptions"}} >
-                Drug Prescription    
-            </Link>
-            <Typography color="textPrimary">{} </Typography>
-            </Breadcrumbs>
-            <br/>
+    <React.Fragment>
       <Row>
         <Col>
           <div>
@@ -219,7 +227,7 @@ const Prescriptions = (props) => {
                               <thead style={{backgroundColor: "#9F9FA5",color: "#000",}}>
                                 <tr>
                                   <th>Name</th>
-                                  <th>Duration</th>
+                                  <th>Dosage</th>
                                   <th>Date Prescribed</th>
                                   <th>Date Dispensed</th>
                                   <th></th>
@@ -232,11 +240,13 @@ const Prescriptions = (props) => {
                                   form.data!==null?
                                   <tr key={form.id}>
                                     <td>
-                                      <b>{form.data && form.data.type!=0 ? form.data.drug.name :  form.data.regimen.name}</b>
+                                        {form.data.regimen && form.data.regimen.name ? form.data.regimen.name + ' - ': ''}
+                                      <b> {form.data.drugs && form.data.drugs.length > 0 ? form.data.drugs.map(x=>x.drug.name).toString() : ''}</b>
+                                          {/*{form.data && form.data.type!=0 ? form.data.drug.name :  form.data.regimen.name}*/}
                                     </td>
-                                    <td>{form.data.duration && form.data.duration ? form.data.duration + form.data.duration_unit : ''}</td>
+                                    <td>{form.data.duration && form.data.duration ? form.data.duration + ' ' + form.data.duration_unit : ''}</td>
                                     <td>{Moment(form.data.date_prescribed).format("DD-MM-YYYY")}</td>
-                                    <td>{ form.data.prescription_status !==0 ? Moment(form.data.date_dispensed).format("DD-MM-YYYY") : '' }</td>
+                                    <td>{ form.data.date_dispensed ? Moment(form.data.date_dispensed).format("DD-MM-YYYY") : '' }</td>
                                     <td>{Actions(form)}</td>
                                   </tr>
                                   :
@@ -264,12 +274,22 @@ const Prescriptions = (props) => {
           </div>
         </Col>
       </Row>
-      </Card>
-     <DispenseModal  modalstatus={modal} togglestatus={toggleModal} datasample={drugDetails}/>
-     <DispenseUpdateModal  modalstatus={modalUpdate} togglestatus={toggleModalUpdate} datasample={drugDetails}/>
-     <ViewModal modalstatus={modal1} togglestatus={toggleModal1} datasample={drugDetails}/> 
-    </div>
+
+     <DispenseModal  modalstatus={modal} togglestatus={toggleModal} datasample={drugDetails} updateFormData={updateFormData}/>
+     <ViewModal modalstatus={modal1} togglestatus={toggleModal1} datasample={drugDetails}/>
+    </React.Fragment>
   );
 }
 
-export default Prescriptions
+const mapStateToProps = state => {
+  return {
+      prescriptionList: state.pharmacy.list
+  };
+};    
+
+const mapActionToProps = {
+  fetchPatientPrescriptionsByEncounter
+};
+  
+export default connect(mapStateToProps, mapActionToProps)(Prescriptions);
+

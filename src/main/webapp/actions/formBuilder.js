@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {url} from '../api'
+import {url as baseUrl, url} from '../api'
 import * as FORMTYPES from './types'
 import {toast} from 'react-toastify';
 
@@ -64,7 +64,10 @@ export const createForm = (data, onSuccess, onError) => dispatch => {
         });
 };
 
-export const updateForm = (id, data) => dispatch => {
+export const updateForm = (id, data, setLoading) => dispatch => {
+    if(setLoading){
+        setLoading(true);
+    }
     axios
         .put(`${url}forms/${id}`, data)
         .then(response => {
@@ -73,6 +76,9 @@ export const updateForm = (id, data) => dispatch => {
                 payload: response.data
             });
             toast.success("Form was updated successfully!");
+            if(setLoading){
+                setLoading(false);
+            }
             console.log(response)
         })
         .catch(error => {
@@ -80,6 +86,9 @@ export const updateForm = (id, data) => dispatch => {
                 type: FORMTYPES.FORMTYPES_ERROR,
                 payload: 'Something went wrong, please try again'
             })
+            if(setLoading){
+                setLoading(false);
+            }
         })
 }
 
@@ -127,6 +136,29 @@ export const fetchAll = (onSuccess, onError) => dispatch => {
                 payload: 'Something went wrong, please try again'
             })
 
+        })
+}
+
+export const  fetchByCode = (id, onSuccess, onError) => dispatch => {
+    dispatch({
+        type:FORMTYPES.FORM_FETCH_BY_CODE,
+        payload: {}
+    })
+    axios
+        .get(`${baseUrl}forms/${id}/formCode`)
+        .then(response => {
+            dispatch({
+                type: FORMTYPES.FORM_FETCH_BY_CODE,
+                payload: response.data
+            })
+            onSuccess()
+        })
+        .catch(error => {
+            onError()
+            dispatch({
+                type: FORMTYPES.FORMTYPES_ERROR,
+                payload: 'Error loading form, something went wrong. Please try again'
+            })
         })
 }
 

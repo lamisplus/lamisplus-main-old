@@ -1,15 +1,13 @@
 import React, {useRef, useEffect, useState} from 'react';
-import Page from 'components/Page';
 import {  Errors, Form, FormBuilder } from 'react-formio';
 import {Card,CardContent,} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import {fetchService, fetchById, updateForm} from '../../actions/formBuilder'
+import {fetchById, updateForm} from '../../actions/formBuilder'
 import {fetchByHospitalNumber} from '../../actions/patients'
 import MatButton from '@material-ui/core/Button';
-import { TiArrowBack } from "react-icons/ti";
 import { authHeader } from '_helpers/auth-header';
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
 import {
@@ -18,7 +16,7 @@ import {
     Label,
     Col,
     Row,
-    Spinner, Modal, ModalBody, ModalHeader, CardBody, ModalFooter
+    Modal, ModalBody, ModalHeader, CardBody, ModalFooter
 } from 'reactstrap';
 import {Link} from 'react-router-dom';
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
@@ -31,6 +29,9 @@ import {url} from '../../api';
 import CancelIcon from "@material-ui/icons/Cancel";
 import DownloadLink  from "react-download-link";
 import { Alert } from '@material-ui/lab';
+import LinearProgress from "@material-ui/core/LinearProgress";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles(theme => ({
     root2: {
@@ -71,12 +72,26 @@ const Update = props => {
                 const data = body.map(({ name, code }) => ({ title: name, value: code }));
                 setFormPrecedenceList(data);
                 body !== null ? setdisabledCheckBox(false) : setdisabledCheckBox(true)
-                setLoading(false);
             } catch (error) {
-                setLoading(false);
             }
         }
         fetchForms();
+    }, []);
+
+    useEffect(() => {
+        async function fetchFormByCode() {
+            axios
+                .get(`${url}forms/${row.code}/formCode`)
+                .then(response => {
+                    setform2(response.data);
+                    setLoading(false);
+                })
+                .catch(error => {
+                    toast.error('Could not load form resource, please contact admin.')
+                    setLoading(false);
+                })
+        }
+        fetchFormByCode();
     }, []);
 
     const handleFileRead = (e) => {
@@ -94,39 +109,32 @@ const Update = props => {
 
     useEffect (() => {
         setformCode(row.code);
-        console.log(row);
-
-        setform2(row)
-
         props.fetchPatientByHospitalNumber('AD-0221', null, null)
     }, [])
 
     const handleSubmit = e =>  {
         if(formPrecedence.length > 0){
             form2["formPrecedence"] = {formCode: formPrecedence.map(x => x.value) ? formPrecedence.map(x => x.value)  : []}
-        } 
-        props.updateForm(form2.id, form2);
+        }
+        form2['resourceObject'] = JSON.parse(res);
+        props.updateForm(form2.id, form2, setLoading);
     }
 
 
     return (
-        <Page title={`Edit Form - ${row ? row.name : ""}`} >
-            <ToastContainer autoClose={3000} hideProgressBar />
+        <Card>
+            <ToastContainer />
+            <CardBody>
+                <Breadcrumbs aria-label="breadcrumb">
+                    <Link color="inherit" to={{  pathname: "/admin",
+                        state: 'form-builder'}} >
+                        Form Manager
+                    </Link>
+                    <Typography color="textPrimary">Edit Form -  {row ? row.name : ""}</Typography>
+                </Breadcrumbs>
+                <br/>
+
             <Row>
-                <Col md={12}>
-            <Link to ={{
-                pathname: "/admin",
-                state: 'form-builder'
-            }}>
-                <MatButton
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    className=" float-right mr-1">
-                    <TiArrowBack /> &nbsp; back
-                </MatButton>
-            </Link>
-                </Col>
                 <Col md={12}>
                     {showFileImport && <>
                         <Alert onClose={toggleShowFileImport} icon={false} className={"mb-3"}>
@@ -135,6 +143,9 @@ const Update = props => {
                                    onChange={e => handleFileChosen(e.target.files[0])}/>
                         </Alert>
                     </>
+                    }
+                    {loading &&
+                    <LinearProgress color="primary" thickness={5}/>
                     }
             <Card >
                 <CardContent>
@@ -167,8 +178,7 @@ const Update = props => {
                                                 icon={icon}
                                                 checkedIcon={checkedIcon}
                                                 style={{marginRight: 8}}
-                                                checked={selected}
-                                            />
+                                                checked={selected}/>
                                             : ""
                                         }
                                         {option.title}
@@ -188,8 +198,9 @@ const Update = props => {
                             <div onClick={toggleModal}  className="mt-5" style={{cursor:"pointer", color:"blue"}}>Preview Form</div>
                         </Col>
                     </Row>
-                    { form2 ?
-                        <FormBuilder form={row.resourceObject || {}} {...props}
+                    {/*only render form when loading is false and form2 has a value*/}
+                    { !loading && form2 ?
+                        <FormBuilder form={form2.resourceObject || {}} {...props}
                                      submission={{data :{baseUrl:url}}}
                                      onChange={(schema) => {
                             // console.log(JSON.stringify(schema));
@@ -208,8 +219,8 @@ const Update = props => {
                     <h4>Json Form</h4>
                     <DownloadLink
                         label="Export as a json file"
-                        filename={row ? row.name+".json" : "lamisplus-form.json"}
-                        exportFile={() => JSON.stringify(row)}
+                        filename={form2 ? form2.name+".json" : "lamisplus-form.json"}
+                        exportFile={() => JSON.stringify(form2)}
                     /> Or Copy the json object below. <br/>
 
                     <div >
@@ -220,6 +231,8 @@ const Update = props => {
                 </CardContent>
             </Card>
 
+
+            {/*preview modal start*/}
                 <Modal isOpen={showModal} toggle={toggleModal} size="lg">
                     <ModalHeader toggle={toggleModal}><h4>View Form</h4> </ModalHeader>
                     <ModalBody>
@@ -267,7 +280,9 @@ const Update = props => {
                     </ModalFooter>
                 </Modal>
                 <hr></hr>
-        </Page>
+
+            </CardBody>
+        </Card>
     );
 }
 

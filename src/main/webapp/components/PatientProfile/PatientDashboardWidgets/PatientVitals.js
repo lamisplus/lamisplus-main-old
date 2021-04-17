@@ -112,7 +112,7 @@ import { authentication } from '../../../_services/authentication';
  }
                    </CardBody>  
                     <Modal isOpen={showModal} toggle={toggle} size='lg' zIndex={"9999"}>
-                      <ModalHeader toggle={toggle}>Take Patient Vitals</ModalHeader>
+                      <ModalHeader toggle={toggle}>Take Patient Vital Signs</ModalHeader>
                       <ModalBody>
                       <AddVitalsPage patientId={props.patientId} showModal={showModal} toggle={toggle}/>
                      </ModalBody>

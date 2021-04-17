@@ -19,9 +19,12 @@ function ReportSearch(props) {
     const [loading, setLoading] = useState(false);
     const [showCurrentForm, setShowCurrentForm] = useState(false);
     const [currentForm, setCurrentForm] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = React.useState(false);
+    const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal);
+    const [deleting, setDeleting] = React.useState(false);
 
     const onSuccess = () => {
-        toast.success("Form saved successfully!", { appearance: "success" });
+        toast.success("Form saved successfully!", {appearance: "success"});
         setShowCurrentForm(false);
     };
 
@@ -29,23 +32,6 @@ function ReportSearch(props) {
         toast.error("Something went wrong, request failed.");
         setShowCurrentForm(false);
     };
-
-    const onDelete = row => {
-        const onSuccess = () => {
-            toast.success("Report was deleted successfully!");
-            props.fetchAll();
-        }
-
-        const onError = (error) => {
-            if(error.response.data.apierror.message===null || error.response.data.apierror.message===""){
-                toast.error("Something went wrong");
-            }else{
-                toast.error(error.response.data.apierror.message);
-            }
-        }
-        if (window.confirm(`Are you sure you want to archive ${row.name} form ?`))
-            props.Delete(row.id, onSuccess, onError);
-    }
 
     React.useEffect(() => {
         setLoading(true);
@@ -57,6 +43,21 @@ function ReportSearch(props) {
         };
         props.fetchAll(onSuccess, onError);
     }, []);
+
+    const onDelete = (id) => {
+        setDeleting(true);
+        const onSuccess = () => {
+            setDeleting(false);
+            toast.success("report deleted successfully!");
+            fetchAll();
+        };
+        const onError = () => {
+            setDeleting(false);
+            toast.error("Something went wrong, please contact administration");
+        };
+        props.Delete(id, onSuccess, onError);
+    }
+
 
     return (
         <React.Fragment>
@@ -85,16 +86,13 @@ function ReportSearch(props) {
                                     <MenuList style={{ color:"#000 !important"}} >
                                         <MenuItem style={{ color:"#000 !important"}}>
                                             <Link
-                                                to={{
-                                                    pathname: "/template-update",
-                                                    row: row
-                                                }}>
+                                                to={{pathname: "/template-update", row: row}}>
                                                 <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Report</span>
                                             </Link>
                                         </MenuItem>
                                         <MenuItem style={{ color:"#000 !important"}}>
                                             <Link
-                                                onClick={() => onDelete(row)}>
+                                                onClick={() => onDelete(row.id)}>
                                                 <MdDeleteForever size="15" color="blue" />{" "}
                                                 <span style={{color: '#000'}}>Delete Report</span>
                                             </Link>
@@ -142,7 +140,7 @@ const mapStateToProps =  (state = { reportList:[], form:{}}) => {
 
 const mapActionToProps = {
     fetchAll: fetchAll,
-    Delete: Delete
+    Delete: Delete,
 };
 
 export default connect(mapStateToProps, mapActionToProps)(ReportSearch);

@@ -67,11 +67,8 @@ function HomePage(props) {
   const urlTabs = urlIndex !== null ? urlIndex : props.location.state ;
   useEffect ( () => {
     switch(urlTabs){  
-      case "collect-sample": return setValue(1)
-      case "sample-verification": return setValue(2)
-      case "test-result": return setValue(3)
-      case "radiology": return setValue(4)
-      case "dispatched-sample-list" : return setValue(5)
+      case "results": return setValue(1)
+
 
       default: return setValue(0)
     }

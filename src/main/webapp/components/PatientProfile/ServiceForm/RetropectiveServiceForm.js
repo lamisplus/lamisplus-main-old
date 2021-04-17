@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-import IconButton from "@material-ui/core/IconButton";
 import {
-  Form,
-  Input,
   Alert,
   CardBody,
   Card,
@@ -13,8 +10,6 @@ import {
   Label,
   Button,
 } from "reactstrap";
-import DataTable from "react-data-table-component";
-import Spinner from "react-bootstrap/Spinner";
 import { connect } from "react-redux";
 import * as actions from "actions/formManager";
 import * as patientActions from "actions/patients";
@@ -26,14 +21,15 @@ import ViewAllForms from "components/FormManager/FormRendererViewList";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as CODES from "api/codes";
-import EditIcon from "@material-ui/icons/Edit";
-import VisibilityIcon from "@material-ui/icons/Visibility";
 import Select from "react-select";
-import CheckedInValidation from "components/Utils/CheckedInValidation";
 import axios from 'axios';
 import { url } from "../../../api";
 import {authentication} from '../../../_services/authentication';
-
+import MaterialTable from 'material-table';
+import { Paper } from '@material-ui/core';
+import {DatePicker} from "react-widgets";
+import "react-widgets/dist/css/react-widgets.css";
+// import Moment from "moment";
 
 const cardStyle = {
   borderColor: "#fff",
@@ -50,21 +46,10 @@ function ServiceFormPage(props) {
   const [encounterMessage, setEncounterMessage] = useState("");
   const [serviceList, setServiceList] = useState([]);
   const [programs, setPrograms] = useState([]);
-  const [efilterText, setEFilterText] = React.useState("");
-  const [eresetPaginationToggle, setEResetPaginationToggle] = React.useState(
-    false
-  );
   const [showFormPage, setShowFormPage] = useState(false);
   const [currentForm, setCurrentForm] = useState();
   const [patientEncounters, setPatientEncouters] = useState([]);
-
-  const encounterFilteredItems = !patientEncounters
-    ? []
-    : patientEncounters.filter(
-        (item) =>
-          item.formName &&
-          item.formName.toLowerCase().includes(efilterText.toLowerCase())
-      );
+  const [dateEncounter, setDateEncounter] = useState(null);
 
   const togglePage = () => {
     if (showFormPage) {
@@ -93,7 +78,7 @@ function ServiceFormPage(props) {
     setPrograms(
       props.programList
         .map((x) => ({ ...x, label: x.name, value: x.code }))
-        .filter((x) => x.value === CODES.GENERAL_SERVICE)
+        //.filter((x) => x.value === CODES.GENERAL_SERVICE)
     );
   }, [props.programList]);
 
@@ -127,6 +112,9 @@ function ServiceFormPage(props) {
   }, [props.patientEncounterList]);
 
   const loadForm = () => {
+    if(!dateEncounter){
+      toast.error('Enter encounter date');
+    }
     if (!currentForm) {
       return;
     }
@@ -155,90 +143,6 @@ function ServiceFormPage(props) {
     togglePage();
   };
 
-  const EncounterFilterComponent = ({ efilterText, onFilter, onClear }) => (
-    <Form className="cr-search-form" onSubmit={(e) => e.preventDefault()}>
-      <Card>
-        <CardBody>
-          <Input
-            type="search"
-            placeholder="Search by Form Name "
-            className="cr-search-form__input pull-right"
-            value={efilterText}
-            onChange={onFilter}
-          />
-        </CardBody>
-      </Card>
-    </Form>
-  );
-
-  const encounterColumns = (viewForm, editForm, viewAllForm) => [
-    {
-      name: "Retropective Form",
-      selector: "formName",
-      sortable: false,
-      cell: (row) => (
-        <p>
-          {row.formName} -{" "}
-          <small>
-            {row.dateEncounter || ""} {row.timeCreated || ""}
-          </small>
-        </p>
-      ),
-    },
-    {
-      cell: (row) => (
-        <React.Fragment>
-          {/*<IconButton*/}
-          {/*  color="primary"*/}
-          {/*  size="small"*/}
-          {/*  aria-label="View All Forms"*/}
-          {/*  title="View All Form"*/}
-          {/*  onClick={() => viewAllForm(row)}*/}
-          {/*  className="fa fa-list"*/}
-          {/*></IconButton>*/}
-          <IconButton
-            color="primary"
-            size="small"
-            aria-label="View Form"
-            title="View Form"
-            onClick={() => viewForm(row)}
-          >
-            <VisibilityIcon />
-          </IconButton>
-          <IconButton
-            color="primary"
-            size="small"
-            aria-label="Edit Form"
-            title="Edit Form"
-            onClick={() => editForm(row)}
-            disabled={!authentication.userHasRole(["patient_write"])}
-          >
-            <EditIcon />
-          </IconButton>
-        </React.Fragment>
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
-    },
-  ];
-
-  const esubHeaderComponentMemo = React.useMemo(() => {
-    const handleClear = () => {
-      if (efilterText) {
-        setEResetPaginationToggle(!eresetPaginationToggle);
-        setEFilterText("");
-      }
-    };
-    return (
-      <EncounterFilterComponent
-        onFilter={(e) => setEFilterText(e.target.value)}
-        onClear={handleClear}
-        efilterText={efilterText}
-      />
-    );
-  }, [efilterText, eresetPaginationToggle]);
-
   const handleProgramChange = (newValue, actionMeta) => {
     fetchServiceByProgram(newValue.id);
   };
@@ -248,7 +152,9 @@ function ServiceFormPage(props) {
     await axios.get( url+ `programs/${programId}/forms`)
         .then(response => {
           setShowServiceFormLoading(false);
-          setServiceList(response.data.filter((x) => x.name.includes('Retrospective')));
+         // let list = response.data.filter((x) => (x.programCode === CODES.GENERAL_SERVICE && x.name.includes('Retrospective')) || x.programCode !== CODES.GENERAL_SERVICE);
+         // let otherList = response.data.filter((x) => x.name.includes('Retrospective'))
+          setServiceList(response.data.filter((x) => (x.programCode === CODES.GENERAL_SERVICE && x.name.includes('Retrospective')) || x.programCode !== CODES.GENERAL_SERVICE));
         })
         .catch(error => {
               setShowServiceFormLoading(false);
@@ -280,11 +186,35 @@ function ServiceFormPage(props) {
         <Row>
           <Col lg={5}>
             <Card style={cardStyle} className=" p-3">
-              <CardHeader>Available Service Forms</CardHeader>
+              <CardHeader>Available Retrospective Service Forms</CardHeader>
               <CardBody>
                 {message ? <Alert color="primary">{message}</Alert> : ""}
 
                 <div>
+                  <Col md={12}>
+                    <FormGroup>
+                      <Label for="encounterDate">Encounter Date*</Label>
+                      <DatePicker
+                          name="encounterDate"
+                          id="encounterDate"
+                          defaultValue={new Date()}
+                          max={new Date()}
+                          required
+                          onChange={(e) => {setDateEncounter(e)}
+                              // setTestOrder({
+                              //   ...testOrder,
+                              //   ...{
+                              //     sample_order_date: e ? Moment(e).format(
+                              //         "DD-MM-YYYY"
+                              //     ) : null,
+                              //     sample_order_time: e ? Moment(e).format("LT") : null,
+                              //   },
+                              // })
+                          }
+
+                      />
+                    </FormGroup>
+                  </Col>
                   <Col md={12}>
                     {" "}
                     <FormGroup>
@@ -334,51 +264,49 @@ function ServiceFormPage(props) {
 
           <Col lg={7}>
             <Card style={cardStyle} className=" p-3">
-              <CardHeader>Service Forms History</CardHeader>
+              <CardHeader>Retrospective Service Forms History</CardHeader>
               <CardBody>
                 {encounterMessage ? (
                   <Alert color="primary">{encounterMessage}</Alert>
                 ) : (
                   ""
                 )}
-                {showEncounterLoading ? (
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
+                <MaterialTable
+                    components={{
+                      Container: props => <Paper {...props} elevation={0}/>
                     }}
-                  >
-                    <span> Fetching Service Form History &nbsp; </span>{" "}
-                    <Spinner animation="border" role="status">
-                      <span className="sr-only"></span>
-                    </Spinner>
-                  </div>
-                ) : (
-                  ""
-                )}
-                {(patientEncounters && patientEncounters.length) > 0 ? (
-                  <div>
-                    <DataTable
-                      columns={encounterColumns(
-                        viewForm,
-                        editForm,
-                        viewAllForm
-                      )}
-                      data={encounterFilteredItems}
-                      pagination
-                      paginationResetDefaultPage={eresetPaginationToggle}
-                      subHeader
-                      subHeaderComponent={esubHeaderComponentMemo}
-                      highlightOnHover={true}
-                      subHeaderAlign={"left"}
-                      noTableHead={true}
-                      noHeader={true}
-                    />
-                  </div>
-                ) : (
-                  ""
-                )}
+                    isLoading={showEncounterLoading}
+                    title="Services Form History"
+                    columns={[
+                      { title: 'Form Name', field: 'formName' },
+                      { title: 'Date', field: 'date' },
+                    ]}
+                    data={patientEncounters}
+                    actions={[
+                      rowData => ({
+                        icon: 'visibility',
+                        tooltip: 'View Form',
+                        onClick: (event, rowData) => viewForm(rowData),
+                        disabled: !authentication.userHasRole(["patient_write"]),
+                      }),
+                      {
+                        icon: 'edit',
+                        tooltip: 'Edit Form',
+                        onClick: (event, rowData) => editForm(rowData)
+                      },
+                    ]}
+                    options={{
+                      actionsColumnIndex: -1,
+                      searchFieldStyle: {
+                        width : '250%',
+                        marginTop: '-25px',
+                      },
+                      searchFieldAlignment: "left",
+                      padding: 'dense',
+                      header: false,
+                      showTitle: false
+                    }}
+                />
               </CardBody>
             </Card>
           </Col>
@@ -405,6 +333,8 @@ function ServiceFormPage(props) {
                   programCode={currentForm.programCode}
                   visitId={props.patient.visitId}
                   onSuccess={onSuccess}
+                  dateEncounter={dateEncounter}
+                  formType={1}
                 />
               )}
               {currentForm && currentForm.type === "VIEW" && (

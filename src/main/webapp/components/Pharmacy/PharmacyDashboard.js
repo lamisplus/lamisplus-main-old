@@ -209,10 +209,10 @@ const ScrollableTabsButtonForce = (props) => {
             type: drugPieChart.type
         },
         title: {
-            text: 'Drug<br>Chart<br>',
+            text: ' Total Prescriptions and Dispensed Drugs in last 7days',
             align: 'center',
-            verticalAlign: 'middle',
-            y: 60
+            // verticalAlign: 'middle',
+            // y: 60
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -315,7 +315,7 @@ const ScrollableTabsButtonForce = (props) => {
         <TabPanel value={value} index={0}>
           <CardDeck>
             <Card>
-              <CardHeader> Total Prescriptions and Dispensed Drugs in last 7days</CardHeader>
+              
               <CardBody>
                 <div>
                     <HighchartsReact options={drugChart} />
@@ -323,7 +323,7 @@ const ScrollableTabsButtonForce = (props) => {
               </CardBody>
             </Card>
             <Card>
-              <CardHeader> Total Drug Prescriptions and Dispensed</CardHeader>
+             
               <CardBody>
                 <div>
                     <HighchartsReact options={basicColumn} />

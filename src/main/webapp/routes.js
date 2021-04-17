@@ -85,8 +85,9 @@ const ReportPage = React.lazy(() => import("components/Reports/ReportingPage"));
 const JasperTemplate = React.lazy(() => import("components/Reports/JasperTemplate"));
 const ReportView = React.lazy(() => import("components/Reports/ReportView"));
 const JasperTemplateUpdate = React.lazy(() => import("components/Reports/JasperTemplateUpdate"));
+//const getBasename = () => {return `/${process.env.PUBLIC_URL.split("/").pop()}`;};
 const getBasename = () => {return `/${process.env.PUBLIC_URL.split("/").pop()}`;};
-
+//SOURCE_URL
 const Prescription = React.lazy(() => import("components/Pharmacy/Prescriptions"))
 
 //Appointment
@@ -115,6 +116,7 @@ const UnauthorisedPage = React.lazy(() => import("pages/Unauthorised"));
 const BootstrapPage = React.lazy(() => import("pages/bootstrap"));
 const BootstrapPage2 = React.lazy(() => import("pages/bootstrap2"))
 
+const FingerPrintPage = React.lazy(() => import("components/Biometrics/CaptureBiometrics"));
 class Routes extends Component {
   render() {
     return (
@@ -131,24 +133,10 @@ class Routes extends Component {
               <PrivateRoute
                 exact
                 path="/patient-registration"
-                component={PateintRegistationPage}
-
-              />
-                <PrivateRoute
-                    exact
-                    path="/patient-registration-formio"
-                    component={PatientRegistrationFormio}
-                    roles={["patient_write", "patient_delete"]}
-                />
-              <PrivateRoute
-                exact
-                path="/patient-update"
-                component={PateintUpdate}/>
-                <PrivateRoute
-                    exact
-                    path="/patient-update-formio"
-                    component={EditPatientFormio}/>
-
+                component={PateintRegistationPage}/>
+                <PrivateRoute exact path="/patient-registration-formio" component={PatientRegistrationFormio} roles={["patient_write", "patient_delete"]}/>
+                <PrivateRoute exact path="/patient-update" component={PateintUpdate}/>
+                <PrivateRoute exact path="/patient-update-formio" component={EditPatientFormio}/>
               {/* Laboratory Links */}
              <PrivateRoute exact path="/collect-result" component={LaboratorySampleResultPage} />
               <PrivateRoute exact path="/laboratory" component={LaboratoryPage} />
@@ -158,6 +146,7 @@ class Routes extends Component {
               <PrivateRoute exact path="/print-sample"  component={PrintSamples}  />
               <PrivateRoute exact path="/print-manifest"  component={PrintManifest}  />
               <PrivateRoute exact path="/patients" component={PatientsPage} />
+                <PrivateRoute exact path="/patients/biometrics" component={FingerPrintPage} />
               <PrivateRoute exact path="/print-sample" component={PrintSamples} />
               <PrivateRoute exact path="/view-sample-dispatched" component={ViewSampleDispatched} />
               
@@ -231,7 +220,7 @@ class Routes extends Component {
               <PrivateRoute exact path="/add-role" component={addRole} />
 
               <PrivateRoute exact path="/appointments" component={AppointmentPage} />
-                <PrivateRoute exact path="/admin" component={AdministrativeDashboard}
+              <PrivateRoute exact path="/admin" component={AdministrativeDashboard}
                               roles={["user_write", "user_delete", "user_read", "admin_read"]}
                 />
                 <PrivateRoute exact path={"/admin-global-variable"} component={GlobalVariableSearchPage} />

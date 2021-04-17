@@ -4,7 +4,9 @@ import { Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Label,Card,CardBody
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import CancelIcon from '@material-ui/icons/Cancel';
-import PrintIcon from '@material-ui/icons/Print';
+//import PrintIcon from '@material-ui/icons/Print';
+import ReactHtmlParser from 'react-html-parser'
+import Divider from '@material-ui/core/Divider';
 
 
 const useStyles = makeStyles(theme => ({
@@ -94,15 +96,27 @@ const ModalViewResult = (props) => {
                                         <span style={{ fontWeight: 'bold'}}>Date Reported </span>: {x.date_result_reported}
                                         <br/>    
                                     </Col>
-                                    <br/>
+                                   
                                     <Col xs="4">
                                         <FormGroup>
-                                          <br/>
+                                         
                                             <Label for="examplePassword"><span style={{ fontWeight: 'bold'}}> Result </span>: {x.comment_sample_reported} </Label>
+                                      
+
                                       
                                         </FormGroup>
                                     </Col>
-                                                </Row>)
+                                    <Col xs="12">
+                                        <FormGroup>
+                                         
+                                            <Label for="examplePassword"><span style={{ fontWeight: 'bold'}}> Notes </span>: {ReactHtmlParser(x.notes_sample_reported && x.notes_sample_reported!==undefined ? x.notes_sample_reported : "")} </Label>
+                                      
+                                        </FormGroup>
+                                      
+                                        <Divider  />
+                                    </Col>  
+                                    </Row>)
+                                   
                                         })
                                         
                                     }
@@ -110,16 +124,7 @@ const ModalViewResult = (props) => {
                     
                                 </Row>
                             <br/>
-                            {/* <MatButton
-                                type='submit'
-                                variant='contained'
-                                color='primary'
-                                className={classes.button}
-                                startIcon={<PrintIcon />}
-                                
-                            >
-                                Print 
-                            </MatButton> */}
+                          
                             <MatButton
                               variant='contained'
                               color='default'

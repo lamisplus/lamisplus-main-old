@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {  Modal, ModalHeader, ModalBody, FormFeedback,Form,Row,Col,FormGroup,Label,Input,Card,CardBody} from 'reactstrap';
+import {  Modal, ModalHeader, ModalBody, Form, Row,Col,FormGroup,Label,Input,Card,CardBody} from 'reactstrap';
 import { connect } from 'react-redux';
 import MatButton from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
@@ -33,7 +33,6 @@ const ModalSample = (props) => {
     const classes = useStyles()
 
     useEffect(() => {
-        //for application codeset edit, load form data
         setFormData(props.formData ? props.formData : defaultValues);
     }, [props.formData]);
 
@@ -95,6 +94,7 @@ const ModalSample = (props) => {
         props.createProgram(formData, onSuccess,onError)
 
     }
+
     return (
 
         <div >
@@ -113,7 +113,6 @@ const ModalSample = (props) => {
                                                 type='text'
                                                 name='name'
                                                 id='name'
-                                                placeholder=' '
                                                 value={formData.name}
                                                 onChange={handleNameInputChange}
                                                 required
@@ -126,18 +125,14 @@ const ModalSample = (props) => {
                                               <Label for="">Module ID</Label>
                                                   <Input type="select" name="moduleId" id="moduleId" 
                                                     vaule={formData.moduleId}
-                                                    onChange={handleInputChange}
-                                                    
-                                                  >
+                                                    onChange={handleInputChange}>
                                                         <option> </option>
                                                         {pcrOptions.map(({ title, value }) => (
-                                                            
                                                             <option key={value} value={value}>
                                                                 {title}
                                                             </option>
                                                         ))}
                                                   </Input>
-                                                     
                                           </FormGroup>
                                     </Col>
                                 </Row>

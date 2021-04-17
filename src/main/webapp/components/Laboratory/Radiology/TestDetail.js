@@ -33,8 +33,8 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 const GlobalVariableSearch = (props) => {
-    const patientId = getQueryParams("hospitalNumber", props.location.search);
-    const encounterId = getQueryParams("encId", props.location.search);
+    const patientId = props.location.state.hospitalNumber;
+    const encounterId = props.location.state.encId;
     const [loading, setLoading] = React.useState(true);
     const [showModal, setShowModal] = React.useState(false);
     const [showViewModal, setShowViewModal] = React.useState(false);
@@ -64,9 +64,10 @@ const GlobalVariableSearch = (props) => {
     }, [patientId]); //componentDidMount
 
     const openResultPage = (row) => {
+        console.log(row)
         if(row.data.files) {
             const files  = row.data.files.map(x => {
-                x.file["name"] = x.file.path;
+                x["name"] = x.path;
                 return x
             })
             row.data["files"] = files;
@@ -90,7 +91,7 @@ const GlobalVariableSearch = (props) => {
         setTestOrder(row);
         toggleModal();
     }
-
+console.log(props.list.formDataObj)
 
     return (
         <React.Fragment>
@@ -101,7 +102,8 @@ const GlobalVariableSearch = (props) => {
         <Card>
             <CardHeader>Test Order Details
                 <Link
-                    to={{pathname: "/laboratory?tab=radiology" }}>
+                    to={{pathname: "/radiology-home",
+                    state:"results"}}>
 
                     <Button
                         type='submit'

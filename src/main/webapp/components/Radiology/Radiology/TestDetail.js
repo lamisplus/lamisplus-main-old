@@ -121,7 +121,7 @@ const GlobalVariableSearch = (props) => {
                     <thead style={{  backgroundColor:'#9F9FA5' }}>
                     <tr>
                         <th>Test</th>
-                        <th>Date Ordered</th>
+                        <th>Date Orderessd</th>
                         <th>Results Uploaded</th>
                         <th>Date Result Uploaded</th>
                         <th>Action</th>

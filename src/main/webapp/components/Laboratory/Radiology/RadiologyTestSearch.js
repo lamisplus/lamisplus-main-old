@@ -8,6 +8,7 @@ import "./../laboratory.css";
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
+import {MenuItem} from "@reach/menu-button";
 
 const RadiologyTestSearch = (props) => {
   const [loading, setLoading] = useState('')
@@ -70,7 +71,8 @@ const RadiologyTestSearch = (props) => {
           date: row.dateEncounter,
           count: row.formDataObj.length,
           resultCount: row.formDataObj.filter(x => x.data && x.data.files && x.data.files.length > 0).length,
-          actions: <Link to ={"/radiology?encId="+row.encounterId+"&hospitalNumber="+row.hospitalNumber}
+          actions: <Link to ={{pathname: "/radiology",
+              state: row.encounterId}}
                         style={{ cursor: "pointer", color: "blue", 
                         fontStyle: "bold" }}>
                           <Tooltip title="Enter Result">

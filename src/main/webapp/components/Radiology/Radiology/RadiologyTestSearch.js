@@ -70,9 +70,10 @@ const RadiologyTestSearch = (props) => {
           date: row.dateEncounter,
           count: row.formDataObj.length,
           resultCount: row.formDataObj.filter(x => x.data && x.data.files && x.data.files.length > 0).length,
-          actions: <Link to ={"/radiology?encId="+row.encounterId+"&hospitalNumber="+row.hospitalNumber}
-                        style={{ cursor: "pointer", color: "blue", 
-                        fontStyle: "bold" }}>
+          actions:<Link to ={{pathname: "/radiology",
+              state: {encId: row.encounterId, hospitalNumber:row.hospitalNumber}}}
+                        style={{ cursor: "pointer", color: "blue",
+                            fontStyle: "bold" }}>
                           <Tooltip title="Enter Result">
                             <IconButton aria-label="Enter Result" >
                             <NoteAddIcon color="primary"/>

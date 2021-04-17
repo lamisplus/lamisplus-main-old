@@ -11,7 +11,7 @@ import {Menu, MenuButton, MenuItem, MenuList} from '@reach/menu-button';
 import {Link} from 'react-router-dom';
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import DownloadLink  from "react-download-link";
-import {CardContent} from "@material-ui/core";
+
 
 //Dtate Picker package
 Moment.locale("en");
@@ -61,9 +61,6 @@ function FormSearch(props) {
             props.deleteForm(row.id)
     }
 
-
-
-
     return (
         <React.Fragment>
             <div>
@@ -77,7 +74,7 @@ function FormSearch(props) {
                         {title: "Action", field: "actions", filtering: false,},
                     ]}
                     isLoading={loading}
-                    data={!props.formList && !props.formList.length ? [] : props.formList.map((row) => ({
+                    data={!props.formList && props.formList.length <= 0 ? [] : props.formList.map((row) => ({
                         programName: row.programName,
                         name: row.name,
                         number: row.version,
@@ -99,12 +96,7 @@ function FormSearch(props) {
                                         </MenuItem>
                                         <MenuItem style={{ color:"#000 !important"}}>
                                             <Link
-                                                to={{
-                                                    pathname: "/view-form",
-                                                    state: {row:row}
-                                                }}
-
-                                            >
+                                                to={{pathname: "/view-form", state: {row:row}}}>
                                                 <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Form </span>
                                             </Link>
                                         </MenuItem>
@@ -115,7 +107,7 @@ function FormSearch(props) {
                                                 <span style={{color: '#000'}}>Delete Form</span>
                                             </Link>
                                         </MenuItem>
-                                        <MenuItem style={{ color:"#000 !important"}}>
+                                        {/*<MenuItem style={{ color:"#000 !important"}}>
                                             <DownloadLink
                                                 label="Export as a json file"
                                                 filename={row ? row.name+".json" : "lamisplus-form.json"}
@@ -124,8 +116,7 @@ function FormSearch(props) {
                                                    return JSON.stringify(row)
                                                 }}
                                             />
-
-                                        </MenuItem>
+                                        </MenuItem>*/}
                                     </MenuList>
                                 </Menu>
                             </div>
@@ -162,10 +153,10 @@ function FormSearch(props) {
         </React.Fragment>
     );
 }
-const mapStateToProps =  (state = { form:{}}) => {
-    // console.log(state.forms)
+const mapStateToProps =  (state = { form:[]}) => {
+
     return {
-        formList: state.formReducers.form !==null ? state.formReducers.form : {},
+        formList: state.formReducers.formList !==null ? state.formReducers.formList : [],
     }}
 
 const mapActionToProps = {

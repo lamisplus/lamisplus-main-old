@@ -35,6 +35,7 @@ export const LAB_SAMPLE_RESULT_CODE_FORM = '4fcabd08-5f7a-43fc-b246-da15e9a05f43
 export const LAB_SAMPLE_DISPATCHED_CODE_FORM = '58220e59-e468-4a4b-91f1-53341068f0a1'
 export const PHARMARCY_DRUG_DISPENSE = '01a75846-83ed-4caa-9c78-136697742b72'
 export const PHARMARCY_DRUG_DISPENSE_REGIMEN = 'c9b1b50f-6544-42b6-a868-91a5bf320671'
+export const BIOMETRICS_CAPTURE_FORM = 'e8a5260c-3f07-404e-a718-cd7f669c9aae'
 /**
  * @CODES
  * ==============================================
