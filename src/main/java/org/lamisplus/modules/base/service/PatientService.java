@@ -551,7 +551,7 @@ public class PatientService {
                 if(patientJson.get("dobEstimated") != null)patientDTO.setDobEstimated(Boolean.valueOf(patientJson.get("dobEstimated").toString()));
                 if(patientJson.get("mobilePhoneNumber") != null)patientDTO.setMobilePhoneNumber(patientJson.get("mobilePhoneNumber").toString());
                 if(patientJson.get("alternatePhoneNumber") != null)patientDTO.setAlternatePhoneNumber(patientJson.get("alternatePhoneNumber").toString());
-                if(patientJson.get("zipCode") != null)patientDTO.setZipCode(patientJson.get("zipCode").toString());
+                if(patientJson.get("zipCode") != null || patientJson.get("zipCode").toString().isEmpty())patientDTO.setZipCode(patientJson.get("zipCode").toString());
                 if(patientJson.get("city") != null)patientDTO.setCity(patientJson.get("city").toString());
                 if(patientJson.get("street") != null)patientDTO.setStreet(patientJson.get("street").toString());
                 if(patientJson.get("landmark") != null)patientDTO.setLandmark(patientJson.get("landmark").toString());

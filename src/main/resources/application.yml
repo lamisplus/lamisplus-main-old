@@ -46,12 +46,13 @@ server:
     port: 8484
     tomcat:
         uri-encoding: UTF-8
+        connection-timeout: 20s
 spring:
     datasource:
         username: postgres
         password: emeka
         driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:5432/lamisplus_db_bk_25_03_21?stringtype=unspecified
+        url: jdbc:postgresql://localhost:5432/lamisplus_db_bk_15_04_21?stringtype=unspecified
         hibernate:
             event.merge.enty_copy_observer: allow
         hikari:
