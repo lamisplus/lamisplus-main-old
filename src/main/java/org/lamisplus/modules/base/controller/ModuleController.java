@@ -7,6 +7,7 @@ import org.audit4j.core.annotation.Audit;
 import org.audit4j.core.annotation.IgnoreAudit;
 import org.lamisplus.modules.base.domain.dto.ModuleDTO;
 import org.lamisplus.modules.base.domain.entity.Module;
+import org.lamisplus.modules.base.domain.entity.Module1;
 import org.lamisplus.modules.base.service.ModuleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,13 +49,13 @@ public class ModuleController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<List<Module>> uploadAndUnzip(@IgnoreAudit @RequestParam("file1") MultipartFile [] jarFile, @IgnoreAudit HttpServletRequest request) {
-        return ResponseEntity.ok(moduleService.uploadAndUnzip(jarFile, request));
+    public ResponseEntity<Module1> uploadAndUnzip(@RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(moduleService.testUpload(file));
     }
 
-    @PostMapping("{id}/install")
-    public ResponseEntity<Module> installModule(@IgnoreAudit @PathVariable Long id) {
-        return ResponseEntity.ok(moduleService.installModule(id, null));
+    @PostMapping("/install")
+    public ResponseEntity<Module1> installModule(Module1 module1) {
+        return ResponseEntity.ok(moduleService.testInstall(module1));
     }
 
     @PostMapping("/start/all")

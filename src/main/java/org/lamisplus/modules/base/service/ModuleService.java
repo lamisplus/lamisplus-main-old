@@ -97,6 +97,35 @@ public class ModuleService {
         return moduleRepository.findAllByArchived(UN_ARCHIVED);
     }
 
+    public Module1 testUpload(MultipartFile file){
+        Module1 module1 = new Module1();
+        module1.setId(null);
+        module1.setActive(true);
+        module1.setArtifact("ndr module/ndr.jar");
+        module1.setBasePackage("org.lamisplus.ndr");
+        module1.setDescription("Ndr Module");
+        module1.setVersion("1.0.0");
+        module1.setStarted(false);
+        module1.setUninstall(false);
+        module1.setProcessConfig(true);
+
+        return module1;
+    }
+
+    public Module1 testInstall(Module1 module1){
+        module1.setId("2268358e-b120-4f54-9f93-80211c25e75c");
+        module1.setActive(true);
+        module1.setArtifact("ndr module/ndr.jar");
+        module1.setBasePackage("org.lamisplus.ndr");
+        module1.setDescription("Ndr Module");
+        module1.setVersion("1.0.0");
+        module1.setStarted(true);
+        module1.setUninstall(false);
+        module1.setProcessConfig(true);
+
+        return module1;
+    }
+
     public List<Module> uploadAndUnzip(MultipartFile[] files, HttpServletRequest request) {
         ModuleUtil.setModuleConfigs();
         currentUser = userService.getUserWithRoles().get().getUserName();

@@ -55,4 +55,15 @@ public class Menu extends Audit<String> implements Serializable {
     @JsonIgnore
     @ToString.Exclude
     private Module moduleByMenu;
+    private Module1 module1ByModuleId;
+
+    @ManyToOne
+    @JoinColumn(name = "module_id", referencedColumnName = "id")
+    public Module1 getModule1ByModuleId() {
+        return module1ByModuleId;
+    }
+
+    public void setModule1ByModuleId(Module1 module1ByModuleId) {
+        this.module1ByModuleId = module1ByModuleId;
+    }
 }
