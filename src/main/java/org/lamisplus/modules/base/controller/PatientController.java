@@ -27,13 +27,31 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping
-    public ResponseEntity<List<PatientDTO>> getAllPatients(@RequestParam (required = false) String key, @RequestParam (required = false) String value,
+    public ResponseEntity<List<PatientDTO>> getAllPatients(@RequestParam (required = false, defaultValue = "%*%") String firstName,
+                                                           @RequestParam (required = false, defaultValue = "%*%") String lastName,
+                                                           @RequestParam (required = false, defaultValue = "%*%") String hospitalNumber,
+                                                           @RequestParam (required = false)String key,
+                                                           @RequestParam (required = false)String value,
+                                                           @RequestParam (required = false, defaultValue = "%*%") String searchValue,
                                                            @PageableDefault(value = 100) Pageable pageable) {
         Page<Patient> page;
         if(key != null && !key.isEmpty() && value != null && !value.isEmpty()){
+            value = "%"+value+"%";
             page = patientService.findPage(key, value, pageable);
-        } else {
-            page = patientService.findPage(pageable);
+        } else if(!firstName.equals("%*%") || !lastName.equals("%*%") || !hospitalNumber.equals("%*%")){
+            if(!firstName.equals("%*%"))firstName = "%"+firstName+"%";
+            if(!lastName.equals("%*%"))lastName = "%"+lastName+"%";
+            if(!hospitalNumber.equals("%*%"))hospitalNumber = "%"+hospitalNumber+"%";
+            page = patientService.findPage(firstName, lastName,hospitalNumber, pageable);
+
+        } else if(!searchValue.equals("%*%")) {
+            firstName = "%"+searchValue+"%";
+            lastName = "%"+searchValue+"%";
+            hospitalNumber = "%"+searchValue+"%";
+            page = patientService.findAllPages(firstName, lastName,hospitalNumber, pageable);
+        }
+        else {
+                page = patientService.findPage(pageable);
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(patientService.getAllPatients(page), headers, HttpStatus.OK);

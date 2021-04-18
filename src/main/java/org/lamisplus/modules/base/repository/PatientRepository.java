@@ -38,4 +38,12 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
     @Query(value = "SELECT * FROM patient WHERE details ->>?1 like ?2", nativeQuery = true)
     Page<Patient> findAllByDetails(String key, String value,Pageable pageable);
 
+    @Query(value = "SELECT * FROM patient WHERE details ->>'firstName'like ?1 " +
+            "OR details ->>'lastName' like ?2 OR details ->>'hospitalNumber' like ?3 AND organisation_unit_id=?4 AND archived=?5", nativeQuery = true)
+    Page<Patient> findAllByDetails(String firstName, String lastName, String hospitalNumber, Long organisationUnitId, int archived, Pageable pageable);
+
+    @Query(value = "SELECT * FROM patient WHERE details ->>'firstName'like ?1 " +
+            "AND details ->>'lastName' like ?2 AND details ->>'hospitalNumber' like ?3 AND organisation_unit_id=?4 AND archived=?5", nativeQuery = true)
+    Page<Patient> findAllByFullDetails(String firstName, String lastName, String hospitalNumber, Long organisationUnitId, int archived, Pageable pageable);
+
 }
