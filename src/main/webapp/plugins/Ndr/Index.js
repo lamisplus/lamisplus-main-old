@@ -21,6 +21,7 @@ import MaterialTable from 'material-table';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import { BehaviorSubject } from 'rxjs';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
+const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
 
 
 export default function CheckboxListSecondary() {
@@ -49,8 +50,8 @@ export default function CheckboxListSecondary() {
   const [loading, setLoading] = useState('')
   
   const [user, setUser] = useState(null);
-  
-  
+  const userToken = currentUserSubject.value;
+  console.log(userToken.id_token)
 
 async function fetchMe() {
   if( authentication.currentUserValue != null ) {
@@ -58,7 +59,7 @@ async function fetchMe() {
         .get(`${url}account`)
         .then((response) => {
           setUser(response.data);
-          console.log(response.data.applicationUserOrganisationUnits);
+          console.log(response.data);
           setFacilities(response.data.applicationUserOrganisationUnits);
           // set user permissions in local storage for easy retrieval, when user logs out it will be removed from the local storage
           localStorage.setItem('currentUser_Permission', JSON.stringify(response.data.permissions));

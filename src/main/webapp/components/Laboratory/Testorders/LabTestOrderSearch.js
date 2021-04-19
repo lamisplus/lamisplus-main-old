@@ -36,6 +36,8 @@ const PatientSearch = (props) => {
           }
         }
     });
+    
+console.log(collectedSamples)
 
     function totalSampleConllected (test){
         const  maxVal = []

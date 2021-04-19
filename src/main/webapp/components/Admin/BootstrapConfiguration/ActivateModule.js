@@ -3,7 +3,7 @@ import { Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Label,Card,CardBody
 } from 'reactstrap';
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import { deActivateBootstrapModule } from '../../../actions/bootstrapModule';
+import { activateBootstrapModule } from '../../../actions/bootstrapModule';
 import { connect, useDispatch } from 'react-redux';
 
 
@@ -44,17 +44,17 @@ const useStyles = makeStyles(theme => ({
 
 
 
-const DeleteModule = (props) => {
+const ActivateModule = (props) => {
     const classes = useStyles()
     const datasample = props.datasample ? props.datasample : {};
     console.log(datasample)
 
-    const deActiveModule = () => {
+    const ActiveModule = () => {
         const onError = () => {
         }
         const onSuccess = () => {
         }
-        props.deActivateBootstrapModule(datasample.id, onSuccess, onError);
+        props.activateBootstrapModule(datasample.id, onSuccess, onError);
         props.togglestatus()
     }
 
@@ -64,13 +64,13 @@ const DeleteModule = (props) => {
           {/* <ModalViewResult ref={componentRef} /> */}
           
               <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
-                  <ModalHeader toggle={props.togglestatus}>Deactivate Module</ModalHeader>
+                  <ModalHeader toggle={props.togglestatus}>Activate Module</ModalHeader>
                       <ModalBody>
                           <Card>
                             <CardBody>
                                 <Row style={{ marginTop: '20px'}}>
                                     <Col xs="12">
-                                        <span style={{ fontWeight: 'bold'}}>Are you sure you want to Deactivate the {datasample.description } module</span>
+                                        <span style={{ fontWeight: 'bold'}}>Are you sure you want to Activate the {datasample.description } module</span>
                                         <br/>
                                     </Col>
                                     <br/>
@@ -83,11 +83,11 @@ const DeleteModule = (props) => {
                                 variant='contained'
                                 color='primary'
                                 className={classes.button}
-                                onClick={()=> deActiveModule()}
+                                onClick={()=> ActiveModule()}
                                 className=" float-right mr-1"
                                 
                             >
-                                Deactivate 
+                                Activate 
                             </MatButton>
                             <MatButton
                               variant='contained'
@@ -113,5 +113,5 @@ const mapStateToProps = state => {
     };
   }; 
   
-  export default connect(mapStateToProps, {deActivateBootstrapModule })(DeleteModule);
+  export default connect(mapStateToProps, {activateBootstrapModule })(ActivateModule);
   
