@@ -42,7 +42,7 @@ const PatientSearch = (props) => {
       const onError = () => {
       setLoading(false)
     }
-        props.fetchAllPatients(onSuccess, onError);
+       // props.fetchAllPatients(onSuccess, onError);
   }, []); //componentDidMount
 
       const onDelete = id => {
@@ -86,143 +86,144 @@ const PatientSearch = (props) => {
                       {title: "", field: "actions", filtering: false,},
                   ]}
                   isLoading={loading}
-              // data={query =>
-              //     new Promise((resolve, reject) => {
-              //         let url = 'https://reqres.in/api/users?'
-              //         url += 'per_page=' + query.pageSize
-              //         url += '&page=' + (query.page)
-              //         axios
-              //             .get(`${baseUrl}patients?size=${query.pageSize}&page=${query.page}`)
-              //             .then(response => response)
-              //             .then(result => {
-              //                 resolve({
-              //                     data: result.data.map((row) => ({
-              //                         name: <Link
-              //                             to ={{
-              //                                 pathname: "/patient-dashboard",
-              //                                 state: row.hospitalNumber
-              //                             }}
-              //
-              //                             title={"Click to view patient dashboard"}
-              //                         >{row.firstName}  { ' '}  {row.lastName ? row.lastName.toUpperCase() : ""}</Link>,
-              //                         id: row.hospitalNumber,
-              //                         gender: getGenderById(row.genderId),
-              //                         age: (row.dob === 0 ||
-              //                             row.dob === undefined ||
-              //                             row.dob === null ||
-              //                             row.dob === "" )
-              //                             ? 0
-              //                             : calculate_age(row.dob),
-              //                         address: row.street || '',
-              //                         actions:
-              //                             <div>
-              //
-              //                                 <Menu>
-              //                                     <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
-              //                                         Actions <span aria-hidden>▾</span>
-              //                                     </MenuButton>
-              //                                     <MenuList style={{ color:"#000 !important"}} >
-              //
-              //                                         {/*<MenuItem  style={{ color:"#000 !important"}} onClick={() => window.location.href = "/patient-dashboard?hospitalNumber="+row.hospitalNumber}>*/}
-              //                                         {/*        <MdDashboard size="15" color="blue" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>*/}
-              //                                         {/*  </MenuItem>*/}
-              //
-              //                                         <MenuItem  style={{ color:"#000 !important"}}>
-              //                                             <Link
-              //                                                 to ={{
-              //                                                     pathname: "/patient-dashboard",
-              //                                                     state: row.hospitalNumber
-              //                                                 }}
-              //                                             >
-              //                                                 <MdDashboard size="15" color="blue" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>
-              //                                             </Link>
-              //                                         </MenuItem>
-              //
-              //                                         <MenuItem style={{ color:"#000 !important"}}>
-              //                                             <Link
-              //                                                 to={{
-              //                                                     pathname: "/patient-update-formio",
-              //                                                     state: row.hospitalNumber
-              //                                                 }}
-              //                                             >
-              //                                                 <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Patient </span>
-              //                                             </Link>
-              //                                         </MenuItem>
-              //                                         <MenuItem style={{ color:"#000 !important"}}>
-              //                                             <Link
-              //                                                 onClick={() => onDelete(row.patientId)}>
-              //                                                 <MdDeleteForever size="15" color="blue" />{" "}
-              //                                                 <span style={{color: '#000'}}>Delete Patient</span>
-              //                                             </Link>
-              //                                         </MenuItem>
-              //                                     </MenuList>
-              //                                 </Menu>
-              //                             </div>
-              //                     })),
-              //                     page: query.page,
-              //                     totalCount: 200,
-              //                 })
-              //             })
-              //     })}
-                  data={props.patientsList.map((row) => ({
-                      name: <Link
-                          to ={{pathname: "/patient-dashboard", state: row.hospitalNumber}}
-                          title={"Click to view patient dashboard"}>
-                          {row.firstName}  { ' '}  {row.lastName ? row.lastName.toUpperCase() : ""}</Link>,
-                      id: row.hospitalNumber,
-                      gender: getGenderById(row.genderId),
-                      age: (row.dob === 0 ||
-                      row.dob === undefined ||
-                      row.dob === null ||
-                      row.dob === "" )
-                        ? 0
-                        : calculate_age(row.dob),
-                      address: row.street || '',
-                      actions:
-        <div>
+              data={query =>
+                  new Promise((resolve, reject) => {
 
-          <Menu>
-              <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
-                Actions <span aria-hidden>▾</span>
-              </MenuButton>
-                  <MenuList style={{ color:"#000 !important"}} >
+                      axios.get(`${baseUrl}patients?size=${query.pageSize}&page=${query.page}&searchValue=${query.search}`,
+                              {headers: new Headers({ 'Access-Control-Expose-Headers': 'X-Total-Count'})})
+                          .then(response => response)
+                          .then(result => {
+                              console.log('in result')
+                              //console.log( result.headers);
+                              //console.log( result.headers['X-Total-Count']);
+                              resolve({
+                                  data: result.data.map((row) => ({
+                                      name: <Link
+                                          to ={{
+                                              pathname: "/patient-dashboard",
+                                              state: row.hospitalNumber
+                                          }}
 
-                      {/*<MenuItem  style={{ color:"#000 !important"}} onClick={() => window.location.href = "/patient-dashboard?hospitalNumber="+row.hospitalNumber}>*/}
-                      {/*        <MdDashboard size="15" color="blue" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>*/}
-                      {/*  </MenuItem>*/}
+                                          title={"Click to view patient dashboard"}
+                                      >{row.firstName}  { ' '}  {row.lastName ? row.lastName.toUpperCase() : ""}</Link>,
+                                      id: row.hospitalNumber,
+                                      gender: getGenderById(row.genderId),
+                                      age: (row.dob === 0 ||
+                                          row.dob === undefined ||
+                                          row.dob === null ||
+                                          row.dob === "" )
+                                          ? 0
+                                          : calculate_age(row.dob),
+                                      address: row.street || '',
+                                      actions:
+                                          <div>
 
-                      <MenuItem  style={{ color:"#000 !important"}}>
-                          <Link
-                              to ={{
-                                  pathname: "/patient-dashboard",
-                                  state: row.hospitalNumber
-                              }}
-                          >
-                              <MdDashboard size="15" color="blue" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>
-                          </Link>
-                      </MenuItem>
+                                              <Menu>
+                                                  <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
+                                                      Actions <span aria-hidden>▾</span>
+                                                  </MenuButton>
+                                                  <MenuList style={{ color:"#000 !important"}} >
 
-                        <MenuItem style={{ color:"#000 !important"}}>
-                              <Link
-                                  to={{
-                                    pathname: "/patient-update-formio",
-                                      state: row.hospitalNumber
-                                  }}
-                                >
-                              <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Patient </span>
-                            </Link>
-                        </MenuItem>
-                        <MenuItem style={{ color:"#000 !important"}}>
-                            <Link
-                                onClick={() => onDelete(row.patientId)}>
-                              <MdDeleteForever size="15" color="blue" />{" "}
-                              <span style={{color: '#000'}}>Delete Patient</span>
-                          </Link>
-                        </MenuItem>
-                </MenuList>
-          </Menu>
-        </div>
-        }))}
+                                                      {/*<MenuItem  style={{ color:"#000 !important"}} onClick={() => window.location.href = "/patient-dashboard?hospitalNumber="+row.hospitalNumber}>*/}
+                                                      {/*        <MdDashboard size="15" color="blue" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>*/}
+                                                      {/*  </MenuItem>*/}
+
+                                                      <MenuItem  style={{ color:"#000 !important"}}>
+                                                          <Link
+                                                              to ={{
+                                                                  pathname: "/patient-dashboard",
+                                                                  state: row.hospitalNumber
+                                                              }}
+                                                          >
+                                                              <MdDashboard size="15" color="blue" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>
+                                                          </Link>
+                                                      </MenuItem>
+
+                                                      <MenuItem style={{ color:"#000 !important"}}>
+                                                          <Link
+                                                              to={{
+                                                                  pathname: "/patient-update-formio",
+                                                                  state: row.hospitalNumber
+                                                              }}
+                                                          >
+                                                              <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Patient </span>
+                                                          </Link>
+                                                      </MenuItem>
+                                                      <MenuItem style={{ color:"#000 !important"}}>
+                                                          <Link
+                                                              onClick={() => onDelete(row.patientId)}>
+                                                              <MdDeleteForever size="15" color="blue" />{" "}
+                                                              <span style={{color: '#000'}}>Delete Patient</span>
+                                                          </Link>
+                                                      </MenuItem>
+                                                  </MenuList>
+                                              </Menu>
+                                          </div>
+                                  })),
+                                  page: query.page,
+                                  totalCount: 200,
+                              })
+                          })
+                  })}
+        //           data={props.patientsList.map((row) => ({
+        //               name: <Link
+        //                   to ={{pathname: "/patient-dashboard", state: row.hospitalNumber}}
+        //                   title={"Click to view patient dashboard"}>
+        //                   {row.firstName}  { ' '}  {row.lastName ? row.lastName.toUpperCase() : ""}</Link>,
+        //               id: row.hospitalNumber,
+        //               gender: getGenderById(row.genderId),
+        //               age: (row.dob === 0 ||
+        //               row.dob === undefined ||
+        //               row.dob === null ||
+        //               row.dob === "" )
+        //                 ? 0
+        //                 : calculate_age(row.dob),
+        //               address: row.street || '',
+        //               actions:
+        // <div>
+        //
+        //   <Menu>
+        //       <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
+        //         Actions <span aria-hidden>▾</span>
+        //       </MenuButton>
+        //           <MenuList style={{ color:"#000 !important"}} >
+        //
+        //               {/*<MenuItem  style={{ color:"#000 !important"}} onClick={() => window.location.href = "/patient-dashboard?hospitalNumber="+row.hospitalNumber}>*/}
+        //               {/*        <MdDashboard size="15" color="blue" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>*/}
+        //               {/*  </MenuItem>*/}
+        //
+        //               <MenuItem  style={{ color:"#000 !important"}}>
+        //                   <Link
+        //                       to ={{
+        //                           pathname: "/patient-dashboard",
+        //                           state: row.hospitalNumber
+        //                       }}
+        //                   >
+        //                       <MdDashboard size="15" color="blue" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>
+        //                   </Link>
+        //               </MenuItem>
+        //
+        //                 <MenuItem style={{ color:"#000 !important"}}>
+        //                       <Link
+        //                           to={{
+        //                             pathname: "/patient-update-formio",
+        //                               state: row.hospitalNumber
+        //                           }}
+        //                         >
+        //                       <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Patient </span>
+        //                     </Link>
+        //                 </MenuItem>
+        //                 <MenuItem style={{ color:"#000 !important"}}>
+        //                     <Link
+        //                         onClick={() => onDelete(row.patientId)}>
+        //                       <MdDeleteForever size="15" color="blue" />{" "}
+        //                       <span style={{color: '#000'}}>Delete Patient</span>
+        //                   </Link>
+        //                 </MenuItem>
+        //         </MenuList>
+        //   </Menu>
+        // </div>
+        // }))}
 
         options={{
             headerStyle: {
@@ -233,7 +234,7 @@ const PatientSearch = (props) => {
                 width : '300%',
                 margingLeft: '250px',
             },
-            filtering: true,
+            filtering: false,
             exportButton: false,
             searchFieldAlignment: 'left',
             pageSizeOptions:[10,20,100],

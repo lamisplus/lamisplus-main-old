@@ -49,9 +49,9 @@ server:
 spring:
     datasource:
         username: postgres
-        password: emeka
+        password: postgres
         driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:5432/lamisplus_db_bk_25_03_21?stringtype=unspecified
+        url: jdbc:postgresql://localhost:5432/lamisplus_etl?stringtype=unspecified
         hibernate:
             event.merge.enty_copy_observer: allow
         hikari:

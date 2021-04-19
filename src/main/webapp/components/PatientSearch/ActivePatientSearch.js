@@ -15,7 +15,7 @@ const ActivePatientSearch = (props) => {
         const onError = () => {
           setLoading(false);
         };
-        props.fetchAllPatients(onSuccess, onError);
+      //  props.fetchAllPatients(onSuccess, onError);
       }, []); //componentDidMount
 
       const calculate_age = dob => {
