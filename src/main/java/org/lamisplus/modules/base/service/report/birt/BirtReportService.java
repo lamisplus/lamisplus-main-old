@@ -113,14 +113,14 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         Optional<User> optionalUser = SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRoleByUserName);
         if(optionalUser.isPresent()){
             user = optionalUser.get();
-            if(params.get("facilityId") == null){
+            if(params.get("facility_Id") == null){
                 //assign default facilityId
-                params.put("facilityId", user.getCurrentOrganisationUnitId());
+                params.put("facility_Id", user.getCurrentOrganisationUnitId());
 
             } else {
                 //check facilityId belongs to user
                 List <Long> orgUnits = user.getApplicationUserOrganisationUnits().stream().map(ApplicationUserOrganisationUnit::getOrganisationUnitId).collect(Collectors.toList());
-                if(!orgUnits.contains(Long.valueOf((Integer)params.get("facilityId")))){
+                if(!orgUnits.contains(Long.valueOf((Integer)params.get("facility_Id")))){
                     throw new EntityNotFoundException(OrganisationUnit.class,"FacilityId","User not in Organisation Unit");
                 }
             }
@@ -274,10 +274,11 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
 
     public Integer delete(Long id) {
-        Optional<ReportInfo> optional = reportInfoRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if(!optional.isPresent())throw new EntityNotFoundException(ReportInfo.class, "Id", id +"");
-        optional.get().setArchived(ARCHIVED);
-        return optional.get().getArchived();
+        ReportInfo reportInfo = reportInfoRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(()
+                -> new EntityNotFoundException(ReportInfo.class, "Id", id +""));
+        reportInfo.setArchived(ARCHIVED);
+        reportInfoRepository.save(reportInfo);
+        return reportInfo.getArchived();
     }
 
     public List<ReportInfoDTO> getReports() {
