@@ -15,7 +15,7 @@ acrossHibernate:
 applicationInfo:
     applicationId: lamisplus
     applicationName: LAMISPLUS
-    buildDate: "@timestamp@"
+    buildDate: "@maven.build.timestamp@"
     buildId: "@pom.version@-@build.revision@"
 build:
     number: "@build.revision@"

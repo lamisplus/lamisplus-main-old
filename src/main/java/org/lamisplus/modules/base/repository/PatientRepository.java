@@ -42,8 +42,8 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
             "OR details ->>'lastName' like ?2 OR details ->>'hospitalNumber' like ?3 AND organisation_unit_id=?4 AND archived=?5", nativeQuery = true)
     Page<Patient> findAllByDetails(String firstName, String lastName, String hospitalNumber, Long organisationUnitId, int archived, Pageable pageable);
 
-    @Query(value = "SELECT * FROM patient WHERE details ->>'firstName'like ?1 " +
-            "AND details ->>'lastName' like ?2 AND details ->>'hospitalNumber' like ?3 AND organisation_unit_id=?4 AND archived=?5", nativeQuery = true)
+    @Query(value = "SELECT * FROM patient WHERE (details ->>'firstName' ilike ?1 " +
+            "OR details ->>'lastName' ilike ?2 OR details ->>'hospitalNumber' ilike ?3) AND organisation_unit_id=?4 AND archived=?5", nativeQuery = true)
     Page<Patient> findAllByFullDetails(String firstName, String lastName, String hospitalNumber, Long organisationUnitId, int archived, Pageable pageable);
 
 }
