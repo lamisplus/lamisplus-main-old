@@ -53,7 +53,7 @@ td: { borderBottom :'#fff'}
 }));
 
 function getSteps() {
-  return ['Upload', 'Install', 'Start'];
+  return ['Upload', 'Install'];
 }
 
 
@@ -65,7 +65,7 @@ const CreateModule = (props) => {
     const [activeStep, setActiveStep] = React.useState(0);
     const steps = getSteps();
     const [fileToUpload, setFileToUpload] = useState({})
-    const [uploadResponse, setUploadResponse] = React.useState({})
+    const [uploadResponse, setUploadResponse] = React.useState([])
     const [uploadModuleList, setUploadModuleList] = React.useState({})
     const [filename, setFilename] = useState('Choose File');
     const [uploadedFile, setUploadedFile] = useState({});
@@ -85,6 +85,7 @@ const CreateModule = (props) => {
     const [disabledNextButton, setDisabledNextButton] = useState(false)
     const [moduleStatus, setModuleStatus] = useState() 
     const [moduleBatchNum, setModuleBatchNum] = useState() 
+ 
 
     useEffect(() => {
       const onSuccess = (data) => {
@@ -98,7 +99,7 @@ const CreateModule = (props) => {
     const handleModuleBatchList = (moduleStatus,moduleBatchNum) => {
       const onSuccess = (data) => {
             console.log(data)
-            setUploadResponse(data)
+            setUploadResponse([data])
             setActiveStep((prevActiveStep) => prevActiveStep + 1); //auotmatically move to the next phase of installation in the wizard
       }
       const onError = () => {}
@@ -132,14 +133,15 @@ const CreateModule = (props) => {
     props.startBootstrapModule( onSuccess, onError); 
   }
 
-  const handleInstallModule = (id) => {
+  const handleInstallModule = (obj) => {
+
       setDisabledNextButton(true)
       setInstallationOverlay(true)
       setDisableNextButtonProcess(true)
       const onSuccess = (installResponse) => {
       const installModuleDetail = installResponse
-      var foundIndex = uploadResponse.findIndex(x => x.batchNo == installModuleDetail.batchNo);
-      uploadResponse[foundIndex] = installModuleDetail
+     // var foundIndex = uploadResponse.findIndex(x => x.batchNo == installModuleDetail.batchNo);
+      //uploadResponse[foundIndex] = installModuleDetail
       console.log(uploadResponse)
       console.log(installResponse)
       setDisabledNextButton(false)
@@ -151,7 +153,7 @@ const CreateModule = (props) => {
       setInstallationOverlay(false)
       setDisableNextButtonProcess(false) 
     }
-    props.installBootstrapModule(id, onSuccess, onError);
+    props.installBootstrapModule(obj, onSuccess, onError);
   }
 
   const handleUploadFile = async e => {  
@@ -160,7 +162,7 @@ const CreateModule = (props) => {
       setDisableNextButtonProcess(true)
       setInstallationMessage('Processing, please wait...')     
       const form_Data = new FormData();
-      form_Data.append('file1', fileToUpload[0]);      
+      form_Data.append('file', fileToUpload[0]);      
       try {
         const res = await axios.post(url+'modules/upload', form_Data, {
           headers: {
@@ -206,22 +208,15 @@ const CreateModule = (props) => {
   }
 
   const handleStartModule = () => {
-    sethiddeStartModuleFinishButton(true)
-    setDisableNextButtonProcess(true)
-    const onSuccess = () => {
-      setInstallationOverlay(false) 
-      setDisableNextButtonProcess(true)
+
       props.history.push(`/admin-bootstrap-configuration`)
-    }
-    const onError = () => {
-      setInstallationOverlay(false)
-      setDisableNextButtonProcess(true) 
-      sethiddeStartModuleFinishButton(false)
-    }
-    props.startBootstrapModule( onSuccess, onError);
+
   }
 
-  const sampleAction = (id) =>{
+
+  console.log(fileToUpload[0])
+
+  const sampleAction = (obj) =>{
 
     return (
       <Menu>
@@ -231,7 +226,7 @@ const CreateModule = (props) => {
           <MenuList style={{ color:"#000 !important"}} >
               <MenuItem  style={{ color:"#000 !important"}} >                      
                 
-                      <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}} onClick={() => handleInstallModule(id)}>Install Module</span>
+                      <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}} onClick={() => handleInstallModule(obj)}>Install Module</span>
                                           
                 </MenuItem>
                 
@@ -259,15 +254,33 @@ const CreateModule = (props) => {
                       <Row>
                           <Col>
                               
-                                <Alert severity="info">
-                                  <AlertTitle>Instructions to add new module</AlertTitle>
-                                    <ul>
-                                      <li>1. Add file  <strong>(only *.jar)</strong></li>
-                                      <li>2. Click Upload</li>
-                                    </ul>
-                                    <br/>
-                                    <strong>NOTE:</strong> Adding, or uploading a module will restart the application, therefore all scheduled task and background processes will be interrupted. 
-                                </Alert>
+                          <Alert severity="info">
+                  {props.location && props.location.ModuleDetail!=="" ? 
+                  
+                  (
+                    <>
+                    <AlertTitle>Update : {props.location.ModuleDetail.name }</AlertTitle>
+                    
+                    <br/>
+
+                    </>
+                  )
+                  :
+                  (
+                    <>
+                    <AlertTitle>Instructions to add new module</AlertTitle>
+                    
+                    <br/>
+                    <strong>NOTE:</strong> This wizard will lead you step by step through the installation of your module.
+                    <br/>
+                    <strong>Click Next to continue, or Cancel to exit Setup.</strong> 
+                    <br/>
+                    </>
+                  )
+                
+                }
+                  
+                </Alert>
                              </Col>
                     </Row>
                     <Row>
@@ -275,7 +288,7 @@ const CreateModule = (props) => {
                         {message ? <Message msg={message} /> : null}
                           <DropzoneArea
                             //onChange={(files) => console.log('Files:', files)}
-                            onChange = {(file1) => setFileToUpload(file1)}
+                            onChange = {(file) => setFileToUpload(file)}
                             showFileNames="true"
                             //acceptedFiles={['jar']}
                             maxFileSize ={'100000000'}
@@ -302,13 +315,31 @@ const CreateModule = (props) => {
           <Row>
               <Col>                  
                 <Alert severity="info">
-                  <AlertTitle>Instructions to add new module</AlertTitle>
+                  {props.location && props.location.ModuleDetail!=="" ? 
+                  
+                  (
+                    <>
+                    <AlertTitle>Update : {props.location.ModuleDetail.name }</AlertTitle>
+                    
+                    <br/>
+
+                    </>
+                  )
+                  :
+                  (
+                    <>
+                    <AlertTitle>Instructions to add new module</AlertTitle>
                     
                     <br/>
                     <strong>NOTE:</strong> This wizard will lead you step by step through the installation of your module.
                     <br/>
                     <strong>Click Next to continue, or Cancel to exit Setup.</strong> 
                     <br/>
+                    </>
+                  )
+                
+                }
+                  
                 </Alert>
               </Col>
                   
@@ -339,19 +370,19 @@ const CreateModule = (props) => {
                         </tr>
                       </thead>
                       <tbody>
-                          {console.log(props.moduleLists)}
-                          {uploadResponse.map((row) => (
+                          {console.log(uploadResponse)}
+                           {[uploadResponse].map((row) => (
                           <tr key={row.id}>
                             <td>{row.name===""?" ":row.name}</td>
                             <td>{row.description===""?" ":row.description}</td>
                             <td>{row.createdBy===""?" ":row.createdBy}</td>
                             <td>{row.version===""?" ":row.version}</td>
-                            <td><Badge  color="primary">{row.status===1 ? "Uploaded":"Installed"}</Badge></td>
-                            <td>{sampleAction(row.id)}</td>
+                            <td><Badge  color="primary">{row.status!==2 ? "":"Installed"}</Badge></td>
+                            <td>{sampleAction(row)}</td>
                           </tr>
 
                           ))
-                        }
+                        } 
                         
                       </tbody>
                     </Table>
@@ -389,13 +420,13 @@ const CreateModule = (props) => {
                         </tr>
                       </thead>
                       <tbody>
-                          {uploadResponse.map((row) => (
+                          {[uploadResponse].map((row) => (
                           <tr key={row.id}>
                             <td>{row.name===""?" ":row.name}</td>
                             <td>{row.description===""?" ":row.description}</td>
                             <td>{row.createdBy===""?" ":row.createdBy}</td>
                             <td>{row.version===""?" ":row.version}</td>
-                            <td><Badge  color="primary">{row.status===1 ? "Uploaded":"Installed"}</Badge></td>
+                            <td><Badge  color="primary">{row.status!==2 ? "":"Installed"}</Badge></td>
                            
                           </tr>
 

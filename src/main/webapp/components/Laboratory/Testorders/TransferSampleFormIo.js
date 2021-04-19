@@ -84,7 +84,7 @@ const ModalSample = (props) => {
     const transferSampleData = (e) => {
         const newData = e.data        
         const newDateSampleVerified = moment(newData.date_sample_verified).format(
-          "DD-MM-YYYY"
+          "YYYY-MM-DD"
         );
         if(newData.date_sample_verified){
           newData['date_sample_verified'] = newDateSampleVerified
