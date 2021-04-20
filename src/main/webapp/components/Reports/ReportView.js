@@ -4,14 +4,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import {fetchService} from '../../actions/formBuilder'
 import {fetchAll, generateReport} from '../../actions/report';
-import { url } from "api";
 import { authHeader } from '_helpers/auth-header';
 import _ from 'lodash';
-import {Card, CardBody} from 'reactstrap';
+import {Card, CardBody, Col} from 'reactstrap';
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Typography from "@material-ui/core/Typography";
 import { Link } from 'react-router-dom';
 import {toast, ToastContainer} from "react-toastify";
+import axios from 'axios';
+import {url} from '../../api';
+
 
 const useStyles = makeStyles(theme => ({
     root2: {
@@ -33,6 +35,7 @@ const GenerateReport = props => {
     const [newdata2] = React.useState(datanew);
     const [res, setRes] = React.useState("");
     const [formCode, setformCode] = React.useState();
+    const [loading, setLoading] = React.useState(true);
     const [form2, setform2] = React.useState();
     const [reportId, setreportId] = React.useState();
     const classes = useStyles();
@@ -41,12 +44,29 @@ const GenerateReport = props => {
     const row = props.location.state;
 
 
-    useEffect (() => {
-        setformCode(row.code);
-        console.log(row);
-        setform2(row)
+    // useEffect (() => {
+    //     setformCode(row.code);
+    //     console.log(row);
+    //     setform2(row)
+    //
+    //       }, [])
 
-          }, [])
+    useEffect(() => {
+        async function fetchById() {
+            axios
+                .get(`${url}reports/${row.id}/`)
+                .then(response => {
+                    setform2(response.data);
+                    console.log(response.data)
+                    setLoading(false);
+                })
+                .catch(error => {
+                    toast.error('Could not load form resource, please contact admin.')
+                    setLoading(false);
+                })
+        }
+        fetchById();
+    }, []);
 
     const submitForm = (submission) => {
        const onError = () => {
