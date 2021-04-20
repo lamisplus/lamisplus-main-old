@@ -77,8 +77,8 @@ const ProgramManagerSearch = (props) => {
             setDeleting(false);
             toast.error("Something went wrong, please contact administration");
         };
-        row['archived'] =1;
-        props.updateProgram(row.id, row)
+        row['archived'] =2;
+        props.updateProgram(row.id, row, onSuccess , onError)
 
     }
 
@@ -114,6 +114,22 @@ const ProgramManagerSearch = (props) => {
     }
 
     console.log(props.list)
+
+    const statusAction = (status)=>{
+
+        if(status===0){
+            return "Active";
+        }
+        else if(status===1){
+            return "Archieve";
+        }
+        else if(status===2){
+            return "Deactivate";
+        }else{
+            return "";
+        }
+
+    }
     const actionButton = (e,status) =>{
         
     
@@ -167,7 +183,7 @@ const ProgramManagerSearch = (props) => {
                     moduleId: row.archived,
                     name: row.name,
                     status:  <Grid component="label" container alignItems="center" spacing={1}>
-                        <Grid item>{row.archived===0 ? "Active": "Inactive"}</Grid>
+                        <Grid item>{statusAction(row.archived)}</Grid>
                     </Grid>,
                     actions:<div>{actionButton(row, row.archived)} </div>
                          

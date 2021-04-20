@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
 const DeleteModule = (props) => {
     const classes = useStyles()
     const datasample = props.datasample ? props.datasample : {};
-    console.log(datasample)
+
 
     const deActiveModule = () => {
         const onError = () => {

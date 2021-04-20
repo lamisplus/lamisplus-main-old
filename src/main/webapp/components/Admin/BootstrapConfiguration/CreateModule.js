@@ -13,6 +13,7 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 import { DropzoneArea } from 'material-ui-dropzone';
 import StartModuleModal from './StartModuleModal'
 import { Badge } from 'reactstrap';
+
 //Stepper 
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -23,6 +24,8 @@ import { Table } from 'reactstrap';
 import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import {  MdDelete } from "react-icons/md";
+import {  GrInstall } from "react-icons/gr";
+
 import { createBootstrapModule, startBootstrapModule } from '../../../actions/bootstrapModule';
 import { installBootstrapModule, fetchAllBootstrapModuleBYBatchNum } from '../../../actions/bootstrapModule';
 import Message from './Message';
@@ -142,11 +145,10 @@ const CreateModule = (props) => {
       const installModuleDetail = installResponse
      // var foundIndex = uploadResponse.findIndex(x => x.batchNo == installModuleDetail.batchNo);
       //uploadResponse[foundIndex] = installModuleDetail
-      console.log(uploadResponse)
-      console.log(installResponse)
       setDisabledNextButton(false)
       setInstallationOverlay(false) 
-      setDisableNextButtonProcess(false)    
+      setDisableNextButtonProcess(false)  
+      props.history.push(`/admin-bootstrap-configuration`)  
     }
     const onError = () => {
       setDisabledNextButton(false)
@@ -226,15 +228,15 @@ const CreateModule = (props) => {
           <MenuList style={{ color:"#000 !important"}} >
               <MenuItem  style={{ color:"#000 !important"}} >                      
                 
-                      <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}} onClick={() => handleInstallModule(obj)}>Install Module</span>
+                      <GrInstall size="15" color="blue" />{" "}<span style={{color: '#000'}} onClick={() => handleInstallModule(obj)}>Install Module</span>
                                           
                 </MenuItem>
                 
-                <MenuItem  style={{ color:"#000 !important"}} >                      
+                {/* <MenuItem  style={{ color:"#000 !important"}} >                      
                 
                       <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Delete Module</span>
                                           
-                </MenuItem>                                     
+                </MenuItem>                                      */}
                 
         </MenuList>
     </Menu>
@@ -363,7 +365,7 @@ const CreateModule = (props) => {
                           
                           <th>Module Name</th>
                           <th>Description</th>
-                          <th>Author</th>
+
                           <th>Version</th>
                           <th>Status</th>
                           <th>Action</th>
@@ -375,9 +377,9 @@ const CreateModule = (props) => {
                           <tr key={row.id}>
                             <td>{row.name===""?" ":row.name}</td>
                             <td>{row.description===""?" ":row.description}</td>
-                            <td>{row.createdBy===""?" ":row.createdBy}</td>
+
                             <td>{row.version===""?" ":row.version}</td>
-                            <td><Badge  color="primary">{row.status!==2 ? "":"Installed"}</Badge></td>
+                            <td>{row.status!==2 ? "":"Installed"}</td>
                             <td>{sampleAction(row)}</td>
                           </tr>
 
@@ -413,7 +415,6 @@ const CreateModule = (props) => {
                           
                           <th>Module Name</th>
                           <th>Description</th>
-                          <th>Author</th>
                           <th>Version</th>
                           <th>Status</th>
                           
@@ -424,9 +425,8 @@ const CreateModule = (props) => {
                           <tr key={row.id}>
                             <td>{row.name===""?" ":row.name}</td>
                             <td>{row.description===""?" ":row.description}</td>
-                            <td>{row.createdBy===""?" ":row.createdBy}</td>
                             <td>{row.version===""?" ":row.version}</td>
-                            <td><Badge  color="primary">{row.status!==2 ? "":"Installed"}</Badge></td>
+                            <td>{row.status!==2 ? "":"Installed"}</td>
                            
                           </tr>
 
@@ -511,16 +511,16 @@ return (
                               >
                               Upload Module
                             </Button>
-                            <Button 
+                            {/* <Button 
                               variant="contained" 
                               color="primary" 
                               onClick={handleStartModule}
                               hidden={hiddeStartModuleFinishButton}
                               >
                               Finish/Start
-                            </Button>
+                            </Button> */}
                            
-                            <Button 
+                            {/* <Button 
                               hidden={disableNextButtonProcess}
                               variant="contained" 
                               color="primary" 
@@ -528,7 +528,7 @@ return (
                               disabled={disabledNextButton}
                               >
                               {activeStep === steps.length - 1 ? 'Finish/Start Module' : 'Next'}
-                            </Button>
+                            </Button> */}
                           </div>
                         </div>
                       )}
