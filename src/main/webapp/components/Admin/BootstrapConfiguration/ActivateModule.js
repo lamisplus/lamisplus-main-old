@@ -47,7 +47,6 @@ const useStyles = makeStyles(theme => ({
 const ActivateModule = (props) => {
     const classes = useStyles()
     const datasample = props.datasample ? props.datasample : {};
-    console.log(datasample)
 
     const ActiveModule = () => {
         const onError = () => {

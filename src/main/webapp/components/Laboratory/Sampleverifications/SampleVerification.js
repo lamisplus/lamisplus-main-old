@@ -221,6 +221,8 @@ return (
     <div>
       
         <Card>
+        <CardBody>
+            <br/>
         <Breadcrumbs aria-label="breadcrumb">
             <Link color="inherit" to={{pathname: "/laboratory", state: 'sample-verification'
         
@@ -246,7 +248,7 @@ return (
                 </div>
                 <br/>
                 <Card className="mb-12">
-                    <CardHeader>Test Order Details 
+                    <CardHeader><span style={{  textTransform: 'capitalize'}}>Test Order Details </span>
                         <Link 
                             to ={{ 
                               pathname: "/laboratory",  
@@ -345,7 +347,8 @@ return (
               </Card>
             </Col>
         </Row>
-        </Card>
+        </CardBody>
+    </Card>
       <ModalSampleVerify modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
       <ModalSample modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal}  labnumber={newSample[0].data.lab_number}/>
       <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} /> 

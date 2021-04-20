@@ -26,6 +26,9 @@ import {
 } from "reactstrap";
 import {authentication} from '../../_services/authentication';
 import { fetchPatientPrescriptionsByEncounter } from "../../actions/pharmacy";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import Typography from "@material-ui/core/Typography";
+import  CapitalizedText from './../CapitalizedText'
 
 
 //
@@ -187,6 +190,22 @@ const updateFormData = (data) =>{
  };
   return (
     <React.Fragment>
+      <Card><CardBody>
+        <br/>
+      <Breadcrumbs aria-label="breadcrumb">
+            <Link color="inherit" 
+                to={{pathname: "/pharmacy",
+                state: 'prescriptions-detail'
+                }} 
+            >
+                    Pharmacy
+            </Link>
+           
+            <Typography color="textPrimary">Prescription  </Typography>
+            
+         </Breadcrumbs>
+        <br/>    
+        <br/>
       <Row>
         <Col>
           <div>
@@ -201,7 +220,7 @@ const updateFormData = (data) =>{
                 <br />
                 <Card className="mb-12">
                   <CardHeader>
-                    DRUG ORDER DETAILS
+                    <span ><CapitalizedText  text="Drug Order Details" /></span>
                     <Link 
                       to ={{ 
                         pathname: "/pharmacy",  
@@ -274,7 +293,7 @@ const updateFormData = (data) =>{
           </div>
         </Col>
       </Row>
-
+      </CardBody></Card>
      <DispenseModal  modalstatus={modal} togglestatus={toggleModal} datasample={drugDetails} updateFormData={updateFormData}/>
      <ViewModal modalstatus={modal1} togglestatus={toggleModal1} datasample={drugDetails}/>
     </React.Fragment>
