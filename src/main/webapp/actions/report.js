@@ -1,5 +1,5 @@
 import axios from "axios";
-import {url} from '../api'
+import {url as baseUrl, url} from '../api'
 import * as ACTION_TYPES from "./types";
 import {toast} from 'react-toastify';
 
@@ -48,6 +48,29 @@ export const generateReport = (data, onError) => dispatch => {
                 onError();
             }
         });
+}
+
+export const  fetchById = (id, onSuccess, onError) => dispatch => {
+    dispatch({
+            type: ACTION_TYPES.REPORTS_FETCH_ALL,
+        payload: {}
+    })
+    axios
+        .get(`${baseUrl}reports/${id}/`)
+        .then(response => {
+            dispatch({
+                    type: ACTION_TYPES.REPORTS_FETCH_ALL,
+                payload: response.data
+            })
+            onSuccess()
+        })
+        .catch(error => {
+            onError()
+            dispatch({
+                type: ACTION_TYPES.REPORTS_ERROR,
+                payload: 'Error loading form, something went wrong. Please try again'
+            })
+        })
 }
 
 export const fetchAll = (onSuccess) => dispatch => {
