@@ -22,6 +22,7 @@ import {Menu, MenuButton, MenuItem, MenuList} from '@reach/menu-button';
 import {MdDeleteForever, MdModeEdit } from "react-icons/md";
 import Grid from '@material-ui/core/Grid';
 import {  FaSyncAlt } from "react-icons/fa";
+import {  GrDocumentUpdate } from "react-icons/gr";
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -166,11 +167,11 @@ const ProgramManagerSearch = (props) => {
                 </MenuButton>
                 <MenuList style={{hover:"#eee"}}>
                     { status ===0 ?
-                        <MenuItem onSelect={() => deActivateProgram(e)}><MdModeEdit size="15" style={{color: '#3F51B5'}}/>{" "}Deactivate</MenuItem>
+                        <MenuItem onSelect={() => deActivateProgram(e)}><FaSyncAlt size="15" style={{color: '#3F51B5'}}/>{" "}Deactivate</MenuItem>
                         :
-                        <MenuItem onSelect={() => ActivateProgram(e)}><MdModeEdit size="15" style={{color: '#3F51B5'}}/>{" "}Activate</MenuItem>
+                        <MenuItem onSelect={() => ActivateProgram(e)}><FaSyncAlt size="15" style={{color: '#3F51B5'}}/>{" "}Activate</MenuItem>
                     }
-                    <MenuItem onSelect={() => updatePrograms(e)}><MdModeEdit size="15" style={{color: '#000'}}/>{" "} Update</MenuItem>
+                    <MenuItem onSelect={() => updatePrograms(e)}><GrDocumentUpdate size="15" style={{color: '#000'}}/>{" "} Update</MenuItem>
                     <MenuItem onSelect={() => deleteProgram(e)}><MdDeleteForever size="15" style={{color: '#000'}}/>{" "}Delete</MenuItem>
                 </MenuList>
             </Menu>
