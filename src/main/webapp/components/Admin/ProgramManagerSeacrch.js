@@ -37,6 +37,7 @@ const ProgramManagerSearch = (props) => {
     const [showDeleteModal, setShowDeleteModal] = React.useState(false);
     const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal)
     const toggleDeactivateModal = () => setShowDeleteModal(!deactiavte)
+    const toggleActivateProgramModal = () => setShowDeleteModal(!deactiavte)
 
     const toggleModal = () => setShowModal(!showModal)
     const classes = useStyles()
@@ -64,6 +65,28 @@ const ProgramManagerSearch = (props) => {
         toggleModal();
 
     }
+
+
+
+    const ActivateProgram = (row) =>{
+        console.log(row)
+        // setDeleting(true);
+        const onSuccess = () => {
+            // setDeleting(false);
+            toggleDeleteModal();
+            toast.success("Program deactivated successfully!");
+            loadProgramManager();
+        };
+        const onError = () => {
+            // setDeleting(false);
+            toast.error("Something went wrong, please contact administration");
+        };
+        row['archived'] =0;
+        props.updateProgram(row.id, row, onSuccess , onError)
+
+    }
+
+
     const deactiavtePrograms = (row) =>{
         console.log(row)
         // setDeleting(true);
@@ -139,7 +162,7 @@ const ProgramManagerSearch = (props) => {
                     { status ===0 ?
                         <MenuItem onSelect={() => deActivateProgram(e)}><MdModeEdit size="15" style={{color: '#3F51B5'}}/>{" "}Deactivate</MenuItem>
                         :
-                        <MenuItem onSelect={() => openProgram(e)}><MdModeEdit size="15" style={{color: '#3F51B5'}}/>{" "}Activate</MenuItem>
+                        <MenuItem onSelect={() => ActivateProgram(e)}><MdModeEdit size="15" style={{color: '#3F51B5'}}/>{" "}Activate</MenuItem>
                     }
                     <MenuItem onSelect={() => updatePrograms(e)}><MdModeEdit size="15" style={{color: '#000'}}/>{" "} Update</MenuItem>
                     <MenuItem onSelect={() => deleteProgram(e)}><MdDeleteForever size="15" style={{color: '#000'}}/>{" "}Delete</MenuItem>
@@ -249,6 +272,31 @@ const ProgramManagerSearch = (props) => {
                         variant='contained'
                         color='default'
                         onClick={toggleDeactivateModal}
+                        startIcon={<CancelIcon />}>
+                        Cancel
+                    </Button>
+                </ModalFooter>
+            </Modal>
+            <Modal isOpen={showDeleteModal} toggle={toggleActivateProgramModal} >
+                <ModalHeader toggle={toggleActivateProgramModal}> Deactivate Program - {currentProgramManager && currentProgramManager.name ? currentProgramManager.name : ""} </ModalHeader>
+                <ModalBody>
+                    <p>Are you sure you want to proceed ?</p>
+                </ModalBody>
+                <ModalFooter>
+                    <Button
+                        type='button'
+                        variant='contained'
+                        color='primary'
+                        className={classes.button}
+                        startIcon={<SaveIcon />}
+                        disabled={deleting}
+                        onClick={() => ActivateProgram(currentProgramManager)}>
+                        Deactiavte  {deleting ? <Spinner /> : ""}
+                    </Button>
+                    <Button
+                        variant='contained'
+                        color='default'
+                        onClick={toggleActivateProgramModal}
                         startIcon={<CancelIcon />}>
                         Cancel
                     </Button>
