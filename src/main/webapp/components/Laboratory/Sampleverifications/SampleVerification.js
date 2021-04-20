@@ -326,7 +326,7 @@ return (
                                                 {!loading ? fetchTestOrders.map((row) => (
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>
                                                       <th className={classes.td}>{row.data.description===""?" ":row.data.description}</th>
-                                                      <td className={classes.td}>{row.data.sample_type==="" ? " ":sampleTypeList(row.data.sample_type)}</td>
+                                                      <td className={classes.td}>{sampleTypeList(row.data && row.data.sample_type!==null ? row.data.sample_type : null)}</td>
                                                       <td className={classes.td}> {encounterDate} </td>
                                                       <td className={classes.td}>{sampleStatus(row.data.lab_test_order_status)} </td>
                                                       <td className={classes.td} hidden={!authentication.userHasRole(["laboratory_write"])}>{sampleAction(row)}</td>
