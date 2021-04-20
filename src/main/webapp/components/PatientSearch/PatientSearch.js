@@ -33,7 +33,7 @@ const PatientSearch = (props) => {
     }
   useEffect(() => {
     //  console.log(props.patientsList)
-      setLoading('true');
+     // setLoading('true');
       const onSuccess = () => {
 
 
@@ -93,9 +93,6 @@ const PatientSearch = (props) => {
                               {headers: new Headers({ 'Access-Control-Expose-Headers': 'X-Total-Count'})})
                           .then(response => response)
                           .then(result => {
-                              console.log('in result')
-                              //console.log( result.headers);
-                              //console.log( result.headers['X-Total-Count']);
                               resolve({
                                   data: result.data.map((row) => ({
                                       name: <Link
@@ -132,7 +129,7 @@ const PatientSearch = (props) => {
                                                           <Link
                                                               to ={{
                                                                   pathname: "/patient-dashboard",
-                                                                  state: row.hospitalNumber
+                                                                  state: (row.details && row.details.hospitalNumber ? row.details.hospitalNumber : row.hospitalNumber)
                                                               }}
                                                           >
                                                               <MdDashboard size="15" color="blue" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>
@@ -143,7 +140,7 @@ const PatientSearch = (props) => {
                                                           <Link
                                                               to={{
                                                                   pathname: "/patient-update-formio",
-                                                                  state: row.hospitalNumber
+                                                                  state: (row.details && row.details.hospitalNumber ? row.details.hospitalNumber : row.hospitalNumber)
                                                               }}
                                                           >
                                                               <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Patient </span>
