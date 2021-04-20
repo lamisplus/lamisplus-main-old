@@ -53,6 +53,7 @@ const ActivateModule = (props) => {
         }
         const onSuccess = () => {
         }
+        datasample['status'] =2
         props.activateBootstrapModule(datasample.id, onSuccess, onError);
         props.togglestatus()
     }

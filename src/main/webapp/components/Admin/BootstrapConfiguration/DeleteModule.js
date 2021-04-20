@@ -53,7 +53,9 @@ const DeleteModule = (props) => {
         const onError = () => {
         }
         const onSuccess = () => {
+
         }
+        datasample['status'] =3
         props.deActivateBootstrapModule(datasample.id, onSuccess, onError);
         props.togglestatus()
     }
