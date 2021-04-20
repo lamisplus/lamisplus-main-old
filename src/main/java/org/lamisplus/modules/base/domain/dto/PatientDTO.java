@@ -34,21 +34,15 @@ public class PatientDTO {
     private String city;
     private String street;
     private String landmark;
-
-    /*
     private Long maritalStatusId;
-    private Long titleId;*/
-
-    /*@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private LocalDate dob;
-
+    private Long titleId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Long genderId;
     private Long educationId;
     private Long occupationId;
-    private Long facilityId;
     private Long countryId;
     private Long stateId;
-    private Long provinceId;*/
+    private Long provinceId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate dateVisitEnd;

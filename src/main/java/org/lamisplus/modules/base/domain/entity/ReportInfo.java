@@ -30,6 +30,7 @@ public class ReportInfo extends JsonBEntity implements Serializable {
     @Column(name = "program_code")
     private String programCode;
 
+    @JsonIgnore
     private String template;
 
     @Basic

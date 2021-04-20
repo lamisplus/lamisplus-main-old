@@ -29,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -46,6 +48,7 @@ public class EncounterService {
     private final EncounterMapper encounterMapper;
     private final FormDataMapper formDataMapper;
     private final FormDataRepository formDataRepository;
+    private final FormRepository formRepository;
     private final UserService userService;
     private final AccessRight accessRight;
     private static final int ARCHIVED = 1;
@@ -117,7 +120,7 @@ public class EncounterService {
         return encounter;
     }
 
-    public Encounter save(EncounterDTO encounterDTO) {
+    public Encounter save(EncounterDTO encounterDTO, int formType) {
         //Get all permissions
         Set<String> permissions = accessRight.getAllPermission();
 
@@ -139,29 +142,35 @@ public class EncounterService {
         final Encounter encounter = encounterMapper.toEncounter(encounterDTO);
         Visit visit = new Visit();
 
-        //For retrospective data entry formType is 1
-        if(encounterDTO.getFormType() != 0) {
-            visit.setDateVisitEnd(encounter.getDateEncounter());
-            visit.setDateVisitStart(encounter.getDateEncounter());
-            visit.setTimeVisitStart(LocalTime.now());
-            visit.setTimeVisitEnd(LocalTime.now());
-            visit.setDateNextAppointment(null);
-            visit.setPatientId(encounter.getPatientId());
-            visit.setTypePatient(0);
-            visit.setOrganisationUnitId(organisationUnitId);
-            visit = visitRepository.save(visit);
 
+        //For retrospective data entry formType is 1
+        if(formType == 1) {
+            visit = visitRepository.findTopByPatientIdAndDateVisitStartOrderByDateVisitStartDesc(encounterDTO.getPatientId(), encounter.getDateEncounter()).orElse(visit);
+            if(visit == null) {
+                visit = new Visit();
+                visit.setDateVisitEnd(encounter.getDateEncounter());
+                visit.setDateVisitStart(encounter.getDateEncounter());
+                visit.setTimeVisitStart(LocalTime.now());
+                visit.setTimeVisitEnd(LocalTime.now());
+                visit.setDateNextAppointment(null);
+                visit.setPatientId(encounter.getPatientId());
+                visit.setTypePatient(0);
+                visit.setOrganisationUnitId(organisationUnitId);
+                visit = visitRepository.save(visit);
+            }
             encounterDTO.setVisitId(visit.getId());
+        } else {
+            visit = visitRepository.findById(encounterDTO.getVisitId()).orElseThrow(() ->
+                    new EntityNotFoundException(Visit.class, "Visit Id", encounterDTO.getVisitId() + ""));
         }
-        visit = visitRepository.findById(encounterDTO.getVisitId()).orElseThrow(() ->
-                new EntityNotFoundException(Visit.class,"Visit Id", encounterDTO.getVisitId()+""));
 
         encounter.setUuid(UUID.randomUUID().toString());
         encounter.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         encounter.setOrganisationUnitId(organisationUnitId);
         Encounter savedEncounter = this.encounterRepository.save(encounter);
+        Optional<Form> form = formRepository.findByCodeAndArchived(savedEncounter.getFormCode(), UNARCHIVED);
 
-        if(encounterDTO.getTypePatient() != null & encounter.getFormForEncounterByFormCode().getType() != 1){
+        if(encounterDTO.getTypePatient() != null) {
             visit.setTypePatient(encounterDTO.getTypePatient());
             visitRepository.save(visit);
         }
@@ -261,14 +270,26 @@ public class EncounterService {
 
     public Page<Encounter> findAllPages(String firstName, String lastName, String hospitalNumber, Pageable pageable) {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-        List<Encounter> encounters = jdbcTemplate.query("SELECT * FROM encounter e LEFT JOIN patient p ON p.id = e.patient_id WHERE p.details ->>'firstName' ilike "+
+        List<Encounter> encounters = jdbcTemplate.query("SELECT * FROM encounter e LEFT OUTER JOIN patient p ON (p.id = e.patient_id) WHERE p.details ->>'firstName' ilike "+
                         "'"+firstName + "' OR p.details ->>'lastName' ilike " +
                         "'"+lastName +"' OR p.details ->>'hospitalNumber' ilike " +
                         "'"+hospitalNumber +"' AND p.organisation_unit_id="+
                         organisationUnitId +"AND p.archived="+
                         UNARCHIVED /*+" LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset()*/,
-                new BeanPropertyRowMapper<>(Encounter.class));
+                (rs, rowNum) -> mapEncounterResult(rs));
 
         return new PageImpl<>(encounters);
+
+
+    }
+
+    private Encounter mapEncounterResult(final ResultSet rs) throws SQLException {
+        Encounter encounter = new Encounter();
+        encounter.setId(rs.getLong("id"));
+        encounter.setPatientId(rs.getLong("patient_id"));
+        encounter.setVisitId(rs.getLong("visit_id"));
+        encounter.setFormCode(rs.getString("form_code"));
+        encounter.setProgramCode(rs.getString("program_code"));
+        return encounter;
     }
 }

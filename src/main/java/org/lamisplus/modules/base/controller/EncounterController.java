@@ -27,8 +27,8 @@ public class EncounterController {
     private final EncounterService encounterService;
 
     @PostMapping
-    public ResponseEntity<Encounter> save(@RequestBody EncounterDTO encounterDTO) {
-        return ResponseEntity.ok(encounterService.save(encounterDTO));
+    public ResponseEntity<Encounter> save(@RequestParam ("formType") Optional<Integer> formType, @RequestBody EncounterDTO encounterDTO) {
+        return ResponseEntity.ok(encounterService.save(encounterDTO, formType.orElse(0)));
     }
 
     @GetMapping

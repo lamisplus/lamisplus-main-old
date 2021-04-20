@@ -1,9 +1,10 @@
+/*
 import axios from "axios";
 import {url} from "../api";
 import * as ACTION_TYPES from "./types";
 import {toast} from "react-toastify"
 
-/**
+/!**
  * ===============================================================================
  * @Actions
  * Encounter CRUD OPERATIONS
@@ -11,7 +12,7 @@ import {toast} from "react-toastify"
  * @method GET => fetchPrescriptions() -> get all encounters: params {null} || query {dateStart}{dateEnd}
  *@method GET => fetchPatientPrescriptions() -> get all prescriptions for a patient: params {patientId} || query {}
  *================================================================================
- */
+ *!/
 
 export const createChart = () => dispatch => {
   axios
@@ -73,3 +74,4 @@ export const deleteChartById = (onSuccess, onError) => dispatch => {
         onError(error.response)
       })
 }
+*/
