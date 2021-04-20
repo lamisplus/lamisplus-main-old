@@ -2,6 +2,7 @@ import axios from "axios";
 import { url as baseUrl } from "../api";
 import * as ACTION_TYPES from "./types";
 import { toast } from "react-toastify";
+import { identity } from "lodash-es";
 
 
 /**
@@ -57,10 +58,11 @@ export const fetchAllBootstrapModuleBYBatchNum = (status, batchNum,onSuccess, on
     });
 };
 
-export const installBootstrapModule = (id, onSuccess, onError)=> dispatch => {
-  if(id){
+export const installBootstrapModule = (obj, onSuccess, onError)=> dispatch => {
+  console.log(obj)
+  if(obj){
   axios
-    .post(`${baseUrl}modules/${id}/install/`)
+    .post(`${baseUrl}modules/install/`,obj)
     .then(response => {
        console.log(response)
       dispatch({
@@ -70,6 +72,62 @@ export const installBootstrapModule = (id, onSuccess, onError)=> dispatch => {
 
       onSuccess && onSuccess(response.data);
       toast.success("Module installed successfully!");
+    })
+    .catch(error => {
+      console.log(error)
+      dispatch({
+        type: ACTION_TYPES.ERROR_INSTALL_BOOSTRAP_MODULE_BY_ID,
+        payload: error
+      })
+      onError && onError();
+      toast.error("Something went wrong!");
+    }
+    );
+    }
+};
+
+export const deActivateBootstrapModule = (id, onSuccess, onError)=> dispatch => {
+  console.log(id)
+  if(id){
+  axios
+    .post(`${baseUrl}modules/${id}/deactivate`)
+    .then(response => {
+       console.log(response)
+      dispatch({
+        type: ACTION_TYPES.INSTALL_BOOSTRAP_MODULE_BY_ID,
+        payload: response.data
+      })
+
+      onSuccess && onSuccess();
+      toast.success("Module Deactivate Successfully!");
+    })
+    .catch(error => {
+      console.log(error)
+      dispatch({
+        type: ACTION_TYPES.ERROR_INSTALL_BOOSTRAP_MODULE_BY_ID,
+        payload: error
+      })
+      onError && onError();
+      toast.error("Something went wrong!");
+    }
+    );
+    }
+};
+
+export const activateBootstrapModule = (id, onSuccess, onError)=> dispatch => {
+  console.log(id)
+  if(id){
+  axios
+    .post(`${baseUrl}modules/${id}/activate`)
+    .then(response => {
+       console.log(response)
+      dispatch({
+        type: ACTION_TYPES.INSTALL_BOOSTRAP_MODULE_BY_ID,
+        payload: response.data
+      })
+
+      onSuccess && onSuccess();
+      toast.success("Module Activate Successfully!");
     })
     .catch(error => {
       console.log(error)

@@ -12,7 +12,7 @@
     <groupId>org.lamisplus.modules</groupId>
     <artifactId>base-module</artifactId>
     <version>1.0.0</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <name>base-module</name>
     <description>LamisPlus base module</description>
 
@@ -249,6 +249,16 @@
         <finalName>${project.artifactId}</finalName>
         <defaultGoal>spring-boot:run</defaultGoal>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.0</version>
+                <!-- Excluding the webapp file from war -->
+                <configuration>
+                    <warSourceExcludes>target/base-module/**, */**</warSourceExcludes>
+                    <packagingExcludes>src/main/webapp/**</packagingExcludes>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

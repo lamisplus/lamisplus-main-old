@@ -3,7 +3,7 @@ import sidebarBgImage from "assets/img/sidebar/sidebar-4.jpg";
 import SourceLink from "components/SourceLink";
 import React, {useState} from "react";
 import { MdDashboard, MdGraphicEq, MdPerson, MdKeyboardArrowDown } from "react-icons/md";
-import { GiTestTubes, GiMedicines } from "react-icons/gi";
+import { GiTestTubes, GiMedicines,GiUnplugged } from "react-icons/gi";
 import { FaUserPlus, FaListUl, FaUserCog, FaCogs, FaWpforms } from "react-icons/fa";
 import {Link, NavLink} from "react-router-dom";
 import { Nav, Navbar, NavItem, NavLink as BSNavLink, Collapse } from "reactstrap";
@@ -31,13 +31,14 @@ const navItems = [
   { to: '/appointments', name: 'Appointments', exact: false, Icon: MdGraphicEq,
   roles: ["4d358195-095a-4944-bc5b-aa711915af8a_read", "4d358195-095a-4944-bc5b-aa711915af8a_write", "4d358195-095a-4944-bc5b-aa711915af8a_delete", "22ec08bd-eeae-4f5e-9041-44461d511e90_read"]},
   { to: '/report', name: 'Reports', exact: false, Icon: FaListUl },
-  // { to: '/visual', name: 'Visualization', exact: false, Icon: MdGraphicEq },
+  // { to: '/data-visualisation', name: 'Data Visualization', exact: false, Icon: MdGraphicEq },
+  // { to: '/plug-in', name: 'Plugins', exact: false, Icon: GiUnplugged },
   { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog,
     roles: ["admin_read", "user_read"] },
   // { to: '/data-visualisation', name: 'Data Visualisation', exact: false, Icon: GiTestTubes },
   // { to: '/select', name: 'React Select', exact: false, Icon: FaUserCog },
 
-  // { to: '/admin-dashboard', name: 'Administration Module', exact: false, Icon: FaUserCog },
+ 
 
  
 ];

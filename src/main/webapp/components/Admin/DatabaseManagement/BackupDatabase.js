@@ -2,8 +2,11 @@ import React, { useState }   from 'react';
 import { Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Input,FormFeedback,Label,Card,CardBody
 } from 'reactstrap';
 import MatButton from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { Alert, AlertTitle } from '@material-ui/lab';
+import BackupIcon from '@material-ui/icons/Backup';
+import Progress from './Progress';
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -47,10 +50,8 @@ const BackupDatabase = (props) => {
     const datasample = props.datasample ? props.datasample : {};
     const [otherfields, setOtherFields] = useState({fileName:""});
     const [errors, setErrors] = useState({});
-    const handleOtherFieldInputChange = e => {
-      setOtherFields ({ ...otherfields, [e.target.name]: e.target.value });
-      //console.log(otherfields)
-  }
+    const [uploadPercentage, setUploadPercentage] = useState(0);
+
   const validate = () => {
       let temp = { ...errors }
       temp.fileName = otherfields.fileName ? "" : "This field is required"
@@ -71,33 +72,34 @@ const BackupDatabase = (props) => {
                                 <Row style={{ marginTop: '20px'}}>
                                     <Col sm={12}>
                                         <Alert severity="info">
-                                            <AlertTitle>Instructions to add new module</AlertTitle>
+                                            <AlertTitle>Instructions to Backup Database</AlertTitle>
                                             
                                             <br/>
-                                            <strong>NOTE:</strong> The following format is allow .csv, .zip  
+                                            <strong>NOTE:</strong> The following format is allow  .zip  
                                         </Alert>
                                     </Col>
 
                                 </Row>
                                 <br/><br/><br/>
                                 <Row>
-                                <Col md={6}>
-                                    <FormGroup>
-                                        <Label for="">File Name</Label>
-                                              <Input
-                                                  type="text"
-                                                  name="fileName"
-                                                  id="fileName"
-                                                  
-                                                  value={otherfields.fileName}
-                                                  onChange={handleOtherFieldInputChange}
-                                                  {...(errors.fileName && { invalid: true})}
-                                                  
-                                              />
-                                                <FormFeedback>{errors.fileName}</FormFeedback>
-                                    </FormGroup>
-                                      </Col>
-                                     
+                                <Col md={12}>
+                                    <Button
+                                        variant="contained"
+                                        color="default"
+                                        className={classes.button}
+                                        startIcon={<BackupIcon />}
+                                        size= "large"
+                                        className=" float-right mr-1"
+                                    >
+                                        Backup
+                                    </Button>
+                                </Col>
+                                <br/>
+                                <Col sm={12}>
+                                    <Progress percentage={uploadPercentage} />
+                                    <br/>
+                                    {/* <strong>{installationMessage}</strong> */}
+                                </Col>   
                                 </Row>
                             <br/>
                             <Row>
@@ -107,7 +109,7 @@ const BackupDatabase = (props) => {
                                         variant='contained'
                                         color='primary'
                                         className={classes.button}
-                                        
+                                        hidden='true'
                                         className=" float-right mr-1"
                                         
                                     >
@@ -118,7 +120,7 @@ const BackupDatabase = (props) => {
                                         color='default'
                                         onClick={props.togglestatus}
                                         className={classes.button}
-                                        
+                                        hidden='true'
                                         className=" float-right mr-1"
                                     >
                                         Cancel

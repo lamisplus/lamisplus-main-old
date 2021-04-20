@@ -162,7 +162,18 @@ const SampleVerification = (props) => {
           return <p>{"---"}</p>
         }
     }
-
+    function sampleTypeList (test){
+        
+        const  maxVal = []
+          for(var i=0; i<test.length; i++){
+             
+                  if ( test[i].display!==null && test[i].display)
+                        console.log(test[i])
+                            maxVal.push(test[i].display.toString()+",")
+              
+          }
+        return maxVal;
+    }
 
 //This is function to check for the status of each collection to display on the tablist below 
     const sampleAction = (e) =>{
@@ -313,7 +324,7 @@ return (
                                                 {!loading ? fetchTestOrders.map((row) => (
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>
                                                       <th className={classes.td}>{row.data.description===""?" ":row.data.description}</th>
-                                                      <td className={classes.td}>{row.data.sample_type==="" ? " ":row.data.sample_type}</td>
+                                                      <td className={classes.td}>{row.data.sample_type==="" ? " ":sampleTypeList(row.data.sample_type)}</td>
                                                       <td className={classes.td}> {encounterDate} </td>
                                                       <td className={classes.td}>{sampleStatus(row.data.lab_test_order_status)} </td>
                                                       <td className={classes.td} hidden={!authentication.userHasRole(["laboratory_write"])}>{sampleAction(row)}</td>

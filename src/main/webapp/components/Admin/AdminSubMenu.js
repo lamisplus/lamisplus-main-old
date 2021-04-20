@@ -112,6 +112,7 @@ function AdminSubMenu(props) {
           </Dropdown>
         <Menu.Item>  <Link to={{pathname: "/admin-bootstrap-configuration"}} >Bootstrap Configuration </Link></Menu.Item>
      
+        <Menu.Item>  <Link to={{pathname: "/admin-database-management"}} >Database Management </Link></Menu.Item>
         <Menu.Item>  <Link to={{pathname: "/case-managers"}} >Case Management </Link></Menu.Item>
        
       </Menu>

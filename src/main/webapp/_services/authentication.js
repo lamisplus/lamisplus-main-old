@@ -83,6 +83,7 @@ function getCurrentUser(){
     const token = user.id_token;
     const decoded = jwt_decode(token);
     console.log(decoded);
+    console.log(currentUserSubject)
     return decoded;
 }
 
