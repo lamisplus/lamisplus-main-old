@@ -92,11 +92,17 @@ const PatientSearch = (props) => {
                           .then(response => response)
                           .then(result => {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> emeka_update
 
                               //console.log('in result')
                               //console.log( result.headers);
                               console.log( result.headers['x-total-count']);
+<<<<<<< HEAD
+>>>>>>> emeka_update
+=======
 >>>>>>> emeka_update
                               resolve({
                                   data: result.data.map((row) => ({
