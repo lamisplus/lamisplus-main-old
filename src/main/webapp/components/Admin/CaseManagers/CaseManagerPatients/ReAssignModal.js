@@ -54,7 +54,7 @@ Moment.locale('en');
 momentLocalizer();
 
 
-const ModalViewResult = (props) => {
+const ModalReassign = (props) => {
     const [loading, setLoading] = useState('')
     const listOfPatient =  props.listOfPatient
     const classes = useStyles()
@@ -74,7 +74,7 @@ const ModalViewResult = (props) => {
     console.log(patientArray)
 
 
-    const assignCaseManager = e => {
+    const ReassignCaseManager = e => {
         e.preventDefault()
         PatientListsArray["patientIds"] = patientArray
         PatientListsArray["userId"] = props.userId
@@ -87,8 +87,8 @@ const ModalViewResult = (props) => {
     return (
         <div >
             <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
-                <Form onSubmit={assignCaseManager}>
-                    <ModalHeader toggle={props.togglestatus}>Assign Case Manager</ModalHeader>
+                <Form onSubmit={ReassignCaseManager}>
+                    <ModalHeader toggle={props.togglestatus}>ReAssign Case Manager</ModalHeader>
                     <ModalBody>
                         <Card >
                             <CardBody>
@@ -130,4 +130,4 @@ const ModalViewResult = (props) => {
     );
 }
 
-export default connect(null, { update })(ModalViewResult);
+export default connect(null, { update })(ModalReassign);
