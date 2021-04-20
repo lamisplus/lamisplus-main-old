@@ -59,6 +59,9 @@ function ServiceFormPage(props) {
     return setShowFormPage(!showFormPage);
   };
 
+  React.useEffect(() => {
+    fetchEncounters();
+  }, []);
 
   React.useEffect(() => {
     setShowLoading(true);
@@ -85,7 +88,7 @@ function ServiceFormPage(props) {
   const fetchEncounters = () => {
     setShowEncounterLoading(true);
     const onSuccess = () => {
-      //setPatientEncouters(props.patientEncounterList)
+      setPatientEncouters(props.patientEncounterList)
       setShowEncounterLoading(false);
     };
     const onError = () => {
@@ -98,9 +101,6 @@ function ServiceFormPage(props) {
     props.fetchPatientEncounters(props.patient.patientId, onSuccess, onError);
   };
 
-  React.useEffect(() => {
-    fetchEncounters();
-  }, []);
 
   React.useEffect(() => {
     try {
@@ -356,6 +356,7 @@ function ServiceFormPage(props) {
                   visitId={props.patient.visitId}
                   onSuccess={onSuccess}
                   encounterId={currentForm.encounterId}
+                  formType={1}
                 />
               )}
               {currentForm && currentForm.type === "VIEW_ALL" && (

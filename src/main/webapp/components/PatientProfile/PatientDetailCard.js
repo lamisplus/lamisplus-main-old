@@ -94,7 +94,7 @@ function PatientDetailCard(props) {
             <Col md={4} className={classes.root2}>
               <span>
                 {" "}
-                 Address : <b>{patient.city || "N/A"}</b>
+                 Address : <b>{patient.street || ""} {", "}{patient.details && patient.details.province && patient.details.province.name ? patient.details.province.name : ' '}{", "}{patient.details && patient.details.state && patient.details.state.name ? patient.details.state.name : ' '} </b>
               </span>
             </Col>
 
