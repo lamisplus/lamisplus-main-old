@@ -169,10 +169,10 @@ const SampleVerification = (props) => {
              
                   if ( test[i].display!==null && test[i].display)
                         console.log(test[i])
-                            maxVal.push(test[i].display.toString()+",")
+                            maxVal.push(test[i].display)
               
           }
-        return maxVal;
+        return maxVal.toString();
     }
 
 //This is function to check for the status of each collection to display on the tablist below 
