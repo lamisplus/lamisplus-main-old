@@ -29,9 +29,9 @@ public class FormService {
     private final AccessRight accessRight;
     private final PermissionRepository permissionRepository;
     private static final int UN_ARCHIVED = 0;
-    private static final String READ = "read";
-    private static final String WRITE = "write";
-    private static final String DELETE = "delete";
+    private static final String READ = "Read";
+    private static final String WRITE = "Write";
+    private static final String DELETE = "Delete";
     private static final String UNDERSCORE = "_";
 
     public List getAllForms() {
@@ -58,9 +58,9 @@ public class FormService {
             String write = UNDERSCORE + WRITE;
             String delete = UNDERSCORE + DELETE;
 
-            permissions.add(new Permission(formDTO.getCode() + read, formDTO.getName() + read));
-            permissions.add(new Permission(formDTO.getCode() + write, formDTO.getName() + write));
-            permissions.add(new Permission(formDTO.getCode() + delete, formDTO.getName() + delete));
+            permissions.add(new Permission(formDTO.getCode() + read, formDTO.getName() +" Read"));
+            permissions.add(new Permission(formDTO.getCode() + write, formDTO.getName() +" Write"));
+            permissions.add(new Permission(formDTO.getCode() + delete, formDTO.getName() +" Delete"));
             permissionRepository.saveAll(permissions);
 
         return formRepository.save(form);
