@@ -21,6 +21,7 @@ import "@reach/menu-button/styles.css";
 import {Menu, MenuButton, MenuItem, MenuList} from '@reach/menu-button';
 import {MdDeleteForever, MdModeEdit } from "react-icons/md";
 import Grid from '@material-ui/core/Grid';
+import {  FaSyncAlt } from "react-icons/fa";
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -32,11 +33,13 @@ const ProgramManagerSearch = (props) => {
     const [loading, setLoading] = React.useState(true);
     const [showModal, setShowModal] = React.useState(false);
     const [deleting, setDeleting] = React.useState(false);
-    const [deactiavte, setDeactiavte] = React.useState(false);
     const [currentProgramManager, setCurrentProgramManager] = React.useState(null);
     const [showDeleteModal, setShowDeleteModal] = React.useState(false);
+    const [showDeactivateModal, setshowDeactivateModal] = React.useState(false);
+    const [showActivateProgramModal, setshowActivateProgramModal] = React.useState(false);
     const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal)
-    const toggleDeactivateModal = () => setShowDeleteModal(!deactiavte)
+    const toggleDeactivateModal = () => setshowDeactivateModal(!showDeactivateModal)
+    const toggleActivateProgramModal = () => setshowActivateProgramModal(!showActivateProgramModal)
 
     const toggleModal = () => setShowModal(!showModal)
     const classes = useStyles()
@@ -64,12 +67,33 @@ const ProgramManagerSearch = (props) => {
         toggleModal();
 
     }
+
+    const ActivateProgramId = (row) =>{
+        console.log(row)
+
+        const onSuccess = () => {
+
+            toggleActivateProgramModal();
+            toast.success("Program deactivated successfully!");
+            loadProgramManager();
+        };
+        const onError = () => {
+
+            toast.error("Something went wrong, please contact administration");
+        };
+        const data = row;
+        data['archived'] =0;
+        props.updateProgram(row.id, data, onSuccess , onError)
+
+    }
+
+
     const deactiavtePrograms = (row) =>{
         console.log(row)
         // setDeleting(true);
         const onSuccess = () => {
             // setDeleting(false);
-            toggleDeleteModal();
+            toggleDeactivateModal();
             toast.success("Program deactivated successfully!");
             loadProgramManager();
         };
@@ -77,8 +101,9 @@ const ProgramManagerSearch = (props) => {
             // setDeleting(false);
             toast.error("Something went wrong, please contact administration");
         };
-        row['archived'] =2;
-        props.updateProgram(row.id, row, onSuccess , onError)
+        const data = row;
+        data['archived'] =2;
+        props.updateProgram(row.id, data, onSuccess , onError)
 
     }
 
@@ -91,9 +116,13 @@ const ProgramManagerSearch = (props) => {
 
     const deActivateProgram = (e) => {
         setCurrentProgramManager(e);
-        toggleDeleteModal();
+        toggleDeactivateModal();
     }
 
+    const ActivateProgram = (e) => {
+        setCurrentProgramManager(e);
+        toggleActivateProgramModal();
+    }
 
     const processDelete = (id) => {
         setDeleting(true);
@@ -139,7 +168,7 @@ const ProgramManagerSearch = (props) => {
                     { status ===0 ?
                         <MenuItem onSelect={() => deActivateProgram(e)}><MdModeEdit size="15" style={{color: '#3F51B5'}}/>{" "}Deactivate</MenuItem>
                         :
-                        <MenuItem onSelect={() => openProgram(e)}><MdModeEdit size="15" style={{color: '#3F51B5'}}/>{" "}Activate</MenuItem>
+                        <MenuItem onSelect={() => ActivateProgram(e)}><MdModeEdit size="15" style={{color: '#3F51B5'}}/>{" "}Activate</MenuItem>
                     }
                     <MenuItem onSelect={() => updatePrograms(e)}><MdModeEdit size="15" style={{color: '#000'}}/>{" "} Update</MenuItem>
                     <MenuItem onSelect={() => deleteProgram(e)}><MdDeleteForever size="15" style={{color: '#000'}}/>{" "}Delete</MenuItem>
@@ -170,14 +199,12 @@ const ProgramManagerSearch = (props) => {
                 <MaterialTable
                     title="Find By Program Area"
                     columns={[
-                        { title: "Module ID", field: "moduleId" },
                         {title: "Program Area", field: "name"},
                         {title: "Status", field: "status"},
                         {title: "Action", field: "actions"},
                     ]}
                     isLoading={loading}
                     data={props.list.map((row) => ({
-                        moduleId: row.archived,
                         name: row.name,
                         status:  <Grid component="label" container alignItems="center" spacing={1}>
                             <Grid item>{statusAction(row.archived)}</Grid>
@@ -185,7 +212,6 @@ const ProgramManagerSearch = (props) => {
                         actions:<div>{actionButton(row, row.archived)} </div>
 
                     }))}
-                    //overriding action menu with props.actions
                     components={props.actions}
                     options={{
                         headerStyle: {
@@ -229,7 +255,7 @@ const ProgramManagerSearch = (props) => {
                     </Button>
                 </ModalFooter>
             </Modal>
-            <Modal isOpen={showDeleteModal} toggle={toggleDeactivateModal} >
+            <Modal isOpen={showDeactivateModal} toggle={toggleDeactivateModal} >
                 <ModalHeader toggle={toggleDeactivateModal}> Deactivate Program - {currentProgramManager && currentProgramManager.name ? currentProgramManager.name : ""} </ModalHeader>
                 <ModalBody>
                     <p>Are you sure you want to proceed ?</p>
@@ -240,7 +266,7 @@ const ProgramManagerSearch = (props) => {
                         variant='contained'
                         color='primary'
                         className={classes.button}
-                        startIcon={<SaveIcon />}
+                        startIcon={<FaSyncAlt />}
                         disabled={deleting}
                         onClick={() => deactiavtePrograms(currentProgramManager)}>
                         Deactiavte  {deleting ? <Spinner /> : ""}
@@ -249,6 +275,31 @@ const ProgramManagerSearch = (props) => {
                         variant='contained'
                         color='default'
                         onClick={toggleDeactivateModal}
+                        startIcon={<CancelIcon />}>
+                        Cancel
+                    </Button>
+                </ModalFooter>
+            </Modal>
+            <Modal isOpen={showActivateProgramModal} toggle={toggleActivateProgramModal} >
+                <ModalHeader toggle={toggleActivateProgramModal}> Activate Program - {currentProgramManager && currentProgramManager.name ? currentProgramManager.name : ""} </ModalHeader>
+                <ModalBody>
+                    <p>Are you sure you want to proceed ?</p>
+                </ModalBody>
+                <ModalFooter>
+                    <Button
+                        type='button'
+                        variant='contained'
+                        color='primary'
+                        className={classes.button}
+                        startIcon={<FaSyncAlt />}
+                        disabled={deleting}
+                        onClick={() => ActivateProgramId(currentProgramManager)}>
+                        activate  {deleting ? <Spinner /> : ""}
+                    </Button>
+                    <Button
+                        variant='contained'
+                        color='default'
+                        onClick={toggleActivateProgramModal}
                         startIcon={<CancelIcon />}>
                         Cancel
                     </Button>
