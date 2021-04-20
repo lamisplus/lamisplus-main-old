@@ -3,13 +3,13 @@ import MaterialTable from 'material-table';
 import { Link } from 'react-router-dom'
 import { connect } from "react-redux";
 import {CardBody, Card} from "reactstrap";
-import { fetchPatientUser } from "../../../../actions/caseManager";
+import { fetchPatientUserId } from "../../../../actions/caseManager";
 import "../casemanager.css";
-// import AddPatientModal from './AddPatientModal';
 import {authentication} from '../../../../_services/authentication';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import { APPLICATION_CODESET_GENDER } from "../../../../actions/types";
 import { fetchApplicationCodeSet } from "../../../../actions/applicationCodeset";
+import ReAssignModal from './ReAssignModal';
 
 
 const CaseManagerPatient = (props) => {
@@ -29,7 +29,7 @@ const CaseManagerPatient = (props) => {
         const onError = () => {
             setLoading(false)
         }
-        props.fetchPatientUser(10, onSuccess, onError);
+        props.fetchPatientUserId(10, onSuccess, onError);
     }, []); //componentDidMount
 
     const calculate_age = dob => {
@@ -116,7 +116,7 @@ const CaseManagerPatient = (props) => {
                         }
                     ]}
                 />
-                {/*AddPatientModal modalstatus={modal3} togglestatus={togglemodal3} listOfPatient={collectmodal} userId={row.id}/>*/}
+                <ReAssignModal modalstatus={modal3} togglestatus={togglemodal3} listOfPatient={collectmodal} />
             </CardBody>
         </Card>
     );
@@ -130,7 +130,7 @@ const mapStateToProps = state => {
 };
 
 const mapActionToProps = {
-    fetchPatientUser: fetchPatientUser,
+    fetchPatientUserId: fetchPatientUserId,
     fetchApplicationCodeSet: fetchApplicationCodeSet
 };
 
