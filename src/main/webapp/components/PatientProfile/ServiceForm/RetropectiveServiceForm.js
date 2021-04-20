@@ -49,7 +49,7 @@ function ServiceFormPage(props) {
   const [showFormPage, setShowFormPage] = useState(false);
   const [currentForm, setCurrentForm] = useState();
   const [patientEncounters, setPatientEncouters] = useState([]);
-  const [dateEncounter, setDateEncounter] = useState(null);
+  const [dateEncounter, setDateEncounter] = useState(new Date());
 
   const togglePage = () => {
     if (showFormPage) {
@@ -114,6 +114,7 @@ function ServiceFormPage(props) {
   const loadForm = () => {
     if(!dateEncounter){
       toast.error('Enter encounter date');
+      return;
     }
     if (!currentForm) {
       return;

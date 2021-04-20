@@ -30,5 +30,8 @@ public interface FormRepository extends JpaRepository<Form, Long> , JpaSpecifica
     List<Form> findAllByCodeNotIn(List<String> permissionName);
 
     Optional<Form> findByCodeAndArchivedAndType(String formCode, int archived, int formType);
+
+    Optional<Form> findByParentCodeAndArchivedAndType(String formCode, int archived, int formType);
+
 }
 

@@ -546,38 +546,36 @@ public class PatientService {
             if (patientDTO.getDetails() != null) {
                 String patientDetailsString = mapper.writeValueAsString(patientDTO.getDetails());
                 JSONObject patientJson = new JSONObject(patientDetailsString);
-                if (patientJson.get("firstName") != null)
-                    patientDTO.setFirstName(patientJson.get("firstName").toString());
+                if (patientJson.get("firstName") != null) patientDTO.setFirstName(patientJson.get("firstName").toString());
                 if (patientJson.get("lastName") != null) patientDTO.setLastName(patientJson.get("lastName").toString());
-                if (patientJson.get("hospitalNumber") != null)
-                    patientDTO.setHospitalNumber(patientJson.get("hospitalNumber").toString());
-                if (patientJson.get("gender.id") != null)
-                    patientDTO.setGenderId(Long.valueOf(patientJson.get("gender.id").toString()));
-                if (patientJson.get("otherNames") != null)
-                    patientDTO.setOtherNames(patientJson.get("otherNames").toString());
-                if (patientJson.get("dob") != null)
-                    patientDTO.setDob(LocalDate.parse(patientJson.get("dob").toString(), formatter));
-                if (patientJson.get("dobEstimated") != null)
-                    patientDTO.setDobEstimated(Boolean.valueOf(patientJson.get("dobEstimated").toString()));
-                if (patientJson.get("mobilePhoneNumber") != null)
-                    patientDTO.setMobilePhoneNumber(patientJson.get("mobilePhoneNumber").toString());
-                if (patientJson.get("alternatePhoneNumber") != null)
-                    patientDTO.setAlternatePhoneNumber(patientJson.get("alternatePhoneNumber").toString());
-                if (patientJson.get("zipCode") != null || !patientJson.get("zipCode").toString().isEmpty())
-                    patientDTO.setZipCode(patientJson.get("zipCode").toString());
-                if (patientJson.get("city") != null) patientDTO.setCity(patientJson.get("city").toString());
+                if (patientJson.get("hospitalNumber") != null) patientDTO.setHospitalNumber(patientJson.get("hospitalNumber").toString());
+                if (patientJson.get("gender") != null) {
+                    JSONObject genderJson = (JSONObject) patientJson.get("gender");
+                    patientDTO.setGenderId(Long.valueOf(genderJson.get("id").toString()));
+                }
+                if (patientJson.get("otherNames") != null) patientDTO.setOtherNames(patientJson.get("otherNames").toString());
+                if (patientJson.get("dob") != null) patientDTO.setDob(LocalDate.parse(patientJson.get("dob").toString(), formatter));
+                if (patientJson.get("dobEstimated") != null) patientDTO.setDobEstimated(Boolean.valueOf(patientJson.get("dobEstimated").toString()));
+                if (patientJson.get("mobilePhoneNumber") != null) patientDTO.setMobilePhoneNumber(patientJson.get("mobilePhoneNumber").toString());
+                if (patientJson.get("alternatePhoneNumber") != null) patientDTO.setAlternatePhoneNumber(patientJson.get("alternatePhoneNumber").toString());
                 if (patientJson.get("street") != null) patientDTO.setStreet(patientJson.get("street").toString());
                 if (patientJson.get("landmark") != null) patientDTO.setLandmark(patientJson.get("landmark").toString());
-                if (patientJson.get("gender.id") != null)
-                    patientDTO.setGenderId(Long.valueOf(patientJson.get("gender.id").toString()));
-                if (patientJson.get("education.id") != null)
-                    patientDTO.setEducationId(Long.valueOf(patientJson.get("education.id").toString()));
-                if (patientJson.get("occupation.id") != null)
-                    patientDTO.setOccupationId(Long.valueOf(patientJson.get("occupation.id").toString()));
-                if (patientJson.get("country.id") != null)
-                    patientDTO.setCountryId(Long.valueOf(patientJson.get("country.id").toString()));
-                if (patientJson.get("maritalStatus.id") != null)
-                    patientDTO.setMaritalStatusId(Long.valueOf(patientJson.get("maritalStatus.id").toString()));
+                if (patientJson.get("education") != null) {
+                    JSONObject educationJson = (JSONObject) patientJson.get("education");
+                    patientDTO.setEducationId(Long.valueOf(educationJson.get("id").toString()));
+                }
+                if (patientJson.get("occupation") != null) {
+                    JSONObject occupationJson = (JSONObject) patientJson.get("occupation");
+                    patientDTO.setOccupationId(Long.valueOf(occupationJson.get("id").toString()));
+                }
+                if (patientJson.get("country") != null) {
+                    JSONObject countryJson = (JSONObject) patientJson.get("country");
+                    patientDTO.setCountryId(Long.valueOf(countryJson.get("id").toString()));
+                }
+                if (patientJson.get("maritalStatus") != null) {
+                    JSONObject maritalStatusJson = (JSONObject) patientJson.get("maritalStatus");
+                    patientDTO.setMaritalStatusId(Long.valueOf(maritalStatusJson.get("id").toString()));
+                }
             }
         } catch (JSONException | JsonProcessingException e) {
             e.printStackTrace();

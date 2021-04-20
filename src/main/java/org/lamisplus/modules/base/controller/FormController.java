@@ -47,7 +47,6 @@ public class FormController {
     @PutMapping("/{id}")
     public ResponseEntity<Form> update(@PathVariable Long id, @RequestBody FormDTO formDTO) {
         return ResponseEntity.ok(this.formService.update(id, formDTO));
-
     }
 
     @DeleteMapping("/{id}")

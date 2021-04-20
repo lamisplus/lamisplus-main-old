@@ -53,14 +53,15 @@ public class FormService {
         Form form = formMapper.toFormDTO(formDTO);
         form.setArchived(UN_ARCHIVED);
         form.setCreatedBy(userService.getUserWithRoles().get().getUserName());
-        String read = UNDERSCORE+READ; String write = UNDERSCORE+WRITE; String delete = UNDERSCORE+DELETE;
 
-        permissions.add(new Permission(formDTO.getCode()+read, formDTO.getName() + read));
+            String read = UNDERSCORE + READ;
+            String write = UNDERSCORE + WRITE;
+            String delete = UNDERSCORE + DELETE;
 
-        permissions.add(new Permission(formDTO.getCode()+write, formDTO.getName() + write));
-
-        permissions.add(new Permission(formDTO.getCode()+delete, formDTO.getName() + delete));
-        permissionRepository.saveAll(permissions);
+            permissions.add(new Permission(formDTO.getCode() + read, formDTO.getName() + read));
+            permissions.add(new Permission(formDTO.getCode() + write, formDTO.getName() + write));
+            permissions.add(new Permission(formDTO.getCode() + delete, formDTO.getName() + delete));
+            permissionRepository.saveAll(permissions);
 
         return formRepository.save(form);
     }
@@ -78,16 +79,16 @@ public class FormService {
 
     public Form getFormByFormCode(String formCode, Optional<Integer> type) {
         Set<String> permissions = accessRight.getAllPermission();
-        Optional<Form> optionalForm;
 
         accessRight.grantAccess(formCode, FormService.class, permissions);
-        if(type.isPresent()){
-            optionalForm = formRepository.findByCodeAndArchivedAndType(formCode, UN_ARCHIVED, type.get());
-        } else {
-            optionalForm = formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED);
+        if (type.isPresent()) {
+            if (type.get() == 1) {
+                formRepository.findByCodeAndArchivedAndType(formCode, UN_ARCHIVED, type.get())
+                        .orElseThrow(() -> new EntityNotFoundException(Form.class, "Form Code has no retrospective", formCode));
+            }
         }
-        Form form = optionalForm.orElseThrow(() -> new EntityNotFoundException(Form.class, "Form Code", formCode));
-        return form;
+        return formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(Form.class, "Form Code", formCode));
     }
 
     public List getFormsByUsageStatus(Integer usageStatus) {
