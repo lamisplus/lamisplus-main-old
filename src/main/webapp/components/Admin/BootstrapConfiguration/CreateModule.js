@@ -379,7 +379,7 @@ const CreateModule = (props) => {
                             <td>{row.description===""?" ":row.description}</td>
 
                             <td>{row.version===""?" ":row.version}</td>
-                            <td>{row.status!==2 ? "":"Installed"}</td>
+                            <td>{row.status!==2 ? "Uploaded":"Uploaded"}</td>
                             <td>{sampleAction(row)}</td>
                           </tr>
 
