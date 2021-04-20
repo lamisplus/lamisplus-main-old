@@ -164,10 +164,10 @@ const useStyles = makeStyles({
              
                   if ( test[i].display!==null && test[i].display)
                         console.log(test[i])
-                            maxVal.push(test[i].display.toString()+",")
+                            maxVal.push(test[i].display)
               
           }
-        return maxVal;
+        return maxVal.toString();
     }
 //This is function to check for the status of each collection to display on the tablist below 
     const sampleAction = (e,dateEncounter) =>{
@@ -318,7 +318,7 @@ return (
                                                     row.data!==null?
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>
                                                       <th className={classes.td}>{row.data.description===""?" ":row.data.description}</th>
-                                                      <td className={classes.td}>{sampleTypeList(row.data && row.data.sample_type ? row.data.sample_type : null)}</td>
+                                                      <td className={classes.td}>{sampleTypeList(row.data && row.data.sample_type!==null ? row.data.sample_type : null)}</td>
                                                       <td className={classes.td}> {encounterDate} </td>
                                                       <td className={classes.td}>{sampleStatus(row.data.lab_test_order_status)}  </td>
                                                       <td className={classes.td} hidden={!authentication.userHasRole(["laboratory_write"])} >{sampleAction(row,encounterDate)}</td>
