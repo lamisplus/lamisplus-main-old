@@ -193,8 +193,10 @@ const ResultReporting = (props) => {
   }
 
 return (
-    <div>
+    <React.Fragment>
     <Card>
+    <CardBody>
+        <br/>
      <Breadcrumbs aria-label="breadcrumb">
             <Link color="inherit" to={{pathname: "/laboratory", state: 'test-result'}} >
                 Laboratory
@@ -217,7 +219,7 @@ return (
                 </div>
                 <br/>
                 <Card className="mb-12">
-                    <CardHeader>Test Order Details 
+                    <CardHeader> <span style={{  textTransform: 'capitalize'}}>Test Order Details </span>
                         <Link 
                             to ={{ 
                               pathname: "/laboratory",  
@@ -317,11 +319,12 @@ return (
               </Card>
             </Col>
         </Row>
+        </CardBody>
         </Card>
         <ModalSampleResult modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} />
         <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} /> 
         <ModalSample modalstatus={modal4} togglestatus={toggleModal4} datasample={collectModal}  labnumber={newSample[0].data.lab_number}/>   
-    </div>
+    </React.Fragment>
   )
   
 }
