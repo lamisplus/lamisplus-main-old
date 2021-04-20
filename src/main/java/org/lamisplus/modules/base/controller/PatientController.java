@@ -4,9 +4,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.dto.*;
-import org.lamisplus.modules.base.domain.entity.Form;
 import org.lamisplus.modules.base.domain.entity.Patient;
-import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.service.PatientService;
 import org.lamisplus.modules.base.util.PaginationUtil;
 import org.springframework.data.domain.Page;
@@ -29,8 +27,32 @@ public class PatientController {
     private final PatientService patientService;
 
     @GetMapping
-    public ResponseEntity<List<PatientDTO>> getAllPatients(@PageableDefault(value = 100) Pageable pageable) {
-        Page<Patient> page = patientService.findPage(pageable);
+    public ResponseEntity<List<PatientDTO>> getAllPatients(@RequestParam (required = false, defaultValue = "%*%") String firstName,
+                                                           @RequestParam (required = false, defaultValue = "%*%") String lastName,
+                                                           @RequestParam (required = false, defaultValue = "%*%") String hospitalNumber,
+                                                           @RequestParam (required = false)String key,
+                                                           @RequestParam (required = false)String value,
+                                                           @RequestParam (required = false, defaultValue = "%*%") String searchValue,
+                                                           @PageableDefault(value = 100) Pageable pageable) {
+        Page<Patient> page;
+        if(key != null && !key.isEmpty() && value != null && !value.isEmpty()){
+            value = "%"+value+"%";
+            page = patientService.findPage(key, value, pageable);
+        } else if(!firstName.equals("%*%") || !lastName.equals("%*%") || !hospitalNumber.equals("%*%")){
+            if(!firstName.equals("%*%"))firstName = "%"+firstName+"%";
+            if(!lastName.equals("%*%"))lastName = "%"+lastName+"%";
+            if(!hospitalNumber.equals("%*%"))hospitalNumber = "%"+hospitalNumber+"%";
+            page = patientService.findPage(firstName, lastName,hospitalNumber, pageable);
+
+        } else if(!searchValue.equals("%*%")) {
+            firstName = "%"+searchValue+"%";
+            lastName = "%"+searchValue+"%";
+            hospitalNumber = "%"+searchValue+"%";
+            page = patientService.findAllPages(firstName, lastName,hospitalNumber, pageable);
+        }
+        else {
+                page = patientService.findPage(pageable);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(patientService.getAllPatients(page), headers, HttpStatus.OK);
     }
@@ -95,8 +117,6 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getAllPatientsByProgramCode(programCode));
     }
 
-
-
     /*@ApiOperation(value="getVisitByPatientIdAndVisitDate", notes = "patientId= required, dateStart=optional, dateEnd=optional\n\n" +
             "Example - /api/patient/20/visits?dateStart=02-03-2020")*/
     @GetMapping("/{id}/visits/{dateStart}/{dateEnd}")
@@ -141,12 +161,12 @@ public class PatientController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Person> save(@RequestBody PatientDTO patientDTO) {
+    public ResponseEntity<Patient> save(@RequestBody PatientDTO patientDTO) {
         return ResponseEntity.ok(patientService.save(patientDTO));
     }
 
     @PutMapping("/{id}")
-    public Person update(@PathVariable Long id, @RequestBody PatientDTO patientDTO) {
+    public Patient update(@PathVariable Long id, @RequestBody PatientDTO patientDTO) {
         return patientService.update(id, patientDTO);
     }
 

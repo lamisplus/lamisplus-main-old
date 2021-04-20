@@ -5,6 +5,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class PaginationUtil {
     private static final String HEADER_X_TOTAL_COUNT = "X-Total-Count";
@@ -16,6 +18,9 @@ public final class PaginationUtil {
     public static <T> HttpHeaders generatePaginationHttpHeaders(UriComponentsBuilder uriBuilder, Page<T> page) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Total-Count", Long.toString(page.getTotalElements()));
+        List<String> allowedHeaders = new ArrayList<>();
+        allowedHeaders.add("X-Total-Count");
+        headers.setAccessControlExposeHeaders(allowedHeaders);
         int pageNumber = page.getNumber();
         int pageSize = page.getSize();
         StringBuilder link = new StringBuilder();

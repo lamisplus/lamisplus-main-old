@@ -48,7 +48,7 @@ public class ProgramService {
     }
 
     public List<Program> getAllPrograms(){
-        return programRepository.findAllByArchivedOrderByIdDesc(UN_ARCHIVED);
+        return programRepository.findAllByArchivedIsNotOrderByIdDesc(ARCHIVED);
     }
 
     public List<Form> getFormByProgramId(Long programId){
@@ -62,10 +62,11 @@ public class ProgramService {
     }
 
     public Integer delete(Long id) {
-        Optional<Program> programOptional = programRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if(!programOptional.isPresent()) throw new EntityNotFoundException(Program.class, "Program Id", id + "");
-        programOptional.get().setArchived(ARCHIVED);
-        return programOptional.get().getArchived();
+        Program program = programRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(
+                () -> new EntityNotFoundException(Program.class, "Program Id", id + ""));
+        program.setArchived(ARCHIVED);
+        programRepository.save(program);
+        return program.getArchived();
     }
 
     public Program update(Long id, ProgramDTO programDTO) {

@@ -6,7 +6,7 @@
 export const url =  window.BASE_URL;
 
 //Local Server
-//export const url =  'http://localhost:8080/api/';
+export const url =  'http://localhost:8484/api/';
 
 //export const url = 'http://192.168.43.101:8484/api/'
 

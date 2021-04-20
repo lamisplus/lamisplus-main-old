@@ -15,7 +15,7 @@ acrossHibernate:
 applicationInfo:
     applicationId: lamisplus
     applicationName: LAMISPLUS
-    buildDate: "@timestamp@"
+    buildDate: "@maven.build.timestamp@"
     buildId: "@pom.version@-@build.revision@"
 build:
     number: "@build.revision@"
@@ -46,12 +46,13 @@ server:
     port: 8484
     tomcat:
         uri-encoding: UTF-8
+        connection-timeout: 20s
 spring:
     datasource:
         username: postgres
         password: emeka
         driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:5432/lamisplus_db_bk_25_03_21?stringtype=unspecified
+        url: jdbc:postgresql://localhost:5432/lamisplus_db_bk_15_04_21?stringtype=unspecified
         hibernate:
             event.merge.enty_copy_observer: allow
         hikari:
@@ -66,6 +67,9 @@ spring:
         database: POSTGRESQL
         show-sql: true
         open-in-view: false
+        hibernate:
+            ddl-auto: update
+            properties:
         properties:
             hibernate.enable_lazy_load_no_trans: true
 

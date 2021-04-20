@@ -17,4 +17,6 @@ public interface ApplicationUserPatientRepository extends JpaRepository<Applicat
     List<ApplicationUserPatient> findAllByPatientIdIn(List<Long> patientIds);
 
     List<ApplicationUserPatient> findAllByArchivedAndPatientIdNotIn(int archived, List<Long> patientIds);
+
+    Optional<ApplicationUserPatient> findByIdAndArchived(Long id, int archived);
 }

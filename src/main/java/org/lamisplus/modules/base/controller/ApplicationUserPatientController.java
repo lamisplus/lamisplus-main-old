@@ -45,8 +45,8 @@ public class ApplicationUserPatientController {
 
     }
 
-    /*@DeleteMapping("/{id}")
-    public Boolean delete(@PathVariable Long id, @RequestBody ApplicationUserOrganisationUnit applicationUserOrganisationUnit) {
-        return this.applicationUserPatientService.delete(id, applicationUserOrganisationUnit);
-    }*/
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Integer> delete(@PathVariable Long id) {
+        return ResponseEntity.ok(applicationUserPatientService.delete(id));
+    }
 }

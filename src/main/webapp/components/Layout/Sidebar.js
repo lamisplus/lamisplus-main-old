@@ -9,8 +9,9 @@ import {Link, NavLink} from "react-router-dom";
 import { Nav, Navbar, NavItem, NavLink as BSNavLink, Collapse } from "reactstrap";
 import bn from "utils/bemnames";
 import { authentication } from '../../_services/authentication';
-import {fetchAll} from "../../actions/menu";
+import {fetchAll, fetchUserPermission} from "../../actions/menu";
 import {connect} from "react-redux";
+import _ from "lodash";
 
 const sidebarBackground = {
   backgroundImage: `url("${sidebarBgImage}")`,
@@ -61,7 +62,6 @@ const adminItems = [
 ];
 
 const bem = bn.create("sidebar");
-const userRoles = authentication.getCurrentUserRole();
 
 
 
@@ -72,9 +72,11 @@ class Sidebar extends React.Component {
     this.state = {
       isOpenComponents: false,
       loading: false,
+      permissionLoading: false,
     };
-
+    this.fetchPermisisons();
     this.fetchExternalMenu();
+
   }
 
   handleClick = (name) => () => {
@@ -86,6 +88,13 @@ class Sidebar extends React.Component {
     });
   };
 
+   userHasRole(role){
+    const userRoles = this.props.permissions;
+    if(role && role.length > 0 && _.intersection(role, userRoles).length === 0){
+      return false;
+    }
+    return true;
+  }
   fetchExternalMenu = () => {
     this.setState({loading: true});
     const onSuccess = () => {
@@ -95,6 +104,17 @@ class Sidebar extends React.Component {
       this.setState({loading: false});
     }
     this.props.fetchAllExternalModulesMenu(onSuccess, onError);
+  };
+
+  fetchPermisisons = () => {
+    this.setState({permissionLoading: true});
+    const onSuccess = () => {
+      this.setState({permissionLoading: false});
+    }
+    const onError = () => {
+      this.setState({permissionLoading: false});
+    }
+    this.props.fetchUserPermission(onSuccess, onError);
   };
 
 
@@ -117,10 +137,10 @@ class Sidebar extends React.Component {
               </SourceLink>
             </Navbar>
             <Nav vertical>
-              {navItems.map(({ to, name, exact, Icon , roles}, index) => (
+              {this.props.permissions  && this.props.permissions.length > 0 && navItems.map(({ to, name, exact, Icon , roles}, index) => (
 
                   <>
-                    {!authentication.userHasRole(roles) ?
+                    {!this.userHasRole(roles) ?
                         <></> :
                         <NavItem key={index} className={bem.e("nav-item")}>
                           <BSNavLink
@@ -194,11 +214,13 @@ class Sidebar extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     menuList: state.menu.list,
+    permissions: state.menu.permissions,
   };
 };
 
 const mapActionToProps = {
   fetchAllExternalModulesMenu: fetchAll,
+  fetchUserPermission: fetchUserPermission
 };
 
 

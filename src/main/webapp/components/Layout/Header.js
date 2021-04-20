@@ -6,6 +6,7 @@ import { notificationsData } from "demos/header";
 import { authentication } from "../../_services/authentication";
 import axios from "axios";
 import Select from "react-select";
+
 // import withBadge from 'hocs/withBadge';
 import { Link } from "react-router-dom";
 
@@ -35,7 +36,10 @@ import MatButton from "@material-ui/core/Button";
 import CancelIcon from '@material-ui/icons/Cancel'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import * as ACTION_TYPES from "../../actions/types";
+import store from "../../store";
 const bem = bn.create("header");
+const { dispatch } = store;
 
 // const MdNotificationsActiveWithBadge = withBadge({
 //   size: 'md',
@@ -90,13 +94,16 @@ function Header() {
           .get(`${baseUrl}account`)
           .then((response) => {
             setUser(response.data);
-            console.log(response.data);
             // set user permissions in local storage for easy retrieval, when user logs out it will be removed from the local storage
             localStorage.setItem('currentUser_Permission', JSON.stringify(response.data.permissions));
+            dispatch({
+              type: ACTION_TYPES.FETCH_PERMISSIONS,
+              payload: response.data.permissions,
+            });
           })
           .catch((error) => {
             authentication.logout();
-            console.log(error);
+           // console.log(error);
           });
     }
   }

@@ -7,14 +7,11 @@ import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.FormDTO;
 import org.lamisplus.modules.base.domain.entity.Form;
 import org.lamisplus.modules.base.domain.entity.Permission;
-import org.lamisplus.modules.base.domain.entity.Program;
 import org.lamisplus.modules.base.domain.mapper.FormMapper;
 import org.lamisplus.modules.base.repository.FormRepository;
 import org.lamisplus.modules.base.repository.PermissionRepository;
 import org.lamisplus.modules.base.repository.ProgramRepository;
-import org.lamisplus.modules.base.repository.UserRepository;
 import org.lamisplus.modules.base.util.AccessRight;
-import org.lamisplus.modules.base.util.UuidGenerator;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -79,12 +76,17 @@ public class FormService {
         return form;
     }
 
-    public Form getFormByFormCode(String formCode) {
+    public Form getFormByFormCode(String formCode, Optional<Integer> type) {
         Set<String> permissions = accessRight.getAllPermission();
+        Optional<Form> optionalForm;
 
         accessRight.grantAccess(formCode, FormService.class, permissions);
-        Form form = formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED)
-                .orElseThrow(() -> new EntityNotFoundException(Form.class, "Form Code", formCode));
+        if(type.isPresent()){
+            optionalForm = formRepository.findByCodeAndArchivedAndType(formCode, UN_ARCHIVED, type.get());
+        } else {
+            optionalForm = formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED);
+        }
+        Form form = optionalForm.orElseThrow(() -> new EntityNotFoundException(Form.class, "Form Code", formCode));
         return form;
     }
 
@@ -114,9 +116,7 @@ public class FormService {
         Set<String> permissions = accessRight.getAllPermission();
 
         accessRight.grantAccessByAccessType(formDTO.getCode(), FormService.class, WRITE, permissions);
-        Form form = formRepository.findByIdAndArchived(id, UN_ARCHIVED)
-                .orElseThrow(() -> new EntityNotFoundException(Form.class, "Id", id +""));
-        log.info("form {}" + form);
+        Form form = formRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(Form.class, "Id", id +""));
 
         form = formMapper.toFormDTO(formDTO);
         form.setId(id);

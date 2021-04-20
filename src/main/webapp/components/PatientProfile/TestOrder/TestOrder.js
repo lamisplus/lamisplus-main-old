@@ -85,12 +85,6 @@ function TestOrderPage(props) {
     // default values in the create lab test order API payload
     const defaults = {
       patient_id: props.patientId,
-      test_result: "",
-      date_result_reported: "",
-      date_sample_collected: "",
-      comment: "",
-      user_id: "",
-      sample_type: "",
       lab_test_order_status: 0
     };
 

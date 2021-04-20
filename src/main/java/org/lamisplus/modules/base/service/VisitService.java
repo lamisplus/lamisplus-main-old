@@ -8,13 +8,10 @@ import org.lamisplus.modules.base.domain.dto.AppointmentDTO;
 import org.lamisplus.modules.base.domain.dto.VisitDTO;
 import org.lamisplus.modules.base.domain.entity.Appointment;
 import org.lamisplus.modules.base.domain.entity.Patient;
-import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.domain.entity.Visit;
-import org.lamisplus.modules.base.domain.mapper.AppointmentMapper;
 import org.lamisplus.modules.base.domain.mapper.VisitMapper;
 import org.lamisplus.modules.base.repository.*;
 import org.lamisplus.modules.base.util.CustomDateTimeFormat;
-import org.lamisplus.modules.base.util.UuidGenerator;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,10 +54,9 @@ public class VisitService {
         });
         visits.forEach(visit -> {
             Patient patient = visit.getPatientByVisit();
-            Person person = patient.getPersonByPersonId();
             List<AppointmentDTO> appointmentDTOS = appointmentService.getOpenAllAppointmentByPatientId(patient.getId());
 
-            VisitDTO visitDTO = visitMapper.toVisitDTO(visit,person,patient);
+            VisitDTO visitDTO = visitMapper.toVisitDTO(visit,patient);
             visitDTO.setAppointmentDTOList(appointmentDTOS);
             visitDTOS.add(visitDTO);
         });
@@ -92,10 +88,9 @@ public class VisitService {
 
         if (!visitOptional.isPresent()) throw new EntityNotFoundException(Visit.class, "Id", id + "");
         Patient patient = visitOptional.get().getPatientByVisit();
-        Person person = patient.getPersonByPersonId();
         List<AppointmentDTO> appointmentDTOS = appointmentService.getOpenAllAppointmentByPatientId(patient.getId());
 
-        VisitDTO visitDTO = visitMapper.toVisitDTO(visitOptional.get(), person, patient);
+        VisitDTO visitDTO = visitMapper.toVisitDTO(visitOptional.get(), patient);
         visitDTO.setAppointmentDTOList(appointmentDTOS);
         return visitDTO;
     }
