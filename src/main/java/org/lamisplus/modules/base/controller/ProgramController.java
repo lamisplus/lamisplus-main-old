@@ -2,7 +2,6 @@ package org.lamisplus.modules.base.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.ProgramDTO;
 import org.lamisplus.modules.base.domain.entity.Form;
 import org.lamisplus.modules.base.domain.entity.Program;
@@ -14,7 +13,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/programs")
-@Audit
 public class ProgramController {
     private final ProgramService programService;
 

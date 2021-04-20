@@ -126,7 +126,10 @@ const UserRegistration = React.lazy(() => import("components/Users/UserRegistrat
 const roles = React.lazy(() => import("components/Roles/RolesPage"))
 const addRole = React.lazy(() => import("components/Roles/AddRole"))
 const UnauthorisedPage = React.lazy(() => import("pages/Unauthorised"));
-const BootstrapPage = React.lazy(() => import("pages/bootstrap"))
+const BootstrapPage = React.lazy(() => import("pages/bootstrap"));
+const BootstrapPage2 = React.lazy(() => import("pages/bootstrap2"))
+
+const FingerPrintPage = React.lazy(() => import("components/Biometrics/CaptureBiometrics"));
 class Routes extends Component {
   render() {
     return (
@@ -156,6 +159,7 @@ class Routes extends Component {
               <PrivateRoute exact path="/print-sample"  component={PrintSamples}  />
               <PrivateRoute exact path="/print-manifest"  component={PrintManifest}  />
               <PrivateRoute exact path="/patients" component={PatientsPage} />
+                <PrivateRoute exact path="/patients/biometrics" component={FingerPrintPage} />
               <PrivateRoute exact path="/print-sample" component={PrintSamples} />
               <PrivateRoute exact path="/view-sample-dispatched" component={ViewSampleDispatched} />
               {/* LIMS Link*/}
@@ -252,7 +256,8 @@ class Routes extends Component {
                 
               {/* The route to Visualization*/}
                 <PrivateRoute exact path={"/unauthorised"} component={UnauthorisedPage} />
-                <PrivateRoute  path="/external-modules" component={BootstrapPage} />
+                <PrivateRoute  path="/external-modules" component={BootstrapPage2} />
+
                 <PrivateRoute exact path={"/tabmenu"} component={TabMenu} />
                 <PrivateRoute exact path={"/dashboard2"} component={Dashboard2} />
                 

@@ -1,19 +1,18 @@
-
 import React, {useEffect, useState} from 'react';
 import MaterialTable from 'material-table';
 import { Link } from 'react-router-dom'
 import { connect } from "react-redux";
-import {Col, Input, FormGroup, Label, CardBody, Card} from "reactstrap";
-import { fetchAllLabTestOrder } from "../../../../actions/laboratory";
+import {CardBody, Card} from "reactstrap";
+import { fetchAll } from "../../../../actions/patients";
 import "../casemanager.css";
-import {GiFiles} from 'react-icons/gi'; 
-import { Badge } from 'reactstrap';
+import {GiFiles} from 'react-icons/gi';
 import Button from "@material-ui/core/Button";
 import AddPatientModal from './AddPatientModal';
 import {authentication} from '../../../../_services/authentication';
-import Page from '../../../Page';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Typography from '@material-ui/core/Typography';
+import { APPLICATION_CODESET_GENDER } from "../../../../actions/types";
+import { fetchApplicationCodeSet } from "../../../../actions/applicationCodeset";
 
 const CaseManagerPatientList = (props) => {
     const row = props.location.state
@@ -22,67 +21,61 @@ const CaseManagerPatientList = (props) => {
   const togglemodal3 = () => setModal3(!modal3)
   
   const [collectmodal, setcollectmodal] = useState([])//to collect array of datas into the modal and pass it as props
-            
-useEffect(() => {
-  
-    setLoading('true');
-  const onSuccess = () => {
-     setLoading(false)
-  }
-  const onError = () => {
-      setLoading(false)     
-  }
-      props.fetchAllLabTestOrderToday(onSuccess, onError);
+
+    useEffect(() => {
+        setLoading('true');
+        const onSuccess = () => {
+            setLoading(false)
+        }
+        const onError = () => {
+            setLoading(false)
+        }
+        props.fetchAllPatients(onSuccess, onError);
     }, []); //componentDidMount
-   
-    const labTestType = [];    
-    
-    props.testOrder.forEach(function(value, index, array) {
-          const getList = value['formDataObj'].find(x => { 
-            
-            if(x.data && x.data!==null && x.data.lab_test_order_status===2 && x.data.manifest_status==null){
-              x['hospitalNumber'] = value.hospitalNumber;
-              x['firstName'] = value.firstName ;
-              x['lastName'] = value.lastName;
-              labTestType.push(x);
-            }
-          
-          })         
-     });
+
+    const calculate_age = dob => {
+        var today = new Date();
+        var dateParts = dob.split("-");
+        var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+        var birthDate = new Date(dateObject); // create a date object directlyfrom`dob1`argument
+        var age_now = today.getFullYear() - birthDate.getFullYear();
+        var m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age_now--;
+        }
+        if (age_now === 0) {
+            return m + " month(s)";
+        }
+        return age_now + " year(s)";
+    };
+
+    React.useEffect(() => {
+        if(props.genderList.length === 0){
+            props.fetchApplicationCodeSet("GENDER", APPLICATION_CODESET_GENDER);
+        }
+    }, [props.genderList]);
+
+    function getGenderById(id) {
+        return id ? ( props.genderList.find((x) => x.id == id) ? props.genderList.find((x) => x.id == id).display : "" ) : "";
+    }
 
      function getDispatch (evt, data){
         setcollectmodal({...collectmodal, ...data});
-        setModal3(!modal3) 
+        setModal3(!modal3)
      }
-         //This is function to check for the status of each collection to display on the tablist below 
-    const sampleStatus = e =>{
-      if(e===1){
-          return (<p><Badge  color="light">Sample Collected</Badge></p>)
-      }else if(e===2){
-          return (<p><Badge  color="light">Sample Transfered</Badge></p>)
-      }else if(e==="3"){
-          return (<p><Badge  color="light">Sample Verified</Badge></p>)
-      }else if(e==="4"){
-          return (<p><Badge  color="light">Sample Rejected</Badge></p>)
-      }else if(e===5){
-          return (<p><Badge  color="light">Result Available</Badge></p>)
-      }else{
-          return (<p>{" "}</p>)
-      }
-  }
 
   return (
       <Card>
           <CardBody>
       <Breadcrumbs aria-label="breadcrumb">
-          <Link color="inherit" to={{pathname: "/admin"}} >
+          <Link color="inherit" to={{pathname: "/admin",
+              state: 'case-managers'}} >
           Case Managers
           </Link>
-          <Typography color="textPrimary">Assign/Reassign Client to Case Manager - {row.firstName +  ' ' + row.lastName || ''} </Typography>
+          <Typography color="textPrimary">Assign Clients to Case Manager - {row.firstName +  ' ' + row.lastName || ''} </Typography>
       </Breadcrumbs>
       <br/>
       <Link to="/patients-managed-case">
-        {/* <Link to="/dispatched-sample"> */}
             <Button
               color="primary"
               variant="contained"
@@ -94,18 +87,6 @@ useEffect(() => {
               <span style={{textTransform: 'capitalize'}}>Patients</span>
             </Button>
       </Link>
-      <Link to="/switch-patients">
-            <Button
-              color="primary"
-              variant="contained"
-              className=" float-right mr-1"
-              size="large">
-              {<GiFiles />} &nbsp;&nbsp;
-              <span style={{textTransform: 'capitalize'}}>Assign</span>
-                  &nbsp;
-              <span style={{textTransform: 'capitalize'}}>Patients</span>
-            </Button>
-      </Link>
         <br/>
         <br/>
         <br/>
@@ -113,38 +94,24 @@ useEffect(() => {
       <MaterialTable
         title="List of Patients to assign"
         columns={[
-          {
-              title: "Patient Name",
-              field: "row.firstName +  ' ' + row.lastName ",
-          },
-
-          {
-            title: "Patient ID",
-            field: "patientId",
-          },
-          { 
-            title: "Age",
-            field: "age",
-              filtering: false
-          },
-          { 
-            title: "Address",
-            field: "address",
-            filtering: false
-          },
+            {title: "Patient Name", field: "name",},
+            { title: "Patient ID", field: "id" },
+            { title: "Gender", field: "gender", filtering: false },
+            { title: "Age", field: "age", filtering: false },
+          {title: "Address", field: "address", filtering: false},
         ]}
         isLoading={loading}
-        data={labTestType.map((row) => ({
-            formDataObj:row,
-            sampleType: row.data.sample_type,
-            dateSampleOrdered: row.data.date_sample_ordered,
-            timeSampleOrdered: row.data.time_sample_collected,
-            dateSampleCollected: row.data.date_sample_collected,
-            timeSampleCollected: row.data.time_sample_collected,
-            sampleOrderedBy: row.data.sample_ordered_by,
-            sampleTransferredBy: row.data.sample_transfered_by,
-            dateSampleTransferred : row.data.date_sample_transfered,
-            sampleCollectedBy: row.data.sample_collected_by,
+        data={props.patientsList.map((row) => ({
+                    name: row.firstName +  ' ' + row.lastName,
+                     id: row.hospitalNumber,
+                    gender: getGenderById(row.genderId),
+                    age: (row.dob === 0 ||
+                        row.dob === undefined ||
+                        row.dob === null ||
+                        row.dob === "" )
+                        ? 0
+                        : calculate_age(row.dob),
+                    address: row.street || '',
             }))}
         options={{
             search: false,
@@ -163,11 +130,12 @@ useEffect(() => {
               icon: 'add' ,
               label: 'Add Manifest',
               onClick: (evt, data) =>
+
                 getDispatch(evt, data)
             }
         ]}       
       />
-      <AddPatientModal modalstatus={modal3} togglestatus={togglemodal3} manifestSamples={collectmodal} />
+      <AddPatientModal modalstatus={modal3} togglestatus={togglemodal3} listOfPatient={collectmodal} userId={row.id}/>
           </CardBody>
       </Card>
   );
@@ -175,12 +143,14 @@ useEffect(() => {
 
 const mapStateToProps = state => {
     return {
-        testOrder: state.laboratory.list
+        genderList: state.applicationCodesets.genderList,
+        patientsList: state.patients.list,
     };
   };
   
   const mapActionToProps = {
-      fetchAllLabTestOrderToday: fetchAllLabTestOrder
+      fetchAllPatients: fetchAll,
+      fetchApplicationCodeSet: fetchApplicationCodeSet
   };
   
 export default connect(mapStateToProps, mapActionToProps)(CaseManagerPatientList);

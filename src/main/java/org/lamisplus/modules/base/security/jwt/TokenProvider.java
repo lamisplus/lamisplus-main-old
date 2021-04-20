@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.security.jwt;
 import io.jsonwebtoken.*;
 //import io.jsonwebtoken.io.Decoders;
 //import io.jsonwebtoken.security.Keys;
+import org.hibernate.Criteria;
 import org.lamisplus.modules.base.domain.entity.Permission;
 import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.repository.UserRepository;
@@ -33,8 +34,8 @@ public class TokenProvider {
     private static final String AUTHORITIES_KEY = "auth";
 
     //private Key key;
-    private String secret = "ChangeThisSecretForLamisplusApplication1234567890!@#$%^&*()_+" +
-            "ChangeThisSecretForLamisplusApplication1234567890!@#$%^&*()_+";
+    private String secret = "DAFGAHJUDJNDfhggtghXMNJHXCCXLKCXMMNCXNCXggdsghvsdvbgsdhjABSDHGDFSV" +
+            "gsdhjABSDHGDFSVhshgsdghdshJHSDJHDJHJDSSDJKDKSJ";
     private long tokenValidityInMilliseconds;
 
     @Autowired

@@ -3,7 +3,6 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.ApplicationCodesetDTO;
 import org.lamisplus.modules.base.domain.entity.ApplicationCodeSet;
 import org.lamisplus.modules.base.service.ApplicationCodesetService;
@@ -16,7 +15,6 @@ import java.util.List;
 @RequestMapping("/api/application-codesets")
 @Slf4j
 @RequiredArgsConstructor
-@Audit
 public class ApplicationCodesetController {
     private final ApplicationCodesetService applicationCodesetService;
 

@@ -29,9 +29,9 @@ public class Program implements Serializable {
     @Column(name = "code", updatable = false)
     private String code;
 
-    @Basic
+    /*@Basic
     @Column(name = "module_id")
-    private Long moduleId;
+    private Long moduleId;*/
 
     @Basic
     @Column(name = "archived")
@@ -48,9 +48,9 @@ public class Program implements Serializable {
     @ToString.Exclude
     private List<Form> formsByProgram;
 
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumn(name = "module_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
     @ToString.Exclude
-    public Module moduleByModuleId;
+    public Module moduleByModuleId;*/
 }

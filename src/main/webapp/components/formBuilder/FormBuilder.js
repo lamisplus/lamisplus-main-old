@@ -27,10 +27,7 @@ import Typography from "@material-ui/core/Typography";
 
 const Create = props => {
     const [res, setRes] = React.useState("");
-    const [formData, setFormData] = React.useState({
-        resourceObject: null,
-        programCode: "",
-        display: ""});
+    const [formData, setFormData] = React.useState({resourceObject: null, programCode: "", display: ""});
     const textAreaRef = useRef(null);
     const [form, setform] = useState([{title: 'Loading', value: ''}]);
     const [useFor, setuseFor] = useState([{title: 'Loading', value: ''}]);
@@ -108,8 +105,6 @@ const Create = props => {
         e.preventDefault()
         props.createForm(formData);
     }
-
-
 
     return (
         <Card>

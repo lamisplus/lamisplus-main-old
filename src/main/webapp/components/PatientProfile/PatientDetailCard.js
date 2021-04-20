@@ -78,7 +78,6 @@ function PatientDetailCard(props) {
                 Age : <b>{Age(patient.dob)}</b>
               </span>
             </Col>
-
             <Col md={4}>
               <span>
                 {" "}
@@ -95,22 +94,28 @@ function PatientDetailCard(props) {
             <Col md={4} className={classes.root2}>
               <span>
                 {" "}
-                 Address : <b>{patient.address || "N/A"}</b>
+                 Address : <b>{patient.city || "N/A"}</b>
               </span>
             </Col>
+
             <Col md={12}>
-            <Label.Group color={"blue"} size={"mini"}>
+            <Label.Group >
               {patient.typePatient &&
               (patient.typePatient === CODES.IN_PATIENT_UNBOOKED ||
                 patient.typePatient === CODES.IN_PATIENT_BOOKED) ? (
-                <Label>
+                <Label color={"blue"} size={"mini"}>
                   IN PATIENT
                   <Label.Detail>Isolation Ward</Label.Detail>
                 </Label>
               ) : (
-                <Label>OUT PATIENT</Label>
+                <Label color={"blue"} size={"mini"}>OUT PATIENT</Label>
               )}
+              <Label color={"red"} size={"mini"}>
+                Biometric Status
+                <Label.Detail>Not Captured</Label.Detail>
+              </Label>
                </Label.Group>
+
             </Col>
               </Row>
             </Col>

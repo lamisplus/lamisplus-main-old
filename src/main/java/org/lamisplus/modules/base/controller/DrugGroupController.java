@@ -2,7 +2,6 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.DrugDTO;
 import org.lamisplus.modules.base.domain.entity.DrugGroup;
 import org.lamisplus.modules.base.service.DrugGroupService;
@@ -14,7 +13,6 @@ import java.util.List;
 @RequestMapping("/api/drug-groups")
 @Slf4j
 @RequiredArgsConstructor
-@Audit
 public class DrugGroupController {
     private final DrugGroupService drugGroupService;
 

@@ -92,7 +92,7 @@ public class User {
     @Column(name = "person_id")
     private Long personId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "person_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Person person;
 

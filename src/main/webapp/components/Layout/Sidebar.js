@@ -164,22 +164,24 @@ class Sidebar extends React.Component {
               <Collapse isOpen={this.state.isOpenAdministration}>
 
                 {this.props.menuList && this.props.menuList.map(({ url, name }, index) => (
+                    <>
                     <NavItem key={index} className={bem.e('nav-item')}>
-                      <BSNavLink
-                          id={`navItem-${name}-${index}`}
-                          // className="text-uppercase"
-                          tag={NavLink}
-                          to ={{
-                            pathname: `/external-modules`,
-                            state: url
-                          }}
-                          activeClassName="active"
-                          exact={false}
-                      >
-                        {/*<Icon className={bem.e('nav-item-icon')} />*/}
-                        <span className="">{name}</span>
-                      </BSNavLink>
-                    </NavItem>
+                  <BSNavLink
+                  id={`navItem-${name}-${index}`}
+                  // className="text-uppercase"
+                  tag={NavLink}
+                  to ={{
+                  pathname: `/external-modules`,
+                  state: url
+                }}
+                  activeClassName="active"
+                  exact={false}
+                  >
+                {/*<Icon className={bem.e('nav-item-icon')} />*/}
+                  <span className="">{name}</span>
+                  </BSNavLink>
+                  </NavItem>
+                    </>
                 ))}
               </Collapse>
             </Nav>

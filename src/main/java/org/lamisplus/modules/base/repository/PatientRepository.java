@@ -29,4 +29,5 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
 
     Page<Patient> findAllByOrganisationUnitIdAndArchivedOrderByIdDesc(Long organisationUnitId, int archived, Pageable pageable);
 
+    List<Patient> findAllByIdIn(List<Long> patientId);
 }
