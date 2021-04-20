@@ -1,6 +1,7 @@
 import axios from "axios";
 import { url } from "api";
 import * as ACTION_TYPES from "./types";
+import {url as baseUrl} from "../api";
 
 
 export const fetchAll = (onSuccess , onError) => dispatch => {
@@ -24,3 +25,24 @@ export const fetchAll = (onSuccess , onError) => dispatch => {
         
       );
   };
+
+export const fetchUserPermission = (onSuccess , onError) => dispatch => {
+    axios
+        .get(`${url}account`)
+        .then((response) => {
+            localStorage.setItem('currentUser_Permission', JSON.stringify(response.data.permissions));
+
+            dispatch({
+                type: ACTION_TYPES.FETCH_PERMISSIONS,
+                payload: response.data.permissions,
+            });
+            return response.data.permissions;
+        })
+        .catch((error) => {
+            dispatch({
+                type: ACTION_TYPES.FETCH_PERMISSIONS,
+                payload: [],
+            });
+            return null;
+        });
+}

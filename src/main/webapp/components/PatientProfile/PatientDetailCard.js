@@ -27,7 +27,7 @@ function PatientDetailCard(props) {
   const patient = patientDetail || props.patient;
   React.useEffect(() => {
     if (props.genderList.length === 0) {
-      props.fetchApplicationCodeSet("GENDER", APPLICATION_CODESET_GENDER);
+     // props.fetchApplicationCodeSet("GENDER", APPLICATION_CODESET_GENDER);
     }
   }, [props.genderList]);
 
@@ -82,7 +82,7 @@ function PatientDetailCard(props) {
               <span>
                 {" "}
                 Gender :{" "}
-                <b>{getGender(patient.genderId )}</b>
+                <b>{patient.details && patient.details.gender && patient.details.gender.display ? patient.details.gender.display : 'N/A'}</b>
               </span>
             </Col>
             <Col md={4} className={classes.root2}>

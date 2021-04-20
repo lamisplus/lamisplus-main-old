@@ -91,10 +91,19 @@ const PatientSearch = (props) => {
                       axios.get(`${baseUrl}patients?size=${query.pageSize}&page=${query.page}&searchValue=${query.search}`)
                           .then(response => response)
                           .then(result => {
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> emeka_update
 
                               //console.log('in result')
                               //console.log( result.headers);
                               console.log( result.headers['x-total-count']);
+<<<<<<< HEAD
+>>>>>>> emeka_update
+=======
+>>>>>>> emeka_update
                               resolve({
                                   data: result.data.map((row) => ({
                                       name: <Link
@@ -131,7 +140,7 @@ const PatientSearch = (props) => {
                                                           <Link
                                                               to ={{
                                                                   pathname: "/patient-dashboard",
-                                                                  state: row.hospitalNumber
+                                                                  state: (row.details && row.details.hospitalNumber ? row.details.hospitalNumber : row.hospitalNumber)
                                                               }}
                                                           >
                                                               <MdDashboard size="15" color="blue" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>
@@ -142,7 +151,7 @@ const PatientSearch = (props) => {
                                                           <Link
                                                               to={{
                                                                   pathname: "/patient-update-formio",
-                                                                  state: row.hospitalNumber
+                                                                  state: (row.details && row.details.hospitalNumber ? row.details.hospitalNumber : row.hospitalNumber)
                                                               }}
                                                           >
                                                               <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Patient </span>

@@ -98,7 +98,7 @@ async function fetchMe(){
                 type: ACTION_TYPES.FETCH_ME,
                 payload: response.data,
             });
-            return response.data;
+            return response.data.permissions;
         })
         .catch((error) => {
             dispatch({
