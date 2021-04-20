@@ -18,7 +18,7 @@ import {url as baseUrl} from "../../api";
 
 
 const PatientSearch = (props) => {
-  const [loading, setLoading] = useState('')
+  const [loading, setLoading] = useState(false)
   const [patients, setPatients] = useState()
 
     /*# Get list of Gender parameter  #*/
@@ -87,12 +87,17 @@ const PatientSearch = (props) => {
                   ]}
                   isLoading={loading}
               data={query =>
-                  new Promise((resolve, reject) => {
-
-                      axios.get(`${baseUrl}patients?size=${query.pageSize}&page=${query.page}&searchValue=${query.search}`,
-                              {headers: new Headers({ 'Access-Control-Expose-Headers': 'X-Total-Count'})})
+                  new Promise((resolve, reject) =>
+                      axios.get(`${baseUrl}patients?size=${query.pageSize}&page=${query.page}&searchValue=${query.search}`)
                           .then(response => response)
                           .then(result => {
+<<<<<<< HEAD
+=======
+
+                              //console.log('in result')
+                              //console.log( result.headers);
+                              console.log( result.headers['x-total-count']);
+>>>>>>> emeka_update
                               resolve({
                                   data: result.data.map((row) => ({
                                       name: <Link
@@ -158,10 +163,10 @@ const PatientSearch = (props) => {
                                           </div>
                                   })),
                                   page: query.page,
-                                  totalCount: 200,
+                                  totalCount: result.headers['x-total-count'],
                               })
                           })
-                  })}
+                  )}
         //           data={props.patientsList.map((row) => ({
         //               name: <Link
         //                   to ={{pathname: "/patient-dashboard", state: row.hospitalNumber}}
@@ -236,7 +241,7 @@ const PatientSearch = (props) => {
             searchFieldAlignment: 'left',
             pageSizeOptions:[10,20,100],
             pageSize:10,
-
+            debounceInterval: 400
         }}
       />
     </div>

@@ -536,6 +536,14 @@ public class PatientService {
         return patientRepository.findAllByDetails(key, value, getOrganisationUnitId(), UN_ARCHIVED, pageable);
     }
 
+    public Page<Patient> findPage(String firstName, String lastName, String hospitalNumber, Pageable pageable) {
+        return patientRepository.findAllByDetails(firstName, lastName, hospitalNumber, getOrganisationUnitId(), UN_ARCHIVED, pageable);
+    }
+
+    public Page<Patient> findAllPages(String firstName, String lastName, String hospitalNumber, Pageable pageable) {
+        return patientRepository.findAllByFullDetails(firstName, lastName, hospitalNumber, getOrganisationUnitId(), UN_ARCHIVED, pageable);
+    }
+
     private PatientDTO addProperties(PatientDTO patientDTO){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         try {
@@ -551,12 +559,10 @@ public class PatientService {
                 if(patientJson.get("dobEstimated") != null)patientDTO.setDobEstimated(Boolean.valueOf(patientJson.get("dobEstimated").toString()));
                 if(patientJson.get("mobilePhoneNumber") != null)patientDTO.setMobilePhoneNumber(patientJson.get("mobilePhoneNumber").toString());
                 if(patientJson.get("alternatePhoneNumber") != null)patientDTO.setAlternatePhoneNumber(patientJson.get("alternatePhoneNumber").toString());
-                if(patientJson.get("zipCode") != null)patientDTO.setZipCode(patientJson.get("zipCode").toString());
+                if(patientJson.get("zipCode") != null || !patientJson.get("zipCode").toString().isEmpty())patientDTO.setZipCode(patientJson.get("zipCode").toString());
                 if(patientJson.get("city") != null)patientDTO.setCity(patientJson.get("city").toString());
                 if(patientJson.get("street") != null)patientDTO.setStreet(patientJson.get("street").toString());
                 if(patientJson.get("landmark") != null)patientDTO.setLandmark(patientJson.get("landmark").toString());
-
-
             }
         } catch (JSONException | JsonProcessingException e) {
             e.printStackTrace();

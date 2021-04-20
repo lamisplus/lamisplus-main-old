@@ -1,5 +1,7 @@
 package org.lamisplus.modules.base.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
@@ -12,16 +14,21 @@ import org.lamisplus.modules.base.domain.mapper.EncounterMapper;
 import org.lamisplus.modules.base.domain.mapper.FormDataMapper;
 import org.lamisplus.modules.base.repository.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import org.lamisplus.modules.base.util.AccessRight;
 import org.lamisplus.modules.base.util.CustomDateTimeFormat;
+import org.lamisplus.modules.base.util.GenericSpecification;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -44,9 +51,7 @@ public class EncounterService {
     private static final int ARCHIVED = 1;
     private static final String WRITE = "write";
     private static final String DELETE = "delete";
-
-
-
+    private final JdbcTemplate  jdbcTemplate;
 
 
     public List<EncounterDTO> getAllEncounters() {
@@ -96,7 +101,7 @@ public class EncounterService {
             formDataDTOList.add(formDataDTO);
         });
         encounterDTO.setFormDataObj(formDataDTOList);
-        return encounterDTO;
+        return addProperties(encounterDTO);
     }
 
     public Encounter update(Long id, EncounterDTO encounterDTO) {
@@ -184,35 +189,21 @@ public class EncounterService {
         return encounter.getArchived();
     }
 
-    public List<EncounterDTO> getEncounterByFormCodeAndDateEncounter(String formCode, Optional<String> dateStart, Optional<String> dateEnd) {
+    public Page<Encounter> getEncounterByFormCodeAndDateEncounter(String formCode, Optional<String> dateStart, Optional<String> dateEnd, Pageable pageable) {
         Set<String> permissions = accessRight.getAllPermission();
 
         accessRight.grantAccess(formCode, Encounter.class, permissions);
+
+        Specification<Encounter> specification = new GenericSpecification<Encounter>().findAllEncounter(formCode, dateStart, dateEnd);
+        return encounterRepository.findAll(specification, pageable);
+    }
+
+    public List<EncounterDTO> getAllEncounters(Page page) {
+        List<Encounter> encounters = page.getContent();
         List<EncounterDTO> encounterDTOS = new ArrayList<>();
-        List<Encounter> encounters = encounterRepository.findAll(new Specification<Encounter>() {
-            @Override
-            public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                List<Predicate> predicates = new ArrayList<>();
-                if(dateStart.isPresent() && !dateStart.get().equals("{dateStart}")){
-                    LocalDate localDate = LocalDate.parse(dateStart.get(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("dateEncounter").as(LocalDate.class), localDate)));
-                }
-
-                if(dateEnd.isPresent() && !dateEnd.get().equals("{dateEnd}")){
-                    LocalDate localDate = LocalDate.parse(dateEnd.get(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("dateEncounter").as(LocalDate.class), localDate)));
-                }
-                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("formCode"), formCode)));
-                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), 0)));
-                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
-
-                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
-            }
-        });
 
         encounters.forEach(singleEncounter -> {
             Patient patient = singleEncounter.getPatientByPatientId();
-            //Person person = patient.getPersonByPersonId();
             Form form = singleEncounter.getFormForEncounterByFormCode();
             List formDataList = new ArrayList();
             singleEncounter.getFormDataByEncounter().forEach(formData -> {
@@ -221,7 +212,7 @@ public class EncounterService {
             final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(patient, singleEncounter, form);
 
             encounterDTO.setFormDataObj(formDataList);
-            encounterDTOS.add(encounterDTO);
+            encounterDTOS.add(addProperties(encounterDTO));
         });
         return encounterDTOS;
     }
@@ -243,5 +234,41 @@ public class EncounterService {
 
     private Set<String> checkForEncounterAndGetPermission(Long id){
         return accessRight.getAllPermission();
+    }
+
+    private EncounterDTO addProperties(EncounterDTO encounterDTO) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        try {
+            //Instance of ObjectMapper provides functionality for reading and writing JSON
+            ObjectMapper mapper = new ObjectMapper();
+            if (encounterDTO.getDetails() != null) {
+                String encounterDetailsString = mapper.writeValueAsString(encounterDTO.getDetails());
+                JSONObject encounterJson = new JSONObject(encounterDetailsString);
+                if (encounterJson.get("firstName") != null)
+                    encounterDTO.setFirstName(encounterJson.get("firstName").toString());
+                if (encounterJson.get("hospitalNumber") != null)
+                    encounterDTO.setHospitalNumber(encounterJson.get("hospitalNumber").toString());
+                if (encounterJson.get("lastName") != null)
+                    encounterDTO.setLastName(encounterJson.get("lastName").toString());
+                if (encounterJson.get("dob") != null)
+                    encounterDTO.setDob(LocalDate.parse(encounterJson.get("dob").toString(), formatter));
+            }
+        } catch (JSONException | JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return encounterDTO;
+    }
+
+    public Page<Encounter> findAllPages(String firstName, String lastName, String hospitalNumber, Pageable pageable) {
+        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+        List<Encounter> encounters = jdbcTemplate.query("SELECT * FROM encounter e LEFT JOIN patient p ON p.id = e.patient_id WHERE p.details ->>'firstName' ilike "+
+                        "'"+firstName + "' OR p.details ->>'lastName' ilike " +
+                        "'"+lastName +"' OR p.details ->>'hospitalNumber' ilike " +
+                        "'"+hospitalNumber +"' AND p.organisation_unit_id="+
+                        organisationUnitId +"AND p.archived="+
+                        UNARCHIVED /*+" LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset()*/,
+                new BeanPropertyRowMapper<>(Encounter.class));
+
+        return new PageImpl<>(encounters);
     }
 }
