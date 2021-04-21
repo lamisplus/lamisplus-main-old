@@ -309,7 +309,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
     private void populateDatabaseConnectionParameters( IReportRunnable iReportRunnable ) {
         String fileSeparator = File.separator;
-        File ymlFile = new File(ApplicationProperties.modulePath + fileSeparator +"config.yml");
+        File ymlFile = new File(ApplicationProperties.modulePath + fileSeparator +"reportConfig.yml");
         try {
             DatabaseProperties properties = readYml(ymlFile);
             properties.getSpring().forEach((k, v) -> {
