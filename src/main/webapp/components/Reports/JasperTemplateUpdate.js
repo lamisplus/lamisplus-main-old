@@ -36,7 +36,9 @@ const UpdateReports = (props) => {
             axios
                 .get(`${url}reports/${row.id}/`)
                 .then(response => {
-                    formData(response.data);
+                    const newFormData = response.data;
+                    newFormData["template"] = formData.template;
+                    setFormData(newFormData);
                     setLoading(false);
                 })
                 .catch(error => {
@@ -125,8 +127,8 @@ const UpdateReports = (props) => {
                 <Card >
                     <CardBody>
                                 <h4>Build Query Parameter Form</h4>
-                                { form2 ?
-                                    <FormBuilder form={row.resourceObject} {...props} onChange={(schema) => {
+                                { formData.resourceObject ?
+                                    <FormBuilder form={formData.resourceObject} {...props} onChange={(schema) => {
                                         setRes(JSON.stringify(schema));
                                     }} />
                                     : ""

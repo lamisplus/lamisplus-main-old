@@ -95,7 +95,9 @@ function TestOrderPage(props) {
       return {
         ...{
           lab_test_id: x.test.value.id,
+          lab_test: x.test.value,
           description: x.test.value.name,
+          test_group: x.testGroup.value,
           lab_test_group: x.testGroup.value.name,
           lab_test_group_id: x.testGroup.value.id,
           unit_measurement: x.test.value.unitMeasurement,
