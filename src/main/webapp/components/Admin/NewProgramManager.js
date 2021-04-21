@@ -40,7 +40,7 @@ const ModalSample = (props) => {
         async function getCharacters() {
             try {
                 const response = await axios(
-                    url + "modules/1"
+                    url + "modules/core"
                 );
                 const body = response.data && response.data !==null ? response.data : {};
                 

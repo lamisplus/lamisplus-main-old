@@ -58,7 +58,7 @@ export const fetchById = (id, onSuccess, onError) => dispatch => {
             );
 };
 
-export const fetchPatientUser = (id, onSuccess, onError) => dispatch => {
+export const fetchPatientUserId = (id, onSuccess, onError) => dispatch => {
     axios
         .get(`${baseUrl}application_user_patient/users/${id}`)
         .then(response => {
@@ -142,7 +142,7 @@ export const update = (data, id, onSuccess, onError) => dispatch => {
                 payload:error.response.data
             });
             console.log(error.response.data)
-            onError()
+            // onError()
             if(error.response.data.apierror.message===null || error.response.data.apierror.message===""){
                 toast.error("Something went wrong");
             }else{
