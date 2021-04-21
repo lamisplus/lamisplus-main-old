@@ -1,11 +1,12 @@
 package org.lamisplus.modules.base.service.report.birt;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
-import org.eclipse.birt.report.data.oda.jdbc.OdaJdbcDriver;
 import org.eclipse.birt.report.engine.api.*;
+import org.eclipse.birt.report.model.api.*;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ReportDetailDTO;
@@ -31,11 +32,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BirtReportService implements ApplicationContextAware, DisposableBean{
     private static final int UN_ARCHIVED = 0;
     private static final int ARCHIVED = 1;
@@ -52,9 +55,9 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
     private IReportEngine birtEngine;
     private ApplicationContext context;
     //private String imageFolder;
-    
+
     private final ReportInfoRepository reportInfoRepository;
-    
+
     private final ReportInfoMapper reportInfoMapper;
 
     private final ProgramRepository programRepository;
@@ -105,20 +108,19 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
     public void generateReport(ReportDetailDTO reportDetailDTO, OutputType output, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
         ReportInfo reportInfo = getReport(reportDetailDTO.getReportId());
-        name = reportInfo.getName();
         InputStream stream = IOUtils.toInputStream(reportInfo.getTemplate());
         User user;
         Optional<User> optionalUser = SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRoleByUserName);
         if(optionalUser.isPresent()){
             user = optionalUser.get();
-            if(params.get("facilityId") == null){
+            if(params.get("facility_Id") == null){
                 //assign default facilityId
-                params.put("facilityId", user.getCurrentOrganisationUnitId());
+                params.put("facility_Id", user.getCurrentOrganisationUnitId());
 
             } else {
                 //check facilityId belongs to user
                 List <Long> orgUnits = user.getApplicationUserOrganisationUnits().stream().map(ApplicationUserOrganisationUnit::getOrganisationUnitId).collect(Collectors.toList());
-                if(!orgUnits.contains(Long.valueOf((Integer)params.get("facilityId")))){
+                if(!orgUnits.contains(Long.valueOf((Integer)params.get("facility_Id")))){
                     throw new EntityNotFoundException(OrganisationUnit.class,"FacilityId","User not in Organisation Unit");
                 }
             }
@@ -132,13 +134,16 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
         switch (output) {
             case HTML:
-                generateHTMLReport(reports.get(reportInfo.getName()), params, response, request);
+                generateHTMLReport(reportInfo.getName(),reports.get(reportInfo.getName()), params, response, request);
                 break;
             case PDF:
-                generatePDFReport(reports.get(reportInfo.getName()), params, response, request);
+                generatePDFReport(reportInfo.getName(), reports.get(reportInfo.getName()), params, response, request);
+                break;
+            case CSV:
+                generateExcelReport(reportInfo.getName(),reports.get(reportInfo.getName()), params, response, request);
                 break;
             case EXCEL:
-                generateExcelReport(reports.get(reportInfo.getName()), params, response, request);
+                generateExcelReport(reportInfo.getName(),reports.get(reportInfo.getName()), params, response, request);
                 break;
             default:
                 throw new IllegalArgumentException("Output type not recognized:" + output);
@@ -150,41 +155,21 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
      * Generate a report as HTML
      */
     @SuppressWarnings("unchecked")
-    private void generateHTMLReport(IReportRunnable report, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
+    private void generateHTMLReport(String reportName, IReportRunnable report, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
+        populateDatabaseConnectionParameters(report);
         IRunAndRenderTask runAndRenderTask = birtEngine.createRunAndRenderTask(report);
         runAndRenderTask.setParameterValues(params);
         response.setContentType(birtEngine.getMIMEType("html"));
         IRenderOption options = new RenderOption();
         HTMLRenderOption htmlOptions = new HTMLRenderOption(options);
         htmlOptions.setOutputFormat("html");
-        //htmlOptions.setBaseImageURL("/" + reportsPath + imagesPath);
-        //htmlOptions.setImageDirectory(imageFolder);
-        //htmlOptions.setImageHandler(htmlImageHandler);
         runAndRenderTask.setRenderOption(htmlOptions);
-
-        runAndRenderTask.setRenderOption(htmlOptions);
-
-        customRunAndRenderTask(htmlOptions, runAndRenderTask, response);
-        }
-
-    /**
-     * Generate a report as PDF
-     */
-    @SuppressWarnings("unchecked")
-    private void generatePDFReport(IReportRunnable report, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
-        IRunAndRenderTask runAndRenderTask = birtEngine.createRunAndRenderTask(report);
-
-        runAndRenderTask.setParameterValues(params);
-        response.setContentType(birtEngine.getMIMEType("pdf"));
-        IRenderOption options = new RenderOption();
-        PDFRenderOption pdfRenderOption = new PDFRenderOption(options);
-        pdfRenderOption.setOutputFormat("pdf");
-        runAndRenderTask.setRenderOption(pdfRenderOption);
-        runAndRenderTask.getAppContext().put(EngineConstants.APPCONTEXT_PDF_RENDER_CONTEXT, request);
+        runAndRenderTask.getAppContext().put(
+                EngineConstants.APPCONTEXT_HTML_RENDER_CONTEXT, request);
 
         try {
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "\"");
-            pdfRenderOption.setOutputStream(response.getOutputStream());
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + reportName.replace(" ","_")+ LocalDate.now().toString().replace("-", "") + "\"");
+            htmlOptions.setOutputStream(response.getOutputStream());
             runAndRenderTask.run();
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
@@ -194,24 +179,64 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
     }
 
     /**
+     * Generate a report as PDF
+     */
+    @SuppressWarnings("unchecked")
+    private void generatePDFReport(String reportName, IReportRunnable report, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
+        populateDatabaseConnectionParameters(report);
+        IRunAndRenderTask runAndRenderTask = this.birtEngine.createRunAndRenderTask(report);
+        runAndRenderTask.setParameterValues(params);
+        response.setContentType(this.birtEngine.getMIMEType("pdf"));
+        IRenderOption options = new RenderOption();
+        PDFRenderOption pdfRenderOption = new PDFRenderOption(options);
+        pdfRenderOption.setOutputFormat("pdf");
+        runAndRenderTask.setRenderOption(pdfRenderOption);
+        runAndRenderTask.getAppContext().put("PDF_RENDER_CONTEXT", request);
+
+        try {
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + reportName.replace(" ","_")+ LocalDate.now().toString().replace("-", "") + "\"");
+            pdfRenderOption.setOutputStream(response.getOutputStream());
+            runAndRenderTask.run();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            runAndRenderTask.close();
+        }
+
+    }
+
+    /**
      * Generate a report as Excel
      */
     @SuppressWarnings("unchecked")
-    private void generateExcelReport(IReportRunnable report, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
+    private void generateExcelReport(String reportName, IReportRunnable report, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
+        populateDatabaseConnectionParameters(report);
         IRunAndRenderTask runAndRenderTask = birtEngine.createRunAndRenderTask(report);
         runAndRenderTask.setParameterValues(params);
-        response.setContentType(birtEngine.getMIMEType("xlsx"));
+        response.setContentType(birtEngine.getMIMEType("xls"));
         IRenderOption options = new RenderOption();
+        /*String WORKSPACE_DIR = System.getProperty("user.dir");
+        new File( WORKSPACE_DIR ).mkdir( );
+        options.setOutputFileName("report.xls"); //$NON-NLS-1$*/
+        options.setOutputFormat("xls");
 
         EXCELRenderOption excelRenderOption = new EXCELRenderOption(options);
-        excelRenderOption.setOutputFormat("xlsx");
+        excelRenderOption.setOutputFormat("xls");
         runAndRenderTask.setRenderOption(excelRenderOption);
         runAndRenderTask.getAppContext().put(EngineConstants.APPCONTEXT_BIRT_VIEWER_HTTPSERVET_REQUEST, request);
 
-        customRunAndRenderTask(excelRenderOption, runAndRenderTask, response);
+
+        try {
+            excelRenderOption.setOutputStream(response.getOutputStream());
+            runAndRenderTask.run();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            runAndRenderTask.close();
+        }
     }
 
-    private void customRunAndRenderTask(RenderOption renderOption, IRunAndRenderTask runAndRenderTask, HttpServletResponse response){
+    /*private void customRunAndRenderTask(RenderOption renderOption, IRunAndRenderTask runAndRenderTask, HttpServletResponse response){
 
         try {
             renderOption.setOutputStream(response.getOutputStream());
@@ -221,7 +246,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         } finally {
             runAndRenderTask.close();
         }
-    }
+    }*/
 
     @Override
     public void destroy() {
@@ -249,10 +274,11 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
 
     public Integer delete(Long id) {
-        Optional<ReportInfo> optional = reportInfoRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if(!optional.isPresent())throw new EntityNotFoundException(ReportInfo.class, "Id", id +"");
-        optional.get().setArchived(ARCHIVED);
-        return optional.get().getArchived();
+        ReportInfo reportInfo = reportInfoRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(()
+                -> new EntityNotFoundException(ReportInfo.class, "Id", id +""));
+        reportInfo.setArchived(ARCHIVED);
+        reportInfoRepository.save(reportInfo);
+        return reportInfo.getArchived();
     }
 
     public List<ReportInfoDTO> getReports() {
@@ -260,7 +286,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
         List<ReportInfoDTO> reportInfoDTOS = new ArrayList<>();
         reportInfos.forEach(reportInfo -> {
-            final ReportInfoDTO reportInfoDTO = reportInfoMapper.toReportInfoDTO(reportInfo);
+            final ReportInfoDTO reportInfoDTO = reportInfoMapper. mapWithoutTemplate(reportInfo);
             Optional<Program>  program = this.programRepository.findProgramByCodeAndArchived(reportInfoDTO.getProgramCode(), UN_ARCHIVED);
             program.ifPresent(value -> reportInfoDTO.setProgramName(value.getName()));
             reportInfoDTOS.add(reportInfoDTO);
@@ -269,8 +295,57 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
     }
 
     public ReportInfo getReport(Long id) {
-        Optional<ReportInfo> optional = this.reportInfoRepository.findByIdAndArchived(id, UN_ARCHIVED);
-        if(!optional.isPresent()) throw new EntityNotFoundException(ReportInfo.class, "Id", id+"");
-        return optional.get();
+        return reportInfoRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() ->
+                new EntityNotFoundException(ReportInfo.class, "Id", id+""));
+    }
+
+    @Value("${spring.datasource.url}")
+    private String dbUrl;
+
+    @Value("${spring.datasource.username}")
+    private String dbUser;
+
+    @Value("${spring.datasource.password}")
+    private String dbPass;
+
+    private void populateDatabaseConnectionParameters( IReportRunnable iReportRunnable ) {
+        DesignElementHandle deh = iReportRunnable.getDesignHandle();
+        SlotHandle slotHandle = deh.getSlot(ReportDesignHandle.DATA_SOURCE_SLOT );
+        Iterator iter = slotHandle.iterator();
+
+        try
+        {
+            while( iter.hasNext() )
+            {
+                Object obj = iter.next();
+                OdaDataSourceHandle odaSrcHdl = (OdaDataSourceHandle) obj;
+                Iterator propIter = odaSrcHdl.getPropertyIterator();
+
+                while( propIter.hasNext() )
+                {
+                    PropertyHandle propHdl = (PropertyHandle) propIter.next();
+
+                    if( propHdl.getPropertyDefn().getName().equalsIgnoreCase(
+                            "odaURL" ) )
+                    {
+                        propHdl.setStringValue( dbUrl );
+                    }
+                    else if( propHdl.getPropertyDefn().getName().equalsIgnoreCase(
+                            "odaUser" ) )
+                    {
+                        propHdl.setStringValue( dbUser );
+                    }
+                    else if( propHdl.getPropertyDefn().getName().equalsIgnoreCase(
+                            "odaPassword" ) )
+                    {
+                        propHdl.setStringValue( dbPass );
+                    }
+                }
+            }
+        }
+        catch( Exception e )
+        {
+            e.printStackTrace();
+        }
     }
 }

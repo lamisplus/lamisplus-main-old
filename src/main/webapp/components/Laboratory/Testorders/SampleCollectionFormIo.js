@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {Modal,ModalHeader, ModalBody,Form,FormFeedback,Row,Alert,Col,Input,FormGroup,Label,Card,CardBody,} from "reactstrap";
-import axios from "axios";
+import React, { useState } from "react";
+import {Modal,ModalHeader, ModalBody,Form,Alert,Col,Card,CardBody,} from "reactstrap";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,7 +7,6 @@ import "react-widgets/dist/css/react-widgets.css";
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import moment from "moment";
-import { url } from "../../../api";
 import {
     createCollectedSample,
     fetchFormById,
@@ -85,14 +83,16 @@ const ModalSample = (props) => {
 
     const saveSample = (e) => {
         const newData = e.data 
+        console.log(newData)
         const newDateSampleCollected = moment(newData.date_sample_collected).format(
-          "DD-MM-YYYY"
+          "YYYY-MM-DD"
         );
         if(newData.date_sample_collected){
           newData['date_sample_collected'] = newDateSampleCollected
         }
         if(newData.date_sample_collected){
-          newData['sample_type'] = newData.sample_type.toString()
+         /// newData['sample_type'] = newData.sample_type.toString()
+         newData['sample_type'] = newData.sample_type
         }
         if(newData.time_sample_collected){
           newData['time_sample_collected'] = moment(newData.time_sample_collected, "hh:mm").format('LT')

@@ -7,9 +7,9 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.dto.AppointmentDTO;
 import org.lamisplus.modules.base.domain.entity.Appointment;
 import org.lamisplus.modules.base.domain.entity.Patient;
-import org.lamisplus.modules.base.domain.entity.Person;
 import org.lamisplus.modules.base.domain.mapper.AppointmentMapper;
 import org.lamisplus.modules.base.repository.AppointmentRepository;
+import org.lamisplus.modules.base.util.Constant;
 import org.lamisplus.modules.base.util.GenericSpecification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,18 +25,17 @@ import java.util.Optional;
 public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final AppointmentMapper appointmentMapper;
-    private static final int ARCHIVED = 1;
-    private static final int UN_ARCHIVED = 0;
+    private final Constant constant;
     private final UserService userService;
 
     public List<AppointmentDTO> getAllAppointment() {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-        List<Appointment> appointments = appointmentRepository.findAllByArchivedAndOrganisationUnitIdOrderByIdAsc(UN_ARCHIVED, organisationUnitId);
+        List<Appointment> appointments = appointmentRepository.findAllByArchivedAndOrganisationUnitIdOrderByIdAsc(constant.UN_ARCHIVED, organisationUnitId);
 
         List<AppointmentDTO> appointmentDTOS = new ArrayList<>();
         appointments.forEach(appointment -> {
             Patient patient = appointment.getPatientByPatientId();
-            final AppointmentDTO appointmentDTO = appointmentMapper.toAppointmentDTO(appointment, patient.getPersonByPersonId(), patient);
+            final AppointmentDTO appointmentDTO = appointmentMapper.toAppointmentDTO(appointment, patient);
 
             appointmentDTOS.add(appointmentDTO);
         });
@@ -46,13 +45,13 @@ public class AppointmentService {
     public Appointment save(AppointmentDTO appointmentDTO) {
         final Appointment appointment = appointmentMapper.toAppointment(appointmentDTO);
         appointment.setOrganisationUnitId(userService.getUserWithRoles().get().getCurrentOrganisationUnitId());
-        appointment.setArchived(UN_ARCHIVED);
+        appointment.setArchived(constant.UN_ARCHIVED);
         return appointmentRepository.save(appointment);
     }
 
     public List<AppointmentDTO> getOpenAllAppointmentByPatientId(Long patientId) {
         List<AppointmentDTO> appointmentDTOS = new ArrayList<>();
-        List<Appointment> appointmentList = appointmentRepository.findAllByPatientIdAndArchivedAndVisitId(patientId, UN_ARCHIVED, null);
+        List<Appointment> appointmentList = appointmentRepository.findAllByPatientIdAndArchivedAndVisitId(patientId, constant.UN_ARCHIVED, null);
         appointmentList.forEach(appointment -> {
             appointmentDTOS.add(getAppointmentDTO(appointment));
         });
@@ -60,33 +59,32 @@ public class AppointmentService {
     }
 
     public AppointmentDTO getAppointment(Long id) {
-        Appointment appointment = appointmentRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(Appointment.class, "Display:", id + ""));
+        Appointment appointment = appointmentRepository.findByIdAndArchived(id, constant.UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(Appointment.class, "Display:", id + ""));
 
         return getAppointmentDTO(appointment);
     }
 
     public Appointment update(Long id, AppointmentDTO appointmentDTO) {
-        appointmentRepository.findByIdAndArchived(id, UN_ARCHIVED)
+        appointmentRepository.findByIdAndArchived(id, constant.UN_ARCHIVED)
                 .orElseThrow(() -> new EntityNotFoundException(Appointment.class, "Display:", id + ""));
         final Appointment appointment = appointmentMapper.toAppointment(appointmentDTO);
         appointment.setId(id);
-        appointment.setArchived(UN_ARCHIVED);
+        appointment.setArchived(constant.UN_ARCHIVED);
 
         return appointmentRepository.save(appointment);
     }
 
     public Integer delete(Long id) {
-        Appointment appointment =  appointmentRepository.findByIdAndArchived(id, UN_ARCHIVED)
+        Appointment appointment =  appointmentRepository.findByIdAndArchived(id, constant.UN_ARCHIVED)
                 .orElseThrow(() -> new EntityNotFoundException(Appointment.class, "Display:", id + ""));
-        appointment.setArchived(ARCHIVED);
+        appointment.setArchived(constant.ARCHIVED);
         return appointment.getArchived();
     }
 
     private AppointmentDTO getAppointmentDTO(Appointment appointment){
         Patient patient = appointment.getPatientByPatientId();
-        Person person = patient.getPersonByPersonId();
 
-        return  appointmentMapper.toAppointmentDTO(appointment, person, patient);
+        return  appointmentMapper.toAppointmentDTO(appointment, patient);
     }
 
 }

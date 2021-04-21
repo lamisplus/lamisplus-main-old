@@ -3,7 +3,6 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.RegimenDTO;
 import org.lamisplus.modules.base.service.RegimenService;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,6 @@ import java.util.List;
 @RequestMapping("/api/regimens")
 @Slf4j
 @RequiredArgsConstructor
-@Audit
 public class RegimenController {
     private final RegimenService regimenService;
 

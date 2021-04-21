@@ -54,7 +54,7 @@ const GeneralPatientSearch = props => {
               </Button>
             </Link>
 
-              <Button
+              {/*<Button
                   variant="contained"
                   color="primary"
                   className=" float-right mr-1"
@@ -64,7 +64,7 @@ const GeneralPatientSearch = props => {
               >
                 <span style={{textTransform: 'capitalize'}}>Search by Fingerprint</span>
               </Button>
-
+*/}
 
             <br />
           </Title>

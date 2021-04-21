@@ -182,7 +182,7 @@ export const FETCH_USER_BY_ID = 'FETCH_USER_BY_ID'
 export const USER_ROLE_UPDATE = 'USER_ROLE_UPDATE'
 export const USERS_ERROR = 'USERS_ERROR'
 export const FETCH_ME = 'FETCH_ME'
-
+export const PERMISSION = 'PERMISSION'
 /**
  * @TYPES
  * ===============================================

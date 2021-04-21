@@ -3,14 +3,15 @@ import sidebarBgImage from "assets/img/sidebar/sidebar-4.jpg";
 import SourceLink from "components/SourceLink";
 import React, {useState} from "react";
 import { MdDashboard, MdGraphicEq, MdPerson, MdKeyboardArrowDown } from "react-icons/md";
-import { GiTestTubes, GiMedicines } from "react-icons/gi";
+import { GiTestTubes, GiMedicines,GiUnplugged } from "react-icons/gi";
 import { FaUserPlus, FaListUl, FaUserCog, FaCogs, FaWpforms } from "react-icons/fa";
 import {Link, NavLink} from "react-router-dom";
 import { Nav, Navbar, NavItem, NavLink as BSNavLink, Collapse } from "reactstrap";
 import bn from "utils/bemnames";
 import { authentication } from '../../_services/authentication';
-import {fetchAll} from "../../actions/menu";
+import {fetchAll, fetchUserPermission} from "../../actions/menu";
 import {connect} from "react-redux";
+import _ from "lodash";
 
 const sidebarBackground = {
   backgroundImage: `url("${sidebarBgImage}")`,
@@ -30,13 +31,14 @@ const navItems = [
   { to: '/appointments', name: 'Appointments', exact: false, Icon: MdGraphicEq,
   roles: ["4d358195-095a-4944-bc5b-aa711915af8a_read", "4d358195-095a-4944-bc5b-aa711915af8a_write", "4d358195-095a-4944-bc5b-aa711915af8a_delete", "22ec08bd-eeae-4f5e-9041-44461d511e90_read"]},
   { to: '/report', name: 'Reports', exact: false, Icon: FaListUl },
-  // { to: '/visual', name: 'Visualization', exact: false, Icon: MdGraphicEq },
+  // { to: '/data-visualisation', name: 'Data Visualization', exact: false, Icon: MdGraphicEq },
+  // { to: '/plug-in', name: 'Plugins', exact: false, Icon: GiUnplugged },
   { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog,
     roles: ["admin_read", "user_read"] },
   // { to: '/data-visualisation', name: 'Data Visualisation', exact: false, Icon: GiTestTubes },
   // { to: '/select', name: 'React Select', exact: false, Icon: FaUserCog },
 
-  // { to: '/admin-dashboard', name: 'Administration Module', exact: false, Icon: FaUserCog },
+ 
 
  
 ];
@@ -60,7 +62,6 @@ const adminItems = [
 ];
 
 const bem = bn.create("sidebar");
-const userRoles = authentication.getCurrentUserRole();
 
 
 
@@ -71,9 +72,11 @@ class Sidebar extends React.Component {
     this.state = {
       isOpenComponents: false,
       loading: false,
+      permissionLoading: false,
     };
-
+    this.fetchPermisisons();
     this.fetchExternalMenu();
+
   }
 
   handleClick = (name) => () => {
@@ -85,6 +88,13 @@ class Sidebar extends React.Component {
     });
   };
 
+   userHasRole(role){
+    const userRoles = this.props.permissions;
+    if(role && role.length > 0 && _.intersection(role, userRoles).length === 0){
+      return false;
+    }
+    return true;
+  }
   fetchExternalMenu = () => {
     this.setState({loading: true});
     const onSuccess = () => {
@@ -94,6 +104,17 @@ class Sidebar extends React.Component {
       this.setState({loading: false});
     }
     this.props.fetchAllExternalModulesMenu(onSuccess, onError);
+  };
+
+  fetchPermisisons = () => {
+    this.setState({permissionLoading: true});
+    const onSuccess = () => {
+      this.setState({permissionLoading: false});
+    }
+    const onError = () => {
+      this.setState({permissionLoading: false});
+    }
+    this.props.fetchUserPermission(onSuccess, onError);
   };
 
 
@@ -116,10 +137,10 @@ class Sidebar extends React.Component {
               </SourceLink>
             </Navbar>
             <Nav vertical>
-              {navItems.map(({ to, name, exact, Icon , roles}, index) => (
+              {this.props.permissions  && this.props.permissions.length > 0 && navItems.map(({ to, name, exact, Icon , roles}, index) => (
 
                   <>
-                    {!authentication.userHasRole(roles) ?
+                    {!this.userHasRole(roles) ?
                         <></> :
                         <NavItem key={index} className={bem.e("nav-item")}>
                           <BSNavLink
@@ -163,22 +184,24 @@ class Sidebar extends React.Component {
               <Collapse isOpen={this.state.isOpenAdministration}>
 
                 {this.props.menuList && this.props.menuList.map(({ url, name }, index) => (
+                    <>
                     <NavItem key={index} className={bem.e('nav-item')}>
-                      <BSNavLink
-                          id={`navItem-${name}-${index}`}
-                          // className="text-uppercase"
-                          tag={NavLink}
-                          to ={{
-                            pathname: `/external-modules`,
-                            state: url
-                          }}
-                          activeClassName="active"
-                          exact={false}
-                      >
-                        {/*<Icon className={bem.e('nav-item-icon')} />*/}
-                        <span className="">{name}</span>
-                      </BSNavLink>
-                    </NavItem>
+                  <BSNavLink
+                  id={`navItem-${name}-${index}`}
+                  // className="text-uppercase"
+                  tag={NavLink}
+                  to ={{
+                  pathname: `/external-modules`,
+                  state: url
+                }}
+                  activeClassName="active"
+                  exact={false}
+                  >
+                {/*<Icon className={bem.e('nav-item-icon')} />*/}
+                  <span className="">{name}</span>
+                  </BSNavLink>
+                  </NavItem>
+                    </>
                 ))}
               </Collapse>
             </Nav>
@@ -191,11 +214,13 @@ class Sidebar extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     menuList: state.menu.list,
+    permissions: state.menu.permissions,
   };
 };
 
 const mapActionToProps = {
   fetchAllExternalModulesMenu: fetchAll,
+  fetchUserPermission: fetchUserPermission
 };
 
 

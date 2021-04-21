@@ -114,6 +114,11 @@ const FormRenderer = (props) => {
     if(formId){
       updateForm(submission, onSuccess, onError);
     }else{
+      // const keys = Object.keys(submission.data);
+      // if(keys.length == 1 && _.isArray(submission.data[keys[0]])){
+      //   submission.data = submission.data[keys[0]];
+      // }
+
       saveForm(submission, onSuccess, onError);
     }
   };
@@ -123,10 +128,13 @@ const FormRenderer = (props) => {
     const encounterDate = submission["dateEncounter"]
       ? submission["dateEncounter"]
       : new Date();
-    const formatedDate = Moment(encounterDate).format("DD-MM-YYYY");
+    let formatedDate = Moment(encounterDate).format("DD-MM-YYYY");
 
+    if(props.dateEncounter){
+      formatedDate = Moment(props.dateEncounter).format("DD-MM-YYYY");
+    }
     let data = {
-      data: [submission.data],
+      data: _.isArray(submission.data) ? submission.data : [submission.data],
       patientId: props.patientId,
       formCode: props.formCode,
       programCode: form.programCode,
@@ -141,7 +149,8 @@ const FormRenderer = (props) => {
     props.saveEncounter(
       data,
       props.onSuccess ? props.onSuccess : onSuccess,
-      props.onError ? props.onError : onError
+      props.onError ? props.onError : onError,
+        props.formType
     );
   }
 

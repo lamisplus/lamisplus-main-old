@@ -220,8 +220,8 @@ function PatientDashboardSubMenu(props) {
             <div aria-describedby={id} onClick={handleClick}>
               Relationships &nbsp;
               <Badge color="dark">
-                {props.patient.personRelativeDTOs
-                    ? props.patient.personRelativeDTOs.length
+                {props.patient.details && props.patient.details.patientRelative
+                    ? props.patient.details.patientRelative.length
                     : 0}
               </Badge>
             </div>
@@ -240,9 +240,9 @@ function PatientDashboardSubMenu(props) {
                 }}
             >
               <List>
-                {props.patient.personRelativeDTOs &&
-                props.patient.personRelativeDTOs.length > 0 ? (
-                    props.patient.personRelativeDTOs.map((relative, index) => (
+                {props.patient.details && props.patient.details.patientRelative &&
+                props.patient.details.patientRelative.length > 0 ? (
+                    props.patient.details.patientRelative.map((relative, index) => (
                         <RelativeList
                             key={index}
                             index={index}

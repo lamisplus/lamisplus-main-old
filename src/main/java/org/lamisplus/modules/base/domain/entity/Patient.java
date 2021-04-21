@@ -3,7 +3,12 @@ package org.lamisplus.modules.base.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,20 +22,20 @@ import java.util.List;
 @Entity
 @EqualsAndHashCode
 @Table(name = "patient")
-public class Patient extends Audit<String> implements Serializable {
+public class Patient extends JsonBEntity implements Serializable {
 
     @Id
     @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Basic
+    /*@Basic
     @Column(name = "date_registration")
     @NotNull
-    private LocalDate dateRegistration;
-    @Basic
+    private LocalDate dateRegistration;*/
+    /*@Basic
     @Column(name = "person_id")
-    private Long personId;
+    private Long personId;*/
     @Basic
     @Column(name = "patient_number")
     private String hospitalNumber;
@@ -49,10 +54,15 @@ public class Patient extends Audit<String> implements Serializable {
     @JsonIgnore
     private Long organisationUnitId;
 
-    @ManyToOne
+    @Type(type = "jsonb")
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "details", nullable = false, columnDefinition = "jsonb")
+    private Object details;
+
+    /*@ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
-    private Person personByPersonId;
+    private Person personByPersonId;*/
 
     @OneToMany(mappedBy = "patientByVisit")
     @JsonIgnore
@@ -73,4 +83,28 @@ public class Patient extends Audit<String> implements Serializable {
     @JsonIgnore
     @ToString.Exclude
     public List<Appointment> appointmentsById;
+
+    @CreatedBy
+    @Column(name = "created_by", nullable = false, updatable = false)
+    @JsonIgnore
+    @ToString.Exclude
+    private String createdBy;
+
+    @CreatedDate
+    @Column(name = "date_created", nullable = false, updatable = false)
+    @JsonIgnore
+    @ToString.Exclude
+    private Timestamp dateCreated;
+
+    @LastModifiedBy
+    @Column(name = "modified_by")
+    @JsonIgnore
+    @ToString.Exclude
+    private String modifiedBy;
+
+    @LastModifiedDate
+    @Column(name = "date_modified")
+    @JsonIgnore
+    @ToString.Exclude
+    private Timestamp dateModified;
 }

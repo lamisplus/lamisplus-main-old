@@ -15,27 +15,18 @@ import java.util.List;
 public class PatientDTO {
 
     private Long patientId;
-    private Long personId;
     private Long visitId;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private LocalDate dateRegistration;
+    /*@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private LocalDate dateRegistration;*/
     private Long organisationUnitId;
-
     private String hospitalNumber;
     private String firstName;
     private String lastName;
     private String otherNames;
-    private Long maritalStatusId;
-    private Long titleId;
-
+    @Convert(converter = LocalDateConverter.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate dob;
-
     private Boolean dobEstimated;
-    private Long genderId;
-    private Long educationId;
-    private Long occupationId;
-    private Long facilityId;
     private String mobilePhoneNumber;
     private String alternatePhoneNumber;
     private String email;
@@ -43,6 +34,12 @@ public class PatientDTO {
     private String city;
     private String street;
     private String landmark;
+    private Long maritalStatusId;
+    private Long titleId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private Long genderId;
+    private Long educationId;
+    private Long occupationId;
     private Long countryId;
     private Long stateId;
     private Long provinceId;
@@ -59,5 +56,7 @@ public class PatientDTO {
 
     private Integer typePatient;
 
-    private List<PersonRelativesDTO> PersonRelativeDTOs;
+    //private List<PersonRelativesDTO> PersonRelativeDTOs;
+
+    private Object details;
 }

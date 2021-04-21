@@ -2,21 +2,19 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.FormDTO;
 import org.lamisplus.modules.base.domain.entity.Form;
 import org.lamisplus.modules.base.service.FormService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-
+import java.util.Optional;
 
 
 @RestController
 @RequestMapping("/api/forms")
 @Slf4j
 @RequiredArgsConstructor
-@Audit
 public class FormController {
     private final FormService formService;
 
@@ -26,8 +24,8 @@ public class FormController {
     }
 
     @GetMapping ("/{formCode}/formCode")
-    public ResponseEntity<Form> getFormByFormCode(@PathVariable String formCode) {
-            return ResponseEntity.ok(this.formService.getFormByFormCode(formCode));
+    public ResponseEntity<Form> getFormByFormCode(@PathVariable String formCode, @RequestParam Optional<Integer> type) {
+            return ResponseEntity.ok(this.formService.getFormByFormCode(formCode, type));
     }
 
     @GetMapping ("/{id}")

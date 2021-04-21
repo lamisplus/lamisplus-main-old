@@ -1,5 +1,7 @@
 package org.lamisplus.modules.base.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
@@ -12,16 +14,23 @@ import org.lamisplus.modules.base.domain.mapper.EncounterMapper;
 import org.lamisplus.modules.base.domain.mapper.FormDataMapper;
 import org.lamisplus.modules.base.repository.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import org.lamisplus.modules.base.util.AccessRight;
 import org.lamisplus.modules.base.util.CustomDateTimeFormat;
+import org.lamisplus.modules.base.util.GenericSpecification;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -39,13 +48,13 @@ public class EncounterService {
     private final EncounterMapper encounterMapper;
     private final FormDataMapper formDataMapper;
     private final FormDataRepository formDataRepository;
+    private final FormRepository formRepository;
     private final UserService userService;
     private final AccessRight accessRight;
     private static final int ARCHIVED = 1;
     private static final String WRITE = "write";
     private static final String DELETE = "delete";
-
-
+    private final JdbcTemplate  jdbcTemplate;
 
 
     public List<EncounterDTO> getAllEncounters() {
@@ -58,9 +67,9 @@ public class EncounterService {
                 return;
             }
             Patient patient = singleEncounter.getPatientByPatientId();
-            Person person = patient.getPersonByPersonId();
+            //Person person = patient.getPersonByPersonId();
             Form form = singleEncounter.getFormForEncounterByFormCode();
-            final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, singleEncounter, form);
+            final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(patient, singleEncounter, form);
             List formDataList = new ArrayList();
             if(null == singleEncounter.getFormDataByEncounter() && !singleEncounter.getFormDataByEncounter().isEmpty()) {
                 singleEncounter.getFormDataByEncounter().forEach(formData -> {
@@ -81,11 +90,11 @@ public class EncounterService {
 
         Patient patient = encounter.getPatientByPatientId();
 
-        Person person = patient.getPersonByPersonId();
+        //Person person = patient.getPersonByPersonId();
 
         Form form = encounter.getFormForEncounterByFormCode();
 
-        final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, encounter, form);
+        final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(patient, encounter, form);
 
         List<FormData> formDataList = encounter.getFormDataByEncounter();
         List formDataDTOList = new ArrayList();
@@ -95,7 +104,7 @@ public class EncounterService {
             formDataDTOList.add(formDataDTO);
         });
         encounterDTO.setFormDataObj(formDataDTOList);
-        return encounterDTO;
+        return addProperties(encounterDTO);
     }
 
     public Encounter update(Long id, EncounterDTO encounterDTO) {
@@ -111,43 +120,68 @@ public class EncounterService {
         return encounter;
     }
 
-    public Encounter save(EncounterDTO encounterDTO) {
+    public Encounter save(EncounterDTO encounterDTO, int formType) {
+        //Get all permissions
         Set<String> permissions = accessRight.getAllPermission();
 
+        //Grant access by access type = WRITE
         accessRight.grantAccessByAccessType(encounterDTO.getFormCode(), Encounter.class, WRITE, permissions);
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
 
         encounterDTO.setTimeCreated(CustomDateTimeFormat.LocalTimeByFormat(LocalTime.now(),"hh:mm a"));
-        Optional<Encounter> encounterOptional = this.encounterRepository.findByPatientIdAndProgramCodeAndFormCodeAndDateEncounterAndOrganisationUnitId(encounterDTO.getPatientId(), encounterDTO.getFormCode(),
-                encounterDTO.getProgramCode(), encounterDTO.getDateEncounter(), organisationUnitId);
 
-        if (encounterOptional.isPresent()) {
-            throw new RecordExistException(Encounter.class, "Patient Id ", encounterDTO.getPatientId() + ", " +
-                    "Program Code = " + encounterDTO.getProgramCode() + ", Form Code =" + encounterDTO.getFormCode() + ", Date =" + encounterDTO.getDateEncounter());
-        }
-        Optional<Visit> visitOptional = this.visitRepository.findById(encounterDTO.getVisitId());
-        if(!visitOptional.isPresent())throw new EntityNotFoundException(Visit.class,"Visit Id", encounterDTO.getVisitId()+"");
+        encounterRepository.findByPatientIdAndProgramCodeAndFormCodeAndDateEncounterAndOrganisationUnitId(
+                encounterDTO.getPatientId(), encounterDTO.getFormCode(), encounterDTO.getProgramCode(),
+                encounterDTO.getDateEncounter(), organisationUnitId).ifPresent(encounter -> {
+            throw new RecordExistException(Encounter.class, "Patient Id ",
+                    encounterDTO.getPatientId() + ", " + "Program Code = " +
+                            encounterDTO.getProgramCode() + ", Form Code =" + encounterDTO.getFormCode() + ", Date =" +
+                            encounterDTO.getDateEncounter());
+        });
 
         final Encounter encounter = encounterMapper.toEncounter(encounterDTO);
+        Visit visit = new Visit();
+
+
+        //For retrospective data entry formType is 1
+        if(formType == 1) {
+            visit = visitRepository.findTopByPatientIdAndDateVisitStartOrderByDateVisitStartDesc(encounterDTO.getPatientId(), encounter.getDateEncounter()).orElse(visit);
+            if(visit == null) {
+                visit = new Visit();
+                visit.setDateVisitEnd(encounter.getDateEncounter());
+                visit.setDateVisitStart(encounter.getDateEncounter());
+                visit.setTimeVisitStart(LocalTime.now());
+                visit.setTimeVisitEnd(LocalTime.now());
+                visit.setDateNextAppointment(null);
+                visit.setPatientId(encounter.getPatientId());
+                visit.setTypePatient(0);
+                visit.setOrganisationUnitId(organisationUnitId);
+                visit = visitRepository.save(visit);
+            }
+            encounterDTO.setVisitId(visit.getId());
+        } else {
+            visit = visitRepository.findById(encounterDTO.getVisitId()).orElseThrow(() ->
+                    new EntityNotFoundException(Visit.class, "Visit Id", encounterDTO.getVisitId() + ""));
+        }
+
         encounter.setUuid(UUID.randomUUID().toString());
         encounter.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         encounter.setOrganisationUnitId(organisationUnitId);
-
         Encounter savedEncounter = this.encounterRepository.save(encounter);
+        Optional<Form> form = formRepository.findByCodeAndArchived(savedEncounter.getFormCode(), UNARCHIVED);
 
-        Visit visit = visitOptional.get();
-        if(encounterDTO.getTypePatient() != null){
+        if(encounterDTO.getTypePatient() != null) {
             visit.setTypePatient(encounterDTO.getTypePatient());
-            this.visitRepository.save(visit);
+            visitRepository.save(visit);
         }
 
-        if(encounterDTO.getData().size() >0){
+        if(encounterDTO.getData().size() > 0){
             encounterDTO.getData().forEach(formDataList->{
                 FormData formData = new FormData();
                 formData.setEncounterId(savedEncounter.getId());
                 formData.setData(formDataList);
                 formData.setOrganisationUnitId(organisationUnitId);
-                this.formDataRepository.save(formData);
+                formDataRepository.save(formData);
             });
         }
         return savedEncounter;
@@ -164,44 +198,30 @@ public class EncounterService {
         return encounter.getArchived();
     }
 
-    public List<EncounterDTO> getEncounterByFormCodeAndDateEncounter(String formCode, Optional<String> dateStart, Optional<String> dateEnd) {
+    public Page<Encounter> getEncounterByFormCodeAndDateEncounter(String formCode, Optional<String> dateStart, Optional<String> dateEnd, Pageable pageable) {
         Set<String> permissions = accessRight.getAllPermission();
 
         accessRight.grantAccess(formCode, Encounter.class, permissions);
+
+        Specification<Encounter> specification = new GenericSpecification<Encounter>().findAllEncounter(formCode, dateStart, dateEnd);
+        return encounterRepository.findAll(specification, pageable);
+    }
+
+    public List<EncounterDTO> getAllEncounters(Page page) {
+        List<Encounter> encounters = page.getContent();
         List<EncounterDTO> encounterDTOS = new ArrayList<>();
-        List<Encounter> encounters = encounterRepository.findAll(new Specification<Encounter>() {
-            @Override
-            public Predicate toPredicate(Root root, CriteriaQuery criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                List<Predicate> predicates = new ArrayList<>();
-                if(dateStart.isPresent() && !dateStart.get().equals("{dateStart}")){
-                    LocalDate localDate = LocalDate.parse(dateStart.get(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("dateEncounter").as(LocalDate.class), localDate)));
-                }
-
-                if(dateEnd.isPresent() && !dateEnd.get().equals("{dateEnd}")){
-                    LocalDate localDate = LocalDate.parse(dateEnd.get(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("dateEncounter").as(LocalDate.class), localDate)));
-                }
-                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("formCode"), formCode)));
-                predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), 0)));
-                criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
-
-                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
-            }
-        });
 
         encounters.forEach(singleEncounter -> {
             Patient patient = singleEncounter.getPatientByPatientId();
-            Person person = patient.getPersonByPersonId();
             Form form = singleEncounter.getFormForEncounterByFormCode();
             List formDataList = new ArrayList();
             singleEncounter.getFormDataByEncounter().forEach(formData -> {
                 formDataList.add(formData);
             });
-            final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(person, patient, singleEncounter, form);
+            final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(patient, singleEncounter, form);
 
             encounterDTO.setFormDataObj(formDataList);
-            encounterDTOS.add(encounterDTO);
+            encounterDTOS.add(addProperties(encounterDTO));
         });
         return encounterDTOS;
     }
@@ -211,7 +231,6 @@ public class EncounterService {
                 .orElseThrow(() -> new EntityNotFoundException(Encounter.class, "Id",encounterId+"" ));
 
         accessRight.grantAccess(encounter.getFormCode(), Encounter.class, checkForEncounterAndGetPermission(encounterId));
-
         List<FormData> formDataList = encounter.getFormDataByEncounter();
         return formDataList;
     }
@@ -224,5 +243,53 @@ public class EncounterService {
 
     private Set<String> checkForEncounterAndGetPermission(Long id){
         return accessRight.getAllPermission();
+    }
+
+    private EncounterDTO addProperties(EncounterDTO encounterDTO) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        try {
+            //Instance of ObjectMapper provides functionality for reading and writing JSON
+            ObjectMapper mapper = new ObjectMapper();
+            if (encounterDTO.getDetails() != null) {
+                String encounterDetailsString = mapper.writeValueAsString(encounterDTO.getDetails());
+                JSONObject encounterJson = new JSONObject(encounterDetailsString);
+                if (encounterJson.get("firstName") != null)
+                    encounterDTO.setFirstName(encounterJson.get("firstName").toString());
+                if (encounterJson.get("hospitalNumber") != null)
+                    encounterDTO.setHospitalNumber(encounterJson.get("hospitalNumber").toString());
+                if (encounterJson.get("lastName") != null)
+                    encounterDTO.setLastName(encounterJson.get("lastName").toString());
+                if (encounterJson.get("dob") != null)
+                    encounterDTO.setDob(LocalDate.parse(encounterJson.get("dob").toString(), formatter));
+            }
+        } catch (JSONException | JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return encounterDTO;
+    }
+
+    public Page<Encounter> findAllPages(String firstName, String lastName, String hospitalNumber, Pageable pageable) {
+        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+        List<Encounter> encounters = jdbcTemplate.query("SELECT * FROM encounter e LEFT OUTER JOIN patient p ON (p.id = e.patient_id) WHERE p.details ->>'firstName' ilike "+
+                        "'"+firstName + "' OR p.details ->>'lastName' ilike " +
+                        "'"+lastName +"' OR p.details ->>'hospitalNumber' ilike " +
+                        "'"+hospitalNumber +"' AND p.organisation_unit_id="+
+                        organisationUnitId +"AND p.archived="+
+                        UNARCHIVED /*+" LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset()*/,
+                (rs, rowNum) -> mapEncounterResult(rs));
+
+        return new PageImpl<>(encounters);
+
+
+    }
+
+    private Encounter mapEncounterResult(final ResultSet rs) throws SQLException {
+        Encounter encounter = new Encounter();
+        encounter.setId(rs.getLong("id"));
+        encounter.setPatientId(rs.getLong("patient_id"));
+        encounter.setVisitId(rs.getLong("visit_id"));
+        encounter.setFormCode(rs.getString("form_code"));
+        encounter.setProgramCode(rs.getString("program_code"));
+        return encounter;
     }
 }

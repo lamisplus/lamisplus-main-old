@@ -84,12 +84,12 @@ const ModalSample = (props) => {
 
         if(newData.date_result_reported){
           newData['date_result_reported'] = moment(newData.date_result_reported).format(
-            "DD-MM-YYYY"
+            "YYYY-MM-DD"
           );
         }
         if(newData.date_asseyed){
           newData['date_asseyed'] = moment(newData.date_asseyed).format(
-            "DD-MM-YYYY"
+            "YYYY-MM-DD"
           );
         }
         if(newData.time_result_reported){

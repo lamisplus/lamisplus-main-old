@@ -1,7 +1,6 @@
 package org.lamisplus.modules.base.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.controller.vm.LoginVM;
 import org.lamisplus.modules.base.security.jwt.JWTFilter;
 import org.lamisplus.modules.base.security.jwt.TokenProvider;
@@ -22,7 +21,6 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
-@Audit
 public class UserJWTController {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -43,7 +41,6 @@ public class UserJWTController {
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        //System.out.println("userService - "+userService.getUserWithRoles().get());
         boolean rememberMe = (loginVM.isRememberMe() == null) ? false : loginVM.isRememberMe();
         String jwt = tokenProvider.createToken(authentication, userService, rememberMe);
         HttpHeaders httpHeaders = new HttpHeaders();

@@ -59,12 +59,12 @@ const RestoreDatabase = (props) => {
                             <CardBody>
                                 <Row style={{ marginTop: '20px'}}>
                                     <Col sm={12}>
-                                        <Alert severity="info">
+                                        {/* <Alert severity="info">
                                             <AlertTitle>Instructions to add new module</AlertTitle>
                                             
                                             <br/>
                                             <strong>NOTE:</strong> The following format is allow .csv, .zip  
-                                        </Alert>
+                                        </Alert> */}
                                     </Col>
                                 </Row>
                                 <br/><br/><br/>

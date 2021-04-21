@@ -23,7 +23,7 @@ const PatientSearch = (props) => {
     return dispensed.length
   }
   const drugType = (drugsArray) => {
-    console.log(prescriptions)
+    //console.log(prescriptions)
     const type = []
     drugsArray.map(drugs => {
         if (drugs.data.type === 1){
@@ -62,11 +62,6 @@ const PatientSearch = (props) => {
             filtering: false,
           },
           {
-            title: "Drug Type",
-            field: "type",
-            filtering: false,
-          },
-          {
             title: "Action",
             field: "actions",
             filtering: false,
@@ -78,7 +73,7 @@ const PatientSearch = (props) => {
           date: prescription.dateEncounter,
           prescribedCount: prescription.formDataObj.length,
           dispensedCount: totalDrugsPrescribed(prescription.formDataObj),
-          type:   drugType(prescription.formDataObj),
+         // type:   drugType(prescription.formDataObj),
           actions: (
             
             <Link

@@ -1,18 +1,12 @@
-import Page from 'components/Page';
+
 import React, {  useState, useEffect } from "react";
-import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { connect } from "react-redux";
 import { FaUserPlus, FaCalendarAlt, FaUserCheck} from 'react-icons/fa'; 
 import { MdAirlineSeatIndividualSuite} from 'react-icons/md';
-import { Line } from 'react-chartjs-2';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import {Card,CardBody,CardHeader,CardTitle,Col,Row,} from 'reactstrap';
-//import {genderChart} from './DashBoardVisualisation/GenderChart';
-//import {combineChart} from './DashBoardVisualisation/CombineChart'
-import CustomHighMap from './map';
-import {deathChart} from './DashBoardVisualisation/DeathChart';
 import { Link } from 'react-router-dom'
 import { fetchAllRegisteredPatients } from "./../actions/generalUserDashboard";
 import { url } from "../api";

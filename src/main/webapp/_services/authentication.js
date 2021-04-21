@@ -83,6 +83,7 @@ function getCurrentUser(){
     const token = user.id_token;
     const decoded = jwt_decode(token);
     console.log(decoded);
+    console.log(currentUserSubject)
     return decoded;
 }
 
@@ -97,7 +98,7 @@ async function fetchMe(){
                 type: ACTION_TYPES.FETCH_ME,
                 payload: response.data,
             });
-            return response.data;
+            return response.data.permissions;
         })
         .catch((error) => {
             dispatch({

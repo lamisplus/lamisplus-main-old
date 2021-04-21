@@ -92,9 +92,13 @@ public class User {
     @Column(name = "person_id")
     private Long personId;
 
-    @OneToOne
-    @JoinColumn(name = "person_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Person person;
+    @Basic
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Basic
+    @Column(name = "last_name")
+    private String lastName;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<Role> role;

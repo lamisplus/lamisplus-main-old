@@ -82,7 +82,7 @@ const ModalSample = (props) => {
     const saveSample = (e) => {
         const newData = e.data 
         const newDateSampleCollected = moment(newData.date_sample_collected).format(
-          "DD-MM-YYYY"
+          "YYYY-MM-DD"
         );
         if(newData.date_sample_collected){
           newData['date_sample_collected'] = newDateSampleCollected

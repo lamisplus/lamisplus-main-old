@@ -1,7 +1,6 @@
 package org.lamisplus.modules.base.repository;
 
 import org.lamisplus.modules.base.domain.entity.Patient;
-import org.lamisplus.modules.base.domain.entity.Person;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,6 +18,8 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
 
     Optional<Patient> findById(Long patientId);
 
+    Optional<Patient> findByIdAndArchived(Long patientId, int archived);
+
     Boolean existsByHospitalNumber(String patientNumber);
 
     Long countByOrganisationUnitIdAndArchived(Long organisationUnitId, int archived);
@@ -28,5 +29,21 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
     List<Patient> findAllByArchivedAndOrganisationUnitIdOrderByIdDesc(int archived, Long organisationUnitId);
 
     Page<Patient> findAllByOrganisationUnitIdAndArchivedOrderByIdDesc(Long organisationUnitId, int archived, Pageable pageable);
+
+    List<Patient> findAllByIdIn(List<Long> patientId);
+
+    @Query(value = "SELECT * FROM patient WHERE details ->>?1 like ?2 AND organisation_unit_id=?3 AND archived=?4", nativeQuery = true)
+    Page<Patient> findAllByDetails(String key, String value, Long organisationUnitId, int archived, Pageable pageable);
+
+    @Query(value = "SELECT * FROM patient WHERE details ->>?1 like ?2", nativeQuery = true)
+    Page<Patient> findAllByDetails(String key, String value,Pageable pageable);
+
+    @Query(value = "SELECT * FROM patient WHERE details ->>'firstName'like ?1 " +
+            "OR details ->>'lastName' like ?2 OR details ->>'hospitalNumber' like ?3 AND organisation_unit_id=?4 AND archived=?5", nativeQuery = true)
+    Page<Patient> findAllByDetails(String firstName, String lastName, String hospitalNumber, Long organisationUnitId, int archived, Pageable pageable);
+
+    @Query(value = "SELECT * FROM patient WHERE (details ->>'firstName' ilike ?1 " +
+            "OR details ->>'lastName' ilike ?2 OR details ->>'hospitalNumber' ilike ?3) AND organisation_unit_id=?4 AND archived=?5", nativeQuery = true)
+    Page<Patient> findAllByFullDetails(String firstName, String lastName, String hospitalNumber, Long organisationUnitId, int archived, Pageable pageable);
 
 }

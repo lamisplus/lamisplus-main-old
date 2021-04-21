@@ -47,6 +47,10 @@ public class Form extends JsonBEntity implements Serializable {
     private String programCode;
 
     @Basic
+    @Column(name = "type")
+    private Integer type;
+
+    @Basic
     @Column(name = "version")
     private String version;
 

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.FileInfo;
 import org.lamisplus.modules.base.service.FilesStorageServiceImpl;
 import org.lamisplus.modules.base.util.upload.FilesStorageService;
@@ -22,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@Audit
 public class FileController {
 
     private final FilesStorageService storageService;
