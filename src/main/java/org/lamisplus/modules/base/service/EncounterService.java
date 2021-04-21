@@ -141,10 +141,15 @@ public class EncounterService {
 
         final Encounter encounter = encounterMapper.toEncounter(encounterDTO);
         Visit visit = new Visit();
+        Form form = formRepository.findByCodeAndArchived(encounterDTO.getFormCode(), UNARCHIVED).orElseThrow(()->
+                new EntityNotFoundException(Encounter.class, "Form", "Not Found"));
 
 
         //For retrospective data entry formType is 1
         if(formType == 1) {
+            if(form.getParentCode() != null){
+                encounter.setFormCode(form.getParentCode());
+            }
             visit = visitRepository.findTopByPatientIdAndDateVisitStartOrderByDateVisitStartDesc(encounterDTO.getPatientId(), encounter.getDateEncounter()).orElse(visit);
             if(visit == null) {
                 visit = new Visit();
@@ -168,7 +173,6 @@ public class EncounterService {
         encounter.setCreatedBy(userService.getUserWithRoles().get().getUserName());
         encounter.setOrganisationUnitId(organisationUnitId);
         Encounter savedEncounter = this.encounterRepository.save(encounter);
-        Optional<Form> form = formRepository.findByCodeAndArchived(savedEncounter.getFormCode(), UNARCHIVED);
 
         if(encounterDTO.getTypePatient() != null) {
             visit.setTypePatient(encounterDTO.getTypePatient());

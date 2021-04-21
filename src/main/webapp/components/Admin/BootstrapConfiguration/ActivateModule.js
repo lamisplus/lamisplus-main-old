@@ -47,13 +47,13 @@ const useStyles = makeStyles(theme => ({
 const ActivateModule = (props) => {
     const classes = useStyles()
     const datasample = props.datasample ? props.datasample : {};
-    console.log(datasample)
 
     const ActiveModule = () => {
         const onError = () => {
         }
         const onSuccess = () => {
         }
+        datasample['status'] =2
         props.activateBootstrapModule(datasample.id, onSuccess, onError);
         props.togglestatus()
     }

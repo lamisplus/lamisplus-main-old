@@ -44,6 +44,7 @@ const PatientSearch = (props) => {
         //return 2
       }
 
+      console.log(collectedSamples)
   return (
     <div>
       <MaterialTable
