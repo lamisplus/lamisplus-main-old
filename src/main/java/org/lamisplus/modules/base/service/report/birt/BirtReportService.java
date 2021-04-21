@@ -2,11 +2,14 @@ package org.lamisplus.modules.base.service.report.birt;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.logstash.logback.encoder.org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import net.logstash.logback.encoder.org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
 import org.eclipse.birt.report.engine.api.*;
 import org.eclipse.birt.report.model.api.*;
+import org.lamisplus.modules.base.config.ApplicationProperties;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ReportDetailDTO;
@@ -17,21 +20,20 @@ import org.lamisplus.modules.base.repository.ProgramRepository;
 import org.lamisplus.modules.base.repository.ReportInfoRepository;
 import org.lamisplus.modules.base.repository.UserRepository;
 import org.lamisplus.modules.base.security.SecurityUtils;
-import org.lamisplus.modules.base.util.GenericSpecification;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.Yaml;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -54,7 +56,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 */
     private IReportEngine birtEngine;
     private ApplicationContext context;
-    //private String imageFolder;
+
 
     private final ReportInfoRepository reportInfoRepository;
 
@@ -272,6 +274,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         return reportInfoRepository.save(reportInfo);
     }
 
+
     public Integer delete(Long id) {
         ReportInfo reportInfo = reportInfoRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(()
                 -> new EntityNotFoundException(ReportInfo.class, "Id", id +""));
@@ -298,16 +301,26 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
                 new EntityNotFoundException(ReportInfo.class, "Id", id+""));
     }
 
-    @Value("${spring.datasource.url}")
     private String dbUrl;
 
-    @Value("${spring.datasource.username}")
     private String dbUser;
 
-    @Value("${spring.datasource.password}")
     private String dbPass;
 
     private void populateDatabaseConnectionParameters( IReportRunnable iReportRunnable ) {
+        String fileSeparator = File.separator;
+        File ymlFile = new File(ApplicationProperties.modulePath + fileSeparator +"config.yml");
+        try {
+            DatabaseProperties properties = readYml(ymlFile);
+            properties.getSpring().forEach((k, v) -> {
+                dbUrl = v.getUrl();
+                dbUser = v.getUsername();
+                dbPass = v.getPassword();
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         DesignElementHandle deh = iReportRunnable.getDesignHandle();
         SlotHandle slotHandle = deh.getSlot(ReportDesignHandle.DATA_SOURCE_SLOT );
         Iterator iter = slotHandle.iterator();
@@ -346,5 +359,24 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         {
             e.printStackTrace();
         }
+    }
+
+    private DatabaseProperties readYml(File ymlFile) throws IOException {
+        BufferedReader in = null;
+        DatabaseProperties databaseProperties;
+        try {
+            in = new BufferedReader(new InputStreamReader(
+                    new FileInputStream(ymlFile.getAbsolutePath())));
+            Yaml yaml = new Yaml();
+            databaseProperties = yaml.loadAs(in, DatabaseProperties.class);
+
+            in.close();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Error: " + e.getMessage());
+        }finally {
+            if (in != null) {in.close(); }
+        }
+        return databaseProperties;
     }
 }

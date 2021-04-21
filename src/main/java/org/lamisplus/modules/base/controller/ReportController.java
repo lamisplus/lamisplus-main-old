@@ -21,8 +21,6 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class ReportController {
-    private static final Logger log = LoggerFactory.getLogger(ReportController.class);
-
     private final BirtReportService reportService;
 
     @PostMapping
