@@ -89,10 +89,6 @@ public class User {
     private Long currentOrganisationUnitId;
 
     @Basic
-    @Column(name = "person_id")
-    private Long personId;
-
-    @Basic
     @Column(name = "first_name")
     private String firstName;
 

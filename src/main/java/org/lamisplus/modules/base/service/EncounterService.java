@@ -147,10 +147,10 @@ public class EncounterService {
 
         //For retrospective data entry formType is 1
         if(formType == 1) {
-            if(form.getParentCode() != null){
-                encounter.setFormCode(form.getParentCode());
+            if(form.getMainCode() != null){
+                encounter.setFormCode(form.getMainCode());
             }
-            visit = visitRepository.findTopByPatientIdAndDateVisitStartOrderByDateVisitStartDesc(encounterDTO.getPatientId(), encounter.getDateEncounter()).orElse(visit);
+            visit = visitRepository.findTopByPatientIdAndDateVisitStartOrderByDateVisitStartDesc(encounterDTO.getPatientId(), encounter.getDateEncounter()).orElse(null);
             if(visit == null) {
                 visit = new Visit();
                 visit.setDateVisitEnd(encounter.getDateEncounter());
@@ -163,7 +163,7 @@ public class EncounterService {
                 visit.setOrganisationUnitId(organisationUnitId);
                 visit = visitRepository.save(visit);
             }
-            encounterDTO.setVisitId(visit.getId());
+            encounter.setVisitId(visit.getId());
         } else {
             visit = visitRepository.findById(encounterDTO.getVisitId()).orElseThrow(() ->
                     new EntityNotFoundException(Visit.class, "Visit Id", encounterDTO.getVisitId() + ""));

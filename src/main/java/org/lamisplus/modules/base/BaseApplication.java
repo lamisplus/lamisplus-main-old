@@ -37,7 +37,7 @@ public class BaseApplication extends SpringBootServletInitializer {
     public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         PropertySourcesPlaceholderConfigurer properties = new PropertySourcesPlaceholderConfigurer();
         properties.setLocation(new FileSystemResource(ApplicationProperties.modulePath +"\\config.properties"));
-        properties.setIgnoreResourceNotFound(false);
+        properties.setIgnoreResourceNotFound(true);
         return properties;
     }
 }
