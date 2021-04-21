@@ -160,6 +160,7 @@ const useStyles = makeStyles({
     function sampleTypeList (test){
         
         const  maxVal = []
+        if (test != null && test.length > 0) {
           for(var i=0; i<test.length; i++){
              
                   if ( test[i].display!==null && test[i].display)
@@ -168,6 +169,7 @@ const useStyles = makeStyles({
               
           }
         return maxVal.toString();
+        }
     }
 //This is function to check for the status of each collection to display on the tablist below 
     const sampleAction = (e,dateEncounter) =>{
@@ -206,7 +208,7 @@ const useStyles = makeStyles({
             }
   }
 
-
+console.log(fetchTestOrders)
 return (
     <div>
       

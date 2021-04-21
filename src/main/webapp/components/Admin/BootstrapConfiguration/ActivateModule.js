@@ -56,6 +56,7 @@ const ActivateModule = (props) => {
         datasample['status'] =2
         props.activateBootstrapModule(datasample.id, onSuccess, onError);
         props.togglestatus()
+        props.history.push(`/admin-bootstrap-configuration`)
     }
 
 
