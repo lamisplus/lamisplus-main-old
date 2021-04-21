@@ -102,7 +102,7 @@ const GenerateReport = props => {
                 <Card>
                     <CardBody>
                     { form2 ?
-                        <Form form={row.resourceObject}
+                        <Form form={form2.resourceObject}
                               submission={submission}
                               options={options}
                               {...props} onSubmit={(submission) => {

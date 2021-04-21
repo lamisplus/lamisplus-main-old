@@ -49,7 +49,7 @@ function ServiceFormPage(props) {
   const [showFormPage, setShowFormPage] = useState(false);
   const [currentForm, setCurrentForm] = useState();
   const [patientEncounters, setPatientEncouters] = useState([]);
-  const [dateEncounter, setDateEncounter] = useState(new Date());
+  const [dateEncounter, setDateEncounter] = useState(null);
 
   const togglePage = () => {
     if (showFormPage) {
@@ -198,7 +198,7 @@ function ServiceFormPage(props) {
                       <DatePicker
                           name="encounterDate"
                           id="encounterDate"
-                          defaultValue={new Date()}
+                         // defaultValue={new Date()}
                           max={new Date()}
                           required
                           onChange={(e) => {setDateEncounter(e)}
