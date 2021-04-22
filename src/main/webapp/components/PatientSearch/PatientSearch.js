@@ -20,7 +20,7 @@ import {url as baseUrl} from "../../api";
 const PatientSearch = (props) => {
   const [loading, setLoading] = useState(false)
   const [patients, setPatients] = useState()
-
+    const tableRef = React.createRef();
     /*# Get list of Gender parameter  #*/
     React.useEffect(() => {
         if(props.genderList.length === 0){
@@ -45,9 +45,16 @@ const PatientSearch = (props) => {
        // props.fetchAllPatients(onSuccess, onError);
   }, []); //componentDidMount
 
-      const onDelete = id => {
-              if (window.confirm(`Are you sure to delete this record? ${id}`))
-                  props.deletePatient(id)
+      const onDelete = row => {
+          const onSuccess = () => {
+              try {
+                  tableRef.current.onQueryChange();
+              }catch(x){
+                    
+              }
+          }
+              if (window.confirm(`Are you sure to delete this record? ${row.firstName}`))
+                  props.deletePatient(row.patientId, onSuccess);
       }
 
 
@@ -73,7 +80,7 @@ const PatientSearch = (props) => {
         <ToastContainer autoClose={3000} hideProgressBar />
           <MaterialTable
               title="Find patients"
-
+              tableRef={tableRef}
                   columns={[
                       {
                         title: "Patient Name",
@@ -106,7 +113,7 @@ const PatientSearch = (props) => {
                                           title={"Click to view patient dashboard"}
                                       >{row.firstName}  { ' '}  {row.lastName ? row.lastName.toUpperCase() : ""}</Link>,
                                       id: row.hospitalNumber,
-                                      gender: getGenderById(row.genderId),
+                                      gender: row.details && row.details.gender && row.details.gender.display ? row.details.gender.display : 'N/A',
                                       age: (row.dob === 0 ||
                                           row.dob === undefined ||
                                           row.dob === null ||
@@ -150,7 +157,7 @@ const PatientSearch = (props) => {
                                                       </MenuItem>
                                                       <MenuItem style={{ color:"#000 !important"}}>
                                                           <Link
-                                                              onClick={() => onDelete(row.patientId)}>
+                                                              onClick={() => onDelete(row)}>
                                                               <MdDeleteForever size="15" color="blue" />{" "}
                                                               <span style={{color: '#000'}}>Delete Patient</span>
                                                           </Link>

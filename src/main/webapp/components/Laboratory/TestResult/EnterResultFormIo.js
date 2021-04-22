@@ -105,7 +105,7 @@ const ModalSample = (props) => {
             Object.assign(datasample.data, newData)
 
             setLoading(true);
-
+            console.log(datasample)
             /* end of the process */
             const onSuccess = () => {
                 setLoading(false);

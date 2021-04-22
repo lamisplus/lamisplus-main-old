@@ -100,7 +100,7 @@ const ModalViewResult = (props) => {
                                     <Col xs="4">
                                         <FormGroup>
                                          
-                                            <Label for="examplePassword"><span style={{ fontWeight: 'bold'}}> Result </span>: {x.comment_sample_reported} </Label>
+                                            <Label for="examplePassword"><span style={{ fontWeight: 'bold'}}> Result </span>: {ReactHtmlParser(x.result_reported)} </Label>
                                       
 
                                       
@@ -109,7 +109,7 @@ const ModalViewResult = (props) => {
                                     <Col xs="12">
                                         <FormGroup>
                                          
-                                            <Label for="examplePassword"><span style={{ fontWeight: 'bold'}}> Notes </span>: {ReactHtmlParser(x.notes_sample_reported && x.notes_sample_reported!==undefined ? x.notes_sample_reported : "")} </Label>
+                                            <Label for="examplePassword"><span style={{ fontWeight: 'bold'}}> Notes </span>: {ReactHtmlParser(x.comment_sample_reported && x.comment_sample_reported!==undefined ? x.comment_sample_reported : "")} </Label>
                                       
                                         </FormGroup>
                                       

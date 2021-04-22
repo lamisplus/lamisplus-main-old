@@ -47,13 +47,15 @@ const useStyles = makeStyles(theme => ({
 const DeleteModule = (props) => {
     const classes = useStyles()
     const datasample = props.datasample ? props.datasample : {};
-    console.log(datasample)
+
 
     const deActiveModule = () => {
         const onError = () => {
         }
         const onSuccess = () => {
+
         }
+        datasample['status'] =3
         props.deActivateBootstrapModule(datasample.id, onSuccess, onError);
         props.togglestatus()
     }

@@ -14,6 +14,8 @@ import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import MaterialTable from 'material-table';
 import {  MdDelete, MdModeEdit } from "react-icons/md";
+import {  GrDocumentUpdate } from "react-icons/gr";
+import {  FaSyncAlt } from "react-icons/fa";
 import DeleteModule from "./DeleteModule";
 import ActivateModule from './ActivateModule'
 import { useSelector, useDispatch } from 'react-redux';
@@ -100,7 +102,7 @@ const useStyles = makeStyles({
                             ModuleDetail: e
                           }}
                       >
-                        <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Update  </span>                   
+                        <GrDocumentUpdate size="15" color="blue" />{" "}<span style={{color: '#000'}}>Update  </span>                   
                       </Link>
                 </MenuItem>
                 <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule(e)}>                      
@@ -114,7 +116,7 @@ const useStyles = makeStyles({
               <>
                
                 <MenuItem  style={{ color:"#000 !important"}} onSelect={() => activateModule(e)}>                      
-                  <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Activate</span>
+                  <FaSyncAlt size="15" color="blue" />{" "}<span style={{color: '#000'}}>Activate</span>
                  </MenuItem>
                  
                 </>
@@ -174,7 +176,6 @@ return (
             columns={[
               { title: 'Module Name', field: 'name' },
               { title: 'Description', field: 'description' },
-              { title: 'Author', field: 'author' },
               {title: 'Version',field: 'version', type: 'numeric'},
               { title: 'Date Created', field: 'date', type: 'date' },
               { title: 'Status', field: 'status'},
@@ -183,10 +184,9 @@ return (
             isLoading={loading}
             data={listOfAllModule.map((row) => ({
                   name: row.name, 
-                  description: row.description, 
-                  author: row.createdBy, 
+                  description: row.description,  
                   version: row.version,
-                  date: row.dateCreated, 
+                  date: row.buildTime, 
                   status:moduleStatus(row.status),
                   actions: actionOnModules(row)   
             }))}      
