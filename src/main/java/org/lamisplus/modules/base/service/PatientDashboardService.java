@@ -1,11 +1,15 @@
 package org.lamisplus.modules.base.service;
 
 import lombok.RequiredArgsConstructor;
+import org.lamisplus.modules.base.repository.AppointmentRepository;
 import org.lamisplus.modules.base.repository.PatientRepository;
+import org.lamisplus.modules.base.repository.VisitRepository;
 import org.lamisplus.modules.base.util.ChartUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,16 +27,21 @@ public class PatientDashboardService {
     private Map<String, Object> yAxisTitle = new HashMap();
     private final UserService userService;
     private final PatientRepository patientRepository;
+    private final AppointmentRepository appointmentRepository;
+    private final VisitRepository visitRepository;
+
+
 
     public Object getPieChart() {
         LocalDate now = LocalDate.now();
         LocalDate range = now.minusYears(18);
+        LocalDate dateTo = LocalDate.now().plusMonths(4);
         String organisationUnitName = userService.getUserWithRoles().get().getOrganisationUnitByCurrentOrganisationUnitId().getName();
-        Long maleCount = patientRepository.countByGender("%male", userService.getUserWithRoles().get().getCurrentOrganisationUnitId(), 0);
-        Long femaleCount = patientRepository.countByGender("%female", userService.getUserWithRoles().get().getCurrentOrganisationUnitId(), 0);
+        Long maleCount = patientRepository.countByGender("%male", userService.getUserWithRoles().get().getCurrentOrganisationUnitId(), 0, dateTo, now);
+        Long femaleCount = patientRepository.countByGender("%female", userService.getUserWithRoles().get().getCurrentOrganisationUnitId(), 0, dateTo, now);
         Long pediatricsCount = 0L;
         try {
-            pediatricsCount = patientRepository.countByPediatrics(userService.getUserWithRoles().get().getCurrentOrganisationUnitId(), 0, now, range);
+            pediatricsCount = patientRepository.countByPediatrics(userService.getUserWithRoles().get().getCurrentOrganisationUnitId(), 0, range, now);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -68,21 +77,27 @@ public class PatientDashboardService {
         String subTitle = "For Facilities";
         List<Object> columnSeries = new ArrayList<>();
         List<Object> appointmentData = new ArrayList<Object>();
-        appointmentData.add(23);
-        appointmentData.add(45);
-        appointmentData.add(23);
-        appointmentData.add(50);
-        appointmentData.add(23);
-        appointmentData.add(89);
+        LocalDate from = LocalDate.now();
+        Timestamp timestamp = Timestamp.from(Instant.now());
+        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+
+
+        appointmentData.add(appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDateBetween(organisationUnitId,0, Timestamp.valueOf(from.minusMonths(6).atStartOfDay()), Timestamp.valueOf(from.minusMonths(5).atStartOfDay())));
+        appointmentData.add(appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDateBetween(organisationUnitId,0, Timestamp.valueOf(from.minusMonths(5).atStartOfDay()), Timestamp.valueOf(from.minusMonths(4).atStartOfDay())));
+        appointmentData.add(appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDateBetween(organisationUnitId,0, Timestamp.valueOf(from.minusMonths(4).atStartOfDay()), Timestamp.valueOf(from.minusMonths(3).atStartOfDay())));
+        appointmentData.add(appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDateBetween(organisationUnitId,0, Timestamp.valueOf(from.minusMonths(3).atStartOfDay()), Timestamp.valueOf(from.minusMonths(2).atStartOfDay())));
+        appointmentData.add(appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDateBetween(organisationUnitId,0, Timestamp.valueOf(from.minusMonths(2).atStartOfDay()), Timestamp.valueOf(from.minusMonths(1).atStartOfDay())));
+        appointmentData.add(appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDateBetween(organisationUnitId,0, Timestamp.valueOf(from.minusMonths(1).atStartOfDay()), timestamp));
+
         columnSeries.add(chartUtil.getMainMap(appointmentData, "Appointment", null, null, null));
 
         List<Object> attendanceData = new ArrayList<Object>();
-        attendanceData.add(5);
-        attendanceData.add(9);
-        attendanceData.add(30);
-        attendanceData.add(5);
-        attendanceData.add(23);
-        attendanceData.add(45);
+        attendanceData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(organisationUnitId,0, LocalDate.now().minusMonths(5), LocalDate.now().minusMonths(6)));
+        attendanceData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(organisationUnitId,0, LocalDate.now().minusMonths(4), LocalDate.now().minusMonths(5)));
+        attendanceData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(organisationUnitId,0, LocalDate.now().minusMonths(3), LocalDate.now().minusMonths(4)));
+        attendanceData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(organisationUnitId,0, LocalDate.now().minusMonths(2), LocalDate.now().minusMonths(3)));
+        attendanceData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(organisationUnitId,0, LocalDate.now().minusMonths(1), LocalDate.now().minusMonths(2)));
+        attendanceData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(organisationUnitId,0, LocalDate.now(), LocalDate.now().minusMonths(1)));
         columnSeries.add(chartUtil.getMainMap(attendanceData, "Attendance", null, null, null));
 
         List<Object> emergenciesData = new ArrayList<Object>();

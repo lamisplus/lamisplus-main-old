@@ -78,7 +78,7 @@ public class BaseApplication extends AcrossModule {
         System.out.println("Fixed Rate scheduler:: " + strDate);
     }*/
 
-     @EventListener({ApplicationReadyEvent.class})
+    /* @EventListener({ApplicationReadyEvent.class})
     private void applicationReadyEvent()
     {
         String url = "http://localhost:8484/login";
@@ -131,7 +131,7 @@ public class BaseApplication extends AcrossModule {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
     @Override
     public String getName() {

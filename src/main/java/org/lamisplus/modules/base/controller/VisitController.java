@@ -19,9 +19,9 @@ public class VisitController {
         return ResponseEntity.ok(visitService.getAllVisits());
     }
 
-    @GetMapping("/totalCount/checkIn")
-    public ResponseEntity<Long> getTotalCount() {
-        return ResponseEntity.ok(visitService.getVisitType());
+    @GetMapping("/count/{type}")
+    public ResponseEntity<Long> getTotalCount(@PathVariable Long type) {
+        return ResponseEntity.ok(visitService.getVisitType(type));
     }
 
     @GetMapping("/{id}")

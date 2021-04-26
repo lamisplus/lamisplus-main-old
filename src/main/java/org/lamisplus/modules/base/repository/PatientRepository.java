@@ -48,8 +48,8 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
     Page<Patient> findAllByFullDetails(String firstName, String lastName, String hospitalNumber, Long organisationUnitId, int archived, Pageable pageable);
 
     @Query(value = "SELECT COUNT(*) FROM patient WHERE details -> 'gender' ->> 'display' ilike ?1 AND " +
-            "organisation_unit_id=?2 AND archived=?3", nativeQuery = true)
-    Long countByGender(String genderName, Long organisationUnitId, int archived);
+            "organisation_unit_id=?2 AND archived=?3 AND details ->>'dateRegistration' BETWEEN ?4 AND ?5", nativeQuery = true)
+    Long countByGender(String genderName, Long organisationUnitId, int archived, LocalDate later, LocalDate now);
 
     @Query(value = "SELECT COUNT(*) FROM patient WHERE organisation_unit_id= ?1 AND archived=?2 AND " +
             "date_part('year', AGE(NOW(), (details ->>'dob')::timestamp))::int < ?3", nativeQuery = true)
@@ -57,6 +57,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
 
     @Query(value = "SELECT COUNT(*) FROM patient WHERE organisation_unit_id= ?1 AND archived=?2 AND " +
             "details ->>'dob' BETWEEN ?3 AND ?4", nativeQuery = true)
-    Long countByPediatrics(Long organisationUnitId, int archived, LocalDate now, LocalDate later);
+    Long countByPediatrics(Long organisationUnitId, int archived, LocalDate later, LocalDate now);
 
 }
