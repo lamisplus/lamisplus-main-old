@@ -21,13 +21,17 @@ public class LaboratoryDashboardService {
     private Map<String, Object> yAxisTitle = new HashMap();
     private List<Object> columnSeries = new ArrayList<>();
     private final List<Object> data = new ArrayList<Object>();
+    private final UserService userService;
+
 
 
     public Object getLaboratoryPieChart() {
+        String organisationUnitName = userService.getUserWithRoles().get().getOrganisationUnitByCurrentOrganisationUnitId().getName();
+
         clearChartList();
         String type = "pie";
         String chartTitle = "LABORATORY TEST GROUP ANALYSIS";
-        String name = "FOR FACILITY";
+        String name = "FOR" + organisationUnitName.toUpperCase() +"FACILITY";
         List chemistry = new ArrayList();
         List<Object> data = new ArrayList<Object>();
         chemistry.add("Chemistry");
@@ -64,10 +68,13 @@ public class LaboratoryDashboardService {
     }
 
     public Object getLimsColumnChart() {
+        String organisationUnitName = userService.getUserWithRoles().get().getOrganisationUnitByCurrentOrganisationUnitId().getName();
+
         clearChartList();
         String type = "column";
         String chartTitle = "LIMS CHART ANALYSIS";
-        String subTitle = "For Facilities";
+
+        String subTitle = "For " + organisationUnitName.toUpperCase() +"  Facilities";
         List<Object> sampleRejectedData = new ArrayList<Object>();
         List<Object> sampleDispatchedData = new ArrayList<Object>();
         List<Object> resultAvailableData = new ArrayList<Object>();
@@ -102,13 +109,15 @@ public class LaboratoryDashboardService {
     }
 
     public Object getLaboratoryTestOrderStackedColumnChart() {
+        String organisationUnitName = userService.getUserWithRoles().get().getOrganisationUnitByCurrentOrganisationUnitId().getName();
+
         List<Object> testOrderedData = new ArrayList<Object>();
         List<Object> resultAvailableData = new ArrayList<Object>();
         List<Object> radiologyTestOrderedData = new ArrayList<Object>();
         List<Object> radiologyResultAvailableData = new ArrayList<Object>();
         String type = "column";
         String chartTitle = "LABORATORY TEST ORDER/ RESULT";
-        String subTitle = "For Facilities";
+        String subTitle = "For "+ organisationUnitName +" Facilities";
 
         testOrderedData.add(10);
         testOrderedData.add(15);

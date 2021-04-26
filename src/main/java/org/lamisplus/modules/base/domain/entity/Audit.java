@@ -45,11 +45,11 @@ public class Audit<U>
     @Column(name = "modified_by")
     @JsonIgnore
     @ToString.Exclude
-    private U modifiedBy;
+    private String modifiedBy = SecurityUtils.getCurrentUserLogin().orElse(null);
 
     @LastModifiedDate
     @Column(name = "date_modified")
     @JsonIgnore
     @ToString.Exclude
-    private Timestamp dateModified;
+    private Timestamp dateModified = Timestamp.from(Instant.now());
 }

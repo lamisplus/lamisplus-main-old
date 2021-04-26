@@ -8,6 +8,6 @@ public class TestBaseModuleConventions extends AbstractAcrossModuleConventionsTe
 
 	@Override
 	protected AcrossModule createModule() {
-		return new BaseModule();
+		return new BaseApplication();
 	}
 }

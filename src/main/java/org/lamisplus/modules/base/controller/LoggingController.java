@@ -42,8 +42,6 @@ public class LoggingController {
         File file = new File(logFile);
 
         MediaType mediaType = MediaTypeUtils.getMediaTypeForFileName(this.servletContext, file.getName());
-        System.out.println("fileName: " + file.getName());
-        System.out.println("mediaType: " + mediaType);
 
         Path path = Paths.get(logFile);
         byte[] data = Files.readAllBytes(path);

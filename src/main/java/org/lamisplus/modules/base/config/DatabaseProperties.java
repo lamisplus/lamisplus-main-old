@@ -1,8 +1,7 @@
-package org.lamisplus.modules.base.service.report.birt;
+package org.lamisplus.modules.base.config;
 
 
 import lombok.Data;
-
 import java.util.Map;
 
 @Data

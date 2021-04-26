@@ -18,7 +18,7 @@ public class StandardCodesetController {
 
     @GetMapping
     public ResponseEntity<List<StandardCodesetDTO>> getAllStandardCodeset() {
-        return ResponseEntity.ok(this.standardCodesetService.getAllStandardCodeset());
+        return ResponseEntity.ok(standardCodesetService.getAllStandardCodeset());
     }
 
     @GetMapping("/standard_codeset_source/{id}")

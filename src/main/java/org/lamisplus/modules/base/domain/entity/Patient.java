@@ -24,11 +24,18 @@ import java.util.List;
 @Table(name = "patient")
 public class Patient extends JsonBEntity implements Serializable {
 
+    @OneToMany(mappedBy = "patientByPatientId")
+    @JsonIgnore
+    @ToString.Exclude
+    public List<ApplicationUserPatient> applicationUserPatientsById;
+    @OneToMany(mappedBy = "patientByPatientId")
+    @JsonIgnore
+    @ToString.Exclude
+    public List<Appointment> appointmentsById;
     @Id
     @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     /*@Basic
     @Column(name = "date_registration")
     @NotNull
@@ -39,51 +46,34 @@ public class Patient extends JsonBEntity implements Serializable {
     @Basic
     @Column(name = "patient_number")
     private String hospitalNumber;
-
     @Basic
     @Column(name = "uuid", updatable = false)
     @JsonIgnore
     private String uuid;
-
     @Basic
     @Column(name = "archived")
     private Integer archived = 0;
-
-    @Basic
-    @Column(name = "organisation_unit_id", updatable = false)
-    @JsonIgnore
-    private Long organisationUnitId;
-
-    @Type(type = "jsonb")
-    @Basic(fetch = FetchType.LAZY)
-    @Column(name = "details", nullable = false, columnDefinition = "jsonb")
-    private Object details;
 
     /*@ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id", insertable = false, updatable = false)
     @JsonIgnore
     private Person personByPersonId;*/
-
+    @Basic
+    @Column(name = "organisation_unit_id", updatable = false)
+    @JsonIgnore
+    private Long organisationUnitId;
+    @Type(type = "jsonb")
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "details", nullable = false, columnDefinition = "jsonb")
+    private Object details;
     @OneToMany(mappedBy = "patientByVisit")
     @JsonIgnore
     @ToString.Exclude
     private List<Visit> visitsByPatient;
-
     @OneToMany(mappedBy = "patientByPatientId")
     @JsonIgnore
     @ToString.Exclude
     private List<Encounter> encountersByPatient;
-
-    @OneToMany(mappedBy = "patientByPatientId")
-    @JsonIgnore
-    @ToString.Exclude
-    public List<ApplicationUserPatient> applicationUserPatientsById;
-
-    @OneToMany(mappedBy = "patientByPatientId")
-    @JsonIgnore
-    @ToString.Exclude
-    public List<Appointment> appointmentsById;
-
     @CreatedBy
     @Column(name = "created_by", nullable = false, updatable = false)
     @JsonIgnore
@@ -107,4 +97,9 @@ public class Patient extends JsonBEntity implements Serializable {
     @JsonIgnore
     @ToString.Exclude
     private Timestamp dateModified;
+
+    @OneToMany(mappedBy = "patientByPatientId")
+    @JsonIgnore
+    @ToString.Exclude
+    private List<PatientFlag> patientFlagsById;
 }

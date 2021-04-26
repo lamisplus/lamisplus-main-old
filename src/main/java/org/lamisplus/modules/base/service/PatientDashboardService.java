@@ -1,10 +1,12 @@
 package org.lamisplus.modules.base.service;
 
 import lombok.RequiredArgsConstructor;
+import org.lamisplus.modules.base.repository.PatientRepository;
 import org.lamisplus.modules.base.util.ChartUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,26 +21,38 @@ public class PatientDashboardService {
     private Map<String, List> xAxis = new HashMap();
     private Map<String, Object> yAxis = new HashMap();
     private Map<String, Object> yAxisTitle = new HashMap();
-
+    private final UserService userService;
+    private final PatientRepository patientRepository;
 
     public Object getPieChart() {
+        LocalDate now = LocalDate.now();
+        LocalDate range = now.minusYears(18);
+        String organisationUnitName = userService.getUserWithRoles().get().getOrganisationUnitByCurrentOrganisationUnitId().getName();
+        Long maleCount = patientRepository.countByGender("%male", userService.getUserWithRoles().get().getCurrentOrganisationUnitId(), 0);
+        Long femaleCount = patientRepository.countByGender("%female", userService.getUserWithRoles().get().getCurrentOrganisationUnitId(), 0);
+        Long pediatricsCount = 0L;
+        try {
+            pediatricsCount = patientRepository.countByPediatrics(userService.getUserWithRoles().get().getCurrentOrganisationUnitId(), 0, now, range);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         clearChartList();
 
         String type = "pie";
-        String chartTitle = "TOTAL REGISTERED PATIENTS (MALE AND FEMALE)  In The Last 4 Months";
-        String name = "TOTAL REGISTERED PATIENTS (MALE AND FEMALE)";
+        String chartTitle = "TOTAL REGISTERED PATIENTS (MALE AND FEMALE) in " + organisationUnitName.toUpperCase() + " (4 Months)";
+        String name = "TOTAL REGISTERED PATIENTS (MALE AND FEMALE) in " + organisationUnitName.toUpperCase();
         List<Object> pediatrics = new ArrayList<>();
         List<Object> data = new ArrayList<Object>();
         pediatrics.add("pediatrics");
-        pediatrics.add(48);
+        pediatrics.add(pediatricsCount);
 
         List<Object> male = new ArrayList<>();
         male.add("male");
-        male.add(12);
+        male.add(maleCount);
 
         List<Object> female = new ArrayList<>();
         female.add("female");
-        female.add(9);
+        female.add(femaleCount);
 
         data.add(pediatrics);
         data.add(male);

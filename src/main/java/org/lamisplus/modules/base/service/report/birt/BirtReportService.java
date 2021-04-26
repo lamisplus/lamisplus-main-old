@@ -2,14 +2,13 @@ package org.lamisplus.modules.base.service.report.birt;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.logstash.logback.encoder.org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import net.logstash.logback.encoder.org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
 import org.eclipse.birt.report.engine.api.*;
 import org.eclipse.birt.report.model.api.*;
 import org.lamisplus.modules.base.config.ApplicationProperties;
+import org.lamisplus.modules.base.config.DatabaseProperties;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ReportDetailDTO;
@@ -27,13 +26,9 @@ import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -311,8 +306,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         String fileSeparator = File.separator;
         File ymlFile = new File(ApplicationProperties.modulePath + fileSeparator +"reportConfig.yml");
         try {
-            DatabaseProperties properties = readYml(ymlFile);
-            properties.getSpring().forEach((k, v) -> {
+            readYml(ymlFile).getSpring().forEach((k, v) -> {
                 dbUrl = v.getUrl();
                 dbUser = v.getUsername();
                 dbPass = v.getPassword();

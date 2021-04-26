@@ -35,8 +35,8 @@ public class VisitController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Visit> updateVisit(@RequestBody Visit visit, @PathVariable Long id) {
-        return ResponseEntity.ok(visitService.update(id, visit));
+    public ResponseEntity<Visit> updateVisit(@RequestBody VisitDTO visitDTO, @PathVariable Long id) {
+        return ResponseEntity.ok(visitService.update(id, visitDTO));
     }
 
     @DeleteMapping("/{id}")

@@ -68,7 +68,7 @@ public class Form extends JsonBEntity implements Serializable {
 
     @Type(type = "jsonb")
     @Basic(fetch = FetchType.LAZY)
-    @Column(name = "form_precedence", nullable = false, columnDefinition = "jsonb")
+    @Column(name = "form_precedence", columnDefinition = "jsonb")
     private Object formPrecedence;
 
     @Basic
@@ -113,6 +113,8 @@ public class Form extends JsonBEntity implements Serializable {
 
     @Transient
     private String programName;
+
+
 
     public Form(Long id, String name, String code, Integer usageCode, String resourcePath, Object formPrecedence, String programCode, String version){
         this.id = id;

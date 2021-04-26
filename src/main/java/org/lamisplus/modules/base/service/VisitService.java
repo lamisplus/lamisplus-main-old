@@ -47,7 +47,7 @@ public class VisitService {
                 List<Predicate> predicates = new ArrayList<>();
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), 0)));
                 criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("dateVisitEnd").as(LocalDate.class),
-                        CustomDateTimeFormat.LocalDateByFormat(LocalDate.now(),"dd-MM-yyyy")));
+                        CustomDateTimeFormat.LocalDateByFormat(LocalDate.now(),"yyyy-MM-dd")));
                 criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }
@@ -95,9 +95,10 @@ public class VisitService {
         return visitDTO;
     }
 
-    public Visit update(Long id, Visit visit) {
+    public Visit update(Long id, VisitDTO visitDTO) {
         Optional<Visit> visitOptional = this.visitRepository.findByIdAndArchivedAndOrganisationUnitId(id, UNARCHIVED, getOrganisationUnitId());
         if (!visitOptional.isPresent()) throw new EntityNotFoundException(Visit.class, "Id", id + "");
+        Visit visit = visitMapper.toVisit(visitDTO);
         visit.setId(id);
         return visitRepository.save(visit);
     }
