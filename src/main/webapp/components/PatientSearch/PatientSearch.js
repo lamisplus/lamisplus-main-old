@@ -45,16 +45,18 @@ const PatientSearch = (props) => {
        // props.fetchAllPatients(onSuccess, onError);
   }, []); //componentDidMount
 
+    const onDelSuccess = () => {
+        try {
+            tableRef.current.onQueryChange();
+        }catch(x){
+            console.log(x)
+        }
+    }
+
       const onDelete = row => {
-          const onSuccess = () => {
-              try {
-                  tableRef.current.onQueryChange();
-              }catch(x){
-                    
-              }
-          }
+
               if (window.confirm(`Are you sure to delete this record? ${row.firstName}`))
-                  props.deletePatient(row.patientId, onSuccess);
+                  props.deletePatient(row.patientId, onDelSuccess);
       }
 
 
