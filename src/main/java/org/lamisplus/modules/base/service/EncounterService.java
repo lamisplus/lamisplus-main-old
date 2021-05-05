@@ -207,7 +207,8 @@ public class EncounterService {
 
         accessRight.grantAccess(formCode, Encounter.class, permissions);
 
-        Specification<Encounter> specification = new GenericSpecification<Encounter>().findAllEncounter(formCode, dateStart, dateEnd);
+        Specification<Encounter> specification = new GenericSpecification<Encounter>().findAllEncounter(formCode, dateStart, dateEnd, UNARCHIVED,
+                userService.getUserWithRoles().get().getCurrentOrganisationUnitId());
         return encounterRepository.findAll(specification, pageable);
     }
 

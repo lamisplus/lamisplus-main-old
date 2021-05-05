@@ -12,7 +12,7 @@
     <groupId>org.lamisplus.modules</groupId>
     <artifactId>base-module</artifactId>
     <version>1.0.0</version>
-    <packaging>Jar</packaging>
+    <packaging>jar</packaging>
     <name>base-module</name>
     <description>LamisPlus base module</description>
 

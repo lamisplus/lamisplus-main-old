@@ -550,7 +550,7 @@ public class PatientService {
                 if (patientJson.get("firstName").toString() != null) patientDTO.setFirstName(patientJson.get("firstName").toString());
                 if (patientJson.get("lastName").toString() != null) patientDTO.setLastName(patientJson.get("lastName").toString());
                 if (patientJson.get("hospitalNumber").toString() != null) patientDTO.setHospitalNumber(patientJson.get("hospitalNumber").toString());
-                if (patientJson.get("gender").toString() != null && !patientJson.get("gender").toString().isEmpty()) {
+                if (patientJson.get("gender")!= null && !patientJson.get("gender").toString().isEmpty()) {
                     JSONObject genderJson = (JSONObject) patientJson.get("gender");
                     patientDTO.setGenderId(Long.valueOf(genderJson.get("id").toString()));
                 }
