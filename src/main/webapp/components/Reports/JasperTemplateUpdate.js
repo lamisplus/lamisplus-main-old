@@ -27,9 +27,6 @@ const UpdateReports = (props) => {
 
     const row = props.location.row;
 
-    // useEffect(() => {
-    //     setform2(row);
-    // }, [])
 
     useEffect(() => {
         async function fetchById() {

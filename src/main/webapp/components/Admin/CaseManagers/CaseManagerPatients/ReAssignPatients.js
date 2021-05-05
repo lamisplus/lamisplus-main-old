@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import MaterialTable from 'material-table';
 import { Link } from 'react-router-dom'
 import { connect } from "react-redux";
-import {Col, Input, FormGroup, Label, Card, CardBody} from "reactstrap";
+import {Card, CardBody} from "reactstrap";
 import { fetchAllLabTestOrder } from "../../../../actions/laboratory";
 import "../casemanager.css";
 import {GiFiles} from 'react-icons/gi'; 
@@ -11,7 +11,6 @@ import { Badge } from 'reactstrap';
 import Button from "@material-ui/core/Button";
 import SwitchPatientModal from './SwitchPatientModal';
 import {authentication} from '../../../../_services/authentication';
-import Page from '../../../Page';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Typography from '@material-ui/core/Typography';
 

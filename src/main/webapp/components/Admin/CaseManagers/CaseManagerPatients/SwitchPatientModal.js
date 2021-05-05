@@ -6,11 +6,9 @@ import MatButton from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
 import SaveIcon from '@material-ui/icons/Save'
 import CancelIcon from '@material-ui/icons/Cancel'
-import { DateTimePicker } from 'react-widgets';
 import "react-widgets/dist/css/react-widgets.css";
 import Moment from 'moment';
 import momentLocalizer from 'react-widgets-moment';
-import moment from "moment";
 import {url} from '../../../../api'
 import { Alert } from 'reactstrap';
 import { dispatchedManifestSamples, updateFormDataObj } from '../../../../actions/laboratory';
@@ -257,8 +255,7 @@ const ModalViewResult = (props) => {
                                               color='primary'
                                               className={classes.button}
                                               startIcon={<SaveIcon />}
-                                              disabled={loading}
-                                          >   
+                                              disabled={loading}>
                                               Save
                                           </MatButton>
                                            
@@ -267,8 +264,7 @@ const ModalViewResult = (props) => {
                                               color='default'
                                               onClick={props.togglestatus}
                                               className={classes.button}
-                                              startIcon={<CancelIcon />}
-                                          >
+                                              startIcon={<CancelIcon />}>
                                               Cancel
                                           </MatButton>
                             </CardBody>

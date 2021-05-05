@@ -44,13 +44,6 @@ const GenerateReport = props => {
     const row = props.location.state;
 
 
-    // useEffect (() => {
-    //     setformCode(row.code);
-    //     console.log(row);
-    //     setform2(row)
-    //
-    //       }, [])
-
     useEffect(() => {
         async function fetchById() {
             axios

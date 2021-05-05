@@ -231,7 +231,6 @@ const Update = props => {
                 </CardContent>
             </Card>
 
-
             {/*preview modal start*/}
                 <Modal isOpen={showModal} toggle={toggleModal} size="lg">
                     <ModalHeader toggle={toggleModal}><h4>View Form</h4> </ModalHeader>
