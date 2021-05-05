@@ -5,8 +5,11 @@ import com.foreach.across.core.AcrossModule;
 import com.foreach.across.core.context.configurer.ComponentScanConfigurer;
 import com.foreach.across.modules.hibernate.jpa.AcrossHibernateJpaModule;
 import com.foreach.across.modules.web.AcrossWebModule;
+import org.apache.commons.lang3.SystemUtils;
+import org.jfree.util.Log;
 import org.lamisplus.modules.base.config.ApplicationProperties;
 import org.lamisplus.modules.bootstrap.BootstrapModule;
+import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -14,16 +17,20 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 import java.awt.*;
-import java.io.IOException;
+import java.io.*;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.FileSystem;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 @EnableScheduling
 @EnableSwagger2WebMvc
@@ -55,83 +62,15 @@ public class BaseApplication extends AcrossModule {
                 getClass().getPackage().getName() +".util"));
     }
 
-    /*@Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(BaseApplication.class);
-    }*/
-
     @Bean
-    public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        PropertySourcesPlaceholderConfigurer properties = new PropertySourcesPlaceholderConfigurer();
-        properties.setLocation(new FileSystemResource(ApplicationProperties.modulePath +"\\config.properties"));
-        properties.setIgnoreResourceNotFound(true);
-        return properties;
+    public static PropertySourcesPlaceholderConfigurer properties() {
+        PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
+        YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
+        yaml.setResources(new FileSystemResource(ApplicationProperties.modulePath + File.separator +"config.yml"));
+        propertySourcesPlaceholderConfigurer.setProperties(yaml.getObject());
+        propertySourcesPlaceholderConfigurer.setIgnoreResourceNotFound(true);
+        return propertySourcesPlaceholderConfigurer;
     }
-
-
-    /*@Scheduled(fixedRate = 1000)
-    public void fixedRateSch() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-
-        Date now = new Date();
-        String strDate = sdf.format(now);
-        System.out.println("Fixed Rate scheduler:: " + strDate);
-    }*/
-
-    /* @EventListener({ApplicationReadyEvent.class})
-    private void applicationReadyEvent()
-    {
-        String url = "http://localhost:8484/login";
-        if (Desktop.isDesktopSupported())
-        {
-            Desktop desktop = Desktop.getDesktop();
-            try
-            {
-                desktop.browse(new URI(url));
-            } catch (IOException | URISyntaxException e)
-            {
-                e.printStackTrace();
-            }
-        } else
-        {
-            Runtime runtime = Runtime.getRuntime();
-            String[] command;
-
-            String operatingSystemName = System.getProperty("os.name").toLowerCase();
-            if (operatingSystemName.indexOf("nix") >= 0 || operatingSystemName.indexOf("nux") >= 0)
-            {
-                String[] browsers = {"opera", "google-chrome", "epiphany", "firefox", "mozilla", "konqueror", "netscape", "links", "lynx"};
-                StringBuffer stringBuffer = new StringBuffer();
-
-                for (int i = 0; i < browsers.length; i++)
-                {
-                    if (i == 0) stringBuffer.append(String.format("%s \"%s\"", browsers[i], url));
-                    else stringBuffer.append(String.format(" || %s \"%s\"", browsers[i], url));
-                }
-                command = new String[]{"sh", "-c", stringBuffer.toString()};
-            } else if (operatingSystemName.indexOf("win") >= 0)
-            {
-                command = new String[]{"rundll32 url.dll,FileProtocolHandler " + url};
-
-            } else if (operatingSystemName.indexOf("mac") >= 0)
-            {
-                command = new String[]{"open " + url};
-            } else
-            {
-                System.out.println("an unknown operating system!!");
-                return;
-            }
-
-            try
-            {
-                if (command.length > 1) runtime.exec(command); // linux
-                else runtime.exec(command[0]); // windows or mac
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }*/
 
     @Override
     public String getName() {

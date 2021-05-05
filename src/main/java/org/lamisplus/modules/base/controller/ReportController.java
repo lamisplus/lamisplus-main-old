@@ -30,6 +30,7 @@ public class ReportController {
     }
 
     @PostMapping(value = "/generate")
+    @ResponseBody
     public void generateReport(@RequestBody ReportDetailDTO data, HttpServletResponse response, HttpServletRequest request) {
         String reportFormat = data.getReportFormat().toLowerCase().trim();
         OutputType format = OutputType.from(reportFormat);

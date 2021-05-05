@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.lamisplus.modules.base.security.SecurityUtils;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 
@@ -12,6 +13,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 
@@ -75,25 +77,25 @@ public class Form extends JsonBEntity implements Serializable {
     @Column(name = "date_created", updatable = false)
     @JsonIgnore
     @CreationTimestamp
-    private Timestamp dateCreated;
+    private Timestamp dateCreated = Timestamp.from(Instant.now());
 
     @CreatedBy
     @Basic
     @Column(name = "created_by", updatable = false)
     @JsonIgnore
-    private String createdBy;
+    private String createdBy = SecurityUtils.getCurrentUserLogin().orElse(null);
 
     @Basic
     @Column(name = "date_modified")
     @JsonIgnore
     @UpdateTimestamp
-    private Timestamp dateModified;
+    private Timestamp dateModified = Timestamp.from(Instant.now());
 
     @LastModifiedBy
     @Basic
     @Column(name = "modified_by")
     @JsonIgnore
-    private String modifiedBy;
+    private String modifiedBy = SecurityUtils.getCurrentUserLogin().orElse(null);
 
     @Basic
     @Column(name = "archived")

@@ -1,6 +1,8 @@
 package org.lamisplus.modules.base.service;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
@@ -11,9 +13,12 @@ import org.lamisplus.modules.base.domain.mapper.AppointmentMapper;
 import org.lamisplus.modules.base.repository.AppointmentRepository;
 import org.lamisplus.modules.base.util.Constant;
 import org.lamisplus.modules.base.util.GenericSpecification;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,10 +39,9 @@ public class AppointmentService {
 
         List<AppointmentDTO> appointmentDTOS = new ArrayList<>();
         appointments.forEach(appointment -> {
-            Patient patient = appointment.getPatientByPatientId();
-            final AppointmentDTO appointmentDTO = appointmentMapper.toAppointmentDTO(appointment, patient);
-
-            appointmentDTOS.add(appointmentDTO);
+            //Patient patient = appointment.getPatientByPatientId();
+            //final AppointmentDTO appointmentDTO = appointmentMapper.toAppointmentDTO(appointment, patient);
+            appointmentDTOS.add(getAppointmentDTO(appointment));
         });
         return appointmentDTOS;
     }
@@ -84,7 +88,20 @@ public class AppointmentService {
     private AppointmentDTO getAppointmentDTO(Appointment appointment){
         Patient patient = appointment.getPatientByPatientId();
 
-        return  appointmentMapper.toAppointmentDTO(appointment, patient);
-    }
+        AppointmentDTO appointmentDTO =   appointmentMapper.toAppointmentDTO(appointment, patient);
 
+        try {
+            //Instance of ObjectMapper provides functionality for reading and writing JSON
+            ObjectMapper mapper = new ObjectMapper();
+            if (appointmentDTO.getDetails() != null) {
+                String patientDetailsString = mapper.writeValueAsString(appointmentDTO.getDetails());
+                JSONObject patientDetailsJson = new JSONObject(patientDetailsString);
+                if (patientDetailsJson.get("firstName") != null) appointmentDTO.setFirstName(patientDetailsJson.get("firstName").toString());
+                if (patientDetailsJson.get("lastName") != null) appointmentDTO.setLastName(patientDetailsJson.get("lastName").toString());
+               }
+        } catch (JSONException | JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return appointmentDTO;
+    }
 }

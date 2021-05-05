@@ -21,6 +21,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
     List<Appointment> findAllByArchivedAndOrganisationUnitIdOrderByIdAsc(int archived, Long organisationUnit);
 
     @Query(value = "SELECT COUNT(*) FROM appointment WHERE organisation_unit_id= ?1 AND archived=?2 AND " +
-            "date BETWEEN ?3 AND ?4", nativeQuery = true)
-    Long countAllByOrganisationUnitIdAndArchivedAndDateBetween(Long organisationUnitId, int archive, Timestamp from, Timestamp to);
+            "detail ->>'appointment_date' BETWEEN ?3 AND ?4", nativeQuery = true)
+    Long countAllByOrganisationUnitIdAndArchivedAndDateBetween(Long organisationUnitId, int archive, LocalDate from, LocalDate to);
 }

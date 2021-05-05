@@ -63,7 +63,7 @@ const PatientSearch = (props) => {
       const calculate_age = dob => {
           var today = new Date();
           var dateParts = dob.split("-");
-          var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+          var dateObject = new Date(+dateParts[0], dateParts[1] - 1, +dateParts[2]);
           var birthDate = new Date(dateObject); // create a date object directlyfrom`dob1`argument
           var age_now = today.getFullYear() - birthDate.getFullYear();
           var m = today.getMonth() - birthDate.getMonth();

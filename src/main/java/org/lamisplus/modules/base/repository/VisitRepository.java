@@ -49,5 +49,10 @@ public interface VisitRepository extends JpaRepository<Visit, Long>, JpaSpecific
             "date_visit_start BETWEEN ?3 AND ?4", nativeQuery = true)
     Long countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(Long organisationUnitId, int archived, LocalDate to, LocalDate now);
 
+    @Query(value = "SELECT COUNT(*) FROM visit WHERE organisation_unit_id= ?1 AND archived=?2 AND visit_type_id = ?3 AND " +
+            "date_visit_start BETWEEN ?4 AND ?5", nativeQuery = true)
+    Long countAllByOrganisationUnitIdAndArchivedAndVisitTypeIdAndDateVisitStartBetween(Long organisationUnitId, int archived, Long visitTypeId, LocalDate to, LocalDate now);
+
+
     //Date Visit End Less than or equal to today
 }

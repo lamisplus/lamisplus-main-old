@@ -14,8 +14,6 @@ import org.lamisplus.modules.base.repository.*;
 
 import org.lamisplus.modules.base.util.AccessRight;
 import org.lamisplus.modules.base.util.GenericSpecification;
-import org.lamisplus.modules.base.util.UuidGenerator;
-
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
