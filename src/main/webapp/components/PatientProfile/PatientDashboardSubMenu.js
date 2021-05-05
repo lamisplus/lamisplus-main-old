@@ -129,7 +129,7 @@ function PatientDashboardSubMenu(props) {
     const onSubmit = (submission) => {
       const data = {
         id: props.patient.visitId,
-        dateVisitEnd: Moment(submission.data.checkOutDate).format("DD-MM-YYYY"),
+        dateVisitEnd: Moment(submission.data.checkOutDate).format("YYYY-MM-DD"),
         dateVisitStart: props.patient.dateVisitStart,
         timeVisitEnd: Moment(submission.data.checkOutTime).format("hh:mm A"),
         timeVisitStart: props.patient.timeVisitStart,

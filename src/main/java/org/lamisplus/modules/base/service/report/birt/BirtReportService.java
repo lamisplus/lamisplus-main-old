@@ -7,6 +7,8 @@ import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
 import org.eclipse.birt.report.engine.api.*;
 import org.eclipse.birt.report.model.api.*;
+import org.lamisplus.modules.base.config.ApplicationProperties;
+import org.lamisplus.modules.base.config.DatabaseProperties;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ReportDetailDTO;
@@ -17,21 +19,17 @@ import org.lamisplus.modules.base.repository.ProgramRepository;
 import org.lamisplus.modules.base.repository.ReportInfoRepository;
 import org.lamisplus.modules.base.repository.UserRepository;
 import org.lamisplus.modules.base.security.SecurityUtils;
-import org.lamisplus.modules.base.util.GenericSpecification;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.Yaml;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -54,7 +52,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 */
     private IReportEngine birtEngine;
     private ApplicationContext context;
-    //private String imageFolder;
+
 
     private final ReportInfoRepository reportInfoRepository;
 
@@ -156,7 +154,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
      */
     @SuppressWarnings("unchecked")
     private void generateHTMLReport(String reportName, IReportRunnable report, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
-        populateDatabaseConnectionParameters(report);
+        getDatabaseConnectionParameters(report);
         IRunAndRenderTask runAndRenderTask = birtEngine.createRunAndRenderTask(report);
         runAndRenderTask.setParameterValues(params);
         response.setContentType(birtEngine.getMIMEType("html"));
@@ -164,8 +162,8 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         HTMLRenderOption htmlOptions = new HTMLRenderOption(options);
         htmlOptions.setOutputFormat("html");
         runAndRenderTask.setRenderOption(htmlOptions);
-        runAndRenderTask.getAppContext().put(
-                EngineConstants.APPCONTEXT_HTML_RENDER_CONTEXT, request);
+        runAndRenderTask.getAppContext().put("HTML_RENDER_CONTEXT", request);
+
 
         try {
             response.setHeader("Content-Disposition", "attachment; filename=\"" + reportName.replace(" ","_")+ LocalDate.now().toString().replace("-", "") + "\"");
@@ -183,7 +181,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
      */
     @SuppressWarnings("unchecked")
     private void generatePDFReport(String reportName, IReportRunnable report, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
-        populateDatabaseConnectionParameters(report);
+        getDatabaseConnectionParameters(report);
         IRunAndRenderTask runAndRenderTask = this.birtEngine.createRunAndRenderTask(report);
         runAndRenderTask.setParameterValues(params);
         response.setContentType(this.birtEngine.getMIMEType("pdf"));
@@ -210,7 +208,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
      */
     @SuppressWarnings("unchecked")
     private void generateExcelReport(String reportName, IReportRunnable report, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
-        populateDatabaseConnectionParameters(report);
+        getDatabaseConnectionParameters(report);
         IRunAndRenderTask runAndRenderTask = birtEngine.createRunAndRenderTask(report);
         runAndRenderTask.setParameterValues(params);
         response.setContentType(birtEngine.getMIMEType("xls"));
@@ -223,10 +221,12 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         EXCELRenderOption excelRenderOption = new EXCELRenderOption(options);
         excelRenderOption.setOutputFormat("xls");
         runAndRenderTask.setRenderOption(excelRenderOption);
-        runAndRenderTask.getAppContext().put(EngineConstants.APPCONTEXT_BIRT_VIEWER_HTTPSERVET_REQUEST, request);
+        runAndRenderTask.getAppContext().put("HTML_RENDER_CONTEXT", request);
 
 
         try {
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + reportName.replace(" ","_")+ LocalDate.now().toString().replace("-", "") + "\".xls");
+            response.setContentType(".xls");
             excelRenderOption.setOutputStream(response.getOutputStream());
             runAndRenderTask.run();
         } catch (Exception e) {
@@ -272,6 +272,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         return reportInfoRepository.save(reportInfo);
     }
 
+
     public Integer delete(Long id) {
         ReportInfo reportInfo = reportInfoRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(()
                 -> new EntityNotFoundException(ReportInfo.class, "Id", id +""));
@@ -298,16 +299,25 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
                 new EntityNotFoundException(ReportInfo.class, "Id", id+""));
     }
 
-    @Value("${spring.datasource.url}")
     private String dbUrl;
 
-    @Value("${spring.datasource.username}")
     private String dbUser;
 
-    @Value("${spring.datasource.password}")
     private String dbPass;
 
-    private void populateDatabaseConnectionParameters( IReportRunnable iReportRunnable ) {
+    private void getDatabaseConnectionParameters( IReportRunnable iReportRunnable ) {
+        String fileSeparator = File.separator;
+        File ymlFile = new File(ApplicationProperties.modulePath + fileSeparator +"config.yml");
+        try {
+            readYml(ymlFile).getSpring().forEach((k, v) -> {
+                dbUrl = v.getUrl();
+                dbUser = v.getUsername();
+                dbPass = v.getPassword();
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         DesignElementHandle deh = iReportRunnable.getDesignHandle();
         SlotHandle slotHandle = deh.getSlot(ReportDesignHandle.DATA_SOURCE_SLOT );
         Iterator iter = slotHandle.iterator();
@@ -346,5 +356,24 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         {
             e.printStackTrace();
         }
+    }
+
+    private DatabaseProperties readYml(File ymlFile) throws IOException {
+        BufferedReader in = null;
+        DatabaseProperties databaseProperties;
+        try {
+            in = new BufferedReader(new InputStreamReader(
+                    new FileInputStream(ymlFile.getAbsolutePath())));
+            Yaml yaml = new Yaml();
+            databaseProperties = yaml.loadAs(in, DatabaseProperties.class);
+
+            in.close();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Error: " + e.getMessage());
+        }finally {
+            if (in != null) {in.close(); }
+        }
+        return databaseProperties;
     }
 }

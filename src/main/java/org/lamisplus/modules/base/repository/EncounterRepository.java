@@ -85,5 +85,6 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
             "WHERE p.details ->>'firstName' ilike 1? OR p.details ->>'lastName' like 2? OR p.details ->>'hospitalNumber' ilike 3? " +
             "AND p.organisation_unit_id=4? AND p.archived=?5;", nativeQuery = true)
     Page<Encounter> findAllByFullDetails(String firstName, String lastName, String hospitalNumber, Long organisationUnitId, int archived, Pageable pageable);*/
+
 }
 

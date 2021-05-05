@@ -3,6 +3,8 @@ package org.lamisplus.modules.base.domain.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.lamisplus.modules.base.domain.entity.Flag;
+import org.lamisplus.modules.base.domain.entity.PatientFlag;
 import org.lamisplus.modules.base.util.converter.LocalDateConverter;
 import org.lamisplus.modules.base.util.converter.LocalTimeAttributeConverter;
 
@@ -16,15 +18,13 @@ public class PatientDTO {
 
     private Long patientId;
     private Long visitId;
-    /*@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private LocalDate dateRegistration;*/
     private Long organisationUnitId;
     private String hospitalNumber;
     private String firstName;
     private String lastName;
     private String otherNames;
     @Convert(converter = LocalDateConverter.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dob;
     private Boolean dobEstimated;
     private String mobilePhoneNumber;
@@ -36,7 +36,6 @@ public class PatientDTO {
     private String landmark;
     private Long maritalStatusId;
     private Long titleId;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Long genderId;
     private Long educationId;
     private Long occupationId;
@@ -44,10 +43,10 @@ public class PatientDTO {
     private Long stateId;
     private Long provinceId;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateVisitEnd;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateVisitStart;
 
     @Convert(converter = LocalTimeAttributeConverter.class)
@@ -56,7 +55,7 @@ public class PatientDTO {
 
     private Integer typePatient;
 
-    //private List<PersonRelativesDTO> PersonRelativeDTOs;
+    List<Flag> flags;
 
     private Object details;
 }

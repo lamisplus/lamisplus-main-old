@@ -21,6 +21,10 @@ public class AppointmentDTO {
 
     private Object detail;
 
+    private String firstName;
+
+    private String lastName;
+
     private String hospitalNumber;
     private Object details;
 }
