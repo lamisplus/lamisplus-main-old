@@ -25,12 +25,10 @@ const FormRenderer = (props) => {
     if (!formData) {
       return null;
     }
-    if( (props.formCode === '4ab293ff-6837-41e8-aa85-14f25ce59ef0' || props.formCode === '87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e' )){
-      const d = {orders : formData.map(item => {
-          return item.data;
-        })};
-      console.log(d);
-      return d;
+    if(props.formCode === '4ab293ff-6837-41e8-aa85-14f25ce59ef0'){
+      const data = {orders : formData};
+      console.log(data);
+      return data;
     }
     if (formData.length === 1) {
       return formData[0].data;

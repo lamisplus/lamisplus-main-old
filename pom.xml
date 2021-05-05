@@ -12,7 +12,7 @@
     <groupId>org.lamisplus.modules</groupId>
     <artifactId>base-module</artifactId>
     <version>1.0.0</version>
-    <packaging>Jar</packaging>
+    <packaging>war</packaging>
     <name>base-module</name>
     <description>LamisPlus base module</description>
 
@@ -20,10 +20,9 @@
         <java.version>1.8</java.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <org.projectlombok.version>1.16.4</org.projectlombok.version>
-        <jjwt.version>0.11.2</jjwt.version>
         <swagger.version>3.0.0-SNAPSHOT</swagger.version>
+        <jjwt.version>0.11.2</jjwt.version>
         <maven.test.skip>true</maven.test.skip>
-        <jobrunr.version>1.1.0</jobrunr.version>
         <maven.lamisplus-baseui.skip>true</maven.lamisplus-baseui.skip>
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
     </properties>
@@ -63,6 +62,18 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>5.4.10.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.6.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.6.1</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -223,15 +234,9 @@
             <version>5.2.10.RELEASE</version>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${swagger.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.9.2</version>
+            <groupId>io.github.jhipster</groupId>
+            <artifactId>jhipster-framework</artifactId>
+            <version>3.9.1</version>
         </dependency>
         <dependency>
             <groupId>org.lamisplus.modules</groupId>

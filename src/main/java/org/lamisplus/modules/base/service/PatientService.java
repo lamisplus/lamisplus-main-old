@@ -14,6 +14,8 @@ import org.lamisplus.modules.base.repository.*;
 
 import org.lamisplus.modules.base.util.AccessRight;
 import org.lamisplus.modules.base.util.GenericSpecification;
+import org.lamisplus.modules.base.util.UuidGenerator;
+
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -122,14 +124,10 @@ public class PatientService {
 
     public PatientDTO getPatientByHospitalNumber(String hospitalNumber) {
         Optional<Patient> patientOptional = this.patientRepository.findByHospitalNumberAndOrganisationUnitIdAndArchived(hospitalNumber, getOrganisationUnitId(), UN_ARCHIVED);
-        List<Flag> flags = new ArrayList<>();
 
         if (!patientOptional.isPresent()) {
             throw new EntityNotFoundException(Patient.class, "Hospital Number", hospitalNumber + "");
         }
-        patientOptional.get().getPatientFlagsById().forEach(patientFlag -> {
-            flags.add(patientFlag.getFlag());
-        });
 
         //Person person = patientOptional.get().getPersonByPersonId();
         //PersonContact personContact = person.getPersonContactsByPerson();
@@ -137,7 +135,6 @@ public class PatientService {
 
         //Check for currently check-in patient
         PatientDTO patientDTO = visitOptional.isPresent() ? patientMapper.toPatientDTO(visitOptional.get(), patientOptional.get()) : patientMapper.toPatientDTO(patientOptional.get());
-        patientDTO.setFlags(flags);
 
         //List<PersonRelative> personRelatives = person.getPersonRelativesByPerson();
 
@@ -505,16 +502,20 @@ public class PatientService {
 
     public List<PatientDTO> getPatients(List<Patient> patients) {
         List<PatientDTO> patientDTOs = new ArrayList<>();
-        List<Flag> flags = new ArrayList<>();
-
         patients.forEach(patient -> {
-             patient.getPatientFlagsById().forEach(patientFlag -> {
-                 flags.add(patientFlag.getFlag());
-             });
+            //Person person = patient.getPersonByPersonId();
+            //PersonContact personContact = person.getPersonContactsByPerson();
+
 
             Optional<Visit> visitOptional = visitRepository.findTopByPatientIdAndDateVisitEndIsNullOrderByDateVisitStartDesc(patient.getId());
             PatientDTO patientDTO = visitOptional.isPresent() ? patientMapper.toPatientDTO(visitOptional.get(), patient) : patientMapper.toPatientDTO(patient);
-            patientDTO.setFlags(flags);
+
+
+            //List<PersonRelative> personRelatives = person.getPersonRelativesByPerson();
+
+                /*patientDTO.setPersonRelativeDTOs(personRelativeMapper.toPersonRelativeDTOList(personRelatives.stream().
+                        filter(personRelative -> personRelative.getArchived() != ARCHIVED).
+                        collect(Collectors.toList())));*/
             patientDTOs.add(transformDTO(patientDTO));
         });
 
@@ -538,7 +539,7 @@ public class PatientService {
     }
 
     private PatientDTO transformDTO(PatientDTO patientDTO) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         try {
             //Instance of ObjectMapper provides functionality for reading and writing JSON
             ObjectMapper mapper = new ObjectMapper();
