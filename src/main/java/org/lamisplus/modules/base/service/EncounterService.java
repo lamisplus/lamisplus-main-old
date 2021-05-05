@@ -272,20 +272,20 @@ public class EncounterService {
         return encounterDTO;
     }
 
-    public Page<Encounter> findAllPages(String firstName, String lastName, String hospitalNumber, Pageable pageable) {
+    /*public Page<Encounter> findAllPages(String firstName, String lastName, String hospitalNumber, Pageable pageable) {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-        List<Encounter> encounters = jdbcTemplate.query("SELECT * FROM encounter e LEFT OUTER JOIN patient p ON (p.id = e.patient_id) WHERE p.details ->>'firstName' ilike "+
+        List<Encounter> encounters = jdbcTemplate.query("SELECT * FROM encounter e LEFT OUTER JOIN patient p ON (p.id = e.patient_id) WHERE (p.details ->>'firstName' ilike "+
                         "'"+firstName + "' OR p.details ->>'lastName' ilike " +
                         "'"+lastName +"' OR p.details ->>'hospitalNumber' ilike " +
-                        "'"+hospitalNumber +"' AND p.organisation_unit_id="+
+                        "'"+hospitalNumber +"' )AND (p.organisation_unit_id="+
                         organisationUnitId +"AND p.archived="+
-                        UNARCHIVED /*+" LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset()*/,
+                        UNARCHIVED +")" +" LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset(),
                 (rs, rowNum) -> mapEncounterResult(rs));
 
         return new PageImpl<>(encounters);
 
 
-    }
+    }*/
 
     private Encounter mapEncounterResult(final ResultSet rs) throws SQLException {
         Encounter encounter = new Encounter();
