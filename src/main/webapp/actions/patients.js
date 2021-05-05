@@ -290,7 +290,7 @@ export const fetchPatientVitalSigns = (id, onSuccess, onError) => dispatch => {
     console.log(id);
     if(id) {
         axios
-            .get(`${baseUrl}patients/${id}`)
+            .get(`${baseUrl}patients/hospitalNumber?hospitalNumber=${id}`)
             .then(response => {
                 dispatch({
                     type: ACTION_TYPES.PATIENTS_FETCH_BY_ID,
