@@ -422,13 +422,13 @@ function PatientDashboardSubMenu(props) {
   );
 }
 
-function RelativeList({ relative, relationshipTypeName }) {
+function RelativeList({ relative }) {
   return (
       <ListItem>
         <ListItemText
             primary={
               <React.Fragment>
-                {relationshipTypeName}, {relative.firstName} {relative.otherNames}{" "}
+                {relative.relationshipType && relative.relationshipType.display ? relative.relationshipType.display : '' }, {relative.firstName} {relative.otherNames}{" "}
                 {relative.lastName}
               </React.Fragment>
             }
