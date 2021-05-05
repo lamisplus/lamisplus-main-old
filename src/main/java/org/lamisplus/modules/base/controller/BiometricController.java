@@ -27,7 +27,7 @@ public class BiometricController {
 
 
     @PostMapping("/api/biometrics/templates")
-    public void saveBiometric(@RequestBody List<Biometric> biometrics) {
+    public void saveBiometric(@RequestBody List<Biometric> biometrics) throws URISyntaxException {
         biometricRepository.saveAll(biometrics);
     }
 

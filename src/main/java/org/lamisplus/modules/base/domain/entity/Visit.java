@@ -27,12 +27,12 @@ public class Visit extends Audit<String> {
 
     @Basic
     @Column(name = "date_visit_end")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate dateVisitEnd;
 
     @Basic
     @Column(name = "date_visit_start")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate dateVisitStart;
 
     @Basic
@@ -50,7 +50,7 @@ public class Visit extends Audit<String> {
 
     @Basic
     @Column(name = "date_next_appointment")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate dateNextAppointment;
 
     @Basic

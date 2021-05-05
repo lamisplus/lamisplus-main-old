@@ -50,9 +50,9 @@ server:
 spring:
     datasource:
         username: postgres
-        password: emeka
+        password: postgres
         driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:5432/lamisplus_db_30_04_21?stringtype=unspecified
+        url: jdbc:postgresql://localhost:5432/lamisplus_etl3
         hibernate:
             event.merge.enty_copy_observer: allow
         hikari:
@@ -69,6 +69,7 @@ spring:
         open-in-view: false
         hibernate:
             ddl-auto: update
+            properties:
         properties:
             hibernate.enable_lazy_load_no_trans: true
 
