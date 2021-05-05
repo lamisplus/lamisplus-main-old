@@ -250,7 +250,7 @@ public class EncounterService {
     }
 
     private EncounterDTO addProperties(EncounterDTO encounterDTO) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try {
             //Instance of ObjectMapper provides functionality for reading and writing JSON
             ObjectMapper mapper = new ObjectMapper();

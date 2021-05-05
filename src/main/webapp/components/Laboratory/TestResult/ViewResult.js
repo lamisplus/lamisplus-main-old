@@ -1,5 +1,6 @@
 import React, { useState }   from 'react';
-import { Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Label,Card,CardBody
+import {
+    Modal, ModalHeader, ModalBody, Row, Col, FormGroup, Label, Card, CardBody, Alert
 } from 'reactstrap';
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
@@ -67,21 +68,25 @@ const ModalViewResult = (props) => {
                           <Card>
                             <CardBody>
                                 <Row style={{ marginTop: '20px'}}>
+                                    <Col xs="12">
+                                    <Alert color="dark" style={{backgroundColor:'#9F9FA5', color:"#000" , fontWeight: 'bolder', }}>
+                                        <Row >
                                     <Col xs="6">
                                         <span style={{ fontWeight: 'bold'}}>Lab Test Group</span> : {lab_test_group}
                                         <br/>
                                     </Col>
                                     <br/>
                                     <Col xs="6">
-                                        <span style={{ fontWeight: 'bold'}}>Lab Test Ordered</span> : {description} 
-                                            &nbsp;&nbsp;&nbsp;Unit: {unit_measurement} 
+                                        <span style={{ fontWeight: 'bold'}}>Lab Test Ordered</span> : {description}
                                         <br/>
                                                       
                                     </Col>
-                                    <br/>
+                                        </Row>
+                                    </Alert>
+                                    </Col>
                                     <Col xs="12">
-                                        <span>Results: </span>
-                                        {console.log(result_detail)}
+                                        <h4>Results: </h4>
+                                        <hr/>
                                     {
                                         !result_detail ? "" :
                                         result_detail.map(x => {
@@ -97,22 +102,14 @@ const ModalViewResult = (props) => {
                                         <br/>    
                                     </Col>
                                    
-                                    <Col xs="4">
-                                        <FormGroup>
-                                         
-                                            <Label for="examplePassword"><span style={{ fontWeight: 'bold'}}> Result </span>: {ReactHtmlParser(x.result_reported)} </Label>
-                                      
-
-                                      
-                                        </FormGroup>
+                                    <Col xs="6">
+                                        <span style={{ fontWeight: 'bold'}}> Result </span>: {ReactHtmlParser(x.result_reported)}
                                     </Col>
+                                                    <Col xs="6">
+                                                        <span style={{ fontWeight: 'bold'}}> Unit Measurement </span>: {unit_measurement}
+                                                    </Col>
                                     <Col xs="12">
-                                        <FormGroup>
-                                         
-                                            <Label for="examplePassword"><span style={{ fontWeight: 'bold'}}> Notes </span>: {ReactHtmlParser(x.comment_sample_reported && x.comment_sample_reported!==undefined ? x.comment_sample_reported : "")} </Label>
-                                      
-                                        </FormGroup>
-                                      
+                                        <span style={{ fontWeight: 'bold'}}> Notes </span>: {ReactHtmlParser(x.comment_sample_reported && x.comment_sample_reported!==undefined ? x.comment_sample_reported : "")}
                                         <Divider  />
                                     </Col>  
                                     </Row>)
