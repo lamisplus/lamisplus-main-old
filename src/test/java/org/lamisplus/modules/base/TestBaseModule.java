@@ -39,7 +39,7 @@ public class TestBaseModule {
 
     @Test
     public void should_initialize_module() {
-        assertNotNull(acrossContext.getModule(BaseModule.NAME));
+        assertNotNull(acrossContext.getModule(BaseApplication.NAME));
     }
 
     @Configuration
@@ -49,7 +49,7 @@ public class TestBaseModule {
 
         @Override
         public void configure(AcrossContext context) {
-            context.addModule(new BaseModule());
+            context.addModule(new BaseApplication());
         }
     }
 }

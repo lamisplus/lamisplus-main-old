@@ -68,7 +68,7 @@ const useStyles = makeStyles({
             dispatch(fetchAllLabTestOrderOfPatient(props.location.state.encounterId,onSuccess,onError ));
             dispatch(fetchById(hospitalNumber,onSuccess,onError));
         }
-    }, [props.location.state.encounterId]); //componentDidMount 
+    }, []); //componentDidMount
 
         //Get list of test type
         const labTestType = [];

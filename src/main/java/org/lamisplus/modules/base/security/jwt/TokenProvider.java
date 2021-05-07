@@ -94,7 +94,6 @@ public class TokenProvider {
 
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-        //Todo: fix
 
         Collection<? extends GrantedAuthority> authorities = Arrays
                 .stream(claims.get(AUTHORITIES_KEY).toString().split(","))

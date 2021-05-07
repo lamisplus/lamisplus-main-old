@@ -147,10 +147,10 @@ public class EncounterService {
 
         //For retrospective data entry formType is 1
         if(formType == 1) {
-            if(form.getParentCode() != null){
-                encounter.setFormCode(form.getParentCode());
+            if(form.getMainCode() != null){
+                encounter.setFormCode(form.getMainCode());
             }
-            visit = visitRepository.findTopByPatientIdAndDateVisitStartOrderByDateVisitStartDesc(encounterDTO.getPatientId(), encounter.getDateEncounter()).orElse(visit);
+            visit = visitRepository.findTopByPatientIdAndDateVisitStartOrderByDateVisitStartDesc(encounterDTO.getPatientId(), encounter.getDateEncounter()).orElse(null);
             if(visit == null) {
                 visit = new Visit();
                 visit.setDateVisitEnd(encounter.getDateEncounter());
@@ -163,7 +163,7 @@ public class EncounterService {
                 visit.setOrganisationUnitId(organisationUnitId);
                 visit = visitRepository.save(visit);
             }
-            encounterDTO.setVisitId(visit.getId());
+            encounter.setVisitId(visit.getId());
         } else {
             visit = visitRepository.findById(encounterDTO.getVisitId()).orElseThrow(() ->
                     new EntityNotFoundException(Visit.class, "Visit Id", encounterDTO.getVisitId() + ""));
@@ -250,7 +250,7 @@ public class EncounterService {
     }
 
     private EncounterDTO addProperties(EncounterDTO encounterDTO) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try {
             //Instance of ObjectMapper provides functionality for reading and writing JSON
             ObjectMapper mapper = new ObjectMapper();
@@ -272,20 +272,20 @@ public class EncounterService {
         return encounterDTO;
     }
 
-    public Page<Encounter> findAllPages(String firstName, String lastName, String hospitalNumber, Pageable pageable) {
+    /*public Page<Encounter> findAllPages(String firstName, String lastName, String hospitalNumber, Pageable pageable) {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-        List<Encounter> encounters = jdbcTemplate.query("SELECT * FROM encounter e LEFT OUTER JOIN patient p ON (p.id = e.patient_id) WHERE p.details ->>'firstName' ilike "+
+        List<Encounter> encounters = jdbcTemplate.query("SELECT * FROM encounter e LEFT OUTER JOIN patient p ON (p.id = e.patient_id) WHERE (p.details ->>'firstName' ilike "+
                         "'"+firstName + "' OR p.details ->>'lastName' ilike " +
                         "'"+lastName +"' OR p.details ->>'hospitalNumber' ilike " +
-                        "'"+hospitalNumber +"' AND p.organisation_unit_id="+
+                        "'"+hospitalNumber +"' )AND (p.organisation_unit_id="+
                         organisationUnitId +"AND p.archived="+
-                        UNARCHIVED /*+" LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset()*/,
+                        UNARCHIVED +")" +" LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset(),
                 (rs, rowNum) -> mapEncounterResult(rs));
 
         return new PageImpl<>(encounters);
 
 
-    }
+    }*/
 
     private Encounter mapEncounterResult(final ResultSet rs) throws SQLException {
         Encounter encounter = new Encounter();

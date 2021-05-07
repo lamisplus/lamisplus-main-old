@@ -13,5 +13,5 @@ import java.nio.file.Paths;
 @Getter
 @Setter
 public class ApplicationProperties {
-    private String modulePath = System.getProperty("user.dir");
+    public static String modulePath = System.getProperty("user.dir");
 }

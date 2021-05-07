@@ -65,10 +65,10 @@ function ListViewPage(props) {
         ]}
         isLoading={props.loading}
         data={props.appointments.map((row) => ({
-          name: row.firstName + " " + row.lastName,
-          fullInfo: row.firstName + " " + row.lastName + " (" +row.hospitalNumber+")",
-          id: row.hospitalNumber,
-          phoneNumber: row.phoneNumber,
+          name: row.details ? row.details.firstName + " " + row.details.lastName : "",
+          fullInfo: (row.details ? row.details.firstName + " " + row.details.lastName : "" ) + " (" +row.hospitalNumber+")",
+          id: row.details && row.details.hospitalNumber ? row.details.hospitalNumber : "",
+          phoneNumber: row.details && row.details.phoneNumber ? row.details.phoneNumber : "",
           service: row.detail.service && row.detail.service.name ? row.detail.service.name : '',
             serviceProvider: row.detail.service_provider || '',
           appointmentDate: row.detail.appointment_date ,

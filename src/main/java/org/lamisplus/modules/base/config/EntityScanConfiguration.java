@@ -1,4 +1,4 @@
-package org.lamisplus.modules.base.extensions;
+package org.lamisplus.modules.base.config;
 
 import com.foreach.across.core.annotations.ModuleConfiguration;
 import com.foreach.across.modules.hibernate.provider.HibernatePackageConfigurer;
