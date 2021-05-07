@@ -73,7 +73,6 @@ const ModalViewResult = (props) => {
     });
     console.log(patientArray)
 
-
     const assignCaseManager = e => {
         e.preventDefault()
         PatientListsArray["patientIds"] = patientArray

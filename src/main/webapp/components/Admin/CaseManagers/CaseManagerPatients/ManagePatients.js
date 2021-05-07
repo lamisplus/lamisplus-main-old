@@ -36,7 +36,7 @@ const CaseManagerPatient = (props) => {
         var today = new Date();
         var dateParts = dob.split("-");
         var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
-        var birthDate = new Date(dateObject); // create a date object directlyfrom`dob1`argument
+        var birthDate = new Date(dateObject); 
         var age_now = today.getFullYear() - birthDate.getFullYear();
         var m = today.getMonth() - birthDate.getMonth();
         if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
