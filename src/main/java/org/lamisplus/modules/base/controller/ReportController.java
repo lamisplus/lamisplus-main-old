@@ -53,4 +53,9 @@ public class ReportController {
     public ResponseEntity<List<ReportInfoDTO>> getAllJasperReports() {
         return ResponseEntity.ok(reportService.getReports());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ReportInfo> update(@PathVariable Long id) {
+        return ResponseEntity.ok(reportService.getReport(id));
+    }
 }

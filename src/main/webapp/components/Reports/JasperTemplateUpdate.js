@@ -3,12 +3,15 @@ import { connect } from 'react-redux';
 import {Card} from '@material-ui/core';
 import {FormBuilder } from 'react-formio';
 import {fetchService} from '../../actions/formBuilder'
-import {update, fetchAll} from '../../actions/report'
+import {update} from '../../actions/report'
 import {FormGroup, Input, Label, Col, Row, Form, CardBody} from 'reactstrap';
 import {Link} from 'react-router-dom';
 import {toast, ToastContainer} from 'react-toastify';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Typography from '@material-ui/core/Typography';
+import axios from 'axios';
+import {url} from '../../api';
+
 
 
 const UpdateReports = (props) => {
@@ -24,13 +27,27 @@ const UpdateReports = (props) => {
 
     const row = props.location.row;
 
-    useEffect (() => {
-        props.fetchAll();
-    }, [])
+    // useEffect(() => {
+    //     setform2(row);
+    // }, [])
 
     useEffect(() => {
-        setform2(row);
-    }, [])
+        async function fetchById() {
+            axios
+                .get(`${url}reports/${row.id}/`)
+                .then(response => {
+                    const newFormData = response.data;
+                    newFormData["template"] = formData.template;
+                    setFormData(newFormData);
+                    setLoading(false);
+                })
+                .catch(error => {
+                    toast.error('Could not load form resource, please contact admin.')
+                    setLoading(false);
+                })
+        }
+        fetchById();
+    }, []);
 
     const handleInputChange = e => {
         setFormData({...formData, [e.target.name]: e.target.value});
@@ -110,8 +127,8 @@ const UpdateReports = (props) => {
                 <Card >
                     <CardBody>
                                 <h4>Build Query Parameter Form</h4>
-                                { form2 ?
-                                    <FormBuilder form={row.resourceObject} {...props} onChange={(schema) => {
+                                { formData.resourceObject ?
+                                    <FormBuilder form={formData.resourceObject} {...props} onChange={(schema) => {
                                         setRes(JSON.stringify(schema));
                                     }} />
                                     : ""
@@ -141,7 +158,7 @@ const mapStateToProps = (state = {  reportList:[], form:{}}) => {
 const mapActionsToProps = ({
     fetchService: fetchService,
     update: update,
-    fetchAll:fetchAll
+    // fetchAll:fetchAll
 })
 
 export default connect(mapStateToProps, mapActionsToProps)(UpdateReports)

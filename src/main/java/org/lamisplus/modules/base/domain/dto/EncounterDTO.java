@@ -47,7 +47,7 @@ public class EncounterDTO implements Serializable {
     //private String OtherNames;
     private String hospitalNumber;
     private String formName;
-    private Integer typePatient;
+    private Integer typePatient = 0;
     private List<Object> data;
     private List<Object> formDataObj;
     private Object details;

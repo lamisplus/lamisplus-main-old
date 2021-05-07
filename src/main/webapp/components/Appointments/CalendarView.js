@@ -11,7 +11,7 @@ function CalendarViewPage(props){
 
     const eventList = props.appointments.map((row) => ({
         id: row.id,
-        title:  row.firstName + " "+ row.lastName +" ("+row.hospitalNumber+") - " + (row.detail.service ? row.detail.service.name : '') + ' - '+ (row.detail.service_provider || ''),
+        title: (row.details ? row.details.firstName + " " + row.details.lastName : "" ) +" ("+row.hospitalNumber+") - " + (row.detail.service ? row.detail.service.name : '') + ' - '+ (row.detail.service_provider || '')+ ' - '+ (row.detail && row.detail.appointment_type ? row.detail.appointment_type.toString() : ''),
         start: row.detail.appointment_date ? moment(row.detail.appointment_date.substring(0, 10)).add(moment.duration(row.detail.appointment_time)).toDate() : "",
         end: row.detail.appointment_date ? moment(row.detail.appointment_date.substring(0, 10)).add(moment.duration(row.detail.appointment_time)).toDate() : "",
         extendedProps: row
@@ -31,7 +31,7 @@ function CalendarViewPage(props){
                selectable
                 localizer={localizer}
                 events={eventList}
-               defaultView={Views.MONTH}
+               defaultView={Views.WEEK}
                 defaultDate={new Date()}
                 startAccessor="start"
                 endAccessor="end"

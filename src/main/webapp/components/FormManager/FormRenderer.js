@@ -114,6 +114,13 @@ const FormRenderer = (props) => {
     if(formId){
       updateForm(submission, onSuccess, onError);
     }else{
+      const keys = Object.keys(submission.data);
+      console.log(keys);
+      // remove the base
+      if(keys.length == 1 && _.isArray(submission.data[keys[0]])){
+        submission.data = submission.data[keys[0]];
+      }
+
       saveForm(submission, onSuccess, onError);
     }
   };
@@ -129,7 +136,7 @@ const FormRenderer = (props) => {
       formatedDate = Moment(props.dateEncounter).format("DD-MM-YYYY");
     }
     let data = {
-      data: [submission.data],
+      data: _.isArray(submission.data) ? submission.data : [submission.data],
       patientId: props.patientId,
       formCode: props.formCode,
       programCode: form.programCode,

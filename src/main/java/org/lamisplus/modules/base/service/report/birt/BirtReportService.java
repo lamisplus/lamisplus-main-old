@@ -272,7 +272,6 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         return reportInfoRepository.save(reportInfo);
     }
 
-
     public Integer delete(Long id) {
         ReportInfo reportInfo = reportInfoRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(()
                 -> new EntityNotFoundException(ReportInfo.class, "Id", id +""));
@@ -286,7 +285,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
         List<ReportInfoDTO> reportInfoDTOS = new ArrayList<>();
         reportInfos.forEach(reportInfo -> {
-            final ReportInfoDTO reportInfoDTO = reportInfoMapper.toReportInfoDTO(reportInfo);
+            final ReportInfoDTO reportInfoDTO = reportInfoMapper. mapWithoutTemplate(reportInfo);
             Optional<Program>  program = this.programRepository.findProgramByCodeAndArchived(reportInfoDTO.getProgramCode(), UN_ARCHIVED);
             program.ifPresent(value -> reportInfoDTO.setProgramName(value.getName()));
             reportInfoDTOS.add(reportInfoDTO);
@@ -309,12 +308,6 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
     private String dbPass;
 
     private void populateDatabaseConnectionParameters( IReportRunnable iReportRunnable ) {
-
-        /*String dbUrl = "jdbc:postgresql://localhost:5432/lamisplus_db_bk_30_03_21"; //You decide how to get this
-        String dbUser = "postgres"; //You decide how to get this
-        String dbPass = "emeka"; //You decide how to get this*/
-
-
         DesignElementHandle deh = iReportRunnable.getDesignHandle();
         SlotHandle slotHandle = deh.getSlot(ReportDesignHandle.DATA_SOURCE_SLOT );
         Iterator iter = slotHandle.iterator();

@@ -117,7 +117,7 @@ export const update = (id, data) => dispatch => {
 
 export const saveEncounter = (data, onSuccess, onError, formType) => dispatch => {
   axios
-    .post(`${baseUrl}encounters?formType=${formType}`, data)
+    .post(`${baseUrl}encounters?formType=${formType ? formType : 0 }`, data)
     .then(response => {
       dispatch({
         type: ACTION_TYPES.FORM_SAVE_ENCOUNTER,

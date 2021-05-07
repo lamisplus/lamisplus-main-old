@@ -133,8 +133,8 @@ export const update = (data, id, onSuccess, onError) => dispatch => {
 
 };
 
-export const Delete = (id) => dispatch => {
-  console.log(`${baseUrl}patients/${id}`);
+export const Delete = (id, onSuccess, onError) => dispatch => {
+//  console.log(`${baseUrl}patients/${id}`);
   axios
   .delete(`${baseUrl}patients/${id}`)
   .then(response => {
@@ -143,16 +143,16 @@ export const Delete = (id) => dispatch => {
       type: ACTION_TYPES.PATIENT_DELETE,
       payload: id
     });
-    
+    if(onSuccess){
+        onSuccess();
+    }
     toast.success("Patient record was deleted successfully!");
   })
   .catch(error => {
-    dispatch({
-      type: ACTION_TYPES.PATIENTS_ERROR,
-      payload:error.response.data
-    });
     //console.log(error.response.data)
-    
+      if(onError){
+          onError();
+      }
     if(error.response.data.apierror.message===null || error.response.data.apierror.message===""){
       toast.error("Something went wrong");
     }else{
@@ -290,7 +290,7 @@ export const fetchPatientVitalSigns = (id, onSuccess, onError) => dispatch => {
     console.log(id);
     if(id) {
         axios
-            .get(`${baseUrl}patients/${id}`)
+            .get(`${baseUrl}patients/hospitalNumber?hospitalNumber=${id}`)
             .then(response => {
                 dispatch({
                     type: ACTION_TYPES.PATIENTS_FETCH_BY_ID,
