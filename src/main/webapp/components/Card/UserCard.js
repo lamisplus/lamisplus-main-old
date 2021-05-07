@@ -12,7 +12,7 @@ const UserCard = ({
   avatarSize,
   title,
   subtitle,
-                    subtitle2,
+  subtitle2,
   text,
   children,
   className,
