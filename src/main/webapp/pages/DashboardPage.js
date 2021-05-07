@@ -10,6 +10,10 @@ import {Card,CardBody,CardHeader,CardTitle,Col,Row,} from 'reactstrap';
 import { Link } from 'react-router-dom'
 import { fetchAllRegisteredPatients } from "./../actions/generalUserDashboard";
 import { url } from "../api";
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
+
+import GridLayout from 'react-grid-layout';
 
 
 // Load Highcharts modules
@@ -287,6 +291,7 @@ const deathChart = {
       <>
                {/* Card stats */}
                <Row className={"p-3"}>
+              
                 <Col lg={3} md={6} sm={6} xs={12} >
                   <Card  className="card-stats mb-4 mb-xl-0 " style={{backgroundColor: '#FFBF43', color: '#fff',  boxShadow: '1px 2px #eee'}}>
                     <CardBody >
