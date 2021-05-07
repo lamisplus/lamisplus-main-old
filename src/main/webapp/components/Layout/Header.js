@@ -159,7 +159,7 @@ function Header() {
           </NavItem>
 
           <NavItem>
-            <NavLink id="Popover2">
+            <NavLink id="Popover2"  >
               <Avatar
                 onClick={toggleUserCardPopover}
                 className="can-click"
@@ -171,7 +171,7 @@ function Header() {
               toggle={toggleUserCardPopover}
               target="Popover2"
               className="p-0 border-0"
-              style={{ minWidth: 250 }}
+              style={{ minWidth: 250, backgroundColor:"#3E51B5" }}
             >
               <PopoverBody
                 className="p-0 border-light"
@@ -182,6 +182,7 @@ function Header() {
                   subtitle2={currentUser && currentUser.role ? currentUser.role : ""}
                   subtitle={currentUser && currentUser.sub ? currentUser.sub : "" }
                   className="border-light"
+                  style={{  backgroundColor:"#3E51B5" }}
                 >
                   <ListGroup flush>
                     <ListGroupItem tag="button" action className="border-light">
