@@ -111,9 +111,6 @@ public class VisitService {
     }
 
     public Long getVisitType(Long type){
-        //Todo find by uuid code...
-        /*Long count = visitRepository.countByVisitTypeIdAndArchivedAndOrganisationUnitId(239L, UNARCHIVED, getOrganisationUnitId());//Unbooked
-        count = count + visitRepository.countByVisitTypeIdAndArchivedAndOrganisationUnitId(238L, UNARCHIVED, getOrganisationUnitId()); //booked*/
         if(type != null && type == 1) {
             return visitRepository.countByVisitTypeIdAndArchivedAndOrganisationUnitId(373L, UNARCHIVED, getOrganisationUnitId()); //Emergency
         }

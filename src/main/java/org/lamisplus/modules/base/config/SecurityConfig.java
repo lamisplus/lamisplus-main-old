@@ -1,5 +1,6 @@
 package org.lamisplus.modules.base.config;
 
+import com.foreach.across.core.annotations.Exposed;
 import org.lamisplus.modules.base.security.jwt.JWTConfigurer;
 import org.lamisplus.modules.base.security.jwt.TokenProvider;
 import org.lamisplus.modules.base.service.UserDetailService;
@@ -17,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-//@Profile(value = {"development", "production"})
+@Exposed
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final TokenProvider tokenProvider;
     //Swagger interface

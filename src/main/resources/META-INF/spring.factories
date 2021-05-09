@@ -1,4 +1,9 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   org.lamisplus.modules.bootstrap.configurer.DynamicModuleImportConfigurer,\
   org.lamisplus.modules.bootstrap.module.ApplicationProperties,\
-  org.lamisplus.modules.bootstrap.module.ModuleFileStorageService
+  org.lamisplus.modules.bootstrap.module.ModuleFileStorageService,\
+  org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration,\
+  org.lamisplus.modules.base.config.SwaggerConfig,\
+  springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc
+
+

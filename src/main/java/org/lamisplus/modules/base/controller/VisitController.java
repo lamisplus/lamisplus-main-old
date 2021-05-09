@@ -31,7 +31,7 @@ public class VisitController {
 
     @PostMapping
     public ResponseEntity<Visit> save(@RequestBody VisitDTO visitDTO) {
-        return ResponseEntity.ok(this.visitService.save(visitDTO));
+        return ResponseEntity.ok(visitService.save(visitDTO));
     }
 
     @PutMapping("/{id}")
