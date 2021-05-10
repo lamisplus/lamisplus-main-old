@@ -10,8 +10,8 @@ import {Card,CardBody,CardHeader,CardTitle,Col,Row,} from 'reactstrap';
 import { Link } from 'react-router-dom'
 import { fetchAllRegisteredPatients } from "./../actions/generalUserDashboard";
 import { url } from "../api";
-import 'react-grid-layout/css/styles.css';
-import 'react-resizable/css/styles.css';
+// import 'react-grid-layout/css/styles.css';
+// import 'react-resizable/css/styles.css';
 
 import GridLayout from 'react-grid-layout';
 
