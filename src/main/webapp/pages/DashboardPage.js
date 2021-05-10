@@ -10,8 +10,8 @@ import {Card,CardBody,CardHeader,CardTitle,Col,Row,} from 'reactstrap';
 import { Link } from 'react-router-dom'
 import { fetchAllRegisteredPatients } from "./../actions/generalUserDashboard";
 import { url } from "../api";
-import 'react-grid-layout/css/styles.css';
-import 'react-resizable/css/styles.css';
+// import 'react-grid-layout/css/styles.css';
+// import 'react-resizable/css/styles.css';
 
 import GridLayout from 'react-grid-layout';
 
@@ -141,7 +141,8 @@ const genderChart = {
       }
   },
   title: {
-      text: genderData.title
+      text: genderData.title,
+      style:{ "fontSize": "14px" }
   },
   accessibility: {
       point: {
@@ -176,7 +177,8 @@ const combineChart = {
       type: combineChartData.type
   },
 title: {
-  text: combineChartData.text
+  text: combineChartData.text,
+  style:{ "fontSize": "14px" }
 },
 xAxis: combineChartData.xAxis,
 labels: {
@@ -210,7 +212,8 @@ const birthChart = {
     }
   },
   title: {
-    text: birthRateData.text
+    text: birthRateData.text,
+    style:{ "fontSize": "14px" }
   },
   subtitle: {
     text: birthRateData.text
