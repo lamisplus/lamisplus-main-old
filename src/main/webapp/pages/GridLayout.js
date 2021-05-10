@@ -10,14 +10,14 @@ import GridLayout from 'react-grid-layout';
 class MyFirstGrid extends React.Component {
   render() {
     // layout is an array of objects, see the demo for more complete usage
-    const layout = [
-      {i: 'a', x: 0, y: 0, w: 2, h: 2},
-      {i: 'b', x: 2, y: 0, w: 2, h: 2, minW: 2, maxW: 4},
-      {i: 'c', x: 4, y: 0, w: 2, h: 2}
-    ];
+    // const layout = [
+    //   {i: 'a', x: 0, y: 0, w: 2, h: 2},
+    //   {i: 'b', x: 2, y: 0, w: 2, h: 2, minW: 2, maxW: 4},
+    //   {i: 'c', x: 4, y: 0, w: 2, h: 2}
+    // ];
     return (
-      <GridLayout className="layout"  cols={12} rowHeight={50} width={1200} >
-        <div key="a" data-grid={{x: 0, y: 0, w:2.5, h: 2}}> 
+      <GridLayout className="layout"  cols={10} rowHeight={50} width={1200} >
+        <div key="a" data-grid={{x: 0, y: 0, w:2, h: 2}}> 
                   <Card  className="card-stats mb-4 mb-xl-0 " style={{backgroundColor: '#FFBF43', color: '#fff',  boxShadow: '1px 2px #eee'}}>
                     <CardBody >
                       <Row >
@@ -47,7 +47,7 @@ class MyFirstGrid extends React.Component {
                   </Card>
              
                 </div>
-        <div key="b" data-grid={{x: 2, y: 0, w:2, h: 2}}>
+        <div key="b" data-grid={{x: 2, y: 0, w:0, h: 0}}>
                   <Card  className="card-stats mb-4 mb-xl-0 " style={{backgroundColor: '#FFBF43', color: '#fff',  boxShadow: '1px 2px #eee'}}>
                     <CardBody >
                       <Row >
