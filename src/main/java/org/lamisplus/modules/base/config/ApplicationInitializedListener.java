@@ -1,17 +1,13 @@
 package org.lamisplus.modules.base.config;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.context.ServletWebServerInitializedEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +15,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ApplicationInitializedListener {
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationInitializedListener.class);
-    private final SimpMessageSendingOperations messagingTemplate;
 
     @EventListener
     @Async
@@ -28,7 +23,6 @@ public class ApplicationInitializedListener {
         int port = event.getApplicationContext().getWebServer().getPort();
         String url = "http://localhost:" + port;
         (new ApplicationInitializedListener.BareBonesBrowserLaunch()).openURL(url);
-        this.messagingTemplate.convertAndSend("/topic/modules-changed", "Application started");
     }
 
     static class BareBonesBrowserLaunch {
