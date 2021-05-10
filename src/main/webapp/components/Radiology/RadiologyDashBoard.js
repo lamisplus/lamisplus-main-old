@@ -185,7 +185,8 @@ const testGroup = {
         type: testOrderGroupData.type
     },
     title: {
-        text: testOrderGroupData.title
+        text: testOrderGroupData.title,
+        style:{ "fontSize": "14px" }
     },
     tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -230,7 +231,8 @@ const testGroup = {
         allowDecimals: false,
         min: 0,
         title: {
-            text: testOrdersStackChart.text
+            text: testOrdersStackChart.text,
+            style:{ "fontSize": "14px" }
         }
     },
   
@@ -257,7 +259,8 @@ const testGroup = {
         type: limsBarChart.type
     },
     title: {
-        text: limsBarChart.text
+        text: limsBarChart.text,
+        style:{ "fontSize": "14px" }
     },
     xAxis: limsBarChart.xAxis,
     labels: {
