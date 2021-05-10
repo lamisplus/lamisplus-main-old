@@ -37,6 +37,7 @@ const  DashboardPage = (props) => {
   const [totalPatients,setTotalPatients] = useState(0)
   const [totalEmergency,setTotalEmergency] = useState(0)
   const [totalCheckin,setTotalCheckin] = useState(0)
+  const [totalAppointment,setTotalAppointment] = useState(0)
   useEffect(() => {
     
             props.fetchAllGender();
@@ -97,8 +98,19 @@ useEffect(() => {
       try {
           const response = await axios.get( url+ 'patient-dashboard/column');
               const body = response.data && response.data!==null ? response.data : {};
-              console.log(body)
+
               setcombineChartData(body)  
+      } catch (error) {}
+    }
+    getCharacters();
+}, []);
+// Total Appointment 
+useEffect(() => {
+  async function getCharacters() {
+      try {
+          const response = await axios.get( url+ 'appointments/count');
+              const body = response.data && response.data!==null ? response.data : {};
+              setTotalAppointment(body)  
       } catch (error) {}
     }
     getCharacters();
@@ -412,7 +424,7 @@ const deathChart = {
 
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
-                            43
+                           {totalAppointment}
                           </span>
                         </div>
 
