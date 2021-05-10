@@ -48,7 +48,7 @@ const  DashboardPage = (props) => {
             const response = await axios.get( url+ 'patients/totalCount');
                 const body2 = response.data && response.data!==null ? response.data :0.00;
                 setTotalPatients(body2) 
-                
+                console.log(body2)
         } catch (error) {
 
         }
@@ -62,6 +62,7 @@ const  DashboardPage = (props) => {
               const response = await axios.get( url+ 'visits/count/1');
                   const body2 = response.data && response.data!==null ? response.data :0;
                   setTotalEmergency(body2) 
+                  console.log(body2)
                   
           } catch (error) {}
         }
@@ -74,7 +75,7 @@ const  DashboardPage = (props) => {
                   const response = await axios.get( url+ 'visits/count/0');
                       const body2 = response.data && response.data!==null ? response.data :0;
                       setTotalCheckin(body2) 
-                      
+                      console.log(body2)
               } catch (error) {}
             }
             getCharacters();
@@ -84,7 +85,7 @@ const  DashboardPage = (props) => {
         try {
             const response = await axios.get( url+ 'patient-dashboard/pie');
                 const body = response.data && response.data!==null ? response.data : {};
-                
+                console.log(body)
                 setGenderData(body)   
         } catch (error) {}
       }
@@ -96,6 +97,7 @@ useEffect(() => {
       try {
           const response = await axios.get( url+ 'patient-dashboard/column');
               const body = response.data && response.data!==null ? response.data : {};
+              console.log(body)
               setcombineChartData(body)  
       } catch (error) {}
     }
@@ -139,7 +141,7 @@ const genderChart = {
       }
   },
   title: {
-      text: 'Total Registered Patients (Male, Female and Pediatric) Pass 4 Months'
+      text: genderData.title
   },
   accessibility: {
       point: {
@@ -174,12 +176,12 @@ const combineChart = {
       type: combineChartData.type
   },
 title: {
-  text: "Total Appointment , Attendance and Emergencies"
+  text: combineChartData.text
 },
 xAxis: combineChartData.xAxis,
 labels: {
   items: [{
-      html: 'Total Appointment , Attendance and Emergencies',
+      html: combineChartData.name,
       style: {
           left: '50px',
           top: '2px',
