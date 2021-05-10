@@ -56,10 +56,13 @@ const DeleteModule = (props) => {
 
         }
         datasample['status'] =3
+        props.datasample['status'] =3
         props.deActivateBootstrapModule(datasample.id, onSuccess, onError);
         props.togglestatus()
+        //props.history.push(`/admin-bootstrap-configuration`)
     }
 
+    console.log(datasample)
 
   return (      
       <div >

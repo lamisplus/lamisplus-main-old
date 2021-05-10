@@ -29,7 +29,7 @@ const LaboratoryPage = React.lazy(() => import("components/Laboratory/HomePage")
 const CollectSample = React.lazy(() =>import("components/Laboratory/Testorders/CollectSample"));
 const LaboratorySampleResultPage = React.lazy(() =>import("components/Laboratory/TestResult/CollectResult"));
 const SampleVerification = React.lazy(() => import("components/Laboratory/Sampleverifications/SampleVerification"));
-
+const GridLayout = React.lazy(() => import("pages/GridLayout"));
 
 const PatientsPage = React.lazy(() => import("components/PatientSearch/HomePage"));
 const PrintSamples = React.lazy(() => import("components/Laboratory/DispatchedManifest/PrintSample"));
@@ -252,7 +252,7 @@ class Routes extends Component {
               {/* The route to Visualization*/}
                 <PrivateRoute exact path={"/visual"} component={TestPageForVisualisation} />
                 <PrivateRoute exact path={"/data-visualisation"} component={DataVisualizationDashboard} />
-
+                <PrivateRoute exact path={"/gridlayout"} component={GridLayout} />
                 
               {/* The route to Visualization*/}
                 <PrivateRoute exact path={"/unauthorised"} component={UnauthorisedPage} />

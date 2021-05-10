@@ -154,6 +154,7 @@ const ResultReporting = (props) => {
     function sampleTypeList (test){
         
         const  maxVal = []
+  
           for(var i=0; i<test.length; i++){
              
                   if ( test[i].display!==null && test[i].display)
@@ -162,6 +163,7 @@ const ResultReporting = (props) => {
               
           }
         return maxVal.toString();
+      
     }
 
 //This is function to check for the status of each collection to display on the tablist below 
