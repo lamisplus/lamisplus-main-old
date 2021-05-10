@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import {Card, CardBody, CardDeck, CardHeader } from 'reactstrap';
+import UserProgressTable from 'components/UserProgressTable';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { url } from "../../api";
 
-
+// Load Highcharts modules
+require("highcharts/modules/exporting")(Highcharts);
 const useStyles = makeStyles(theme => ({
     root2: {
         flexGrow: 1,
@@ -119,6 +122,14 @@ const useStyles = makeStyles(theme => ({
   
 
 
+  const userProgressTableData = 
+      [
+  
+          {name: 'Total Sample Dispatached'},
+          {name: 'Total Sample Results'},
+          {name: 'Total Sample Rejected'}
+  
+      ];
 
 export default function LaboratoryDashBoard(props) {
     const classes = useStyles();
@@ -130,8 +141,8 @@ export default function LaboratoryDashBoard(props) {
             async function getCharacters() {
                 try {
                     const response = await axios.get( url+ 'laboratory-dashboard/pie');
-                    //console.log(response)
                     const body = response.data && response.data!==null ? response.data : {}; 
+                    
                     settestOrderGroupData(body)
                         
                 } catch (error) {}
@@ -143,17 +154,28 @@ export default function LaboratoryDashBoard(props) {
             async function getCharacters() {
                 try {
                     const response = await axios.get( url+ 'laboratory-dashboard/column/testOrders');
-                   
                     const body = response.data && response.data!==null ? response.data : {}; 
                     settestOrdersStackChart(body)
-                        
+                    console.log(body) 
                 } catch (error) {}
             }
             getCharacters();
         }, []); 
-    
-console.log(testOrderGroupData)
-console.log(testOrdersStackChart)
+    // API request for LIMS BAR CHART   
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+                const response = await axios.get( url+ 'laboratory-dashboard/column/lims');
+                const body = response.data && response.data!==null ? response.data : {}; 
+                setlimsBarChart(body)
+                    
+            } catch (error) {}
+        }
+        getCharacters();
+    }, []); 
+
+// Test Group Pie Chart 
+
 const testGroup = {
 
     chart: {
@@ -163,7 +185,7 @@ const testGroup = {
         type: testOrderGroupData.type
     },
     title: {
-        text: ''
+        text: testOrderGroupData.title
     },
     tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -184,7 +206,7 @@ const testGroup = {
         }
     },
     series: [{
-        name: '',
+        name: 'Test Group',
         colorByPoint: true,
         data: testOrderGroupData.data
     }]
@@ -199,7 +221,7 @@ const testGroup = {
     },
   
     title: {
-        text: testOrdersStackChart.subTitle
+        text: testOrdersStackChart.text
     },
   
     xAxis: testOrdersStackChart.xAxis,
@@ -259,7 +281,7 @@ const testGroup = {
              
                 <CardDeck>
                     <Card >
-                        <CardHeader> Radiology Test  Chart for the past 3months</CardHeader>
+                        {/* <CardHeader> Laboratory Test Group for the past 6months</CardHeader> */}
                             <CardBody>
                                 <div>
                                     <HighchartsReact options={testGroup} />
@@ -267,7 +289,7 @@ const testGroup = {
                             </CardBody>                      
                     </Card>
                     <Card >
-                        <CardHeader> Radiology Test  Results for 6months</CardHeader>
+                        {/* <CardHeader> Laboratory Test Order/ Result for the past 6months</CardHeader> */}
                             <CardBody>
                                 <div>
                                     <HighchartsReact options={testOrders} />
@@ -275,8 +297,7 @@ const testGroup = {
                             </CardBody>                      
                     </Card>
                 </CardDeck>
-                    <br/><br/>
-                
+              
 
            
         </div>
