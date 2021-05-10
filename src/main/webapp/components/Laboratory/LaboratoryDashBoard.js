@@ -8,7 +8,8 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { url } from "../../api";
 
-
+// Load Highcharts modules
+require("highcharts/modules/exporting")(Highcharts);
 const useStyles = makeStyles(theme => ({
     root2: {
         flexGrow: 1,
