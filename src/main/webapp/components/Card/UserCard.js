@@ -12,7 +12,7 @@ const UserCard = ({
   avatarSize,
   title,
   subtitle,
-                    subtitle2,
+  subtitle2,
   text,
   children,
   className,
@@ -21,9 +21,9 @@ const UserCard = ({
   const classes = classNames('bg-gradient-theme', className);
 
   return (
-    <Card inverse className={classes} {...restProps}>
-      <CardBody className="d-flex justify-content-center align-items-center flex-column">
-        <Avatar src={avatar} size={avatarSize} className="mb-2" />
+    <Card inverse className= "" {...restProps} >
+      <CardBody className="d-flex justify-content-center align-items-center flex-column" >
+        <Avatar src={avatar} size={avatarSize} className="mb-2" style={{ backgroundColor:"#fff" }}/>
         <CardTitle>{title}</CardTitle>
         <CardSubtitle>{subtitle}</CardSubtitle>
         <CardSubtitle>{subtitle2}</CardSubtitle>

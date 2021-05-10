@@ -19,9 +19,9 @@ public class VisitController {
         return ResponseEntity.ok(visitService.getAllVisits());
     }
 
-    @GetMapping("/count/{type}")
-    public ResponseEntity<Long> getTotalCount(@PathVariable Long type) {
-        return ResponseEntity.ok(visitService.getVisitType(type));
+    @GetMapping("/totalCount/checkIn")
+    public ResponseEntity<Long> getTotalCount() {
+        return ResponseEntity.ok(visitService.getVisitType());
     }
 
     @GetMapping("/{id}")
@@ -35,8 +35,8 @@ public class VisitController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Visit> updateVisit(@RequestBody VisitDTO visitDTO, @PathVariable Long id) {
-        return ResponseEntity.ok(visitService.update(id, visitDTO));
+    public ResponseEntity<Visit> updateVisit(@RequestBody Visit visit, @PathVariable Long id) {
+        return ResponseEntity.ok(visitService.update(id, visit));
     }
 
     @DeleteMapping("/{id}")

@@ -21,6 +21,8 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class ReportController {
+    private static final Logger log = LoggerFactory.getLogger(ReportController.class);
+
     private final BirtReportService reportService;
 
     @PostMapping
@@ -30,7 +32,6 @@ public class ReportController {
     }
 
     @PostMapping(value = "/generate")
-    @ResponseBody
     public void generateReport(@RequestBody ReportDetailDTO data, HttpServletResponse response, HttpServletRequest request) {
         String reportFormat = data.getReportFormat().toLowerCase().trim();
         OutputType format = OutputType.from(reportFormat);

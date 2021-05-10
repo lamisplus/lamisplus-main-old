@@ -88,9 +88,7 @@ function HomePage(props) {
   const [fetchingPatient, setFetchingPatient] = useState(false);
 
 
-  const hospitalNumber = props.location.state
-      || getQueryParams("hospitalNumber", props.location.search)
-      || "";
+  const hospitalNumber = props.location.state;
 
   const isEmpty = (value) => {
     if (JSON.stringify(value) === "{}") {

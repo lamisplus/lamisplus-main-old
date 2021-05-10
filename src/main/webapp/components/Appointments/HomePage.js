@@ -153,7 +153,7 @@ function HomePage(props) {
         );
   }
   return (
-    <React.Fragment>
+    <div>
       <AppBar position="static">
         <Tabs
           value={value}
@@ -209,7 +209,7 @@ function HomePage(props) {
           onError={onError}
           options={currentForm.options}
       />
-    </React.Fragment>
+    </div>
   );
 }
 

@@ -66,7 +66,7 @@ function HomePage(props) {
   };
 
   return (
-    <React.Fragment>
+    <div>
       <AppBar position="static">
         <Tabs
           value={value}
@@ -101,7 +101,7 @@ function HomePage(props) {
         <ActivePatientSearch />
       </TabPanel>
      
-    </React.Fragment>
+    </div>
   );
 }
 

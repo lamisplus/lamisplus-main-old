@@ -17,7 +17,7 @@ import java.util.*;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Table(name = "application_user")
-public class User extends Audit<String> {
+public class User {
     @Id
     @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,19 +50,19 @@ public class User extends Audit<String> {
     @NonNull
     private Integer active = 1;
 
-    /*@Basic
+    @Basic
     @Column(name = "date_created")
     @CreationTimestamp
-    private Date dateCreated;*/
+    private Date dateCreated;
 
-    /*@Basic
+    @Basic
     @Column(name = "last_modified_by")
-    private String lastModifiedBy;*/
+    private String lastModifiedBy;
 
-    /*@Basic
+    @Basic
     @Column(name = "date_last_modified")
     @UpdateTimestamp
-    private Date dateLastModified;*/
+    private Date dateLastModified;
 
     @Basic
     @Column(name = "activation_key")
@@ -72,7 +72,7 @@ public class User extends Audit<String> {
     @Column(name = "date_reset")
     private Date dateReset;
 
-    /*@Basic
+    @Basic
     @Column(name = "reset_key")
     private String resetKey;
 
@@ -82,11 +82,15 @@ public class User extends Audit<String> {
 
     @Basic
     @Column(name = "time_uploaded")
-    private Time timeUploaded;*/
+    private Time timeUploaded;
 
     @Basic
     @Column(name = "current_organisation_unit_id")
     private Long currentOrganisationUnitId;
+
+    @Basic
+    @Column(name = "person_id")
+    private Long personId;
 
     @Basic
     @Column(name = "first_name")

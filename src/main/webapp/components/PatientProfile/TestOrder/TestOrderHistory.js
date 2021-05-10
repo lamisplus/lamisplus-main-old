@@ -35,11 +35,11 @@ const columns = [
   },
   {
     name: 'Test Result',
-    selector: 'test_result',
+    selector: 'reported_result',
     sortable: false,
     cell: row => (
       <span>
-        {row.test_result  ? row.test_result +' ' +row.unit_measurement : ''}
+        {row.reported_result && row.reported_result.length > 0  ? row.reported_result.map(x => x.result_reported).toString() +' ' +row.unit_measurement : ''}
       </span>
     )
   }
