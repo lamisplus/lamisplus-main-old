@@ -121,7 +121,7 @@ const PatientSearch = (props) => {
                                           row.dob === null ||
                                           row.dob === "" )
                                           ? 0
-                                          : calculate_age(row.dob),
+                                          : calculate_age(row.details && row.details.dob ? row.details.dob : row.dob),
                                       address: row.street || '',
                                       actions:
                                           <div>

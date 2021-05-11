@@ -75,7 +75,7 @@ function PatientDetailCard(props) {
             <Col md={4} className={classes.root2}>
               <span>
                 {" "}
-                Age : <b>{Age(patient.dob)}</b>
+                Age : <b>{Age(patient.details && patient.details.dob ? patient.details.dob : patient.dob)}</b>
               </span>
             </Col>
             <Col md={4}>
