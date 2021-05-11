@@ -13,7 +13,6 @@ import { url } from "../api";
 // import 'react-grid-layout/css/styles.css';
 // import 'react-resizable/css/styles.css';
 
-import GridLayout from 'react-grid-layout';
 
 
 // Load Highcharts modules
@@ -109,7 +108,7 @@ useEffect(() => {
   async function getCharacters() {
       try {
           const response = await axios.get( url+ 'appointments/count');
-              const body = response.data && response.data!==null ? response.data : {};
+              const body = response.data && response.data!==null ? response.data : 0;
               setTotalAppointment(body)  
       } catch (error) {}
     }

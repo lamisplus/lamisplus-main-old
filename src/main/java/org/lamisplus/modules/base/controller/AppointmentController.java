@@ -42,4 +42,9 @@ public class AppointmentController {
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
         return ResponseEntity.ok(this.appointmentService.delete(id));
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getTotalCount() {
+        return ResponseEntity.ok(appointmentService.getTodayAppointmentCount());
+    }
 }

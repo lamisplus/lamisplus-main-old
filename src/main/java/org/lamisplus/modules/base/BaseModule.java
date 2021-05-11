@@ -5,11 +5,12 @@ import com.foreach.across.core.AcrossModule;
 import com.foreach.across.core.context.configurer.ComponentScanConfigurer;
 import com.foreach.across.modules.hibernate.jpa.AcrossHibernateJpaModule;
 import com.foreach.across.modules.web.AcrossWebModule;
+import org.lamisplus.modules.bootstrap.BootstrapModule;
 
 @AcrossApplication(
         modules = {
-                AcrossWebModule.NAME,
-                AcrossHibernateJpaModule.NAME
+                AcrossHibernateJpaModule.NAME,
+                AcrossWebModule.NAME, BootstrapModule.NAME,
         }
 )
 public class BaseModule extends AcrossModule {
@@ -27,7 +28,7 @@ public class BaseModule extends AcrossModule {
                 getClass().getPackage().getName() +".domain",
                 getClass().getPackage().getName() +".domain.mapper",
                 getClass().getPackage().getName() +".util",
-                "springfox.documentation"));
+                "springfox.documentation", "org.springframework.web.socket"));
     }
 
     public String getName() {
