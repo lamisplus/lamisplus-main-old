@@ -160,3 +160,5 @@ target/
 base-module.iml
 
 src/main/resources/log/
+
+*.gz
