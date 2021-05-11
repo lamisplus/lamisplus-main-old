@@ -8,7 +8,8 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { url } from "../../api";
 
-
+// Load Highcharts modules
+require("highcharts/modules/exporting")(Highcharts);
 const useStyles = makeStyles(theme => ({
     root2: {
         flexGrow: 1,
@@ -141,6 +142,7 @@ export default function LaboratoryDashBoard(props) {
                 try {
                     const response = await axios.get( url+ 'laboratory-dashboard/pie');
                     const body = response.data && response.data!==null ? response.data : {}; 
+                    
                     settestOrderGroupData(body)
                         
                 } catch (error) {}
@@ -154,7 +156,7 @@ export default function LaboratoryDashBoard(props) {
                     const response = await axios.get( url+ 'laboratory-dashboard/column/testOrders');
                     const body = response.data && response.data!==null ? response.data : {}; 
                     settestOrdersStackChart(body)
-                        
+                    console.log(body) 
                 } catch (error) {}
             }
             getCharacters();
@@ -183,7 +185,8 @@ const testGroup = {
         type: testOrderGroupData.type
     },
     title: {
-        text: 'Laboratory Test Group Analysis For The Past 6 Months'
+        text: testOrderGroupData.title,
+        style:{ "fontSize": "14px" }
     },
     tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -219,7 +222,8 @@ const testGroup = {
     },
   
     title: {
-        text: testOrdersStackChart.subTitle
+        text: testOrdersStackChart.text,
+        style:{ "fontSize": "14px" }
     },
   
     xAxis: testOrdersStackChart.xAxis,

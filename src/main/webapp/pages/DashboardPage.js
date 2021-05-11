@@ -10,8 +10,8 @@ import {Card,CardBody,CardHeader,CardTitle,Col,Row,} from 'reactstrap';
 import { Link } from 'react-router-dom'
 import { fetchAllRegisteredPatients } from "./../actions/generalUserDashboard";
 import { url } from "../api";
-import 'react-grid-layout/css/styles.css';
-import 'react-resizable/css/styles.css';
+// import 'react-grid-layout/css/styles.css';
+// import 'react-resizable/css/styles.css';
 
 import GridLayout from 'react-grid-layout';
 
@@ -37,6 +37,7 @@ const  DashboardPage = (props) => {
   const [totalPatients,setTotalPatients] = useState(0)
   const [totalEmergency,setTotalEmergency] = useState(0)
   const [totalCheckin,setTotalCheckin] = useState(0)
+  const [totalAppointment,setTotalAppointment] = useState(0)
   useEffect(() => {
     
             props.fetchAllGender();
@@ -48,7 +49,7 @@ const  DashboardPage = (props) => {
             const response = await axios.get( url+ 'patients/totalCount');
                 const body2 = response.data && response.data!==null ? response.data :0.00;
                 setTotalPatients(body2) 
-                
+                console.log(body2)
         } catch (error) {
 
         }
@@ -62,6 +63,7 @@ const  DashboardPage = (props) => {
               const response = await axios.get( url+ 'visits/count/1');
                   const body2 = response.data && response.data!==null ? response.data :0;
                   setTotalEmergency(body2) 
+                  console.log(body2)
                   
           } catch (error) {}
         }
@@ -74,7 +76,7 @@ const  DashboardPage = (props) => {
                   const response = await axios.get( url+ 'visits/count/0');
                       const body2 = response.data && response.data!==null ? response.data :0;
                       setTotalCheckin(body2) 
-                      
+                      console.log(body2)
               } catch (error) {}
             }
             getCharacters();
@@ -84,7 +86,7 @@ const  DashboardPage = (props) => {
         try {
             const response = await axios.get( url+ 'patient-dashboard/pie');
                 const body = response.data && response.data!==null ? response.data : {};
-                
+                console.log(body)
                 setGenderData(body)   
         } catch (error) {}
       }
@@ -96,7 +98,19 @@ useEffect(() => {
       try {
           const response = await axios.get( url+ 'patient-dashboard/column');
               const body = response.data && response.data!==null ? response.data : {};
+
               setcombineChartData(body)  
+      } catch (error) {}
+    }
+    getCharacters();
+}, []);
+// Total Appointment 
+useEffect(() => {
+  async function getCharacters() {
+      try {
+          const response = await axios.get( url+ 'appointments/count');
+              const body = response.data && response.data!==null ? response.data : {};
+              setTotalAppointment(body)  
       } catch (error) {}
     }
     getCharacters();
@@ -139,7 +153,8 @@ const genderChart = {
       }
   },
   title: {
-      text: 'Total Registered Patients (Male, Female and Pediatric) Pass 4 Months'
+      text: genderData.title,
+      style:{ "fontSize": "14px" }
   },
   accessibility: {
       point: {
@@ -174,12 +189,13 @@ const combineChart = {
       type: combineChartData.type
   },
 title: {
-  text: "Total Appointment , Attendance and Emergencies"
+  text: combineChartData.text,
+  style:{ "fontSize": "14px" }
 },
 xAxis: combineChartData.xAxis,
 labels: {
   items: [{
-      html: 'Total Appointment , Attendance and Emergencies',
+      html: combineChartData.name,
       style: {
           left: '50px',
           top: '2px',
@@ -208,7 +224,8 @@ const birthChart = {
     }
   },
   title: {
-    text: birthRateData.text
+    text: birthRateData.text,
+    style:{ "fontSize": "14px" }
   },
   subtitle: {
     text: birthRateData.text
@@ -407,7 +424,7 @@ const deathChart = {
 
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
-                            43
+                           {totalAppointment}
                           </span>
                         </div>
 
