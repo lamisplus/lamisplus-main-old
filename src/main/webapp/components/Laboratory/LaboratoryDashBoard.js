@@ -8,7 +8,8 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { url } from "../../api";
 
-
+// Load Highcharts modules
+require("highcharts/modules/exporting")(Highcharts);
 const useStyles = makeStyles(theme => ({
     root2: {
         flexGrow: 1,
@@ -184,7 +185,8 @@ const testGroup = {
         type: testOrderGroupData.type
     },
     title: {
-        text: testOrderGroupData.title
+        text: testOrderGroupData.title,
+        style:{ "fontSize": "14px" }
     },
     tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -220,7 +222,8 @@ const testGroup = {
     },
   
     title: {
-        text: testOrdersStackChart.text
+        text: testOrdersStackChart.text,
+        style:{ "fontSize": "14px" }
     },
   
     xAxis: testOrdersStackChart.xAxis,

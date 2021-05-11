@@ -21,9 +21,10 @@ const columns = [
     sortable: false,
     cell: row => (
       <span>
-        {row.drug && row.drug.name ? row.drug.name 
-         : row.regimen && row.regimen.name ? row.regimen.name : ''} 
-       
+        {row.regimen ?
+            ( row.regimen && row.regimen.regimen ? row.regimen.regimen + ' - ': '')
+            :
+        <b> {row.drugs && row.drugs.length > 0 ? row.drugs.map(x=>x.drug.name).toString() : ''}</b>}
       </span>
     )
   },
@@ -33,7 +34,7 @@ const columns = [
     sortable: false,
     cell: row => (
         <span>
-          {row.dosage_strength || ''} {row.dosage_strength_unit && row.dosage_strength_unit.display ? row.dosage_strength_unit.display : ''} {' to be taken '}{row.dosage_frequency || ''}{' time(s) a day'}
+          {row.dosage_frequency || '-'}
         </span>
       )
   },
@@ -43,7 +44,7 @@ const columns = [
     sortable: false,
     cell: row => (
       <span>
-        {'Start at '}{row.start_date || ''} {' for '}{row.duration}{' '}{row.duration_unit}
+        {'Start at '} <b>{row.start_date || ''}</b> {' for '} <b>{row.duration}{' '}{row.duration_unit}</b>
       </span>
     )
   },
