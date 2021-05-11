@@ -142,7 +142,7 @@ const UploadResultPage = (props) => {
                             <Col md={6}>
                                 <Row><Col md={12}>
                                     <FormGroup>
-                                        <Label for="encounterDate">Upload Date & Time*</Label>
+                                        <Label for="encounterDate">Upload Date & Time* </Label>
                                         <DateTimePicker
                                             name="encounterDate"
                                             id="encounterDate"

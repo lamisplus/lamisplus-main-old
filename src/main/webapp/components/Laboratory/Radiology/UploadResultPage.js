@@ -6,7 +6,7 @@ import {fetchRadiologyTestOrdersByEncounterID, updateRadiologyByFormId} from "ac
 
 import Button from "@material-ui/core/Button";
 import {toast, ToastContainer} from "react-toastify";
-import SaveIcon from "@material-ui/icons/Delete";
+import SaveIcon from "@material-ui/icons/Save";
 import CancelIcon from "@material-ui/icons/Cancel";
 import {makeStyles} from "@material-ui/core/styles";
 import {Card, CardBody, Modal, ModalBody, ModalFooter, ModalHeader, Spinner
@@ -63,6 +63,7 @@ const UploadResultPage = (props) => {
         testOrder.data["note"] = note;
         testOrder.data["test_order_status"] = 1
         setSaving(true);
+        
         const onSuccess = () => {
             setSaving(false);
             props.toggleModal();
@@ -80,8 +81,12 @@ const UploadResultPage = (props) => {
         const formData = new FormData();
         formData.append('file', files);
         formData.append('formData', testOrder);
+        const newFormData = props.formData;
+
+        newFormData.data['file_uploaded'] = files
+        console.log(newFormData)
         try {
-            const res = await axios.post(`${url}radiologies?formId=${testOrder.id}`, formData, {
+            const res = await axios.post(`${url}radiologies?formId=${testOrder.id},patientId=${newFormData.data.patient_id}`, newFormData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -116,7 +121,7 @@ const UploadResultPage = (props) => {
 
 
         <Modal isOpen={props.showModal} toggle={props.toggleModal} size="xl">
-            <ToastContainer/>
+            
                 <Form onSubmit={uploadResult}>
 
                     <ModalHeader toggle={props.toggleModal}> Upload Result </ModalHeader>
@@ -219,7 +224,7 @@ const UploadResultPage = (props) => {
                             startIcon={<SaveIcon/>}
                             disabled={saving}
                         >
-                            Upload {saving ? <Spinner/> : ""}
+                            Save {saving ? <Spinner/> : ""}
                         </Button>
                         <Button
                             variant='contained'
