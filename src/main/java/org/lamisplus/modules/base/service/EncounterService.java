@@ -147,10 +147,10 @@ public class EncounterService {
 
         //For retrospective data entry formType is 1
         if(formType == 1) {
-            if(form.getParentCode() != null){
-                encounter.setFormCode(form.getParentCode());
+            if(form.getMainCode() != null){
+                encounter.setFormCode(form.getMainCode());
             }
-            visit = visitRepository.findTopByPatientIdAndDateVisitStartOrderByDateVisitStartDesc(encounterDTO.getPatientId(), encounter.getDateEncounter()).orElse(visit);
+            visit = visitRepository.findTopByPatientIdAndDateVisitStartOrderByDateVisitStartDesc(encounterDTO.getPatientId(), encounter.getDateEncounter()).orElse(null);
             if(visit == null) {
                 visit = new Visit();
                 visit.setDateVisitEnd(encounter.getDateEncounter());
@@ -163,7 +163,7 @@ public class EncounterService {
                 visit.setOrganisationUnitId(organisationUnitId);
                 visit = visitRepository.save(visit);
             }
-            encounterDTO.setVisitId(visit.getId());
+            encounter.setVisitId(visit.getId());
         } else {
             visit = visitRepository.findById(encounterDTO.getVisitId()).orElseThrow(() ->
                     new EntityNotFoundException(Visit.class, "Visit Id", encounterDTO.getVisitId() + ""));
@@ -203,30 +203,40 @@ public class EncounterService {
     }
 
     public Page<Encounter> getEncounterByFormCodeAndDateEncounter(String formCode, Optional<String> dateStart, Optional<String> dateEnd, Pageable pageable) {
-        Set<String> permissions = accessRight.getAllPermission();
+        Specification<Encounter> specification = null;
+        try {
+            Set<String> permissions = accessRight.getAllPermission();
 
-        accessRight.grantAccess(formCode, Encounter.class, permissions);
+            accessRight.grantAccess(formCode, Encounter.class, permissions);
 
-        Specification<Encounter> specification = new GenericSpecification<Encounter>().findAllEncounter(formCode, dateStart, dateEnd);
+            specification = new GenericSpecification<Encounter>().findAllEncounter(formCode, dateStart, dateEnd, UNARCHIVED,
+                    userService.getUserWithRoles().get().getCurrentOrganisationUnitId());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return encounterRepository.findAll(specification, pageable);
     }
 
     public List<EncounterDTO> getAllEncounters(Page page) {
-        List<Encounter> encounters = page.getContent();
         List<EncounterDTO> encounterDTOS = new ArrayList<>();
 
-        encounters.forEach(singleEncounter -> {
-            Patient patient = singleEncounter.getPatientByPatientId();
-            Form form = singleEncounter.getFormForEncounterByFormCode();
-            List formDataList = new ArrayList();
-            singleEncounter.getFormDataByEncounter().forEach(formData -> {
-                formDataList.add(formData);
-            });
-            final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(patient, singleEncounter, form);
+        try {
+            List<Encounter> encounters = page.getContent();
+            encounters.forEach(singleEncounter -> {
+                Patient patient = singleEncounter.getPatientByPatientId();
+                Form form = singleEncounter.getFormForEncounterByFormCode();
+                List formDataList = new ArrayList();
+                singleEncounter.getFormDataByEncounter().forEach(formData -> {
+                    formDataList.add(formData);
+                });
+                final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(patient, singleEncounter, form);
 
-            encounterDTO.setFormDataObj(formDataList);
-            encounterDTOS.add(addProperties(encounterDTO));
-        });
+                encounterDTO.setFormDataObj(formDataList);
+                encounterDTOS.add(addProperties(encounterDTO));
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return encounterDTOS;
     }
 
@@ -281,10 +291,7 @@ public class EncounterService {
                         organisationUnitId +"AND p.archived="+
                         UNARCHIVED +")" +" LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset(),
                 (rs, rowNum) -> mapEncounterResult(rs));
-
         return new PageImpl<>(encounters);
-
-
     }*/
 
     private Encounter mapEncounterResult(final ResultSet rs) throws SQLException {

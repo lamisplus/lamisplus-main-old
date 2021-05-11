@@ -51,4 +51,5 @@ public class EncounterDTO implements Serializable {
     private List<Object> data;
     private List<Object> formDataObj;
     private Object details;
+    private Long organisationUnitId;
 }
