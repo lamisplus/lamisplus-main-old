@@ -169,8 +169,10 @@ const genderChart = {
           dataLabels: {
               enabled: true,
               format: '{point.name}'
-          }
+          },
+          showInLegend: true
       }
+      
   },
   series: [{
       
