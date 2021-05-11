@@ -120,12 +120,11 @@ public class GenericSpecification<T>  {
             }
             predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("formCode"), formCode)));
             predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), archived)));
-            predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("organistaion_unit_id"), organisation_unit_id)));
+            predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("organisationUnitId"), organisation_unit_id)));
 
             criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
-
     }
 }

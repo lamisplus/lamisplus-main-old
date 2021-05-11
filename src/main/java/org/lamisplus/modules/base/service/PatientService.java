@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
-import org.lamisplus.modules.base.controller.apierror.IllegalTypeException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.*;
 import org.lamisplus.modules.base.domain.entity.*;
@@ -15,8 +14,6 @@ import org.lamisplus.modules.base.repository.*;
 
 import org.lamisplus.modules.base.util.AccessRight;
 import org.lamisplus.modules.base.util.GenericSpecification;
-import org.lamisplus.modules.base.util.UuidGenerator;
-
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -31,8 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -125,10 +120,14 @@ public class PatientService {
 
     public PatientDTO getPatientByHospitalNumber(String hospitalNumber) {
         Optional<Patient> patientOptional = this.patientRepository.findByHospitalNumberAndOrganisationUnitIdAndArchived(hospitalNumber, getOrganisationUnitId(), UN_ARCHIVED);
+        List<Flag> flags = new ArrayList<>();
 
         if (!patientOptional.isPresent()) {
             throw new EntityNotFoundException(Patient.class, "Hospital Number", hospitalNumber + "");
         }
+        patientOptional.get().getPatientFlagsById().forEach(patientFlag -> {
+            flags.add(patientFlag.getFlag());
+        });
 
         //Person person = patientOptional.get().getPersonByPersonId();
         //PersonContact personContact = person.getPersonContactsByPerson();
@@ -136,6 +135,7 @@ public class PatientService {
 
         //Check for currently check-in patient
         PatientDTO patientDTO = visitOptional.isPresent() ? patientMapper.toPatientDTO(visitOptional.get(), patientOptional.get()) : patientMapper.toPatientDTO(patientOptional.get());
+        patientDTO.setFlags(flags);
 
         //List<PersonRelative> personRelatives = person.getPersonRelativesByPerson();
 
@@ -168,7 +168,6 @@ public class PatientService {
             patientDTO.getPersonRelativeDTOs().forEach(personRelativeDTO -> {
                 Optional<PersonRelative> personRelativeOptional = this.personRelativeRepository.findById(personRelativeDTO.getId());
                 final PersonRelative personRelative = personRelativeMapper.toPersonRelative(personRelativeDTO);
-
                 //If person relative exist
                 if(personRelativeOptional.isPresent()){
                     //Setting person relative id
@@ -177,7 +176,6 @@ public class PatientService {
                 personRelative.setPersonId(updatedPerson.getId());
                 personRelatives.add(personRelative);
             });
-
             this.personRelativeRepository.saveAll(personRelatives);
         }*/
 
@@ -503,20 +501,16 @@ public class PatientService {
 
     public List<PatientDTO> getPatients(List<Patient> patients) {
         List<PatientDTO> patientDTOs = new ArrayList<>();
-        patients.forEach(patient -> {
-            //Person person = patient.getPersonByPersonId();
-            //PersonContact personContact = person.getPersonContactsByPerson();
+        List<Flag> flags = new ArrayList<>();
 
+        patients.forEach(patient -> {
+            patient.getPatientFlagsById().forEach(patientFlag -> {
+                flags.add(patientFlag.getFlag());
+            });
 
             Optional<Visit> visitOptional = visitRepository.findTopByPatientIdAndDateVisitEndIsNullOrderByDateVisitStartDesc(patient.getId());
             PatientDTO patientDTO = visitOptional.isPresent() ? patientMapper.toPatientDTO(visitOptional.get(), patient) : patientMapper.toPatientDTO(patient);
-
-
-            //List<PersonRelative> personRelatives = person.getPersonRelativesByPerson();
-
-                /*patientDTO.setPersonRelativeDTOs(personRelativeMapper.toPersonRelativeDTOList(personRelatives.stream().
-                        filter(personRelative -> personRelative.getArchived() != ARCHIVED).
-                        collect(Collectors.toList())));*/
+            patientDTO.setFlags(flags);
             patientDTOs.add(transformDTO(patientDTO));
         });
 

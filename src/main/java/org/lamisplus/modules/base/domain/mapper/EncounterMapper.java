@@ -16,6 +16,7 @@ public interface EncounterMapper {
             @Mapping(source="form.id", target="formId"),
             @Mapping(source="form.name", target="formName"),
             @Mapping(source="encounter.programCode", target="programCode"),
+            @Mapping(source="encounter.organisationUnitId", target="organisationUnitId")
     })
     EncounterDTO toEncounterDTO(Patient patient, Encounter encounter, Form form);
 
