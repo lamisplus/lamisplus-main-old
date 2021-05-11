@@ -18,6 +18,7 @@ import moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { DropzoneArea } from 'material-ui-dropzone';
 //Dtate Picker package
 Moment.locale("en");
 momentLocalizer();
@@ -37,7 +38,8 @@ const UploadResultPage = (props) => {
     const defaultValues = {data:{files:[]}};
     const [testOrder, setTestOrder] = React.useState(defaultValues);
     const [note, setNote] = React.useState("");
-    const classes = useStyles()
+    const classes = useStyles();
+    const [fileToUpload, setFileToUpload] = useState({})
 
     useEffect(() => {
         if(props.formData) {
@@ -66,14 +68,16 @@ const UploadResultPage = (props) => {
             setSaving(false);
             toast.error("Something went wrong, please contact administration");
         };
+        console.log(fileToUpload)
         props.updateRadiologyByFormId(testOrder, testOrder.id, onSuccess, onError)
 
     }
+    console.log(fileToUpload)
+
+
     return (
 
     <>
-
-
         <Modal isOpen={props.showModal} toggle={props.toggleModal} size="xl">
             <ToastContainer/>
                 <Form onSubmit={uploadResult}>
@@ -120,6 +124,7 @@ const UploadResultPage = (props) => {
                                         console.log('onAdd', newFileObjs);
                                         testOrder.data["files"] = [].concat(testOrder.data.files, newFileObjs);
                                         setTestOrder(testOrder);
+                                        setFileToUpload(testOrder)
                                     }}
                                     onDelete={deleteFileObj => {
                                         //delete file object from the array
@@ -131,7 +136,9 @@ const UploadResultPage = (props) => {
                                     }}
 
                                 />
+                               
                             </Col>
+                           
                             <Col md={6}>
                                 <Row><Col md={12}>
                                     <FormGroup>
