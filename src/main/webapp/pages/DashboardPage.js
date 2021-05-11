@@ -13,8 +13,6 @@ import { url } from "../api";
 // import 'react-grid-layout/css/styles.css';
 // import 'react-resizable/css/styles.css';
 
-
-
 // Load Highcharts modules
 require("highcharts/modules/exporting")(Highcharts);
 const cardStyle = {
