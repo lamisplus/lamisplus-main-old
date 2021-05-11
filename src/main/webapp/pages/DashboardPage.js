@@ -13,7 +13,6 @@ import { url } from "../api";
 // import 'react-grid-layout/css/styles.css';
 // import 'react-resizable/css/styles.css';
 
-import GridLayout from 'react-grid-layout';
 
 
 // Load Highcharts modules
