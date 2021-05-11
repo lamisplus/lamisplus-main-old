@@ -47,7 +47,7 @@ public class VisitService {
                 List<Predicate> predicates = new ArrayList<>();
                 predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), 0)));
                 criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("dateVisitEnd").as(LocalDate.class),
-                        CustomDateTimeFormat.LocalDateByFormat(LocalDate.now(),"dd-MM-yyyy")));
+                        CustomDateTimeFormat.LocalDateByFormat(LocalDate.now(),"yyyy-MM-dd")));
                 criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
                 return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
             }
@@ -95,9 +95,10 @@ public class VisitService {
         return visitDTO;
     }
 
-    public Visit update(Long id, Visit visit) {
+    public Visit update(Long id, VisitDTO visitDTO) {
         Optional<Visit> visitOptional = this.visitRepository.findByIdAndArchivedAndOrganisationUnitId(id, UNARCHIVED, getOrganisationUnitId());
         if (!visitOptional.isPresent()) throw new EntityNotFoundException(Visit.class, "Id", id + "");
+        Visit visit = visitMapper.toVisit(visitDTO);
         visit.setId(id);
         return visitRepository.save(visit);
     }
@@ -109,13 +110,11 @@ public class VisitService {
         return visitOptional.get().getArchived();
     }
 
-    public Long getVisitType(){
-        //Todo find by uuid code...
-        Long count = visitRepository.countByVisitTypeIdAndArchivedAndOrganisationUnitId(239L, UNARCHIVED, getOrganisationUnitId());//Unbooked
-        count = count + visitRepository.countByVisitTypeIdAndArchivedAndOrganisationUnitId(238L, UNARCHIVED, getOrganisationUnitId()); //booked
-        count = count + visitRepository.countByVisitTypeIdAndArchivedAndOrganisationUnitId(373L, UNARCHIVED, getOrganisationUnitId()); //Emergency
-
-        return count;
+    public Long getVisitType(Long type){
+        if(type != null && type == 1) {
+            return visitRepository.countByVisitTypeIdAndArchivedAndOrganisationUnitId(373L, UNARCHIVED, getOrganisationUnitId()); //Emergency
+        }
+        return visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(getOrganisationUnitId(), UNARCHIVED, LocalDate.now().minusDays(LocalDate.now().getDayOfWeek().getValue()),LocalDate.now()); //Emergency
     }
 
     private Long getOrganisationUnitId(){

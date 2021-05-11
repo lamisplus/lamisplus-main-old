@@ -106,7 +106,7 @@ public class GenericSpecification<T>  {
         };
     }*/
 
-    public Specification<T> findAllEncounter(String formCode, Optional<String> dateStart, Optional<String> dateEnd) {
+    public Specification<T> findAllEncounter(String formCode, Optional<String> dateStart, Optional<String> dateEnd, int archived, Long organisation_unit_id) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if(dateStart.isPresent() && !dateStart.get().equals("{dateStart}")){
@@ -119,11 +119,12 @@ public class GenericSpecification<T>  {
                 predicates.add(criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(root.get("dateEncounter").as(LocalDate.class), localDate)));
             }
             predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("formCode"), formCode)));
-            predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), 0)));
+            predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("archived"), archived)));
+            predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("organisationUnitId"), organisation_unit_id)));
+
             criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
         };
-
     }
 }

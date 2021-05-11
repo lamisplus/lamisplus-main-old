@@ -282,7 +282,7 @@ function ServiceFormPage(props) {
                       { title: 'Form Name', field: 'formName' },
                       { title: 'Date', field: 'date' },
                     ]}
-                    data={patientEncounters}
+                    data={props.patientEncounterList}
                     actions={[
                       rowData => ({
                         icon: 'visibility',
