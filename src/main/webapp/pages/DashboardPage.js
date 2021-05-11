@@ -108,7 +108,7 @@ useEffect(() => {
   async function getCharacters() {
       try {
           const response = await axios.get( url+ 'appointments/count');
-              const body = response.data && response.data!==null ? response.data : {};
+              const body = response.data && response.data!==null ? response.data : 0;
               setTotalAppointment(body)  
       } catch (error) {}
     }
