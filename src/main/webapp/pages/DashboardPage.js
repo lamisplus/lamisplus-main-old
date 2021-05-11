@@ -44,7 +44,7 @@ const  DashboardPage = (props) => {
     async function getCharacters() {
         try {
             const response = await axios.get( url+ 'patients/totalCount');
-                const body2 = response.data && response.data!==null ? response.data :0.00;
+                const body2 = response.data && response.data!==null ? response.data :0;
                 setTotalPatients(body2) 
                 console.log(body2)
         } catch (error) {
@@ -106,7 +106,7 @@ useEffect(() => {
   async function getCharacters() {
       try {
           const response = await axios.get( url+ 'appointments/count');
-              const body = response.data && response.data!==null ? response.data : {};
+              const body = response.data && response.data!==null ? response.data :0;
               setTotalAppointment(body)  
       } catch (error) {}
     }
