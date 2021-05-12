@@ -36,6 +36,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 const UploadResultPage = (props) => {
+    const newFormData = props.FormData;
     const [saving, setSaving] = React.useState(false);
     const defaultValues = {data:{files:[]}};
     const [testOrder, setTestOrder] = React.useState(defaultValues);
@@ -46,11 +47,11 @@ const UploadResultPage = (props) => {
     const classes = useStyles()
 
     useEffect(() => {
-        if(props.formData) {
-            setTestOrder(props.formData);
-            setNote(props.formData.data.note);
+        if(newFormData) {
+            setTestOrder(newFormData);
+            setNote(newFormData.data.note);
         }
-    }, [props.formData]); //componentDidMount
+    }, []); //componentDidMount
 
 
     const uploadResult = async e => {
@@ -78,12 +79,16 @@ const UploadResultPage = (props) => {
 
         // sending radiology to backend
         setUploadMessage('Processing, please wait...')
-        const formData = new FormData();
-        formData.append('file', files);
-        formData.append('formData', testOrder);
-        const newFormData = props.formData;
+        // const formData = new FormData();
+        // formData.append('file', files);
+        // formData.append('formData', testOrder);
+        
 
-        newFormData.data['file_uploaded'] = files
+        newFormData.data['file'] = files
+        const form_Data = new FormData();
+        form_Data.append('file', files); 
+        form_Data.append('formData', newFormData); 
+        console.log(form_Data)
         console.log(newFormData)
         try {
             const res = await axios.post(`${url}radiologies?formId=${testOrder.id},patientId=${newFormData.data.patient_id}`, newFormData, {
@@ -158,7 +163,7 @@ const UploadResultPage = (props) => {
                                         <DateTimePicker
                                             name="encounterDate"
                                             id="encounterDate"
-                                            defaultValue={props.formData && props.formData.data && props.formData.data.result_date ? moment(props.formData.data.result_date + " " + props.formData.data.result_time, "DD-MM-YYYY LT").toDate() : null}
+                                            defaultValue={newFormData && newFormData.data && newFormData.data.result_date ? moment(newFormData.data.result_date + " " + newFormData.data.result_time, "DD-MM-YYYY LT").toDate() : null}
                                             //min={moment(testOrder.data.order_date + " " + testOrder.data.order_time, "DD-MM-YYYY LT").toDate()}
                                             max={new Date()}
                                             required
