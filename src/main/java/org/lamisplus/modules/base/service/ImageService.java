@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -21,20 +22,22 @@ import java.util.List;
 public class ImageService {
     private final ImageDbRepository imageRepository;
 
-    public List<Long> uploadImage(MultipartFile [] multipartImages) throws Exception {
-        List<Long> imageIds = new ArrayList<>();
+    public List<String> uploadImage(MultipartFile [] multipartImages, Long patientId) throws Exception {
+        List<String> imageIds = new ArrayList<>();
         Arrays.asList(multipartImages).stream().forEach(file -> {
             if(!file.getContentType().contains("image")){
                 throw new IllegalTypeException(Image.class, file.getOriginalFilename(), " not an image");
             }
             Image dbImage = new Image();
             dbImage.setName(file.getName());
+            dbImage.setPatientId(patientId);
+            dbImage.setUuid(UUID.randomUUID().toString());
             try {
                 dbImage.setContent(file.getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            imageIds.add(imageRepository.save(dbImage).getId());
+            imageIds.add(imageRepository.save(dbImage).getUuid());
 
         });
             return imageIds;

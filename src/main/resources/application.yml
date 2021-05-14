@@ -49,10 +49,7 @@ server:
         connection-timeout: 20s
 spring:
     datasource:
-        username: postgres
-        password: emeka
         driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:5432/lamisplus_db_30_04_21
         hibernate:
             event.merge.enty_copy_observer: allow
         hikari:

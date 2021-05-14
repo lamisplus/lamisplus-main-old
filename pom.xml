@@ -12,7 +12,7 @@
     <groupId>org.lamisplus.modules</groupId>
     <artifactId>base-module</artifactId>
     <version>1.0.0</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>base-module</name>
     <description>LamisPlus base module</description>
 
@@ -20,7 +20,6 @@
         <java.version>1.8</java.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <org.projectlombok.version>1.16.4</org.projectlombok.version>
-        <swagger.version>3.0.0-SNAPSHOT</swagger.version>
         <jjwt.version>0.11.2</jjwt.version>
         <maven.test.skip>true</maven.test.skip>
         <maven.lamisplus-baseui.skip>true</maven.lamisplus-baseui.skip>
@@ -38,8 +37,35 @@
     <dependencies>
         <dependency>
             <groupId>com.foreach.across</groupId>
+            <artifactId>across-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>logback-classic</artifactId>
+                    <groupId>ch.qos.logback</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>log4j-over-slf4j</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+                <!--<exclusion>
+                    <artifactId>org.slf4j</artifactId>
+                    <groupId>slf4j-api</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>org.slf4j</artifactId>
+                    <groupId>jcl-over-slf4j</groupId>
+                </exclusion>-->
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.foreach.across</groupId>
             <artifactId>across-test</artifactId>
-            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.foreach.across</groupId>
+                    <artifactId>across-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.foreach.across</groupId>
@@ -64,18 +90,6 @@
             <version>5.4.10.Final</version>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>2.6.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.6.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
@@ -97,17 +111,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <!--<exclusions>
-              <exclusion>
-                <groupId>org.junit.vintage</groupId>
-                <artifactId>junit-vintage-engine</artifactId>
-              </exclusion>
-            </exclusions>-->
         </dependency>
         <dependency>
             <groupId>com.vladmihalcea</groupId>
@@ -196,11 +199,6 @@
             <version>1.26</version>
         </dependency>
         <dependency>
-            <groupId>net.sf.jasperreports</groupId>
-            <artifactId>jasperreports</artifactId>
-            <version>6.4.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.innoventsolutions.birt.runtime</groupId>
             <artifactId>org.eclipse.birt.runtime_4.8.0-20180626</artifactId>
             <version>4.8.0</version>
@@ -242,6 +240,16 @@
             <groupId>org.lamisplus.modules</groupId>
             <artifactId>bootstrap</artifactId>
             <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>3.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
         </dependency>
     </dependencies>
 

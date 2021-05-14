@@ -25,6 +25,10 @@ public class Image {
     private String name;
 
     @Basic
+    @Column(name = "uuid")
+    private String uuid;
+
+    @Basic
     @Column(name = "patient_id")
-    private String patientId;
+    private Long patientId;
 }
