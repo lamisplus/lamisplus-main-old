@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -25,15 +27,16 @@ public class ImageController {
         Image dbImage = new Image();
         dbImage.setName(multipartImage.getName());
         dbImage.setContent(multipartImage.getBytes());
+        dbImage.setUuid(UUID.randomUUID().toString());
 
         return imageRepository.save(dbImage)
                 .getId();
     }
 
-    @GetMapping(value = "/api/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public Resource downloadImage(@PathVariable Long id) {
-        byte[] image = imageRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(Image.class,"Id:",id+""))
+    @GetMapping(value = "/api/{uuid}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public Resource downloadImage(@PathVariable String uuid) {
+        byte[] image = imageRepository.findByUuid(uuid)
+                .orElseThrow(() -> new EntityNotFoundException(Image.class,"UUID:",uuid+""))
                 .getContent();
 
         return new ByteArrayResource(image);

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,5 +29,11 @@ public interface FormRepository extends JpaRepository<Form, Long> , JpaSpecifica
     List findAllByArchivedOrderByIdAsc(int archived);
 
     List<Form> findAllByCodeNotIn(List<String> permissionName);
-}
 
+    Optional<Form> findByCodeAndArchivedAndType(String formCode, int archived, int formType);
+
+    Optional<Form> findByMainCodeAndArchivedAndType(String formCode, int archived, int formType);
+
+    Optional<Form> findByMainCodeAndArchived(String formCode, int archived);
+
+}

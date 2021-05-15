@@ -76,8 +76,8 @@ public class TokenProvider {
         }
         org.lamisplus.modules.base.domain.entity.User user = userService.getUserWithRoles().get();
         //getting & adding user details to token
-        String name = user.getPerson().getFirstName() + " " +
-                userService.getUserWithRoles().get().getPerson().getLastName();
+        String name = user.getFirstName() + " " +
+                userService.getUserWithRoles().get().getLastName();
 
         String authorities = user.getRole().stream().map(Role::getName).collect(Collectors.joining(","));
 

@@ -85,13 +85,9 @@ function TestOrderPage(props) {
     // default values in the create lab test order API payload
     const defaults = {
       patient_id: props.patientId,
-      test_result: "",
-      date_result_reported: "",
-      date_sample_collected: "",
-      comment: "",
+      lab_test_order_status: 0,
       user_id: "",
       sample_type: "",
-      lab_test_order_status: 0
     };
 
     //looping through the test order to create the formData structure expected by the server
@@ -99,7 +95,9 @@ function TestOrderPage(props) {
       return {
         ...{
           lab_test_id: x.test.value.id,
+          lab_test: x.test.value,
           description: x.test.value.name,
+          test_group: x.testGroup.value,
           lab_test_group: x.testGroup.value.name,
           lab_test_group_id: x.testGroup.value.id,
           unit_measurement: x.test.value.unitMeasurement,

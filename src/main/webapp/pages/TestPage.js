@@ -1,204 +1,152 @@
-import Page from 'components/Page';
 import React from 'react';
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
-import {basicColumn} from '../components/Highcharts/BasicColumn';
-import {columnDrillDown} from './../components/Highcharts/ColumnDrillDown';
-import {columnPlacement} from './../components/Highcharts/ColumnPlacement';
-import {pieChart} from './../components/Highcharts/PieChart';
-import {pieChartWithLegend} from './../components/Highcharts/PieChartWithLegend';
-import {dualAxisLineColumn} from './../components/Highcharts/DualAxisLineColumn'
-import {barColumnDualAxis} from './../components/Highcharts/BarColumnDualAxis'
-import {NigeriaMaps} from './../components/Highcharts/CountryMaps';
-import CustomHighMap from './map'
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import CameraIcon from '@material-ui/icons/PhotoCamera';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import Link from '@material-ui/core/Link';
 
-const cardStyle = {
-  borderColor: '#fff',
-};
-
-const options = {
-  title: {
-    text: 'My chart'
-  },
-  series: [{
-    data: [1, 10, 3, 10]
-  }]
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" href="https://material-ui.com/">
+        Your Website
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
 }
 
-
-var config = {
-  chart: {
-      type: 'column'
+const useStyles = makeStyles((theme) => ({
+  icon: {
+    marginRight: theme.spacing(2),
   },
-  title: {
-      text: 'World\'s largest cities per 2014'
+  heroContent: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(8, 0, 6),
   },
-  subtitle: {
-      text: 'Source: <a href="http://en.wikipedia.org/wiki/List_of_cities_proper_by_population">Wikipedia</a>'
+  heroButtons: {
+    marginTop: theme.spacing(4),
   },
-  xAxis: {
-      type: 'category',
-      labels: {
-          rotation: -45,
-          style: {
-              fontSize: '13px',
-              fontFamily: 'Verdana, sans-serif'
-          }
-      }
+  cardGrid: {
+    paddingTop: theme.spacing(8),
+    paddingBottom: theme.spacing(8),
   },
-  yAxis: {
-      min: 0,
-      title: {
-          text: 'Population (millions)'
-      }
+  card: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
   },
-  legend: {
-      enabled: false
+  cardMedia: {
+    paddingTop: '56.25%', // 16:9
   },
-  tooltip: {
-      pointFormat: 'Population in 2008: <b>{point.y:.1f} millions</b>'
+  cardContent: {
+    flexGrow: 1,
   },
-  series: [{
-      name: 'Population',
-      data: [
-          ['Shanghai', 23.7],
-          ['Lagos', 16.1],
-          ['Istanbul', 14.2],
-          ['Karachi', 14.0],
-          ['Mumbai', 12.5],
-          ['Moscow', 12.1],
-          ['São Paulo', 11.8],
-          ['Beijing', 11.7],
-          ['Guangzhou', 11.1],
-          ['Delhi', 11.1],
-          ['Shenzhen', 10.5],
-          ['Seoul', 10.4],
-          ['Jakarta', 10.0],
-          ['Kinshasa', 9.3],
-          ['Tianjin', 9.3],
-          ['Tokyo', 9.0],
-          ['Cairo', 8.9],
-          ['Dhaka', 8.9],
-          ['Mexico City', 8.9],
-          ['Lima', 8.9]
-      ],
-     
-  }]
-};
-
-var stackBar = {
-
-  chart: {
-      type: 'column'
+  footer: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(6),
   },
+}));
 
-  title: {
-      text: 'Test Orders'
-  },
+const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-  xAxis: {
-      categories: ['Jan.', 'Feburary', 'March', 'April', 'May', 'June']
-  },
+export default function Album() {
+  const classes = useStyles();
 
-  yAxis: {
-      allowDecimals: false,
-      min: 0,
-      title: {
-          text: 'Tests Ordered'
-      }
-  },
-
-  tooltip: {
-      formatter: function () {
-          return '<b>' + this.x + '</b><br/>' +
-              this.series.name + ': ' + this.y + '<br/>' +
-              'Total: ' + this.point.stackTotal;
-      }
-  },
-
-  plotOptions: {
-      column: {
-          stacking: 'normal'
-      }
-  },
-
-  series: [{
-      name: 'Test Ordered',
-      data: [5, 3, 4, 7, 2,6],
-      stack: 'test'
-  }, {
-      name: 'Result Avilable',
-      data: [3, 4, 4, 2, 5,5],
-      stack: 'test'
-  }, {
-      name: 'Radiology Test Orders',
-      data: [2, 5, 6, 2, 1,7],
-      stack: 'result'
-  }, {
-      name: 'Radiology Result Avialable',
-      data: [3, 0, 4, 4, 3,8],
-      stack: 'result'
-  }]
-
-};
-
-class DashboardPage extends React.Component {
-  componentDidMount() {
-    // this is needed, because InfiniteCalendar forces window scroll
-    window.scrollTo(0, 0);
-  }
-
-  render() {
-
-    return (
-      <Page
-        className="DashboardPage p-5"
-        title="Visualization Page "
-      > 
-
-      <div>
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={options}
-        />
-      </div>
-      <div>
-        <HighchartsReact options={config} />
-      </div>
-      <div>
-        <HighchartsReact options={stackBar} />
-      </div>
-      <div>
-        <HighchartsReact options={basicColumn} />
-      </div>
-      <div>
-        <HighchartsReact options={columnDrillDown} />
-      </div>
-      <div>
-        <HighchartsReact options={columnPlacement} />
-      </div>
-      <div>
-        <HighchartsReact options={pieChart} />
-      </div>
-      <div>
-        <HighchartsReact options={pieChartWithLegend} />
-      </div>
-      <div>
-        <HighchartsReact options={dualAxisLineColumn} />
-      </div>
-      <div>
-        <HighchartsReact options={barColumnDualAxis} />
-      </div>
-     
-      <div>
-        <HighchartsReact options={NigeriaMaps} />
-      </div>
-      <>
-      <CustomHighMap />
-      </>
-      
-      </Page>
-    );
-  }
+  return (
+    <React.Fragment>
+      <CssBaseline />
+      <AppBar position="relative">
+        <Toolbar>
+          <CameraIcon className={classes.icon} />
+          <Typography variant="h6" color="inherit" noWrap>
+            Album layout
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <main>
+        {/* Hero unit */}
+        <div className={classes.heroContent}>
+          <Container maxWidth="sm">
+            <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+              Album layout
+            </Typography>
+            <Typography variant="h5" align="center" color="textSecondary" paragraph>
+              Something short and leading about the collection below—its contents, the creator, etc.
+              Make it short and sweet, but not too short so folks don&apos;t simply skip over it
+              entirely.
+            </Typography>
+            <div className={classes.heroButtons}>
+              <Grid container spacing={2} justify="center">
+                <Grid item>
+                  <Button variant="contained" color="primary">
+                    Main call to action
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button variant="outlined" color="primary">
+                    Secondary action
+                  </Button>
+                </Grid>
+              </Grid>
+            </div>
+          </Container>
+        </div>
+        <Container className={classes.cardGrid} maxWidth="md">
+          {/* End hero unit */}
+          <Grid container spacing={4}>
+            {cards.map((card) => (
+              <Grid item key={card} xs={12} sm={6} md={4}>
+                <Card className={classes.card}>
+                  <CardMedia
+                    className={classes.cardMedia}
+                    image="https://source.unsplash.com/random"
+                    title="Image title"
+                  />
+                  <CardContent className={classes.cardContent}>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      Heading
+                    </Typography>
+                    <Typography>
+                      This is a media card. You can use this section to describe the content.
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button size="small" color="primary">
+                      View
+                    </Button>
+                    <Button size="small" color="primary">
+                      Edit
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </main>
+      {/* Footer */}
+      <footer className={classes.footer}>
+        <Typography variant="h6" align="center" gutterBottom>
+          Footer
+        </Typography>
+        <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
+          Something here to give the footer a purpose!
+        </Typography>
+        <Copyright />
+      </footer>
+      {/* End footer */}
+    </React.Fragment>
+  );
 }
-export default DashboardPage;

@@ -156,6 +156,21 @@ const useStyles = makeStyles({
         }
     }
 
+
+    function sampleTypeList (test){
+        
+        const  maxVal = []
+        if (test != null && test.length > 0) {
+          for(var i=0; i<test.length; i++){
+             
+                  if ( test[i].display!==null && test[i].display)
+                        console.log(test[i])
+                            maxVal.push(test[i].display)
+              
+          }
+        return maxVal.toString();
+        }
+    }
 //This is function to check for the status of each collection to display on the tablist below 
     const sampleAction = (e,dateEncounter) =>{
             if(e.data.lab_test_order_status ===0 || e.data.lab_test_order_status ===null){
@@ -193,11 +208,12 @@ const useStyles = makeStyles({
             }
   }
 
-
+console.log(fetchTestOrders)
 return (
     <div>
       
-        <Card>
+     <Card body>
+         <CardBody>
         <Breadcrumbs aria-label="breadcrumb">
             <Link color="inherit" 
                 to={{pathname: "/laboratory",
@@ -223,7 +239,7 @@ return (
                 </div>
                 <br/>
                 <Card className="mb-12">
-                    <CardHeader>Test Order Details 
+                    <CardHeader> <span style={{  textTransform: 'capitalize'}}>Test Order Details </span>
                         <Link 
                             to ={{ 
                               pathname: "/laboratory",  
@@ -304,7 +320,7 @@ return (
                                                     row.data!==null?
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>
                                                       <th className={classes.td}>{row.data.description===""?" ":row.data.description}</th>
-                                                      <td className={classes.td}>{row.data.sample_type==="" ? " ":row.data.sample_type}</td>
+                                                      <td className={classes.td}>{sampleTypeList(row.data && row.data.sample_type!==null ? row.data.sample_type : null)}</td>
                                                       <td className={classes.td}> {encounterDate} </td>
                                                       <td className={classes.td}>{sampleStatus(row.data.lab_test_order_status)}  </td>
                                                       <td className={classes.td} hidden={!authentication.userHasRole(["laboratory_write"])} >{sampleAction(row,encounterDate)}</td>
@@ -327,7 +343,9 @@ return (
               </Card>
             </Col>
         </Row>
-        </Card>
+        </CardBody>
+    </Card>
+   
       <SampleCollectionFormIo modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} labnumber={labNumber !=="" ? labNumber : labNum['lab_number'] }/>
       <ModalSampleTransfer modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} labnumber={labNumber!=="" ? labNumber : labNum}/>
       <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />

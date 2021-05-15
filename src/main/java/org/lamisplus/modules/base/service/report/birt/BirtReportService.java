@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
-import org.eclipse.birt.report.data.oda.jdbc.OdaJdbcDriver;
 import org.eclipse.birt.report.engine.api.*;
 import org.eclipse.birt.report.model.api.*;
-import org.hibernate.engine.config.spi.ConfigurationService;
+import org.lamisplus.modules.base.config.ApplicationProperties;
+import org.lamisplus.modules.base.config.DatabaseProperties;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ReportDetailDTO;
@@ -19,21 +19,18 @@ import org.lamisplus.modules.base.repository.ProgramRepository;
 import org.lamisplus.modules.base.repository.ReportInfoRepository;
 import org.lamisplus.modules.base.repository.UserRepository;
 import org.lamisplus.modules.base.security.SecurityUtils;
-import org.lamisplus.modules.base.util.GenericSpecification;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.Yaml;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -50,15 +47,14 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
     private String reportsPath = System.getProperty("user.dir");
     @Value("${images.relative.path}")
     private String imagesPath;
-
     private HTMLServerImageHandler htmlImageHandler = new HTMLServerImageHandler();
 */
     private IReportEngine birtEngine;
     private ApplicationContext context;
-    //private String imageFolder;
-    
+
+
     private final ReportInfoRepository reportInfoRepository;
-    
+
     private final ReportInfoMapper reportInfoMapper;
 
     private final ProgramRepository programRepository;
@@ -98,7 +94,6 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
                         birtEngine.openReportDesign(folder.getAbsolutePath() + File.separator + file));
             }
         }
-
     }*/
 
     public void loadReports(String reportName, InputStream reportStream) throws EngineException {
@@ -109,23 +104,19 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
     public void generateReport(ReportDetailDTO reportDetailDTO, OutputType output, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
         ReportInfo reportInfo = getReport(reportDetailDTO.getReportId());
-        name = reportInfo.getName();
-        log.info("Info {}", reportInfo);
-        log.info("name ", reportInfo.getName());
-
         InputStream stream = IOUtils.toInputStream(reportInfo.getTemplate());
         User user;
         Optional<User> optionalUser = SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRoleByUserName);
         if(optionalUser.isPresent()){
             user = optionalUser.get();
-            if(params.get("facilityId") == null){
+            if(params.get("facility_Id") == null){
                 //assign default facilityId
-                params.put("facilityId", user.getCurrentOrganisationUnitId());
+                params.put("facility_Id", user.getCurrentOrganisationUnitId());
 
             } else {
                 //check facilityId belongs to user
                 List <Long> orgUnits = user.getApplicationUserOrganisationUnits().stream().map(ApplicationUserOrganisationUnit::getOrganisationUnitId).collect(Collectors.toList());
-                if(!orgUnits.contains(Long.valueOf((Integer)params.get("facilityId")))){
+                if(!orgUnits.contains(Long.valueOf((Integer)params.get("facility_Id")))){
                     throw new EntityNotFoundException(OrganisationUnit.class,"FacilityId","User not in Organisation Unit");
                 }
             }
@@ -139,13 +130,16 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
         switch (output) {
             case HTML:
-                generateHTMLReport(reports.get(reportInfo.getName()), params, response, request);
+                generateHTMLReport(reportInfo.getName(),reports.get(reportInfo.getName()), params, response, request);
                 break;
             case PDF:
-                generatePDFReport(reports.get(reportInfo.getName()), params, response, request);
+                generatePDFReport(reportInfo.getName(), reports.get(reportInfo.getName()), params, response, request);
+                break;
+            case CSV:
+                generateExcelReport(reportInfo.getName(),reports.get(reportInfo.getName()), params, response, request);
                 break;
             case EXCEL:
-                generateExcelReport(reports.get(reportInfo.getName()), params, response, request);
+                generateExcelReport(reportInfo.getName(),reports.get(reportInfo.getName()), params, response, request);
                 break;
             default:
                 throw new IllegalArgumentException("Output type not recognized:" + output);
@@ -157,81 +151,90 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
      * Generate a report as HTML
      */
     @SuppressWarnings("unchecked")
-    private void generateHTMLReport(IReportRunnable report, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
-        populateDatabaseConnectionParameters(report);
+    private void generateHTMLReport(String reportName, IReportRunnable report, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
+        getDatabaseConnectionParameters(report);
         IRunAndRenderTask runAndRenderTask = birtEngine.createRunAndRenderTask(report);
         runAndRenderTask.setParameterValues(params);
         response.setContentType(birtEngine.getMIMEType("html"));
         IRenderOption options = new RenderOption();
         HTMLRenderOption htmlOptions = new HTMLRenderOption(options);
         htmlOptions.setOutputFormat("html");
-        htmlOptions.setOutputFileName(name+".html");
-        log.info("birt report name is", name+".html");
-        //htmlOptions.setBaseImageURL("/" + reportsPath + imagesPath);
-        //htmlOptions.setImageDirectory(imageFolder);
-        //htmlOptions.setImageHandler(htmlImageHandler);
         runAndRenderTask.setRenderOption(htmlOptions);
+        runAndRenderTask.getAppContext().put("HTML_RENDER_CONTEXT", request);
 
-        runAndRenderTask.setRenderOption(htmlOptions);
-
-        customRunAndRenderTask(htmlOptions, runAndRenderTask, response);
-        }
-
-    /**
-     * Generate a report as PDF
-     */
-    @SuppressWarnings("unchecked")
-    private void generatePDFReport(IReportRunnable report, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
-        populateDatabaseConnectionParameters(report);
-        IRunAndRenderTask runAndRenderTask = birtEngine.createRunAndRenderTask(report);
-
-        runAndRenderTask.setParameterValues(params);
-        response.setContentType(birtEngine.getMIMEType("pdf"));
-        IRenderOption options = new RenderOption();
-        PDFRenderOption pdfRenderOption = new PDFRenderOption(options);
-        pdfRenderOption.setOutputFormat("pdf");
-        pdfRenderOption.setOutputFileName(name+".pdf");
-        log.info("birt report name is", name+".pdf");
-
-        runAndRenderTask.setRenderOption(pdfRenderOption);
-        runAndRenderTask.getAppContext().put(EngineConstants.APPCONTEXT_PDF_RENDER_CONTEXT, request);
 
         try {
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "\"");
-            pdfRenderOption.setOutputStream(response.getOutputStream());
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + reportName.replace(" ","_")+ LocalDate.now().toString().replace("-", "") + "\"");
+            htmlOptions.setOutputStream(response.getOutputStream());
             runAndRenderTask.run();
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         } finally {
             runAndRenderTask.close();
-            destroy();
         }
+    }
+
+    /**
+     * Generate a report as PDF
+     */
+    @SuppressWarnings("unchecked")
+    private void generatePDFReport(String reportName, IReportRunnable report, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
+        getDatabaseConnectionParameters(report);
+        IRunAndRenderTask runAndRenderTask = this.birtEngine.createRunAndRenderTask(report);
+        runAndRenderTask.setParameterValues(params);
+        response.setContentType(this.birtEngine.getMIMEType("pdf"));
+        IRenderOption options = new RenderOption();
+        PDFRenderOption pdfRenderOption = new PDFRenderOption(options);
+        pdfRenderOption.setOutputFormat("pdf");
+        runAndRenderTask.setRenderOption(pdfRenderOption);
+        runAndRenderTask.getAppContext().put("PDF_RENDER_CONTEXT", request);
+
+        try {
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + reportName.replace(" ","_")+ LocalDate.now().toString().replace("-", "") + "\"");
+            pdfRenderOption.setOutputStream(response.getOutputStream());
+            runAndRenderTask.run();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            runAndRenderTask.close();
+        }
+
     }
 
     /**
      * Generate a report as Excel
      */
     @SuppressWarnings("unchecked")
-    private void generateExcelReport(IReportRunnable report, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
-        populateDatabaseConnectionParameters(report);
+    private void generateExcelReport(String reportName, IReportRunnable report, Map<String,Object> params, HttpServletResponse response, HttpServletRequest request) {
+        getDatabaseConnectionParameters(report);
         IRunAndRenderTask runAndRenderTask = birtEngine.createRunAndRenderTask(report);
         runAndRenderTask.setParameterValues(params);
-        response.setContentType(birtEngine.getMIMEType("xlsx"));
+        response.setContentType(birtEngine.getMIMEType("xls"));
         IRenderOption options = new RenderOption();
+        /*String WORKSPACE_DIR = System.getProperty("user.dir");
+        new File( WORKSPACE_DIR ).mkdir( );
+        options.setOutputFileName("report.xls"); //$NON-NLS-1$*/
+        options.setOutputFormat("xls");
 
         EXCELRenderOption excelRenderOption = new EXCELRenderOption(options);
-        excelRenderOption.setOutputFormat("xlsx");
-        excelRenderOption.setOutputFileName(name+".xlsx");
-        log.info("birt report name is", name+".xlsx");
-
+        excelRenderOption.setOutputFormat("xls");
         runAndRenderTask.setRenderOption(excelRenderOption);
-        runAndRenderTask.getAppContext().put(EngineConstants.APPCONTEXT_BIRT_VIEWER_HTTPSERVET_REQUEST, request);
+        runAndRenderTask.getAppContext().put("HTML_RENDER_CONTEXT", request);
 
-        customRunAndRenderTask(excelRenderOption, runAndRenderTask, response);
+
+        try {
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + reportName.replace(" ","_")+ LocalDate.now().toString().replace("-", "") + "\".xls");
+            response.setContentType(".xls");
+            excelRenderOption.setOutputStream(response.getOutputStream());
+            runAndRenderTask.run();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            runAndRenderTask.close();
+        }
     }
 
-    private void customRunAndRenderTask(RenderOption renderOption, IRunAndRenderTask runAndRenderTask, HttpServletResponse response){
-
+    /*private void customRunAndRenderTask(RenderOption renderOption, IRunAndRenderTask runAndRenderTask, HttpServletResponse response){
         try {
             renderOption.setOutputStream(response.getOutputStream());
             runAndRenderTask.run();
@@ -239,9 +242,8 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
             e.printStackTrace();
         } finally {
             runAndRenderTask.close();
-            destroy();
         }
-    }
+    }*/
 
     @Override
     public void destroy() {
@@ -269,11 +271,11 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
 
     public Integer delete(Long id) {
-        ReportInfo reportInfo = reportInfoRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() ->
-                new EntityNotFoundException(ReportInfo.class, "Id", id +""));
+        ReportInfo reportInfo = reportInfoRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(()
+                -> new EntityNotFoundException(ReportInfo.class, "Id", id +""));
         reportInfo.setArchived(ARCHIVED);
         reportInfoRepository.save(reportInfo);
-        return reportInfoRepository.save(reportInfo).getArchived();
+        return reportInfo.getArchived();
     }
 
     public List<ReportInfoDTO> getReports() {
@@ -281,7 +283,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
         List<ReportInfoDTO> reportInfoDTOS = new ArrayList<>();
         reportInfos.forEach(reportInfo -> {
-            final ReportInfoDTO reportInfoDTO = reportInfoMapper.toReportInfoDTO(reportInfo);
+            final ReportInfoDTO reportInfoDTO = reportInfoMapper. mapWithoutTemplate(reportInfo);
             Optional<Program>  program = this.programRepository.findProgramByCodeAndArchived(reportInfoDTO.getProgramCode(), UN_ARCHIVED);
             program.ifPresent(value -> reportInfoDTO.setProgramName(value.getName()));
             reportInfoDTOS.add(reportInfoDTO);
@@ -294,13 +296,25 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
                 new EntityNotFoundException(ReportInfo.class, "Id", id+""));
     }
 
-    private void populateDatabaseConnectionParameters( IReportRunnable iReportRunnable ) {
+    private String dbUrl;
 
-        String dbUrl = "jdbc:postgresql://localhost:5432/lamisplus_db_bk_30_03_21"; //You decide how to get this
-        String dbUser = "postgres"; //You decide how to get this
-        String dbPass = "emeka"; //You decide how to get this
+    private String dbUser;
 
+    private String dbPass;
 
+    private void getDatabaseConnectionParameters( IReportRunnable iReportRunnable ) {
+        String fileSeparator = File.separator;
+        File ymlFile = new File(ApplicationProperties.modulePath + fileSeparator +"config.yml");
+        try {
+            readYml(ymlFile).getSpring().forEach((k, v) -> {
+                dbUrl = v.getUrl();
+                dbUser = v.getUsername();
+                dbPass = v.getPassword();
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         DesignElementHandle deh = iReportRunnable.getDesignHandle();
         SlotHandle slotHandle = deh.getSlot(ReportDesignHandle.DATA_SOURCE_SLOT );
         Iterator iter = slotHandle.iterator();
@@ -339,5 +353,24 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         {
             e.printStackTrace();
         }
+    }
+
+    private DatabaseProperties readYml(File ymlFile) throws IOException {
+        BufferedReader in = null;
+        DatabaseProperties databaseProperties;
+        try {
+            in = new BufferedReader(new InputStreamReader(
+                    new FileInputStream(ymlFile.getAbsolutePath())));
+            Yaml yaml = new Yaml();
+            databaseProperties = yaml.loadAs(in, DatabaseProperties.class);
+
+            in.close();
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Error: " + e.getMessage());
+        }finally {
+            if (in != null) {in.close(); }
+        }
+        return databaseProperties;
     }
 }

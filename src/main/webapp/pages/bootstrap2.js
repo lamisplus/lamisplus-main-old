@@ -13,8 +13,7 @@ import { BehaviorSubject } from 'rxjs';
 
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
 
-const userToken = "Bearer "+currentUserSubject.value;
-console.log(userToken.id_token)
+const userToken = currentUserSubject.value.id_token;
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -42,12 +41,6 @@ export default function ExternalModules(props) {
   const src = props.location.state;
   var myRequest = new Request(src);
 
-  // fetch(myRequest).then(function(response) {
-  //   console.log(response.status); // returns 200
-  // }).catch(function(error) {
-  //   console.log(error)
-  //   alert('Could not load external module, please contact support');
-  // });
   if(!src){
     return (
         <>
@@ -58,7 +51,7 @@ export default function ExternalModules(props) {
   return (
 
       <>
-      <iframe  style={{width:"100%", height:"100%", border:"none", margin:0, padding:0}} src={src + "?jwt="+userToken} ></iframe>
+      <iframe  style={{width:"100%", height:"100%", border:"none", margin:0, padding:0}} src={src + "?jwt="+encodeURIComponent(userToken)} ></iframe>
 </>
   );
 }

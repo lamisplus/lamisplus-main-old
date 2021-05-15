@@ -1,5 +1,6 @@
 package org.lamisplus.modules.base.controller;
 
+import com.foreach.across.core.annotations.Exposed;
 import org.lamisplus.modules.base.controller.vm.ManagedUserVM;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.repository.UserRepository;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@Exposed
 public class AccountController {
     private static class AccountResourceException extends RuntimeException {
         private AccountResourceException(String message) {
@@ -49,9 +51,6 @@ public class AccountController {
         //Check Password Length
         userService.registerUser(managedUserVM, managedUserVM.getPassword());
     }
-
-
-
 
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {

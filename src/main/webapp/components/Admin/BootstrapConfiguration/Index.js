@@ -14,7 +14,10 @@ import {Menu,MenuList,MenuButton,MenuItem,} from "@reach/menu-button";
 import "@reach/menu-button/styles.css";
 import MaterialTable from 'material-table';
 import {  MdDelete, MdModeEdit } from "react-icons/md";
+import {  GrDocumentUpdate } from "react-icons/gr";
+import {  FaSyncAlt } from "react-icons/fa";
 import DeleteModule from "./DeleteModule";
+import ActivateModule from './ActivateModule'
 import { useSelector, useDispatch } from 'react-redux';
 import {  fetchAllBootstrapModule } from '../../../actions/bootstrapModule';
 import { Badge } from 'reactstrap';
@@ -41,8 +44,10 @@ const useStyles = makeStyles({
 
   const BootstrapConfiguration = (props) => {
     const [collectModal, setcollectModal] = useState([])
-    const [modal, setModal] = useState(false) //Modal to collect sample 
+    const [modal, setModal] = useState(false) //Modal 
     const toggleModal = () => setModal(!modal)
+    const [modal2, setModal2] = useState(false) //Modal to collect sample 
+    const toggleModal2 = () => setModal2(!modal2)
     const classes = useStyles()
     const [loading, setLoading] = useState('')
     const dispatch = useDispatch();
@@ -60,10 +65,16 @@ const useStyles = makeStyles({
         const fetchAllModule = dispatch(fetchAllBootstrapModule(onSuccess,onError ));
 
   }, []); //componentDidMount
-  console.log(listOfAllModule)
-    const deleteModule = (row) => {  
-      setcollectModal({...collectModal, ...row});
-      setModal(!modal) 
+
+
+  const deleteModule = (row) => {  
+    setcollectModal({...collectModal, ...row});
+    setModal(!modal) 
+  }
+
+  const activateModule = (row) => {  
+    setcollectModal({...collectModal, ...row});
+    setModal2(!modal2) 
   }
   const installModule = (moduleID) => {
     
@@ -87,22 +98,30 @@ const useStyles = makeStyles({
                 <MenuItem style={{ color:"#000 !important"}}>
                       <Link
                           to={{
-                            pathname: "/updated-module",
-                            currentId: {}
+                            pathname: "/admin-bootstrap-configuration-create-module",
+                            ModuleDetail: e
                           }}
                       >
-                        <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Update  </span>                   
+                        <GrDocumentUpdate size="15" color="blue" />{" "}<span style={{color: '#000'}}>Update  </span>                   
                       </Link>
                 </MenuItem>
-                <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule('module to delete')}>                      
+                <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule(e)}>                      
                   <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Deactivate</span>
                  </MenuItem>
-                 <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule('module to delete')}>                      
-                  <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Delete</span>
-                 </MenuItem>
+                 
                 </>
                  : "" 
-              }                                    
+              } 
+              {e.status === 3 ?
+              <>
+               
+                <MenuItem  style={{ color:"#000 !important"}} onSelect={() => activateModule(e)}>                      
+                  <FaSyncAlt size="15" color="blue" />{" "}<span style={{color: '#000'}}>Activate</span>
+                 </MenuItem>
+                 
+                </>
+                 : "" 
+              }                                   
                 
         </MenuList>
        </Menu>
@@ -114,7 +133,7 @@ const moduleStatus = e =>{
   }else if(e===2){
       return <p><Badge  color="light">installed</Badge></p>
   }else if(e===3){
-    return <p><Badge  color="light">Active</Badge></p>
+    return <p><Badge  color="warning">Deactivated</Badge></p>
   }
   else{
       return <p>{" "}</p>
@@ -137,8 +156,8 @@ return (
 
           <Link 
               to ={{ 
-              pathname: "/admin-bootstrap-configuration-create-module",
-              activetab: 1
+                pathname: "/admin-bootstrap-configuration-create-module",
+                ModuleDetail: ""
               }} 
             >
               <MatButton
@@ -157,7 +176,6 @@ return (
             columns={[
               { title: 'Module Name', field: 'name' },
               { title: 'Description', field: 'description' },
-              { title: 'Author', field: 'author' },
               {title: 'Version',field: 'version', type: 'numeric'},
               { title: 'Date Created', field: 'date', type: 'date' },
               { title: 'Status', field: 'status'},
@@ -166,10 +184,9 @@ return (
             isLoading={loading}
             data={listOfAllModule.map((row) => ({
                   name: row.name, 
-                  description: row.description, 
-                  author: row.createdBy, 
+                  description: row.description,  
                   version: row.version,
-                  date: row.dateCreated, 
+                  date: row.buildTime, 
                   status:moduleStatus(row.status),
                   actions: actionOnModules(row)   
             }))}      
@@ -186,7 +203,7 @@ return (
           </Card>
 
        <DeleteModule modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} />
-
+       <ActivateModule modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} />
 </React.Fragment>
   )
   

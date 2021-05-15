@@ -33,7 +33,6 @@ public class ReportController {
 
     @PostMapping(value = "/generate")
     public void generateReport(@RequestBody ReportDetailDTO data, HttpServletResponse response, HttpServletRequest request) {
-        log.info("Generating full report: " + data.getReportName() + "; format: " + data.getReportFormat());
         String reportFormat = data.getReportFormat().toLowerCase().trim();
         OutputType format = OutputType.from(reportFormat);
 
@@ -53,5 +52,10 @@ public class ReportController {
     @GetMapping
     public ResponseEntity<List<ReportInfoDTO>> getAllJasperReports() {
         return ResponseEntity.ok(reportService.getReports());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ReportInfo> update(@PathVariable Long id) {
+        return ResponseEntity.ok(reportService.getReport(id));
     }
 }

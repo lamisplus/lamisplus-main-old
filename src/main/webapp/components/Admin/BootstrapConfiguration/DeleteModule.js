@@ -3,6 +3,8 @@ import { Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Label,Card,CardBody
 } from 'reactstrap';
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import { deActivateBootstrapModule } from '../../../actions/bootstrapModule';
+import { connect, useDispatch } from 'react-redux';
 
 
 const useStyles = makeStyles(theme => ({
@@ -45,8 +47,22 @@ const useStyles = makeStyles(theme => ({
 const DeleteModule = (props) => {
     const classes = useStyles()
     const datasample = props.datasample ? props.datasample : {};
-    
 
+
+    const deActiveModule = () => {
+        const onError = () => {
+        }
+        const onSuccess = () => {
+
+        }
+        datasample['status'] =3
+        props.datasample['status'] =3
+        props.deActivateBootstrapModule(datasample.id, onSuccess, onError);
+        props.togglestatus()
+        //props.history.push(`/admin-bootstrap-configuration`)
+    }
+
+    console.log(datasample)
 
   return (      
       <div >
@@ -59,7 +75,7 @@ const DeleteModule = (props) => {
                             <CardBody>
                                 <Row style={{ marginTop: '20px'}}>
                                     <Col xs="12">
-                                        <span style={{ fontWeight: 'bold'}}>Are you sure you want to Deactivate the HTS module</span>
+                                        <span style={{ fontWeight: 'bold'}}>Are you sure you want to Deactivate the {datasample.description } module</span>
                                         <br/>
                                     </Col>
                                     <br/>
@@ -72,7 +88,7 @@ const DeleteModule = (props) => {
                                 variant='contained'
                                 color='primary'
                                 className={classes.button}
-                                
+                                onClick={()=> deActiveModule()}
                                 className=" float-right mr-1"
                                 
                             >
@@ -96,4 +112,11 @@ const DeleteModule = (props) => {
   );
 }
 
-export default DeleteModule;
+const mapStateToProps = state => {
+    return {
+        moduleLists: state.boostrapmodule.moduleList
+    };
+  }; 
+  
+  export default connect(mapStateToProps, {deActivateBootstrapModule })(DeleteModule);
+  

@@ -182,7 +182,7 @@ export const FETCH_USER_BY_ID = 'FETCH_USER_BY_ID'
 export const USER_ROLE_UPDATE = 'USER_ROLE_UPDATE'
 export const USERS_ERROR = 'USERS_ERROR'
 export const FETCH_ME = 'FETCH_ME'
-
+export const PERMISSION = 'PERMISSION'
 /**
  * @TYPES
  * ===============================================
@@ -279,6 +279,17 @@ export const TOTAL_PATIENTS = 'TOTAL_PATIENTS'
 export const TOTAL_PATIENTS_ERROR = 'TOTAL_PATIENTS_ERROR'
 
 export const MENU_FETCH_ALL = 'MENU_FETCH_ALL'
+/**
+ * @TYPES
+ * ===============================================
+ * DATA VISUALIZATION
+ */
+export const CREATE_CHART = 'CREATE_CHART'
+export const CREATE_CHART_ERROR = 'CREATE_CHART_ERROR'
+export const FETCH_CHART_BY_ID = 'FETCH_CHART_BY_ID'
+export const FETCH_CHART_BY_ID_ERROR = 'FETCH_CHART_BY_ID_ERROR'
+export const DELETE_CHART_BY_ID = 'DELETE_CHART_BY_ID'
+export const DELETE_CHART_BY_ID_ERROR = 'DELETE_CHART_BY_ID_ERROR'
 export const CREATE_USER = 'CREATE_USER'
 /**
  * @TYPES

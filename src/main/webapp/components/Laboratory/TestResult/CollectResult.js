@@ -151,7 +151,20 @@ const ResultReporting = (props) => {
           return <p>{""}</p>
         }
     }
-
+    function sampleTypeList (test){
+        
+        const  maxVal = []
+  
+          for(var i=0; i<test.length; i++){
+             
+                  if ( test[i].display!==null && test[i].display)
+                        console.log(test[i])
+                            maxVal.push(test[i].display)
+              
+          }
+        return maxVal.toString();
+      
+    }
 
 //This is function to check for the status of each collection to display on the tablist below 
     const sampleAction = (e) =>{
@@ -182,8 +195,10 @@ const ResultReporting = (props) => {
   }
 
 return (
-    <div>
+    <React.Fragment>
     <Card>
+    <CardBody>
+        <br/>
      <Breadcrumbs aria-label="breadcrumb">
             <Link color="inherit" to={{pathname: "/laboratory", state: 'test-result'}} >
                 Laboratory
@@ -206,7 +221,7 @@ return (
                 </div>
                 <br/>
                 <Card className="mb-12">
-                    <CardHeader>Test Order Details 
+                    <CardHeader> <span style={{  textTransform: 'capitalize'}}>Test Order Details </span>
                         <Link 
                             to ={{ 
                               pathname: "/laboratory",  
@@ -285,7 +300,7 @@ return (
                                                 {!loading ? fetchTestOrders.map((row) => (
                                                     <tr key={row.id} style={{ borderBottomColor: '#fff' }}>
                                                       <th className={classes.td}>{row.data.description===""?" ":row.data.description}</th>
-                                                      <td className={classes.td}>{row.data.sample_type==="" ? " ":row.data.sample_type}</td>
+                                                      <td className={classes.td}>{sampleTypeList(row.data && row.data.sample_type!==null ? row.data.sample_type : null)}</td>
                                                       <td className={classes.td}> {encounterDate} </td>
                                                       <td className={classes.td}>{sampleStatus(row.data.lab_test_order_status)} </td>
                                                       <td className={classes.td}>{sampleAction(row)}</td>
@@ -306,11 +321,12 @@ return (
               </Card>
             </Col>
         </Row>
+        </CardBody>
         </Card>
         <ModalSampleResult modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} />
         <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} /> 
         <ModalSample modalstatus={modal4} togglestatus={toggleModal4} datasample={collectModal}  labnumber={newSample[0].data.lab_number}/>   
-    </div>
+    </React.Fragment>
   )
   
 }

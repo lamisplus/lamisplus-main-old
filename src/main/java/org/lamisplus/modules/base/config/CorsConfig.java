@@ -1,5 +1,6 @@
 package org.lamisplus.modules.base.config;
 
+import com.foreach.across.core.annotations.Exposed;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +10,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
+@Exposed
 public class CorsConfig {
     private String allowOrigin = "*";
 

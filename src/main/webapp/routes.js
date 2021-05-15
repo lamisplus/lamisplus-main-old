@@ -29,13 +29,26 @@ const LaboratoryPage = React.lazy(() => import("components/Laboratory/HomePage")
 const CollectSample = React.lazy(() =>import("components/Laboratory/Testorders/CollectSample"));
 const LaboratorySampleResultPage = React.lazy(() =>import("components/Laboratory/TestResult/CollectResult"));
 const SampleVerification = React.lazy(() => import("components/Laboratory/Sampleverifications/SampleVerification"));
+const GridLayout = React.lazy(() => import("pages/GridLayout"));
 
-const DispatchedSamples = React.lazy(() => import("components/Laboratory/DispatchedManifest/DispatchedSamplesList"))
 const PatientsPage = React.lazy(() => import("components/PatientSearch/HomePage"));
 const PrintSamples = React.lazy(() => import("components/Laboratory/DispatchedManifest/PrintSample"));
 const PrintManifest = React.lazy(() => import("components/Laboratory/DispatchedManifest/PrintManifest"));
-const ViewSampleDispatched = React.lazy(() => import("components/Laboratory/DispatchedManifest/ViewPrintManifest"));
 
+//Lamis
+const SampleList = React.lazy(() => import("plugins/Lims/SampleList"))
+const DispatchedSamples = React.lazy(() => import("plugins/Lims/DispatchedSamplesList"))
+const DispatchedSamplesLims = React.lazy(() => import("plugins/Lims/DispatchedSamplesList"))
+const ViewSampleDispatched = React.lazy(() => import("plugins/Lims/ViewPrintManifest"));
+//NIMS
+const NimsSampleList = React.lazy(() => import("plugins/Nims/SampleList"))
+const ViewOrderStatusNims = React.lazy(() => import("plugins/Nims/DispatchedSamplesList"))
+
+//NDR 
+//NIMS
+const Ndr = React.lazy(() => import("plugins/Ndr/Index"))
+
+const Dashboard2 = React.lazy(() => import("pages/DashboardPage2"))
 /* Radiology */
 const RadiologyPage = React.lazy(() => import("components/Radiology/HomePage"));
 /* Bootstrap configuration */
@@ -67,15 +80,15 @@ const ProgramManagerSeacrch = React.lazy(() => import('components/Admin/ProgramM
 const PharmacyDashboard = React.lazy(() => import("./components/Pharmacy/PharmacyDashboard"))
 
 
-// const CheckInPatientPage = React.lazy(() => import("components/CheckIn/CheckedInPatientPage"));
+const Plugins = React.lazy(() => import("pages/Plugins"));
 // const ViewVitalsPage = React.lazy(() => import("components/Vitals/ViewVitalsPage"));
 
 // const CheckInModal = React.lazy(() => import('components/CheckIn/CheckInModal'));
 
 const EnrolledPatientsDashboard = React.lazy(() => import("components/PatientProfile/HomePage"));
 /* Data Visualisation */
-const TestPageForVisualisation = React.lazy(() => import("pages/TestPage"));
-
+const TestPageForVisualisation = React.lazy(() => import("pages/TestPageForVisualisation"));
+const DataVisualizationDashboard = React.lazy(() => import("components/Admin/DataVisualisation/Index"));
 /* Sample table i design */
 const TestPage = React.lazy(() => import("pages/TestPage"));
 const TabMenu = React.lazy(() => import("pages/TabMenu"));
@@ -85,8 +98,8 @@ const ReportPage = React.lazy(() => import("components/Reports/ReportingPage"));
 const JasperTemplate = React.lazy(() => import("components/Reports/JasperTemplate"));
 const ReportView = React.lazy(() => import("components/Reports/ReportView"));
 const JasperTemplateUpdate = React.lazy(() => import("components/Reports/JasperTemplateUpdate"));
-//const getBasename = () => {return `/${process.env.PUBLIC_URL.split("/").pop()}`;};
 const getBasename = () => {return `/${process.env.PUBLIC_URL.split("/").pop()}`;};
+//const getBasename = () => {return window.SOURCE_URL;};
 //SOURCE_URL
 const Prescription = React.lazy(() => import("components/Pharmacy/Prescriptions"))
 
@@ -149,7 +162,13 @@ class Routes extends Component {
                 <PrivateRoute exact path="/patients/biometrics" component={FingerPrintPage} />
               <PrivateRoute exact path="/print-sample" component={PrintSamples} />
               <PrivateRoute exact path="/view-sample-dispatched" component={ViewSampleDispatched} />
-              
+              {/* LIMS Link*/}
+              <PrivateRoute exact path="/sample-list" component={SampleList} />
+               {/* NIMS Link*/}
+              <PrivateRoute exact path="/nims-sample-list" component={NimsSampleList} />
+              {/* NDR Link*/}
+              <PrivateRoute exact path="/ndr" component={Ndr} />
+              <PrivateRoute exact path="/view-order-status-nims" component={ViewOrderStatusNims} />
               {/* Radiology Link*/}
               <PrivateRoute exact path="/radiology-home" component={RadiologyPage} />
               {/* BootstrapConfiguration Link */}
@@ -158,8 +177,8 @@ class Routes extends Component {
               <PrivateRoute exact path="/admin-bootstrap-configuration-update-module" component={UpdateModule} />
               <PrivateRoute exact path="/updated-module" component={UpdatedModule} />
               {/* DataBaseManagement Link */}
-              <PrivateRoute exact path="/database-management" component={DataBaseManagement} />
-              <PrivateRoute exact path="/database-sync" component={DataBaseSync} />
+              <PrivateRoute exact path="/admin-database-management" component={DataBaseManagement} />
+              <PrivateRoute exact path="/admin-database-sync" component={DataBaseSync} />
               {/* OrganizationUnit */}
               <PrivateRoute exact path="/admin-organization-unit" component={OrganizationUnit} />
               <PrivateRoute exact path="/admin-parent-organization-unit" component={ParentOrganizationUnit} />
@@ -228,16 +247,20 @@ class Routes extends Component {
                 <PrivateRoute exact path={"/admin-application-codesets"} component={ApplicationCodesetPage} />
                 <PrivateRoute exact path={"/admin-wards"} component={WardManagerPage} />
                 <PrivateRoute exact path={"/radiology"} component={RadiologyTestDetailPage} />
+                <PrivateRoute exact path={"/plug-in"} component={Plugins} />
               {/* The route to Appointment*/}
               {/* The route to Visualization*/}
-                <PrivateRoute exact path={"/visual"} component={TestPage} />
-                <PrivateRoute exact path={"/data-visualisation"} component={TestPageForVisualisation} />
+                <PrivateRoute exact path={"/visual"} component={TestPageForVisualisation} />
+                <PrivateRoute exact path={"/data-visualisation"} component={DataVisualizationDashboard} />
+                <PrivateRoute exact path={"/gridlayout"} component={GridLayout} />
                 
               {/* The route to Visualization*/}
                 <PrivateRoute exact path={"/unauthorised"} component={UnauthorisedPage} />
                 <PrivateRoute  path="/external-modules" component={BootstrapPage2} />
 
                 <PrivateRoute exact path={"/tabmenu"} component={TabMenu} />
+                <PrivateRoute exact path={"/dashboard2"} component={Dashboard2} />
+                
             </React.Suspense>
           </MainLayout>
           

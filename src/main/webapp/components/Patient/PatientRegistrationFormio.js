@@ -43,7 +43,7 @@ function PatientRegistrationFormio(props) {
         const onError = () => {
             toast.error("An error occurred, could not save patient information");
         }
-        props.create(data, onSuccess, onError);
+        props.create({hospitalNumber: data.hospitalNumber, details : data}, onSuccess, onError);
 
     }
     return (

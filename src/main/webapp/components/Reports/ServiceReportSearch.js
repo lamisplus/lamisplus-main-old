@@ -63,6 +63,7 @@ function ReportSearch(props) {
                         description: row.description,
                         resourceObject: row.resourceObject,
                         actions:  (
+
                             <Link
                                 to={{
                                     pathname: "/report-view",

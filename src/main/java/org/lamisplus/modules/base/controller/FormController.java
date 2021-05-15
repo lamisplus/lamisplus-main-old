@@ -8,7 +8,7 @@ import org.lamisplus.modules.base.service.FormService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-
+import java.util.Optional;
 
 
 @RestController
@@ -24,8 +24,8 @@ public class FormController {
     }
 
     @GetMapping ("/{formCode}/formCode")
-    public ResponseEntity<Form> getFormByFormCode(@PathVariable String formCode) {
-            return ResponseEntity.ok(this.formService.getFormByFormCode(formCode));
+    public ResponseEntity<Form> getFormByFormCode(@PathVariable String formCode, @RequestParam Optional<Integer> type) {
+            return ResponseEntity.ok(this.formService.getFormByFormCode(formCode, type));
     }
 
     @GetMapping ("/{id}")
@@ -47,7 +47,6 @@ public class FormController {
     @PutMapping("/{id}")
     public ResponseEntity<Form> update(@PathVariable Long id, @RequestBody FormDTO formDTO) {
         return ResponseEntity.ok(this.formService.update(id, formDTO));
-
     }
 
     @DeleteMapping("/{id}")

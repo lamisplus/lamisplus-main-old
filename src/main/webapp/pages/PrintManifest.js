@@ -10,12 +10,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import sigInLogo from 'assets/img/signin.jpg';
-import logo200Image from 'assets/img/logo/logo_200.png';
 import limslogo from 'assets/img/logo/Coat_of_arms_of_Nigeria.svg';
-import {Card, CardBody,CardHeader,Col,Row,Alert,Table, Form,FormGroup,Label,Input} from 'reactstrap'
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import {Table} from 'reactstrap'
 import { useSelector, useDispatch } from 'react-redux';
 import {  samplesManifestById, sampleDispatchedByManifestID } from '../actions/laboratory'
 import { Spinner } from 'reactstrap';
@@ -118,7 +114,6 @@ const PrintManifest = (props) => {
     }
 
   return (
-
       <Grid 
       item xs={12} sm={12} md={12} 
       component={Paper} 
@@ -129,7 +124,10 @@ const PrintManifest = (props) => {
       justify="center"
       alignItems="center"
       >
+        
+
         <div className={classes.paper}>
+       
           
             <img
               src={limslogo}
@@ -197,6 +195,22 @@ const PrintManifest = (props) => {
                   >
                     <TiPrinter/>{" "} Print
                 </MatButton>
+                 <Link 
+                  to ={{ 
+                  pathname: "/dispatched-sample",  
+                  }} 
+                >
+                  <Button
+                    type='submit'
+                    variant='contained'
+                    //variant="outlined"
+                    color="default"                        
+                    className=" float-right mr-1"
+                    style={{paddingLeft:'200'}}
+                  >
+                 <TiArrowBack/>{" "} Back to Sample List
+                </Button>
+               </Link>
               </Grid>
             </Grid>
            

@@ -1,6 +1,8 @@
 spring.boot:
     priority: 1
     auto-configuration:
-        org.lamisplus.modules.bootstrap.configurer.DynamicModuleImportConfigurer: true
+        org.lamisplus.modules.bootstrap.config.DynamicModuleImportConfigurer: true
         org.lamisplus.modules.bootstrap.module.ApplicationProperties: true
         org.lamisplus.modules.bootstrap.module.ModuleFileStorageService: true
+        org.lamisplus.modules.base.config.SwaggerConfig: true
+

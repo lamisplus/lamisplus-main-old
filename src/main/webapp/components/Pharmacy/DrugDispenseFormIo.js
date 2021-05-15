@@ -60,7 +60,7 @@ const ModalSample = (props) => {
     const classes = useStyles()
     let history = useHistory();
     const datasampleObj = props.datasample && props.datasample!==null ? props.datasample : {};
-
+    const datasample = props.datasample && props.datasample!==null ? props.datasample : {};
     const DrugId = datasampleObj.id
     const [loading, setLoading] = useState(false)
     const [visible, setVisible] = useState(true);

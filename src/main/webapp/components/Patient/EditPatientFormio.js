@@ -50,8 +50,10 @@ const EditPatientFormio = (props) => {
                 .get(`${baseUrl}patients/${patientHospitalNumber}`, requestOptions)
                 .then(response => {
                     try {
-                        const patientObj = response.data;
+                        const patientObj = response.data.details;
                         patientId = response.data.patientId;
+                        patientObj['patientId'] = patientId;
+
                        setSubmission({data: patientObj});
                         setShowLoadingPatientInfo(false);
                     } catch(c){
@@ -77,7 +79,7 @@ const EditPatientFormio = (props) => {
         const onError = () => {
             toast.error("An error occurred, could not save patient information");
         }
-        props.update(data, submission.data.patientId, onSuccess, onError);
+        props.update({hospitalNumber: data.hospitalNumber, details : data}, submission.data.patientId, onSuccess, onError);
 
     }
 

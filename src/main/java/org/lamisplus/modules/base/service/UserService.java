@@ -7,7 +7,6 @@ import org.lamisplus.modules.base.domain.entity.*;
 import org.lamisplus.modules.base.domain.mapper.UserMapper;
 import org.lamisplus.modules.base.repository.OrganisationUnitRepository;
 import org.lamisplus.modules.base.repository.RoleRepository;
-import org.lamisplus.modules.base.repository.PersonRepository;
 import org.lamisplus.modules.base.repository.UserRepository;
 import org.lamisplus.modules.base.security.RolesConstants;
 import org.lamisplus.modules.base.security.SecurityUtils;
@@ -27,9 +26,6 @@ import java.util.*;
 @Service
 @Transactional
 public class UserService {
-
-    @Autowired
-    private PersonRepository personRepository;
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
@@ -70,12 +66,12 @@ public class UserService {
                     throw new UsernameAlreadyUsedException();
                         }
                 );
-        Person person = new Person();
+        /*Person person = new Person();
         person.setUuid(UUID.randomUUID().toString());
         person.setFirstName(userDTO.getFirstName());
         person.setLastName(userDTO.getLastName());
         person.setDob(userDTO.getDateOfBirth());
-        Person newPerson = personRepository.save(person);
+        Person newPerson = personRepository.save(person);*/
 
 
         User newUser = new User();
@@ -86,8 +82,8 @@ public class UserService {
         newUser.setGender(userDTO.getGender());
         newUser.setCurrentOrganisationUnitId(userDTO.getCurrentOrganisationUnitId());
         newUser.setPassword(encryptedPassword);
-        newUser.setPerson(newPerson);
-        newUser.setPersonId(newPerson.getId());
+        /*newUser.setPerson(newPerson);
+        newUser.setPersonId(newPerson.getId());*/
 
         if (userDTO.getRoles() == null || userDTO.getRoles().isEmpty()) {
             Set<Role> roles = new HashSet<>();
