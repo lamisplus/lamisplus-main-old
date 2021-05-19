@@ -53,6 +53,7 @@ export default function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState("");
+  const [submitText, setSubmittext] = useState("Sign In");
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [helperText, setHelperText] = useState("");
   const [error, setError] = useState(false);
@@ -66,17 +67,17 @@ export default function SignIn() {
   }, [username, password]);
 
   const handleLogin = () => {
+    setSubmittext("Login Please wait...")
+    setIsButtonDisabled(false)
     authentication.login(username, password, remember).then(
       (user) => {
-        //const { from } = this.props.location.state || {
-        //  from: { pathname: "/dashboard" },
-        //};
-        //this.props.history.push(from);
         setError(false);
         setHelperText("Login Successfully");
         history.push("/");
       },
       (error) => {
+        setIsButtonDisabled(true)
+        setSubmittext("Sign In")
         setError(true);
         setHelperText("Incorrect username or password");
       }
@@ -154,7 +155,7 @@ export default function SignIn() {
               onClick={() => handleLogin()}
               disabled={isButtonDisabled}
             >
-              Sign In
+              {submitText}
             </Button>
             {/* <div className="text-center pt-1">
               <h6>or</h6>
