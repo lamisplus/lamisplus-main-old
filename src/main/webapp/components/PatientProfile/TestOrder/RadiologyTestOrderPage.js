@@ -35,7 +35,7 @@ function RadiologyTestOrderPage(props) {
         testGroup: {},
         vlIndication: "",
         sampleOrderedBy: "",
-        sample_order_date: moment(new Date()).format("DD-MM-YYYY"),
+        sample_order_date: moment(new Date()).format("YYYY-MM-DD"),
         sample_order_time: moment(new Date()).format("LT")
     };
     const [testOrder, setTestOrder] = React.useState(defaultFormValue);
@@ -144,7 +144,7 @@ function RadiologyTestOrderPage(props) {
                                 ...testOrder,
                                 ...{
                                     sample_order_date: e ? Moment(e).format(
-                                        "DD-MM-YYYY"
+                                        "YYYY-MM-DD"
                                     ) : null,
                                     sample_order_time: e ? Moment(e).format("LT") : null,
                                 },

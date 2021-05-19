@@ -222,7 +222,8 @@ const testGroup = {
     },
   
     title: {
-        text: testOrdersStackChart.text
+        text: testOrdersStackChart.text,
+        style:{ "fontSize": "14px" }
     },
   
     xAxis: testOrdersStackChart.xAxis,
