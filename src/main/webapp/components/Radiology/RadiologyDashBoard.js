@@ -162,17 +162,6 @@ export default function LaboratoryDashBoard(props) {
             getCharacters();
         }, []); 
     // API request for LIMS BAR CHART   
-    useEffect(() => {
-        async function getCharacters() {
-            try {
-                const response = await axios.get( url+ 'laboratory-dashboard/column/lims');
-                const body = response.data && response.data!==null ? response.data : {}; 
-                setlimsBarChart(body)
-                    
-            } catch (error) {}
-        }
-        getCharacters();
-    }, []); 
 
 // Test Group Pie Chart 
 

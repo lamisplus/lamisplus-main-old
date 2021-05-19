@@ -546,7 +546,7 @@ public class PatientService {
                 if (patientJson.get("lastName").toString() != null) patientDTO.setLastName(patientJson.get("lastName").toString());
                 if (patientJson.get("hospitalNumber").toString() != null) patientDTO.setHospitalNumber(patientJson.get("hospitalNumber").toString());
                 if (patientJson.get("gender")!= null && !patientJson.get("gender").toString().isEmpty()) {
-                    JSONObject genderJson = (JSONObject) patientJson.get("gender");
+                    JSONObject genderJson = new JSONObject(patientJson.get("gender").toString());
                     patientDTO.setGenderId(Long.valueOf(genderJson.get("id").toString()));
                 }
                 if (patientJson.get("otherNames").toString() != null) patientDTO.setOtherNames(patientJson.get("otherNames").toString());
@@ -557,23 +557,23 @@ public class PatientService {
                 if (patientJson.get("street").toString() != null) patientDTO.setStreet(patientJson.get("street").toString());
                 if (patientJson.get("landmark").toString() != null) patientDTO.setLandmark(patientJson.get("landmark").toString());
                 if (patientJson.get("education").toString() != null) {
-                    JSONObject educationJson = (JSONObject) patientJson.get("education");
+                    JSONObject educationJson = new JSONObject(patientJson.get("education").toString());
                     patientDTO.setEducationId(Long.valueOf(educationJson.get("id").toString()));
                 }
                 if (patientJson.get("occupation").toString() != null) {
-                    JSONObject occupationJson = (JSONObject) patientJson.get("occupation");
+                    JSONObject occupationJson = new JSONObject(patientJson.get("occupation").toString());
                     patientDTO.setOccupationId(Long.valueOf(occupationJson.get("id").toString()));
                 }
                 if (patientJson.get("country").toString() != null) {
-                    JSONObject countryJson = (JSONObject) patientJson.get("country");
+                    JSONObject countryJson = new JSONObject(patientJson.get("country").toString());
                     patientDTO.setCountryId(Long.valueOf(countryJson.get("id").toString()));
                 }
                 if (patientJson.get("maritalStatus").toString() != null) {
-                    JSONObject maritalStatusJson = (JSONObject) patientJson.get("maritalStatus");
+                    JSONObject maritalStatusJson = new JSONObject(patientJson.get("maritalStatus").toString());
                     patientDTO.setMaritalStatusId(Long.valueOf(maritalStatusJson.get("id").toString()));
                 }
             }
-        } catch (JSONException | JsonProcessingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return patientDTO;
@@ -587,6 +587,7 @@ public class PatientService {
             String formDataJsonString = mapper.writeValueAsString(patientDTO.getDetails());
 
             JSONObject patientDetails = new JSONObject(formDataJsonString);
+            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             if (patientDetails.has(key)) {
                 patientDTO.setHospitalNumber(patientDetails.get(key).toString());
             } else {

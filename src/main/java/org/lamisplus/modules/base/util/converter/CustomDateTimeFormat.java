@@ -1,4 +1,4 @@
-package org.lamisplus.modules.base.util;
+package org.lamisplus.modules.base.util.converter;
 
 import lombok.RequiredArgsConstructor;
 

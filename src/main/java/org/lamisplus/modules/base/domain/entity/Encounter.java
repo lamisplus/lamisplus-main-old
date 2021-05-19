@@ -63,11 +63,6 @@ public class Encounter implements Serializable  {
     @JsonIgnore
     private String uuid;
 
-    /*@Basic
-    @Column(name = "date_created")
-    @JsonIgnore
-    private Timestamp dateCreated;*/
-
     @CreatedBy
     @Basic
     @Column(name = "created_by", updatable = false)
@@ -88,7 +83,7 @@ public class Encounter implements Serializable  {
     @Basic
     @Column(name = "modified_by")
     @JsonIgnore
-    private String modifiedBy;
+    private String modifiedBy = SecurityUtils.getCurrentUserLogin().orElse(null);
 
     @Basic
     @Column(name = "archived")

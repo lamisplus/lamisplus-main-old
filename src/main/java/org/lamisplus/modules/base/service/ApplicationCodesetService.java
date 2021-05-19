@@ -3,15 +3,18 @@ package org.lamisplus.modules.base.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ApplicationCodesetDTO;
 import org.lamisplus.modules.base.domain.entity.ApplicationCodeSet;
 import org.lamisplus.modules.base.domain.mapper.ApplicationCodesetMapper;
 import org.lamisplus.modules.base.repository.ApplicationCodesetRepository;
-import org.lamisplus.modules.base.util.Constant;
+import org.lamisplus.modules.base.util.Constants;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,9 +27,18 @@ public class ApplicationCodesetService {
 
     private final ApplicationCodesetRepository applicationCodesetRepository;
     private final ApplicationCodesetMapper applicationCodesetMapper;
-    private final Constant constant;
+    private final Constants.ArchiveStatus constant;
 
     public List<ApplicationCodesetDTO> getAllApplicationCodeset(){
+        List<ApplicationCodeSet> applicationCodeSets = applicationCodesetRepository.findAllByArchivedOrderByIdAsc(constant.UN_ARCHIVED);
+        List<ApplicationCodeSet> applicationCodeSets1 = new ArrayList<>();
+        applicationCodeSets.forEach(applicationCodeSet -> {
+            if(applicationCodeSet.getCode() == null || StringUtils.isBlank(applicationCodeSet.getCode())){
+                applicationCodeSet.setCode(UUID.randomUUID().toString());
+                applicationCodeSets1.add(applicationCodeSet);
+            }
+        });
+        if(!applicationCodeSets1.isEmpty()) applicationCodesetRepository.saveAll(applicationCodeSets1);
         return applicationCodesetMapper.toApplicationCodesetDTOList(applicationCodesetRepository.findAllByArchivedOrderByIdAsc(constant.UN_ARCHIVED));
     }
 

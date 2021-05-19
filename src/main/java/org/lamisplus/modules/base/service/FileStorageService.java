@@ -1,4 +1,4 @@
-package org.lamisplus.modules.base.util.upload;
+package org.lamisplus.modules.base.service;
 
 import java.nio.file.Path;
 import java.util.stream.Stream;
@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 
 @Component
-public interface FilesStorageService {
+public interface FileStorageService {
     public void init();
 
     public void save(MultipartFile file);

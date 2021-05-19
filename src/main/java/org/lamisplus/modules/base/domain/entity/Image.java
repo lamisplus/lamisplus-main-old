@@ -16,8 +16,7 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
-    @Column(name = "content")
+    @Basic(fetch = FetchType.LAZY)
     private byte[] content;
 
     @Basic
@@ -25,6 +24,10 @@ public class Image {
     private String name;
 
     @Basic
+    @Column(name = "uuid")
+    private String uuid;
+
+    @Basic
     @Column(name = "patient_id")
-    private String patientId;
+    private Long patientId;
 }

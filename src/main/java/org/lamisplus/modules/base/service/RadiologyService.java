@@ -22,22 +22,22 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class RadiologyService {
-    private static final String IMAGE_ID = "image_id";
+    private static final String IMAGE_ID = "image_uuid";
     private final ImageService imageService;
     private final FormDataRepository formDataRepository;
     private final UserService userService;
 
 
-    public List<Long> save(Long formId, FormData formData, MultipartFile [] files) {
+    public List<String> save(Long formId, Long patientId, FormData formData, MultipartFile [] files) {
         formDataRepository.findByIdAndOrganisationUnitId(formId, userService.getUserWithRoles().get().getCurrentOrganisationUnitId())
                 .orElseThrow(() -> new EntityNotFoundException(FormData.class, "formId", formId +""));
 
         JSONArray jsonArray = new JSONArray();
-        List<Long> imageIds = new ArrayList<>();
+        List<String> imageUuids = new ArrayList<>();
 
         try {
             //Saving images
-            imageIds = imageService.uploadImage(files);
+            imageUuids = imageService.uploadImage(files, patientId);
             //Instance of ObjectMapper provides functionality for reading and writing JSON
             ObjectMapper mapper = new ObjectMapper();
             String formDataJsonString = mapper.writeValueAsString(formData.getData());
@@ -45,9 +45,11 @@ public class RadiologyService {
             JSONObject jsonObject = new JSONObject(formDataJsonString);
             if(jsonObject.has(IMAGE_ID)){
                 jsonArray = jsonObject.getJSONArray(IMAGE_ID);
-                }
-            for (Long imageId : imageIds) {
-                jsonArray.put(imageId);
+            }else {
+                jsonObject.put(IMAGE_ID, new ArrayList<>());
+            }
+            for (String imageUuid : imageUuids) {
+                jsonArray.put(imageUuid);
             }
 
             jsonObject.put(IMAGE_ID, jsonArray);
@@ -60,7 +62,7 @@ public class RadiologyService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return imageIds;
+        return imageUuids;
     }
 
     public FormData getJson(String formDataString) {

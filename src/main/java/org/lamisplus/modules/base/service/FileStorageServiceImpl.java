@@ -10,7 +10,6 @@ import java.util.stream.Stream;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.util.upload.FilesStorageService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
@@ -23,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class FilesStorageServiceImpl implements FilesStorageService {
+public class FileStorageServiceImpl implements FileStorageService {
 
     private String path = System.getProperty("user.dir");
 

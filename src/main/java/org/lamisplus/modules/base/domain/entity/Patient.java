@@ -26,14 +26,6 @@ import java.util.List;
 @Table(name = "patient")
 public class Patient extends JsonBEntity implements Serializable {
 
-    @OneToMany(mappedBy = "patientByPatientId")
-    @JsonIgnore
-    @ToString.Exclude
-    public List<ApplicationUserPatient> applicationUserPatientsById;
-    @OneToMany(mappedBy = "patientByPatientId")
-    @JsonIgnore
-    @ToString.Exclude
-    public List<Appointment> appointmentsById;
     @Id
     @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -104,4 +96,14 @@ public class Patient extends JsonBEntity implements Serializable {
     @JsonIgnore
     @ToString.Exclude
     private List<PatientFlag> patientFlagsById;
+
+    @OneToMany(mappedBy = "patientByPatientId")
+    @JsonIgnore
+    @ToString.Exclude
+    public List<ApplicationUserPatient> applicationUserPatientsById;
+
+    @OneToMany(mappedBy = "patientByPatientId")
+    @JsonIgnore
+    @ToString.Exclude
+    public List<Appointment> appointmentsById;
 }

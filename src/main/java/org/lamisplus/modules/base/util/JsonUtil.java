@@ -25,13 +25,13 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
  * @return a string json
  *
  */
-public class JsonUtils {
+public class JsonUtil {
 
     //request by sonar
-    private JsonUtils() {
+    private JsonUtil() {
     }
 
-    public static final Logger logger = LoggerFactory.getLogger(JsonUtils.class);
+    public static final Logger logger = LoggerFactory.getLogger(JsonUtil.class);
 
     public static <T> T json2Object(String str, Class<T> clazz)
             throws   IOException {
