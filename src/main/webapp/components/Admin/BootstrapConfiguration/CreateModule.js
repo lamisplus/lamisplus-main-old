@@ -164,7 +164,8 @@ const CreateModule = (props) => {
       setDisableNextButtonProcess(true)
       setInstallationMessage('Processing, please wait...')     
       const form_Data = new FormData();
-      form_Data.append('file', fileToUpload[0]);      
+      form_Data.append('file', fileToUpload[0]);    
+        
       try {
         const res = await axios.post(url+'modules/upload', form_Data, {
           headers: {

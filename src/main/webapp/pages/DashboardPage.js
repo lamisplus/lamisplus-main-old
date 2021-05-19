@@ -13,8 +13,6 @@ import { url } from "../api";
 // import 'react-grid-layout/css/styles.css';
 // import 'react-resizable/css/styles.css';
 
-
-
 // Load Highcharts modules
 require("highcharts/modules/exporting")(Highcharts);
 const cardStyle = {
@@ -46,7 +44,7 @@ const  DashboardPage = (props) => {
     async function getCharacters() {
         try {
             const response = await axios.get( url+ 'patients/totalCount');
-                const body2 = response.data && response.data!==null ? response.data :0.00;
+                const body2 = response.data && response.data!==null ? response.data :0;
                 setTotalPatients(body2) 
                 console.log(body2)
         } catch (error) {
@@ -108,9 +106,8 @@ useEffect(() => {
   async function getCharacters() {
       try {
           const response = await axios.get( url+ 'appointments/count');
-              const bodyResponse = response.data && response.data!==null ? response.data : 0;
-              console.log(bodyResponse)
-              setTotalAppointment(bodyResponse)
+              const body = response.data && response.data!==null ? response.data :0;
+              setTotalAppointment(body)  
       } catch (error) {}
     }
     getCharacters();
@@ -172,8 +169,10 @@ const genderChart = {
           dataLabels: {
               enabled: true,
               format: '{point.name}'
-          }
+          },
+          showInLegend: true
       }
+      
   },
   series: [{
       
