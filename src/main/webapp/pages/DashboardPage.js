@@ -165,7 +165,7 @@ const genderChart = {
       pie: {
           allowPointSelect: true,
           cursor: 'pointer',
-          depth: 35,
+         
           dataLabels: {
               enabled: true,
               format: '{point.name}'
