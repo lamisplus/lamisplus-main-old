@@ -36,9 +36,9 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 const UploadResultPage = (props) => {
-    const newFormData = props.FormData;
+    const NewFormData = props.formDataObj;
     const [saving, setSaving] = React.useState(false);
-    const defaultValues = {data:{files:[]}};
+    const defaultValues = {data:{oldfiles:[]}};
     const [testOrder, setTestOrder] = React.useState(defaultValues);
     const [note, setNote] = React.useState("");
     const [uploadPercentage, setUploadPercentage] = useState(0);
@@ -46,25 +46,40 @@ const UploadResultPage = (props) => {
     const [files, setFiles] = useState([]);
     const classes = useStyles()
 
+    const [fileToUpload, setFileToUpload] = useState([])
+
     useEffect(() => {
-        if(newFormData) {
-            setTestOrder(newFormData);
-            setNote(newFormData.data.note);
+        if(NewFormData) {
+            setTestOrder(NewFormData);
+            setNote(NewFormData.data.note);
+            setUploadMessage("")
         }
-    }, []); //componentDidMount
+    }, [NewFormData]); //componentDidMount
 
 
-    const uploadResult = async e => {
-        e.preventDefault();
-
-        if(files.length == 0){
+    const handleUploadFile = async e => { 
+        if(fileToUpload.length == 0){
             toast.error("You must upload at least one file");
             return;
         }
-        testOrder.data["note"] = note;
+        //testOrder.data["note"] = note;
         testOrder.data["test_order_status"] = 1
         setSaving(true);
-        
+         
+        if(fileToUpload[0]){
+        NewFormData.data["test_order_status"] = 1
+        testOrder.data["test_order_status"] = 1
+        NewFormData.data["image_uuid"] = []
+        const FormID = NewFormData.id
+        const PatientIdID = NewFormData.data.patient_id
+        //NewFormData.data['files'] = fileToUpload[0]
+        const form_Data = new FormData();
+       
+        fileToUpload.forEach(function(value) {
+            form_Data.append('file', value); 
+        })
+          
+        form_Data.append('formData', JSON.stringify(NewFormData));
         const onSuccess = () => {
             setSaving(false);
             props.toggleModal();
@@ -75,42 +90,28 @@ const UploadResultPage = (props) => {
             setSaving(false);
             toast.error("Something went wrong, please contact administration");
         };
-       // props.updateRadiologyByFormId(testOrder, testOrder.id, onSuccess, onError)
 
-        // sending radiology to backend
-        setUploadMessage('Processing, please wait...')
-        // const formData = new FormData();
-        // formData.append('file', files);
-        // formData.append('formData', testOrder);
-        
-
-        newFormData.data['file'] = files
-        const form_Data = new FormData();
-        form_Data.append('file', files); 
-        form_Data.append('formData', newFormData); 
-        console.log(form_Data)
-        console.log(newFormData)
-        try {
-            const res = await axios.post(`${url}radiologies?formId=${testOrder.id},patientId=${newFormData.data.patient_id}`, newFormData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-
-                onUploadProgress: progressEvent => {
-                    setUploadPercentage(
-                        parseInt(
-                            Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                        )
-                    );
-                    // Clear percentage
-                    setTimeout(() => setUploadPercentage(0), 10000);
+          try {
+            const res = await axios.post(`${url}radiologies/${FormID}/${PatientIdID}`,form_Data, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+              
+            onUploadProgress: progressEvent => {
+              setUploadPercentage(
+                parseInt(
+                  Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                )
+              );
+                  // Clear percentage
+                  setTimeout(() => setUploadPercentage(0), 10000);
                 }
-            });
-
-            const { fileName, filePath } = res.data;
-            onSuccess();
-            setUploadMessage('File Uploaded');
-        } catch (err) {
+              });
+              
+              const { fileName, filePath } = res.data;
+              onSuccess();
+              setUploadMessage('File Uploaded');
+          } catch (err) {
             console.log(err)
             onError();
             if (err.response && err.response.status === 500) {
@@ -118,16 +119,21 @@ const UploadResultPage = (props) => {
             } else{
                 setUploadMessage('Something went wrong! please try again...');
             }
-        }
-    }
+              
+            }
+          }else{
+            
+          }
+      }
+
+
+
     return (
 
     <>
-
-
         <Modal isOpen={props.showModal} toggle={props.toggleModal} size="xl">
             
-                <Form onSubmit={uploadResult}>
+                <Form  enctype="multipart/form-data">
 
                     <ModalHeader toggle={props.toggleModal}> Upload Result </ModalHeader>
                     <ModalBody>
@@ -163,12 +169,12 @@ const UploadResultPage = (props) => {
                                         <DateTimePicker
                                             name="encounterDate"
                                             id="encounterDate"
-                                            defaultValue={newFormData && newFormData.data && newFormData.data.result_date ? moment(newFormData.data.result_date + " " + newFormData.data.result_time, "DD-MM-YYYY LT").toDate() : null}
+                                            defaultValue={NewFormData && NewFormData.data && NewFormData.data.result_date ? moment(NewFormData.data.result_date + " " + NewFormData.data.result_time, "DD-MM-YYYY LT").toDate() : null}
                                             //min={moment(testOrder.data.order_date + " " + testOrder.data.order_time, "DD-MM-YYYY LT").toDate()}
                                             max={new Date()}
                                             required
                                             onChange={(e) => {
-                                                testOrder.data["result_date"] = e ? Moment(e).format("DD-MM-YYYY") : null
+                                                testOrder.data["result_date"] = e ? Moment(e).format("YYYY-MM-DD") : null
                                                 testOrder.data["result_time"] = e ? Moment(e).format("LT") : null
                                                 setTestOrder(testOrder)
                                             }
@@ -179,37 +185,25 @@ const UploadResultPage = (props) => {
                                 </Col>
 
                             <Col md={12}>
-                                <DropzoneArea
-                                    acceptedFiles={[".jpg", ".png", ".jpeg", ".gif"]}
-                                    onChange={(files) => {
-                                        setFiles(files);
-                                       // uploadFileToServer(files);
+                                
 
-                                        console.log('Files:', files)}}
+                        
+                            <br/>
+                            <DropzoneArea
+                                acceptedFiles={[".jpg", ".png", ".jpeg", ".gif"]}
+                                //onChange={(files) => console.log('Files:', files)}
+                                onChange = {(file) => setFileToUpload(file)}
+                                showFileNames="true"
+                                //acceptedFiles={['jar']}
+                                maxFileSize ={'100000000'}
+  
+                          />
 
-                                    // fileObjects={testOrder.data.files}
-                                    // onAdd={newFileObjs => {
-                                    //     console.log('onAdd', newFileObjs);
-                                    //     testOrder.data["files"] = [].concat(testOrder.data.files, newFileObjs);
-                                    //     setTestOrder(testOrder);
-                                    // }}
-                                    // onDelete={deleteFileObj => {
-                                    //     //delete file object from the array
-                                    //     const files = testOrder.data.files.filter(x => x.file.name !== deleteFileObj.file.name);
-                                    //     console.log(files)
-                                    //     testOrder.data["files"] = files;
-                                    //     setTestOrder(testOrder);
-                                    //     console.log('onDelete', deleteFileObj);
-                                    // }}
-
-                                />
-
-<br/>
                             </Col>
 
                                     <Col md={"12"}>
                                         <Label for="comment">Notes</Label>
-                                        <ReactQuill theme="snow" value={note} onChange={setNote}/>
+                                        <ReactQuill theme="snow" value={note} onChange={(note) => NewFormData.data["note"]=note}/>
                                     </Col>
                             <Col sm={12}>
                                 <br/>
@@ -222,11 +216,12 @@ const UploadResultPage = (props) => {
                     </ModalBody>
                     <ModalFooter>
                         <Button
-                            type='submit'
+                            
                             variant='contained'
                             color='primary'
                             className={classes.button}
                             startIcon={<SaveIcon/>}
+                            onClick={handleUploadFile}
                             disabled={saving}
                         >
                             Save {saving ? <Spinner/> : ""}

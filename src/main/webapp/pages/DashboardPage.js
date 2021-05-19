@@ -165,7 +165,7 @@ const genderChart = {
       pie: {
           allowPointSelect: true,
           cursor: 'pointer',
-          depth: 35,
+         
           dataLabels: {
               enabled: true,
               format: '{point.name}'
@@ -270,7 +270,8 @@ const deathChart = {
     }
   },
   title: {
-    text: deathRateData.text
+    text: deathRateData.text,
+    style:{ "fontSize": "14px" }
   },
   subtitle: {
     text: deathRateData.text
