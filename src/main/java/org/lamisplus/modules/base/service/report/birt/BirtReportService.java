@@ -109,15 +109,17 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         Optional<User> optionalUser = SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRoleByUserName);
         if(optionalUser.isPresent()){
             user = optionalUser.get();
-            if(params.get("facility_Id") == null){
+            if(params.get("facilityId") == null){
                 //assign default facilityId
-                params.put("facility_Id", user.getCurrentOrganisationUnitId());
+                params.put("facilityId", user.getCurrentOrganisationUnitId());
 
             } else {
                 //check facilityId belongs to user
+                //params.put("facilityId", user.getCurrentOrganisationUnitId());
+
                 List <Long> orgUnits = user.getApplicationUserOrganisationUnits().stream().map(ApplicationUserOrganisationUnit::getOrganisationUnitId).collect(Collectors.toList());
-                if(!orgUnits.contains(Long.valueOf((Integer)params.get("facility_Id")))){
-                    throw new EntityNotFoundException(OrganisationUnit.class,"FacilityId","User not in Organisation Unit");
+                if(!orgUnits.contains(Long.valueOf(params.get("facilityId").toString()))){
+                    throw new EntityNotFoundException(OrganisationUnit.class,"FacilityId","Organisation Unit not valid");
                 }
             }
         }
@@ -219,7 +221,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         EXCELRenderOption excelRenderOption = new EXCELRenderOption(options);
         excelRenderOption.setOutputFormat("xls");
         runAndRenderTask.setRenderOption(excelRenderOption);
-        runAndRenderTask.getAppContext().put("HTML_RENDER_CONTEXT", request);
+        runAndRenderTask.getAppContext().put("EXCEL_RENDER_CONTEXT", request);
 
 
         try {

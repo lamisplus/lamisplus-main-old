@@ -20,7 +20,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@Exposed
 public class AccountController {
     private static class AccountResourceException extends RuntimeException {
         private AccountResourceException(String message) {

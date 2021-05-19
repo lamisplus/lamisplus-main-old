@@ -140,7 +140,7 @@ export default function LaboratoryDashBoard(props) {
         useEffect(() => {
             async function getCharacters() {
                 try {
-                    const response = await axios.get( url+ 'laboratory-dashboard/pie');
+                    const response = await axios.get( url+ 'radiology-dashboard/pie');
                     const body = response.data && response.data!==null ? response.data : {}; 
                     
                     settestOrderGroupData(body)
@@ -153,7 +153,7 @@ export default function LaboratoryDashBoard(props) {
         useEffect(() => {
             async function getCharacters() {
                 try {
-                    const response = await axios.get( url+ 'laboratory-dashboard/column/testOrders');
+                    const response = await axios.get( url+ 'radiology-dashboard/column/testOrders');
                     const body = response.data && response.data!==null ? response.data : {}; 
                     settestOrdersStackChart(body)
                     console.log(body) 
@@ -162,17 +162,6 @@ export default function LaboratoryDashBoard(props) {
             getCharacters();
         }, []); 
     // API request for LIMS BAR CHART   
-    useEffect(() => {
-        async function getCharacters() {
-            try {
-                const response = await axios.get( url+ 'laboratory-dashboard/column/lims');
-                const body = response.data && response.data!==null ? response.data : {}; 
-                setlimsBarChart(body)
-                    
-            } catch (error) {}
-        }
-        getCharacters();
-    }, []); 
 
 // Test Group Pie Chart 
 

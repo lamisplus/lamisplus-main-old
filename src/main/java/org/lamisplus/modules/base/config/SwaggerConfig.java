@@ -1,5 +1,6 @@
 package org.lamisplus.modules.base.config;
 
+import com.foreach.across.core.annotations.Exposed;
 import com.google.common.collect.Lists;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,11 +12,11 @@ import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-
 import java.util.List;
 
 @Configuration
 @Component
+@Exposed
 public class SwaggerConfig {
     /**
      * Provides sensible defaults and convenience methods for configuration.

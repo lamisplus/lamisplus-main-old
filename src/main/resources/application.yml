@@ -43,7 +43,7 @@ server:
         mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
     http2:
         enabled: true
-    port: 8484
+    port: 8080
     tomcat:
         uri-encoding: UTF-8
         connection-timeout: 20s
@@ -64,9 +64,6 @@ spring:
         database: POSTGRESQL
         show-sql: true
         open-in-view: false
-        hibernate:
-            ddl-auto: update
-            properties:
         properties:
             hibernate.enable_lazy_load_no_trans: true
 

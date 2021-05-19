@@ -7,6 +7,6 @@ import org.lamisplus.modules.base.domain.entity.Image;
 import java.util.Optional;
 
 @Repository
-public interface ImageDbRepository extends JpaRepository<Image, Long> {
+public interface ImageRepository extends JpaRepository<Image, Long> {
     Optional<Image> findByUuid(String uuid);
 }

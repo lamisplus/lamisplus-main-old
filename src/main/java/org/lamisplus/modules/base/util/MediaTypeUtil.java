@@ -3,7 +3,7 @@ package org.lamisplus.modules.base.util;
 import javax.servlet.ServletContext;
 import org.springframework.http.MediaType;
 
-public class MediaTypeUtils {
+public class MediaTypeUtil {
 
     // abc.zip
     // abc.pdf,..

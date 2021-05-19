@@ -3,15 +3,7 @@ package org.lamisplus.modules.base.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.lamisplus.modules.base.util.UuidGenerator;
-
 import javax.persistence.*;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.Objects;
 
 @Entity
 @Data
