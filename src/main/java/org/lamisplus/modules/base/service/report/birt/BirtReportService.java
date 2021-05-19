@@ -109,9 +109,11 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         Optional<User> optionalUser = SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRoleByUserName);
         if(optionalUser.isPresent()){
             user = optionalUser.get();
-            if(params.get("facilityId") == null){
+            if(params.get("facilityIds") == null){
                 //assign default facilityId
-                params.put("facilityId", user.getCurrentOrganisationUnitId());
+                List<Long> facilityIds = new ArrayList<>();
+                facilityIds.add(user.getCurrentOrganisationUnitId());
+                params.put("facilityId", facilityIds);
 
             } else {
                 //check facilityId belongs to user
