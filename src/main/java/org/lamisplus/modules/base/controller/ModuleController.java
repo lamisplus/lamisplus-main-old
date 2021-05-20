@@ -53,9 +53,9 @@ public class ModuleController {
         return ResponseEntity.ok(moduleService.uploadAndUnzip(files));
     }
 
-    @PostMapping("/install")
-    public ResponseEntity<Module> installModule(Module module) {
-        return ResponseEntity.ok(installModule(module, null));
+    @PostMapping("/install/{moduleId}")
+    public ResponseEntity<Module> installModule(@PathVariable Long moduleId) {
+        return ResponseEntity.ok(installModule(moduleId, null));
     }
 
     @PostMapping("/start/all")
