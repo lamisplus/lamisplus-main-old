@@ -55,7 +55,7 @@ public class ModuleController {
 
     @PostMapping("/install")
     public ResponseEntity<Module> installModule(Module module) {
-        return ResponseEntity.ok(installModule(module, false));
+        return ResponseEntity.ok(installModule(module, null));
     }
 
     @PostMapping("/start/all")
