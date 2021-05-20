@@ -41,8 +41,8 @@ public class BaseApplication extends SpringBootServletInitializer {
         SpringApplication application = new SpringApplication(BaseApplication.class);
         context = application.run(args);
         Log.info("java.class.path - " + System.getProperty("java.class.path"));
-        ModuleService moduleService = context.getBean(ModuleService.class);
-        moduleService.startModule(isStartUp);
+        //ModuleService moduleService = context.getBean(ModuleService.class);
+        //moduleService.startModule(isStartUp);
         if(url == null){
             url = "http://localhost:8080";
         }
@@ -67,16 +67,6 @@ public class BaseApplication extends SpringBootServletInitializer {
 
     public static ConfigurableApplicationContext getContext() {
         return context;
-    }
-
-
-    @Bean
-    public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        PropertySourcesPlaceholderConfigurer properties =
-                new PropertySourcesPlaceholderConfigurer();
-        properties.setLocation(new FileSystemResource("config.properties"));
-        properties.setIgnoreResourceNotFound(true);
-        return properties;
     }
 
     //starting the default browser
