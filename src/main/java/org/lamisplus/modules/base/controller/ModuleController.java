@@ -55,7 +55,7 @@ public class ModuleController {
 
     @PostMapping("/install/{moduleId}")
     public ResponseEntity<Module> installModule(@PathVariable Long moduleId) {
-        return ResponseEntity.ok(installModule(moduleId, null));
+        return ResponseEntity.ok(moduleService.installModule(moduleId, null));
     }
 
     @PostMapping("/start/all")
