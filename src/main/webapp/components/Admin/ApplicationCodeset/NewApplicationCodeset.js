@@ -23,6 +23,7 @@ const useStyles = makeStyles(theme => ({
 
 const ModalSample = (props) => {
     const [loading, setLoading] = useState(false)
+    const [showNewCodesetGroup, setShowNewCodesetGroup] = useState(false)
     const defaultValues = {display:"", language:"", version:"", codesetGroup:""};
     const [formData, setFormData] = useState( defaultValues)
     const classes = useStyles()
@@ -30,7 +31,8 @@ const ModalSample = (props) => {
     useEffect(() => {
         //for application codeset edit, load form data
         setFormData(props.formData ? props.formData : defaultValues);
-    }, [props.formData]);
+        setShowNewCodesetGroup(false);
+    }, [props.formData,  props.showModal]);
 
     const handleInputChange = e => {
         setFormData ({ ...formData, [e.target.name]: e.target.value});
@@ -70,27 +72,49 @@ const ModalSample = (props) => {
             <Modal isOpen={props.showModal} toggle={props.toggleModal} size="lg">
 
                 <Form onSubmit={createGlobalVariable}>
-                    <ModalHeader toggle={props.toggleModal}> {props.formData && props.formData.id ? 'Edit' : 'New'} Global Variable </ModalHeader>
+                    <ModalHeader toggle={props.toggleModal}> {props.formData && props.formData.id ? 'Edit' : 'New'} Application Codeset </ModalHeader>
                     <ModalBody>
                         <Card >
                             <CardBody>
                                 <Row >
                                     <Col md={12}>
-                                        <FormGroup>
-                                            <Label>Codeset Group</Label>
-                                            <Select
-                                                required
-                                                name="cg"
-                                                id="cg"
-                                                isOptionDisabled={option => formData.id ? option.value !== formData.codesetGroup : false}
-                                                isMulti={false}
-                                                onChange={handleCodesetGroupChange}
-                                                options={props.applicationCodesetList ? Array.from(new Set(props.applicationCodesetList.map(x => x.codesetGroup))).sort().map (codesetGroup => ({value: codesetGroup, label: codesetGroup})) : []}
-                                                value={formData.codesetGroup ? {value: formData.codesetGroup, label: formData.codesetGroup} : ""}
-                                                isLoading={false}
-                                            />
+                                        {!showNewCodesetGroup ?
+                                            <FormGroup>
+                                                <Label>Codeset Group <span style={{cursor: "pointer", color: "blue"}}
+                                                                           onClick={() => setShowNewCodesetGroup(true)}> ( or Click to create new codeset group)</span></Label>
+                                                <Select
+                                                    required
+                                                    name="cg"
+                                                    id="cg"
+                                                    isOptionDisabled={option => formData.id ? option.value !== formData.codesetGroup : false}
+                                                    isMulti={false}
+                                                    onChange={handleCodesetGroupChange}
+                                                    options={props.applicationCodesetList ? Array.from(new Set(props.applicationCodesetList.map(x => x.codesetGroup))).sort().map(codesetGroup => ({
+                                                        value: codesetGroup,
+                                                        label: codesetGroup
+                                                    })) : []}
+                                                    value={formData.codesetGroup ? {
+                                                        value: formData.codesetGroup,
+                                                        label: formData.codesetGroup
+                                                    } : ""}
+                                                    isLoading={false}
+                                                />
+                                            </FormGroup> :
+                                            <FormGroup>
+                                                <Label>Codeset Group <span style={{cursor: "pointer", color: "blue"}}
+                                                                           onClick={() => setShowNewCodesetGroup(false)}> ( or Click to pick from existing codeset group)</span></Label>
+                                                <Input
+                                                    type='text'
+                                                    name='codesetGroup'
+                                                    id='codesetGroup'
+                                                    placeholder='Enter new codeset group'
+                                                    value={formData.codesetGroup}
+                                                    onChange={handleInputChange}
+                                                    required
+                                                />
+                                            </FormGroup>
 
-                                        </FormGroup>
+                                        }
                                     </Col>
                                     <Col md={12}>
                                         <FormGroup>
