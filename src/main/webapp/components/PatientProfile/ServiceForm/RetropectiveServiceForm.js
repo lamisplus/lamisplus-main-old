@@ -30,6 +30,7 @@ import { Paper } from '@material-ui/core';
 import {DatePicker} from "react-widgets";
 import "react-widgets/dist/css/react-widgets.css";
 // import Moment from "moment";
+import "./ServiceForm.css";
 
 const cardStyle = {
   borderColor: "#fff",
