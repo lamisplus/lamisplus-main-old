@@ -49,8 +49,8 @@ public class ModuleController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<Module> uploadAndUnzip(@RequestParam("file") MultipartFile file) {
-        return ResponseEntity.ok(moduleService.uploadAndUnzip(file));
+    public ResponseEntity<Module> uploadAndUnzip(@RequestParam("file") MultipartFile[] files) {
+        return ResponseEntity.ok(moduleService.uploadAndUnzip(files));
     }
 
     @PostMapping("/install")
