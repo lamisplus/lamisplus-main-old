@@ -49,13 +49,13 @@ public class ModuleController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<Module1> uploadAndUnzip(@RequestParam("file") MultipartFile file) {
-        return ResponseEntity.ok(moduleService.testUpload(file));
+    public ResponseEntity<Module> uploadAndUnzip(@RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(moduleService.uploadAndUnzip(file));
     }
 
     @PostMapping("/install")
-    public ResponseEntity<Module1> installModule(Module1 module1) {
-        return ResponseEntity.ok(moduleService.testInstall(module1));
+    public ResponseEntity<Module> installModule(Module module) {
+        return ResponseEntity.ok(installModule(module, false));
     }
 
     @PostMapping("/start/all")
