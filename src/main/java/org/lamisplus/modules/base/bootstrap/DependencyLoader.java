@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @RequiredArgsConstructor
 public class DependencyLoader {
-    private final ModuleService moduleService;
+    //private final ModuleService moduleService;
 
 
     /**
@@ -22,6 +22,6 @@ public class DependencyLoader {
      */
     @Scheduled(fixedDelay = Long.MAX_VALUE, initialDelay =1000)
     public void loadDependencies() {
-        moduleService.loadDependencies(null);
+        //moduleService.loadDependencies(null);
     }
 }
