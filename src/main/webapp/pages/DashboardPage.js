@@ -226,9 +226,7 @@ const birthChart = {
     text: birthRateData.text,
     style:{ "fontSize": "14px" }
   },
-  subtitle: {
-    text: birthRateData.text
-  },
+ 
   plotOptions: {
     column: {
         depth: 25
@@ -251,7 +249,7 @@ const birthChart = {
   
   series: [{
     name: birthSeries.name,
-    data: birthSeries.data
+    data: []
   }]
   };
 /* End of BirthRate Chart */
@@ -273,9 +271,7 @@ const deathChart = {
     text: deathRateData.text,
     style:{ "fontSize": "14px" }
   },
-  subtitle: {
-    text: deathRateData.text
-  },
+
   plotOptions: {
     column: {
         depth: 25
@@ -298,7 +294,7 @@ const deathChart = {
   
   series: [{
     name: deathSeries.name,
-    data: deathSeries.data
+    data: []
   }]
   };
 /* End of Death Rate Chart */

@@ -6,8 +6,8 @@ import {fetchRadiologyTestOrdersByEncounterID, updateRadiologyByFormId} from "ac
 import Button from "@material-ui/core/Button";
 import CancelIcon from "@material-ui/icons/Cancel";
 import {makeStyles} from "@material-ui/core/styles";
-import {Card, CardBody, Modal, ModalBody, ModalFooter, ModalHeader, Spinner
-    ,CardHeader,Col,Row,Alert,Table, Form,FormGroup,Label,Input} from 'reactstrap'
+import { Modal, ModalBody, ModalFooter, ModalHeader, Spinner
+    ,CardHeader,Col,Row,Alert,} from 'reactstrap'
 import Moment from "moment";
 import parse from 'html-react-parser';
 import momentLocalizer from "react-widgets-moment";

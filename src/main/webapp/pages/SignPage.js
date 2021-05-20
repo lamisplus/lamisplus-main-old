@@ -8,7 +8,8 @@ import Checkbox from "@material-ui/core/Checkbox";
 import { Link } from 'react-router-dom';
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
-
+import {Card, CardBody, Modal, ModalBody, ModalFooter, ModalHeader, Spinner
+  ,CardHeader,Col,Row,Alert,} from 'reactstrap'
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -102,14 +103,16 @@ export default function SignIn() {
     >
       <Container component="main" maxWidth="xs">
         <CssBaseline />
+       
         <div className={classes.paper}>
+         
           <img
             src={logo200Image}
             className="rounded"
             style={{ cursor: "pointer" }}
             alt="logo"
           />
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h4">
             Sign in
           </Typography>
           <form className={classes.form} noValidate>
@@ -157,18 +160,11 @@ export default function SignIn() {
             >
               {submitText}
             </Button>
-            {/* <div className="text-center pt-1">
-              <h6>or</h6>
-              <h6>
-                <Link to="/register">Register</Link>
-              </h6>
-            </div>  */}
+           
             <Grid container>
               <Grid item></Grid>
             </Grid> 
-            {/* <Box mt={5}>
-              <Copyright />
-            </Box> */}
+           
           </form>
         </div>
       </Container>

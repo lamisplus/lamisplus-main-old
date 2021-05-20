@@ -122,14 +122,14 @@ const useStyles = makeStyles(theme => ({
   
 
 
-  const userProgressTableData = 
-      [
+//   const userProgressTableData = 
+//       [
   
-          {name: 'Total Sample Dispatached'},
-          {name: 'Total Sample Results'},
-          {name: 'Total Sample Rejected'}
+//           {name: 'Total Sample Dispatached'},
+//           {name: 'Total Sample Results'},
+//           {name: 'Total Sample Rejected'}
   
-      ];
+//       ];
 
 export default function LaboratoryDashBoard(props) {
     const classes = useStyles();
@@ -141,9 +141,9 @@ export default function LaboratoryDashBoard(props) {
             async function getCharacters() {
                 try {
                     const response = await axios.get( url+ 'laboratory-dashboard/pie');
-                    const body = response.data && response.data!==null ? response.data : {}; 
+                    const responseBodyPie = response.data && response.data!==null ? response.data : {}; 
                     
-                    settestOrderGroupData(body)
+                    settestOrderGroupData(responseBodyPie)
                         
                 } catch (error) {}
             }
@@ -154,25 +154,25 @@ export default function LaboratoryDashBoard(props) {
             async function getCharacters() {
                 try {
                     const response = await axios.get( url+ 'laboratory-dashboard/column/testOrders');
-                    const body = response.data && response.data!==null ? response.data : {}; 
-                    settestOrdersStackChart(body)
-                    console.log(body) 
+                    const responseBodyBar = response.data && response.data!==null ? response.data : {}; 
+                    settestOrdersStackChart(responseBodyBar)
+                    console.log(responseBodyBar) 
                 } catch (error) {}
             }
             getCharacters();
         }, []); 
     // API request for LIMS BAR CHART   
-    useEffect(() => {
-        async function getCharacters() {
-            try {
-                const response = await axios.get( url+ 'laboratory-dashboard/column/lims');
-                const body = response.data && response.data!==null ? response.data : {}; 
-                setlimsBarChart(body)
+    // useEffect(() => {
+    //     async function getCharacters() {
+    //         try {
+    //             const response = await axios.get( url+ 'laboratory-dashboard/column/lims');
+    //             const bodyLims = response.data && response.data!==null ? response.data : {}; 
+    //             setlimsBarChart(bodyLims)
                     
-            } catch (error) {}
-        }
-        getCharacters();
-    }, []); 
+    //         } catch (error) {}
+    //     }
+    //     getCharacters();
+    // }, []); 
 
 // Test Group Pie Chart 
 
@@ -275,7 +275,7 @@ const testGroup = {
             }
         }]
     },
-    series: limsBarChart.series
+    series: []
 }
 
     return (
@@ -301,9 +301,9 @@ const testGroup = {
                 </CardDeck>
                     <br/><br/>
                 <Grid container spacing={2}>
-                    <Grid item xs='8' >                    
+                    {/* <Grid item xs='8' >                    
                         <Card  >
-                            {/* <CardHeader> LIMS Chart Analysis</CardHeader> */}
+                            
                                 <CardBody>
                                     <div>
                                         <HighchartsReact options={lamisChart} />
@@ -311,8 +311,8 @@ const testGroup = {
                                     
                                 </CardBody>                      
                         </Card>   
-                    </Grid>
-                  <Grid item xs='4'>
+                    </Grid> */}
+                  {/* <Grid item xs='4'>
                       <Card  >
                           <CardHeader> Recent LIMS Analysis for the past 7days</CardHeader>
                               <CardBody>
@@ -322,7 +322,7 @@ const testGroup = {
                                   />
                               </CardBody>                      
                       </Card>  
-                  </Grid>
+                  </Grid> */}
                     
                 </Grid> 
 
