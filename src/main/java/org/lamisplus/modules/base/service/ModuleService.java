@@ -97,7 +97,7 @@ public class ModuleService {
         return moduleRepository.findAllByArchived(UN_ARCHIVED);
     }
 
-    public List<Module> uploadAndUnzip(MultipartFile[] files, HttpServletRequest request) {
+    public List<Module> uploadAndUnzip(MultipartFile[] files) {
         ModuleUtil.setModuleConfigs();
         currentUser = userService.getUserWithRoles().get().getUserName();
 
