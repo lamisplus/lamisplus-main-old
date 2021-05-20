@@ -325,13 +325,4 @@ public class Module1 {
         result = 31 * result + Arrays.hashCode(data);
         return result;
     }
-
-    @OneToMany(mappedBy = "module1ByModuleId")
-    public Collection<Menu> getMenusById() {
-        return menusById;
-    }
-
-    public void setMenusById(Collection<Menu> menusById) {
-        this.menusById = menusById;
-    }
 }
