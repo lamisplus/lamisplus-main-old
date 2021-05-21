@@ -141,9 +141,9 @@ export default function LaboratoryDashBoard(props) {
             async function getCharacters() {
                 try {
                     const response = await axios.get( url+ 'radiology-dashboard/pie');
-                    const body = response.data && response.data!==null ? response.data : {}; 
+                    const responsePie = response.data && response.data!==null ? response.data : {}; 
                     
-                    settestOrderGroupData(body)
+                    settestOrderGroupData(responsePie)
                         
                 } catch (error) {}
             }
@@ -154,9 +154,9 @@ export default function LaboratoryDashBoard(props) {
             async function getCharacters() {
                 try {
                     const response = await axios.get( url+ 'radiology-dashboard/column/testOrders');
-                    const body = response.data && response.data!==null ? response.data : {}; 
-                    settestOrdersStackChart(body)
-                    console.log(body) 
+                    const responseBar = response.data && response.data!==null ? response.data : {}; 
+                    settestOrdersStackChart(responseBar)
+                    console.log(responseBar) 
                 } catch (error) {}
             }
             getCharacters();

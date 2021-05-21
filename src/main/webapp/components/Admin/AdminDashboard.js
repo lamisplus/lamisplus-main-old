@@ -20,11 +20,10 @@ import {
   } from 'react-icons/md';
 
 
+// Load Highcharts modules
+require("highcharts/modules/exporting")(Highcharts);
 
 function AdminDashboard(props) {
-
-
-
 
     const [testOrderGroupData, settestOrderGroupData] = useState({})
     const [testOrdersStackChart, settestOrdersStackChart] = useState({})
@@ -176,28 +175,28 @@ const testGroup = {
             bgColor="white"
             inverse={false}
             icon={MdDelete}
-            title="50"
+            title="0"
             subtitle="Archive Records"
           />
           <IconWidget
             bgColor="success"
             inverse={false}
             icon={MdPersonPin}
-            title="10"
+            title="0"
             subtitle="Active Users"
           />
           <IconWidget
             bgColor="white"
             inverse={false}
             icon={MdPeople}
-            title="20"
+            title="0"
             subtitle="Login Users"
           />
           <IconWidget
             bgColor="primary"
             inverse={false}
             icon={MdShowChart}
-            title="20"
+            title="0"
             subtitle="Facilities"
           />
         </CardGroup>

@@ -19,6 +19,9 @@ import HighchartsReact from 'highcharts-react-official';
 import { url } from "../../api";
 import axios from 'axios';
 import {getQueryParams} from "components/Utils/PageUtils";
+// Load Highcharts modules
+require("highcharts/modules/exporting")(Highcharts);
+
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -182,8 +185,8 @@ const ScrollableTabsButtonForce = (props) => {
           async function getCharacters() {
               try {
                   const response = await axios.get( url+ 'pharmacy-dashboard/pie');
-                  const body = response.data && response.data!==null ? response.data : {}; 
-                  setdrugPieChart(body)                         
+                  const bodyPie = response.data && response.data!==null ? response.data : {}; 
+                  setdrugPieChart(bodyPie)                         
               } catch (error) {}
           }
           getCharacters();
@@ -209,8 +212,9 @@ const ScrollableTabsButtonForce = (props) => {
             type: drugPieChart.type
         },
         title: {
-            text: ' Total Prescriptions and Dispensed Drugs in last 7days',
+            text: drugPieChart.title,
             align: 'center',
+            style:{ "fontSize": "14px" }
             // verticalAlign: 'middle',
             // y: 60
         },
@@ -250,7 +254,8 @@ const ScrollableTabsButtonForce = (props) => {
               type: drugBarChart.type
           },
           title: {
-              text: drugBarChart.text
+              text: drugBarChart.text,
+              style:{ "fontSize": "14px" }
           },
           subtitle: {
               text: drugBarChart.subtitle

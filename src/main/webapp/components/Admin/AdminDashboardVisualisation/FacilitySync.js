@@ -42,11 +42,11 @@ export const basicColumn = {
     },
     series: [{
         name: 'Expected',
-        data: [49.9, 71.5, 106.4, 129.2, 144.0 ]
+        data: []
   
     }, {
         name: 'Sync',
-        data: [83.6, 78.8, 98.5, 93.4, 106.0]
+        data: []
   
     },  ]
   };
