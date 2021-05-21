@@ -6,7 +6,7 @@
 //export const url =  'http://www.lamisplus.org/base-module/api/';
 
 //Local Server
-//export const url =  '/api/';
+//export const url =  'https://lp-base-app.herokuapp.com/api/';
 
 export const url = 'http://localhost:8484/api/'
 
