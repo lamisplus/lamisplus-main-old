@@ -161,21 +161,23 @@ function Header() {
           <NavItem>
             <NavLink id="Popover2"  >
               <Avatar
-                onClick={toggleUserCardPopover}
+                onMouseOver={toggleUserCardPopover}
                 className="can-click"
               />
             </NavLink>
             <Popover
               placement="bottom-end"
               isOpen={isOpenUserCardPopover}
-              toggle={toggleUserCardPopover}
+              //toggle={toggleUserCardPopover}              
               target="Popover2"
+              //onMouseLeave={toggleUserCardPopover}
               className="p-0 border-0"
               style={{ minWidth: 250, backgroundColor:"#3E51B5" }}
             >
               <PopoverBody
                 className="p-0 border-light"
                 style={{ backgroundColor: "#000 !important" }}
+                onMouseLeave={toggleUserCardPopover}
               >
                 <UserCard
                   title={currentUser ? currentUser.name : ""}
