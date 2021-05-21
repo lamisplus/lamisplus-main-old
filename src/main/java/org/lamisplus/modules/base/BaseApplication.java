@@ -25,12 +25,12 @@ import java.net.URISyntaxException;
 public class BaseApplication extends SpringBootServletInitializer {
     private static ConfigurableApplicationContext context;
 
-    private static Boolean isStartUp = true;
+    /*private static Boolean isStartUp = true;
 
     @Value("${base.url}")
     private static String url;
 
-    private static String command = "rundll32 url.dll,FileProtocolHandler ";
+    private static String command = "rundll32 url.dll,FileProtocolHandler ";*/
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -41,15 +41,15 @@ public class BaseApplication extends SpringBootServletInitializer {
         SpringApplication application = new SpringApplication(BaseApplication.class);
         context = application.run(args);
         Log.info("java.class.path - " + System.getProperty("java.class.path"));
-        //ModuleService moduleService = context.getBean(ModuleService.class);
+        /*//ModuleService moduleService = context.getBean(ModuleService.class);
         //moduleService.startModule(isStartUp);
         if(url == null){
             url = "http://localhost:8080";
         }
-        browse(url +"/login");
+        browse(url +"/login");*/
     }
 
-    public static void restart(Class[] clz, ConfigurableApplicationContext configurableApplicationContext) {
+    /*public static void restart(Class[] clz, ConfigurableApplicationContext configurableApplicationContext) {
         if (context == null) {
             context = configurableApplicationContext;
         }
@@ -86,5 +86,5 @@ public class BaseApplication extends SpringBootServletInitializer {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 }
