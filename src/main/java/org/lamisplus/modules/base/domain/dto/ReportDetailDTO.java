@@ -1,10 +1,7 @@
 package org.lamisplus.modules.base.domain.dto;
 
 import lombok.Data;
-import org.lamisplus.modules.base.domain.entity.Parameter;
-
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 @Data

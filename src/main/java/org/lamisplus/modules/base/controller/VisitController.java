@@ -1,7 +1,6 @@
 package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.VisitDTO;
 import org.lamisplus.modules.base.domain.entity.Visit;
 import org.lamisplus.modules.base.service.VisitService;
@@ -12,7 +11,6 @@ import java.util.List;
 @RestController
 @RequestMapping("api/visits")
 @RequiredArgsConstructor
-@Audit
 public class VisitController {
     private final VisitService visitService;
 
@@ -21,9 +19,9 @@ public class VisitController {
         return ResponseEntity.ok(visitService.getAllVisits());
     }
 
-    @GetMapping("/totalCount/checkIn")
-    public ResponseEntity<Long> getTotalCount() {
-        return ResponseEntity.ok(visitService.getVisitType());
+    @GetMapping("/count/{type}")
+    public ResponseEntity<Long> getTotalCount(@PathVariable Long type) {
+        return ResponseEntity.ok(visitService.getVisitType(type));
     }
 
     @GetMapping("/{id}")
@@ -33,12 +31,12 @@ public class VisitController {
 
     @PostMapping
     public ResponseEntity<Visit> save(@RequestBody VisitDTO visitDTO) {
-        return ResponseEntity.ok(this.visitService.save(visitDTO));
+        return ResponseEntity.ok(visitService.save(visitDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Visit> updateVisit(@RequestBody Visit visit, @PathVariable Long id) {
-        return ResponseEntity.ok(visitService.update(id, visit));
+    public ResponseEntity<Visit> updateVisit(@RequestBody VisitDTO visitDTO, @PathVariable Long id) {
+        return ResponseEntity.ok(visitService.update(id, visitDTO));
     }
 
     @DeleteMapping("/{id}")

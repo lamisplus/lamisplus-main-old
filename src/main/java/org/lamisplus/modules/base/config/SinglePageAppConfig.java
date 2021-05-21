@@ -26,11 +26,12 @@ public class SinglePageAppConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        log.info("in addResourceHandlers");
-            registry.addResourceHandler("/**")
-                    .addResourceLocations("classpath:/static/")
-                    .resourceChain(false)
-                    .addResolver(new PushStateResourceResolver());
+        registry.addResourceHandler("/**")
+                .addResourceLocations("classpath:/static/")
+                .resourceChain(false)
+                .addResolver(new PushStateResourceResolver());
+        registry.addResourceHandler("/swagger-ui.html**").addResourceLocations("classpath:/META-INF/resources/swagger-ui.html");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
     private class PushStateResourceResolver implements ResourceResolver {

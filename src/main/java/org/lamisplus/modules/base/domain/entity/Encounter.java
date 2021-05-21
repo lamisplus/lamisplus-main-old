@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.lamisplus.modules.base.security.SecurityUtils;
 import org.lamisplus.modules.base.util.converter.LocalDateConverter;
 import org.lamisplus.modules.base.util.converter.LocalTimeAttributeConverter;
 import org.springframework.data.annotation.CreatedBy;
@@ -12,6 +13,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -51,7 +53,7 @@ public class Encounter implements Serializable  {
     private LocalDate dateEncounter;
 
     @Basic
-    @Column(name = "date_created", nullable = true)
+    @Column(name = "date_created")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "hh:mm a")
     @Convert(converter = LocalTimeAttributeConverter.class)
     private LocalTime timeCreated;
@@ -61,16 +63,11 @@ public class Encounter implements Serializable  {
     @JsonIgnore
     private String uuid;
 
-    /*@Basic
-    @Column(name = "date_created")
-    @JsonIgnore
-    private Timestamp dateCreated;*/
-
     @CreatedBy
     @Basic
     @Column(name = "created_by", updatable = false)
     @JsonIgnore
-    private String createdBy;
+    private String createdBy = SecurityUtils.getCurrentUserLogin().orElse(null);
 
     @Basic
     @Column(name = "organisation_unit_id", updatable = false)
@@ -80,13 +77,13 @@ public class Encounter implements Serializable  {
     @Column(name = "date_modified")
     @JsonIgnore
     @UpdateTimestamp
-    private Timestamp dateModified;
+    private Timestamp dateModified = Timestamp.from(Instant.now());
 
     @LastModifiedBy
     @Basic
     @Column(name = "modified_by")
     @JsonIgnore
-    private String modifiedBy;
+    private String modifiedBy = SecurityUtils.getCurrentUserLogin().orElse(null);
 
     @Basic
     @Column(name = "archived")
@@ -121,4 +118,4 @@ public class Encounter implements Serializable  {
     @JsonIgnore
     @ToString.Exclude
     private List<FormData> formDataByEncounter;
-    }
+}

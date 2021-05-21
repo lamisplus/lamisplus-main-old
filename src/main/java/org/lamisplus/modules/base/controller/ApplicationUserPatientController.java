@@ -3,7 +3,6 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.*;
 import org.lamisplus.modules.base.domain.entity.ApplicationUserOrganisationUnit;
 import org.lamisplus.modules.base.service.ApplicationUserPatientService;
@@ -15,7 +14,6 @@ import java.util.List;
 @RequestMapping("/api/application_user_patient")
 @Slf4j
 @RequiredArgsConstructor
-@Audit
 public class ApplicationUserPatientController {
     private final ApplicationUserPatientService applicationUserPatientService;
 
@@ -25,6 +23,10 @@ public class ApplicationUserPatientController {
         return ResponseEntity.ok(applicationUserPatientService.getAllApplicationUserByPatientId(patientId));
     }
 
+    @GetMapping("/patientsNotManaged/{programCode}")
+    public ResponseEntity<List<PatientDTO>> getPatientsNotCaseManaged(@PathVariable String programCode) {
+        return ResponseEntity.ok(applicationUserPatientService.getPatientsNotCaseManaged(programCode));
+    }
     @GetMapping("/users/{userId}")
     public ResponseEntity<List<PatientDTO>> getAllApplicationUserPatientByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(applicationUserPatientService.getAllPatientByUserId(userId));
@@ -43,8 +45,8 @@ public class ApplicationUserPatientController {
 
     }
 
-    /*@DeleteMapping("/{id}")
-    public Boolean delete(@PathVariable Long id, @RequestBody ApplicationUserOrganisationUnit applicationUserOrganisationUnit) {
-        return this.applicationUserPatientService.delete(id, applicationUserOrganisationUnit);
-    }*/
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Integer> delete(@PathVariable Long id) {
+        return ResponseEntity.ok(applicationUserPatientService.delete(id));
+    }
 }

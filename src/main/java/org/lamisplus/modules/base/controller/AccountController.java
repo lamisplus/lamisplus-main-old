@@ -50,9 +50,6 @@ public class AccountController {
         userService.registerUser(managedUserVM, managedUserVM.getPassword());
     }
 
-
-
-
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {
         final Page<UserDTO> page = userService.getAllManagedUsers(pageable);

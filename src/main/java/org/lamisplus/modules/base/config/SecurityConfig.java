@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-//@Profile(value = {"development", "production"})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final TokenProvider tokenProvider;
     //Swagger interface
@@ -49,12 +48,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/api/authenticate","/api/application-codesets/codesetGroup").permitAll()
+                    .antMatchers("/api/authenticate", "/api/swagger-ui.html","/api/application-codesets/codesetGroup").permitAll()
                     .antMatchers("/api/**").authenticated()
-                .antMatchers(AUTH_LIST).authenticated().and().httpBasic()
+                .antMatchers(AUTH_LIST).permitAll()
+                .and().headers().frameOptions().sameOrigin()
                 .and()
                     .apply(securityConfigurerAdapter())
                 .and().csrf().disable()
+
         ;
     }
     private JWTConfigurer securityConfigurerAdapter() {

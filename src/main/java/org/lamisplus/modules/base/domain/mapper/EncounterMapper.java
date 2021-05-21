@@ -11,14 +11,14 @@ import org.mapstruct.Mappings;
 public interface EncounterMapper {
     Encounter toEncounter(EncounterDTO encounterDTO);
     @Mappings({
-            @Mapping(source="person.id", target="personId"),
             @Mapping(source="patient.id", target="patientId"),
             @Mapping(source="encounter.id", target="encounterId"),
             @Mapping(source="form.id", target="formId"),
             @Mapping(source="form.name", target="formName"),
             @Mapping(source="encounter.programCode", target="programCode"),
-            //@Mapping(source="encounter.formData", target="formDataObj")
+            @Mapping(source="encounter.organisationUnitId", target="organisationUnitId")
     })
-    EncounterDTO toEncounterDTO(Person person, Patient patient, Encounter encounter, Form form);
+    EncounterDTO toEncounterDTO(Patient patient, Encounter encounter, Form form);
+
 
 }

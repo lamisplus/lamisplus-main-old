@@ -5,10 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.FileInfo;
-import org.lamisplus.modules.base.service.FilesStorageServiceImpl;
-import org.lamisplus.modules.base.util.upload.FilesStorageService;
+import org.lamisplus.modules.base.service.FileStorageServiceImpl;
+import org.lamisplus.modules.base.service.FileStorageService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,18 +21,17 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@Audit
 public class FileController {
 
-    private final FilesStorageService storageService;
-    private final FilesStorageServiceImpl filesStorageServiceImpl;
+    private final FileStorageService storageService;
+    private final FileStorageServiceImpl fileStorageServiceImpl;
 
     private String uploadFileLocation = System.getProperty("user.dir"); // upload the local directory saved by the file, use @Value to get the attribute value configured in the global configuration file
 
 
     @PostMapping("/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws Exception {
-        return filesStorageServiceImpl.uploadFile(file, request);
+        return fileStorageServiceImpl.uploadFile(file, request);
     }
 
     @GetMapping("/files")

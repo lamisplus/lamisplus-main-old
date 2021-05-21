@@ -3,12 +3,11 @@ package org.lamisplus.modules.base.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
-import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ApplicationUserOrganisationUnitDTO;
 import org.lamisplus.modules.base.domain.entity.ApplicationUserOrganisationUnit;
 import org.lamisplus.modules.base.domain.mapper.ApplicationUserOrganisationUnitMapper;
 import org.lamisplus.modules.base.repository.ApplicationUserOrganisationUnitRepository;
-import org.lamisplus.modules.base.util.Constant;
+import org.lamisplus.modules.base.util.Constants;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +24,7 @@ public class ApplicationUserOrganisationUnitService {
     private final ApplicationUserOrganisationUnitRepository applicationUserOrganisationUnitRepository;
     private final ApplicationUserOrganisationUnitMapper applicationUserOrganisationUnitMapper;
     private final UserService userService;
-    private final Constant constant;
+    private final Constants.ArchiveStatus constant;
 
     public List<ApplicationUserOrganisationUnit> save(Set<ApplicationUserOrganisationUnitDTO> applicationUserOrganisationUnitDTO1) {
         List<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitList = new ArrayList<>();

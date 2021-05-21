@@ -13,6 +13,10 @@ import java.util.Optional;
 public interface ApplicationUserPatientRepository extends JpaRepository<ApplicationUserPatient, Long>, JpaSpecificationExecutor {
 
     List<ApplicationUserPatient> findAllByUserId(Long userId);
-    Optional<ApplicationUserPatient> findAllByPatientId(Long patientId);
+    Optional<ApplicationUserPatient> findAllByPatientIdAndArchived(Long patientId, int archived);
+    List<ApplicationUserPatient> findAllByPatientIdIn(List<Long> patientIds);
 
+    List<ApplicationUserPatient> findAllByArchivedAndPatientIdNotIn(int archived, List<Long> patientIds);
+
+    Optional<ApplicationUserPatient> findByIdAndArchived(Long id, int archived);
 }

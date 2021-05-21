@@ -5,6 +5,7 @@ import org.lamisplus.modules.base.domain.entity.Encounter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -79,5 +80,15 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
     List<Encounter> findAllByOrganisationUnitIdAndArchived(Long organisationUnitId, int archived);
 
     Optional<Encounter> findByIdAndArchived(Long id, int archived);
+
+    /*@Query(value = "SELECT * FROM encounter e LEFT JOIN patient p ON p.id = e.patient_id " +
+            "WHERE p.details ->>'firstName' ilike 1? OR p.details ->>'lastName' like 2? OR p.details ->>'hospitalNumber' ilike 3? " +
+            "AND p.organisation_unit_id=4? AND p.archived=?5;", nativeQuery = true)
+    Page<Encounter> findAllByFullDetails(String firstName, String lastName, String hospitalNumber, Long organisationUnitId, int archived, Pageable pageable);*/
+
+    List<Encounter> findByPatientByPatientIdAndDateModifiedIsAfter(Long patientId, LocalDate dateModified);
+
+    Optional<Encounter> findAllByPatientIdAndFormCodeAndArchived(Long patientId, String formCode, int archived);
+
 }
 

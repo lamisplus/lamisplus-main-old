@@ -3,7 +3,6 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.OrganisationUnitLevelDTO;
 import org.lamisplus.modules.base.service.OrganisationUnitLevelService;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,6 @@ import java.util.List;
 @RequestMapping("/api/organisation-unit-levels")
 @Slf4j
 @RequiredArgsConstructor
-@Audit
 public class OrganisationUnitLevelController {
     private final OrganisationUnitLevelService organisationUnitLevelService;
 

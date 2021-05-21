@@ -3,7 +3,6 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.entity.Regimen;
 import org.lamisplus.modules.base.domain.entity.RegimenLine;
 import org.lamisplus.modules.base.service.RegimenLineService;
@@ -15,7 +14,6 @@ import java.util.List;
 @RequestMapping("/api/regimen-lines")
 @Slf4j
 @RequiredArgsConstructor
-@Audit
 public class RegimenLineController {
     private final RegimenLineService regimenLineService;
 
