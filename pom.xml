@@ -241,83 +241,11 @@
 		<finalName>${project.artifactId}</finalName>
 		<defaultGoal>spring-boot:run</defaultGoal>
 		<plugins>
-
-			<!--
-                        <plugin>
-                            <groupId>com.github.eirslett</groupId>
-                            <artifactId>frontend-maven-plugin</artifactId>
-                            <version>1.6</version>
-                            <configuration>
-                                <installDirectory>target</installDirectory>
-                            </configuration>
-                            <executions>
-                                <execution>
-                                    <id>install node and yarn</id>
-                                    <goals>
-                                        <goal>install-node-and-yarn</goal>
-                                    </goals>
-                                    <configuration>
-                                        <nodeVersion>v12.16.1</nodeVersion>
-                                        <yarnVersion>v1.22.4</yarnVersion>
-                                    </configuration>
-                                </execution>
-                                <execution>
-                                    <id>yarn install all of our dependencies </id>
-                                    <goals>
-                                        <goal>yarn</goal>
-                                    </goals>
-                                    <configuration>
-                                        <arguments>install</arguments>
-                                        <workingDirectory>./</workingDirectory>
-                                    </configuration>
-                                </execution>
-                                <execution>
-                                    <id>run build</id>
-                                    <goals>
-                                        <goal>yarn</goal>
-                                    </goals>
-                                    <configuration>
-                                        <arguments>build</arguments>
-                                        <workingDirectory>./</workingDirectory>
-                                    </configuration>
-                                </execution>
-                                <execution>
-                                <configuration>
-                                    <workingDirectory>./</workingDirectory>
-                                </configuration>
-                                </execution>
-                            </executions>
-                        </plugin>
-            -->
-
-
-			<!--<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>Copy my react frontend in build to the static folder of my target folder</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>src\main\resources\static</outputDirectory>
-							<resources>
-								<resource>
-									<directory>build</directory>
-									<filtering>true</filtering>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.3.0</version>
-				<!-- Excluding the webpack file from war -->
+				<!-- Excluding the webapp file from war -->
 				<configuration>
 					<warSourceExcludes>target/base-module/**, */**</warSourceExcludes>
 					<packagingExcludes>src/main/webapp/**</packagingExcludes>
@@ -343,55 +271,18 @@
 					<target>${java.version}</target>
 					<annotationProcessorPaths>
 						<path>
-							<groupId>org.mapstruct</groupId>
-							<artifactId>mapstruct-processor</artifactId>
-							<version>${mapstruct.version}</version>
-						</path>
-						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 							<version>${lombok.version}</version>
 						</path>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>1.4.2.Final</version>
+						</path>
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
-			<!--&lt;!&ndash; Maven Shade Plugin &ndash;&gt;
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.4</version>
-				<executions>
-					&lt;!&ndash; Run shade goal on package phase &ndash;&gt;
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<transformers>
-								<transformer
-										implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-									<resource>META-INF/spring.handlers</resource>
-								</transformer>
-								<transformer
-										implementation="org.springframework.boot.maven.PropertiesMergingResourceTransformer">
-									<resource>META-INF/spring.factories</resource>
-								</transformer>
-								<transformer
-										implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-									<resource>META-INF/spring.schemas</resource>
-								</transformer>
-								<transformer
-										implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-								<transformer
-										implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>org.lamisplus.modules.base.BaseApplication</mainClass>
-								</transformer>
-							</transformers>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>-->
 		</plugins>
 	</build>
 </project>
