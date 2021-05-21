@@ -21,7 +21,7 @@ public class SwaggerConfig {
     /**
      * Provides sensible defaults and convenience methods for configuration.
      * @return a Docket
-     */
+     *//*
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -35,10 +35,10 @@ public class SwaggerConfig {
                 .securitySchemes(Lists.newArrayList(apiKey()));
     }
 
-    /**
+    *//**
      *
      * @return ApiInfo for documentation
-     */
+     *//*
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Lamisplus")

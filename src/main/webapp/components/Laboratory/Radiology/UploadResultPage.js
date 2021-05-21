@@ -69,7 +69,7 @@ const UploadResultPage = (props) => {
         if(fileToUpload[0]){
         NewFormData.data["test_order_status"] = 1
         testOrder.data["test_order_status"] = 1
-        NewFormData.data["image_uuid"] = []
+        //NewFormData.data["image_uuid"] = []
         const FormID = NewFormData.id
         const PatientIdID = NewFormData.data.patient_id
         //NewFormData.data['files'] = fileToUpload[0]

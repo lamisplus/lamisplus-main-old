@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.service.report.birt;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
 import org.eclipse.birt.report.engine.api.*;
@@ -109,20 +110,23 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         Optional<User> optionalUser = SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRoleByUserName);
         if(optionalUser.isPresent()){
             user = optionalUser.get();
-            if(params.get("facilityIds") == null){
-                //assign default facilityId
-                List<Long> facilityIds = new ArrayList<>();
-                facilityIds.add(user.getCurrentOrganisationUnitId());
-                params.put("facilityId", facilityIds);
-
-            } else {
-                //check facilityId belongs to user
-                //params.put("facilityId", user.getCurrentOrganisationUnitId());
-
-                List <Long> orgUnits = user.getApplicationUserOrganisationUnits().stream().map(ApplicationUserOrganisationUnit::getOrganisationUnitId).collect(Collectors.toList());
+            List <Long> orgUnits = user.getApplicationUserOrganisationUnits().stream().map(ApplicationUserOrganisationUnit::getOrganisationUnitId).collect(Collectors.toList());
+            if(params.get("facilityId") != null){
                 if(!orgUnits.contains(Long.valueOf(params.get("facilityId").toString()))){
                     throw new EntityNotFoundException(OrganisationUnit.class,"FacilityId","Organisation Unit not valid");
                 }
+
+            }  else if(params.get("facilityIds") != null){
+                List<Integer> facilityIds = (List<Integer>) params.get("facilityIds");
+                params.remove("facilityIds");
+                facilityIds.forEach(facilityId->{
+                    if(!orgUnits.contains(Long.valueOf(facilityId))){
+                        facilityIds.remove(facilityId);
+                    }
+                });
+                params.put("facilityIds", StringUtils.join(facilityIds, ","));
+            } else {
+                params.put("facilityId", user.getCurrentOrganisationUnitId());
             }
         }
 

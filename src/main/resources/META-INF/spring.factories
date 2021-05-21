@@ -3,5 +3,3 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   org.lamisplus.modules.bootstrap.module.ApplicationProperties,\
   org.lamisplus.modules.bootstrap.module.ModuleFileStorageService,\
   org.lamisplus.modules.base.config.SwaggerConfig
-
-

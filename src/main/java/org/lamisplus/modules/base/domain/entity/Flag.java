@@ -42,11 +42,17 @@ public class Flag {
     @Column(name = "visible")
     private Boolean visible;
 
+    @Basic
+    @Column(name = "module_id")
+    private String module_id;
+
+/*
     @ManyToOne
     @JsonIgnore
     @ToString.Exclude
-    @JoinColumn(name = "module_id", referencedColumnName = "id")
+    @JoinColumn(name = "module_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Module moduleByModuleId;
+*/
 
     @JsonIgnore
     @ToString.Exclude
