@@ -39,6 +39,7 @@ const UpdateReports = (props) => {
                     const newFormData = response.data;
                     newFormData["template"] = formData.template;
                     setFormData(newFormData);
+                    //setprogramCode(newFormData.programCode);
                     setLoading(false);
                 })
                 .catch(error => {
@@ -92,6 +93,7 @@ const UpdateReports = (props) => {
                                     <Col md={4}> <FormGroup>
                                         <Label class="sr-only">Program Name</Label>
                                         <Input type='text' name='programCode' id='programCode' value={formData.programName} onChange={handleInputChange} required/>
+                                    
                                     </FormGroup></Col>
 
                                        <Col md={4}> <FormGroup>
