@@ -275,7 +275,6 @@
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.apache.batik.css_1.7.0.v201011041433:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.eclipse.equinox.registry_3.8.0.v20180426-1327:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:javax.xml.stream_1.0.1.v201004272200:4.8.0" level="project" />
-    <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.eclipse.orbit.mongodb_3.2.2.v20170222-2110:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.eclipse.core.runtime_3.14.0.v20180417-0825:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.mozilla.javascript_1.7.5.v201504281450:4.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.innoventsolutions.birt.runtime:org.eclipse.update.configurator_3.4.0.v20180512-1141:4.8.0" level="project" />

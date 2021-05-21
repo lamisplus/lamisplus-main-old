@@ -35,9 +35,9 @@ server:
     connection-timeout: 20s
 spring:
   datasource:
-    username: xjwygrdeaarjol
-    password: 8c46a597ab716c2161e3ec4837afc803c84fbf31d2883fd82c6080cb71ea4885
-    url: jdbc:postgresql://ec2-34-206-252-187.compute-1.amazonaws.com:5432/d7289uqovjkusm
+    username: postgres
+    password: emeka
+    url: jdbc:postgresql://localhost:5432/lamisplus_etl3
     driver-class-name: org.postgresql.Driver
     hibernate:
       event.merge.enty_copy_observer: allow

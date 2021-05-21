@@ -11,15 +11,18 @@ import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 import java.util.List;
 
 @Configuration
 @Component
+@EnableSwagger2
 public class SwaggerConfig {
     /**
      * Provides sensible defaults and convenience methods for configuration.
      * @return a Docket
-     *//*
+     */
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
@@ -33,10 +36,10 @@ public class SwaggerConfig {
                 .securitySchemes(Lists.newArrayList(apiKey()));
     }
 
-    *//**
+    /**
      *
      * @return ApiInfo for documentation
-     *//*
+     */
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Lamisplus")
@@ -71,7 +74,6 @@ public class SwaggerConfig {
      * @return ApiKey
      * Sending Authorization: Bearer <token> header
      */
-
     private ApiKey apiKey() {
         return new ApiKey("Authorization", "Bearer ", "header");
     }
