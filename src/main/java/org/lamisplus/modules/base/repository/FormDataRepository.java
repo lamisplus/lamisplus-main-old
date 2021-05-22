@@ -68,9 +68,6 @@ public interface FormDataRepository extends JpaRepository<FormData, Long>, JpaSp
             "f.data ->>'order_date' BETWEEN ?2 AND ?3", nativeQuery = true)
     Long countAllByOrganisationUnitIdAndRadiologyTestOrderStatusEqualAndDateBetween(Long organisationUnitId, String status, LocalDate from, LocalDate to);
 
-
-
-
     List<FormData> findByEncounterId(Long encounterId);
 
     @Query(value = "select d from FormData d where d.encounterId in (select e.id from Encounter e where e.formCode = ?1 and e.patientId = ?2)")
@@ -78,6 +75,4 @@ public interface FormDataRepository extends JpaRepository<FormData, Long>, JpaSp
 
     @Query(value = "select d from FormData d where d.encounterId = (select distinct e.id from Encounter e where e.dateEncounter = ?1 and e.patientId = ?2)")
     List<FormData> findByDateEncounterAndPatientId(LocalDate dateEncounter, Long patientId);
-
-
 }
