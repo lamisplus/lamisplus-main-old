@@ -49,15 +49,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/api/authenticate", "/api/swagger-ui.html","/api/application-codesets/codesetGroup").permitAll()
+                    .antMatchers("/api/authenticate","/api/application-codesets/codesetGroup", "/api/swagger-ui.html").permitAll()
                     .antMatchers("/api/**").authenticated()
                 .antMatchers(AUTH_LIST).permitAll()
                 .and().headers().frameOptions().sameOrigin()
                 .and()
                     .apply(securityConfigurerAdapter())
-                .and().csrf().disable()
-
-        ;
+                .and().csrf().disable();
     }
     private JWTConfigurer securityConfigurerAdapter() {
         return new JWTConfigurer(tokenProvider);

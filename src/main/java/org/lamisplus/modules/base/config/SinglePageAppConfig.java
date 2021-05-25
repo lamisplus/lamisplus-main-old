@@ -1,7 +1,6 @@
 package org.lamisplus.modules.base.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -10,11 +9,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.ResourceResolver;
 import org.springframework.web.servlet.resource.ResourceResolverChain;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Arrays;
@@ -50,7 +44,6 @@ public class SinglePageAppConfig implements WebMvcConfigurer {
 
         @Override
         public String resolveUrlPath(String resourcePath, List<? extends Resource> locations, ResourceResolverChain chain) {
-            log.info("in resolveUrlPath");
             Resource resolvedResource = resolve(resourcePath, locations);
             if (resolvedResource == null) {
                 return null;
@@ -94,14 +87,5 @@ public class SinglePageAppConfig implements WebMvcConfigurer {
             String extension = StringUtils.getFilenameExtension(path);
             return handledExtensions.stream().anyMatch(ext -> ext.equals(extension));
         }
-    }
-
-    @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
-                .build();
     }
 }
