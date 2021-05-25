@@ -588,12 +588,22 @@ public class PatientService {
 
             JSONObject patientDetails = new JSONObject(formDataJsonString);
             mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            JSONArray otherIdentifier = new JSONArray(patientDetails.get("otherIdentifier").toString());
+
+
+            if(otherIdentifier != null && patientDTO.getHospitalNumber().equals("")){
+                if(!mapper.readValue(otherIdentifier.toString(), List.class).isEmpty()) {
+                    patientDetails.put("hospitalNumber", UUID.randomUUID().toString());
+                }
+            }
+
             if (patientDetails.has(key)) {
                 patientDTO.setHospitalNumber(patientDetails.get(key).toString());
+                patientDTO.setDetails(patientDetails.toString());
             } else {
                 throw new EntityNotFoundException(Patient.class, "Hospital Number", "null");
             }
-        } catch (JSONException | JsonProcessingException e) {
+        } catch (JSONException | JsonProcessingException  | NullPointerException e) {
             e.printStackTrace();
         }
         return patientDTO;

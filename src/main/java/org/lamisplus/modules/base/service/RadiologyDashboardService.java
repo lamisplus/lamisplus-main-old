@@ -99,12 +99,12 @@ public class RadiologyDashboardService {
         columnSeries.add(chartUtil.getMainMap(testOrderedData, "Radiology Test Ordered", "test", null, null));
 
         try {
-            resultAvailableData.add(formDataRepository.countAllByOrganisationUnitIdAndRadiologyTestOrderStatusEqualAndDateBetween(organisationUnitId, "%2%", currentMonth.minusMonths(6), currentMonth.minusMonths(5)));
-            resultAvailableData.add(formDataRepository.countAllByOrganisationUnitIdAndRadiologyTestOrderStatusEqualAndDateBetween(organisationUnitId, "%2%", currentMonth.minusMonths(5), currentMonth.minusMonths(4)));
-            resultAvailableData.add(formDataRepository.countAllByOrganisationUnitIdAndRadiologyTestOrderStatusEqualAndDateBetween(organisationUnitId, "%2%", currentMonth.minusMonths(4), currentMonth.minusMonths(3)));
-            resultAvailableData.add(formDataRepository.countAllByOrganisationUnitIdAndRadiologyTestOrderStatusEqualAndDateBetween(organisationUnitId, "%2%", currentMonth.minusMonths(3), currentMonth.minusMonths(2)));
-            resultAvailableData.add(formDataRepository.countAllByOrganisationUnitIdAndRadiologyTestOrderStatusEqualAndDateBetween(organisationUnitId, "%2%", currentMonth.minusMonths(2), currentMonth.minusMonths(1)));
-            resultAvailableData.add(formDataRepository.countAllByOrganisationUnitIdAndRadiologyTestOrderStatusEqualAndDateBetween(organisationUnitId, "%2%", currentMonth.minusMonths(1), currentMonth));
+            resultAvailableData.add(formDataRepository.countAllByOrganisationUnitIdAndRadiologyTestOrderStatusEqualAndDateBetween(organisationUnitId, "%1%", currentMonth.minusMonths(6), currentMonth.minusMonths(5)));
+            resultAvailableData.add(formDataRepository.countAllByOrganisationUnitIdAndRadiologyTestOrderStatusEqualAndDateBetween(organisationUnitId, "%1%", currentMonth.minusMonths(5), currentMonth.minusMonths(4)));
+            resultAvailableData.add(formDataRepository.countAllByOrganisationUnitIdAndRadiologyTestOrderStatusEqualAndDateBetween(organisationUnitId, "%1%", currentMonth.minusMonths(4), currentMonth.minusMonths(3)));
+            resultAvailableData.add(formDataRepository.countAllByOrganisationUnitIdAndRadiologyTestOrderStatusEqualAndDateBetween(organisationUnitId, "%1%", currentMonth.minusMonths(3), currentMonth.minusMonths(2)));
+            resultAvailableData.add(formDataRepository.countAllByOrganisationUnitIdAndRadiologyTestOrderStatusEqualAndDateBetween(organisationUnitId, "%1%", currentMonth.minusMonths(2), currentMonth.minusMonths(1)));
+            resultAvailableData.add(formDataRepository.countAllByOrganisationUnitIdAndRadiologyTestOrderStatusEqualAndDateBetween(organisationUnitId, "%1%", currentMonth.minusMonths(1), currentMonth));
             columnSeries.add(chartUtil.getMainMap(resultAvailableData, "Radiology Result Available", "result", null, null));
         }catch (Exception e){
             e.printStackTrace();

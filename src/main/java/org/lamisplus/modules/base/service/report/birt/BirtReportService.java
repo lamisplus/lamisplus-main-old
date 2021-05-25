@@ -304,10 +304,13 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
                 new EntityNotFoundException(ReportInfo.class, "Id", id+""));
     }
 
+    //@Value("${spring.datasource.url}")
     private String dbUrl;
 
+    //@Value("${spring.datasource.username}")
     private String dbUser;
 
+    //@Value("${spring.datasource.password}")
     private String dbPass;
 
     private void getDatabaseConnectionParameters( IReportRunnable iReportRunnable ) {

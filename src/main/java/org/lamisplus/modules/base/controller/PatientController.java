@@ -94,16 +94,6 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getEncountersByPatientIdAndFormCode(pageable, id, formCode, sortField, sortOrder, limit));
     }
 
-    /*@GetMapping("/{id}/encounters/test/{fCode}")
-    public ResponseEntity<List> getEncountersByPatientIdAndFCode(@PathVariable Long id,
-                                                                 @PathVariable String fCode, @RequestParam (required = false) String sortField,
-                                                                 @RequestParam(required = false) String sortOrder, @RequestParam(required = false) Integer limit,
-                                                                 @PageableDefault(value = 100) Pageable pageable) {
-        final Page<Encounter> page = patientService.getEncountersByPatientIdAndFCode(pageable, id, fCode,sortField, sortOrder, limit);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }*/
-
     @GetMapping("/{id}/encounters/programCodeExclusionList")
     //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List> getEncountersByPatientIdAndProgramCodeExclusionList(@PathVariable Long id, @RequestParam(required = false) List<String> programCodeExclusionList) {

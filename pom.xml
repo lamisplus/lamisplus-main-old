@@ -41,33 +41,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>22.0</version>
-        </dependency>
-        <!--<dependency>
-            <groupId>com.foreach.across</groupId>
-            <artifactId>across-core</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>logback-classic</artifactId>
-                    <groupId>ch.qos.logback</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>log4j-over-slf4j</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-                &lt;!&ndash;<exclusion>
-                    <artifactId>org.slf4j</artifactId>
-                    <groupId>slf4j-api</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>org.slf4j</artifactId>
-                    <groupId>jcl-over-slf4j</groupId>
-                </exclusion>&ndash;&gt;
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>com.foreach.across</groupId>
             <artifactId>across-test</artifactId>
             <exclusions>
@@ -76,11 +49,12 @@
                     <artifactId>across-core</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>-->
-        <!--<dependency>
-            <groupId>com.foreach.across</groupId>
-            <artifactId>across-web</artifactId>
-        </dependency>-->
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>22.0</version>
+        </dependency>
         <dependency>
             <groupId>com.foreach.across</groupId>
             <artifactId>across-autoconfigure</artifactId>
@@ -91,10 +65,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--<dependency>
-            <groupId>com.foreach.across.modules</groupId>
-            <artifactId>across-hibernate-module</artifactId>
-        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -122,12 +92,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <!--<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
@@ -222,7 +186,7 @@
             <artifactId>org.eclipse.birt.runtime_4.8.0-20180626</artifactId>
             <version>4.8.0</version>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>io.zonky.test</groupId>
             <artifactId>embedded-database-spring-test</artifactId>
             <version>1.6.2</version>
@@ -233,7 +197,7 @@
                     <artifactId>guava</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>

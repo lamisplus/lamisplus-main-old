@@ -121,6 +121,7 @@ public class FormService {
 
         form = formMapper.toFormDTO(formDTO);
         form.setId(id);
+        form.setArchived(0);
         return formRepository.save(form);
     }
 
