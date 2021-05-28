@@ -8,7 +8,7 @@ import javax.persistence.*;
 @EqualsAndHashCode
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class Permission {
+public class Permission extends Audit<String> {
     @Id
     @GeneratedValue
     private Long id;

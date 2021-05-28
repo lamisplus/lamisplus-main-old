@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -77,7 +78,7 @@ public class Encounter implements Serializable  {
     @Column(name = "date_modified")
     @JsonIgnore
     @UpdateTimestamp
-    private Timestamp dateModified = Timestamp.from(Instant.now());
+    private LocalDateTime dateModified = LocalDateTime.now();
 
     @LastModifiedBy
     @Basic

@@ -7,11 +7,18 @@ import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.domain.entity.User;
 import org.lamisplus.modules.base.repository.RoleRepository;
 import org.lamisplus.modules.base.repository.UserRepository;
+import org.lamisplus.modules.base.security.MyLogoutSuccessHandler;
 import org.lamisplus.modules.base.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 
@@ -22,6 +29,9 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final SessionRegistry sessionRegistry;
+    private final MyLogoutSuccessHandler logoutSuccessHandler;
+
 
     @GetMapping("/{id}")
     //@PreAuthorize("hasAuthority('user_read')")
@@ -69,5 +79,29 @@ public class UserController {
                 .map(UserDTO::new)
                 .orElseThrow(() -> new EntityNotFoundException(User.class, "Not Found", ""));
         return ResponseEntity.ok(userService.changeOrganisationUnit(id, userDTO));
+    }
+
+    @GetMapping("/loggedInCount")
+    public Integer getNumberOfLoggedInUsers() {
+        final List<Object> allPrincipals = sessionRegistry.getAllPrincipals();
+        return  allPrincipals.size();
+
+        /*for(final Object principal : allPrincipals) {
+            if(principal instanceof UserPrincipal) {
+                final UserPrincipal user = (UserPrincipal) principal;
+                // Do something with user
+                System.out.println(user);
+            }
+        }*/
+    }
+
+    @PostMapping("/logOut")
+    public void logOut(HttpServletRequest request,
+                          HttpServletResponse response, Authentication authentication) {
+        try {
+            logoutSuccessHandler.onLogoutSuccess(request, response, authentication);
+        } catch (IOException | ServletException e) {
+            e.printStackTrace();
+        }
     }
 }

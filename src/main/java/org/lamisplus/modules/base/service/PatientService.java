@@ -14,6 +14,7 @@ import org.lamisplus.modules.base.repository.*;
 
 import org.lamisplus.modules.base.util.AccessRight;
 import org.lamisplus.modules.base.util.GenericSpecification;
+import org.lamisplus.modules.base.util.RandomCodeGenerator;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -25,6 +26,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -593,7 +596,11 @@ public class PatientService {
 
             if(otherIdentifier != null && patientDTO.getHospitalNumber().equals("")){
                 if(!mapper.readValue(otherIdentifier.toString(), List.class).isEmpty()) {
-                    patientDetails.put("hospitalNumber", UUID.randomUUID().toString());
+                    String time = String.valueOf(Timestamp.from(Instant.now())).replace("-", "")
+                            .replace(" ", "")
+                            .replace(":", "")
+                            .replace(".", "");
+                    patientDetails.put("hospitalNumber", RandomCodeGenerator.randomAlphabeticString(4)+time);
                 }
             }
 

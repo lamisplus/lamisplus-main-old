@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -77,7 +78,7 @@ public class Form extends JsonBEntity implements Serializable {
     @Column(name = "date_created", updatable = false)
     @JsonIgnore
     @CreationTimestamp
-    private Timestamp dateCreated = Timestamp.from(Instant.now());
+    private LocalDateTime dateCreated = LocalDateTime.now();
 
     @CreatedBy
     @Basic
@@ -89,7 +90,7 @@ public class Form extends JsonBEntity implements Serializable {
     @Column(name = "date_modified")
     @JsonIgnore
     @UpdateTimestamp
-    private Timestamp dateModified = Timestamp.from(Instant.now());
+    private LocalDateTime dateModified = LocalDateTime.now();
 
     @LastModifiedBy
     @Basic

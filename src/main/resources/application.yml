@@ -49,6 +49,9 @@ server:
         connection-timeout: 20s
 spring:
     datasource:
+        username: postgres
+        password: emeka
+        url: jdbc:postgresql://localhost:5432/lamisplus_28_05_21
         driver-class-name: org.postgresql.Driver
         hibernate:
             event.merge.enty_copy_observer: allow
@@ -66,7 +69,8 @@ spring:
         open-in-view: false
         properties:
             hibernate.enable_lazy_load_no_trans: true
-
+        hibernate:
+            ddl-auto: update
     mail:
         host: localhost
         port: 25
@@ -95,3 +99,9 @@ jhipster:
 lamis:
     temp-dir: runtime/
     module-path: modules
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"

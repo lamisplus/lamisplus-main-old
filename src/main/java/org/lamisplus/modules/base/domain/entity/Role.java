@@ -4,16 +4,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.lamisplus.modules.base.security.SecurityUtils;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Set;
 
 @Entity
+@Data
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class Role {
+public class Role extends Audit<String> {
     @Id
     @GeneratedValue
     @Getter
@@ -25,16 +32,29 @@ public class Role {
     @Setter
     private String name;
 
-    @Basic
-    @Column(name = "date_created")
+    @CreatedBy
+    @Column(name = "created_by", nullable = false, updatable = false)
     @JsonIgnore
-    @CreationTimestamp
-    private Timestamp dateCreated;
+    @ToString.Exclude
+    private String createdBy = SecurityUtils.getCurrentUserLogin().orElse(null);
 
-    @Basic
+    @CreatedDate
+    @Column(name = "date_created", nullable = false, updatable = false)
+    @JsonIgnore
+    @ToString.Exclude
+    private Timestamp dateCreated = Timestamp.from(Instant.now());
+
+    @LastModifiedBy
+    @Column(name = "modified_by")
+    @JsonIgnore
+    @ToString.Exclude
+    private String modifiedBy = SecurityUtils.getCurrentUserLogin().orElse(null);
+
+    @LastModifiedDate
     @Column(name = "date_modified")
-    @UpdateTimestamp
-    private Timestamp dateModified;
+    @JsonIgnore
+    @ToString.Exclude
+    private Timestamp dateModified = Timestamp.from(Instant.now());
 
     @Getter
     @Setter

@@ -2,4 +2,4 @@ spring:
   datasource:
     username: postgres
     password: emeka
-    url: jdbc:postgresql://localhost:5432/lamisplus_db_23_05_21
+    url: jdbc:postgresql://localhost:5432/lamisplus_28_05_21

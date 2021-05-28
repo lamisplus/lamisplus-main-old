@@ -5,11 +5,14 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.lamisplus.modules.base.security.SecurityUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.*;
 
 @Entity
@@ -46,23 +49,29 @@ public class User {
     private String password;
 
     @Basic
-    @Column(name = "active")
+    @Column(name = "archived")
     @NonNull
-    private Integer active = 1;
+    private Integer archived = 1;
 
-    @Basic
-    @Column(name = "date_created")
-    @CreationTimestamp
-    private Date dateCreated;
+    @Column(name = "created_by", nullable = false, updatable = false)
+    @JsonIgnore
+    @ToString.Exclude
+    private String createdBy = SecurityUtils.getCurrentUserLogin().orElse(null);
 
-    @Basic
-    @Column(name = "last_modified_by")
-    private String lastModifiedBy;
+    @Column(name = "date_created", nullable = false, updatable = false)
+    @JsonIgnore
+    @ToString.Exclude
+    private Timestamp dateCreated = Timestamp.from(Instant.now());
 
-    @Basic
-    @Column(name = "date_last_modified")
-    @UpdateTimestamp
-    private Date dateLastModified;
+    @Column(name = "modified_by")
+    @JsonIgnore
+    @ToString.Exclude
+    private String modifiedBy = SecurityUtils.getCurrentUserLogin().orElse(null);
+
+    @Column(name = "date_modified")
+    @JsonIgnore
+    @ToString.Exclude
+    private Timestamp dateModified = Timestamp.from(Instant.now());
 
     @Basic
     @Column(name = "activation_key")
@@ -76,21 +85,21 @@ public class User {
     @Column(name = "reset_key")
     private String resetKey;
 
-    @Basic
+    /*@Basic
     @Column(name = "uploaded")
     private Integer uploaded;
 
     @Basic
     @Column(name = "time_uploaded")
-    private Time timeUploaded;
+    private Time timeUploaded;*/
 
     @Basic
     @Column(name = "current_organisation_unit_id")
     private Long currentOrganisationUnitId;
 
-    @Basic
+    /*@Basic
     @Column(name = "person_id")
-    private Long personId;
+    private Long personId;*/
 
     @Basic
     @Column(name = "first_name")
