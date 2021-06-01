@@ -18,8 +18,6 @@ import javax.persistence.PersistenceContext;
 @Service
 public class UserDetailService implements UserDetailsService {
 
-    private final Logger log = LoggerFactory.getLogger(UserDetailService.class);
-
     @Autowired
     UserRepository userRepository;
 

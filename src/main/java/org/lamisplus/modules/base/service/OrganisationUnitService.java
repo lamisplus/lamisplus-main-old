@@ -2,12 +2,14 @@ package org.lamisplus.modules.base.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+/*import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;*/
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.OrganisationUnitDTO;
+/*
 import org.lamisplus.modules.base.domain.dto.OrganisationUnitExtraction;
+*/
 import org.lamisplus.modules.base.domain.entity.OrganisationUnit;
 import org.lamisplus.modules.base.domain.entity.OrganisationUnitHierarchy;
 import org.lamisplus.modules.base.domain.mapper.OrganisationUnitMapper;
@@ -15,12 +17,7 @@ import org.lamisplus.modules.base.repository.OrganisationUnitHierarchyRepository
 import org.lamisplus.modules.base.repository.OrganisationUnitRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -119,7 +116,7 @@ public class OrganisationUnitService {
         return organisationUnitRepository.findAllByOrganisationUnitLevelIdIn(levels);
     }
 
-    public List getAll(){
+    /*public List getAll(){
         List orgList = new ArrayList();
         try {
             orgList = this.readDataFromExcelFile("C:\\Users\\Dell\\Documents\\PALLADIUM WORKS\\PALLADIUM WORKS\\IP_Facilities.xlsx");
@@ -198,5 +195,5 @@ public class OrganisationUnitService {
                 return cell.getNumericCellValue();
         }
         return null;
-    }
+    }*/
 }

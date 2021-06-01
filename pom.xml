@@ -21,6 +21,7 @@
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <org.projectlombok.version>1.16.4</org.projectlombok.version>
         <jjwt.version>0.11.2</jjwt.version>
+        <build.revision>1.0.0</build.revision>
         <maven.test.skip>true</maven.test.skip>
         <maven.lamisplus-baseui.skip>true</maven.lamisplus-baseui.skip>
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
@@ -63,6 +64,10 @@
                         <groupId>com.foreach.across.modules</groupId>
                         <artifactId>across-hibernate-module</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -87,6 +92,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+            <!--<exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>-->
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -181,11 +192,11 @@
             <artifactId>snakeyaml</artifactId>
             <version>1.26</version>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>com.innoventsolutions.birt.runtime</groupId>
             <artifactId>org.eclipse.birt.runtime_4.8.0-20180626</artifactId>
             <version>4.8.0</version>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>io.zonky.test</groupId>
             <artifactId>embedded-database-spring-test</artifactId>
@@ -271,17 +282,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>-->
-        <dependency>
+        <!--<dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>4.1.2</version>
-           <!-- <exclusions>
-                <exclusion>
-                    <groupId>com.github.virtuald</groupId>
-                    <artifactId>curvesapi</artifactId>
-                </exclusion>
-            </exclusions>-->
-        </dependency>
+        </dependency>-->
     </dependencies>
 
     <build>

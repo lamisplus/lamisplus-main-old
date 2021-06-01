@@ -47,7 +47,7 @@ public class BaseApplication extends SpringBootServletInitializer {
 
 
 
-    /*@Bean
+    @Bean
     public static PropertySourcesPlaceholderConfigurer properties() {
         PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
         YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
@@ -55,7 +55,7 @@ public class BaseApplication extends SpringBootServletInitializer {
         propertySourcesPlaceholderConfigurer.setProperties(yaml.getObject());
         propertySourcesPlaceholderConfigurer.setIgnoreResourceNotFound(true);
         return propertySourcesPlaceholderConfigurer;
-    }*/
+    }
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {

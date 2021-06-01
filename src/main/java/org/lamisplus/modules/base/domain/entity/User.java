@@ -13,6 +13,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -61,7 +62,7 @@ public class User {
     @Column(name = "date_created", nullable = false, updatable = false)
     @JsonIgnore
     @ToString.Exclude
-    private Timestamp dateCreated = Timestamp.from(Instant.now());
+    private LocalDateTime dateCreated = LocalDateTime.now();
 
     @Column(name = "modified_by")
     @JsonIgnore
@@ -71,7 +72,7 @@ public class User {
     @Column(name = "date_modified")
     @JsonIgnore
     @ToString.Exclude
-    private Timestamp dateModified = Timestamp.from(Instant.now());
+    private LocalDateTime dateModified = LocalDateTime.now();
 
     @Basic
     @Column(name = "activation_key")
