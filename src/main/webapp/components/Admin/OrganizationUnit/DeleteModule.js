@@ -60,7 +60,7 @@ const DeleteModule = (props) => {
           {/* <ModalViewResult ref={componentRef} /> */}
           
               <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
-                  <ModalHeader toggle={props.togglestatus}>Deactivate Module</ModalHeader>
+                  <ModalHeader toggle={props.togglestatus}>Delete Organisation Unit Level</ModalHeader>
                       <ModalBody>
                           <Card>
                             <CardBody>
@@ -102,5 +102,6 @@ const DeleteModule = (props) => {
     </div>
   );
 }
+
 
 export default DeleteModule;

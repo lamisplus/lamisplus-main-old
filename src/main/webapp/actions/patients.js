@@ -92,9 +92,9 @@ export const create = (data,onSuccess, onError) => dispatch => {
         payload: "Something went wrong"
       });
       onError()
-      if(error.response.data.apierror.message===null || error.response.data.apierror.message===""){
-        toast.error("Something went wrong");
-      }else{
+      if(error.response.data.apierror.statusCode===400){
+        toast.error(error.response.data.apierror.message);
+      }else if (error.response.data.apierror.message===null || error.response.data.apierror.message===""){
         //toast.error(error.response.data.apierror.message);
         toast.error("Something went wrong. Please try again...");
       }

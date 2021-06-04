@@ -87,7 +87,7 @@ function AdminSubMenu(props) {
                 </Dropdown.Item>
                 
                 <Dropdown.Item >
-                  <Link to={{pathname: "/admin-organization-unit"}}>Organization Unit setup</Link>
+                  <Link to={{pathname: "/admin-organization-unit"}}>Organization Unit Setup</Link>
                 </Dropdown.Item>
                 <Dropdown.Item>
                   <Link

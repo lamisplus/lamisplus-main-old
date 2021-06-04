@@ -9,15 +9,13 @@ import org.lamisplus.modules.base.domain.entity.Appointment;
 import org.lamisplus.modules.base.domain.entity.Patient;
 import org.lamisplus.modules.base.domain.mapper.AppointmentMapper;
 import org.lamisplus.modules.base.repository.AppointmentRepository;
-import org.lamisplus.modules.base.util.Constant;
-import org.lamisplus.modules.base.util.GenericSpecification;
+import org.lamisplus.modules.base.util.Constants;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -26,7 +24,7 @@ import java.util.Optional;
 public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final AppointmentMapper appointmentMapper;
-    private final Constant constant;
+    private final Constants.ArchiveStatus constant;
     private final UserService userService;
 
     public List<AppointmentDTO> getAllAppointment() {
@@ -90,6 +88,6 @@ public class AppointmentService {
 
     public Long getTodayAppointmentCount() {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-        return appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDate(organisationUnitId, Constant.UN_ARCHIVED, LocalDate.now());
+        return appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDate(organisationUnitId, constant.UN_ARCHIVED, LocalDate.now());
     }
 }

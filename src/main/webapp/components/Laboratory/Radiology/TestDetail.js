@@ -18,6 +18,7 @@ import momentLocalizer from "react-widgets-moment";
 import UploadResultPage from "./UploadResultPage";
 import ViewResultPage from "./ViewResultPage";
 import {authentication} from '../../../_services/authentication';
+import TestUpload from "./TestUpload";
 //Dtate Picker package
 Moment.locale("en");
 momentLocalizer();
@@ -79,15 +80,16 @@ const GlobalVariableSearch = (props) => {
     }
 
     const uploadResultPage = (row) => {
-        if(row.data.files) {
-            const files  = row.data.files.map(x => {
-                x.file["name"] = x.file.path;
+        if(row.data.image_uuid) {
+            const files  = row.data.image_uuid.map(x => {
+                //x.file["name"] = x.file.path;
                 return x
             })
-            row.data["files"] = files;
+            //row.data["files"] = files;
         } else {
            // row["data"] =  row.data;
         }
+        console.log(row)
         setTestOrder(row);
         toggleModal();
     }
@@ -135,7 +137,7 @@ console.log(props.list.formDataObj)
                             <tr key={row.id} style={{ borderBottomColor: '#fff' }}>
                                 <th className={classes.td}>{row.data.description ? row.data.description : ""}</th>
                                 <td className={classes.td}>{row.data.order_date ? row.data.order_date : ""} {" "}{row.data.order_time ? row.data.order_time : ""}  </td>
-                                <td className={classes.td}>{row.data.files ? row.data.files.length : "0"}</td>
+                                <td className={classes.td}>{row.data.image_uuid ? row.data.image_uuid.length : "0"}</td>
                                 <td className={classes.td}>{row.data.result_date ? row.data.result_date : ""} {" "}{row.data.result_time ? row.data.result_time : ""}  </td>
                                 <td className={classes.td} > <Menu>
                                     <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px"}}>
@@ -144,7 +146,7 @@ console.log(props.list.formDataObj)
                                     <MenuList style={{hover:"#eee"}}>
 
                                         <MenuItem onSelect={() => uploadResultPage(row)} hidden={!authentication.userHasRole(["laboratory_write"])} ><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Upload Result</MenuItem>
-                                        {row.data && row.data.files && row.data.files.length > 0 &&  <MenuItem onSelect={() => openResultPage(row)}><FaRegEye size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>}
+                                        {row.data && row.data.test_order_status > 0 &&  <MenuItem onSelect={() => openResultPage(row)}><FaRegEye size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>}
 
                                     </MenuList>
                                 </Menu></td>
@@ -155,9 +157,10 @@ console.log(props.list.formDataObj)
                     </tbody>
                 </Table>
             </CardBody>
-
+            <br/>
+            {/* <TestUpload /> */}
             {/*<NewGlobalVariable toggleModal={toggleModal} showModal={showModal} loadGlobalVariable={loadGlobalVariable} formData={currentGlobalVariable}/>*/}
-          <UploadResultPage toggleModal={toggleModal} showModal={showModal} loadSearch={loadSearch} formData={testOrder}/>
+          <UploadResultPage toggleModal={toggleModal} showModal={showModal} loadSearch={loadSearch} formDataObj={testOrder}/>
             <ViewResultPage toggleModal={toggleViewModal} showModal={showViewModal}  formData={testOrder}/>
         </Card>
         </React.Fragment>

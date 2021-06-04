@@ -3,6 +3,7 @@ package org.lamisplus.modules.base;
 import com.foreach.across.config.AcrossApplication;
 import com.foreach.across.modules.hibernate.jpa.AcrossHibernateJpaModule;
 import com.foreach.across.modules.web.AcrossWebModule;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.config.ApplicationProperties;
 import org.lamisplus.modules.bootstrap.BootstrapModule;
@@ -14,7 +15,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
-
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
 import java.io.File;
 
 @EnableScheduling

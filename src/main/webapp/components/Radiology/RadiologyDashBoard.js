@@ -140,10 +140,10 @@ export default function LaboratoryDashBoard(props) {
         useEffect(() => {
             async function getCharacters() {
                 try {
-                    const response = await axios.get( url+ 'laboratory-dashboard/pie');
-                    const body = response.data && response.data!==null ? response.data : {}; 
+                    const response = await axios.get( url+ 'radiology-dashboard/pie');
+                    const responsePie = response.data && response.data!==null ? response.data : {}; 
                     
-                    settestOrderGroupData(body)
+                    settestOrderGroupData(responsePie)
                         
                 } catch (error) {}
             }
@@ -153,26 +153,15 @@ export default function LaboratoryDashBoard(props) {
         useEffect(() => {
             async function getCharacters() {
                 try {
-                    const response = await axios.get( url+ 'laboratory-dashboard/column/testOrders');
-                    const body = response.data && response.data!==null ? response.data : {}; 
-                    settestOrdersStackChart(body)
-                    console.log(body) 
+                    const response = await axios.get( url+ 'radiology-dashboard/column/testOrders');
+                    const responseBar = response.data && response.data!==null ? response.data : {}; 
+                    settestOrdersStackChart(responseBar)
+                    console.log(responseBar) 
                 } catch (error) {}
             }
             getCharacters();
         }, []); 
     // API request for LIMS BAR CHART   
-    useEffect(() => {
-        async function getCharacters() {
-            try {
-                const response = await axios.get( url+ 'laboratory-dashboard/column/lims');
-                const body = response.data && response.data!==null ? response.data : {}; 
-                setlimsBarChart(body)
-                    
-            } catch (error) {}
-        }
-        getCharacters();
-    }, []); 
 
 // Test Group Pie Chart 
 
@@ -222,7 +211,8 @@ const testGroup = {
     },
   
     title: {
-        text: testOrdersStackChart.text
+        text: testOrdersStackChart.text,
+        style:{ "fontSize": "14px" }
     },
   
     xAxis: testOrdersStackChart.xAxis,

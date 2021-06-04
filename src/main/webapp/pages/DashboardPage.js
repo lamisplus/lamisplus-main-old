@@ -13,8 +13,6 @@ import { url } from "../api";
 // import 'react-grid-layout/css/styles.css';
 // import 'react-resizable/css/styles.css';
 
-
-
 // Load Highcharts modules
 require("highcharts/modules/exporting")(Highcharts);
 const cardStyle = {
@@ -46,7 +44,7 @@ const  DashboardPage = (props) => {
     async function getCharacters() {
         try {
             const response = await axios.get( url+ 'patients/totalCount');
-                const body2 = response.data && response.data!==null ? response.data :0.00;
+                const body2 = response.data && response.data!==null ? response.data :0;
                 setTotalPatients(body2) 
                 console.log(body2)
         } catch (error) {
@@ -108,7 +106,7 @@ useEffect(() => {
   async function getCharacters() {
       try {
           const response = await axios.get( url+ 'appointments/count');
-              const body = response.data && response.data!==null ? response.data : 0;
+              const body = response.data && response.data!==null ? response.data :0;
               setTotalAppointment(body)  
       } catch (error) {}
     }
@@ -167,12 +165,14 @@ const genderChart = {
       pie: {
           allowPointSelect: true,
           cursor: 'pointer',
-          depth: 35,
+         
           dataLabels: {
               enabled: true,
               format: '{point.name}'
-          }
+          },
+          showInLegend: true
       }
+      
   },
   series: [{
       
@@ -226,9 +226,7 @@ const birthChart = {
     text: birthRateData.text,
     style:{ "fontSize": "14px" }
   },
-  subtitle: {
-    text: birthRateData.text
-  },
+ 
   plotOptions: {
     column: {
         depth: 25
@@ -251,7 +249,7 @@ const birthChart = {
   
   series: [{
     name: birthSeries.name,
-    data: birthSeries.data
+    data: []
   }]
   };
 /* End of BirthRate Chart */
@@ -270,11 +268,10 @@ const deathChart = {
     }
   },
   title: {
-    text: deathRateData.text
+    text: deathRateData.text,
+    style:{ "fontSize": "14px" }
   },
-  subtitle: {
-    text: deathRateData.text
-  },
+
   plotOptions: {
     column: {
         depth: 25
@@ -297,7 +294,7 @@ const deathChart = {
   
   series: [{
     name: deathSeries.name,
-    data: deathSeries.data
+    data: []
   }]
   };
 /* End of Death Rate Chart */
