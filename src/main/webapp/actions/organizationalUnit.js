@@ -185,19 +185,42 @@ export const deleteOrgUnit = (id, onSuccess,onError) => dispatch => {
 
 export const updateOrganisationUnitLevel = (id, data, onSuccess,onError) => dispatch => {
   axios
-  .delete(`${baseUrl}organisation-units/${id}`, data)
+  .put(`${baseUrl}organisation-unit-levels/${id}`, data)
   .then(response => {
 
     dispatch({
-      type: ACTION_TYPES.DELETE_ORGANISATION_UNIT,
+      type: ACTION_TYPES.UPDATE_ORGANISATION_UNIT,
       payload: id
     });
     onSuccess()
-    toast.success("Organisational Unit record was deleted successfully!");
+    toast.success("Organisational Unit record was updated successfully!");
   })
   .catch(error => {
     dispatch({
-      type: ACTION_TYPES.DELETE_ORGANISATION_UNIT_ERROR,
+      type: ACTION_TYPES.UPDATE_ORGANISATION_UNIT_ERROR,
+      payload:error.response
+    });
+    onError()
+    toast.error("Something went wrong, please try again");
+    
+  });
+};
+
+export const updateOrganisationUnit = (id, data, onSuccess,onError) => dispatch => {
+  axios
+  .put(`${baseUrl}organisation-units/${id}`, data)
+  .then(response => {
+
+    dispatch({
+      type: ACTION_TYPES.UPDATE_ORGANISATION_UNIT,
+      payload: id
+    });
+    onSuccess()
+    toast.success("Organisational Unit record was updated successfully!");
+  })
+  .catch(error => {
+    dispatch({
+      type: ACTION_TYPES.UPDATE_ORGANISATION_UNIT_ERROR,
       payload:error.response
     });
     onError()

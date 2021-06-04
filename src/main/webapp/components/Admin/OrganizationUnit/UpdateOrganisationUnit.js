@@ -7,7 +7,7 @@ import axios from "axios";
 import {url} from '../../../api'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
-import {createOrgUnitLevel} from './../../../actions/organizationalUnit'
+import {updateOrganisationUnit} from './../../../actions/organizationalUnit'
 import { connect } from "react-redux";
 
 const useStyles = makeStyles(theme => ({
@@ -124,7 +124,7 @@ const createOrgUnit = (e) => {
         props.togglestatus();
     };
 
-    props.createOrgUnitLevel(otherfields,onSuccess, onError);
+    props.updateOrganisationUnit(otherfields.id, otherfields, onSuccess, onError);
 }
 
   return (      
@@ -232,7 +232,7 @@ const createOrgUnit = (e) => {
 }
 
 
-export default connect(null, { createOrgUnitLevel })(
+export default connect(null, { updateOrganisationUnit })(
     CreateParentOrgUnit
 );
 
