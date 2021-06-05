@@ -11,9 +11,9 @@ import "@reach/menu-button/styles.css";
 import MaterialTable from 'material-table';
 import {  MdDelete, MdModeEdit, MdRemoveRedEye } from "react-icons/md";
 import { FaPlusCircle, FaPlus} from 'react-icons/fa'
-import DeleteModule from "./DeleteModule";
-import CreateOrganizationUnit from "./CreateOrganizationUnit";
-import CreatOrgUnitByUpload from "./CreatOrgUnitByUpload";
+import DeleteOrgUnitLevel from "./DeleteOrgUnitLevel";
+import CreateOrganizationUnitLevel from "./CreateOrganizationUnitLevel";
+import UpdateOrganisationUnitLevel from "./UpdateOrganisationUnitLevel";
 import { useSelector, useDispatch } from 'react-redux';
 import {  fetchAllOrganizationalUnit, Delete } from '../../../actions/organizationalUnit';
 import { ToastContainer } from "react-toastify";
@@ -40,6 +40,7 @@ const useStyles = makeStyles({
 
   const OrganizationUnit = (props) => {
     const [orgUnitID, setorgUnitID] = useState([])
+    const [collectModal, setcollectModal] = useState([])
     const [modal, setModal] = useState(false) // 
     const toggleModal = () => setModal(!modal)
     const [modal2, setModal2] = useState(false) //
@@ -66,11 +67,15 @@ const useStyles = makeStyles({
 
     }, []); //componentDidMount
 
-    const deleteModule = (rowId) => {  
-      if (window.confirm(`Are you sure to delete this record? ${rowId}`))
-      dispatch(Delete(4444))
+    const deleteModule = (row) => {  
+      setcollectModal({...collectModal, ...row});
+      setModal(!modal) 
     }
-
+    const updateOrgUnitLevel = (row) => {  
+      setcollectModal({...collectModal, ...row});
+      setModal3(!modal3) 
+    }
+    
     const createOrgUnit = () => {  
       setModal2(!modal2) 
     }
@@ -79,7 +84,7 @@ const useStyles = makeStyles({
       setModal4(!modal4)
        
     }
-
+console.log(listOfAllOrgUnit)
 return (
     <div >
       <ToastContainer autoClose={3000} hideProgressBar />
@@ -89,7 +94,7 @@ return (
                               <Link color="inherit" to={{pathname: "/admin"}} >
                                   Admin
                               </Link>
-                              <Typography color="textPrimary">Organisational Unit Level Manager </Typography>
+                              <Typography color="textPrimary">Organisational Unit Level Setup </Typography>
                              </Breadcrumbs>
                                
                                
@@ -104,7 +109,7 @@ return (
 
                                   </div>
                             <MaterialTable
-                              title="Organisational Unit Level"
+                              title="Organisational Unit Levels"
                               columns={[
                                 { title: ' Name', field: 'name' },
                                 { title: 'Description', field: 'description' },
@@ -123,27 +128,32 @@ return (
                                               Actions <span aria-hidden>▾</span>
                                             </MenuButton>
                                                 <MenuList style={{ color:"#000 !important"}} >
-                                                       <MenuItem  style={{ color:"#000 !important"}}  onClick={() => createParentOrgUnit( row)}>                      
-                                                      
-                                                          <FaPlusCircle size="15" color="blue" />{" "}<span style={{color: '#000'}}>Add </span>
-                                                    
-                                                      </MenuItem>
+                                                       
                                                       <MenuItem  style={{ color:"#000 !important"}} >                      
                                                       <Link
                                                         to={{pathname: "/admin-parent-organization-unit", state: { orgUnitLevel: row  }}}>
                                                           <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>View</span>
                                                        </Link>  
                                                       </MenuItem>
-                                                      <MenuItem style={{ color:"#000 !important"}}>
+                                                      <MenuItem style={{ color:"#000 !important"}}  onSelect={() => updateOrgUnitLevel(row)}>
                                                             
                                                               <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit   </span>                   
                                                            
                                                       </MenuItem> 
-                                                      <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule(row.organisationUnitLevelId)}>                      
+                                                      <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule(row)}>                      
                                                       
                                                             <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Delete </span>
                                                                                 
-                                                      </MenuItem>                                    
+                                                      </MenuItem>
+                                                      { row.status ===0 ? 
+                                                      <MenuItem  style={{ color:"#000 !important"}}  onClick={() => createParentOrgUnit( row)}>                      
+                                                      
+                                                          <FaPlusCircle size="15" color="blue" />{" "}<span style={{color: '#000'}}>Add Org. Unit Level </span>
+                                                    
+                                                      </MenuItem>
+                                                      :
+                                                      ""
+                                                      }                               
                                                       
                                               </MenuList>
                                         </Menu>
@@ -168,9 +178,9 @@ return (
                             />
                             </Card>
                       
-       <DeleteModule modalstatus={modal} togglestatus={toggleModal} orgUnitID={orgUnitID}/>
-       <CreateOrganizationUnit modalstatus={modal2} togglestatus={toggleModal2}  />
-       <CreatOrgUnitByUpload modalstatus={modal3} togglestatus={toggleModal3}  />
+       <DeleteOrgUnitLevel modalstatus={modal} togglestatus={toggleModal} orgUnit={collectModal}/>
+       <CreateOrganizationUnitLevel modalstatus={modal2} togglestatus={toggleModal2}  />
+       <UpdateOrganisationUnitLevel modalstatus={modal3} togglestatus={toggleModal3}  orgUnit={collectModal}/>
        <CreateParentOrgUnit modalstatus={modal4} togglestatus={toggleModal4}   orgUnitID={orgUnitID}/>
                        
        

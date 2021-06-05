@@ -31,3 +31,7 @@
   th {
     border-bottom: 1px solid black;
   }
+
+.nav-item .nav-link.active {
+  color: #0f0f10 !important;
+}

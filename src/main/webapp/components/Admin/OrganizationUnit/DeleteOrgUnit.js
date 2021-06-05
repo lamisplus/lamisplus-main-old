@@ -4,7 +4,8 @@ import { Modal, ModalHeader, ModalBody,Row,Col,FormGroup,Label,Card,CardBody
 import MatButton from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import CancelIcon from '@material-ui/icons/Cancel';
-import PrintIcon from '@material-ui/icons/Print';
+import {deleteOrgUnit} from './../../../actions/organizationalUnit'
+import { connect } from "react-redux";
 
 
 const useStyles = makeStyles(theme => ({
@@ -46,27 +47,36 @@ const useStyles = makeStyles(theme => ({
 
 const DeleteModule = (props) => {
     const classes = useStyles()
-    const datasample = props.datasample ? props.datasample : {};
-    const lab_test_group = datasample.data ? datasample.data.lab_test_group : null ;
-    const description = datasample.data ? datasample.data.description : null ;
-    const unit_measurement = datasample.data ? datasample.data.unit_measurement : null ;
-    const date_result_reported = datasample.data ? datasample.data.date_result_reported : null ;
-    const test_result = datasample.data ? datasample.data.test_result : null ;
+    const orgUnit = props.orgUnit ? props.orgUnit : {};
+    const [loading, setLoading] = useState(false)
+    console.log(orgUnit);
 
+const DeleteOrgUnitLevel = () =>{
 
+    const onSuccess = () => {
+        setLoading(false);
+        props.togglestatus();
+    };
+    const onError = () => {
+        setLoading(false);
+        props.togglestatus();
+    };
+
+    props.createOrgUnitLevel(orgUnit.id,onSuccess, onError);
+}
 
   return (      
       <div >
           {/* <ModalViewResult ref={componentRef} /> */}
           
-              <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="lg">
-                  <ModalHeader toggle={props.togglestatus}>Delete Organisation Unit Level</ModalHeader>
+              <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="md">
+                  <ModalHeader toggle={props.togglestatus}>Delete Organisation Unit </ModalHeader>
                       <ModalBody>
                           <Card>
                             <CardBody>
                                 <Row style={{ marginTop: '20px'}}>
                                     <Col xs="12">
-                                        <span style={{ fontWeight: 'bold'}}>Are you sure you want to Deactivate the HTS module</span>
+                                        <span style={{ fontWeight: 'bold'}}>Are you sure you want to Delete {orgUnit.name} ?</span>
                                         <br/>
                                     </Col>
                                     <br/>
@@ -74,17 +84,6 @@ const DeleteModule = (props) => {
                                     <br/>
                                 </Row>
                             <br/>
-                            <MatButton
-                                type='submit'
-                                variant='contained'
-                                color='primary'
-                                className={classes.button}
-                                
-                                className=" float-right mr-1"
-                                
-                            >
-                                Deactivate 
-                            </MatButton>
                             <MatButton
                               variant='contained'
                               color='default'
@@ -95,6 +94,18 @@ const DeleteModule = (props) => {
                             >
                               Cancel
                             </MatButton>
+                            <MatButton
+                                type='submit'
+                                variant='contained'
+                                color='primary'
+                                className={classes.button}
+                                onClick={DeleteOrgUnitLevel}
+                                className=" float-right mr-1"
+                                disabled={loading}
+                            >
+                                Yes 
+                            </MatButton>
+                            
                       </CardBody>
                 </Card>
           </ModalBody>
@@ -103,5 +114,6 @@ const DeleteModule = (props) => {
   );
 }
 
-
-export default DeleteModule;
+export default connect(null, { deleteOrgUnit })(
+    DeleteModule
+);

@@ -28,6 +28,7 @@ function AdminDashboard(props) {
     const [testOrderGroupData, settestOrderGroupData] = useState({})
     const [testOrdersStackChart, settestOrdersStackChart] = useState({})
     const [limsBarChart, setlimsBarChart] = useState({})
+    const [TotalLoginUser, setTotalLoginUser] = useState(0)
     // APi request for Pie chart
         useEffect(() => {
             async function getCharacters() {
@@ -40,6 +41,20 @@ function AdminDashboard(props) {
             }
             getCharacters();
         }, []);  
+    //API TO GET TOTAL LOGIN USER 
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+                const response = await axios.get( url+ 'users/loggedInCount');
+                    const loggedInCount = response.data && response.data!==null ? response.data :0;
+                    setTotalLoginUser(loggedInCount) 
+                    console.log(loggedInCount)
+            } catch (error) {
+    
+            }
+          }
+          getCharacters();
+      }, []);
     // API request for stack bar chart    
         useEffect(() => {
             async function getCharacters() {
@@ -189,7 +204,7 @@ const testGroup = {
             bgColor="white"
             inverse={false}
             icon={MdPeople}
-            title="0"
+            title={TotalLoginUser}
             subtitle="Login Users"
           />
           <IconWidget
