@@ -25,6 +25,7 @@ const cardStyle = {
 
 const  DashboardPage = (props) => {
   window.scrollTo(0, 0);
+  console.log(props)
   const [genderData, setGenderData] = useState({})
   const [combineChartData, setcombineChartData] = useState({})
   const [birthRateData, setbirthRateData] = useState({})
