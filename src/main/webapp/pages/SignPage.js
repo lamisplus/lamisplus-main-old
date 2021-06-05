@@ -71,7 +71,7 @@ export default function SignIn() {
       (user) => {
         setError(false);
         setHelperText("Login Successfully");
-        history.push("/");
+        history.push("/", {user : user} );
       },
       (error) => {
         setIsButtonDisabled(true)
