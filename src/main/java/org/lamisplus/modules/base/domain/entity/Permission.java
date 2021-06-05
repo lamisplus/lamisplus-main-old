@@ -19,6 +19,9 @@ public class Permission extends Audit<String> {
     @NonNull
     private String description;
 
+    @NonNull
+    private int archived;
+
     /*@OneToMany(mappedBy = "permissionByPermissionId")
     @ToString.Exclude
     @JsonIgnore

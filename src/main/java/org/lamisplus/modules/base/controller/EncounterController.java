@@ -81,5 +81,4 @@ public class EncounterController {
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
         return ResponseEntity.ok(this.encounterService.delete(id));
     }
-
 }

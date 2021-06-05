@@ -17,7 +17,7 @@ public class PermissionController {
     @GetMapping
     //@PreAuthorize("hasAuthority('user_read')")
     public ResponseEntity<List<Permission>> getAll() {
-        return ResponseEntity.ok(this.permissionRepository.findAll());
+        return ResponseEntity.ok(this.permissionRepository.findAllByArchived(0));
     }
 
 

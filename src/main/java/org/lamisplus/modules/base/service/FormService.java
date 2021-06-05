@@ -12,6 +12,7 @@ import org.lamisplus.modules.base.repository.FormRepository;
 import org.lamisplus.modules.base.repository.PermissionRepository;
 import org.lamisplus.modules.base.repository.ProgramRepository;
 import org.lamisplus.modules.base.util.AccessRight;
+import org.lamisplus.modules.base.util.Constants;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -33,6 +34,8 @@ public class FormService {
     private static final String WRITE = "Write";
     private static final String DELETE = "Delete";
     private static final String UNDERSCORE = "_";
+    private final Constants.ArchiveStatus constant;
+
 
     public List getAllForms() {
         List<Form> forms = formRepository.findAllByArchivedOrderByIdAsc(UN_ARCHIVED);
@@ -58,9 +61,9 @@ public class FormService {
             String write = UNDERSCORE + WRITE;
             String delete = UNDERSCORE + DELETE;
 
-            permissions.add(new Permission(formDTO.getCode() + read, formDTO.getName() +" Read"));
-            permissions.add(new Permission(formDTO.getCode() + write, formDTO.getName() +" Write"));
-            permissions.add(new Permission(formDTO.getCode() + delete, formDTO.getName() +" Delete"));
+            permissions.add(new Permission(formDTO.getCode() + read, formDTO.getName() +" Read", constant.UN_ARCHIVED));
+            permissions.add(new Permission(formDTO.getCode() + write, formDTO.getName() +" Write", constant.UN_ARCHIVED));
+            permissions.add(new Permission(formDTO.getCode() + delete, formDTO.getName() +" Delete", constant.UN_ARCHIVED));
             permissionRepository.saveAll(permissions);
 
         return formRepository.save(form);
@@ -132,6 +135,11 @@ public class FormService {
 
         accessRight.grantAccessByAccessType(form.getCode(), FormService.class, DELETE, permissions);
 
+        List<Permission> permissionList = permissionRepository.findAllByNameIsLike("%"+form.getCode()+"%");
+        permissionList.forEach(permission -> {
+            permission.setArchived(constant.ARCHIVED);
+            permissionRepository.save(permission);
+        });
         form.setArchived(ARCHIVED);
         formRepository.save(form);
         return form.getArchived();
