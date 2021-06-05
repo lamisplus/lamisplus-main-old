@@ -114,7 +114,7 @@ function Header() {
               payload: response.data.permissions,
             });
             console.log(response.data)
-            if(response.data.currentOrganisationUnitName ===null){
+            if(response.data.currentorganisationUnitId ===null){
               toggleAssignModal()
             }            
             
