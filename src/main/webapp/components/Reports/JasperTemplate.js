@@ -33,11 +33,12 @@ const CreateReports = props => {
       // … do something with the 'content' …
     };
     
-    const handleFileChosen = (file) => {
-      fileReader = new FileReader();
-      fileReader.onloadend = handleFileRead;
-      fileReader.readAsText(file);
-    };
+    // const handleFileChosen = (file) => {
+    //   fileReader = new FileReader();
+    //   fileReader.onloadend = handleFileRead;
+    //   fileReader.readAsText(file);
+    // };
+    
     const [newdata2] = React.useState(datanew);
     const [programCode, setprogramCode] = React.useState("");
     const [name, setname] = React.useState();
@@ -111,16 +112,16 @@ const CreateReports = props => {
                                     </Row>
                                     <Row>
                                         <Col md={12}> <FormGroup>
-                                            <Label class="sr-only">Template(Paste XML or JSON Template) OR { '  '}{ '  '}{ '  '}</Label>
+                                            <Label class="sr-only">Template(Paste XML or JSON Template)  { '  '}{ '  '}{ '  '}</Label>
                                              
-                                            <input
+                                            {/* <input
                                                 type='file'
                                                 id='file'
                                                 className='input-file'
                                                 accept='.rptdesign'
                                                 onChange={e => handleFileChosen(e.target.files[0])}
                                                 style={{paddingLeft:'10px'}}
-                                            />
+                                            /> */}
                                             <Input type="textarea" name="text" id="template" value={template} rows="10" onChange={e => settemplate(e.target.value)}/>
                                         </FormGroup></Col>
                                     </Row>
