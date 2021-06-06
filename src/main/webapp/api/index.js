@@ -3,7 +3,7 @@
 //export const url =  'https://lp-base.herokuapp.com/api/';
 
 //Online Server
-export const url =  'http://www.lamisplus.org/base-module/api/';
+//export const url =  'http://www.lamisplus.org/base-module/api/';
 
 //Local Server
 //export const url =  'https://lp-base-app.herokuapp.com/api/';

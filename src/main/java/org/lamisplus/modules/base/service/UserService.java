@@ -97,7 +97,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Page<UserDTO> getAllManagedUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(UserDTO::new);
+        return userRepository.findAllByArchived(pageable, 0).map(UserDTO::new);
     }
 
     public User update(Long id, User user) {

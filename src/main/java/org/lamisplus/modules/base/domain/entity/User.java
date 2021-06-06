@@ -52,7 +52,7 @@ public class User {
     @Basic
     @Column(name = "archived")
     @NonNull
-    private Integer archived = 1;
+    private Integer archived = 0;
 
     @Column(name = "created_by", nullable = false, updatable = false)
     @JsonIgnore
