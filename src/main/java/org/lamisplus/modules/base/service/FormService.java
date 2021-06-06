@@ -60,6 +60,22 @@ public class FormService {
             String read = UNDERSCORE + READ;
             String write = UNDERSCORE + WRITE;
             String delete = UNDERSCORE + DELETE;
+        /*Permission permission = null;
+
+        if(permissionRepository.findByDescriptionAndArchived(formDTO.getName() +" Read", 0).isPresent()){
+           permission =  permissionRepository.findByDescriptionAndArchived(formDTO.getName() +" Read", 0).get();
+        }
+
+        if(permissionRepository.findByDescriptionAndArchived(formDTO.getName() +" Write", 0).isPresent()){
+            permission =  permissionRepository.findByDescriptionAndArchived(formDTO.getName() +" Write", 0).get();
+
+        }
+
+        if(permissionRepository.findByDescriptionAndArchived(formDTO.getName() +" Delete", 0).isPresent()){
+            permission =  permissionRepository.findByDescriptionAndArchived(formDTO.getName() +" Delete", 0).get();
+
+        }*/
+
 
             permissions.add(new Permission(formDTO.getCode() + read, formDTO.getName() +" Read", constant.UN_ARCHIVED));
             permissions.add(new Permission(formDTO.getCode() + write, formDTO.getName() +" Write", constant.UN_ARCHIVED));
