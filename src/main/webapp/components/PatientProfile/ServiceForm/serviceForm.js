@@ -96,7 +96,7 @@ function ServiceFormPage(props) {
     setPrograms(
       props.programList
         .map((x) => ({ ...x, label: x.name, value: x.code }))
-        .filter((x) => x.value !== CODES.GENERAL_SERVICE)
+        .filter((x) => ( x.value !== CODES.GENERAL_SERVICE && x.value !== CODES.RETROSPECTIVE_SERVICE ))
     );
   }, [props.programList]);
 
