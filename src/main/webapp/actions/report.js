@@ -29,11 +29,14 @@ export const creatReport = (data, onSuccess, onError) => dispatch => {
 };
 
 
-export const generateReport = (data, onError) => dispatch => {
+export const generateReport = (data, onSuccess, onError) => dispatch => {
     const reportFormat = 'application/'+(data.reportFormat).toLowerCase();
     axios
         .post(`${url}reports/generate`, data, {responseType: 'arraybuffer'})
         .then(response => {
+            if(onSuccess){
+                onSuccess();
+            }
         //Create a Blob from the PDF Stream
             const file = new Blob(
                 [response.data],
