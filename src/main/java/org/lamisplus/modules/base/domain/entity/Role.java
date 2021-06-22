@@ -26,6 +26,10 @@ public class Role extends Audit<String> {
     @Setter
     private String name;
 
+    @Getter
+    @Setter
+    private String code;
+
     @LastModifiedDate
     @Column(name = "date_modified")
     @JsonIgnore

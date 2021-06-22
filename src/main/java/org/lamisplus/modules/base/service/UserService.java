@@ -58,15 +58,19 @@ public class UserService {
            return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRoleByUserName);
     }
 
-    public User registerUser(UserDTO userDTO, String password){
-        userRepository
-                .findOneByUserName(userDTO.getUserName().toLowerCase())
-                .ifPresent(existingUser-> {
-                    throw new UsernameAlreadyUsedException();
-                        }
-                );
-
+    public User registerUser(UserDTO userDTO, String password, boolean updateUser){
+        Optional<User> optionalUser = userRepository.findOneByUserName(userDTO.getUserName().toLowerCase());
         User newUser = new User();
+        if(updateUser){
+
+        }else {
+            optionalUser.ifPresent(existingUser-> {
+                        throw new UsernameAlreadyUsedException();
+                    }
+            );
+        }
+
+
         String encryptedPassword = passwordEncoder.encode(password);
         newUser.setUserName(userDTO.getUserName());
         newUser.setEmail(userDTO.getEmail());

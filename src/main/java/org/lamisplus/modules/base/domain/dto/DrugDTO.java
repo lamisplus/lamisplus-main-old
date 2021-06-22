@@ -12,5 +12,7 @@ public class DrugDTO {
 
     private String code;
 
+    private String abbrev;
+
     private Long drugGroupId;
 }

@@ -17,4 +17,6 @@ public class RegimenDTO {
     private String name;
 
     private Long regimenLineId;
+
+    private String code;
 }

@@ -45,8 +45,6 @@ public class BaseApplication extends SpringBootServletInitializer {
         SpringApplication.run(BaseApplication.class, args);
     }
 
-
-
     @Bean
     public static PropertySourcesPlaceholderConfigurer properties() {
         PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();

@@ -20,8 +20,8 @@ public class Ward extends Audit<String>{
     private String name;
 
     @Basic
-    @Column(name = "uuid", updatable = false)
-    private String uuid;
+    @Column(name = "code", updatable = false)
+    private String code;
 
     @Basic
     @Column(name = "archived")

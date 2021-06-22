@@ -25,6 +25,10 @@ public class RegimenLine extends Audit<String> {
     private String name;
 
     @Basic
+    @Column(name = "code")
+    private String code;
+
+    @Basic
     @Column(name = "archived")
     @JsonIgnore
     private Integer archived;
