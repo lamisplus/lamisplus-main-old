@@ -89,7 +89,7 @@ const UserList = (props) => {
     currentUser = user;
     setAssignFacilityModal(!assignFacilityModal);
     console.log(assignFacilityModal);
-    console.log("Modal should open")
+  
   }
 
   const toggleEditRoles = (id) => {

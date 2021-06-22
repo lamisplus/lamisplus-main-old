@@ -1,6 +1,5 @@
 package org.lamisplus.modules.base.controller;
 
-import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.entity.Encounter;
@@ -40,8 +39,8 @@ public class EncounterController {
             "Example - api/encounters/{formCode}?dateStart=01-01-2020&dateEnd=01-04-2020")*/
     @GetMapping("/{formCode}/{dateStart}/{dateEnd}")
     public ResponseEntity<List<EncounterDTO>> getEncounterByFormCodeAndDateEncounter(@PathVariable String formCode,
-                                                                 @ApiParam(defaultValue = "") @PathVariable(required = false) Optional<String> dateStart,
-                                                                                     @ApiParam(value = "") @PathVariable(required = false) Optional<String> dateEnd,
+                                                                 /*@ApiParam(defaultValue = "")*/ @PathVariable(required = false) Optional<String> dateStart,
+                                                                                     /*@ApiParam(value = "")*/ @PathVariable(required = false) Optional<String> dateEnd,
                                                                                      @RequestParam (required = false, defaultValue = "%*%")String searchValue,
                                                                                      @PageableDefault(value = 100) Pageable pageable) {
 
@@ -82,5 +81,4 @@ public class EncounterController {
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
         return ResponseEntity.ok(this.encounterService.delete(id));
     }
-
 }

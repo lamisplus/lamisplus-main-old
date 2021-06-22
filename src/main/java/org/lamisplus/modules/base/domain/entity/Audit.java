@@ -19,6 +19,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -39,7 +40,7 @@ public class Audit<U>
     @Column(name = "date_created", nullable = false, updatable = false)
     @JsonIgnore
     @ToString.Exclude
-    private Timestamp dateCreated = Timestamp.from(Instant.now());
+    private LocalDateTime dateCreated = LocalDateTime.now();
 
     @LastModifiedBy
     @Column(name = "modified_by")
@@ -51,5 +52,5 @@ public class Audit<U>
     @Column(name = "date_modified")
     @JsonIgnore
     @ToString.Exclude
-    private Timestamp dateModified = Timestamp.from(Instant.now());
+    private LocalDateTime dateModified = LocalDateTime.now();
 }

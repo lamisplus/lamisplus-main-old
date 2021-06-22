@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ApplicationCodesetDTO;
+import org.lamisplus.modules.base.domain.dto.ApplicationCodesetResponseDTO;
 import org.lamisplus.modules.base.domain.entity.ApplicationCodeSet;
 import org.lamisplus.modules.base.domain.mapper.ApplicationCodesetMapper;
 import org.lamisplus.modules.base.repository.ApplicationCodesetRepository;
@@ -31,14 +32,6 @@ public class ApplicationCodesetService {
 
     public List<ApplicationCodesetDTO> getAllApplicationCodeset(){
         List<ApplicationCodeSet> applicationCodeSets = applicationCodesetRepository.findAllByArchivedOrderByIdAsc(constant.UN_ARCHIVED);
-        List<ApplicationCodeSet> applicationCodeSets1 = new ArrayList<>();
-        applicationCodeSets.forEach(applicationCodeSet -> {
-            if(applicationCodeSet.getCode() == null || StringUtils.isBlank(applicationCodeSet.getCode())){
-                applicationCodeSet.setCode(UUID.randomUUID().toString());
-                applicationCodeSets1.add(applicationCodeSet);
-            }
-        });
-        if(!applicationCodeSets1.isEmpty()) applicationCodesetRepository.saveAll(applicationCodeSets1);
         return applicationCodesetMapper.toApplicationCodesetDTOList(applicationCodesetRepository.findAllByArchivedOrderByIdAsc(constant.UN_ARCHIVED));
     }
 
@@ -56,10 +49,8 @@ public class ApplicationCodesetService {
         return applicationCodesetRepository.save(applicationCodeset);
     }
 
-    public List<ApplicationCodesetDTO> getApplicationCodeByCodesetGroup(String codeSetGroup){
-        List<ApplicationCodeSet> applicationCodesetList = applicationCodesetRepository.findAllByCodesetGroupAndArchivedOrderByIdAsc(codeSetGroup, constant.UN_ARCHIVED);
-
-        return applicationCodesetMapper.toApplicationCodesetDTOList(applicationCodesetList);
+    public List<ApplicationCodesetResponseDTO> getApplicationCodeByCodesetGroup(String codeSetGroup){
+        return applicationCodesetRepository.findAllByCodesetGroupAndArchivedOrderByIdAsc(codeSetGroup, constant.UN_ARCHIVED);
     }
 
     public ApplicationCodesetDTO getApplicationCodeset(Long id){

@@ -1,4 +1,4 @@
-package org.lamisplus.modules.base;
+package org.lamisplus.modules.base.controller;
 
 import com.foreach.across.config.AcrossContextConfigurer;
 import com.foreach.across.core.AcrossContext;
@@ -9,6 +9,7 @@ import io.zonky.test.db.postgres.junit5.SingleInstancePostgresExtension;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.lamisplus.modules.base.BaseModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;

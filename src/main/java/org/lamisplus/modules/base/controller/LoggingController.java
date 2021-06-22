@@ -23,7 +23,7 @@ import java.nio.file.Paths;
 @RequiredArgsConstructor
 public class LoggingController {
     private final ServletContext servletContext;
-    private String logFile;
+    private String logFile = "application-debug.log";
 
     @GetMapping
     public String log() {
@@ -54,6 +54,5 @@ public class LoggingController {
                 // Content-Length
                 .contentLength(data.length) //
                 .body(resource);
-
     }
 }

@@ -14,6 +14,7 @@ import org.lamisplus.modules.base.repository.*;
 
 import org.lamisplus.modules.base.util.AccessRight;
 import org.lamisplus.modules.base.util.GenericSpecification;
+import org.lamisplus.modules.base.util.RandomCodeGenerator;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -25,6 +26,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -65,43 +68,10 @@ public class PatientService {
         Optional<Patient> patient1 = patientRepository.findByHospitalNumberAndOrganisationUnitIdAndArchived(patientDTO.getHospitalNumber(), organisationUnitId, UN_ARCHIVED);
         if (patient1.isPresent())
             throw new RecordExistException(Patient.class, "Hospital Number", patientDTO.getHospitalNumber() + "");
-        log.info("patientDTO from front end {} ", patientDTO);
-
-        //final Person person = patientMapper.toPerson(patientDTO);
-        //person.setUuid(UUID.randomUUID().toString());
-        //final Person createdPerson = this.personRepository.save(person);
-
-        //final PersonContact personContact = patientMapper.toPersonContact(patientDTO);
-        //personContact.setPersonId(createdPerson.getId());
-        //this.personContactRepository.save(personContact);
-
-        /*if (patientDTO.getPersonRelativeDTOs()!= null || patientDTO.getPersonRelativeDTOs().size() > 0) {
-            final List<PersonRelative> personRelatives = new ArrayList<>();
-            patientDTO.getPersonRelativeDTOs().forEach(personRelativeDTO -> {
-                final PersonRelative personRelative = personRelativeMapper.toPersonRelative(personRelativeDTO);
-                personRelative.setPersonId(createdPerson.getId());
-                personRelatives.add(personRelative);
-                this.personRelativeRepository.save(personRelative);
-            });
-            this.personRelativeRepository.saveAll(personRelatives);
-        }*/
-
 
         final Patient patient = patientMapper.toPatient(patientDTO);
-        /*patient.setPersonByPersonId(createdPerson);
-        patient.setPersonId(createdPerson.getId());*/
         patient.setUuid(UUID.randomUUID().toString());
         patient.setOrganisationUnitId(organisationUnitId);
-
-        /*//Creating the ObjectMapper object
-        ObjectMapper mapper = new ObjectMapper();
-        //Converting the Object to JSONString
-        String jsonString = null;
-        try {
-            jsonString = mapper.writeValueAsString(patient);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }*/
 
         return patientRepository.save(patient);
     }
@@ -128,20 +98,11 @@ public class PatientService {
         patientOptional.get().getPatientFlagsById().forEach(patientFlag -> {
             flags.add(patientFlag.getFlag());
         });
-
-        //Person person = patientOptional.get().getPersonByPersonId();
-        //PersonContact personContact = person.getPersonContactsByPerson();
         Optional<Visit> visitOptional = visitRepository.findTopByPatientIdAndDateVisitEndIsNullOrderByDateVisitStartDesc(patientOptional.get().getId());
 
         //Check for currently check-in patient
         PatientDTO patientDTO = visitOptional.isPresent() ? patientMapper.toPatientDTO(visitOptional.get(), patientOptional.get()) : patientMapper.toPatientDTO(patientOptional.get());
         patientDTO.setFlags(flags);
-
-        //List<PersonRelative> personRelatives = person.getPersonRelativesByPerson();
-
-            /*patientDTO.setPersonRelativeDTOs(personRelativeMapper.toPersonRelativeDTOList(personRelatives.stream().
-                    filter(personRelative -> personRelative.getArchived() != ARCHIVED).
-                    collect(Collectors.toList())));*/
         return transformDTO(patientDTO);
     }
 
@@ -151,39 +112,9 @@ public class PatientService {
                 new EntityNotFoundException(Patient.class, "Id", id + ""));
 
         patientDTO = transformDTO(HOSPITAL_NUMBER, patientDTO);
-        //final Person person = patientMapper.toPerson(patientDTO);
-        /*person.setId(patientOptional.get().getPersonId());
-        person.setUuid(patientOptional.get().getPersonByPersonId().getUuid());*/
-        //final Person updatedPerson = this.personRepository.save(person);
-
-        //final PersonContact personContact = patientMapper.toPersonContact(patientDTO);
-        //Optional<PersonContact> personContactOptional = this.personContactRepository.findByPersonId(updatedPerson.getId());
-        //personContact.setId(personContactOptional.get().getId());
-        //personContact.setPersonId(updatedPerson.getId());
-
-        //this.personContactRepository.save(personContact);
-
-        /*final List<PersonRelative> personRelatives = new ArrayList<>();
-        if(patientDTO.getPersonRelativeDTOs() != null && patientDTO.getPersonRelativeDTOs().size()>0) {
-            patientDTO.getPersonRelativeDTOs().forEach(personRelativeDTO -> {
-                Optional<PersonRelative> personRelativeOptional = this.personRelativeRepository.findById(personRelativeDTO.getId());
-                final PersonRelative personRelative = personRelativeMapper.toPersonRelative(personRelativeDTO);
-                //If person relative exist
-                if(personRelativeOptional.isPresent()){
-                    //Setting person relative id
-                    personRelative.setId(personRelativeOptional.get().getId());
-                }
-                personRelative.setPersonId(updatedPerson.getId());
-                personRelatives.add(personRelative);
-            });
-            this.personRelativeRepository.saveAll(personRelatives);
-        }*/
 
         final Patient patient = patientMapper.toPatient(patientDTO);
-        //patient.setPersonId(updatedPerson.getId());
         patient.setId(id);
-        //patient.setModifiedBy(userService.getUserWithRoles().get().getUserName());
-
         return patientRepository.save(patient);
     }
 
@@ -265,18 +196,11 @@ public class PatientService {
         //setting all patient archive to 1
         Patient patient = patientOptional.get();
         patient.setArchived(ARCHIVED);
-        //patientOptional.get().setModifiedBy(username);
-        //For person
-        //Person person = patientOptional.get().getPersonByPersonId();
-        //person.setArchived(ARCHIVED);
-        //patientOptional.get().getPersonByPersonId().setModifiedBy(username);
         //For encounter
         List<Encounter> encounters = new ArrayList<>();
         patientOptional.get().getEncountersByPatient().forEach(encounter -> {
             encounter.setArchived(ARCHIVED);
             encounters.add(encounter);
-            //encounter.setModifiedBy(username);
-
         });
         //For visit
         List<Visit> visits = new ArrayList<>();
@@ -301,7 +225,6 @@ public class PatientService {
 
         visitList.forEach(visit -> {
             Patient patient = visit.getPatientByVisit();
-            //Person person = patient.getPersonByPersonId();
             List<AppointmentDTO> appointmentDTOS = appointmentService.getOpenAllAppointmentByPatientId(patient.getId());
             final VisitDTO visitDTO = visitMapper.toVisitDTO(visit, patient);
             visitDTO.setAppointmentDTOList(appointmentDTOS);
@@ -391,8 +314,6 @@ public class PatientService {
     }
 
     public List<FormDTO> getAllFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
-
-        //ArrayList<EncounterDistinctDTO> encounterDistinctDTOS = new ArrayList<>();
         Optional<Program> optionalProgram = programRepository.findProgramByCodeAndArchived(programCode, UN_ARCHIVED);
         if (!optionalProgram.isPresent()) {
             throw new EntityNotFoundException(Program.class, "programCode", programCode + "");
@@ -581,23 +502,34 @@ public class PatientService {
 
 
     private PatientDTO transformDTO(String key, PatientDTO patientDTO){
-
         try {
             //Instance of ObjectMapper provides functionality for reading and writing JSON
             String formDataJsonString = mapper.writeValueAsString(patientDTO.getDetails());
 
             JSONObject patientDetails = new JSONObject(formDataJsonString);
             mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            JSONArray otherIdentifier = new JSONArray(patientDetails.get("otherIdentifier").toString());
+
+
+            if(otherIdentifier != null && patientDTO.getHospitalNumber().equals("")){
+                if(!mapper.readValue(otherIdentifier.toString(), List.class).isEmpty()) {
+                    String time = String.valueOf(Timestamp.from(Instant.now())).replace("-", "")
+                            .replace(" ", "")
+                            .replace(":", "")
+                            .replace(".", "");
+                    patientDetails.put("hospitalNumber", RandomCodeGenerator.randomAlphabeticString(4)+time);
+                }
+            }
+
             if (patientDetails.has(key)) {
                 patientDTO.setHospitalNumber(patientDetails.get(key).toString());
+                patientDTO.setDetails(patientDetails.toString());
             } else {
                 throw new EntityNotFoundException(Patient.class, "Hospital Number", "null");
             }
-        } catch (JSONException | JsonProcessingException e) {
+        } catch (JSONException | JsonProcessingException  | NullPointerException e) {
             e.printStackTrace();
         }
         return patientDTO;
     }
-
-
 }

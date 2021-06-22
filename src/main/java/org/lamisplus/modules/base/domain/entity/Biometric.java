@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-public class Biometric {
+public class Biometric extends Audit<String> {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
@@ -45,6 +45,4 @@ public class Biometric {
     public void update() {
         this.dateLastModified = LocalDateTime.now();
     }
-
-
 }

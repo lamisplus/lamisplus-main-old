@@ -25,6 +25,7 @@ const cardStyle = {
 
 const  DashboardPage = (props) => {
   window.scrollTo(0, 0);
+  console.log(props)
   const [genderData, setGenderData] = useState({})
   const [combineChartData, setcombineChartData] = useState({})
   const [birthRateData, setbirthRateData] = useState({})
@@ -44,9 +45,9 @@ const  DashboardPage = (props) => {
     async function getCharacters() {
         try {
             const response = await axios.get( url+ 'patients/totalCount');
-                const body2 = response.data && response.data!==null ? response.data :0;
-                setTotalPatients(body2) 
-                console.log(body2)
+                const patientTotalCount = response.data && response.data!==null ? response.data :0;
+                setTotalPatients(patientTotalCount && patientTotalCount!==null ? patientTotalCount : 0) 
+                
         } catch (error) {
 
         }
@@ -58,9 +59,9 @@ const  DashboardPage = (props) => {
       async function getCharacters() {
           try {
               const response = await axios.get( url+ 'visits/count/1');
-                  const body2 = response.data && response.data!==null ? response.data :0;
-                  setTotalEmergency(body2) 
-                  console.log(body2)
+                  const visitCount = response.data && response.data!==null ? response.data :0;
+                  setTotalEmergency(visitCount && visitCount!==null ? visitCount : 0) 
+                  
                   
           } catch (error) {}
         }
@@ -71,9 +72,9 @@ const  DashboardPage = (props) => {
           async function getCharacters() {
               try {
                   const response = await axios.get( url+ 'visits/count/0');
-                      const body2 = response.data && response.data!==null ? response.data :0;
-                      setTotalCheckin(body2) 
-                      console.log(body2)
+                      const checkinCounts = response.data && response.data!==null ? response.data :0;
+                      setTotalCheckin(checkinCounts && checkinCounts!==null ? checkinCounts : 0) 
+                      
               } catch (error) {}
             }
             getCharacters();
@@ -82,9 +83,9 @@ const  DashboardPage = (props) => {
     async function getCharacters() {
         try {
             const response = await axios.get( url+ 'patient-dashboard/pie');
-                const body = response.data && response.data!==null ? response.data : {};
-                console.log(body)
-                setGenderData(body)   
+                const pieChartDashboard = response.data && response.data!==null ? response.data : {};
+                //console.log(pieChartDashboard && pieChartDashboard !==null ? pieChartDashboard : {})
+                setGenderData(pieChartDashboard && pieChartDashboard !==null ? pieChartDashboard : {})   
         } catch (error) {}
       }
       getCharacters();
@@ -94,9 +95,9 @@ useEffect(() => {
   async function getCharacters() {
       try {
           const response = await axios.get( url+ 'patient-dashboard/column');
-              const body = response.data && response.data!==null ? response.data : {};
+              const columnChartDashboard = response.data && response.data!==null ? response.data : {};
 
-              setcombineChartData(body)  
+              setcombineChartData(columnChartDashboard && columnChartDashboard !==null ? columnChartDashboard : {})  
       } catch (error) {}
     }
     getCharacters();
@@ -106,8 +107,8 @@ useEffect(() => {
   async function getCharacters() {
       try {
           const response = await axios.get( url+ 'appointments/count');
-              const body = response.data && response.data!==null ? response.data :0;
-              setTotalAppointment(body)  
+              const appointCount = response.data && response.data!==null ? response.data :0;
+              setTotalAppointment(appointCount && appointCount !==null ? appointCount : 0)  
       } catch (error) {}
     }
     getCharacters();
@@ -117,9 +118,9 @@ useEffect(() => {
   async function getCharacters() {
       try {
           const response = await axios.get( url+ 'patient-dashboard/column/birthRate');
-              const body2 = response.data && response.data!==null ? response.data : {};
-              setbirthRateData(body2) 
-              setBirthSereies(body2.series && body2.series!==null ? body2.series : {})
+              const bithRateChart = response.data && response.data!==null ? response.data : {};
+              setbirthRateData(bithRateChart) 
+              setBirthSereies(bithRateChart.series && bithRateChart.series!==null ? bithRateChart.series : {})
         
       } catch (error) {}
     }
@@ -130,9 +131,9 @@ useEffect(() => {
   async function getCharacters() {
       try {
           const response = await axios.get( url+ 'patient-dashboard/column/deathRate');
-              const body2 = response.data && response.data!==null ? response.data : {};
-              setdeathRateData(body2) 
-              setDeathSereies(body2.series && body2.series!==null ? body2.series : {})
+              const deathRateChart = response.data && response.data!==null ? response.data : {};
+              setdeathRateData(deathRateChart) 
+              setDeathSereies(deathRateChart.series && deathRateChart.series!==null ? deathRateChart.series : {})
         
       } catch (error) {}
     }

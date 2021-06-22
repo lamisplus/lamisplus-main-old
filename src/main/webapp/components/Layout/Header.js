@@ -38,6 +38,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import * as ACTION_TYPES from "../../actions/types";
 import store from "../../store";
+import AssignFacilityModal from './../../components/Users/AssignFacilityModalFirst'
+
+
 const bem = bn.create("header");
 const { dispatch } = store;
 
@@ -60,6 +63,8 @@ function Header() {
   const [isOpenUserCardPopover, setIsOpenUserCardPopover] = useState(false);
   const [user, setUser] = useState(null);
   const [modal, setModal] = useState(false);
+
+  const [assignFacilityModal, setAssignFacilityModal] = useState(false);
 
   const toggleNotificationPopover = () => {
     setIsOpenNotificationPopover(!isOpenNotificationPopover);
@@ -88,6 +93,14 @@ function Header() {
     authentication.logout();
   }
 
+  //TO ASSIGN FACILITIES
+  const toggleAssignModal = () => {
+    
+    setAssignFacilityModal(!assignFacilityModal);
+    console.log(assignFacilityModal);
+    console.log("Modal should open")
+  }
+
   async function fetchMe() {
     if( authentication.currentUserValue != null ) {
       axios
@@ -100,6 +113,11 @@ function Header() {
               type: ACTION_TYPES.FETCH_PERMISSIONS,
               payload: response.data.permissions,
             });
+            console.log(response.data)
+            if(response.data && response.data.currentOrganisationUnitId === null ){
+              toggleAssignModal()
+            }            
+            
           })
           .catch((error) => {
             authentication.logout();
@@ -122,6 +140,10 @@ function Header() {
   }
 
   const currentUser = authentication.getCurrentUser();
+  // if(user && user.currentOrganisationUnitName !==null ){
+  //   toggleAssignModal()
+  // }
+
 
   useEffect(() => {
     fetchMe();
@@ -241,7 +263,7 @@ function Header() {
             </ModalBody>
           </Modal>
         </Nav>
-
+          <AssignFacilityModal showModal={assignFacilityModal} toggleModal={() => setAssignFacilityModal(!assignFacilityModal)} user={user}/>
       </Navbar>
     );
 }
