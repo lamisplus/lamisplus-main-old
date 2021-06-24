@@ -4,9 +4,11 @@ import com.foreach.across.config.AcrossApplication;
 import com.foreach.across.modules.hibernate.jpa.AcrossHibernateJpaModule;
 import com.foreach.across.modules.web.AcrossWebModule;
 import com.google.common.collect.Lists;
+import liquibase.integration.spring.SpringLiquibase;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.config.ApplicationProperties;
 import org.lamisplus.modules.bootstrap.BootstrapModule;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -25,6 +27,7 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,6 +43,8 @@ import java.io.File;
 @Slf4j
 @EnableSwagger2
 public class BaseApplication extends SpringBootServletInitializer {
+    @Autowired
+    DataSource dataSource;
 
     public static void main(String[] args) {
         SpringApplication.run(BaseApplication.class, args);
@@ -114,4 +119,12 @@ public class BaseApplication extends SpringBootServletInitializer {
     private ApiKey apiKey() {
         return new ApiKey("JWT", "Authorization", "header");
     }
+
+    /*@Bean
+    public SpringLiquibase liquibase() {
+        SpringLiquibase liquibase = new SpringLiquibase();
+        liquibase.setChangeLog("classpath:changeLogFile.xml");
+        liquibase.setDataSource(dataSource);
+        return liquibase;
+    }*/
 }

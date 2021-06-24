@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -30,18 +31,15 @@ public class ApplicationUserOrganisationUnitService {
     private final Constants.ArchiveStatus constant;
 
     public List<ApplicationUserOrganisationUnit> save(Set<ApplicationUserOrganisationUnitDTO> applicationUserOrganisationUnitDTO1) {
-        List<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitList = new ArrayList<>();
         applicationUserOrganisationUnitDTO1.forEach(applicationUserOrganisationUnitDTO -> {
             applicationUserOrganisationUnitRepository.findAllByApplicationUserIdAndArchived(userService.getUserWithRoles().get().getId(), constant.UN_ARCHIVED)
                     .forEach(applicationUserOrganisationUnit -> {
                         applicationUserOrganisationUnitRepository.deleteById(applicationUserOrganisationUnit.getId());
                     });
-
-            ApplicationUserOrganisationUnit applicationUserOrganisationUnit = applicationUserOrganisationUnitMapper.toApplicationUserOrganisationUnit(applicationUserOrganisationUnitDTO);
-            applicationUserOrganisationUnitRepository.save(applicationUserOrganisationUnit);
-            applicationUserOrganisationUnitList.add(applicationUserOrganisationUnit);
         });
-        return applicationUserOrganisationUnitList;
+        List<ApplicationUserOrganisationUnitDTO> applicationUserOrganisationUnitDTOS = applicationUserOrganisationUnitDTO1.stream().collect(Collectors.toList());
+        List<ApplicationUserOrganisationUnit> applicationUserOrganisationUnits = applicationUserOrganisationUnitRepository.saveAll(applicationUserOrganisationUnitMapper.toApplicationUserOrganisationUnitList(applicationUserOrganisationUnitDTOS));
+        return applicationUserOrganisationUnitRepository.saveAll(applicationUserOrganisationUnits);
     }
 
     public ApplicationUserOrganisationUnit update(Long id, ApplicationUserOrganisationUnit applicationUserOrganisationUnit) {
