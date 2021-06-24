@@ -152,6 +152,7 @@ const AssignFacilityModal = (props) => {
             toast.success("Facility assigned successfully!")
 
             props.toggleModal()
+            window.location.reload(false);
         }
         const onError = () => {
             setLoading(false);
