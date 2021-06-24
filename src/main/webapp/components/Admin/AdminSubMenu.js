@@ -82,7 +82,7 @@ function AdminSubMenu(props) {
               
                 <Dropdown.Item>
                   <Link to={{pathname: "/admin-application-codesets"}} >
-                 Application Codeset Setup
+                    Application Codeset Setup
                   </Link>
                 </Dropdown.Item>
                 

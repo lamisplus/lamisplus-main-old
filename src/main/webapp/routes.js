@@ -86,8 +86,18 @@ const Plugins = React.lazy(() => import("pages/Plugins"));
 // const CheckInModal = React.lazy(() => import('components/CheckIn/CheckInModal'));
 
 const EnrolledPatientsDashboard = React.lazy(() => import("components/PatientProfile/HomePage"));
-/* Data Visualisation */
+/* Data Visualisation */ 
+const AnalyticsDashboards = React.lazy(() => import("components/Admin/DashboardAnalytics/Index"));
 const TestPageForVisualisation = React.lazy(() => import("pages/TestPageForVisualisation"));
+const MonitoringForVisualisation = React.lazy(() => import("components/Admin/DashboardAnalytics/Monitoring/Index"));
+const QualityCareForVisualisation = React.lazy(() => import("components/Admin/DashboardAnalytics/QualityCare/Index"));
+const CaseBaseSurvillance = React.lazy(() => import("components/Admin/DashboardAnalytics/CaseBaseSurvillance/Index"));
+const BiometericTracker = React.lazy(() => import("components/Admin/DashboardAnalytics/BiometericTracker/Index"));
+const ClinicalCascade = React.lazy(() => import("components/Admin/DashboardAnalytics/ClinicalCascade/Index"));
+const CommodityManagement = React.lazy(() => import("components/Admin/DashboardAnalytics/CommodityManagement/Index"));
+const MortalitySurvillance = React.lazy(() => import("components/Admin/DashboardAnalytics/MortalitySurvillance/Index"));
+const RecencyTesting = React.lazy(() => import("components/Admin/DashboardAnalytics/RecencyTesting/Index"));
+
 const DataVisualizationDashboard = React.lazy(() => import("components/Admin/DataVisualisation/Index"));
 /* Sample table i design */
 const TestPage = React.lazy(() => import("pages/TestPage"));
@@ -249,8 +259,19 @@ class Routes extends Component {
                 <PrivateRoute exact path={"/radiology"} component={RadiologyTestDetailPage} />
                 <PrivateRoute exact path={"/plug-in"} component={Plugins} />
               {/* The route to Appointment*/}
-              {/* The route to Visualization*/}
+              {/* The route to Visualization*/} 
+                <PrivateRoute exact path={"/data-analytics"} component={AnalyticsDashboards} />
                 <PrivateRoute exact path={"/visual"} component={TestPageForVisualisation} />
+                <PrivateRoute exact path={"/monitoring"} component={MonitoringForVisualisation} />
+                <PrivateRoute exact path={"/quality-care"} component={QualityCareForVisualisation} />
+                <PrivateRoute exact path={"/case-base-survillance"} component={CaseBaseSurvillance} />
+                <PrivateRoute exact path={"/biometric-tracker"} component={BiometericTracker} />
+                <PrivateRoute exact path={"/clinical-cascade"} component={ClinicalCascade} />
+                <PrivateRoute exact path={"/commodity-management"} component={CommodityManagement} />
+                <PrivateRoute exact path={"/mortality-surveillance"} component={MortalitySurvillance} />
+                <PrivateRoute exact path={"/recency-testing"} component={RecencyTesting} />
+                
+                                
                 <PrivateRoute exact path={"/data-visualisation"} component={DataVisualizationDashboard} />
                 <PrivateRoute exact path={"/gridlayout"} component={GridLayout} />
                 

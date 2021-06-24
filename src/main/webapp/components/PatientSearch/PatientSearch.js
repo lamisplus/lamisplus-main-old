@@ -81,6 +81,7 @@ const PatientSearch = (props) => {
       <div>
         <ToastContainer autoClose={3000} hideProgressBar />
           <MaterialTable
+         
               title="Find patients"
               tableRef={tableRef}
                   columns={[
