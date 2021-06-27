@@ -11,11 +11,11 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import {url} from '../../api';
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 
 
 const UpdateReports = (props) => {
-
     const [loading, setLoading] = useState(false)
     const defaultValues = {programName: "", template: "", name: "", description: "", format: "", form2 : ""}
     const [formData, setFormData] = useState(props.location.row)
@@ -70,7 +70,7 @@ const UpdateReports = (props) => {
 
         }
         formData['resourceObject'] = JSON.parse(res);
-        props.update(formData.id, formData, onSuccess, onError)
+        props.update(formData.id, formData, onSuccess, onError, setLoading)
     }
 
         return (
@@ -93,7 +93,6 @@ const UpdateReports = (props) => {
                                     <Col md={4}> <FormGroup>
                                         <Label class="sr-only">Program Name</Label>
                                         <Input type='text' name='programCode' id='programCode' value={formData.programName} onChange={handleInputChange} required/>
-                                    
                                     </FormGroup></Col>
 
                                        <Col md={4}> <FormGroup>
@@ -120,6 +119,7 @@ const UpdateReports = (props) => {
                                         <Input rows={10} cols={10} type='textarea' name='template' id='template' value={formData.template} onChange={handleInputChange} required/>
                                     </FormGroup></Col>
                                 </Row>
+
                                 </CardBody>
                             </Card>
                         </Form>
