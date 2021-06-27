@@ -50,7 +50,7 @@ public class Encounter implements Serializable  {
     @Basic
     @Column(name = "date_encounter")
     @Convert(converter = LocalDateConverter.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateEncounter;
 
     @Basic

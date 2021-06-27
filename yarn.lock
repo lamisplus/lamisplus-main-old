@@ -20083,9 +20083,9 @@ table@^5.0.0, table@^5.0.2:
     slice-ansi "^2.1.0"
     string-width "^3.0.0"
 
-"tableau-api@git://github.com/ilyabo/tableau-api.git":
+"tableau-api@git://github.com/ilyabo/tableau-api":
   version "2.0.0"
-  resolved "git://github.com/ilyabo/tableau-api.git#069f178bd634f77ae14e44fd32cf3fa8258f1866"
+  resolved "git://github.com/ilyabo/tableau-api#069f178bd634f77ae14e44fd32cf3fa8258f1866"
 
 tableau-react-embed@^1.1.0:
   version "1.1.0"
