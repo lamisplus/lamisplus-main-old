@@ -29,7 +29,7 @@ public class EncounterDTO implements Serializable {
     private String programCode;
 
     @Convert(converter = LocalDateConverter.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate dateEncounter;
     private Long patientId;
     private Long visitId;
