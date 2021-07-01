@@ -7,6 +7,8 @@ import momentLocalizer from "react-widgets-moment";
 import { DateTimePicker } from "react-widgets";
 import "react-widgets/dist/css/react-widgets.css";
 
+import EditIcon from "@material-ui/icons/Edit";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
 //Dtate Picker package
 Moment.locale("en");
@@ -81,7 +83,7 @@ function ListViewPage(props) {
         }))}
         actions={[
           {
-            icon: "visibility",
+            icon: VisibilityIcon,
             iconProps: { color: "primary" },
             tooltip: "View Appointment",
             onClick: (event, rowData) =>
@@ -92,7 +94,7 @@ function ListViewPage(props) {
               ),
           },
           {
-            icon: "edit",
+            icon: EditIcon,
             iconProps: { color: "primary" },
             tooltip: "Edit Appointment",
             onClick: (event, rowData) =>

@@ -16,6 +16,8 @@ import SaveIcon from "@material-ui/icons/Delete";
 import CancelIcon from "@material-ui/icons/Cancel";
 import {makeStyles} from "@material-ui/core/styles";
 import { ToastContainer, toast } from "react-toastify";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -106,13 +108,13 @@ const processDelete = (id) => {
 
                 actions= {[
                     {
-                        icon: 'edit',
+                        icon: EditIcon,
                         iconProps: {color: 'primary'},
                         tooltip: 'Edit Ward',
                         onClick: (event, rowData) => openWard(rowData)
                     },
                     {
-                        icon: 'delete',
+                        icon: DeleteIcon,
                         iconProps: {color: 'primary'},
                         tooltip: 'Delete Ward',
                         onClick: (event, rowData) => deleteWard(rowData)
