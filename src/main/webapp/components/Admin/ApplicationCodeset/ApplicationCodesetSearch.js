@@ -33,6 +33,7 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import Delete from "@material-ui/icons/Delete";
 
 const tableIcons = {
 Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -54,8 +55,6 @@ ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
 ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
 
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -157,13 +156,13 @@ const processDelete = (id) => {
 
                 actions= {[
                     {
-                        icon: EditIcon,
+                        icon: Edit,
                         iconProps: {color: 'primary'},
                         tooltip: 'Edit Codeset',
                         onClick: (event, rowData) => openApplicationCodeset(rowData)
                     },
                     {
-                        icon: DeleteIcon,
+                        icon: Delete,
                         iconProps: {color: 'primary'},
                         tooltip: 'Delete Codeset',
                         onClick: (event, rowData) => deleteApplicationCodeset(rowData)
