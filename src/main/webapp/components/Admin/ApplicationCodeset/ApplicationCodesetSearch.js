@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, forwardRef} from 'react';
 import MaterialTable from 'material-table';
 import { connect } from "react-redux";
 import { fetchAll, deleteApplicationCodeset} from "actions/applicationCodeset";
@@ -16,7 +16,6 @@ import SaveIcon from "@material-ui/icons/Delete";
 import CancelIcon from "@material-ui/icons/Cancel";
 import {makeStyles} from "@material-ui/core/styles";
 import { ToastContainer, toast } from "react-toastify";
-import { forwardRef } from 'react';
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
@@ -154,13 +153,13 @@ const processDelete = (id) => {
 
                 actions= {[
                     {
-                        icon: 'edit',
+                        icon: 'Edit',
                         iconProps: {color: 'primary'},
                         tooltip: 'Edit Codeset',
                         onClick: (event, rowData) => openApplicationCodeset(rowData)
                     },
                     {
-                        icon: 'delete',
+                        icon: 'Delete',
                         iconProps: {color: 'primary'},
                         tooltip: 'Delete Codeset',
                         onClick: (event, rowData) => deleteApplicationCodeset(rowData)

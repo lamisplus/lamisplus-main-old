@@ -155,6 +155,7 @@ const PatientSearch = (props) => {
               }}
 
           />
+        
     </div>
   );
 }
