@@ -31,7 +31,7 @@ axios.interceptors.response.use(function (response) {
 
     }
    else
-       if (error.response.status === 401 ) {
+       if (error && error.response && error.response.status && error.response.status === 401 ) {
         // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
         authentication.logout();
         dispatch({
