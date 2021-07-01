@@ -6,6 +6,8 @@ import { fetchAll, Delete as Del , fetchCheckedInPatients} from "../../actions/p
 import "./PatientSearch.css";
 import axios from "axios";
 import {url as baseUrl} from "../../api";
+
+import DashboardIcon from "@material-ui/icons/Dashboard";
 import {Menu, MenuButton, MenuItem, MenuList} from "@reach/menu-button";
 import { forwardRef } from 'react';
 
@@ -145,7 +147,7 @@ const ActivePatientSearch = (props) => {
         
         actions= {[
           {
-            icon: 'dashboard',
+            icon: DashboardIcon,
             iconProps: {color: 'primary'},
             tooltip: 'Patient Dashboard',
             onClick: (event, rowData) => rowData.id ? window.location.href = "patient-dashboard?hospitalNumber="+rowData.id: ""

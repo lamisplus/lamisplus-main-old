@@ -388,13 +388,13 @@ function ServiceFormPage(props) {
                         data={patientEncounters}
                         actions={[
                           rowData => ({
-                            icon: 'visibility',
+                            icon: VisibilityIcon,
                             tooltip: 'View Form',
                             onClick: (event, rowData) => viewForm(rowData),
                             disabled: !authentication.userHasRole(["patient_write"]),
                           }),
                           {
-                            icon: 'edit',
+                            icon: EditIcon,
                             tooltip: 'Edit Form',
                             onClick: (event, rowData) => editForm(rowData)
                           },
