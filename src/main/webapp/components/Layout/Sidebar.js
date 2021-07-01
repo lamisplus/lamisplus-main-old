@@ -35,7 +35,7 @@ const navItems = [
   // { to: '/plug-in', name: 'Plugins', exact: false, Icon: GiUnplugged },
   { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog,
     roles: ["admin_read", "user_read"] },
-  // { to: '/data-visualisation', name: 'Data Visualisation', exact: false, Icon: GiTestTubes },
+  // { to: '/data-analytics', name: 'Data Visualisation', exact: false, Icon: MdGraphicEq },
   // { to: '/select', name: 'React Select', exact: false, Icon: FaUserCog },
 
  

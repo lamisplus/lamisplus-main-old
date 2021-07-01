@@ -29,6 +29,10 @@ public class Regimen extends Audit<String> {
     private Long regimenLineId;
 
     @Basic
+    @Column(name = "code", updatable = false)
+    private String code;
+
+    @Basic
     @Column(name = "archived")
     @JsonIgnore
     private Integer archived;

@@ -22,6 +22,7 @@ build:
 logging:
     request-response:
         enabled: true
+
     file:
         name: application-debug.log
 server:
@@ -95,5 +96,14 @@ lamis:
 management:
     endpoints:
         web:
+            base-path: /management
             exposure:
-                include: "*"
+                include: ["configprops", "env", "health", 'jhimetrics', "info", "threaddump", "logfile" ]
+        enabled-by-default: true
+    endpoint:
+        health:
+            show-details: WHEN_AUTHORIZED
+        jhimetrics:
+            enabled: true
+
+

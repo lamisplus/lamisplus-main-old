@@ -44,9 +44,9 @@ const  DashboardPage = (props) => {
   useEffect(() => {
     async function getCharacters() {
         try {
-            const response = await axios.get( url+ 'patients/totalCount');
-                const patientTotalCount = response.data && response.data!==null ? response.data :0;
-                setTotalPatients(patientTotalCount && patientTotalCount!==null ? patientTotalCount : 0) 
+            const responsetotalCount = await axios.get( url+ 'patients/totalCount');
+                const patientTotalCount = responsetotalCount.data && responsetotalCount.data!==null ? responsetotalCount.data :0;
+                setTotalPatients(patientTotalCount && patientTotalCount >0 ? patientTotalCount : 0 ) 
                 
         } catch (error) {
 
@@ -58,9 +58,9 @@ const  DashboardPage = (props) => {
     useEffect(() => {
       async function getCharacters() {
           try {
-              const response = await axios.get( url+ 'visits/count/1');
-                  const visitCount = response.data && response.data!==null ? response.data :0;
-                  setTotalEmergency(visitCount && visitCount!==null ? visitCount : 0) 
+              const responsevisits = await axios.get( url+ 'visits/count/1');
+                  const visitCount = responsevisits.data && responsevisits.data!==null ? responsevisits.data :0;
+                  setTotalEmergency(visitCount && visitCount >0 ? visitCount : 0) 
                   
                   
           } catch (error) {}
@@ -71,9 +71,9 @@ const  DashboardPage = (props) => {
         useEffect(() => {
           async function getCharacters() {
               try {
-                  const response = await axios.get( url+ 'visits/count/0');
-                      const checkinCounts = response.data && response.data!==null ? response.data :0;
-                      setTotalCheckin(checkinCounts && checkinCounts!==null ? checkinCounts : 0) 
+                  const responsevisitsCheckin = await axios.get( url+ 'visits/count/0');
+                      const checkinCounts = responsevisitsCheckin.data && responsevisitsCheckin.data!==null ? responsevisitsCheckin.data :0;
+                      setTotalCheckin(checkinCounts && checkinCounts > 0 ? checkinCounts : 0) 
                       
               } catch (error) {}
             }
@@ -117,8 +117,8 @@ useEffect(() => {
 useEffect(() => {
   async function getCharacters() {
       try {
-          const response = await axios.get( url+ 'patient-dashboard/column/birthRate');
-              const bithRateChart = response.data && response.data!==null ? response.data : {};
+          const responsebirthRate = await axios.get( url+ 'patient-dashboard/column/birthRate');
+              const bithRateChart = responsebirthRate.data && responsebirthRate.data!==null ? responsebirthRate.data : {};
               setbirthRateData(bithRateChart) 
               setBirthSereies(bithRateChart.series && bithRateChart.series!==null ? bithRateChart.series : {})
         
@@ -304,7 +304,7 @@ const deathChart = {
   return (
       <>
                {/* Card stats */}
-               <Row className={"p-3"}>
+            <Row className={"p-3"}>
               
                 <Col lg={3} md={6} sm={6} xs={12} >
                   <Card  className="card-stats mb-4 mb-xl-0 " style={{backgroundColor: '#FFBF43', color: '#fff',  boxShadow: '1px 2px #eee'}}>
@@ -325,7 +325,7 @@ const deathChart = {
 
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0" style={{ color: 'white'}}>
-                            {totalPatients}
+                            {Number.isInteger(totalPatients) ===true ? totalPatients : 0}
                           </span>
                         </div>
                         
@@ -357,7 +357,8 @@ const deathChart = {
 
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0" style={{ color: 'white' }}>
-                            {totalEmergency}
+                          {Number.isInteger(totalEmergency) ===true ? totalEmergency : 0}
+                            
                           </span>
                         </div>
                        
@@ -388,7 +389,10 @@ const deathChart = {
                                 </div>
 
                           </CardTitle>
-                          <span className="h2 font-weight-bold mb-0" style={{ color: 'white'}}>{totalCheckin}</span>
+                          <span className="h2 font-weight-bold mb-0" style={{ color: 'white'}}>
+                          
+                          {Number.isInteger(totalCheckin) ===true ? totalCheckin : 0}
+                          </span>
                         </div>
                         
                         </Link>
@@ -421,7 +425,8 @@ const deathChart = {
 
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
-                           {totalAppointment}
+                          {Number.isInteger(totalAppointment) ===true ? totalAppointment : 0}
+                          
                           </span>
                         </div>
 
@@ -434,7 +439,7 @@ const deathChart = {
                     </CardBody>
                   </Card>
                 </Col>
-              </Row>
+          </Row>
 
           <Row className={"pl-3 pr-3 "}>
       

@@ -51,10 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .sessionManagement()
-                .maximumSessions(1).sessionRegistry(sessionRegistry()).and()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .authorizeRequests()
+                .authorizeRequests()
                     .antMatchers("/api/authenticate","/api/application-codesets/codesetGroup", "/api/swagger-ui.html").permitAll()
                     .antMatchers("/api/**").authenticated()
                 .antMatchers(AUTH_LIST).permitAll()

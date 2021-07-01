@@ -131,12 +131,12 @@ const [anchorEl, setAnchorEl] = React.useState(null);
           aria-label="scrollable force tabs example"
         >
             
-          <Tab className={classes.title} label="Dashboard" icon={<MdDashboard />} {...a11yProps(0)}
+          <Tab className={classes.title} label="Summary View" icon={<MdDashboard />} {...a11yProps(0)}
            
           
           /> 
           
-          <Tab className={classes.title} label="System Configuration" icon={<GiTestTubes />} {...a11yProps(1)} 
+          <Tab className={classes.title} label="Analytics" icon={<GiTestTubes />} {...a11yProps(1)} 
           aria-controls="fade-menu" aria-haspopup="true" onClick={handleClick}
           
           />

@@ -3,7 +3,6 @@ import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {Card, CardBody, CardDeck, CardHeader } from 'reactstrap';
-import UserProgressTable from 'components/UserProgressTable';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { url } from "../../api";
@@ -119,17 +118,7 @@ const useStyles = makeStyles(theme => ({
         position: 'relative',
         overflow: 'auto',
     };
-  
 
-
-//   const userProgressTableData = 
-//       [
-  
-//           {name: 'Total Sample Dispatached'},
-//           {name: 'Total Sample Results'},
-//           {name: 'Total Sample Rejected'}
-  
-//       ];
 
 export default function LaboratoryDashBoard(props) {
     const classes = useStyles();

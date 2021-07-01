@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -28,22 +29,17 @@ public class ApplicationUserOrganisationUnitService {
     private final ApplicationUserOrganisationUnitMapper applicationUserOrganisationUnitMapper;
     private final UserService userService;
     private final Constants.ArchiveStatus constant;
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
 
     public List<ApplicationUserOrganisationUnit> save(Set<ApplicationUserOrganisationUnitDTO> applicationUserOrganisationUnitDTO1) {
-        List<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitList = new ArrayList<>();
         applicationUserOrganisationUnitDTO1.forEach(applicationUserOrganisationUnitDTO -> {
             applicationUserOrganisationUnitRepository.findAllByApplicationUserIdAndArchived(userService.getUserWithRoles().get().getId(), constant.UN_ARCHIVED)
                     .forEach(applicationUserOrganisationUnit -> {
                         applicationUserOrganisationUnitRepository.deleteById(applicationUserOrganisationUnit.getId());
                     });
-
-            ApplicationUserOrganisationUnit applicationUserOrganisationUnit = applicationUserOrganisationUnitMapper.toApplicationUserOrganisationUnit(applicationUserOrganisationUnitDTO);
-            applicationUserOrganisationUnitRepository.save(applicationUserOrganisationUnit);
-            applicationUserOrganisationUnitList.add(applicationUserOrganisationUnit);
         });
-        return applicationUserOrganisationUnitList;
+        List<ApplicationUserOrganisationUnitDTO> applicationUserOrganisationUnitDTOS = applicationUserOrganisationUnitDTO1.stream().collect(Collectors.toList());
+        List<ApplicationUserOrganisationUnit> applicationUserOrganisationUnits = applicationUserOrganisationUnitRepository.saveAll(applicationUserOrganisationUnitMapper.toApplicationUserOrganisationUnitList(applicationUserOrganisationUnitDTOS));
+        return applicationUserOrganisationUnitRepository.saveAll(applicationUserOrganisationUnits);
     }
 
     public ApplicationUserOrganisationUnit update(Long id, ApplicationUserOrganisationUnit applicationUserOrganisationUnit) {
@@ -64,20 +60,5 @@ public class ApplicationUserOrganisationUnitService {
 
     public Boolean delete(Long id, ApplicationUserOrganisationUnit applicationUserOrganisationUnit) {
         return true;
-    }
-
-    public void setCurrentOrganisationUnit(Set<ApplicationUserOrganisationUnitDTO> applicationUserOrganisationUnitDTOS){
-        Long orgUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-        if(null == orgUnitId){
-            Optional<UserDTO> optionalUserDTO = userService.getUserWithRoles().map(UserDTO::new);
-            if(optionalUserDTO.isPresent()){
-                for (ApplicationUserOrganisationUnitDTO applicationUserOrganisationUnitDTO : applicationUserOrganisationUnitDTOS) {
-                    UserDTO userDTO = optionalUserDTO.get();
-                    userDTO.setCurrentOrganisationUnitId(applicationUserOrganisationUnitDTO.getOrganisationUnitId());
-                    userRepository.save(userMapper.userDTOToUser(userDTO));
-                    break;
-                }
-            }
-        }
     }
 }

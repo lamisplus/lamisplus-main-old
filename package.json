@@ -40,6 +40,7 @@
     "moment": "^2.24.0",
     "npm": "^6.14.5",
     "plotly.js": "^1.54.7",
+    "powerbi-report-component": "^2.6.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-apollo": "^3.1.5",
@@ -82,6 +83,7 @@
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
     "styled-components": "^5.1.1",
+    "tableau-react-embed": "^1.1.0",
     "use-react-hooks": "^1.0.7",
     "uuid": "^7.0.3"
   },

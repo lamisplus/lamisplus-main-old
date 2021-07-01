@@ -98,9 +98,7 @@ return (
                               </Link>
                               <Typography color="textPrimary">{parentOrganisationUnitId.name} </Typography>
                              </Breadcrumbs>
-                               
-                               
-                                <br/>
+                              <br/>
                                   <div className={"d-flex justify-content-end pb-2"}>
                                       <Button variant="contained"
                                               color="primary"
