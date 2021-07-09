@@ -4,17 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.dto.ApplicationUserOrganisationUnitDTO;
-import org.lamisplus.modules.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.domain.entity.ApplicationUserOrganisationUnit;
 import org.lamisplus.modules.base.domain.mapper.ApplicationUserOrganisationUnitMapper;
-import org.lamisplus.modules.base.domain.mapper.UserMapper;
 import org.lamisplus.modules.base.repository.ApplicationUserOrganisationUnitRepository;
-import org.lamisplus.modules.base.repository.UserRepository;
 import org.lamisplus.modules.base.util.Constants;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -56,6 +51,10 @@ public class ApplicationUserOrganisationUnitService {
 
     public List<ApplicationUserOrganisationUnit> getAllApplicationUserOrganisationUnit() {
         return applicationUserOrganisationUnitRepository.findAllByArchived(constant.UN_ARCHIVED);
+    }
+
+    public Optional<ApplicationUserOrganisationUnit> getApplicationUserOrganisationUnitByUserIdAndOrganisationUnitId(Long applicationUserId, Long organisationUnitId){
+        return applicationUserOrganisationUnitRepository.findByApplicationUserIdAndOrganisationUnitIdAndArchived(applicationUserId, organisationUnitId, constant.UN_ARCHIVED);
     }
 
     public Boolean delete(Long id, ApplicationUserOrganisationUnit applicationUserOrganisationUnit) {
