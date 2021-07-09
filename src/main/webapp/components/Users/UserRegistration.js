@@ -323,7 +323,7 @@ const UserRegistration = (props) => {
                   <FormGroup>
                     <Label for="phoneNumber">Phone Number *</Label>
                     <Input
-                      type="text"
+                      type="number"
                       name="phoneNumber"
                       id="phoneNumber"
                       onChange={handleInputChange}

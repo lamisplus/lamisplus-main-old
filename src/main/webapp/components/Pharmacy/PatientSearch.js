@@ -48,7 +48,7 @@ ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 
 const PatientSearch = (props) => {
   const prescriptions = useSelector(state => state.pharmacy.allPrescriptions)
-
+console.log(prescriptions)
   const totalDrugsPrescribed = (drugsArray) => {
 
     const dispensed = []

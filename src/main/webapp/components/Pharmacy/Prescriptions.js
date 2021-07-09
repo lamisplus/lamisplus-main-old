@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Prescriptions = (props) => {
  const prescriptionOrder  = props.location.state  && props.location.state.formDataObj  ? props.location.state.formDataObj : {}
-  console.log(prescriptionOrder.length <= 0)
+  console.log(prescriptionOrder)
   const classes = useStyles();
   const [loading, setLoading] = useState('')
   const [modal, setModal] = useState(false);
@@ -208,7 +208,7 @@ const updateFormData = (data) =>{
       <Row>
         <Col>
           <div>
-            {formData.length <= 0 ? (
+            {formData.length >= 0 ? (
               <Fragment>
                 {!loading ?
                         <PatientDetailCard getpatientdetails={ props.location.state }/>  
