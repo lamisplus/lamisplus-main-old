@@ -208,7 +208,6 @@ const useStyles = makeStyles({
             }
   }
 
-console.log(fetchTestOrders)
 return (
     <div>
       
@@ -345,11 +344,18 @@ return (
         </Row>
         </CardBody>
     </Card>
-   
-      <SampleCollectionFormIo modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} labnumber={labNumber !=="" ? labNumber : labNum['lab_number'] }/>
-      <ModalSampleTransfer modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} labnumber={labNumber!=="" ? labNumber : labNum}/>
-      <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />
-      <TransferModalConfirmation modalstatus={modal4} togglestatusConfirmation={toggleModal4} datasample={collectModal} actionButton={transferSample} labnumber={labNumber!=="" ? labNumber : labNum}/>
+    {modal || modal2  || modal3 || modal4 ? 
+      (
+        <>
+            <SampleCollectionFormIo modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} labnumber={labNumber !=="" ? labNumber : labNum['lab_number'] }/>
+            <ModalSampleTransfer modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} labnumber={labNumber!=="" ? labNumber : labNum}/>
+            <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />
+            <TransferModalConfirmation modalstatus={modal4} togglestatusConfirmation={toggleModal4} datasample={collectModal} actionButton={transferSample} labnumber={labNumber!=="" ? labNumber : labNum}/>
+       </>
+      ) 
+      : ""
+      } 
+     
    
     </div>
   )  
