@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Prescriptions = (props) => {
  const prescriptionOrder  = props.location.state  && props.location.state.formDataObj  ? props.location.state.formDataObj : {}
-  console.log(props.location.state.formDataObj)
+
   const classes = useStyles();
   const [loading, setLoading] = useState('')
   const [modal, setModal] = useState(false);
@@ -87,10 +87,9 @@ const Prescriptions = (props) => {
   const [drugDetails, setDrugDetails] = useState()
 
 const updateFormData = (data) =>{
-      console.log('in update form data')
+
     setLoading(true);
       const index = formData.findIndex(x => x.id == data.id);
-      console.log('index is '+index)
 
       formData[index] = data;
       setFormData(formData);
@@ -144,7 +143,7 @@ const updateFormData = (data) =>{
            <MenuItem onSelect={() => 
             toggle(form)
           }
-                     hidden={!authentication.userHasRole(["pharmacy_write"])}
+                     hidden={!authentication.userHasRole(["pharmacy_write"]) }
            >
              <i
                className="fa fa-pencil"
