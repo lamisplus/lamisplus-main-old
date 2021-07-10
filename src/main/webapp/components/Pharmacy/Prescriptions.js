@@ -85,7 +85,7 @@ const Prescriptions = (props) => {
   const toggleModal2 = () => setModal2(!modal2)
   const [formData, setFormData] = useState(prescriptionOrder);
   const [drugDetails, setDrugDetails] = useState()
-
+  console.log(formData)
 const updateFormData = (data) =>{
 
     setLoading(true);
@@ -255,6 +255,7 @@ const updateFormData = (data) =>{
                               
                                 <tbody >
                                 {!loading  ?  formData.map((form) => (
+                                  
                                   form.data!==null?
                                   <tr key={form.id}>
                                     <td>
