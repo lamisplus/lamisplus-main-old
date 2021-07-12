@@ -97,17 +97,19 @@ const updateFormData = (data) =>{
     }
 
   const toggle = (form) => {
-
+    console.log(form)
     setDrugDetails({ ...drugDetails, ...form });
     setModal(!modal);
     
   } 
   const toggle1 = (form) => {
+    console.log(form)
     setDrugDetails({ ...drugDetails, ...form });
     setModal1(!modal1)
   }
 
   const toggle2 = (form) => {
+    console.log(form)
     setDrugDetails({ ...drugDetails, ...form });
     setModal2(!modal2)
   }
@@ -168,7 +170,7 @@ const updateFormData = (data) =>{
              </i>
            </MenuItem>
          )}
-         {form.data && form.data.prescription_status !=0 ? (
+         {form.data && form.data.prescription_status !=0  ? (
             <MenuItem onSelect={() => toggle1(form)}>
               <i
                 className="fa fa-eye"
