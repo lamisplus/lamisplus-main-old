@@ -7,7 +7,7 @@ const initialState = {
   list:[]
 };
 
-export default (state = initialState, action) => {
+ const  pharmacyReducer = (state = initialState, action) => {
   switch (action.type) {
     case ACTION_TYPES.PHARMACY_FETCH_PRESCRIPTIONS:
       return { ...state, allPrescriptions: [...action.payload] };
@@ -24,5 +24,7 @@ export default (state = initialState, action) => {
       return state;
   }
 };
+
+export default pharmacyReducer;
 
 

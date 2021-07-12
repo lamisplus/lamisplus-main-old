@@ -1,5 +1,5 @@
 import axios from "axios";
-import {url} from "../api";
+import {url, PHARMACYSERVICECODE} from "../api";
 import * as ACTION_TYPES from "./types";
 import {toast} from "react-toastify"
 
@@ -16,7 +16,7 @@ import {toast} from "react-toastify"
 export const fetchPrescriptions = () => dispatch => {
   axios
     .get(
-      `${url}encounters/4ab293ff-6837-41e8-aa85-14f25ce59ef0/{dateStart}/{dateEnd}`
+      `${url}encounters/${PHARMACYSERVICECODE}/{dateStart}/{dateEnd}`
     )
     .then((response) => {
       console.log(response)
@@ -37,7 +37,7 @@ export const fetchPatientPrescriptions = (patientId) => dispatch => {
   console.log(patientId)
   axios
     .get(
-      `${url}patients/${patientId}/encounters/4ab293ff-6837-41e8-aa85-14f25ce59ef0/{dateStart}/{dateEnd}`
+      `${url}patients/${patientId}/encounters/${PHARMACYSERVICECODE}/{dateStart}/{dateEnd}`
     )
     .then((response) => {
       dispatch({

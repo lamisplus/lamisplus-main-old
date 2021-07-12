@@ -225,7 +225,7 @@ const UserList = (props) => {
                   </MenuItem>
                 </MenuList>
               </Menu>
-              <Modal isOpen={modal} backdrop={true}>
+              <Modal isOpen={modal} >
                 <Form onSubmit={handleEdit}>
                   <ModalHeader>Edit Roles</ModalHeader>
                   <ModalBody>
