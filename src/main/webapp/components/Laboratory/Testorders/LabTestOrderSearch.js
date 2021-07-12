@@ -147,7 +147,7 @@ const PatientSearch = (props) => {
                   },
                   filtering: true,
                   searchFieldStyle: {
-                      width : '300%',
+                      width : '250%',
                       margingLeft: '250px',
                   },
                   exportButton: true,

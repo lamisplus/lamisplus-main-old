@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Prescriptions = (props) => {
  const prescriptionOrder  = props.location.state  && props.location.state.formDataObj  ? props.location.state.formDataObj : {}
-  console.log(props.location.state.formDataObj)
+  console.log(prescriptionOrder)
   const classes = useStyles();
   const [loading, setLoading] = useState('')
   const [modal, setModal] = useState(false);
@@ -85,12 +85,11 @@ const Prescriptions = (props) => {
   const toggleModal2 = () => setModal2(!modal2)
   const [formData, setFormData] = useState(prescriptionOrder);
   const [drugDetails, setDrugDetails] = useState()
-
+  console.log(formData)
 const updateFormData = (data) =>{
-      console.log('in update form data')
+
     setLoading(true);
       const index = formData.findIndex(x => x.id == data.id);
-      console.log('index is '+index)
 
       formData[index] = data;
       setFormData(formData);
@@ -98,17 +97,19 @@ const updateFormData = (data) =>{
     }
 
   const toggle = (form) => {
-
+    console.log(form)
     setDrugDetails({ ...drugDetails, ...form });
     setModal(!modal);
     
   } 
   const toggle1 = (form) => {
+    console.log(form)
     setDrugDetails({ ...drugDetails, ...form });
     setModal1(!modal1)
   }
 
   const toggle2 = (form) => {
+    console.log(form)
     setDrugDetails({ ...drugDetails, ...form });
     setModal2(!modal2)
   }
@@ -139,12 +140,12 @@ const updateFormData = (data) =>{
          Action <span aria-hidden>▾</span>
        </MenuButton>
        <MenuList style={{ hover: "#eee" }}>
-         {form.data.prescription_status === 0 ? (
+         {form.data && form.data.prescription_status === 0 ? (
 
            <MenuItem onSelect={() => 
             toggle(form)
           }
-                     hidden={!authentication.userHasRole(["pharmacy_write"])}
+                     hidden={!authentication.userHasRole(["pharmacy_write"]) }
            >
              <i
                className="fa fa-pencil"
@@ -169,7 +170,7 @@ const updateFormData = (data) =>{
              </i>
            </MenuItem>
          )}
-         {form.data.prescription_status !=0 ? (
+         {form.data && form.data.prescription_status !=0  ? (
             <MenuItem onSelect={() => toggle1(form)}>
               <i
                 className="fa fa-eye"
@@ -209,7 +210,7 @@ const updateFormData = (data) =>{
       <Row>
         <Col>
           <div>
-            {formData ? (
+            {formData.length >= 0 ? (
               <Fragment>
                 {!loading ?
                         <PatientDetailCard getpatientdetails={ props.location.state }/>  
@@ -255,7 +256,8 @@ const updateFormData = (data) =>{
                               
                               
                                 <tbody >
-                                {!loading ? formData.map((form) => (
+                                {!loading  ?  formData.map((form) => (
+                                  
                                   form.data!==null?
                                   <tr key={form.id}>
                                     <td>
@@ -264,8 +266,8 @@ const updateFormData = (data) =>{
                                           {/*{form.data && form.data.type!=0 ? form.data.drug.name :  form.data.regimen.name}*/}
                                     </td>
                                     <td>{form.data.duration && form.data.duration ? form.data.duration + ' ' + form.data.duration_unit : ''}</td>
-                                    <td>{Moment(form.data.date_prescribed).format("DD-MM-YYYY")}</td>
-                                    <td>{ form.data.date_dispensed ? Moment(form.data.date_dispensed).format("DD-MM-YYYY") : '' }</td>
+                                    <td>{Moment(form.data.date_prescribed).format("YYYY-MM-DD")}</td>
+                                    <td>{ form.data.date_dispensed ? Moment(form.data.date_dispensed).format("YYYY-MM-DD") : '' }</td>
                                     <td>{Actions(form)}</td>
                                   </tr>
                                   :
@@ -284,18 +286,27 @@ const updateFormData = (data) =>{
                 </Card>
               </Fragment>
             ) : (
-              <p>
-                {" "}
-                {/* <Spinner color="primary" /> Loading Please Wait.. */}
-                No Prescription details
-              </p>
+              <div style={{height:'300px'}}>
+                <p>
+                  {" "}
+                  {/* <Spinner color="primary" /> Loading Please Wait.. */}
+                  No Prescription details. Please try again...
+                </p>
+              </div>
             )}
           </div>
         </Col>
       </Row>
       </CardBody></Card>
-     <DispenseModal  modalstatus={modal} togglestatus={toggleModal} datasample={drugDetails} updateFormData={updateFormData}/>
-     <ViewModal modalstatus={modal1} togglestatus={toggleModal1} datasample={drugDetails}/>
+      {modal || modal1 ? 
+      (
+        <>
+        <DispenseModal  modalstatus={modal} togglestatus={toggleModal} datasample={drugDetails} updateFormData={updateFormData}/>
+        <ViewModal modalstatus={modal1} togglestatus={toggleModal1} datasample={drugDetails}/>
+       </>
+      ) 
+      : ""
+      } 
     </React.Fragment>
   );
 }

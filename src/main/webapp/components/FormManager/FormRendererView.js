@@ -98,6 +98,8 @@ const FormRenderer = (props) => {
     <React.Fragment>
             <Card>
               <CardBody>
+              {form && form.name &&  form.resourceObject ?
+              <>
                 <h4 class="text-capitalize">
                   {"View: "}
                   {props.title || form.name}
@@ -112,6 +114,15 @@ const FormRenderer = (props) => {
                   options={options}
                   hideComponents={props.hideComponents}
                 />
+               </>
+                : 
+               
+                <>
+                <Alert color="danger" isOpen={showErrorMsg} toggle={onDismiss}>
+                  {errorMsg}
+                </Alert>
+                </>
+              }
               </CardBody>
             </Card>
     </React.Fragment>

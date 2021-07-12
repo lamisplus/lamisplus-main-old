@@ -110,14 +110,18 @@ return (
                             <MaterialTable
                               title="Organisational Unit"
                               columns={[
-                                { title: 'Parent Name', field: 'name' },
+                                { title: 'Name', field: 'name' },
+                                { title: 'Org. Unit Level Name', field: 'ParentOrgUnitName' },
+                                { title: 'Parent Org. Unit name', field: 'ParentName' },
                                 { title: 'Description', field: 'description' },
                                 
                                 { title: 'Action', field: 'actions'},
                               ]}
                               isLoading={loading}
                                 data={listOfAllParentOrgUnit.map((row) => ({
-                                      name: row.name,  
+                                      name: row.name, 
+                                      ParentOrgUnitName: row && row.parentParentOrganisationUnitName ? row.parentParentOrganisationUnitName : "",  
+                                      ParentName: row && row.parentOrganisationUnitName ? row.parentOrganisationUnitName : "", 
                                       description: row. description,
                                     
                                     actions: 

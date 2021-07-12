@@ -253,16 +253,21 @@ const UserRegistration = (props) => {
                     />
                   </FormGroup>
                   <FormGroup>
-                    <Label for="phoneNumber">Phone Number *</Label>
+                    <Label for="password">Password *</Label>
                     <Input
-                      type="text"
-                      name="phoneNumber"
-                      id="phoneNumber"
-                      onChange={handleInputChange}
-                      value={values.phoneNumber}
+                      type="password"
+                      name="password"
+                      id="password"
+                      onChange={handlePassword}
+                      value={values.password}
                       required
+                      className={validPasswordClass}
                     />
+                    <FormFeedback>
+                      Password must be atleast 6 characters
+                    </FormFeedback>
                   </FormGroup>
+                  
                 </Col>
                 <Col md={6}>
                   <FormGroup>
@@ -316,19 +321,15 @@ const UserRegistration = (props) => {
                   {/*  />*/}
                   {/*</FormGroup>*/}
                   <FormGroup>
-                    <Label for="password">Password *</Label>
+                    <Label for="phoneNumber">Phone Number *</Label>
                     <Input
-                      type="password"
-                      name="password"
-                      id="password"
-                      onChange={handlePassword}
-                      value={values.password}
+                      type="number"
+                      name="phoneNumber"
+                      id="phoneNumber"
+                      onChange={handleInputChange}
+                      value={values.phoneNumber}
                       required
-                      className={validPasswordClass}
                     />
-                    <FormFeedback>
-                      Password must be atleast 6 characters
-                    </FormFeedback>
                   </FormGroup>
                   <FormGroup>
                     <Label for="confirm">Confirm Password *</Label>
