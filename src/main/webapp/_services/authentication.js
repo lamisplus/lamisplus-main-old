@@ -47,18 +47,10 @@ function login(username, password, remember) {
 
 function logout() {
 
-    axios.post(`${url}users/logOut`)
-        .then(response => {
-            console.log(response)
             localStorage.removeItem('currentUser');
             localStorage.removeItem('currentUser_Permissions');
             currentUserSubject.next(null);
-
-        });
              // remove user from local storage to log user out
-           
-      
-   
 }
 
 function getCurrentUserRole() {

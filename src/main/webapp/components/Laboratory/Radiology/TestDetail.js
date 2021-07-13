@@ -161,7 +161,7 @@ console.log(props.list.formDataObj)
             {/* <TestUpload /> */}
             {/*<NewGlobalVariable toggleModal={toggleModal} showModal={showModal} loadGlobalVariable={loadGlobalVariable} formData={currentGlobalVariable}/>*/}
           <UploadResultPage toggleModal={toggleModal} showModal={showModal} loadSearch={loadSearch} formDataObj={testOrder}/>
-            <ViewResultPage toggleModal={toggleViewModal} showModal={showViewModal}  formData={testOrder}/>
+          <ViewResultPage toggleModal={toggleViewModal} showModal={showViewModal}  formData={testOrder}/>
         </Card>
         </React.Fragment>
     );
