@@ -98,10 +98,10 @@ public class UserController {
     @PostMapping("/logOut")
     public void logOut(HttpServletRequest request,
                           HttpServletResponse response, Authentication authentication) {
-        try {
+        /*try {
             logoutSuccessHandler.onLogoutSuccess(request, response, authentication);
         } catch (IOException | ServletException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }
