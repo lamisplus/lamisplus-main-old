@@ -267,6 +267,10 @@ const UserRegistration = (props) => {
                       required
                     />
                   </FormGroup>
+<<<<<<< HEAD
+=======
+                 
+>>>>>>> mathew
                   
                 </Col>
                 <Col md={6}>
@@ -323,7 +327,11 @@ const UserRegistration = (props) => {
                   <FormGroup>
                     <Label for="phoneNumber">Phone Number *</Label>
                     <Input
+<<<<<<< HEAD
                       type="text"
+=======
+                      type="number"
+>>>>>>> mathew
                       name="phoneNumber"
                       id="phoneNumber"
                       onChange={handleInputChange}

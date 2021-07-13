@@ -48,7 +48,7 @@ ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 
 const PatientSearch = (props) => {
   const prescriptions = useSelector(state => state.pharmacy.allPrescriptions)
-
+console.log(prescriptions)
   const totalDrugsPrescribed = (drugsArray) => {
 
     const dispensed = []
@@ -89,7 +89,7 @@ const PatientSearch = (props) => {
             title: "Patient Name",
             field: "name",
           },
-          { title: "Prescription Date", field: "date", type: "date" },
+          { title: "Prescription Date", field: "date", type: "date", filtering: false, },
           {
             title: "Total Prescribed",
             field: "prescribedCount",
@@ -138,15 +138,14 @@ const PatientSearch = (props) => {
             color: "#000",
             margin: "auto",
           },
-          filtering: true,
-
           searchFieldStyle: {
-            width: "300%",
-            margingLeft: "250px",
-          },
-
-          exportButton: true,
-          searchFieldAlignment: "left",
+                width : '300%',
+                margingLeft: '250px',
+            },
+            filtering: true,
+            exportButton: false,
+            searchFieldAlignment: 'left',
+            actionsColumnIndex: -1
         }}
       />
     </div>
