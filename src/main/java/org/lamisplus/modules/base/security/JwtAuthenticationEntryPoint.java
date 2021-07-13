@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {
@@ -28,7 +29,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
         response.setContentType("application/json");
 
         //pass down the actual obj that exception handler normally send
-        ApiError apiError = new ApiError(BAD_REQUEST);
+        ApiError apiError = new ApiError(UNAUTHORIZED);
         apiError.setStatusCode(401);
         apiError.setMessage("Invalid Token");
         apiError.setDebugMessage(authException.getMessage());
