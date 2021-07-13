@@ -2,4 +2,4 @@ spring:
   datasource:
     username: postgres
     password: emeka
-    url: jdbc:postgresql://localhost:5432/Lamisplus_backup_mathew_12
+    url: jdbc:postgresql://localhost:5432/Yola_OSS_Adamawa

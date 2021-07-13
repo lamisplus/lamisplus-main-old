@@ -7,18 +7,12 @@ import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.domain.entity.User;
 import org.lamisplus.modules.base.repository.RoleRepository;
 import org.lamisplus.modules.base.repository.UserRepository;
-import org.lamisplus.modules.base.security.MyLogoutSuccessHandler;
 import org.lamisplus.modules.base.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 
@@ -30,7 +24,7 @@ public class UserController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final SessionRegistry sessionRegistry;
-    private final MyLogoutSuccessHandler logoutSuccessHandler;
+    //private final MyLogoutSuccessHandler logoutSuccessHandler;
 
 
     @GetMapping("/{id}")
@@ -95,13 +89,13 @@ public class UserController {
         }*/
     }
 
-    @PostMapping("/logOut")
-    public void logOut(HttpServletRequest request,
-                          HttpServletResponse response, Authentication authentication) {
-        /*try {
-            logoutSuccessHandler.onLogoutSuccess(request, response, authentication);
-        } catch (IOException | ServletException e) {
-            e.printStackTrace();
-        }*/
+/*@PostMapping("/logOut")
+public void logOut(HttpServletRequest request,
+                      HttpServletResponse response, Authentication authentication) {
+    try {
+        logoutSuccessHandler.onLogoutSuccess(request, response, authentication);
+    } catch (IOException | ServletException e) {
+        e.printStackTrace();
     }
+}*/
 }
