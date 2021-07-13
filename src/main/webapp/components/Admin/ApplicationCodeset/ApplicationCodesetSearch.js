@@ -32,6 +32,8 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const tableIcons = {
 Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -153,13 +155,13 @@ const processDelete = (id) => {
 
                 actions= {[
                     {
-                        icon: 'Edit',
+                        icon: EditIcon,
                         iconProps: {color: 'primary'},
                         tooltip: 'Edit Codeset',
                         onClick: (event, rowData) => openApplicationCodeset(rowData)
                     },
                     {
-                        icon: 'Delete',
+                        icon: DeleteIcon,
                         iconProps: {color: 'primary'},
                         tooltip: 'Delete Codeset',
                         onClick: (event, rowData) => deleteApplicationCodeset(rowData)
