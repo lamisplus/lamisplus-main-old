@@ -90,7 +90,7 @@ const AddRole = (props) => {
           console.log(Object.entries(response.data));
           setPermissions(
             Object.entries(response.data).map(([key, value]) => ({
-              label: value.name,
+              label: value.description,
               value: value.name,
             }))
           );
@@ -173,6 +173,7 @@ const AddRole = (props) => {
                   <FormGroup>
                     <Label for="permissions">Permissions</Label>
                     <DualListBox
+                        canFilter
                       options={permissions}
                       onChange={onPermissionSelect}
                       selected={selectedPermissions}

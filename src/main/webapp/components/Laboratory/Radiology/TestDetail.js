@@ -145,7 +145,7 @@ console.log(props.list.formDataObj)
                                     </MenuButton>
                                     <MenuList style={{hover:"#eee"}}>
 
-                                        <MenuItem onSelect={() => uploadResultPage(row)} hidden={!authentication.userHasRole(["laboratory_write"])} ><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Upload Result</MenuItem>
+                                        <MenuItem onSelect={() => uploadResultPage(row)} hidden={!authentication.userHasRole(["6f757363-0ee7-45df-99e2-39f0f427b096_write"])} ><FaPlusSquare size="15" style={{color: '#3F51B5'}}/>{" "}Upload Result</MenuItem>
                                         {row.data && row.data.test_order_status > 0 &&  <MenuItem onSelect={() => openResultPage(row)}><FaRegEye size="15" style={{color: '#3F51B5'}}/>{" "}View Result</MenuItem>}
 
                                     </MenuList>
