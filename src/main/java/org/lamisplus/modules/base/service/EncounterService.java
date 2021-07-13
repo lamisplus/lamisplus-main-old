@@ -50,8 +50,6 @@ public class EncounterService {
     private static final int ARCHIVED = 1;
     private static final String WRITE = "write";
     private static final String DELETE = "delete";
-    private final JdbcTemplate  jdbcTemplate;
-
 
     public List<EncounterDTO> getAllEncounters() {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
@@ -63,7 +61,6 @@ public class EncounterService {
                 return;
             }
             Patient patient = singleEncounter.getPatientByPatientId();
-            //Person person = patient.getPersonByPersonId();
             Form form = singleEncounter.getFormForEncounterByFormCode();
             final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(patient, singleEncounter, form);
             List formDataList = new ArrayList();
@@ -85,8 +82,6 @@ public class EncounterService {
         accessRight.grantAccess(encounter.getFormCode(), Encounter.class, permissions);
 
         Patient patient = encounter.getPatientByPatientId();
-
-        //Person person = patient.getPersonByPersonId();
 
         Form form = encounter.getFormForEncounterByFormCode();
 

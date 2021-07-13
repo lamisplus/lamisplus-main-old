@@ -12,4 +12,5 @@ import java.util.Objects;
 public class WardDTO {
     private Long id;
     private String name;
+    private String code;
 }

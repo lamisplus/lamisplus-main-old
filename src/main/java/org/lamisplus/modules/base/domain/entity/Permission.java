@@ -8,7 +8,7 @@ import javax.persistence.*;
 @EqualsAndHashCode
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class Permission {
+public class Permission extends Audit<String> {
     @Id
     @GeneratedValue
     private Long id;
@@ -18,6 +18,9 @@ public class Permission {
 
     @NonNull
     private String description;
+
+    @NonNull
+    private int archived;
 
     /*@OneToMany(mappedBy = "permissionByPermissionId")
     @ToString.Exclude

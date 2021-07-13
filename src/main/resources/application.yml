@@ -22,6 +22,7 @@ build:
 logging:
     request-response:
         enabled: true
+
     file:
         name: application-debug.log
 server:
@@ -66,7 +67,6 @@ spring:
         open-in-view: false
         properties:
             hibernate.enable_lazy_load_no_trans: true
-
     mail:
         host: localhost
         port: 25
@@ -83,15 +83,27 @@ spring:
                 fail-on-empty-beans: false
     banner:
         location: banner.txt
-jhipster:
-    security:
-        authentication:
-            jwt:
-                # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
-                base64-secret: YzMzNjBmOTcwN2Y4YmNmNWViMzhhNjk5MjhmMmY5OTZkNWUxYzIwM2Q5ZWU4OWIzNTZmZTBlOTMzZjFhN2ZmMzBlMDIzMGRkYWNkYTIwOThmY2E1ZjNhYTAxODA0NTJkY2U5NTYxZTI1YjA1NTIyN2IwMTZlMTRlMDM0OTIyNzM=
-                # Token is valid 24 hours
-                token-validity-in-seconds: 86400
-                token-validity-in-seconds-for-remember-me: 2592000
+jwt:
+    # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
+    base64-secret: YzMzNjBmOTcwN2Y4YmNmNWViMzhhNjk5MjhmMmY5OTZkNWUxYzIwM2Q5ZWU4OWIzNTZmZTBlOTMzZjFhN2ZmMzBlMDIzMGRkYWNkYTIwOThmY2E1ZjNhYTAxODA0NTJkY2U5NTYxZTI1YjA1NTIyN2IwMTZlMTRlMDM0OTIyNzM=
+    # Token is valid 24 hours
+    token-validity-in-milli-seconds: 3600000
+    token-validity-in-milli-seconds-for-remember-me: 3600000
 lamis:
     temp-dir: runtime/
     module-path: modules
+
+management:
+    endpoints:
+        web:
+            base-path: /management
+            exposure:
+                include: ["configprops", "env", "health", 'jhimetrics', "info", "threaddump", "logfile" ]
+        enabled-by-default: true
+    endpoint:
+        health:
+            show-details: WHEN_AUTHORIZED
+        jhimetrics:
+            enabled: true
+
+

@@ -1,7 +1,6 @@
 package org.lamisplus.modules.base.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -10,7 +9,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.ResourceResolver;
 import org.springframework.web.servlet.resource.ResourceResolverChain;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Arrays;
@@ -30,6 +28,8 @@ public class SinglePageAppConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/static/")
                 .resourceChain(false)
                 .addResolver(new PushStateResourceResolver());
+        registry.addResourceHandler("/swagger-ui.html**").addResourceLocations("classpath:/META-INF/resources/swagger-ui.html");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
     private class PushStateResourceResolver implements ResourceResolver {
@@ -44,7 +44,6 @@ public class SinglePageAppConfig implements WebMvcConfigurer {
 
         @Override
         public String resolveUrlPath(String resourcePath, List<? extends Resource> locations, ResourceResolverChain chain) {
-            log.info("in resolveUrlPath");
             Resource resolvedResource = resolve(resourcePath, locations);
             if (resolvedResource == null) {
                 return null;

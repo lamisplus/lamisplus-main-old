@@ -75,7 +75,7 @@ public class RoleService {
             try {
                 // add permissions by either id or name
                 if (null != p.getName()) {
-                    permissionToAdd = permissionRepository.findByName(p.getName()).get();
+                    permissionToAdd = permissionRepository.findByNameAndArchived(p.getName(), 0).get();
                 } /*else if(p.getId() != null ){
                 permissionToAdd = permissionRepository.findById(p.getId()).get();
             }*/ else {

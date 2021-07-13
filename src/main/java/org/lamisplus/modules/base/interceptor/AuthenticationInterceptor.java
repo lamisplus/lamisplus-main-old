@@ -16,6 +16,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle (HttpServletRequest request, HttpServletResponse response, Object handler) {
+        //request.getMethod().equalsIgnoreCase("POST");
+        //request.logout();
         if (request.getRequestURI().contains("/api/encounters")) {
             return HandleEncounterController(request);
         }

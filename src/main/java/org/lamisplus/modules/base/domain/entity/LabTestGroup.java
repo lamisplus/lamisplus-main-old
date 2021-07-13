@@ -28,9 +28,9 @@ public class LabTestGroup extends Audit<String> {
     private String name;
 
     @Basic
-    @Column(name = "uuid", updatable = false)
+    @Column(name = "code", updatable = false)
     @JsonIgnore
-    private String uuid;
+    private String code;
 
     @Basic
     @Column(name = "archived")

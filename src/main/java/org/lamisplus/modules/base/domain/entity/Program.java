@@ -14,7 +14,7 @@ import java.util.List;
 @Entity
 @EqualsAndHashCode
 @Table(name = "program")
-public class Program implements Serializable {
+public class Program extends Audit<String> implements Serializable {
 
     @Id
     @Column(name = "id", updatable = false)

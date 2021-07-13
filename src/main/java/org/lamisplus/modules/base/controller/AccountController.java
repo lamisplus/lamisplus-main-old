@@ -1,8 +1,9 @@
 package org.lamisplus.modules.base.controller;
 
-import com.foreach.across.core.annotations.Exposed;
 import org.lamisplus.modules.base.controller.vm.ManagedUserVM;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
+import org.lamisplus.modules.base.domain.entity.ApplicationUserOrganisationUnit;
+import org.lamisplus.modules.base.domain.entity.User;
 import org.lamisplus.modules.base.repository.UserRepository;
 import org.lamisplus.modules.base.service.UserService;
 import org.lamisplus.modules.base.util.PaginationUtil;
@@ -38,17 +39,29 @@ public class AccountController {
 
     @GetMapping("/account")
     public UserDTO getAccount(Principal principal){
-        return userService
+        UserDTO userDTO =  userService
                 .getUserWithRoles()
                 .map(UserDTO::new)
                 .orElseThrow(() -> new AccountResourceException("User could not be found"));
+
+        User user = userRepository.getOne(userDTO.getId());
+
+        if(userDTO.getCurrentOrganisationUnitId() == null && !userDTO.getApplicationUserOrganisationUnits().isEmpty()){
+            for (ApplicationUserOrganisationUnit applicationUserOrganisationUnit : userDTO.getApplicationUserOrganisationUnits()) {
+                user.setCurrentOrganisationUnitId(applicationUserOrganisationUnit.getOrganisationUnitId());
+                userRepository.save(user);
+                break;
+            }
+        }
+
+        return userDTO;
     }
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
         //Check Password Length
-        userService.registerUser(managedUserVM, managedUserVM.getPassword());
+        userService.registerUser(managedUserVM, managedUserVM.getPassword(), false);
     }
 
     @GetMapping("/users")

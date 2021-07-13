@@ -2,6 +2,7 @@ package org.lamisplus.modules.base.repository;
 
 import org.lamisplus.modules.base.domain.entity.OrganisationUnit;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +21,11 @@ public interface OrganisationUnitRepository extends JpaRepository<OrganisationUn
     List<OrganisationUnit> findAllByArchivedOrderByIdAsc(int unarchived);
 
     List<OrganisationUnit> findAllByOrganisationUnitLevelIdIn(List<Long> organisationUnitLevelId);
+
+    @Query(value = "SELECT id from organisation_unit WHERE name ilike ?1" +
+            " AND description ilike '%local%'AND " +
+            "parent_organisation_unit_id = (SELECT id from organisation_unit WHERE name = ?2 " +
+            "AND organisation_unit_level_id=2)", nativeQuery = true)
+    Long findByOrganisationDetails(String parentOrganisationUnitName, String parentsParentOrganisationUnitName);
+
 }

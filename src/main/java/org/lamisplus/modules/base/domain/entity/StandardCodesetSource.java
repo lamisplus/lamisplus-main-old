@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @EqualsAndHashCode
 @Table(name = "standard_codeset_source")
-public class StandardCodesetSource {
+public class StandardCodesetSource extends Audit<String> {
     @Id
     @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,28 +33,6 @@ public class StandardCodesetSource {
     @JsonIgnore
     @ToString.Exclude
     private List<StandardCodeset> standardCodesetsById;
-
-    @Basic
-    @Column(name = "date_created")
-    @JsonIgnore
-    @CreationTimestamp
-    private Timestamp dateCreated;
-
-    @Basic
-    @Column(name = "created_by")
-    @JsonIgnore
-    private String createdBy;
-
-    @Basic
-    @Column(name = "date_modified")
-    @JsonIgnore
-    @UpdateTimestamp
-    private Timestamp dateModified;
-
-    @Basic
-    @Column(name = "modified_by")
-    @JsonIgnore
-    private String modifiedBy;
 
     @Basic
     @Column(name = "archived")

@@ -1,7 +1,8 @@
-package org.lamisplus.modules.base;
+package org.lamisplus.modules.base.controller;
 
 import com.foreach.across.core.AcrossModule;
 import com.foreach.across.test.AbstractAcrossModuleConventionsTest;
+import org.lamisplus.modules.base.BaseModule;
 
 public class TestBaseModuleConventions extends AbstractAcrossModuleConventionsTest
 {

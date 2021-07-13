@@ -35,9 +35,9 @@ public class LabTest extends Audit<String> {
     private String unitMeasurement;
 
     @Basic
-    @Column(name = "uuid", updatable = false)
+    @Column(name = "code", updatable = false)
     @JsonIgnore
-    private String uuid;
+    private String code;
 
     @Basic
     @Column(name = "archived")

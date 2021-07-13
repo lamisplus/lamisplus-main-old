@@ -30,6 +30,9 @@ import { Paper } from '@material-ui/core';
 import {DatePicker} from "react-widgets";
 import "react-widgets/dist/css/react-widgets.css";
 // import Moment from "moment";
+import "./ServiceForm.css";
+import EditIcon from "@material-ui/icons/Edit";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
 const cardStyle = {
   borderColor: "#fff",
@@ -285,13 +288,13 @@ function ServiceFormPage(props) {
                     data={props.patientEncounterList}
                     actions={[
                       rowData => ({
-                        icon: 'visibility',
+                        icon: VisibilityIcon,
                         tooltip: 'View Form',
                         onClick: (event, rowData) => viewForm(rowData),
                         disabled: !authentication.userHasRole(["patient_write"]),
                       }),
                       {
-                        icon: 'edit',
+                        icon: EditIcon,
                         tooltip: 'Edit Form',
                         onClick: (event, rowData) => editForm(rowData)
                       },

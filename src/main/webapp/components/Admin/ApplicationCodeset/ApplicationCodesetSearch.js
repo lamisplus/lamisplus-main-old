@@ -53,6 +53,9 @@ ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
 ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
 
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+
 const useStyles = makeStyles(theme => ({
     button: {
         margin: theme.spacing(1)
@@ -153,13 +156,13 @@ const processDelete = (id) => {
 
                 actions= {[
                     {
-                        icon: 'Edit',
+                        icon: EditIcon,
                         iconProps: {color: 'primary'},
                         tooltip: 'Edit Codeset',
                         onClick: (event, rowData) => openApplicationCodeset(rowData)
                     },
                     {
-                        icon: 'Delete',
+                        icon: DeleteIcon,
                         iconProps: {color: 'primary'},
                         tooltip: 'Delete Codeset',
                         onClick: (event, rowData) => deleteApplicationCodeset(rowData)

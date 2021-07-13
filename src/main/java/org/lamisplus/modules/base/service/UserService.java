@@ -40,7 +40,6 @@ public class UserService {
     private final OrganisationUnitRepository organisationUnitRepository;
 
 
-
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, UserMapper userMapper, OrganisationUnitRepository organisationUnitRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -59,31 +58,28 @@ public class UserService {
            return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRoleByUserName);
     }
 
-    public User registerUser(UserDTO userDTO, String password){
-        userRepository
-                .findOneByUserName(userDTO.getUserName().toLowerCase())
-                .ifPresent(existingUser-> {
-                    throw new UsernameAlreadyUsedException();
-                        }
-                );
-        /*Person person = new Person();
-        person.setUuid(UUID.randomUUID().toString());
-        person.setFirstName(userDTO.getFirstName());
-        person.setLastName(userDTO.getLastName());
-        person.setDob(userDTO.getDateOfBirth());
-        Person newPerson = personRepository.save(person);*/
-
-
+    public User registerUser(UserDTO userDTO, String password, boolean updateUser){
+        Optional<User> optionalUser = userRepository.findOneByUserName(userDTO.getUserName().toLowerCase());
         User newUser = new User();
+        if(updateUser){
+
+        }else {
+            optionalUser.ifPresent(existingUser-> {
+                        throw new UsernameAlreadyUsedException();
+                    }
+            );
+        }
+
+
         String encryptedPassword = passwordEncoder.encode(password);
         newUser.setUserName(userDTO.getUserName());
         newUser.setEmail(userDTO.getEmail());
         newUser.setPhoneNumber(userDTO.getPhoneNumber());
         newUser.setGender(userDTO.getGender());
-        newUser.setCurrentOrganisationUnitId(userDTO.getCurrentOrganisationUnitId());
+        newUser.setCurrentOrganisationUnitId(getUserWithRoles().get().getCurrentOrganisationUnitId());
         newUser.setPassword(encryptedPassword);
-        /*newUser.setPerson(newPerson);
-        newUser.setPersonId(newPerson.getId());*/
+        newUser.setFirstName(userDTO.getFirstName());
+        newUser.setLastName(userDTO.getLastName());
 
         if (userDTO.getRoles() == null || userDTO.getRoles().isEmpty()) {
             Set<Role> roles = new HashSet<>();
@@ -98,16 +94,14 @@ public class UserService {
             newUser.setRole(getRolesFromStringSet(userDTO.getRoles()));
         }
 
-        //newUser.applicationUserOrganisationUnitsById
-
         userRepository.save(newUser);
-        log.debug("User Created: {}", newUser);
+        //log.debug("User Created: {}", newUser);
         return newUser;
     }
 
     @Transactional(readOnly = true)
     public Page<UserDTO> getAllManagedUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(UserDTO::new);
+        return userRepository.findAllByArchived(pageable, 0).map(UserDTO::new);
     }
 
     public User update(Long id, User user) {

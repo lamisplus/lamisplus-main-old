@@ -28,6 +28,10 @@ public class Drug extends Audit<String> {
     private String code;
 
     @Basic
+    @Column(name = "abbrev")
+    private String abbrev;
+
+    @Basic
     @Column(name = "drug_group_id")
     private Long drugGroupId;
 

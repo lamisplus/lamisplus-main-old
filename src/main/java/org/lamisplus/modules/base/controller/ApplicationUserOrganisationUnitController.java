@@ -32,7 +32,6 @@ public class ApplicationUserOrganisationUnitController {
     @PostMapping
     public ResponseEntity<List<ApplicationUserOrganisationUnit>> save(@RequestBody Set<ApplicationUserOrganisationUnitDTO> applicationUserOrganisationUnitDTO) {
         return ResponseEntity.ok(applicationUserOrganisationUnitService.save(applicationUserOrganisationUnitDTO));
-
     }
 
     @PutMapping("{id}")

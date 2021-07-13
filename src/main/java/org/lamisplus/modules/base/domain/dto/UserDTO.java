@@ -28,7 +28,7 @@ public class UserDTO {
     private String email;
     private String phoneNumber;
     private String gender;
-    private LocalDate dateOfBirth;
+    //private LocalDate dateOfBirth;
     private Long currentOrganisationUnitId;
     @ToString.Exclude
     private List<ApplicationUserOrganisationUnit> applicationUserOrganisationUnits;
@@ -42,7 +42,8 @@ public class UserDTO {
         this.roles = user.getRole().stream().map(Role::getName).collect(Collectors.toSet());
         permissions = new HashSet<>();
         user.getRole().forEach(roles1 ->{
-            permissions.addAll(roles1.getPermission().stream().map(Permission::getName).collect(Collectors.toSet()));
+            permissions.addAll(roles1.getPermission().stream().filter(p -> p.getArchived() == 0)
+                    .map(Permission::getName).collect(Collectors.toSet()));
         });
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();

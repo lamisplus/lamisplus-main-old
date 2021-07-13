@@ -22,7 +22,7 @@ public class ApplicationInitializedListener {
         LOG.info("Scanning for active modules...");
         int port = event.getApplicationContext().getWebServer().getPort();
         String url = "http://localhost:" + port;
-        (new ApplicationInitializedListener.BareBonesBrowserLaunch()).openURL(url);
+        //(new ApplicationInitializedListener.BareBonesBrowserLaunch()).openURL(url);
     }
 
     static class BareBonesBrowserLaunch {

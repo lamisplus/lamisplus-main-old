@@ -2,18 +2,19 @@ package org.lamisplus.modules.base.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Collection;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
+@Data
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class Role {
+public class Role extends Audit<String> {
     @Id
     @GeneratedValue
     @Getter
@@ -25,16 +26,15 @@ public class Role {
     @Setter
     private String name;
 
-    @Basic
-    @Column(name = "date_created")
-    @JsonIgnore
-    @CreationTimestamp
-    private Timestamp dateCreated;
+    @Getter
+    @Setter
+    private String code;
 
-    @Basic
+    @LastModifiedDate
     @Column(name = "date_modified")
-    @UpdateTimestamp
-    private Timestamp dateModified;
+    @JsonIgnore
+    @ToString.Exclude
+    private LocalDateTime dateModified = LocalDateTime.now();
 
     @Getter
     @Setter
