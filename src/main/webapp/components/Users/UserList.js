@@ -26,7 +26,7 @@ import { MdModeEdit } from "react-icons/md";
 import useForm from "../Functions/UseForm";
 import DualListBox from "react-dual-listbox";
 import "react-dual-listbox/lib/react-dual-listbox.css";
-import "react-toastify/dist/ReactToastify.css";
+//import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
 import AssignFacilityModal from "./AssignFacilityModal";
 import { forwardRef } from 'react';
@@ -88,6 +88,10 @@ const UserList = (props) => {
   let { values, setValues, handleInputChange, resetForm } = useForm({});
 
   useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = () =>{
     const onSuccess = () => {
       setLoading(false);
     };
@@ -95,8 +99,7 @@ const UserList = (props) => {
       setLoading(false);
     };
     props.fetchAllUsers(onSuccess, onError);
-  }, []);
-
+  }
   /* Get list of Roles from the server */
   useEffect(() => {
     async function getCharacters() {
@@ -122,10 +125,10 @@ const UserList = (props) => {
   };
 
   const toggleAssignModal = (user) => {
-    console.log(user);
+   // console.log(user);
     currentUser = user;
     setAssignFacilityModal(!assignFacilityModal);
-    console.log(assignFacilityModal);
+    //console.log(assignFacilityModal);
   
   }
 
@@ -162,6 +165,7 @@ const UserList = (props) => {
       setSaving(false);
       toast.success("User roles Updated Successfully");
       resetForm();
+      fetchUsers();
     };
     const onError = () => {
       setSaving(false);
@@ -225,53 +229,7 @@ const UserList = (props) => {
                   </MenuItem>
                 </MenuList>
               </Menu>
-              <Modal isOpen={modal} >
-                <Form onSubmit={handleEdit}>
-                  <ModalHeader>Edit Roles</ModalHeader>
-                  <ModalBody>
-                    <FormGroup>
-                      <Label for="roles">Roles</Label>
-                      <DualListBox
-                          canFilter
-                        options={roles}
-                        onChange={onRoleSelect}
-                        selected={selectedRoles}
-                      />
-                    </FormGroup>
-                  </ModalBody>
-                  <ModalFooter>
-                    <MatButton
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      startIcon={<SaveIcon />}
-                      disabled={saving}
-                      onClick={() => toggleEditRoles(userId)}
-                    >
-                      {!saving ? (
-                        <span style={{ textTransform: "capitalize" }}>
-                          Save
-                        </span>
-                      ) : (
-                        <span style={{ textTransform: "capitalize" }}>
-                          Saving...
-                        </span>
-                      )}
-                    </MatButton>
-                    <MatButton
-                      variant="contained"
-                      className={classes.button}
-                      startIcon={<CancelIcon />}
-                      onClick={() => toggleEditRoles(userId)}
-                    >
-                      <span style={{ textTransform: "capitalize" }}>
-                        Cancel
-                      </span>
-                    </MatButton>
-                  </ModalFooter>
-                </Form>
-              </Modal>
+
             </div>
 
           ),
@@ -292,6 +250,53 @@ const UserList = (props) => {
       />
       <AssignFacilityModal
           showModal={assignFacilityModal} toggleModal={() => setAssignFacilityModal(!assignFacilityModal)} user={currentUser}/>
+      <Modal isOpen={modal} >
+        <Form onSubmit={handleEdit}>
+          <ModalHeader>Edit Roles</ModalHeader>
+          <ModalBody>
+            <FormGroup>
+              <Label for="roles">Roles</Label>
+              <DualListBox
+                  canFilter
+                  options={roles}
+                  onChange={onRoleSelect}
+                  selected={selectedRoles}
+              />
+            </FormGroup>
+          </ModalBody>
+          <ModalFooter>
+            <MatButton
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                startIcon={<SaveIcon />}
+                disabled={saving}
+                onClick={() => toggleEditRoles(userId)}
+            >
+              {!saving ? (
+                  <span style={{ textTransform: "capitalize" }}>
+                          Save
+                        </span>
+              ) : (
+                  <span style={{ textTransform: "capitalize" }}>
+                          Saving...
+                        </span>
+              )}
+            </MatButton>
+            <MatButton
+                variant="contained"
+                className={classes.button}
+                startIcon={<CancelIcon />}
+                onClick={() => toggleEditRoles(userId)}
+            >
+                      <span style={{ textTransform: "capitalize" }}>
+                        Cancel
+                      </span>
+            </MatButton>
+          </ModalFooter>
+        </Form>
+      </Modal>
     </div>
   );
 };
