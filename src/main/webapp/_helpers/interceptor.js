@@ -28,7 +28,7 @@ axios.interceptors.response.use(function (response) {
         console.log(error.request.responseURL);
         const url = error.request && error.request.responseURL ? error.request.responseURL.toString() : null;
         if(url && !url.includes("encounters")){
-            window.location.href = '/unauthorised';
+           // window.location.href = '/unauthorised';
         }
 
     }
