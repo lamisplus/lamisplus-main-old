@@ -22,7 +22,7 @@ const columns = [
     cell: row => (
       <span>
         {row.regimen ?
-            ( row.regimen && row.regimen.regimen ? row.regimen.regimen + ' - ': '')
+            ( row.regimen && row.regimen.name ? row.regimen.name + ' - ': '')
             :
         <b> {row.drugs && row.drugs.length > 0 ? row.drugs.map(x=>x.drug.name).toString() : ''}</b>}
       </span>
