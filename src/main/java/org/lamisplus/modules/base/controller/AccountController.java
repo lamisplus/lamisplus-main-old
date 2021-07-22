@@ -62,14 +62,12 @@ public class AccountController {
                 break;
             }
         }
-        Optional<ApplicationUserOrganisationUnit> optionalApplicationUserOrganisationUnit = applicationUserOrganisationUnitRepository.findByApplicationUserIdAndOrganisationUnitIdAndArchived(user.getId(), user.getCurrentOrganisationUnitId(), 0);
+        Optional<ApplicationUserOrganisationUnit> optionalApplicationUserOrganisationUnit = applicationUserOrganisationUnitRepository.findOneByApplicationUserIdAndOrganisationUnitIdAndArchived(user.getId(), user.getCurrentOrganisationUnitId(), 0);
 
         if(!optionalApplicationUserOrganisationUnit.isPresent()){
-            Set<ApplicationUserOrganisationUnit> applicationUserOrganisationUnitSet = new HashSet<>();
             ApplicationUserOrganisationUnit applicationUserOrganisationUnit = new ApplicationUserOrganisationUnit();
             applicationUserOrganisationUnit.setApplicationUserId(user.getId());
             applicationUserOrganisationUnit.setOrganisationUnitId(user.getCurrentOrganisationUnitId());
-            applicationUserOrganisationUnitSet.add(applicationUserOrganisationUnit);
             applicationUserOrganisationUnitRepository.save(applicationUserOrganisationUnit);
         }
         return userDTO;

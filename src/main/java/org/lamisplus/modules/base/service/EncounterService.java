@@ -195,23 +195,18 @@ public class EncounterService {
 
     public Page<Encounter> getEncounterByFormCodeAndDateEncounter(String formCode, Optional<String> dateStart, Optional<String> dateEnd, Pageable pageable) {
         Specification<Encounter> specification = null;
-        try {
-            Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermission();
 
-            accessRight.grantAccess(formCode, Encounter.class, permissions);
+        accessRight.grantAccess(formCode, Encounter.class, permissions);
 
-            specification = new GenericSpecification<Encounter>().findAllEncounter(formCode, dateStart, dateEnd, UNARCHIVED,
-                    userService.getUserWithRoles().get().getCurrentOrganisationUnitId());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        specification = new GenericSpecification<Encounter>().findAllEncounter(formCode, dateStart, dateEnd, UNARCHIVED,
+                userService.getUserWithRoles().get().getCurrentOrganisationUnitId());
         return encounterRepository.findAll(specification, pageable);
     }
 
     public List<EncounterDTO> getAllEncounters(Page page) {
         List<EncounterDTO> encounterDTOS = new ArrayList<>();
 
-        try {
             List<Encounter> encounters = page.getContent();
             encounters.forEach(singleEncounter -> {
                 Patient patient = singleEncounter.getPatientByPatientId();
@@ -225,9 +220,6 @@ public class EncounterService {
                 encounterDTO.setFormDataObj(formDataList);
                 encounterDTOS.add(addProperties(encounterDTO));
             });
-        }catch (Exception e){
-            e.printStackTrace();
-        }
         return encounterDTOS;
     }
 

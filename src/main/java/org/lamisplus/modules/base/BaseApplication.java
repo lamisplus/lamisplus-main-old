@@ -51,6 +51,7 @@ public class BaseApplication extends SpringBootServletInitializer {
     }
 
     @Bean
+    //Reads database properties from the config.yml
     public static PropertySourcesPlaceholderConfigurer properties() {
         PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
         YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();

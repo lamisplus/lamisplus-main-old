@@ -123,6 +123,4 @@ class ApiError {
     public void addValidationErrors(Set<ConstraintViolation<?>> constraintViolations) {
         constraintViolations.forEach(this::addValidationError);
     }
-
-
 }

@@ -242,17 +242,6 @@ const UserRegistration = (props) => {
                     />
                   </FormGroup>
                   <FormGroup>
-                    <Label for="email">Email *</Label>
-                    <Input
-                      type="email"
-                      name="email"
-                      id="email"
-                      onChange={handleInputChange}
-                      value={values.email}
-                      required
-                    />
-                  </FormGroup>
-                  <FormGroup>
                     <Label for="password">Password *</Label>
                     <Input
                       type="password"
@@ -267,6 +256,18 @@ const UserRegistration = (props) => {
                       Password must be atleast 6 characters
                     </FormFeedback>
                   </FormGroup>
+                  <FormGroup>
+                    <Label for="email">Email *</Label>
+                    <Input
+                      type="email"
+                      name="email"
+                      id="email"
+                      onChange={handleInputChange}
+                      value={values.email}
+                      required
+                    />
+                  </FormGroup>
+                 
                   
                 </Col>
                 <Col md={6}>

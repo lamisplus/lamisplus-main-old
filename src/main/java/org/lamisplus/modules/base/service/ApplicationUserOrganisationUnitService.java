@@ -54,7 +54,7 @@ public class ApplicationUserOrganisationUnitService {
     }
 
     public Optional<ApplicationUserOrganisationUnit> getApplicationUserOrganisationUnitByUserIdAndOrganisationUnitId(Long applicationUserId, Long organisationUnitId){
-        return applicationUserOrganisationUnitRepository.findByApplicationUserIdAndOrganisationUnitIdAndArchived(applicationUserId, organisationUnitId, constant.UN_ARCHIVED);
+        return applicationUserOrganisationUnitRepository.findOneByApplicationUserIdAndOrganisationUnitIdAndArchived(applicationUserId, organisationUnitId, constant.UN_ARCHIVED);
     }
 
     public Boolean delete(Long id, ApplicationUserOrganisationUnit applicationUserOrganisationUnit) {

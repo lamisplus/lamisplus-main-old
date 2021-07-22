@@ -231,8 +231,8 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
 
         try {
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + reportName.replace(" ","_")+ LocalDate.now().toString().replace("-", "") + "\".xls");
-            response.setContentType(".xls");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + reportName.replace(" ","_")+ LocalDate.now().toString().replace("-", ""));
+            response.setContentType("xls");
             excelRenderOption.setOutputStream(response.getOutputStream());
             runAndRenderTask.run();
         } catch (Exception e) {
