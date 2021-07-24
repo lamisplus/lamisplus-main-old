@@ -43,8 +43,6 @@ import java.io.File;
 @Slf4j
 @EnableSwagger2
 public class BaseApplication extends SpringBootServletInitializer {
-    @Autowired
-    DataSource dataSource;
 
     public static void main(String[] args) {
         SpringApplication.run(BaseApplication.class, args);
