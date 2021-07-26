@@ -69,6 +69,7 @@ const DrugOrder = (props) => {
                 formCode={currentForm.code}
                 programCode={currentForm.programCode}
                 visitId={props.patient.visitId}
+                dateEncounter={props.patient.dateVisitStart}
                 onSubmit={saveDrugOrders}
             />}
             </React.Fragment>
