@@ -477,7 +477,8 @@ public class PatientService {
                 if (patientJson.get("alternatePhoneNumber").toString() != null) patientDTO.setAlternatePhoneNumber(patientJson.get("alternatePhoneNumber").toString());
                 if (patientJson.get("street").toString() != null) patientDTO.setStreet(patientJson.get("street").toString());
                 if (patientJson.get("landmark").toString() != null) patientDTO.setLandmark(patientJson.get("landmark").toString());
-                if (patientJson.get("education").toString() != null) {
+                System.out.println(patientJson.get("hospitalNumber").toString());
+                if (patientJson.get("education")!= null && patientJson.get("education").toString().isEmpty()) {
                     JSONObject educationJson = new JSONObject(patientJson.get("education").toString());
                     patientDTO.setEducationId(Long.valueOf(educationJson.get("id").toString()));
                 }
