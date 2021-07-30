@@ -2,4 +2,4 @@ spring:
   datasource:
     username: postgres
     password: postgres
-    url: jdbc:postgresql://localhost:5432/ccrhs2
+    url: jdbc:postgresql://localhost:5432/ccrhs22
