@@ -44,6 +44,9 @@ import java.io.File;
 @EnableSwagger2
 public class BaseApplication extends SpringBootServletInitializer {
 
+    @Autowired
+    private DataSource dataSource;
+
     public static void main(String[] args) {
         SpringApplication.run(BaseApplication.class, args);
     }
@@ -119,11 +122,11 @@ public class BaseApplication extends SpringBootServletInitializer {
         return new ApiKey("JWT", "Authorization", "header");
     }
 
-    /*@Bean
+    @Bean
     public SpringLiquibase liquibase() {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setChangeLog("classpath:changeLogFile.xml");
         liquibase.setDataSource(dataSource);
         return liquibase;
-    }*/
+    }
 }
