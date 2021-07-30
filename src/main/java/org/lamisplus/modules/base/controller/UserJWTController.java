@@ -1,6 +1,9 @@
 package org.lamisplus.modules.base.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.audit4j.core.annotation.Audit;
+import org.audit4j.core.annotation.AuditField;
+import org.audit4j.core.annotation.IgnoreAudit;
 import org.lamisplus.modules.base.controller.vm.LoginVM;
 import org.lamisplus.modules.base.security.jwt.JWTFilter;
 import org.lamisplus.modules.base.security.jwt.TokenProvider;
@@ -32,8 +35,9 @@ public class UserJWTController {
         this.userService = userService;
     }
 
+    @Audit(action = "api/authenticate")
     @PostMapping("/authenticate")
-    public ResponseEntity<JWTToken> authorize(@Valid @RequestBody LoginVM loginVM) {
+    public ResponseEntity<JWTToken> authorize(@Valid @RequestBody @IgnoreAudit LoginVM loginVM) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginVM.getUsername(),
                 loginVM.getPassword()
