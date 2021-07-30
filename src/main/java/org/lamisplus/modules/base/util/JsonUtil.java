@@ -6,8 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,5 +82,35 @@ public class JsonUtil {
             e.printStackTrace();
         }
         return entityObject;
+    }
+
+    public static List<String> traverse(JsonNode root, List <String> jsonFieldNames){
+        if(root.isObject()){
+            Iterator<String> fieldNames = root.fieldNames();
+
+            while(fieldNames.hasNext()) {
+                String fieldName = fieldNames.next();
+                jsonFieldNames.add(fieldName);
+                JsonNode fieldValue = root.get(fieldName);
+                traverse(fieldValue, jsonFieldNames);
+            }
+        } else if(root.isArray()){
+            ArrayNode arrayNode = (ArrayNode) root;
+            for(int i = 0; i < arrayNode.size(); i++) {
+                JsonNode arrayElement = arrayNode.get(i);
+                traverse(arrayElement, jsonFieldNames);
+            }
+        } else {
+            //get the json value
+            // JsonNode root represents a single value field - do something with it.
+        }
+        return jsonFieldNames;
+    }
+
+    public static JsonNode getJsonNode(Object object){
+        if(object != null){
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.convertValue(object, JsonNode.class);
+        }else return null;
     }
 }

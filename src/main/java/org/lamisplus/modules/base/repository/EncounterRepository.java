@@ -90,5 +90,7 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
 
     Optional<Encounter> findAllByPatientIdAndFormCodeAndArchived(Long patientId, String formCode, int archived);
 
+    Optional<Encounter> findFirstByFormCodeOrderByIdDesc(String formCode);
+
 }
 
