@@ -122,11 +122,11 @@ public class BaseApplication extends SpringBootServletInitializer {
         return new ApiKey("JWT", "Authorization", "header");
     }
 
-    @Bean
+    /*@Bean
     public SpringLiquibase liquibase() {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setChangeLog("classpath:changeLogFile.xml");
         liquibase.setDataSource(dataSource);
         return liquibase;
-    }
+    }*/
 }
