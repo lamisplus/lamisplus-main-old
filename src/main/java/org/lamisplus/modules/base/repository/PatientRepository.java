@@ -59,4 +59,5 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
             "details ->>'dob' BETWEEN ?3 AND ?4", nativeQuery = true)
     Long countByPediatrics(Long organisationUnitId, int archived, LocalDate later, LocalDate now);
 
+    Optional<Patient> findByIdAndOrganisationUnitIdAndArchived(Long patientId, Long organisationUnitId, int archived);
 }

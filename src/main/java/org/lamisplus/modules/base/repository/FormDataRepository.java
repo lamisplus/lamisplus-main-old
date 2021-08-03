@@ -70,6 +70,9 @@ public interface FormDataRepository extends JpaRepository<FormData, Long>, JpaSp
 
     List<FormData> findByEncounterId(Long encounterId);
 
+    Optional<FormData> findOneByEncounterIdOrderByIdDesc(Long encounterId);
+
+
     @Query(value = "select d from FormData d where d.encounterId in (select e.id from Encounter e where e.formCode = ?1 and e.patientId = ?2)")
     List<FormData> findByFormCodeAndPatientId(String formCode, Long patientId);
 

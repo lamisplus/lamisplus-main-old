@@ -64,22 +64,6 @@ public class FormService {
             String read = UNDERSCORE + READ;
             String write = UNDERSCORE + WRITE;
             String delete = UNDERSCORE + DELETE;
-        /*Permission permission = null;
-
-        if(permissionRepository.findByDescriptionAndArchived(formDTO.getName() +" Read", 0).isPresent()){
-           permission =  permissionRepository.findByDescriptionAndArchived(formDTO.getName() +" Read", 0).get();
-        }
-
-        if(permissionRepository.findByDescriptionAndArchived(formDTO.getName() +" Write", 0).isPresent()){
-            permission =  permissionRepository.findByDescriptionAndArchived(formDTO.getName() +" Write", 0).get();
-
-        }
-
-        if(permissionRepository.findByDescriptionAndArchived(formDTO.getName() +" Delete", 0).isPresent()){
-            permission =  permissionRepository.findByDescriptionAndArchived(formDTO.getName() +" Delete", 0).get();
-
-        }*/
-
 
             permissions.add(new Permission(formDTO.getCode() + read, formDTO.getName() +" Read", constant.UN_ARCHIVED));
             permissions.add(new Permission(formDTO.getCode() + write, formDTO.getName() +" Write", constant.UN_ARCHIVED));
@@ -166,25 +150,21 @@ public class FormService {
     }
 
     public List<String> getFormFieldNames(String formCode) {
-        try {
-            FormData formData = new FormData();
-            Form form = formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED).orElseThrow(
-                    () -> new EntityNotFoundException(Form.class, "Form", "" + formCode));
-            List<Encounter> encounters = form.getEncountersByForm();
-            if(!encounters.isEmpty()){
-                Encounter encounter = encounters.stream().max(Comparator.comparing(e -> e.getId())).get();
-                formData = formDataRepository.findByEncounterId(encounter.getId()).stream().max(Comparator.comparing(fd -> fd.getId())).get();
-            }else {
-                new EntityNotFoundException(Encounter.class, "Encounter", " for " + form.getName());
-            }
+        FormData formData = new FormData();
+        Form form = formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED).orElseThrow(
+                () -> new EntityNotFoundException(Form.class, "Form", "" + formCode));
+        List<Encounter> encounters = form.getEncountersByForm();
+        if(!encounters.isEmpty()){
+            Encounter encounter = encounters.stream().max(Comparator.comparing(e -> e.getId())).get();
+            formData = formDataRepository.findByEncounterId(encounter.getId()).stream().max(Comparator.comparing(fd -> fd.getId())).get();
+        }else {
+            new EntityNotFoundException(Encounter.class, "Encounter", " for " + form.getName());
+        }
 
-            Object data = formData.getData();
-            if (null != data) {
-                List<String> jsonFieldNames = new ArrayList();
-                return JsonUtil.traverse(JsonUtil.getJsonNode(data), jsonFieldNames);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        Object data = formData.getData();
+        if (null != data) {
+            List<String> jsonFieldNames = new ArrayList();
+            return JsonUtil.traverse(JsonUtil.getJsonNode(data), jsonFieldNames, false);
         }
         return null;
     }

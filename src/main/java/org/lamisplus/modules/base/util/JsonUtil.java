@@ -84,7 +84,7 @@ public class JsonUtil {
         return entityObject;
     }
 
-    public static List<String> traverse(JsonNode root, List <String> jsonFieldNames){
+    public static List<String> traverse(JsonNode root, List <String> jsonFieldNames, Boolean withValues){
         if(root.isObject()){
             Iterator<String> fieldNames = root.fieldNames();
 
@@ -92,15 +92,18 @@ public class JsonUtil {
                 String fieldName = fieldNames.next();
                 jsonFieldNames.add(fieldName);
                 JsonNode fieldValue = root.get(fieldName);
-                traverse(fieldValue, jsonFieldNames);
+                traverse(fieldValue, jsonFieldNames, false);
             }
         } else if(root.isArray()){
             ArrayNode arrayNode = (ArrayNode) root;
             for(int i = 0; i < arrayNode.size(); i++) {
                 JsonNode arrayElement = arrayNode.get(i);
-                traverse(arrayElement, jsonFieldNames);
+                traverse(arrayElement, jsonFieldNames, false);
             }
         } else {
+            if(withValues){
+                jsonFieldNames.add(root.toString());
+            }
             //get the json value
             // JsonNode root represents a single value field - do something with it.
         }

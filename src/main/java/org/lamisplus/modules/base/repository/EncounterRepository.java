@@ -25,6 +25,9 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
     //New
     Page<Encounter> findAllByPatientIdAndFormCodeAndArchived(Pageable pageable, Long patientId, String FormCode, int Archived);
 
+    Optional<Encounter> findOneByPatientIdAndFormCodeAndArchived(Long patientId, String FormCode, int Archived);
+
+
 
     Optional<Encounter> findByPatientIdAndProgramCodeAndFormCodeAndDateEncounterAndOrganisationUnitId(Long patientId, String ProgramCode, String FormCode, LocalDate dateFncounter, Long organisationUnitId);
 

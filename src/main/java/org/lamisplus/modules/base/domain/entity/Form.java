@@ -2,6 +2,7 @@ package org.lamisplus.modules.base.domain.entity;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
+import org.apache.commons.lang3.builder.ToStringExclude;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -12,9 +13,8 @@ import org.springframework.data.annotation.LastModifiedBy;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -77,6 +77,7 @@ public class Form extends JsonBEntity implements Serializable {
     @Basic
     @Column(name = "date_created", updatable = false)
     @JsonIgnore
+    @ToStringExclude
     @CreationTimestamp
     private LocalDateTime dateCreated = LocalDateTime.now();
 
@@ -117,7 +118,10 @@ public class Form extends JsonBEntity implements Serializable {
     @Transient
     private String programName;
 
-
+    @OneToMany(mappedBy = "formByFormId")
+    @ToStringExclude
+    @JsonIgnore
+    private List<FormFlag> formsByIdFlag;
 
     public Form(Long id, String name, String code, Integer usageCode, String resourcePath, Object formPrecedence, String programCode, String version){
         this.id = id;
