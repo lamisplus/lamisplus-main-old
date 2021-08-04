@@ -33,7 +33,7 @@ public class FlagService {
     public Flag save(FlagDTO flagDTO) {
         Optional<Flag> optionalFlag = flagRepository.findByNameAndFieldNameAndFieldValueAndArchived(flagDTO.getName(),
                 flagDTO.getFieldName(), flagDTO.getFieldValue(), UN_ARCHIVED);
-        if (optionalFlag.isPresent()) throw new RecordExistException(Flag.class, "Name", flagDTO.getName());
+        if (optionalFlag.isPresent()) throw new RecordExistException(Flag.class, "Name", flagDTO.getName() + " with " + flagDTO.getFieldValue());
         return flagRepository.save(flagMapper.toFlag(flagDTO));
     }
 
