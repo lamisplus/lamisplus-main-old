@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.type.CollectionType;
@@ -115,5 +116,9 @@ public class JsonUtil {
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.convertValue(object, JsonNode.class);
         }else return null;
+    }
+
+    public static String traverse(JsonNode root, String field) {
+        return root.get(field).toString();
     }
 }

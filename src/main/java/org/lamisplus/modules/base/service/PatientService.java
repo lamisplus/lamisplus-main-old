@@ -84,8 +84,7 @@ public class PatientService {
         //Start of flag operation for associated with (0)
         List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("bbc01821-ff3b-463d-842b-b90eab4bdacd", 0, UN_ARCHIVED);
         if(!formFlags.isEmpty()){
-            final Object finalPatientDTO = patientDTO.getDetails();
-            flagUtil.checkForAndSavePatientFlag(patientDTO.getPatientId(), patientDTO.getDetails(), formFlags, false);
+            flagUtil.checkForAndSavePatientFlag(savedPatient.getId(), savedPatient.getDetails(), formFlags, false);
         }
         return savedPatient;
     }

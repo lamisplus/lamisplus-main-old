@@ -188,7 +188,7 @@ public class EncounterService {
         List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived(savedEncounter.getFormCode(), 0, UNARCHIVED);
         if(!formFlags.isEmpty()) {
             final Object finalFormData = formDataRepository.findOneByEncounterIdOrderByIdDesc(savedEncounter.getId()).get().getData();
-            flagUtil.checkForAndSavePatientFlag(savedEncounter.getPatientId(), finalFormData, formFlags, false);
+            flagUtil.checkForAndSavePatientFlag(savedEncounter.getPatientId(), JsonUtil.getJsonNode(finalFormData), formFlags, false);
         }
 
         return savedEncounter;

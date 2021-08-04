@@ -1,5 +1,7 @@
 package org.lamisplus.modules.base.util;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.lamisplus.modules.base.domain.dto.PatientDTO;
 import org.lamisplus.modules.base.domain.entity.Flag;
@@ -27,17 +29,37 @@ public class FlagUtil {
             int flagDataType = formFlag.getFlag().getDatatype();
             String fieldName = formFlag.getFlag().getFieldName().trim();
             String formFlagFieldValue = formFlag.getFlag().getFieldValue().replaceAll("\\s", "").trim();
+            ObjectMapper mapper = new ObjectMapper();
+
             //if not application code set
             if (flagDataType == 0) {
-                String field = String.valueOf(JsonUtil.getJsonNode(forJsonNode).get(fieldName));/*.replaceAll("^\"+|\"+$", "");*/
-                if (formFlagFieldValue.equalsIgnoreCase(field)) {
-                    this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                try {
+                    String stringField = JsonUtil.getJsonNode(forJsonNode).toString();
+
+                    final JsonNode tree = mapper.readTree(stringField);
+
+                    JsonNode jsonNode = tree.at(fieldName);
+                    String field = String.valueOf(jsonNode).replaceAll("^\"+|\"+$", "");
+                    if (formFlagFieldValue.equalsIgnoreCase(field)) {
+                        this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
                 //if application code set
             } else if (flagDataType == 1) {
-                String field = JsonUtil.getJsonNode(forJsonNode).get(fieldName).toString().replaceAll("\\s", "").trim();/*.replaceAll("^\"+|\"+$", "");*/
-                if (formFlagFieldValue.equalsIgnoreCase(field)) {
-                    this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                try {
+                    String stringField = JsonUtil.getJsonNode(forJsonNode).get(fieldName).toString();
+                    //fieldName = "/" + fieldName + "/display";
+
+                    final JsonNode tree = mapper.readTree(stringField);
+                    JsonNode jsonNode = tree.get("display");
+                    String field = String.valueOf(jsonNode).replaceAll("^\"+|\"+$", "");
+                    if (formFlagFieldValue.equalsIgnoreCase(field)) {
+                        this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         });
@@ -73,12 +95,12 @@ public class FlagUtil {
         Flag flag = flagRepository.findByIdAndArchived(flagId, 0).get();
         //Check for opposites or similarities in flag field name & delete
         patientFlags.forEach(patientFlag1 -> {
-             if (patientFlag1.getFlag().getFieldName().equalsIgnoreCase(flag.getFieldName())) {
-                if (!temp) {
-                    patientFlagRepository.delete(patientFlag1);
-                    return;
-                }
-             }
+           if(patientFlag1.getFlag().getFieldName().equalsIgnoreCase(flag.getFieldName())) {
+               if(!temp) {
+                   patientFlagRepository.delete(patientFlag1);
+                   return;
+               }
+           }
         });
         if (!patientFlagRepository.findByPatientIdAndFlagId(patientId, flagId).isPresent()) {
             patientFlagRepository.save(patientFlag);
