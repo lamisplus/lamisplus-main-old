@@ -125,7 +125,10 @@ const CaptureBiometrics = (props) => {
 
     }
     const saveBiometrics = () => {
-
+        if(formData.length <= 0){
+            toast.error("No fingerprint captured.");
+            return;
+        }
     }
 
     const addToFingerprintList = () => {
