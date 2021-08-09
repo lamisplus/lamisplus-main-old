@@ -34,9 +34,7 @@ public class FlagUtil {
             //if not application code set
             if (flagDataType == 0) {
                 try {
-                    String stringField = JsonUtil.getJsonNode(forJsonNode).toString();
-
-                    final JsonNode tree = mapper.readTree(stringField);
+                    final JsonNode tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
 
                     JsonNode jsonNode = tree.at(fieldName);
                     String field = String.valueOf(jsonNode).replaceAll("^\"+|\"+$", "");
@@ -49,10 +47,10 @@ public class FlagUtil {
                 //if application code set
             } else if (flagDataType == 1) {
                 try {
-                    String stringField = JsonUtil.getJsonNode(forJsonNode).get(fieldName).toString();
+                    //String stringField = JsonUtil.getJsonNode(forJsonNode).get(fieldName).toString();
                     //fieldName = "/" + fieldName + "/display";
 
-                    final JsonNode tree = mapper.readTree(stringField);
+                    final JsonNode tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
                     JsonNode jsonNode = tree.get("display");
                     String field = String.valueOf(jsonNode).replaceAll("^\"+|\"+$", "");
                     if (formFlagFieldValue.equalsIgnoreCase(field)) {
@@ -95,11 +93,10 @@ public class FlagUtil {
         Flag flag = flagRepository.findByIdAndArchived(flagId, 0).get();
         //Check for opposites or similarities in flag field name & delete
         patientFlags.forEach(patientFlag1 -> {
-           if(patientFlag1.getFlag().getFieldName().equalsIgnoreCase(flag.getFieldName())) {
-               if(!temp) {
+           if(patientFlag1.getFlag().getFieldName().equalsIgnoreCase(flag.getFieldName()) &&
+                   !patientFlag1.getFlag().getFieldValue().equalsIgnoreCase(flag.getFieldValue())) {
                    patientFlagRepository.delete(patientFlag1);
                    return;
-               }
            }
         });
         if (!patientFlagRepository.findByPatientIdAndFlagId(patientId, flagId).isPresent()) {
