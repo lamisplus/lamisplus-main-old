@@ -35,9 +35,7 @@ public class FlagUtil {
             if (flagDataType == 0) {
                 try {
                     final JsonNode tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
-
-                    JsonNode jsonNode = tree.at(fieldName);
-                    String field = String.valueOf(jsonNode).replaceAll("^\"+|\"+$", "");
+                    String field = String.valueOf(tree).replaceAll("^\"+|\"+$", "");
                     if (formFlagFieldValue.equalsIgnoreCase(field)) {
                         this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
                     }
@@ -47,9 +45,6 @@ public class FlagUtil {
                 //if application code set
             } else if (flagDataType == 1) {
                 try {
-                    //String stringField = JsonUtil.getJsonNode(forJsonNode).get(fieldName).toString();
-                    //fieldName = "/" + fieldName + "/display";
-
                     final JsonNode tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
                     JsonNode jsonNode = tree.get("display");
                     String field = String.valueOf(jsonNode).replaceAll("^\"+|\"+$", "");
