@@ -28,14 +28,19 @@ public class FormController {
             return ResponseEntity.ok(this.formService.getFormByFormCode(formCode, type));
     }
 
-    @GetMapping ("/{id}")
-    public ResponseEntity<Form> getForm(@PathVariable Long id) {
-        return ResponseEntity.ok(this.formService.getForm(id));
+    @GetMapping ("/{formCode}/fieldNames")
+    public ResponseEntity<List<String>> getFormFieldNames(@PathVariable String formCode) {
+        return ResponseEntity.ok(this.formService.getFormFieldNames(formCode));
     }
 
     @GetMapping ("/{usageCode}/usageCode")
     public ResponseEntity<List> getFormsByUsageStatus(@PathVariable Integer usageCode) {
         return ResponseEntity.ok(this.formService.getFormsByUsageStatus(usageCode));
+    }
+
+    @GetMapping ("/{id}/")
+    public ResponseEntity<Form> getForm(@PathVariable Long id) {
+        return ResponseEntity.ok(this.formService.getForm(id));
     }
 
     @PostMapping

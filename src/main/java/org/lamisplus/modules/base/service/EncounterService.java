@@ -15,6 +15,8 @@ import org.lamisplus.modules.base.domain.mapper.FormDataMapper;
 import org.lamisplus.modules.base.repository.*;
 
 import org.lamisplus.modules.base.util.AccessRight;
+import org.lamisplus.modules.base.util.FlagUtil;
+import org.lamisplus.modules.base.util.JsonUtil;
 import org.lamisplus.modules.base.util.converter.CustomDateTimeFormat;
 import org.lamisplus.modules.base.util.GenericSpecification;
 import org.springframework.boot.configurationprocessor.json.JSONException;
@@ -41,15 +43,18 @@ public class EncounterService {
     private static final int UNARCHIVED = 0;
     private final EncounterRepository encounterRepository;
     private final VisitRepository visitRepository;
+    private final PatientFlagRepository patientFlagRepository;
     private final EncounterMapper encounterMapper;
     private final FormDataMapper formDataMapper;
     private final FormDataRepository formDataRepository;
     private final FormRepository formRepository;
+    private final FormFlagRepository formFlagRepository;
     private final UserService userService;
     private final AccessRight accessRight;
     private static final int ARCHIVED = 1;
     private static final String WRITE = "write";
     private static final String DELETE = "delete";
+    private final FlagUtil flagUtil;
 
     public List<EncounterDTO> getAllEncounters() {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
@@ -179,6 +184,13 @@ public class EncounterService {
                 formDataRepository.save(formData);
             });
         }
+        //Start of flag operation for associated with (0)
+        List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived(savedEncounter.getFormCode(), 0, UNARCHIVED);
+        if(!formFlags.isEmpty()) {
+            final Object finalFormData = formDataRepository.findOneByEncounterIdOrderByIdDesc(savedEncounter.getId()).get().getData();
+            flagUtil.checkForAndSavePatientFlag(savedEncounter.getPatientId(), JsonUtil.getJsonNode(finalFormData), formFlags, false);
+        }
+
         return savedEncounter;
     }
 

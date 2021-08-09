@@ -1,18 +1,20 @@
 package org.lamisplus.modules.base.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.FormDTO;
+import org.lamisplus.modules.base.domain.entity.Encounter;
 import org.lamisplus.modules.base.domain.entity.Form;
+import org.lamisplus.modules.base.domain.entity.FormData;
 import org.lamisplus.modules.base.domain.entity.Permission;
 import org.lamisplus.modules.base.domain.mapper.FormMapper;
-import org.lamisplus.modules.base.repository.FormRepository;
-import org.lamisplus.modules.base.repository.PermissionRepository;
-import org.lamisplus.modules.base.repository.ProgramRepository;
+import org.lamisplus.modules.base.repository.*;
 import org.lamisplus.modules.base.util.AccessRight;
 import org.lamisplus.modules.base.util.Constants;
+import org.lamisplus.modules.base.util.JsonUtil;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -23,6 +25,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class FormService {
     private final FormRepository formRepository;
+    private final FormDataRepository formDataRepository;
+    private final EncounterRepository encounterRepository;
     private final ProgramRepository programRepository;
     private final FormMapper formMapper;
     private final UserService userService;
@@ -60,22 +64,6 @@ public class FormService {
             String read = UNDERSCORE + READ;
             String write = UNDERSCORE + WRITE;
             String delete = UNDERSCORE + DELETE;
-        /*Permission permission = null;
-
-        if(permissionRepository.findByDescriptionAndArchived(formDTO.getName() +" Read", 0).isPresent()){
-           permission =  permissionRepository.findByDescriptionAndArchived(formDTO.getName() +" Read", 0).get();
-        }
-
-        if(permissionRepository.findByDescriptionAndArchived(formDTO.getName() +" Write", 0).isPresent()){
-            permission =  permissionRepository.findByDescriptionAndArchived(formDTO.getName() +" Write", 0).get();
-
-        }
-
-        if(permissionRepository.findByDescriptionAndArchived(formDTO.getName() +" Delete", 0).isPresent()){
-            permission =  permissionRepository.findByDescriptionAndArchived(formDTO.getName() +" Delete", 0).get();
-
-        }*/
-
 
             permissions.add(new Permission(formDTO.getCode() + read, formDTO.getName() +" Read", constant.UN_ARCHIVED));
             permissions.add(new Permission(formDTO.getCode() + write, formDTO.getName() +" Write", constant.UN_ARCHIVED));
@@ -159,5 +147,25 @@ public class FormService {
         form.setArchived(ARCHIVED);
         formRepository.save(form);
         return form.getArchived();
+    }
+
+    public List<String> getFormFieldNames(String formCode) {
+        FormData formData = new FormData();
+        Form form = formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED).orElseThrow(
+                () -> new EntityNotFoundException(Form.class, "Form", "" + formCode));
+        List<Encounter> encounters = form.getEncountersByForm();
+        if(!encounters.isEmpty()){
+            Encounter encounter = encounters.stream().max(Comparator.comparing(e -> e.getId())).get();
+            formData = formDataRepository.findByEncounterId(encounter.getId()).stream().max(Comparator.comparing(fd -> fd.getId())).get();
+        }else {
+            new EntityNotFoundException(Encounter.class, "Encounter", " for " + form.getName());
+        }
+
+        Object data = formData.getData();
+        if (null != data) {
+            List<String> jsonFieldNames = new ArrayList();
+            return JsonUtil.traverse(JsonUtil.getJsonNode(data), jsonFieldNames, false);
+        }
+        return null;
     }
 }

@@ -60,7 +60,8 @@ spring:
                 prepStmtCacheSize: 250
                 prepStmtCacheSqlLimit: 2048
                 useServerPrepStmts: true
-            maximum-pool-size: 60
+            maximum-pool-size: 20
+            minimum-idle: 5
     jpa:
         database: POSTGRESQL
         show-sql: true

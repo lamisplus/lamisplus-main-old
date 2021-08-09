@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.service;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.application.Application;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
@@ -12,9 +13,7 @@ import org.lamisplus.modules.base.domain.entity.*;
 import org.lamisplus.modules.base.domain.mapper.*;
 import org.lamisplus.modules.base.repository.*;
 
-import org.lamisplus.modules.base.util.AccessRight;
-import org.lamisplus.modules.base.util.GenericSpecification;
-import org.lamisplus.modules.base.util.RandomCodeGenerator;
+import org.lamisplus.modules.base.util.*;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -31,6 +30,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -40,6 +40,7 @@ public class PatientService {
 
     public static final String HOSPITAL_NUMBER = "hospitalNumber";
     private final EncounterRepository encounterRepository;
+    private final ApplicationCodesetRepository applicationCodesetRepository;
     private final PatientRepository patientRepository;
     private final VisitRepository visitRepository;
     private final PatientMapper patientMapper;
@@ -48,8 +49,11 @@ public class PatientService {
     private final FormMapper formMapper;
     private final UserService userService;
     private final AppointmentService appointmentService;
+    private final FlagService flagService;
     private final ProgramRepository programRepository;
     private final FormRepository formRepository;
+    private final FormFlagRepository formFlagRepository;
+    private final PatientFlagRepository patientFlagRepository;
     private final AccessRight accessRight;
     public static final String FORM_CODE = "formCode";
     private static final int UN_ARCHIVED = 0;
@@ -59,6 +63,7 @@ public class PatientService {
     private static final String WRITE = "write";
     private static final String DELETE = "delete";
     private final ObjectMapper mapper;
+    private final FlagUtil flagUtil;
 
     public Patient save(PatientDTO patientDTO) {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
@@ -73,7 +78,15 @@ public class PatientService {
         patient.setUuid(UUID.randomUUID().toString());
         patient.setOrganisationUnitId(organisationUnitId);
 
-        return patientRepository.save(patient);
+
+        Patient savedPatient =  patientRepository.save(patient);
+
+        //Start of flag operation for associated with (0)
+        List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("bbc01821-ff3b-463d-842b-b90eab4bdacd", 0, UN_ARCHIVED);
+        if(!formFlags.isEmpty()){
+            flagUtil.checkForAndSavePatientFlag(savedPatient.getId(), savedPatient.getDetails(), formFlags, false);
+        }
+        return savedPatient;
     }
 
     public List<PatientDTO> getAllPatients() {
@@ -90,22 +103,38 @@ public class PatientService {
 
     public PatientDTO getPatientByHospitalNumber(String hospitalNumber) {
         Optional<Patient> patientOptional = this.patientRepository.findByHospitalNumberAndOrganisationUnitIdAndArchived(hospitalNumber, getOrganisationUnitId(), UN_ARCHIVED);
-        List<Flag> flags = new ArrayList<>();
 
         if (!patientOptional.isPresent()) {
             throw new EntityNotFoundException(Patient.class, "Hospital Number", hospitalNumber + "");
         }
-        patientOptional.get().getPatientFlagsById().forEach(patientFlag -> {
-            flags.add(patientFlag.getFlag());
-        });
-        Optional<Visit> visitOptional = visitRepository.findTopByPatientIdAndDateVisitEndIsNullOrderByDateVisitStartDesc(patientOptional.get().getId());
 
-        //Check for currently check-in patient
-        PatientDTO patientDTO = visitOptional.isPresent() ? patientMapper.toPatientDTO(visitOptional.get(), patientOptional.get()) : patientMapper.toPatientDTO(patientOptional.get());
-        patientDTO.setFlags(flags);
-        return transformDTO(patientDTO);
+        return this.updatePatientFlag(getPatient(patientOptional));
     }
 
+    //Temp method to update Patient Flag
+    private PatientDTO updatePatientFlag(PatientDTO patientDTO) {
+        //Start of flag operation for associated with (0)
+        List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("bbc01821-ff3b-463d-842b-b90eab4bdacd", 0, UN_ARCHIVED);
+        if (!formFlags.isEmpty()) {
+            final Object finalPatientDetails = patientDTO.getDetails();
+            flagUtil.checkForAndSavePatientFlag(patientDTO.getPatientId(), finalPatientDetails, formFlags, true);
+        }
+
+
+        Optional<Encounter> optionalEncounter = encounterRepository.findOneByPatientIdAndFormCodeAndArchived(patientDTO.getPatientId(), "3746bd2c-362d-4944-8982-5189441b1d59", UN_ARCHIVED);
+        if(optionalEncounter.isPresent()){
+            Encounter encounter = optionalEncounter.get();
+            Optional<FormData> optionalFormData = encounter.getFormDataByEncounter().stream().findFirst();
+            if(optionalFormData.isPresent()){
+                formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("3746bd2c-362d-4944-8982-5189441b1d59", 0, UN_ARCHIVED);
+                if (!formFlags.isEmpty()) {
+                    final Object finalFormData = optionalFormData.get().getData();
+                    flagUtil.checkForAndSavePatientFlag(patientDTO.getPatientId(), finalFormData, formFlags, true);
+                }
+            }
+        }
+        return patientDTO;
+    }
 
     public Patient update(Long id, PatientDTO patientDTO) {
         patientRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() ->
@@ -238,81 +267,6 @@ public class PatientService {
         return patientRepository.existsByHospitalNumber(patientNumber);
     }
 
-    private Pageable createPageRequest(Pageable pageable, String sortField, String sortOrder, Integer limit) {
-        Sort sort;
-        int pageNumber = pageable.getPageNumber();
-        int pageSize = pageable.getPageSize();
-
-        if (limit != null && limit > 0) {
-            pageSize = limit;
-        }
-
-        if (sortField == null || sortField.isEmpty()) {
-            sortField = "dateEncounter";
-            sort = Sort.by(sortField).descending();
-        } else {
-            sort = Sort.by(sortField).descending();
-        }
-
-        if (sortOrder != null && sortOrder.equalsIgnoreCase("Asc")) {
-            sort = Sort.by(sortField).ascending();
-        }
-
-        return PageRequest.of(pageNumber, pageSize, sort);
-    }
-
-    /**
-     * Get a list of formData
-     *
-     * @param page page
-     * @return FormData List
-     */
-    private List getFormData(List<Encounter> encounterList, Page page) {
-        List<Map> formDataList = new ArrayList();
-        List<Encounter> encounters = new ArrayList();
-        if (page == null) {
-            encounters = encounterList;
-        } else {
-            encounters = page.getContent();
-        }
-        //First forEach loop
-        encounters.forEach(encounter -> {
-            //Check if encounter is archived
-            if (encounter.getArchived() == 1) return;
-            //Second forEach loop for getting formData
-            encounter.getFormDataByEncounter().forEach(formData -> {
-                try {
-                    //Instance of ObjectMapper provides functionality for reading and writing JSON
-                    ObjectMapper mapper = new ObjectMapper();
-                    String formDataJsonString = mapper.writeValueAsString(formData.getData());
-
-                    JSONObject main = new JSONObject(formDataJsonString);
-                    main.put("encounterId", formData.getEncounterId());
-                    main.put("formDataId", formData.getId());
-
-                    Map<String, String> map = mapper.readValue(main.toString(), Map.class);
-
-                    formDataList.add(map);
-                } catch (JSONException | JsonProcessingException e) {
-                    e.printStackTrace();
-                }
-            });
-        });
-        return formDataList;
-    }
-
-    /**
-     * Get a list of Encounter By PatientId in Desc order
-     *
-     * @param patientId
-     * @return Encounter List
-     */
-    private List<Encounter> getEncounterByPatientIdDesc(Long patientId) {
-        Specification<Encounter> specification = new GenericSpecification<Encounter>().findAllEncounterByPatientIdDesc(patientId, getOrganisationUnitId());
-
-        return encounterRepository.findAll(specification);
-    }
-
     public List<FormDTO> getAllFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
         Optional<Program> optionalProgram = programRepository.findProgramByCodeAndArchived(programCode, UN_ARCHIVED);
         if (!optionalProgram.isPresent()) {
@@ -352,20 +306,25 @@ public class PatientService {
                 }
             });
 
-            formCodeSet.forEach(formCode -> {
-                forms.add(formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED).get());
-            });
+            for (String formCode : formCodeSet) {
+                Form form = formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED).get();
+                //Start of flag operation
+                forms = flagUtil.setAndGetFormListForFlagOperation(this.getPatientById(patientId), form, forms);
+            }
 
         } else {
-            program.getFormsByProgram().forEach(form -> {
+            for (Form form : program.getFormsByProgram()) {
                 if (form.getFormPrecedence() == null) {
-                    forms.add(form);
+                    //Start of flag operation
+                    forms = flagUtil.setAndGetFormListForFlagOperation(this.getPatientById(patientId), form, forms);
                 }
-            });
+            }
         }
-
         return formMapper.FormToFormDTOs(forms);
     }
+
+
+
 
     public List<FormDTO> getFilledFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
         List<Form> forms = new ArrayList<>();
@@ -374,30 +333,6 @@ public class PatientService {
             forms.add(formRepository.findByCodeAndArchived(encounterDistinctDTO.getFormCode(), UN_ARCHIVED).get());
         });
         return formMapper.FormToFormDTOs(forms);
-    }
-
-    private Set<String> getFormPrecedence(Form form) {
-        JSONArray jsonArray = new JSONArray();
-        HashSet<String> formPrecedenceSet = new HashSet<>();
-
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            String formPrecedenceJson = mapper.writeValueAsString(form.getFormPrecedence());
-            JSONObject jsonObject = new JSONObject(formPrecedenceJson);
-
-            if (jsonObject.has(FORM_CODE)) {
-                jsonArray = jsonObject.getJSONArray(FORM_CODE);
-            }
-            if (jsonArray.length() > 0) {
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    formPrecedenceSet.add(jsonArray.getString(i));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return formPrecedenceSet;
     }
 
     public List getAllProgramEnrolled(Long id) {
@@ -416,9 +351,6 @@ public class PatientService {
         return patientDTOList;
     }
 
-    private Long getOrganisationUnitId() {
-        return userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-    }
 
     public List<PatientDTO> getPatients(List<Patient> patients) {
         List<PatientDTO> patientDTOs = new ArrayList<>();
@@ -477,19 +409,19 @@ public class PatientService {
                 if (patientJson.get("alternatePhoneNumber").toString() != null) patientDTO.setAlternatePhoneNumber(patientJson.get("alternatePhoneNumber").toString());
                 if (patientJson.get("street").toString() != null) patientDTO.setStreet(patientJson.get("street").toString());
                 if (patientJson.get("landmark").toString() != null) patientDTO.setLandmark(patientJson.get("landmark").toString());
-                if (patientJson.get("education").toString() != null) {
+                if (patientJson.optJSONObject("education")!= null && !patientJson.get("education").toString().isEmpty()) {
                     JSONObject educationJson = new JSONObject(patientJson.get("education").toString());
                     patientDTO.setEducationId(Long.valueOf(educationJson.get("id").toString()));
                 }
-                if (patientJson.get("occupation").toString() != null) {
+                if (patientJson.optJSONObject("occupation") != null && !patientJson.get("occupation").toString().isEmpty()) {
                     JSONObject occupationJson = new JSONObject(patientJson.get("occupation").toString());
                     patientDTO.setOccupationId(Long.valueOf(occupationJson.get("id").toString()));
                 }
-                if (patientJson.get("country").toString() != null) {
+                if (patientJson.optJSONObject("country") != null) {
                     JSONObject countryJson = new JSONObject(patientJson.get("country").toString());
                     patientDTO.setCountryId(Long.valueOf(countryJson.get("id").toString()));
                 }
-                if (patientJson.get("maritalStatus").toString() != null) {
+                if (patientJson.optJSONObject("maritalStatus") != null && !patientJson.get("maritalStatus").toString().isEmpty()) {
                     JSONObject maritalStatusJson = new JSONObject(patientJson.get("maritalStatus").toString());
                     patientDTO.setMaritalStatusId(Long.valueOf(maritalStatusJson.get("id").toString()));
                 }
@@ -500,7 +432,6 @@ public class PatientService {
         return patientDTO;
     }
 
-
     private PatientDTO transformDTO(String key, PatientDTO patientDTO){
         try {
             //Instance of ObjectMapper provides functionality for reading and writing JSON
@@ -508,16 +439,18 @@ public class PatientService {
 
             JSONObject patientDetails = new JSONObject(formDataJsonString);
             mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            JSONArray otherIdentifier = new JSONArray(patientDetails.get("otherIdentifier").toString());
+            if(patientDetails.optJSONObject("otherIdentifier") != null) {
+                JSONArray otherIdentifier = new JSONArray(patientDetails.get("otherIdentifier").toString());
 
 
-            if(otherIdentifier != null && patientDTO.getHospitalNumber().equals("")){
-                if(!mapper.readValue(otherIdentifier.toString(), List.class).isEmpty()) {
-                    String time = String.valueOf(Timestamp.from(Instant.now())).replace("-", "")
-                            .replace(" ", "")
-                            .replace(":", "")
-                            .replace(".", "");
-                    patientDetails.put("hospitalNumber", RandomCodeGenerator.randomAlphabeticString(4)+time);
+                if (otherIdentifier != null && patientDTO.getHospitalNumber().equals("")) {
+                    if (!mapper.readValue(otherIdentifier.toString(), List.class).isEmpty()) {
+                        String time = String.valueOf(Timestamp.from(Instant.now())).replace("-", "")
+                                .replace(" ", "")
+                                .replace(":", "")
+                                .replace(".", "");
+                        patientDetails.put("hospitalNumber", RandomCodeGenerator.randomAlphabeticString(4) + time);
+                    }
                 }
             }
 
@@ -531,5 +464,132 @@ public class PatientService {
             e.printStackTrace();
         }
         return patientDTO;
+    }
+
+    private Set<String> getFormPrecedence(Form form) {
+        JSONArray jsonArray = new JSONArray();
+        HashSet<String> formPrecedenceSet = new HashSet<>();
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String formPrecedenceJson = mapper.writeValueAsString(form.getFormPrecedence());
+            JSONObject jsonObject = new JSONObject(formPrecedenceJson);
+
+            if (jsonObject.has(FORM_CODE)) {
+                jsonArray = jsonObject.getJSONArray(FORM_CODE);
+            }
+            if (jsonArray.length() > 0) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    formPrecedenceSet.add(jsonArray.getString(i));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return formPrecedenceSet;
+    }
+
+    private Long getOrganisationUnitId() {
+        return userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+    }
+
+    private PatientDTO getPatientById(Long patientId){
+        Optional<Patient> patientOptional = this.patientRepository.findByIdAndOrganisationUnitIdAndArchived(patientId, getOrganisationUnitId(), UN_ARCHIVED);
+
+        if (!patientOptional.isPresent()) {
+            throw new EntityNotFoundException(Patient.class, "Id", patientId + "");
+        }
+
+        return this.getPatient(patientOptional);
+    }
+
+    /**
+     * Get a list of Encounter By PatientId in Desc order
+     *
+     * @param patientId
+     * @return Encounter List
+     */
+    private List<Encounter> getEncounterByPatientIdDesc(Long patientId) {
+        Specification<Encounter> specification = new GenericSpecification<Encounter>().findAllEncounterByPatientIdDesc(patientId, getOrganisationUnitId());
+
+        return encounterRepository.findAll(specification);
+    }
+
+    /**
+     * Get a list of formData
+     *
+     * @param page page
+     * @return FormData List
+     */
+    private List getFormData(List<Encounter> encounterList, Page page) {
+        List<Map> formDataList = new ArrayList();
+        List<Encounter> encounters = new ArrayList();
+        if (page == null) {
+            encounters = encounterList;
+        } else {
+            encounters = page.getContent();
+        }
+        //First forEach loop
+        encounters.forEach(encounter -> {
+            //Check if encounter is archived
+            if (encounter.getArchived() == 1) return;
+            //Second forEach loop for getting formData
+            encounter.getFormDataByEncounter().forEach(formData -> {
+                try {
+                    //Instance of ObjectMapper provides functionality for reading and writing JSON
+                    ObjectMapper mapper = new ObjectMapper();
+                    String formDataJsonString = mapper.writeValueAsString(formData.getData());
+
+                    JSONObject main = new JSONObject(formDataJsonString);
+                    main.put("encounterId", formData.getEncounterId());
+                    main.put("formDataId", formData.getId());
+
+                    Map<String, String> map = mapper.readValue(main.toString(), Map.class);
+
+                    formDataList.add(map);
+                } catch (JSONException | JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            });
+        });
+        return formDataList;
+    }
+
+    private Pageable createPageRequest(Pageable pageable, String sortField, String sortOrder, Integer limit) {
+        Sort sort;
+        int pageNumber = pageable.getPageNumber();
+        int pageSize = pageable.getPageSize();
+
+        if (limit != null && limit > 0) {
+            pageSize = limit;
+        }
+
+        if (sortField == null || sortField.isEmpty()) {
+            sortField = "dateEncounter";
+            sort = Sort.by(sortField).descending();
+        } else {
+            sort = Sort.by(sortField).descending();
+        }
+
+        if (sortOrder != null && sortOrder.equalsIgnoreCase("Asc")) {
+            sort = Sort.by(sortField).ascending();
+        }
+
+        return PageRequest.of(pageNumber, pageSize, sort);
+    }
+
+    private PatientDTO getPatient(Optional<Patient> patientOptional){
+        List<Flag> flags = new ArrayList<>();
+
+        patientOptional.get().getPatientFlagsById().forEach(patientFlag -> {
+            flags.add(patientFlag.getFlag());
+        });
+        Optional<Visit> visitOptional = visitRepository.findTopByPatientIdAndDateVisitEndIsNullOrderByDateVisitStartDesc(patientOptional.get().getId());
+
+        //Check for currently check-in patient
+        PatientDTO patientDTO = visitOptional.isPresent() ? patientMapper.toPatientDTO(visitOptional.get(), patientOptional.get()) : patientMapper.toPatientDTO(patientOptional.get());
+        patientDTO.setFlags(flags);
+        return transformDTO(patientDTO);
     }
 }

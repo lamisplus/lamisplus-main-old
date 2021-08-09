@@ -9,7 +9,7 @@ import org.eclipse.birt.core.framework.Platform;
 import org.eclipse.birt.report.engine.api.*;
 import org.eclipse.birt.report.model.api.*;
 import org.lamisplus.modules.base.config.ApplicationProperties;
-import org.lamisplus.modules.base.config.DatabaseProperties;
+import org.lamisplus.modules.base.config.YmlFile;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ReportDetailDTO;
@@ -304,28 +304,13 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
                 new EntityNotFoundException(ReportInfo.class, "Id", id+""));
     }
 
-    //@Value("${spring.datasource.url}")
-    private String dbUrl;
-
-    //@Value("${spring.datasource.username}")
-    private String dbUser;
-
-    //@Value("${spring.datasource.password}")
-    private String dbPass;
-
     private void getDatabaseConnectionParameters( IReportRunnable iReportRunnable ) {
         String fileSeparator = File.separator;
-        File ymlFile = new File(ApplicationProperties.modulePath + fileSeparator +"config.yml");
-        try {
-            readYml(ymlFile).getSpring().forEach((k, v) -> {
-                dbUrl = v.getUrl();
-                dbUser = v.getUsername();
-                dbPass = v.getPassword();
-            });
+        YmlFile.getDatabaseConnectionParameters(ApplicationProperties.modulePath + fileSeparator +"config.yml");
+        String dbUrl = YmlFile.dbUrl;
+        String dbUser = YmlFile.dbUser;
+        String dbPass = YmlFile.dbPass;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         DesignElementHandle deh = iReportRunnable.getDesignHandle();
         SlotHandle slotHandle = deh.getSlot(ReportDesignHandle.DATA_SOURCE_SLOT );
         Iterator iter = slotHandle.iterator();
@@ -364,24 +349,5 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         {
             e.printStackTrace();
         }
-    }
-
-    private DatabaseProperties readYml(File ymlFile) throws IOException {
-        BufferedReader in = null;
-        DatabaseProperties databaseProperties;
-        try {
-            in = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(ymlFile.getAbsolutePath())));
-            Yaml yaml = new Yaml();
-            databaseProperties = yaml.loadAs(in, DatabaseProperties.class);
-
-            in.close();
-        } catch (Exception e){
-            e.printStackTrace();
-            throw new RuntimeException("Error: " + e.getMessage());
-        }finally {
-            if (in != null) {in.close(); }
-        }
-        return databaseProperties;
     }
 }

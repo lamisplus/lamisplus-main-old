@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.vm.ManagedUserVM;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.domain.entity.ApplicationUserOrganisationUnit;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.swing.text.html.parser.Entity;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashSet;
@@ -40,37 +42,33 @@ public class AccountController {
 
     private final ApplicationUserOrganisationUnitRepository applicationUserOrganisationUnitRepository;
 
-    /*public AccountController(UserRepository userRepository, UserService userService, ApplicationUserOrganisationUnitService applicationUserOrganisationUnitService) {
-        this.userRepository = userRepository;
-        this.userService = userService;
-        this.applicationUserOrganisationUnitService = applicationUserOrganisationUnitService;
-    }*/
-
     @GetMapping("/account")
     public UserDTO getAccount(Principal principal){
-        UserDTO userDTO =  userService
-                .getUserWithRoles()
-                .map(UserDTO::new)
-                .orElseThrow(() -> new AccountResourceException("User could not be found"));
 
-        User user = userRepository.getOne(userDTO.getId());
+        Optional<User> optionalUser = userService.getUserWithRoles();
+        if(optionalUser.isPresent()){
+            User user = optionalUser.get();
 
-        if(userDTO.getCurrentOrganisationUnitId() == null && !userDTO.getApplicationUserOrganisationUnits().isEmpty()){
-            for (ApplicationUserOrganisationUnit applicationUserOrganisationUnit : userDTO.getApplicationUserOrganisationUnits()) {
-                user.setCurrentOrganisationUnitId(applicationUserOrganisationUnit.getOrganisationUnitId());
-                userRepository.save(user);
-                break;
+            if(user.getCurrentOrganisationUnitId() == null && !user.getApplicationUserOrganisationUnits().isEmpty()){
+                for (ApplicationUserOrganisationUnit applicationUserOrganisationUnit : user.getApplicationUserOrganisationUnits()) {
+                    user.setCurrentOrganisationUnitId(applicationUserOrganisationUnit.getOrganisationUnitId());
+                    userRepository.save(user);
+                    break;
+                }
+            } else if(user.getCurrentOrganisationUnitId() != null && user.getApplicationUserOrganisationUnits().isEmpty()){
+                ApplicationUserOrganisationUnit applicationUserOrganisationUnit = new ApplicationUserOrganisationUnit();
+                applicationUserOrganisationUnit.setApplicationUserId(user.getId());
+                applicationUserOrganisationUnit.setOrganisationUnitId(user.getCurrentOrganisationUnitId());
+                applicationUserOrganisationUnitRepository.save(applicationUserOrganisationUnit);
             }
-        }
-        Optional<ApplicationUserOrganisationUnit> optionalApplicationUserOrganisationUnit = applicationUserOrganisationUnitRepository.findOneByApplicationUserIdAndOrganisationUnitIdAndArchived(user.getId(), user.getCurrentOrganisationUnitId(), 0);
 
-        if(!optionalApplicationUserOrganisationUnit.isPresent()){
-            ApplicationUserOrganisationUnit applicationUserOrganisationUnit = new ApplicationUserOrganisationUnit();
-            applicationUserOrganisationUnit.setApplicationUserId(user.getId());
-            applicationUserOrganisationUnit.setOrganisationUnitId(user.getCurrentOrganisationUnitId());
-            applicationUserOrganisationUnitRepository.save(applicationUserOrganisationUnit);
+            return userService
+                    .getUserWithRoles()
+                    .map(UserDTO::new)
+                    .orElseThrow(() -> new EntityNotFoundException(User.class,"Name:","User"));
+        } else{
+            throw new EntityNotFoundException(User.class,"Name:","User");
         }
-        return userDTO;
     }
 
     @PostMapping("/register")
