@@ -19,7 +19,7 @@ public class FormFlagController {
     private final FormFlagService formFlagService;
 
     @GetMapping
-    public ResponseEntity<List<FormFlag>> getAllFormFlags() {
+    public ResponseEntity<List<FormFlagDTOS>> getAllFormFlags() {
         return ResponseEntity.ok(formFlagService.getAllFormFlags());
     }
 

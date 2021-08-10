@@ -31,10 +31,20 @@ public class FormFlagService {
     private final FormFlagMapper formFlagMapper;
     private final FlagService flagService;
     private final FlagMapper flagMapper;
+    private final FlagRepository flagRepository;
 
 
-    public List<FormFlag> getAllFormFlags() {
-        return formFlagRepository.findAllByArchived(UN_ARCHIVED);
+
+
+    public List<FormFlagDTOS> getAllFormFlags() {
+        List<FormFlagDTOS> formFlagDTOSList = new ArrayList<>();
+        flagRepository.findAllByArchived(UN_ARCHIVED).forEach(flag -> {
+            FormFlagDTOS formFlagDTOS = new FormFlagDTOS();
+            formFlagDTOS.setFlag(flag);
+            formFlagDTOS.setFormFlagDTOS(formFlagMapper.toFormFlagDTOs(flag.getFormsByIdFlag()));
+            formFlagDTOSList.add(formFlagDTOS);
+        });
+        return formFlagDTOSList;
     }
 
     public List save(FormFlagDTOS formFlagDTOS) {

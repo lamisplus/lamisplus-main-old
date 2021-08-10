@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -84,7 +85,7 @@ public class PatientService {
         //Start of flag operation for associated with (0)
         List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("bbc01821-ff3b-463d-842b-b90eab4bdacd", 0, UN_ARCHIVED);
         if(!formFlags.isEmpty()){
-            flagUtil.checkForAndSavePatientFlag(savedPatient.getId(), savedPatient.getDetails(), formFlags, false);
+            flagUtil.checkForAndSavePatientFlag(savedPatient.getId(), this.setAge(savedPatient.getDetails()), formFlags, false);
         }
         return savedPatient;
     }
@@ -111,30 +112,6 @@ public class PatientService {
         return this.updatePatientFlag(getPatient(patientOptional));
     }
 
-    //Temp method to update Patient Flag
-    private PatientDTO updatePatientFlag(PatientDTO patientDTO) {
-        //Start of flag operation for associated with (0)
-        List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("bbc01821-ff3b-463d-842b-b90eab4bdacd", 0, UN_ARCHIVED);
-        if (!formFlags.isEmpty()) {
-            final Object finalPatientDetails = patientDTO.getDetails();
-            flagUtil.checkForAndSavePatientFlag(patientDTO.getPatientId(), finalPatientDetails, formFlags, true);
-        }
-
-
-        Optional<Encounter> optionalEncounter = encounterRepository.findOneByPatientIdAndFormCodeAndArchived(patientDTO.getPatientId(), "3746bd2c-362d-4944-8982-5189441b1d59", UN_ARCHIVED);
-        if(optionalEncounter.isPresent()){
-            Encounter encounter = optionalEncounter.get();
-            Optional<FormData> optionalFormData = encounter.getFormDataByEncounter().stream().findFirst();
-            if(optionalFormData.isPresent()){
-                formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("3746bd2c-362d-4944-8982-5189441b1d59", 0, UN_ARCHIVED);
-                if (!formFlags.isEmpty()) {
-                    final Object finalFormData = optionalFormData.get().getData();
-                    flagUtil.checkForAndSavePatientFlag(patientDTO.getPatientId(), finalFormData, formFlags, true);
-                }
-            }
-        }
-        return patientDTO;
-    }
 
     public Patient update(Long id, PatientDTO patientDTO) {
         patientRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() ->
@@ -144,7 +121,24 @@ public class PatientService {
 
         final Patient patient = patientMapper.toPatient(patientDTO);
         patient.setId(id);
-        return patientRepository.save(patient);
+        Patient savedPatient = patientRepository.save(patient);
+
+        //Start of flag operation for associated with (0)
+        List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("bbc01821-ff3b-463d-842b-b90eab4bdacd", 0, UN_ARCHIVED);
+        if(!formFlags.isEmpty()){
+            flagUtil.checkForAndSavePatientFlag(savedPatient.getId(), this.setAge(savedPatient.getDetails()), formFlags, false);
+        }
+        return savedPatient;
+
+    }
+
+    private void savePatientAndCheckForFlag(Long patientId, String formCode, Object details, List forms){
+        //Start of flag operation for associated with (0)
+        List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived(formCode, 0, UN_ARCHIVED);
+        if(!formFlags.isEmpty()){
+            flagUtil.checkForAndSavePatientFlag(patientId, this.setAge(details), formFlags, false);
+        }
+
     }
 
 
@@ -592,4 +586,54 @@ public class PatientService {
         patientDTO.setFlags(flags);
         return transformDTO(patientDTO);
     }
+
+    private Object setAge(Object object){
+        try {
+            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            String details = object.toString();
+
+            JSONObject patientDetails = new JSONObject(details);
+            String dob = patientDetails.optString("dob");
+            if(dob != null) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+                //convert String to LocalDate
+                LocalDate localDate = LocalDate.parse(dob, formatter);
+                Period period = Period.between(localDate, LocalDate.now());
+                patientDetails.remove("age");
+                patientDetails.put("age", period.getYears());
+            }
+            return object;
+
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    //Temp method to update Patient Flag
+    private PatientDTO updatePatientFlag(PatientDTO patientDTO) {
+        //Start of flag operation for associated with (0)
+        List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("bbc01821-ff3b-463d-842b-b90eab4bdacd", 0, UN_ARCHIVED);
+        if (!formFlags.isEmpty()) {
+            String details = JsonUtil.getJsonNode(patientDTO.getDetails()).toString();
+            flagUtil.checkForAndSavePatientFlag(patientDTO.getPatientId(), this.setAge(details), formFlags, true);
+        }
+
+        Optional<Encounter> optionalEncounter = encounterRepository.findOneByPatientIdAndFormCodeAndArchived(patientDTO.getPatientId(), "3746bd2c-362d-4944-8982-5189441b1d59", UN_ARCHIVED);
+        if(optionalEncounter.isPresent()){
+            Encounter encounter = optionalEncounter.get();
+            Optional<FormData> optionalFormData = encounter.getFormDataByEncounter().stream().findFirst();
+            if(optionalFormData.isPresent()){
+                formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("3746bd2c-362d-4944-8982-5189441b1d59", 0, UN_ARCHIVED);
+                if (!formFlags.isEmpty()) {
+                    final Object finalFormData = optionalFormData.get().getData();
+                    flagUtil.checkForAndSavePatientFlag(patientDTO.getPatientId(), finalFormData, formFlags, true);
+                }
+            }
+        }
+        return patientDTO;
+    }
+
 }
