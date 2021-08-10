@@ -91,11 +91,9 @@ public class FormFlagService {
             formFlags.add(formFlagMapper.toFormFlag(formFlagDTO));
         });
         if(!formFlags.isEmpty()) {
-            formFlagRepository.saveAll(formFlags);
+            formFlagDTOS.setFormFlagDTOS(formFlagMapper.toFormFlagDTOs(formFlagRepository.saveAll(formFlags)));
         }
         formFlagDTOS.setFlag(flag);
-        formFlagDTOS.setFormFlagDTOS(formFlagMapper.toFormFlagDTOs(flag.getFormsByIdFlag()));
-
         return formFlagDTOS;
     }
 
