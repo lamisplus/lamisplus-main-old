@@ -21,12 +21,14 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import CancelIcon from '@material-ui/icons/Cancel';
 import {CircularProgress} from "@material-ui/core";
 import ErrorIcon from '@material-ui/icons/Error';
+import { url } from "../../api";
 
 const CaptureBiometrics = (props) => {
     const [formData, setFormData] = React.useState([]);
     const [devices, setDevices] = React.useState([]);
     const [device, setDevice] = React.useState();
     const [loading, setLoading] = React.useState(false);
+    const [saveText, setSaveText] = React.useState("Save Enrollment");
     const [showModal, setShowModal] = React.useState(false);
     const [status, setStatus] = React.useState('Pending');
     const toggleModal = () => setShowModal(!showModal);
@@ -125,10 +127,27 @@ const CaptureBiometrics = (props) => {
 
     }
     const saveBiometrics = () => {
+       
         if(formData.length <= 0){
             toast.error("No fingerprint captured.");
             return;
         }
+
+        const body = {iso: true, dateEnrolled: new Date(), templateType:"", biometricsType:"", patient:props.patient.hospitalNumber };
+        body['template'] = formData.map((x) => x.template);
+        setSaveText("Saving Please Wait...");
+         axios
+            .post(`${url}biometrics/templates`, body)
+    .then((response) => {
+            console.log(response);
+            toast.success("Biometrics saved successfully!");
+            setSaveText("Save Enrollment");
+        })
+            .catch((error) => {
+                toast.error("An error occurred, could not save patient's biometrics.");
+                setSaveText("Save Enrollment");
+            });
+
     }
 
     const addToFingerprintList = () => {
@@ -246,7 +265,7 @@ const CaptureBiometrics = (props) => {
                                     // className={classes.button}
                                     startIcon={<SaveIcon/>}
                                 >
-                                    Save Enrollment
+                                    {saveText}
                                 </MatButton>
                             </Col>
                         </Row>

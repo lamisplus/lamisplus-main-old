@@ -22,6 +22,7 @@ import rolesReducer from './rolesReducer';
 import generalUsersDashboardModuleReducer from './generalUserDashboardReducer';
 import programManagerReducer from './programManagerReducer';
 import caseManagerReducer from './caseManagerReducer'
+import flagReducer from './flagReducer'
 
 import menuReducer from "./menu";
 
@@ -49,6 +50,7 @@ export default combineReducers({
   roles: rolesReducer,
   generalUsersDashboardModuleReducer : generalUsersDashboardModuleReducer,
   menu: menuReducer,
-  caseManager: caseManagerReducer
+  caseManager: caseManagerReducer,
+  flags: flagReducer
 })
 

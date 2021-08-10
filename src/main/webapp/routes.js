@@ -126,6 +126,7 @@ const GlobalVariableSearchPage = React.lazy(() => import("components/Admin/Globa
 const StandardSearchPage = React.lazy(() => import("components/Admin/InternationalStandards/StandardSearch"));
 const ApplicationCodesetPage = React.lazy(() => import("components/Admin/ApplicationCodeset/ApplicationCodesetSearch"));
 const WardManagerPage = React.lazy(() => import("components/Admin/WardManager/WardSearch"));
+const FlagManagerPage = React.lazy(() => import("components/Admin/FlagManager/FlagSearch"));
 
 //Radiology
 const RadiologyTestDetailPage = React.lazy(() => import("components/Laboratory/Radiology/TestDetail"));
@@ -256,6 +257,8 @@ class Routes extends Component {
                 <PrivateRoute exact path={"/admin-standards"} component={StandardSearchPage} />
                 <PrivateRoute exact path={"/admin-application-codesets"} component={ApplicationCodesetPage} />
                 <PrivateRoute exact path={"/admin-wards"} component={WardManagerPage} />
+                <PrivateRoute exact path={"/admin-flags"} component={FlagManagerPage} />
+
                 <PrivateRoute exact path={"/radiology"} component={RadiologyTestDetailPage} />
                 <PrivateRoute exact path={"/plug-in"} component={Plugins} />
               {/* The route to Appointment*/}

@@ -1,6 +1,6 @@
 import React, {useRef, useEffect, useState} from 'react';
 import { connect } from 'react-redux';
-import {  Errors, FormBuilder } from 'react-formio';
+import {  Errors, FormBuilder, Form as FormV } from 'react-formio';
 import { Link } from 'react-router-dom';
 import {fetchService, createForm, fetchAllForms} from '../../actions/formBuilder'
 import {
@@ -24,6 +24,7 @@ import "react-widgets/dist/css/react-widgets.css";
 import { Alert } from '@material-ui/lab';
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Typography from "@material-ui/core/Typography";
+import JsonSchemaViewer from "./JsonSchemaViewer";
 
 const Create = props => {
     const [res, setRes] = React.useState("");
@@ -34,7 +35,7 @@ const Create = props => {
     const [disabledCheckBox, setdisabledCheckBox] = useState(true)
     const [showFileImport, setShowFileImport] = useState(true);
     const toggleShowFileImport = () => setShowFileImport(!showFileImport);
-
+    const [jsonSchema, setJsonSchema] = React.useState();
     const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
     const checkedIcon = <CheckBoxIcon fontSize="small" />;
     let fileReader;
@@ -107,6 +108,7 @@ const Create = props => {
     }
 
     return (
+        <>
         <Card>
             <ToastContainer />
             <CardBody>
@@ -255,14 +257,18 @@ const Create = props => {
                                  submission={{data :{baseUrl:url}}}
                                  saveText={'Create Form'} onChange={(schema) => {
                         setRes(JSON.stringify(schema));
+
                     }} />
                     <br></br>
                     <div>
                         <h4>Json Form</h4>
                         <textarea cols="50" ref={textAreaRef} value={res}/>
                     </div>
+               <JsonSchemaViewer formObject={res}/>
             </CardBody>
             </Card>
+
+    </>
     );
 
 }

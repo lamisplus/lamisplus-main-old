@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/biometrics/templates")
+@RequestMapping("")
 public class BiometricController {
     private final BiometricRepository biometricRepository;
     private final PatientRepository patientRepository;

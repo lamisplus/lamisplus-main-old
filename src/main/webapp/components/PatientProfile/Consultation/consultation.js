@@ -103,13 +103,18 @@ function ConsultationPage(props) {
     {successMsg}
   </Alert>
 
-    <FormRenderer
-    patientId={props.patient.patientId}
-    formCode={currentForm.code}
-    programCode={currentForm.programCode}
-    visitId={props.patient.visitId}
-    onSuccess={onSuccess}
-  />
+      {props.patient.visitId ?
+          <FormRenderer
+              patientId={props.patient.patientId}
+              formCode={currentForm.code}
+              programCode={currentForm.programCode}
+              visitId={props.patient.visitId}
+              onSuccess={onSuccess}
+          /> :
+        <div>
+          <Alert color='danger'> This patient does not have a current visit. You have to check in to proceed</Alert>
+        </div>
+      }
   </React.Fragment>
   )
 }
