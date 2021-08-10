@@ -303,5 +303,9 @@ export const USERS_FETCH_BY_ID = 'USERS_FETCH_BY_ID'
 export const PATIENT_BY_USER_ID = 'PATIENT_BY_USER_ID'
 export const USER_ERROR = 'USER_ERROR'
 
-
-
+/**
+ * @TYPES
+ * ==============================================
+ * FLAGS
+ */
+export const FLAG_LIST = 'FLAG_LIST'

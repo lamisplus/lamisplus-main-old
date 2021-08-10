@@ -35,10 +35,10 @@ const FlagSearch = (props) => {
     const classes = useStyles()
 
     useEffect(() => {
-        loadApplicationCodeset()
+        loadFlag()
     }, []); //componentDidMount
 
- const loadApplicationCodeset = () => {
+ const loadFlag = () => {
      const onSuccess = () => {
          setLoading(false);
      };
@@ -54,7 +54,7 @@ const processDelete = (id) => {
         setDeleting(false);
         toggleDeleteModal();
         toast.success("Flag deleted successfully!");
-        loadApplicationCodeset();
+        loadFlag();
     };
     const onError = () => {
         setDeleting(false);
@@ -100,11 +100,9 @@ const processDelete = (id) => {
                         title: "Flag Name",
                         field: "name",
                     },
-                    { title: "Form", field: "display" },
-                    { title: "Form Field", field: "display" },
-                    { title: "Operand", field: "display" },
-                    { title: "Value", field: "display" },
-                    { title: "Created By", field: "createdBy" }
+                    { title: "Form Field", field: "fieldName" },
+                    { title: "Operator", field: "operand" },
+                    { title: "Value", field: "fieldValue" },
                 ]}
                 isLoading={loading}
                 data={props.list}
@@ -142,9 +140,9 @@ const processDelete = (id) => {
             />
             </CardBody>
 
-            <NewWard toggleModal={toggleModal} showModal={showModal} loadApplicationCodeset={loadApplicationCodeset} formData={currentCodeset}/>
+            <NewWard toggleModal={toggleModal} showModal={showModal} loadFlag={loadFlag} formData={currentCodeset}/>
             <Modal isOpen={showDeleteModal} toggle={toggleDeleteModal} >
-                    <ModalHeader toggle={props.toggleDeleteModal}> Delete Flag - {currentCodeset && currentCodeset.name ? currentCodeset.name : ""} </ModalHeader>
+                    <ModalHeader toggle={toggleDeleteModal}> Delete Flag - {currentCodeset && currentCodeset.name ? currentCodeset.name : ""} </ModalHeader>
                     <ModalBody>
                         <p>Are you sure you want to proceed ?</p>
                     </ModalBody>

@@ -6,8 +6,8 @@ const initialState = {
 
 const flagReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ACTION_TYPES.WARD_LIST:
-      return { ...state, wardList: [...action.payload] }
+    case ACTION_TYPES.FLAG_LIST:
+      return { ...state, flagList: [...action.payload] }
     default:
       return state
   }

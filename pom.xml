@@ -79,8 +79,8 @@
             <artifactId>across-autoconfigure</artifactId>
             <exclusions>
                 <exclusion>
-                        <groupId>com.foreach.across.modules</groupId>
-                        <artifactId>across-hibernate-module</artifactId>
+                    <groupId>com.foreach.across.modules</groupId>
+                    <artifactId>across-hibernate-module</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>ch.qos.logback</groupId>
@@ -354,6 +354,10 @@
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-jms</artifactId>
                 </exclusion>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
             </exclusions>
         </dependency>
         <!--<dependency>
@@ -414,25 +418,25 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-             <!--<plugin>
-                 <groupId>org.liquibase</groupId>
-                 <artifactId>liquibase-maven-plugin</artifactId>
-                 <version>3.4.1</version>
-				<configuration>
-					<propertyFile>src/main/resources/liquibase.properties</propertyFile>
-					<changeLogFile>src/main/resources/changeLogFile.xml</changeLogFile>
-					<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
-					<logging>info</logging>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>update</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>-->
+            <!--<plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>3.4.1</version>
+               <configuration>
+                   <propertyFile>src/main/resources/liquibase.properties</propertyFile>
+                   <changeLogFile>src/main/resources/changeLogFile.xml</changeLogFile>
+                   <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
+                   <logging>info</logging>
+               </configuration>
+               <executions>
+                   <execution>
+                       <phase>pre-integration-test</phase>
+                       <goals>
+                           <goal>update</goal>
+                       </goals>
+                   </execution>
+               </executions>
+           </plugin>-->
         </plugins>
     </build>
 </project>
