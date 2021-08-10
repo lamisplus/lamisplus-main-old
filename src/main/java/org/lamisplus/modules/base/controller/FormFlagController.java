@@ -28,6 +28,11 @@ public class FormFlagController {
         return ResponseEntity.ok(formFlagService.getFormFlag(id));
     }
 
+    @GetMapping("/{id}/flag")
+    public ResponseEntity<FormFlagDTOS> getFlagByFormFlagId(@PathVariable Long id) {
+        return ResponseEntity.ok(formFlagService.getFlagByFormFlagId(id));
+    }
+
     @PostMapping
     public ResponseEntity<List<FormFlag>> save(@RequestBody FormFlagDTOS formFlagDTOS) {
         return ResponseEntity.ok(formFlagService.save(formFlagDTOS));
@@ -41,5 +46,10 @@ public class FormFlagController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         formFlagService.delete(id);
+    }
+
+    @DeleteMapping("/{id}/flag")
+    public void deleteFlagByFormFlagId(@PathVariable Long id) {
+        formFlagService.deleteFlagByFormFlagId(id);
     }
 }

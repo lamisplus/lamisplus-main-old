@@ -83,10 +83,8 @@ public class PatientService {
         Patient savedPatient =  patientRepository.save(patient);
 
         //Start of flag operation for associated with (0)
-        List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("bbc01821-ff3b-463d-842b-b90eab4bdacd", 0, UN_ARCHIVED);
-        if(!formFlags.isEmpty()){
-            flagUtil.checkForAndSavePatientFlag(savedPatient.getId(), this.setAge(savedPatient.getDetails()), formFlags, false);
-        }
+        savePatientAndCheckForFlag(savedPatient.getId(), "bbc01821-ff3b-463d-842b-b90eab4bdacd", this.setAge(savedPatient.getDetails()));
+
         return savedPatient;
     }
 
@@ -124,15 +122,12 @@ public class PatientService {
         Patient savedPatient = patientRepository.save(patient);
 
         //Start of flag operation for associated with (0)
-        List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("bbc01821-ff3b-463d-842b-b90eab4bdacd", 0, UN_ARCHIVED);
-        if(!formFlags.isEmpty()){
-            flagUtil.checkForAndSavePatientFlag(savedPatient.getId(), this.setAge(savedPatient.getDetails()), formFlags, false);
-        }
+        savePatientAndCheckForFlag(savedPatient.getId(), "bbc01821-ff3b-463d-842b-b90eab4bdacd", this.setAge(savedPatient.getDetails()));
         return savedPatient;
 
     }
 
-    private void savePatientAndCheckForFlag(Long patientId, String formCode, Object details, List forms){
+    private void savePatientAndCheckForFlag(Long patientId, String formCode, Object details){
         //Start of flag operation for associated with (0)
         List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived(formCode, 0, UN_ARCHIVED);
         if(!formFlags.isEmpty()){

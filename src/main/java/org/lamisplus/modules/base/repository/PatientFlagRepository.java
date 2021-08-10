@@ -13,4 +13,6 @@ public interface PatientFlagRepository extends JpaRepository<PatientFlag, Long> 
     Optional<PatientFlag> findByPatientIdAndFlagId(Long patientId, Long flagId);
 
     List<PatientFlag> findAllByPatientId(Long patientId);
+
+    void deleteByFlagId(Long flagId);
 }
