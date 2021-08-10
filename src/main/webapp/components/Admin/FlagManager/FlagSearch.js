@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { fetchAllFlag, deleteFlag} from "actions/flag";
 import {
     Card,
-    CardBody, Modal, ModalBody, ModalHeader, Spinner, ModalFooter
+    CardBody, Modal, ModalBody, ModalHeader, Spinner, ModalFooter, Alert
 } from 'reactstrap';
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Typography from "@material-ui/core/Typography";
@@ -18,6 +18,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import { ToastContainer, toast } from "react-toastify";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+// import {Alert} from "@material-ui/lab";
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -30,15 +31,16 @@ const FlagSearch = (props) => {
     const [showModal, setShowModal] = React.useState(false);
     const [showDeleteModal, setShowDeleteModal] = React.useState(false);
     const [currentCodeset, setCurrentCodeset] = React.useState(null);
+    const [formData, setFormData] = React.useState(null);
     const toggleModal = () => setShowModal(!showModal)
     const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal)
     const classes = useStyles()
 
     useEffect(() => {
-        loadApplicationCodeset()
+        loadFlag()
     }, []); //componentDidMount
 
- const loadApplicationCodeset = () => {
+ const loadFlag = () => {
      const onSuccess = () => {
          setLoading(false);
      };
@@ -54,7 +56,7 @@ const processDelete = (id) => {
         setDeleting(false);
         toggleDeleteModal();
         toast.success("Flag deleted successfully!");
-        loadApplicationCodeset();
+        loadFlag();
     };
     const onError = () => {
         setDeleting(false);
@@ -63,7 +65,7 @@ const processDelete = (id) => {
     props.delete(id, onSuccess, onError);
 }
     const openWard = (row) => {
-        setCurrentCodeset(row);
+        setFormData(row);
         toggleModal();
     }
 
@@ -98,13 +100,11 @@ const processDelete = (id) => {
                 columns={[
                     {
                         title: "Flag Name",
-                        field: "name",
+                        field: "flag.name",
                     },
-                    { title: "Form", field: "display" },
-                    { title: "Form Field", field: "display" },
-                    { title: "Operand", field: "display" },
-                    { title: "Value", field: "display" },
-                    { title: "Created By", field: "createdBy" }
+                    { title: "Form Field", field: "flag.fieldName" },
+                    { title: "Operator", field: "flag.operator" },
+                    { title: "Value", field: "flag.fieldValue" },
                 ]}
                 isLoading={loading}
                 data={props.list}
@@ -120,7 +120,7 @@ const processDelete = (id) => {
                         icon: DeleteIcon,
                         iconProps: {color: 'primary'},
                         tooltip: 'Delete Flag',
-                        onClick: (event, rowData) => deleteWard(rowData)
+                        onClick: (event, rowData) => deleteWard(rowData.flag)
                     }
                         ]}
                 //overriding action menu with props.actions
@@ -142,11 +142,15 @@ const processDelete = (id) => {
             />
             </CardBody>
 
-            <NewWard toggleModal={toggleModal} showModal={showModal} loadApplicationCodeset={loadApplicationCodeset} formData={currentCodeset}/>
+            <NewWard toggleModal={toggleModal} showModal={showModal} loadFlag={loadFlag} formData={formData}/>
             <Modal isOpen={showDeleteModal} toggle={toggleDeleteModal} >
-                    <ModalHeader toggle={props.toggleDeleteModal}> Delete Flag - {currentCodeset && currentCodeset.name ? currentCodeset.name : ""} </ModalHeader>
+                    <ModalHeader toggle={toggleDeleteModal}> Delete Flag - {currentCodeset && currentCodeset.name ? currentCodeset.name : ""} </ModalHeader>
                     <ModalBody>
-                        <p>Are you sure you want to proceed ?</p>
+                        <Alert  className={"mb-3"} color={"danger"}>
+                            This delete can affect records on the system!<br></br>
+                            <b>Are you sure you want to proceed ?</b>
+                        </Alert>
+
                     </ModalBody>
                 <ModalFooter>
                     <Button

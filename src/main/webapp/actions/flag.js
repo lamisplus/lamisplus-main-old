@@ -6,10 +6,10 @@ import * as ACTION_TYPES from "./types";
 
 export const fetchAllFlag = (onSuccess , onError) => dispatch => {
     axios
-        .get(`${url}wards`)
+        .get(`${url}flags`)
         .then(response => {
             dispatch({
-                type: ACTION_TYPES.WARD_LIST,
+                type: ACTION_TYPES.FLAG_LIST,
                 payload: response.data
             });
             if(onSuccess){
@@ -27,7 +27,7 @@ export const fetchAllFlag = (onSuccess , onError) => dispatch => {
 
 export const createFlag = (data, onSuccess , onError) => dispatch => {
     axios
-        .post(`${url}wards`, data)
+        .post(`${url}flags`, data)
         .then(response => {
             if(onSuccess){
                 onSuccess();
@@ -44,7 +44,7 @@ export const createFlag = (data, onSuccess , onError) => dispatch => {
 
 export const updateFlag = (id, data, onSuccess , onError) => dispatch => {
     axios
-        .put(`${url}wards/${id}`, data)
+        .put(`${url}flags/${id}`, data)
         .then(response => {
             if(onSuccess){
                 onSuccess();
@@ -61,7 +61,7 @@ export const updateFlag = (id, data, onSuccess , onError) => dispatch => {
 
 export const deleteFlag = (id, onSuccess , onError) => dispatch => {
     axios
-        .delete(`${url}wards/${id}`)
+        .delete(`${url}flags/${id}`)
         .then(response => {
             if(onSuccess){
                 onSuccess();

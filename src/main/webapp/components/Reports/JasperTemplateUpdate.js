@@ -27,9 +27,9 @@ const UpdateReports = (props) => {
 
     const row = props.location.row;
 
-    // useEffect(() => {
-    //     setform2(row);
-    // }, [])
+    useEffect(() => {
+        props.fetchService()
+    }, [])
 
     useEffect(() => {
         async function fetchById() {
@@ -92,7 +92,9 @@ const UpdateReports = (props) => {
                                 <Row>
                                     <Col md={4}> <FormGroup>
                                         <Label class="sr-only">Program Name</Label>
-                                        <Input type='text' name='programCode' id='programCode' value={formData.programName} onChange={handleInputChange} required/>
+                                        <Input  type="select"  name='programCode' id='programCode' value={formData.programCode} onChange={handleInputChange} required>
+                                            {props.services.map(service => (<option key={service.name} value={service.code}>{service.name}</option>))}
+                                        </Input>
                                     </FormGroup></Col>
 
                                        <Col md={4}> <FormGroup>
