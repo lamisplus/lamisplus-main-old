@@ -1,5 +1,6 @@
 package org.lamisplus.modules.base.util;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +12,12 @@ import org.lamisplus.modules.base.domain.entity.PatientFlag;
 import org.lamisplus.modules.base.repository.FlagRepository;
 import org.lamisplus.modules.base.repository.FormFlagRepository;
 import org.lamisplus.modules.base.repository.PatientFlagRepository;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
@@ -21,6 +26,8 @@ public class FlagUtil {
     private final PatientFlagRepository patientFlagRepository;
     private final FormFlagRepository formFlagRepository;
     private final FlagRepository flagRepository;
+    private final ObjectMapper mapper;
+
 
 
     public void checkForAndSavePatientFlag(Long patientId, Object forJsonNode, List<FormFlag> formFlags, Boolean temp){
@@ -30,7 +37,6 @@ public class FlagUtil {
             String operator = formFlag.getFlag().getOperator().trim();
             Boolean continuous = formFlag.getFlag().getContinuous();
             String formFlagFieldValue = formFlag.getFlag().getFieldValue().replaceAll("\\s", "").trim();
-            ObjectMapper mapper = new ObjectMapper();
 
             //if not application code set but is string
             if (flagDataType == 0) {
@@ -148,6 +154,8 @@ public class FlagUtil {
 
     //Flag operation
     public List<Form> setAndGetFormListForFlagOperation(PatientDTO patientDTO, Form form, List<Form> forms){
+        String details = JsonUtil.getJsonNode(patientDTO.getDetails()).toString();
+
         //Get forms flags are applied to
         List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived(form.getCode(), 1, 0);
 
@@ -159,8 +167,18 @@ public class FlagUtil {
             patientDTO.getFlags().forEach(flag -> {
                 formFlags.forEach(formFlag -> {
                     if(formFlag.getFlagId() == flag.getId()){
-                        forms.add(form);
+                        //Temporary solution to age and recency testing
+                        if(formFlag.getFormCode().equalsIgnoreCase("f70f12f8-7c0b-4fb3-8a5d-7f4a01f5fee1")) {
+                            Integer age = this.getAge(details);
+                            if(age > 15) {
+                                forms.add(form);
+                            }
+                        }else {
+                            forms.add(form);
+                        }
                     }
+
+
                 });
             });
         }
@@ -184,5 +202,24 @@ public class FlagUtil {
         if (!patientFlagRepository.findByPatientIdAndFlagId(patientId, flagId).isPresent()) {
             patientFlagRepository.save(patientFlag);
         }
+    }
+
+    Integer getAge(Object object){
+        try {
+            final JsonNode tree = mapper.readTree(object.toString()).get("dob");
+            String dob = String.valueOf(tree).replaceAll("^\"+|\"+$", "");
+
+            if (dob != null) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+                //convert String to LocalDate
+                LocalDate localDate = LocalDate.parse(dob, formatter);
+                Period period = Period.between(localDate, LocalDate.now());
+                return period.getYears();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }
