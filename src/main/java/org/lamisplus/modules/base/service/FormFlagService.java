@@ -10,10 +10,12 @@ import org.lamisplus.modules.base.domain.dto.FormFlagDTO;
 import org.lamisplus.modules.base.domain.dto.FormFlagDTOS;
 import org.lamisplus.modules.base.domain.entity.Flag;
 import org.lamisplus.modules.base.domain.entity.FormFlag;
+import org.lamisplus.modules.base.domain.entity.PatientFlag;
 import org.lamisplus.modules.base.domain.mapper.FlagMapper;
 import org.lamisplus.modules.base.domain.mapper.FormFlagMapper;
 import org.lamisplus.modules.base.repository.FlagRepository;
 import org.lamisplus.modules.base.repository.FormFlagRepository;
+import org.lamisplus.modules.base.repository.PatientFlagRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,8 +34,7 @@ public class FormFlagService {
     private final FlagService flagService;
     private final FlagMapper flagMapper;
     private final FlagRepository flagRepository;
-
-
+    private final PatientFlagRepository patientFlagRepository;
 
 
     public List<FormFlagDTOS> getAllFormFlags() {
@@ -69,6 +70,16 @@ public class FormFlagService {
                 .orElseThrow(() -> new EntityNotFoundException(Flag.class, "Id", id + ""));
     }
 
+    public FormFlagDTOS getFlagByFormFlagId(Long id) {
+        FormFlag formFlag =  formFlagRepository.findByIdAndArchived(id, UN_ARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(Flag.class, "Id", id + ""));
+        FormFlagDTOS formFlagDTOS = new FormFlagDTOS();
+        formFlagDTOS.setFlag(formFlag.getFlag());
+        formFlagDTOS.setFormFlagDTOS(formFlagMapper.toFormFlagDTOs(formFlag.getFlag().getFormsByIdFlag()));
+
+        return formFlagDTOS;
+    }
+
     public FormFlag update(Long id, FormFlag formFlag) {
         Flag flag = flagService.update(formFlag.getFlagId(), flagMapper.toFlagDTO(formFlag.getFlag()));
         formFlagRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(FormFlag.class, "Id", id + ""));
@@ -78,5 +89,13 @@ public class FormFlagService {
     public void delete(Long id) {
         FormFlag formFlag = formFlagRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(FormFlag.class, "Id", id + ""));
         formFlagRepository.delete(formFlag);
+    }
+
+    public void deleteFlagByFormFlagId(Long id) {
+        FormFlag formFlag = formFlagRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(FormFlag.class, "Id", id + ""));
+        Long flagId = formFlag.getFlagId();
+        patientFlagRepository.deleteByFlagId(formFlag.getFlagId());
+        formFlagRepository.delete(formFlag);
+        flagRepository.deleteById(flagId);
     }
 }
