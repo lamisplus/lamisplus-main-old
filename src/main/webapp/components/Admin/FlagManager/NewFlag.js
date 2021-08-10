@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {  Modal, ModalHeader, ModalBody, Form,Row,Col,FormGroup,Label,Input,Card,CardBody} from 'reactstrap';
+import {  Modal, ModalHeader, ModalBody, Form,Row,Col,FormGroup,Label,Input,Card,CardBody, Alert} from 'reactstrap';
 import { connect } from 'react-redux';
 import MatButton from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
@@ -29,7 +29,7 @@ const ModalSample = (props) => {
     const [showAppCodeset, setShowAppCodeset] = useState(false);
     const [applicableForm, setApplicableForm] = useState([]);
     const [associatedForm, setAssociatedForm] = useState({});
-    const [operandList, setOperandList] = useState([{label:"Equals to (=)", value:"="},{label:"Greater than (>)", value:">"},{label:"Less than (<)", value:"<"},{label:"Greater than or equals to>=", value:">="},{label:"Less than or equals to <=", value:"<="}]);
+    const [operandList, setOperandList] = useState([{label:"Equals to (=)", value:"equal_to"},{label:"Greater than (>)", value:"greater_than"},{label:"Less than (<)", value:"less_than"},{label:"Greater than or equals to>=", value:"greater_than_or_equal_to"},{label:"Less than or equals to <=", value:"less_than_or_equal_to"}]);
     const [formTypeList, setFormTypeList] = useState([{label:"String", value:"0"},{label:"Integer", value:"2"}]);
     const defaultValues = {fieldName:"", fieldValue:"", name:"", operator:"", datatype:"", continuous: false};
     const [formData, setFormData] = useState( defaultValues)
@@ -172,6 +172,7 @@ const createFlag = (data) => {
                         <Card >
                             <CardBody>
                                 <Row >
+
                                     <Col md={6}>
                                         <FormGroup>
                                             <Label>Name</Label>
@@ -326,6 +327,11 @@ const createFlag = (data) => {
                                         }
                                 <hr></hr>
                                 <Row>
+                                    <Col md={12}>
+                                        <Alert color={"info"}>
+                                            Please note that forms selected in the <b>'applicable forms'</b> box below will <b>only be visible</b> when a patient encounter matches this flag's field value.
+                                        </Alert>
+                                    </Col>
                                 <Col md={6}>
                                     <FormGroup>
                                         <Label>Select Applicable Forms (Select a list of forms that will use this flag)</Label>
