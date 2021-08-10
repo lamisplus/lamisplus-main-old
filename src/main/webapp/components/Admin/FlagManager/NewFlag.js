@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {  Modal, ModalHeader, ModalBody, Form,Row,Col,FormGroup,Label,Input,Card,CardBody} from 'reactstrap';
+import {  Modal, ModalHeader, ModalBody, Form,Row,Col,FormGroup,Label,Input,Card,CardBody, Alert} from 'reactstrap';
 import { connect } from 'react-redux';
 import MatButton from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
@@ -172,6 +172,7 @@ const createFlag = (data) => {
                         <Card >
                             <CardBody>
                                 <Row >
+
                                     <Col md={6}>
                                         <FormGroup>
                                             <Label>Name</Label>
@@ -326,6 +327,11 @@ const createFlag = (data) => {
                                         }
                                 <hr></hr>
                                 <Row>
+                                    <Col md={12}>
+                                        <Alert color={"info"}>
+                                            Please note that forms selected in the <b>'applicable forms'</b> box below will <b>only be visible</b> when a patient encounter matches this flag's field value.
+                                        </Alert>
+                                    </Col>
                                 <Col md={6}>
                                     <FormGroup>
                                         <Label>Select Applicable Forms (Select a list of forms that will use this flag)</Label>
