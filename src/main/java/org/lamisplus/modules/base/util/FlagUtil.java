@@ -32,7 +32,7 @@ public class FlagUtil {
             String formFlagFieldValue = formFlag.getFlag().getFieldValue().replaceAll("\\s", "").trim();
             ObjectMapper mapper = new ObjectMapper();
 
-            //if not application code set
+            //if not application code set but is string
             if (flagDataType == 0) {
                 try {
                     final JsonNode tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
