@@ -20,11 +20,11 @@ public class FormFlag extends Audit<String> {
     private Long id;
 
     @Basic
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private Integer status;
 
     @Basic
-    @Column(name = "form_code")
+    @Column(name = "form_code", nullable = false)
     private String formCode;
 
     @Basic
