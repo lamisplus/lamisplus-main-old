@@ -23,5 +23,7 @@ public class FlagDTO {
 
     private Integer datatype;
 
-    private String operand;
+    private String operator;
+
+    private Boolean continuous;
 }

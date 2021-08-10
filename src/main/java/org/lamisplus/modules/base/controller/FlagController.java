@@ -2,9 +2,10 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.domain.dto.FlagDTO;
-import org.lamisplus.modules.base.domain.entity.Flag;
-import org.lamisplus.modules.base.service.FlagService;
+import org.lamisplus.modules.base.domain.dto.FormFlagDTO;
+import org.lamisplus.modules.base.domain.dto.FormFlagDTOS;
+import org.lamisplus.modules.base.domain.entity.FormFlag;
+import org.lamisplus.modules.base.service.FormFlagService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,30 +16,30 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class FlagController {
-    private final FlagService flagService;
+    private final FormFlagService formFlagService;
 
     @GetMapping
-    public ResponseEntity<List<FlagDTO>> getAllFlags() {
-        return ResponseEntity.ok(flagService.getAllFlags());
+    public ResponseEntity<List<FormFlagDTOS>> getAllFlags() {
+        return ResponseEntity.ok(formFlagService.getAllFlags());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FlagDTO> getFlag(@PathVariable Long id) {
-        return ResponseEntity.ok(flagService.getFlag(id));
+    public ResponseEntity<FormFlagDTOS> getFlagById(@PathVariable Long id) {
+        return ResponseEntity.ok(formFlagService.getFlagById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Flag> save(@RequestBody FlagDTO flagDTO) {
-        return ResponseEntity.ok(flagService.save(flagDTO));
+    public ResponseEntity<List<FormFlag>> save(@RequestBody FormFlagDTOS formFlagDTOS) {
+        return ResponseEntity.ok(formFlagService.save(formFlagDTOS));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Flag> update(@PathVariable Long id, @RequestBody FlagDTO flagDTO) {
-        return ResponseEntity.ok(flagService.update(id, flagDTO));
+    public ResponseEntity<FormFlagDTOS> update(@PathVariable Long id, @RequestBody FormFlagDTOS formFlagDTOS) {
+        return ResponseEntity.ok(formFlagService.update(id, formFlagDTOS));
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        flagService.delete(id);
+        formFlagService.delete(id);
     }
 }

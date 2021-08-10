@@ -37,7 +37,7 @@ public class FormFlagService {
     private final PatientFlagRepository patientFlagRepository;
 
 
-    public List<FormFlagDTOS> getAllFormFlags() {
+    public List<FormFlagDTOS> getAllFlags() {
         List<FormFlagDTOS> formFlagDTOSList = new ArrayList<>();
         flagRepository.findAllByArchived(UN_ARCHIVED).forEach(flag -> {
             FormFlagDTOS formFlagDTOS = new FormFlagDTOS();
@@ -70,32 +70,44 @@ public class FormFlagService {
                 .orElseThrow(() -> new EntityNotFoundException(Flag.class, "Id", id + ""));
     }
 
-    public FormFlagDTOS getFlagByFormFlagId(Long id) {
-        FormFlag formFlag =  formFlagRepository.findByIdAndArchived(id, UN_ARCHIVED)
+    public FormFlagDTOS getFlagById(Long id) {
+        Flag flag =  flagRepository.findByIdAndArchived(id, UN_ARCHIVED)
                 .orElseThrow(() -> new EntityNotFoundException(Flag.class, "Id", id + ""));
         FormFlagDTOS formFlagDTOS = new FormFlagDTOS();
-        formFlagDTOS.setFlag(formFlag.getFlag());
-        formFlagDTOS.setFormFlagDTOS(formFlagMapper.toFormFlagDTOs(formFlag.getFlag().getFormsByIdFlag()));
+        formFlagDTOS.setFlag(flag);
+        formFlagDTOS.setFormFlagDTOS(formFlagMapper.toFormFlagDTOs(flag.getFormsByIdFlag()));
 
         return formFlagDTOS;
     }
 
-    public FormFlag update(Long id, FormFlag formFlag) {
-        Flag flag = flagService.update(formFlag.getFlagId(), flagMapper.toFlagDTO(formFlag.getFlag()));
-        formFlagRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(FormFlag.class, "Id", id + ""));
-        return formFlagRepository.save(formFlag);
+    public FormFlagDTOS update(Long id, FormFlagDTOS formFlagDTOS) {
+        List<FormFlag> formFlags = new ArrayList<>();
+        Flag flag = new Flag();
+        if(formFlagDTOS.getFlag() != null){flag = flagService.update(id, flagMapper.toFlagDTO(formFlagDTOS.getFlag()));}
+        formFlagDTOS.getFormFlagDTOS().forEach(formFlagDTO -> {
+            FormFlag formFlag = formFlagRepository.findByIdAndArchived(formFlagDTO.getId(), UN_ARCHIVED)
+                    .orElseThrow(() -> new EntityNotFoundException(FormFlag.class, "Form and Flag", ""));
+            formFlagDTO.setId(formFlag.getId());
+            formFlags.add(formFlagMapper.toFormFlag(formFlagDTO));
+        });
+        if(!formFlags.isEmpty()) {
+            formFlagRepository.saveAll(formFlags);
+        }
+        formFlagDTOS.setFlag(flag);
+        formFlagDTOS.setFormFlagDTOS(formFlagMapper.toFormFlagDTOs(flag.getFormsByIdFlag()));
+
+        return formFlagDTOS;
     }
+
+/*    public void delete(Long id) {
+        FormFlag formFlag = formFlagRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(FormFlag.class, "Id", id + ""));
+        formFlagRepository.delete(formFlag);
+    }*/
 
     public void delete(Long id) {
-        FormFlag formFlag = formFlagRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(FormFlag.class, "Id", id + ""));
-        formFlagRepository.delete(formFlag);
-    }
-
-    public void deleteFlagByFormFlagId(Long id) {
-        FormFlag formFlag = formFlagRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(FormFlag.class, "Id", id + ""));
-        Long flagId = formFlag.getFlagId();
-        patientFlagRepository.deleteByFlagId(formFlag.getFlagId());
-        formFlagRepository.delete(formFlag);
-        flagRepository.deleteById(flagId);
+        Flag flag = flagRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(Flag.class, "Id", id + ""));
+        patientFlagRepository.deleteByFlagId(flag.getId());
+        formFlagRepository.deleteByFlagId(flag.getId());
+        flagRepository.delete(flag);
     }
 }
