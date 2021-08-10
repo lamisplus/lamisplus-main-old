@@ -31,16 +31,43 @@ const ModalSample = (props) => {
     const [associatedForm, setAssociatedForm] = useState({});
     const [operandList, setOperandList] = useState([{label:"Equals to (=)", value:"="},{label:"Greater than (>)", value:">"},{label:"Less than (<)", value:"<"},{label:"Greater than or equals to>=", value:">="},{label:"Less than or equals to <=", value:"<="}]);
     const [formTypeList, setFormTypeList] = useState([{label:"String", value:"0"},{label:"Integer", value:"2"}]);
-    const defaultValues = {fieldName:"", fieldValue:"", name:"", operand:"", datatype:0};
+    const defaultValues = {fieldName:"", fieldValue:"", name:"", operator:"", datatype:"", continuous: false};
     const [formData, setFormData] = useState( defaultValues)
     const classes = useStyles()
 
     useEffect(() => {
-        //for application codeset edit, load form data
-        setFormData(props.formData ? props.formData : defaultValues);
+        //for flag edit, load form data
+        if(props.formData){
+            loadFormData(props.formData);
+        } else {
+            setFormData(defaultValues);
+            setApplicableForm([]);
+            setAssociatedForm({});
+        }
+
         fetchForms();
     }, [props.formData]);
 
+    const loadFormData = (data) => {
+        setFormData(data.flag);
+        if(data.formFlagDTOS && data.formFlagDTOS.length > 0){
+            let associatedFormData = data.formFlagDTOS.find((x) => (x.status === 0));
+            console.log(associatedFormData);
+            let associatedFormObj = formList.find((x) => (x.code === associatedFormData.formCode));
+            console.log(associatedFormObj);
+            setAssociatedForm(associatedFormObj);
+            let applicableFormData = data.formFlagDTOS.filter((x) => (x.status === 1));
+            let forms = [];
+            applicableFormData.map((x) => {
+                const a = formList.find((y) => (y.code === x.formCode));
+                if(a){
+                    forms.push(a);
+                }
+            });
+            setApplicableForm(forms);
+        }
+
+    }
     const fetchForms = () => {
         axios
             .get(`${url}forms`)
@@ -88,35 +115,49 @@ const ModalSample = (props) => {
 
 
 const createFlag = (data) => {
-        let flagList = applicableForm.map((x) =>
-            ({formCode: x.value, status: 1}));
-        flagList.push({code: associatedForm.code, status:0});
-        const body = {flag: data, formFlagDTOS: flagList};
-        //console.log(body);
+
         axios
-        .post(`${url}form-flags`, body)
+        .post(`${url}flags`, data)
         .then((response) => {
-            console.log(response);
             toast.success("Flag saved successfully!");
             setLoading(false);
             props.loadFlag();
             props.toggleModal();
         })
         .catch((error) => {
-            toast.error("An error occurred, could not save patient's biometrics.");
+            toast.error("An error occurred, could not save flag.");
             setLoading(false);
         });
 
 }
+    const updateFlag = (id, data) => {
+        axios
+            .put(`${url}flags/${id}`, data)
+            .then((response) => {
+                toast.success("Flag updated successfully!");
+                setLoading(false);
+                props.loadFlag();
+                props.toggleModal();
+            })
+            .catch((error) => {
+                toast.error("An error occurred, could not update flag.");
+                setLoading(false);
+            });
+
+    }
 
     const create = e => {
-        e.preventDefault()
-            setLoading(true);
+        e.preventDefault();
+        let flagList = applicableForm.map((x) =>
+            ({formCode: x.value, status: 1}));
+        flagList.push({formCode: associatedForm.code, status:0});
+        const body = {flag: formData, formFlagDTOS: flagList};
+        setLoading(true);
             if(formData.id){
-                props.updateWard(formData.id, formData)
-                return
+                updateFlag(formData.id, body)
+                return;
             }
-            createFlag(formData)
+            createFlag(body)
 
     }
     return (
@@ -155,6 +196,7 @@ const createFlag = (data) => {
                                                 isMulti={false}
                                                 isLoading={false}
                                                 options={formList}
+                                                value={associatedForm}
                                                 onChange={(x) => {
                                                     setAssociatedForm(x);
                                                    // fetchFormFields(x.value);
@@ -181,14 +223,14 @@ const createFlag = (data) => {
                                             <Label>Select Operator</Label>
                                             <Select
                                                 required
-                                                name="operand"
-                                                id="operand"
+                                                name="operator"
+                                                id="operator"
                                                 isMulti={false}
                                                 isLoading={false}
-                                                value={operandList.find((x) => x.value === formData.operand) ? operandList.find((x) => x.value === formData.operand) : ""}
+                                                value={operandList.find((x) => x.value === formData.operator) ? operandList.find((x) => x.value === formData.operator) : ""}
                                                 options={operandList}
                                                 onChange={(x) => {
-                                                    setFormData({...formData, operand:x.value})
+                                                    setFormData({...formData, operator:x.value})
                                                 }}
                                             />
                                         </FormGroup>
@@ -219,7 +261,7 @@ const createFlag = (data) => {
                                                 name='cv'
                                                 id='cv'
                                                 placeholder='Is Continuous Variable'
-                                                onChange={(e) => setFormData({...formData, isContinousVariable: e.target.checked})}
+                                                onChange={(e) => setFormData({...formData, continuous: e.target.checked})}
 
                                             />Is Form Value a Continuous Variable?
 
@@ -263,23 +305,23 @@ const createFlag = (data) => {
                                             />
                                         </FormGroup>
                                     </Col>
-                                    {/*<Col md={6}>*/}
-                                    {/*    <FormGroup>*/}
-                                    {/*        <Label>Select Form Value Datatype</Label>*/}
-                                    {/*        <Select*/}
-                                    {/*            required*/}
-                                    {/*            name="formType"*/}
-                                    {/*            id="formType"*/}
-                                    {/*            isMulti={false}*/}
-                                    {/*            isLoading={false}*/}
-                                    {/*            options={formTypeList}*/}
-                                    {/*            value={formTypeList.find((x) => x.value === formData.datatype) ? formTypeList.find((x) => x.value === formData.datatype) : ""}*/}
-                                    {/*            onChange={(x) => {*/}
-                                    {/*            setFormData({...formData, datatype:x.value})*/}
-                                    {/*        }}*/}
-                                    {/*        />*/}
-                                    {/*    </FormGroup>*/}
-                                    {/*</Col>*/}
+                                    <Col md={6}>
+                                        <FormGroup>
+                                            <Label>Select Form Value Datatype</Label>
+                                            <Select
+                                                required
+                                                name="formType"
+                                                id="formType"
+                                                isMulti={false}
+                                                isLoading={false}
+                                                options={formTypeList}
+                                                value={formTypeList.find((x) => x.value === formData.datatype) ? formTypeList.find((x) => x.value === formData.datatype) : ""}
+                                                onChange={(x) => {
+                                                setFormData({...formData, datatype:x.value})
+                                            }}
+                                            />
+                                        </FormGroup>
+                                    </Col>
                                 </Row>
                                         }
                                 <hr></hr>
@@ -294,6 +336,7 @@ const createFlag = (data) => {
                                             isMulti={true}
                                             isLoading={false}
                                             options={formList}
+                                            value={applicableForm}
                                             onChange={(x) => setApplicableForm(x)}
                                         />
                                     </FormGroup>
