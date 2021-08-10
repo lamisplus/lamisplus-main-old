@@ -29,7 +29,7 @@ const ModalSample = (props) => {
     const [showAppCodeset, setShowAppCodeset] = useState(false);
     const [applicableForm, setApplicableForm] = useState([]);
     const [associatedForm, setAssociatedForm] = useState({});
-    const [operandList, setOperandList] = useState([{label:"Equals to (=)", value:"="},{label:"Greater than (>)", value:">"},{label:"Less than (<)", value:"<"},{label:"Greater than or equals to>=", value:">="},{label:"Less than or equals to <=", value:"<="}]);
+    const [operandList, setOperandList] = useState([{label:"Equals to (=)", value:"equal_to"},{label:"Greater than (>)", value:"greater_than"},{label:"Less than (<)", value:"less_than"},{label:"Greater than or equals to>=", value:"greater_than_or_equal_to"},{label:"Less than or equals to <=", value:"less_than_or_equal_to"}]);
     const [formTypeList, setFormTypeList] = useState([{label:"String", value:"0"},{label:"Integer", value:"2"}]);
     const defaultValues = {fieldName:"", fieldValue:"", name:"", operator:"", datatype:"", continuous: false};
     const [formData, setFormData] = useState( defaultValues)
