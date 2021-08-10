@@ -48,8 +48,12 @@ public class Flag extends JsonBEntity {
     private Integer datatype;
 
     @Basic
-    @Column(name = "operand")
-    private String operand;
+    @Column(name = "operator")
+    private String operator;
+
+    @Basic
+    @Column(name = "continuous")
+    private Boolean continuous;
 
     @Basic
     @Column(name = "archived")

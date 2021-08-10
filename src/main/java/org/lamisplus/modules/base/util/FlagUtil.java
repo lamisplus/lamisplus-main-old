@@ -14,7 +14,6 @@ import org.lamisplus.modules.base.repository.PatientFlagRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -28,6 +27,8 @@ public class FlagUtil {
         formFlags.forEach(formFlag -> {
             int flagDataType = formFlag.getFlag().getDatatype();
             String fieldName = formFlag.getFlag().getFieldName().trim();
+            String operator = formFlag.getFlag().getOperator();
+            Boolean continuous = formFlag.getFlag().getContinuous();
             String formFlagFieldValue = formFlag.getFlag().getFieldValue().replaceAll("\\s", "").trim();
             ObjectMapper mapper = new ObjectMapper();
 
@@ -52,6 +53,43 @@ public class FlagUtil {
                         this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
                     }
                 }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }// If integer
+            else if(flagDataType == 2) {
+                if (operator.equalsIgnoreCase("=")) {
+                    try {
+                        final JsonNode tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
+                        String field = String.valueOf(tree).replaceAll("^\"+|\"+$", "");
+                        if (formFlagFieldValue.equalsIgnoreCase(field)) {
+                            this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else if (operator.equalsIgnoreCase(">")){
+                try {
+                    final JsonNode tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
+                    String field = String.valueOf(tree).replaceAll("^\"+|\"+$", "");
+                    Integer integerValue = Integer.valueOf(field);
+                    Integer formFlagFieldIntegerValue = Integer.valueOf(formFlagFieldValue);
+                    if (integerValue > formFlagFieldIntegerValue) {
+                        this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (operator.equalsIgnoreCase("<")){
+                try {
+                    final JsonNode tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
+                    String field = String.valueOf(tree).replaceAll("^\"+|\"+$", "");
+                    Integer integerValue = Integer.valueOf(field);
+                    Integer formFlagFieldIntegerValue = Integer.valueOf(formFlagFieldValue);
+                    if (integerValue < formFlagFieldIntegerValue) {
+                        this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                    }
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
