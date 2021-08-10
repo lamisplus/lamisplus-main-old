@@ -27,7 +27,7 @@ public class FlagUtil {
         formFlags.forEach(formFlag -> {
             int flagDataType = formFlag.getFlag().getDatatype();
             String fieldName = formFlag.getFlag().getFieldName().trim();
-            String operator = formFlag.getFlag().getOperator();
+            String operator = formFlag.getFlag().getOperator().trim();
             Boolean continuous = formFlag.getFlag().getContinuous();
             String formFlagFieldValue = formFlag.getFlag().getFieldValue().replaceAll("\\s", "").trim();
             ObjectMapper mapper = new ObjectMapper();
@@ -57,18 +57,23 @@ public class FlagUtil {
                 }
             }// If integer
             else if(flagDataType == 2) {
-                if (operator.equalsIgnoreCase("=")) {
+
+                if (operator.equalsIgnoreCase("equal_to")) {
                     try {
                         final JsonNode tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
                         String field = String.valueOf(tree).replaceAll("^\"+|\"+$", "");
                         if (formFlagFieldValue.equalsIgnoreCase(field)) {
                             this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                        }else if(continuous){
+                            patientFlagRepository.findByPatientIdAndFlagId(patientId, formFlag.getFlagId()).ifPresent(patientFlag -> {
+                                patientFlagRepository.delete(patientFlag);
+                            });
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-            } else if (operator.equalsIgnoreCase(">")){
+             else if (operator.equalsIgnoreCase("greater_than")){
                 try {
                     final JsonNode tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
                     String field = String.valueOf(tree).replaceAll("^\"+|\"+$", "");
@@ -76,11 +81,16 @@ public class FlagUtil {
                     Integer formFlagFieldIntegerValue = Integer.valueOf(formFlagFieldValue);
                     if (integerValue > formFlagFieldIntegerValue) {
                         this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                    }else if(continuous){
+                        patientFlagRepository.findByPatientIdAndFlagId(patientId, formFlag.getFlagId()).ifPresent(patientFlag -> {
+                            patientFlagRepository.delete(patientFlag);
+                        });
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            } else if (operator.equalsIgnoreCase("<")){
+            } else
+                if (operator.equalsIgnoreCase("less_than")){
                 try {
                     final JsonNode tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
                     String field = String.valueOf(tree).replaceAll("^\"+|\"+$", "");
@@ -88,9 +98,48 @@ public class FlagUtil {
                     Integer formFlagFieldIntegerValue = Integer.valueOf(formFlagFieldValue);
                     if (integerValue < formFlagFieldIntegerValue) {
                         this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                    }else if(continuous){
+                        patientFlagRepository.findByPatientIdAndFlagId(patientId, formFlag.getFlagId()).ifPresent(patientFlag -> {
+                            patientFlagRepository.delete(patientFlag);
+                        });
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                }
+            } else
+                if (operator.equalsIgnoreCase("greater_than_or_equal_to")){
+                    try {
+                        final JsonNode tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
+                        String field = String.valueOf(tree).replaceAll("^\"+|\"+$", "");
+                        Integer integerValue = Integer.valueOf(field);
+                        Integer formFlagFieldIntegerValue = Integer.valueOf(formFlagFieldValue);
+                        if (integerValue >= formFlagFieldIntegerValue) {
+                            this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                        }else if(continuous){
+                            patientFlagRepository.findByPatientIdAndFlagId(patientId, formFlag.getFlagId()).ifPresent(patientFlag -> {
+                                patientFlagRepository.delete(patientFlag);
+                            });
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+            } else
+                if (operator.equalsIgnoreCase("less_than_or_equal_to")) {
+                    try {
+                        final JsonNode tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
+                        String field = String.valueOf(tree).replaceAll("^\"+|\"+$", "");
+                        Integer fieldIntegerValue = Integer.valueOf(field);
+                        Integer formFlagFieldIntegerValue = Integer.valueOf(formFlagFieldValue);
+                        if (fieldIntegerValue <= formFlagFieldIntegerValue) {
+                            this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                        }else if(continuous){
+                            patientFlagRepository.findByPatientIdAndFlagId(patientId, formFlag.getFlagId()).ifPresent(patientFlag -> {
+                                patientFlagRepository.delete(patientFlag);
+                            });
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

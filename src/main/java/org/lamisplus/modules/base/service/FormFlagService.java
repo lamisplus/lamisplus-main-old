@@ -83,11 +83,16 @@ public class FormFlagService {
     public FormFlagDTOS update(Long id, FormFlagDTOS formFlagDTOS) {
         List<FormFlag> formFlags = new ArrayList<>();
         Flag flag = new Flag();
+        final Flag finalFlag = new Flag();
         if(formFlagDTOS.getFlag() != null){flag = flagService.update(id, flagMapper.toFlagDTO(formFlagDTOS.getFlag()));}
+        finalFlag.setId(flag.getId());
         formFlagDTOS.getFormFlagDTOS().forEach(formFlagDTO -> {
-            FormFlag formFlag = formFlagRepository.findByIdAndArchived(formFlagDTO.getId(), UN_ARCHIVED)
-                    .orElseThrow(() -> new EntityNotFoundException(FormFlag.class, "Form and Flag", ""));
-            formFlagDTO.setId(formFlag.getId());
+            Optional<FormFlag> optionalFormFlag = formFlagRepository.findByFlagIdAndFormCodeAndArchived(id, formFlagDTO.getFormCode(), UN_ARCHIVED);
+            optionalFormFlag.ifPresent(formFlag -> {
+                formFlagDTO.setId(formFlag.getId());
+            });
+            formFlagDTO.setFlagId(finalFlag.getId());
+
             formFlags.add(formFlagMapper.toFormFlag(formFlagDTO));
         });
         if(!formFlags.isEmpty()) {
