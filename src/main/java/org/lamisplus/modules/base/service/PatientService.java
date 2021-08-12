@@ -598,7 +598,7 @@ public class PatientService {
                 patientDetails.remove("age");
                 patientDetails.put("age", period.getYears());
             }
-            return object;
+            return patientDetails;
 
         } catch(Exception e){
             e.printStackTrace();

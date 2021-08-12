@@ -84,7 +84,11 @@ public class FormFlagService {
         List<FormFlag> formFlags = new ArrayList<>();
         Flag flag = new Flag();
         final Flag finalFlag = new Flag();
-        if(formFlagDTOS.getFlag() != null){flag = flagService.update(id, flagMapper.toFlagDTO(formFlagDTOS.getFlag()));}
+        if(formFlagDTOS.getFlag() != null){
+            if(formFlagDTOS.getFlag().getContinuous() == null)formFlagDTOS.getFlag().setContinuous(false);
+
+            flag = flagService.update(id, flagMapper.toFlagDTO(formFlagDTOS.getFlag()));
+        }
         finalFlag.setId(flag.getId());
         formFlagDTOS.getFormFlagDTOS().forEach(formFlagDTO -> {
             Optional<FormFlag> optionalFormFlag = formFlagRepository.findByFlagIdAndFormCodeAndArchived(id, formFlagDTO.getFormCode(), UN_ARCHIVED);

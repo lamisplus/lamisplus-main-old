@@ -1,0 +1,965 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-1">
+        <createSequence sequenceName="application_codeset_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-2">
+        <createSequence sequenceName="application_codeset_standard_codeset_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-3">
+        <createSequence sequenceName="application_user_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-4">
+        <createSequence sequenceName="application_user_organisation_unit_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-5">
+        <createSequence sequenceName="application_user_patient_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-6">
+        <createSequence sequenceName="appointment_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-7">
+        <createSequence sequenceName="data_source_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-8">
+        <createSequence sequenceName="drug_group_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-9">
+        <createSequence sequenceName="drug_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-10">
+        <createSequence sequenceName="drug_inventory_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-11">
+        <createSequence sequenceName="encounter_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-12">
+        <createSequence sequenceName="flag_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-13">
+        <createSequence sequenceName="form_data_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-14">
+        <createSequence sequenceName="form_flag_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-15">
+        <createSequence sequenceName="form_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-16">
+        <createSequence sequenceName="global_variable_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-17">
+        <createSequence sequenceName="hibernate_sequence"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-18">
+        <createSequence sequenceName="icd_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-19">
+        <createSequence sequenceName="image_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-20">
+        <createSequence sequenceName="lab_test_group_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-21">
+        <createSequence sequenceName="lab_test_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-22">
+        <createSequence sequenceName="menu_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-23">
+        <createSequence sequenceName="module_dependency_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-24">
+        <createSequence sequenceName="organisation_unit_hierarchy_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-25">
+        <createSequence sequenceName="organisation_unit_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-26">
+        <createSequence sequenceName="organisation_unit_identifier_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-27">
+        <createSequence sequenceName="organisation_unit_level_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-28">
+        <createSequence sequenceName="patient_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-29">
+        <createSequence sequenceName="permission_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-30">
+        <createSequence sequenceName="program_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-31">
+        <createSequence sequenceName="radiology_test_group_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-32">
+        <createSequence sequenceName="radiology_test_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-33">
+        <createSequence sequenceName="regimen_drug_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-34">
+        <createSequence sequenceName="regimen_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-35">
+        <createSequence sequenceName="regimen_line_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-36">
+        <createSequence sequenceName="report_info_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-37">
+        <createSequence sequenceName="role_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-38">
+        <createSequence sequenceName="standard_codeset_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-39">
+        <createSequence sequenceName="standard_codeset_source_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-40">
+        <createSequence sequenceName="sym_data_data_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-41">
+        <createSequence sequenceName="visit_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-42">
+        <createSequence sequenceName="ward_id_seq"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-43">
+        <createTable tableName="application_codeset">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="application_codeset2_pkey"/>
+            </column>
+            <column name="codeset_group" type="VARCHAR(2147483647)"/>
+            <column name="display" type="VARCHAR(2147483647)"/>
+            <column name="language" type="VARCHAR(2147483647)"/>
+            <column name="version" type="VARCHAR(2147483647)"/>
+            <column name="code" type="VARCHAR(2147483647)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(2147483647)"/>
+            <column name="archived" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-44">
+        <createTable tableName="application_codeset_has_standard_codeset">
+            <column name="standard_codeset_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="application_codeset_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-45">
+        <createTable tableName="application_codeset_standard_codeset">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="application_codeset_standard_codeset_pkey"/>
+            </column>
+            <column name="application_codeset_id" type="BIGINT"/>
+            <column name="standard_codeset_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-46">
+        <createTable tableName="application_user">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="user_pkey"/>
+            </column>
+            <column name="user_name" type="VARCHAR(2147483647)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(2147483647)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="INT"/>
+            <column name="activation_key" type="VARCHAR(2147483647)"/>
+            <column name="date_reset" type="date"/>
+            <column name="reset_key" type="VARCHAR(2147483647)"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="gender" type="VARCHAR(255)"/>
+            <column name="phone_number" type="VARCHAR(255)"/>
+            <column name="current_organisation_unit_id" type="BIGINT"/>
+            <column name="first_name" type="VARCHAR(255)"/>
+            <column name="last_name" type="VARCHAR(255)"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(2147483647)"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-47">
+        <createTable tableName="application_user_organisation_unit">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="application_user_organisation_unit_pkey"/>
+            </column>
+            <column name="application_user_id" type="BIGINT"/>
+            <column name="organisation_unit_id" type="BIGINT"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="archived" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-48">
+        <createTable tableName="application_user_patient">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="application_user_patient_pkey"/>
+            </column>
+            <column name="patient_id" type="BIGINT"/>
+            <column name="application_user_id" type="BIGINT"/>
+            <column name="organisation_unit_id" type="BIGINT"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="created_by" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-49">
+        <createTable tableName="application_user_role">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-50">
+        <sql>
+            CREATE TABLE appointment
+            (
+            id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+            archived integer,
+            created_by character varying(255) ,
+            date timestamp without time zone,
+            date_created timestamp without time zone,
+            date_modified timestamp without time zone,
+            detail jsonb NOT NULL,
+            modified_by character varying(255) ,
+            organisation_unit_id bigint,
+            patient_id bigint,
+            visit_id bigint,
+            CONSTRAINT appointment_pkey PRIMARY KEY (id)
+            )
+        </sql>
+    </changeSet>
+    <!--<changeSet author="Chukwuemeka Ilozue" id="1628678831400-51">
+        <createTable tableName="audit">
+            <column name="identifier" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="timestamp" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="actor" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="origin" type="VARCHAR(200)"/>
+            <column name="action" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="elements" type="VARCHAR(70000)"/>
+        </createTable>
+    </changeSet>-->
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-52">
+        <createTable tableName="biometric">
+            <column name="id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="archived" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="biometric_type" type="VARCHAR(255)"/>
+            <column name="date_enrollment" type="date"/>
+            <column name="iso" type="BOOL"/>
+            <column name="date_last_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="template" type="BYTEA">
+                <constraints nullable="false"/>
+            </column>
+            <column name="template_type" type="VARCHAR(255)"/>
+            <column name="organisation_unit_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="patient_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-53">
+        <createTable tableName="data_source">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="data_source_pkey"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="format" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-54">
+        <createTable tableName="drug">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="drug_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(2147483647)"/>
+            <column name="abbrev" type="VARCHAR(2147483647)"/>
+            <column name="drug_group_id" type="BIGINT"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="archived" type="INT"/>
+            <column name="code" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-55">
+        <createTable tableName="drug_group">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="drug_group_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(2147483647)"/>
+            <column name="code" type="VARCHAR(2147483647)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(2147483647)"/>
+            <column name="archived" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-56">
+        <createTable tableName="drug_inventory">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="drug_inventory_pkey"/>
+            </column>
+            <column name="drug_id" type="BIGINT"/>
+            <column name="brand_name" type="VARCHAR(2147483647)"/>
+            <column name="strength" type="VARCHAR(2147483647)"/>
+            <column name="pack_size" type="INT"/>
+            <column name="dosage_form" type="VARCHAR(2147483647)"/>
+            <column name="code" type="VARCHAR(2147483647)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(2147483647)"/>
+            <column name="archived" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-57">
+        <createTable tableName="encounter">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="encounter_pkey"/>
+            </column>
+            <column name="patient_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="visit_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="form_code" type="VARCHAR(2147483647)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="program_code" type="VARCHAR(2147483647)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_encounter" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(2147483647)"/>
+            <column name="archived" type="INT"/>
+            <column name="uuid" type="VARCHAR(2147483647)"/>
+            <column name="organisation_unit_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-58">
+        <createTable tableName="flag">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="flag_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(2147483647)"/>
+            <column name="field_value" type="VARCHAR(2147483647)"/>
+            <column name="datatype" type="INT"/>
+            <column name="operator" type="VARCHAR(2147483647)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(2147483647)"/>
+            <column name="archived" type="INT"/>
+            <column name="field_name" type="VARCHAR(2147483647)"/>
+            <column name="continuous" type="BOOL"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-59">
+        <sql>
+            CREATE TABLE form (
+            id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+            name character varying ,
+            code character varying ,
+            program_code character varying ,
+            resource_object jsonb,
+            resource_path character varying ,
+            version character varying ,
+            usage_status integer,
+            date_created timestamp without time zone,
+            created_by character varying ,
+            date_modified timestamp without time zone,
+            modified_by character varying ,
+            archived integer,
+            form_precedence jsonb,
+            type integer,
+            main_code character varying ,
+            parent_code character varying(255) ,
+            CONSTRAINT form_pkey PRIMARY KEY (id))
+        </sql>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-60">
+        <sql>
+            CREATE TABLE form_data
+            (
+            id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+            data jsonb,
+            encounter_id bigint,
+            organisation_unit_id bigint,
+            CONSTRAINT form_data_pkey PRIMARY KEY (id)
+            )
+        </sql>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-61">
+        <createTable tableName="form_flag">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="flag_form_pkey"/>
+            </column>
+            <column name="flag_id" type="BIGINT"/>
+            <column name="status" type="INT"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(2147483647)"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="archived" type="INT"/>
+            <column name="form_code" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-62">
+        <createTable tableName="global_variable">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="global_variable_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(200)"/>
+            <column name="description" type="VARCHAR(300)"/>
+            <column name="format" type="VARCHAR(15)"/>
+            <column name="archived" type="INT"/>
+            <column name="module_name" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-63">
+        <createTable tableName="icd">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="icd_pkey"/>
+            </column>
+            <column name="abbreviated_description" type="VARCHAR(255)"/>
+            <column name="archived" type="INT"/>
+            <column name="category_code" type="VARCHAR(255)"/>
+            <column name="category_title" type="VARCHAR(255)"/>
+            <column name="diagnosis_code" type="VARCHAR(255)"/>
+            <column name="full_code" type="VARCHAR(255)"/>
+            <column name="full_description" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-64">
+        <createTable tableName="image">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="image_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="patient_id" type="VARCHAR(255)"/>
+            <column name="uuid" type="VARCHAR(255)"/>
+            <column name="content" type="BYTEA"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-65">
+        <createTable tableName="lab_test">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="lab_test_pkey"/>
+            </column>
+            <column name="lab_test_group_id" type="BIGINT"/>
+            <column name="name" type="VARCHAR(2147483647)"/>
+            <column name="unit_measurement" type="VARCHAR(2147483647)"/>
+            <column name="code" type="VARCHAR(2147483647)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(2147483647)"/>
+            <column name="archived" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-66">
+        <createTable tableName="lab_test_group">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="lab_test_category_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(2147483647)"/>
+            <column name="code" type="VARCHAR(2147483647)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(2147483647)"/>
+            <column name="archived" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-67">
+        <createTable tableName="menu">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="menu_pkey"/>
+            </column>
+            <column name="archived" type="INT"/>
+            <column name="module_id" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="url" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-68">
+        <createTable tableName="module">
+            <column name="id" type="VARCHAR(2147483647)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="artifact_id" type="VARCHAR(255)"/>
+            <column name="base_package" type="VARCHAR(255)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="VARCHAR(255)"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="modified_by" type="VARCHAR(2147483647)"/>
+            <column name="archived" type="INT"/>
+            <column name="module_type" type="INT"/>
+            <column name="uuid" type="VARCHAR(2147483647)"/>
+            <column name="date_installed" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="installed_by" type="VARCHAR(255)"/>
+            <column name="status" type="INT"/>
+            <column name="main" type="VARCHAR(255)"/>
+            <column name="batch_no" type="VARCHAR(2147483647)"/>
+            <column name="artifact" type="VARCHAR(255)"/>
+            <column name="build_time" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="code" type="VARCHAR(255)"/>
+            <column name="data" type="BYTEA"/>
+            <column name="process_config" type="BOOL"/>
+            <column name="started" type="BOOL"/>
+            <column name="uninstall" type="BOOL"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-69">
+        <createTable tableName="module_dependency">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="module_dependency_pkey"/>
+            </column>
+            <column name="artifact_id" type="VARCHAR(255)"/>
+            <column name="module_id" type="VARCHAR(2147483647)"/>
+            <column name="version" type="VARCHAR(2147483647)"/>
+            <column name="archived" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-70">
+        <sql>
+            CREATE TABLE organisation_unit
+            (
+            id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+            name character varying(100) ,
+            description character varying(300) ,
+            organisation_unit_level_id bigint,
+            parent_organisation_unit_id bigint,
+            archived integer,
+            details jsonb,
+            date_created timestamp without time zone,
+            created_by character varying ,
+            date_modified timestamp without time zone,
+            modified_by character varying ,
+            CONSTRAINT organisation_unit_pkey PRIMARY KEY (id)
+            )
+        </sql>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-71">
+        <createTable tableName="organisation_unit_hierarchy">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="organisation_unit_hierarchy_pkey"/>
+            </column>
+            <column name="organisation_unit_id" type="BIGINT"/>
+            <column name="parent_organisation_unit_id" type="BIGINT"/>
+            <column name="organisation_unit_level_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-72">
+        <createTable tableName="organisation_unit_identifier">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="organisation_unit_identifier_pkey"/>
+            </column>
+            <column name="organisation_unit_id" type="BIGINT"/>
+            <column name="code" type="VARCHAR(2147483647)"/>
+            <column name="name" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-73">
+        <createTable tableName="organisation_unit_level">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="organisational_unit_level_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(100)"/>
+            <column name="description" type="VARCHAR(300)"/>
+            <column name="archived" type="INT"/>
+            <column name="status" type="INT"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-74">
+        <sql>
+            CREATE TABLE patient(
+            id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+            patient_number character varying ,
+            details jsonb,
+            uuid character varying ,
+            organisation_unit_id bigint,
+            date_created timestamp without time zone,
+            created_by character varying ,
+            date_modified timestamp without time zone,
+            modified_by character varying ,
+            archived integer,
+            CONSTRAINT patient_pkey PRIMARY KEY (id))
+        </sql>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-75">
+        <createTable tableName="patient_flag">
+            <column name="patient_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="flag_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-76">
+        <createTable tableName="permission">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="priviledge_pkey"/>
+            </column>
+            <column name="description" type="VARCHAR(2147483647)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(2147483647)"/>
+            <column name="archived" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-77">
+        <createTable tableName="program">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="program_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(2147483647)"/>
+            <column name="code" type="VARCHAR(2147483647)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="module_id" type="VARCHAR(2147483647)"/>
+            <column name="archived" type="INT"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-78">
+        <createTable tableName="radiology_test">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="radiology_test_group_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(2147483647)"/>
+            <column name="group_id" type="BIGINT"/>
+            <column name="archived" type="INT"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-79">
+        <createTable tableName="radiology_test_group">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="radiology_test_group_pkey1"/>
+            </column>
+            <column name="name" type="VARCHAR(2147483647)"/>
+            <column name="archived" type="INT"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-80">
+        <createTable tableName="regimen">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="regimen_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(2147483647)"/>
+            <column name="regimen_line_id" type="BIGINT"/>
+            <column name="archived" type="INT"/>
+            <column name="composition" type="VARCHAR(255)"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(2147483647)"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="code" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-81">
+        <createTable tableName="regimen_drug">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="regimen_drug_pkey"/>
+            </column>
+            <column name="regimen_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="drug_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(2147483647)"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="archived" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-82">
+        <createTable tableName="regimen_line">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="regimen_line_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(2147483647)"/>
+            <column name="archived" type="INT"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+            <column name="code" type="VARCHAR(2147483647)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-83">
+        <sql>
+            CREATE TABLE report_info
+            (
+            id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+            archived integer,
+            description character varying(255) ,
+            name character varying(255) ,
+            program_code character varying(255) ,
+            template character varying ,
+            resource_object jsonb,
+            date_created timestamp without time zone,
+            created_by character varying ,
+            date_modified timestamp without time zone,
+            modified_by character varying ,
+            code character varying ,
+            CONSTRAINT report_info_pkey PRIMARY KEY (id)
+            )
+        </sql>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-84">
+        <createTable tableName="role">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="role_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(2147483647)"/>
+            <column name="code" type="VARCHAR(2147483647)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(2147483647)"/>
+            <column name="archived" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-85">
+        <createTable tableName="role_permission">
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="permission_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-86">
+        <createTable tableName="standard_codeset">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="standard_codeset_pkey"/>
+            </column>
+            <column name="code" type="VARCHAR(2147483647)"/>
+            <column name="description" type="VARCHAR(2147483647)"/>
+            <column name="standard_codeset_source_id" type="BIGINT"/>
+            <column name="archived" type="INT"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-87">
+        <createTable tableName="standard_codeset_source">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="standard_codeset_source_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(2147483647)"/>
+            <column name="description" type="VARCHAR(2147483647)"/>
+            <column name="archived" type="INT"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-88">
+        <createTable tableName="visit">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="patient_visit_pkey"/>
+            </column>
+            <column name="date_visit_end" type="date"/>
+            <column name="date_visit_start" type="date"/>
+            <column name="time_visit_end" type="TIME WITHOUT TIME ZONE"/>
+            <column name="time_visit_start" type="TIME WITHOUT TIME ZONE"/>
+            <column name="patient_id" type="BIGINT"/>
+            <column name="visit_type_id" type="BIGINT"/>
+            <column name="date_next_appointment" type="date"/>
+            <column name="uuid" type="VARCHAR(2147483647)"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modified_by" type="VARCHAR(2147483647)"/>
+            <column name="archived" type="INT"/>
+            <column name="type_patient" type="INT"/>
+            <column name="organisation_unit_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-89">
+        <createTable tableName="ward">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="ward_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(2147483647)"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="code" type="VARCHAR(2147483647)"/>
+            <column name="archived" type="INT"/>
+            <column name="modified_by" type="VARCHAR(2147483647)"/>
+            <column name="date_modified" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="organisation_unit_id" type="BIGINT"/>
+            <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-90">
+        <addPrimaryKey columnNames="standard_codeset_id, application_codeset_id" constraintName="application_codeset_has_standard_codeset_pkey" tableName="application_codeset_has_standard_codeset"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-91">
+        <addPrimaryKey columnNames="user_id, role_id" constraintName="application_user_roles_pkey" tableName="application_user_role"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-92">
+        <addPrimaryKey columnNames="id" constraintName="biometric_pkey" tableName="biometric"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-93">
+        <addPrimaryKey columnNames="id" constraintName="module_pkey" tableName="module"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-94">
+        <addPrimaryKey columnNames="patient_id, flag_id" constraintName="patient_flag_pkey" tableName="patient_flag"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-95">
+        <addPrimaryKey columnNames="role_id, permission_id" constraintName="role_permissions_pkey" tableName="role_permission"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-96">
+        <addUniqueConstraint columnNames="code" constraintName="form_code_key" tableName="form"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-97">
+        <addUniqueConstraint columnNames="uuid" constraintName="patient_code_key" tableName="patient"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-98">
+        <addUniqueConstraint columnNames="code" constraintName="program_code_key" tableName="program"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-99">
+        <addUniqueConstraint columnNames="name" constraintName="uk_f73dsvaor0f4cycvldyt2idf1" tableName="module"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-101">
+        <addUniqueConstraint columnNames="code" constraintName="uk_fuq6kda6folarp19oggaf02vb" tableName="program"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-102">
+        <addUniqueConstraint columnNames="name" constraintName="uk_msgp2h0jmt17kj329439hmixa" tableName="data_source"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-103">
+        <addUniqueConstraint columnNames="base_package" constraintName="uk_rxqkmhg2y507iqe53my30p6sv" tableName="module"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-104">
+        <addUniqueConstraint columnNames="name" constraintName="unique_name" tableName="permission"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-106">
+        <addForeignKeyConstraint baseColumnNames="drug_group_id" baseTableName="drug" constraintName="drug_group_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="drug_group"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-107">
+        <addForeignKeyConstraint baseColumnNames="drug_id" baseTableName="drug_inventory" constraintName="drug_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="drug"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-108">
+        <addForeignKeyConstraint baseColumnNames="program_code" baseTableName="encounter" constraintName="encounter_program_code_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code" referencedTableName="program"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-109">
+        <addForeignKeyConstraint baseColumnNames="standard_codeset_id" baseTableName="application_codeset_standard_codeset" constraintName="fk7rakobphuf1x8hqj09326h5si" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="standard_codeset"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-110">
+        <addForeignKeyConstraint baseColumnNames="group_id" baseTableName="radiology_test" constraintName="fk_group_id_radiology_test_group" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="radiology_test_group"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-111">
+        <addForeignKeyConstraint baseColumnNames="organisation_unit_level_id" baseTableName="organisation_unit" constraintName="fk_organisation_level" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="organisation_unit_level"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-112">
+        <addForeignKeyConstraint baseColumnNames="form_code" baseTableName="encounter" constraintName="fkl126c2uxxdv4qnnx2qnj18mi0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code" referencedTableName="form"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-113">
+        <addForeignKeyConstraint baseColumnNames="form_code" baseTableName="form_flag" constraintName="form_code_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code" referencedTableName="form"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-114">
+        <addForeignKeyConstraint baseColumnNames="program_code" baseTableName="form" constraintName="form_program_code_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code" referencedTableName="program"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-115">
+        <addForeignKeyConstraint baseColumnNames="lab_test_group_id" baseTableName="lab_test" constraintName="lab_test_group_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="lab_test_group"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-116">
+        <addForeignKeyConstraint baseColumnNames="module_id" baseTableName="program" constraintName="module_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="module"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-117">
+        <addForeignKeyConstraint baseColumnNames="organisation_unit_level_id" baseTableName="organisation_unit_hierarchy" constraintName="organisation_unit_level_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="organisation_unit_level"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-118">
+        <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="patient_flag" constraintName="patient_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patient"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-119">
+        <addForeignKeyConstraint baseColumnNames="regimen_id" baseTableName="regimen_drug" constraintName="regimen_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="regimen"/>
+    </changeSet>
+    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-120">
+        <addForeignKeyConstraint baseColumnNames="regimen_line_id" baseTableName="regimen" constraintName="regimen_regimen_line_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="regimen_line"/>
+    </changeSet>
+</databaseChangeLog>
