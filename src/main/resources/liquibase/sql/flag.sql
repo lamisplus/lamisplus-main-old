@@ -14,7 +14,7 @@ INSERT INTO public.flag (id, name, field_value, datatype, operator, date_created
 
 --SELECT pg_catalog.setval('public.flag_id_seq', 15, true);
 
-SELECT setval('flag_id_seq', (15));
+SELECT setval('flag_id_seq', (16));
 
 
 

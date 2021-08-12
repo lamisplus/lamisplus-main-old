@@ -22,4 +22,4 @@ INSERT INTO public.form_flag (id, flag_id, status, created_by, date_created, mod
 
 --SELECT pg_catalog.setval('public.form_flag_id_seq', 59, true);
 
-SELECT setval('form_flag_id_seq', (59));
+SELECT setval('form_flag_id_seq', (60));
