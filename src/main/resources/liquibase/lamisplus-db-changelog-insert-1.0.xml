@@ -24,14 +24,6 @@
                  stripComments="true"/>
     </changeSet>
 
-    <!--<changeSet author="Chukwuemeka Ilozue" id="1628678831400-124">
-        <sqlFile dbms="postgresql"
-                 path="sql/organisation_unit_hierarchy"
-                 relativeToChangelogFile="true"
-                 splitStatements="false"
-                 stripComments="true"/>
-    </changeSet>-->
-
     <changeSet author="Chukwuemeka Ilozue" id="1628678831400-125">
         <sqlFile dbms="postgresql"
                  path="sql/lab_test_group.sql"

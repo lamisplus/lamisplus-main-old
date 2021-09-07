@@ -251,24 +251,7 @@
             )
         </sql>
     </changeSet>
-    <!--<changeSet author="Chukwuemeka Ilozue" id="1628678831400-51">
-        <createTable tableName="audit">
-            <column name="identifier" type="VARCHAR(200)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="timestamp" type="TIMESTAMP WITHOUT TIME ZONE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="actor" type="VARCHAR(200)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="origin" type="VARCHAR(200)"/>
-            <column name="action" type="VARCHAR(200)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="elements" type="VARCHAR(70000)"/>
-        </createTable>
-    </changeSet>-->
+
     <changeSet author="Chukwuemeka Ilozue" id="1628678831400-52">
         <createTable tableName="biometric">
             <column name="id" type="VARCHAR(255)">
