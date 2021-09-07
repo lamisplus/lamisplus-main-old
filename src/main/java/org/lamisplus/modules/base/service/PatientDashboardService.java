@@ -34,17 +34,16 @@ public class PatientDashboardService {
 
 
     public Object getPieChart() {
-        LocalDate now = LocalDate.now();
-        LocalDate range = now.minusYears(18);
-        LocalDate dateTo = LocalDate.now().plusMonths(4);
+
         LocalDate currentMonth = YearMonth.now().atEndOfMonth();
+        LocalDate fourMonths = currentMonth.minusMonths(4);
 
         String organisationUnitName = userService.getUserWithRoles().get().getOrganisationUnitByCurrentOrganisationUnitId().getName();
-        Long maleCount = patientRepository.countByGender("%male", userService.getUserWithRoles().get().getCurrentOrganisationUnitId(), 0, currentMonth.minusMonths(4), currentMonth);
-        Long femaleCount = patientRepository.countByGender("%female", userService.getUserWithRoles().get().getCurrentOrganisationUnitId(), 0, currentMonth.minusMonths(4), currentMonth);
+        Long maleCount = patientRepository.countByGender("male", userService.getUserWithRoles().get().getCurrentOrganisationUnitId(), 0, fourMonths, currentMonth);
+        Long femaleCount = patientRepository.countByGender("female", userService.getUserWithRoles().get().getCurrentOrganisationUnitId(), 0, fourMonths, currentMonth);
         Long pediatricsCount = 0L;
         try {
-            pediatricsCount = patientRepository.countByPediatrics(userService.getUserWithRoles().get().getCurrentOrganisationUnitId(), 0, range, now);
+            pediatricsCount = patientRepository.countByPediatrics(userService.getUserWithRoles().get().getCurrentOrganisationUnitId(), 0, fourMonths, currentMonth);
         }catch (Exception e){
             e.printStackTrace();
         }
