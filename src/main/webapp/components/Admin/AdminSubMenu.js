@@ -76,7 +76,7 @@ function AdminSubMenu(props) {
               <Dropdown.Menu>
                 <Dropdown.Item>
                   <Link to={{pathname: "/admin-flags"}} >
-                    Flags Setup
+                  Flags Setup
                   </Link>
                 </Dropdown.Item>
               <Dropdown.Item>

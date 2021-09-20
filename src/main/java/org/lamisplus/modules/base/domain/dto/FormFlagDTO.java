@@ -4,6 +4,8 @@ import lombok.Data;
 import org.lamisplus.modules.base.domain.entity.Flag;
 import org.lamisplus.modules.base.domain.entity.FormFlag;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.util.List;
 
 
@@ -14,6 +16,7 @@ public class FormFlagDTO {
 
     private Integer status;
 
+    @NotNull(message = "formCode cannot be null")
     private String formCode;
 
     private Long flagId;

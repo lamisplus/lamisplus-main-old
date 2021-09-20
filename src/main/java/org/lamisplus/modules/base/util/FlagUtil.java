@@ -1,5 +1,7 @@
 package org.lamisplus.modules.base.util;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +13,13 @@ import org.lamisplus.modules.base.domain.entity.PatientFlag;
 import org.lamisplus.modules.base.repository.FlagRepository;
 import org.lamisplus.modules.base.repository.FormFlagRepository;
 import org.lamisplus.modules.base.repository.PatientFlagRepository;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -21,22 +28,28 @@ public class FlagUtil {
     private final PatientFlagRepository patientFlagRepository;
     private final FormFlagRepository formFlagRepository;
     private final FlagRepository flagRepository;
+    private final ObjectMapper mapper;
+
 
 
     public void checkForAndSavePatientFlag(Long patientId, Object forJsonNode, List<FormFlag> formFlags, Boolean temp){
         formFlags.forEach(formFlag -> {
             int flagDataType = formFlag.getFlag().getDatatype();
             String fieldName = formFlag.getFlag().getFieldName().trim();
-            String operator = formFlag.getFlag().getOperator();
+            String operator = formFlag.getFlag().getOperator().trim();
             Boolean continuous = formFlag.getFlag().getContinuous();
             String formFlagFieldValue = formFlag.getFlag().getFieldValue().replaceAll("\\s", "").trim();
-            ObjectMapper mapper = new ObjectMapper();
+            JsonNode tree;
+            String field = "";
+            Integer fieldIntegerValue = 0;
+            Integer formFlagFieldIntegerValue = 0;
+            OperatorType operatorType = OperatorType.from(operator);
 
-            //if not application code set
+            //if not application code set but is string
             if (flagDataType == 0) {
                 try {
-                    final JsonNode tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
-                    String field = String.valueOf(tree).replaceAll("^\"+|\"+$", "");
+                    tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
+                    field = String.valueOf(tree).replaceAll("^\"+|\"+$", "");
                     if (formFlagFieldValue.equalsIgnoreCase(field)) {
                         this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
                     }
@@ -46,9 +59,9 @@ public class FlagUtil {
                 //if application code set
             } else if (flagDataType == 1) {
                 try {
-                    final JsonNode tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
+                    tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
                     JsonNode jsonNode = tree.get("display");
-                    String field = String.valueOf(jsonNode).replaceAll("^\"+|\"+$", "");
+                    field = String.valueOf(jsonNode).replaceAll("^\"+|\"+$", "");
                     if (formFlagFieldValue.equalsIgnoreCase(field)) {
                         this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
                     }
@@ -57,40 +70,81 @@ public class FlagUtil {
                 }
             }// If integer
             else if(flagDataType == 2) {
-                if (operator.equalsIgnoreCase("=")) {
+                try {
+                    tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
+                    field = String.valueOf(tree).replaceAll("^\"+|\"+$", "");
+                    fieldIntegerValue = Integer.valueOf(field);
+                    formFlagFieldIntegerValue = Integer.valueOf(formFlagFieldValue);
+
+
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+
+                if (operator.equalsIgnoreCase("equal_to")) {
                     try {
-                        final JsonNode tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
-                        String field = String.valueOf(tree).replaceAll("^\"+|\"+$", "");
                         if (formFlagFieldValue.equalsIgnoreCase(field)) {
                             this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                        }else if(continuous){
+                            patientFlagRepository.findByPatientIdAndFlagId(patientId, formFlag.getFlagId()).ifPresent(patientFlag -> {
+                                patientFlagRepository.delete(patientFlag);
+                            });
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-            } else if (operator.equalsIgnoreCase(">")){
+             else if (operator.equalsIgnoreCase("greater_than")){
                 try {
-                    final JsonNode tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
-                    String field = String.valueOf(tree).replaceAll("^\"+|\"+$", "");
-                    Integer integerValue = Integer.valueOf(field);
-                    Integer formFlagFieldIntegerValue = Integer.valueOf(formFlagFieldValue);
-                    if (integerValue > formFlagFieldIntegerValue) {
+                    if (fieldIntegerValue > formFlagFieldIntegerValue) {
                         this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                    }else if(continuous){
+                        patientFlagRepository.findByPatientIdAndFlagId(patientId, formFlag.getFlagId()).ifPresent(patientFlag -> {
+                            patientFlagRepository.delete(patientFlag);
+                        });
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            } else if (operator.equalsIgnoreCase("<")){
+            } else
+                if (operator.equalsIgnoreCase("less_than")){
                 try {
-                    final JsonNode tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
-                    String field = String.valueOf(tree).replaceAll("^\"+|\"+$", "");
-                    Integer integerValue = Integer.valueOf(field);
-                    Integer formFlagFieldIntegerValue = Integer.valueOf(formFlagFieldValue);
-                    if (integerValue < formFlagFieldIntegerValue) {
+                    if (fieldIntegerValue < formFlagFieldIntegerValue) {
                         this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                    }else if(continuous){
+                        patientFlagRepository.findByPatientIdAndFlagId(patientId, formFlag.getFlagId()).ifPresent(patientFlag -> {
+                            patientFlagRepository.delete(patientFlag);
+                        });
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                }
+            } else
+                if (operator.equalsIgnoreCase("greater_than_or_equal_to")){
+                    try {
+                        if (fieldIntegerValue >= formFlagFieldIntegerValue) {
+                            this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                        }else if(continuous){
+                            patientFlagRepository.findByPatientIdAndFlagId(patientId, formFlag.getFlagId()).ifPresent(patientFlag -> {
+                                patientFlagRepository.delete(patientFlag);
+                            });
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+            } else
+                if (operator.equalsIgnoreCase("less_than_or_equal_to")) {
+                    try {
+                        if (fieldIntegerValue <= formFlagFieldIntegerValue) {
+                            this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                        }else if(continuous){
+                            patientFlagRepository.findByPatientIdAndFlagId(patientId, formFlag.getFlagId()).ifPresent(patientFlag -> {
+                                patientFlagRepository.delete(patientFlag);
+                            });
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -99,21 +153,40 @@ public class FlagUtil {
 
     //Flag operation
     public List<Form> setAndGetFormListForFlagOperation(PatientDTO patientDTO, Form form, List<Form> forms){
+        String details = JsonUtil.getJsonNode(patientDTO.getDetails()).toString();
+
         //Get forms flags are applied to
         List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived(form.getCode(), 1, 0);
+        List<Flag> patientFlags = new ArrayList<>();
 
         //check if formFlag is empty
         if(formFlags.isEmpty()){
             forms.add(form);
+            return forms;
         } else {
             //check for patient flag
-            patientDTO.getFlags().forEach(flag -> {
                 formFlags.forEach(formFlag -> {
+                    patientDTO.getFlags().forEach(flag -> {
                     if(formFlag.getFlagId() == flag.getId()){
-                        forms.add(form);
+                        //Temporary solution to age and recency testing
+                        patientFlags.add(flag);
+                        /*if(formFlag.getFormCode().equalsIgnoreCase("f70f12f8-7c0b-4fb3-8a5d-7f4a01f5fee1")) {
+                            Integer age = this.getAge(details);
+                            if(age > 15) {
+                                forms.add(form);
+                            }
+                        }else {
+                            forms.add(form);
+                        }*/
                     }
+
+
                 });
             });
+                if(patientFlags.size() == formFlags.size()){
+                    forms.add(form);
+                    return forms;
+                }
         }
         return forms;
     }
@@ -134,6 +207,26 @@ public class FlagUtil {
         });
         if (!patientFlagRepository.findByPatientIdAndFlagId(patientId, flagId).isPresent()) {
             patientFlagRepository.save(patientFlag);
+            return;
         }
+    }
+
+    Integer getAge(Object object){
+        try {
+            final JsonNode tree = mapper.readTree(object.toString()).get("dob");
+            String dob = String.valueOf(tree).replaceAll("^\"+|\"+$", "");
+
+            if (dob != null) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+                //convert String to LocalDate
+                LocalDate localDate = LocalDate.parse(dob, formatter);
+                Period period = Period.between(localDate, LocalDate.now());
+                return period.getYears();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

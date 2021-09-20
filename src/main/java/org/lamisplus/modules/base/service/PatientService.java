@@ -598,7 +598,7 @@ public class PatientService {
                 patientDetails.remove("age");
                 patientDetails.put("age", period.getYears());
             }
-            return object;
+            return patientDetails;
 
         } catch(Exception e){
             e.printStackTrace();
@@ -623,8 +623,8 @@ public class PatientService {
             if(optionalFormData.isPresent()){
                 formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("3746bd2c-362d-4944-8982-5189441b1d59", 0, UN_ARCHIVED);
                 if (!formFlags.isEmpty()) {
-                    final Object finalFormData = optionalFormData.get().getData();
-                    flagUtil.checkForAndSavePatientFlag(patientDTO.getPatientId(), finalFormData, formFlags, true);
+                    String formData = JsonUtil.getJsonNode(optionalFormData.get().getData()).toString();
+                    flagUtil.checkForAndSavePatientFlag(patientDTO.getPatientId(), formData, formFlags, true);
                 }
             }
         }

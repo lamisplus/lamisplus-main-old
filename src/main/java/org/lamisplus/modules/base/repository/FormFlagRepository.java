@@ -16,6 +16,8 @@ public interface FormFlagRepository extends JpaRepository<FormFlag, Long> {
 
     Optional<FormFlag> findByIdAndArchived(Long id, int archived);
 
+    Optional<FormFlag> findByFlagIdAndFormCodeAndArchived(Long flagId, String formCode, int archived);
+
     List<FormFlag> findByFormCodeAndStatusAndArchived(String formCode, int status, int archived);
 
     void deleteByFlagId(Long flagId);

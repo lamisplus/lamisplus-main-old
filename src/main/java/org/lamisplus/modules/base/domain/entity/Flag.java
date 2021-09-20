@@ -53,7 +53,7 @@ public class Flag extends JsonBEntity {
 
     @Basic
     @Column(name = "continuous")
-    private Boolean continuous;
+    private Boolean continuous = false;
 
     @Basic
     @Column(name = "archived")
