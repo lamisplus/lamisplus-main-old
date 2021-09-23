@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-121">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-121">
         <sqlFile dbms="postgresql"
                  path="sql/application_codeset.sql"
                  relativeToChangelogFile="true"
@@ -8,7 +8,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-122">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-122">
         <sqlFile dbms="postgresql"
                  path="sql/organisation_unit_level.sql"
                  relativeToChangelogFile="true"
@@ -16,7 +16,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-123">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-123">
         <sqlFile dbms="postgresql"
                  path="sql/organisation_unit.sql"
                  relativeToChangelogFile="true"
@@ -24,7 +24,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-125">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-125">
         <sqlFile dbms="postgresql"
                  path="sql/lab_test_group.sql"
                  relativeToChangelogFile="true"
@@ -32,7 +32,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-126">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-126">
         <sqlFile dbms="postgresql"
                  path="sql/lab_test.sql"
                  relativeToChangelogFile="true"
@@ -40,7 +40,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-127">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-127">
         <sqlFile dbms="postgresql"
                  path="sql/drug_group.sql"
                  relativeToChangelogFile="true"
@@ -48,7 +48,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-128">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-128">
         <sqlFile dbms="postgresql"
                  path="sql/drug.sql"
                  relativeToChangelogFile="true"
@@ -57,7 +57,7 @@
 
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-129">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-129">
         <sqlFile dbms="postgresql"
                  path="sql/radiology_test_group.sql"
                  relativeToChangelogFile="true"
@@ -65,7 +65,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-130">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-130">
         <sqlFile dbms="postgresql"
                  path="sql/radiology_test.sql"
                  relativeToChangelogFile="true"
@@ -73,7 +73,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-131">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-131">
         <sqlFile dbms="postgresql"
                  path="sql/regimen_line.sql"
                  relativeToChangelogFile="true"
@@ -81,7 +81,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-132">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-132">
         <sqlFile dbms="postgresql"
                  path="sql/regimen.sql"
                  relativeToChangelogFile="true"
@@ -89,7 +89,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-133">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-133">
         <sqlFile dbms="postgresql"
                  path="sql/regimen_drug.sql"
                  relativeToChangelogFile="true"
@@ -97,7 +97,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-134">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-134">
         <sqlFile dbms="postgresql"
                  path="sql/module.sql"
                  relativeToChangelogFile="true"
@@ -105,7 +105,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-135">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-135">
         <sqlFile dbms="postgresql"
                  path="sql/program.sql"
                  relativeToChangelogFile="true"
@@ -113,7 +113,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-136">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-136">
         <sqlFile dbms="postgresql"
                  path="sql/form.sql"
                  relativeToChangelogFile="true"
@@ -121,7 +121,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-137">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-137">
         <sqlFile dbms="postgresql"
                  path="sql/role.sql"
                  relativeToChangelogFile="true"
@@ -129,7 +129,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-138">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-138">
         <sqlFile dbms="postgresql"
                  path="sql/permission.sql"
                  relativeToChangelogFile="true"
@@ -137,7 +137,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-139">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-139">
         <sqlFile dbms="postgresql"
                  path="sql/role_permission.sql"
                  relativeToChangelogFile="true"
@@ -145,7 +145,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-140">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-140">
         <sqlFile dbms="postgresql"
                  path="sql/application_user.sql"
                  relativeToChangelogFile="true"
@@ -153,7 +153,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-141">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-141">
         <sqlFile dbms="postgresql"
                  path="sql/application_user_role.sql"
                  relativeToChangelogFile="true"
@@ -161,7 +161,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-142">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-142">
         <sqlFile dbms="postgresql"
                  path="sql/flag.sql"
                  relativeToChangelogFile="true"
@@ -169,7 +169,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-143">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-143">
         <sqlFile dbms="postgresql"
                  path="sql/form_flag.sql"
                  relativeToChangelogFile="true"
@@ -177,7 +177,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-144">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-144">
         <sqlFile dbms="postgresql"
                  path="sql/report_info.sql"
                  relativeToChangelogFile="true"
@@ -185,7 +185,7 @@
                  stripComments="true"/>
     </changeSet>
 
-    <changeSet author="Chukwuemeka Ilozue" id="1628678831400-145">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-145">
         <sqlFile dbms="postgresql"
                  path="sql/organisation_unit_hierarchy.sql"
                  relativeToChangelogFile="true"
