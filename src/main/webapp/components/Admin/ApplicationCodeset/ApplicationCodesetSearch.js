@@ -97,7 +97,7 @@ const processDelete = (id) => {
         toast.error("Something went wrong, please contact administration");
     };
     props.delete(id, onSuccess, onError);
-}
+    }
     const openApplicationCodeset = (row) => {
         setCurrentCodeset(row);
         toggleModal();
