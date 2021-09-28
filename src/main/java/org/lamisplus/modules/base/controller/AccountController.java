@@ -1,9 +1,11 @@
 package org.lamisplus.modules.base.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.lamisplus.modules.base.controller.vm.ManagedUserVM;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.domain.entity.ApplicationUserOrganisationUnit;
 import org.lamisplus.modules.base.domain.entity.User;
+import org.lamisplus.modules.base.repository.ApplicationUserOrganisationUnitRepository;
 import org.lamisplus.modules.base.repository.UserRepository;
 import org.lamisplus.modules.base.service.UserService;
 import org.lamisplus.modules.base.util.PaginationUtil;
@@ -17,10 +19,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class AccountController {
     private static class AccountResourceException extends RuntimeException {
         private AccountResourceException(String message) {
@@ -32,10 +38,13 @@ public class AccountController {
 
     private final UserService userService;
 
-    public AccountController(UserRepository userRepository, UserService userService) {
+    private final ApplicationUserOrganisationUnitRepository applicationUserOrganisationUnitRepository;
+
+    /*public AccountController(UserRepository userRepository, UserService userService, ApplicationUserOrganisationUnitService applicationUserOrganisationUnitService) {
         this.userRepository = userRepository;
         this.userService = userService;
-    }
+        this.applicationUserOrganisationUnitService = applicationUserOrganisationUnitService;
+    }*/
 
     @GetMapping("/account")
     public UserDTO getAccount(Principal principal){
@@ -53,7 +62,14 @@ public class AccountController {
                 break;
             }
         }
+        Optional<ApplicationUserOrganisationUnit> optionalApplicationUserOrganisationUnit = applicationUserOrganisationUnitRepository.findOneByApplicationUserIdAndOrganisationUnitIdAndArchived(user.getId(), user.getCurrentOrganisationUnitId(), 0);
 
+        if(!optionalApplicationUserOrganisationUnit.isPresent()){
+            ApplicationUserOrganisationUnit applicationUserOrganisationUnit = new ApplicationUserOrganisationUnit();
+            applicationUserOrganisationUnit.setApplicationUserId(user.getId());
+            applicationUserOrganisationUnit.setOrganisationUnitId(user.getCurrentOrganisationUnitId());
+            applicationUserOrganisationUnitRepository.save(applicationUserOrganisationUnit);
+        }
         return userDTO;
     }
 

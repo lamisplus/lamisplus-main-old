@@ -91,19 +91,57 @@ public class OrganisationUnitService {
     }
 
     public List<OrganisationUnit> getOrganisationUnitByParentOrganisationUnitIdAndOrganisationUnitLevelId(Long parentOrgUnitId, Long orgUnitLevelId) {
-        return organisationUnitRepository.findAllByParentOrganisationUnitIdAndOrganisationUnitLevelId(parentOrgUnitId, orgUnitLevelId);
+        OrganisationUnit parentOrganisationUnit = organisationUnitRepository.findByIdAndArchived(parentOrgUnitId, UNARCHIVED).orElseThrow(
+                () -> new EntityNotFoundException(OrganisationUnit.class, "Parent OrganisationUnit", "invalid"));
+
+            List<OrganisationUnit> organisationUnits = new ArrayList<>();
+        organisationUnitRepository.findAllByParentOrganisationUnitIdAndOrganisationUnitLevelId(parentOrgUnitId, orgUnitLevelId).forEach(organisationUnit -> {
+            organisationUnit.setParentOrganisationUnitName(parentOrganisationUnit.getName());
+            organisationUnits.add(organisationUnit);
+        });
+        return organisationUnits;
     }
 
     public List<OrganisationUnit> getOrganisationUnitByOrganisationUnitLevelId(Long id) {
-        return organisationUnitRepository.findAllByOrganisationUnitLevelId(id);
+        List<OrganisationUnit> organisationUnits = new ArrayList<>();
+        organisationUnitRepository.findAllByOrganisationUnitLevelId(id).forEach(organisationUnit -> {
+            Long orgUnitId = organisationUnit.getParentOrganisationUnitId();
+            /*for(int i=0; i<2; i++) {
+                Optional<OrganisationUnit> optionalOrganisationUnit = organisationUnitRepository.findByIdAndArchived(orgUnitId, UNARCHIVED);
+                if(optionalOrganisationUnit.isPresent()){
+                    if(organisationUnit.getParentOrganisationUnitName() == null) {
+                        organisationUnit.setParentOrganisationUnitName(optionalOrganisationUnit.get().getName());
+                    }else if(organisationUnit.getParentParentOrganisationUnitName() == null) {
+                        organisationUnit.setParentParentOrganisationUnitName(optionalOrganisationUnit.get().getName());
+                    }
+                    orgUnitId = optionalOrganisationUnit.get().getParentOrganisationUnitId();
+                }
+            }*/
+            organisationUnits.add(findOrganisationUnits(organisationUnit, orgUnitId));
+        });
+
+        return organisationUnits;
     }
 
     public List<OrganisationUnitDTO> getOrganisationUnitSubsetByParentOrganisationUnitIdAndOrganisationUnitLevelId(Long parent_org_unit_id, Long org_unit_level_id) {
         List<OrganisationUnitHierarchy> organisationUnitHierarchies = organisationUnitHierarchyRepository.findAllByParentOrganisationUnitIdAndOrganisationUnitLevelId(parent_org_unit_id, org_unit_level_id);
         List<OrganisationUnitDTO> organisationUnitDTOS = new ArrayList<>();
         organisationUnitHierarchies.forEach(organisationUnitHierarchy -> {
-            final OrganisationUnitDTO organisationUnitDTO = organisationUnitMapper.toOrganisationUnitDTO(organisationUnitHierarchy.getOrganisationUnitByOrganisationUnitId());
-            organisationUnitDTOS.add(organisationUnitDTO);
+            OrganisationUnit organisationUnit = organisationUnitHierarchy.getOrganisationUnitByOrganisationUnitId();
+            final OrganisationUnitDTO organisationUnitDTO = organisationUnitMapper.toOrganisationUnitDTO(organisationUnit);
+            Long orgUnitId = organisationUnit.getParentOrganisationUnitId();
+            /*for(int i=0; i<2; i++) {
+                Optional<OrganisationUnit> optionalOrganisationUnit = organisationUnitRepository.findByIdAndArchived(orgUnitId, UNARCHIVED);
+                if(optionalOrganisationUnit.isPresent()){
+                    if(organisationUnitDTO.getParentOrganisationUnitName() == null) {
+                    organisationUnitDTO.setParentOrganisationUnitName(optionalOrganisationUnit.get().getName());
+                    }else if(organisationUnitDTO.getParentParentOrganisationUnitName() == null) {
+                    organisationUnitDTO.setParentParentOrganisationUnitName(optionalOrganisationUnit.get().getName());
+                }
+                    orgUnitId = optionalOrganisationUnit.get().getParentOrganisationUnitId();
+              }
+            }*/
+            organisationUnitDTOS.add(organisationUnitMapper.toOrganisationUnitDTO(findOrganisationUnits(organisationUnit, orgUnitId)));
         });
         return organisationUnitDTOS;
     }
@@ -196,4 +234,19 @@ public class OrganisationUnitService {
         }
         return null;
     }*/
+
+    private OrganisationUnit findOrganisationUnits(OrganisationUnit organisationUnit, Long orgUnitId){
+        for(int i=0; i<2; i++) {
+            Optional<OrganisationUnit> optionalOrganisationUnit = organisationUnitRepository.findByIdAndArchived(orgUnitId, UNARCHIVED);
+            if(optionalOrganisationUnit.isPresent()){
+                if(organisationUnit.getParentOrganisationUnitName() == null) {
+                    organisationUnit.setParentOrganisationUnitName(optionalOrganisationUnit.get().getName());
+                }else if(organisationUnit.getParentParentOrganisationUnitName() == null) {
+                    organisationUnit.setParentParentOrganisationUnitName(optionalOrganisationUnit.get().getName());
+                }
+                orgUnitId = optionalOrganisationUnit.get().getParentOrganisationUnitId();
+            }
+        }
+        return organisationUnit;
+    }
 }

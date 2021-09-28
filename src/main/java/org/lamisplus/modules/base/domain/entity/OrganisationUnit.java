@@ -42,6 +42,7 @@ public class OrganisationUnit extends JsonBEntity implements Serializable {
     @Basic
     @Column(name = "parent_organisation_unit_id")
     private Long parentOrganisationUnitId;
+
     @Basic
     @Column(name = "archived")
     @JsonIgnore
@@ -105,4 +106,11 @@ public class OrganisationUnit extends JsonBEntity implements Serializable {
     @JsonIgnore
     @ToString.Exclude
     public List<User> users;
+
+    @Transient
+    private String  parentOrganisationUnitName;
+
+    @Transient
+    private String  parentParentOrganisationUnitName;
+
 }

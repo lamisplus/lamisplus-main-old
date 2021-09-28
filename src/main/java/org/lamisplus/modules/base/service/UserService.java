@@ -1,18 +1,17 @@
 package org.lamisplus.modules.base.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.domain.entity.*;
 import org.lamisplus.modules.base.domain.mapper.UserMapper;
-import org.lamisplus.modules.base.repository.OrganisationUnitRepository;
 import org.lamisplus.modules.base.repository.RoleRepository;
 import org.lamisplus.modules.base.repository.UserRepository;
 import org.lamisplus.modules.base.security.RolesConstants;
 import org.lamisplus.modules.base.security.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +24,8 @@ import java.util.*;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UserService {
-
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
@@ -37,16 +36,13 @@ public class UserService {
 
     private final UserMapper userMapper;
 
-    private final OrganisationUnitRepository organisationUnitRepository;
-
-
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, UserMapper userMapper, OrganisationUnitRepository organisationUnitRepository) {
+    /*public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, UserMapper userMapper, OrganisationUnitRepository organisationUnitRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
         this.organisationUnitRepository = organisationUnitRepository;
-    }
+    }*/
 
     @Transactional
     public Optional<User> getUserWithAuthoritiesByUsername(String userName){

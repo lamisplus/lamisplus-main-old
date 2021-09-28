@@ -55,8 +55,6 @@ ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
 ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
 
-
-
 const useStyles = makeStyles(theme => ({
     button: {
         margin: theme.spacing(1)
