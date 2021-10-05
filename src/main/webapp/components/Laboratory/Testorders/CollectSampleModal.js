@@ -83,6 +83,7 @@ const ModalSample = (props) => {
     const [otherfields, setOtherFields] = useState({sample_collected_by:"",sample_ordered_by:"",sample_priority:"",time_sample_collected:"", comment_sample_collected:""});
     //This is to get SAMPLE TYPE from application Codeset
     const [errors, setErrors] = useState({});
+    
 
     useEffect(() => {
         async function getCharacters() {
