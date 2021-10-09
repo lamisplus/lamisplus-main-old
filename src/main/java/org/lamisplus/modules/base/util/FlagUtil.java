@@ -72,83 +72,59 @@ public class FlagUtil {
             else if(flagDataType == 2) {
                 try {
                     tree = mapper.readTree(forJsonNode.toString()).get(fieldName);
+                    //removing extra quotes
                     field = String.valueOf(tree).replaceAll("^\"+|\"+$", "");
                     fieldIntegerValue = Integer.valueOf(field);
                     formFlagFieldIntegerValue = Integer.valueOf(formFlagFieldValue);
-
 
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
                 }
 
                 if (operator.equalsIgnoreCase("equal_to")) {
-                    try {
-                        if (formFlagFieldValue.equalsIgnoreCase(field)) {
-                            this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
-                        }else if(continuous){
-                            patientFlagRepository.findByPatientIdAndFlagId(patientId, formFlag.getFlagId()).ifPresent(patientFlag -> {
-                                patientFlagRepository.delete(patientFlag);
-                            });
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if (formFlagFieldValue.equalsIgnoreCase(field)) {
+                        savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                    }else if(continuous){
+                        patientFlagRepository.findByPatientIdAndFlagId(patientId, formFlag.getFlagId()).ifPresent(patientFlag -> {
+                            patientFlagRepository.delete(patientFlag);
+                        });
                     }
                 }
              else if (operator.equalsIgnoreCase("greater_than")){
-                try {
-                    if (fieldIntegerValue > formFlagFieldIntegerValue) {
-                        this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
-                    }else if(continuous){
-                        patientFlagRepository.findByPatientIdAndFlagId(patientId, formFlag.getFlagId()).ifPresent(patientFlag -> {
-                            patientFlagRepository.delete(patientFlag);
-                        });
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (fieldIntegerValue > formFlagFieldIntegerValue) {
+                    savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                }else if(continuous){
+                    patientFlagRepository.findByPatientIdAndFlagId(patientId, formFlag.getFlagId()).ifPresent(patientFlag -> {
+                        patientFlagRepository.delete(patientFlag);
+                    });
                 }
-            } else
-                if (operator.equalsIgnoreCase("less_than")){
-                try {
-                    if (fieldIntegerValue < formFlagFieldIntegerValue) {
-                        this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
-                    }else if(continuous){
-                        patientFlagRepository.findByPatientIdAndFlagId(patientId, formFlag.getFlagId()).ifPresent(patientFlag -> {
-                            patientFlagRepository.delete(patientFlag);
-                        });
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+
+            } else if (operator.equalsIgnoreCase("less_than")){
+                if (fieldIntegerValue < formFlagFieldIntegerValue) {
+                    savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                }else if(continuous){
+                    findByPatientIdAndFlagIdAndDelete(patientId, formFlag.getFlagId());
                 }
             } else
                 if (operator.equalsIgnoreCase("greater_than_or_equal_to")){
                     try {
                         if (fieldIntegerValue >= formFlagFieldIntegerValue) {
-                            this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                            savePatientFlag(patientId, formFlag.getFlagId(), temp);
                         }else if(continuous){
-                            patientFlagRepository.findByPatientIdAndFlagId(patientId, formFlag.getFlagId()).ifPresent(patientFlag -> {
-                                patientFlagRepository.delete(patientFlag);
-                            });
+                            findByPatientIdAndFlagIdAndDelete(patientId, formFlag.getFlagId());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-            } else
-                if (operator.equalsIgnoreCase("less_than_or_equal_to")) {
-                    try {
-                        if (fieldIntegerValue <= formFlagFieldIntegerValue) {
-                            this.savePatientFlag(patientId, formFlag.getFlagId(), temp);
-                        }else if(continuous){
-                            patientFlagRepository.findByPatientIdAndFlagId(patientId, formFlag.getFlagId()).ifPresent(patientFlag -> {
-                                patientFlagRepository.delete(patientFlag);
-                            });
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+            } else if (operator.equalsIgnoreCase("less_than_or_equal_to")) {
+                    if (fieldIntegerValue <= formFlagFieldIntegerValue) {
+                        savePatientFlag(patientId, formFlag.getFlagId(), temp);
+                    }else if(continuous){
+                        findByPatientIdAndFlagIdAndDelete(patientId, formFlag.getFlagId());
                     }
                 }
             }
         });
-
     }
 
     //Flag operation
@@ -228,5 +204,11 @@ public class FlagUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void findByPatientIdAndFlagIdAndDelete(Long patientId, Long flagId){
+        patientFlagRepository.findByPatientIdAndFlagId(patientId, flagId).ifPresent(patientFlag -> {
+            patientFlagRepository.delete(patientFlag);
+        });
     }
 }
