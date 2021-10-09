@@ -11,7 +11,7 @@
 
     <groupId>org.lamisplus.modules</groupId>
     <artifactId>base-module</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
     <name>base-module</name>
     <description>LamisPlus base module</description>
@@ -354,10 +354,10 @@
                     <groupId>org.springframework</groupId>
                     <artifactId>spring-jms</artifactId>
                 </exclusion>
-                    <exclusion>
-                        <groupId>log4j</groupId>
-                        <artifactId>log4j</artifactId>
-                    </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <!--<dependency>
