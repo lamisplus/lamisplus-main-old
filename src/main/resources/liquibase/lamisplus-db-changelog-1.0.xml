@@ -1,132 +1,263 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-1">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="application_codeset_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="application_codeset_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-2">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="application_codeset_standard_codeset_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="application_codeset_standard_codeset_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-3">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="application_user_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="application_user_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-4">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="application_user_organisation_unit_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="application_user_organisation_unit_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-5">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="application_user_patient_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="application_user_patient_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-6">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="appointment_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="appointment_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-7">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="data_source_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="data_source_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-8">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="drug_group_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="drug_group_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-9">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="drug_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="drug_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-10">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="drug_inventory_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="drug_inventory_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-11">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="encounter_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="encounter_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-12">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="flag_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="flag_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-13">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="form_data_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="form_data_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-14">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="form_flag_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="form_flag_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-15">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="form_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="form_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-16">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="global_variable_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="global_variable_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-17">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="hibernate_sequence"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="hibernate_sequence"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-18">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="icd_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="icd_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-19">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="image_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="image_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-20">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="lab_test_group_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="lab_test_group_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-21">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="lab_test_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="lab_test_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-22">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="menu_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="menu_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-23">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="module_dependency_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="module_dependency_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-24">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="organisation_unit_hierarchy_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="organisation_unit_hierarchy_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-25">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="organisation_unit_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="organisation_unit_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-26">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="organisation_unit_identifier_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="organisation_unit_identifier_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-27">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="organisation_unit_level_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="organisation_unit_level_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-28">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="patient_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="patient_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-29">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="permission_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="permission_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-30">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="program_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="program_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-31">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="radiology_test_group_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="radiology_test_group_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-32">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="radiology_test_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="radiology_test_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-33">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="regimen_drug_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="regimen_drug_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-34">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="regimen_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="regimen_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-35">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="regimen_line_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="regimen_line_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-36">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="report_info_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="report_info_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-37">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="role_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="role_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-38">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="standard_codeset_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="standard_codeset_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-39">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="standard_codeset_source_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="standard_codeset_source_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-40">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="sym_data_data_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="sym_data_data_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-41">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="visit_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="visit_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-42">
+        <preConditions onFail="MARK_RAN">
+            <sequenceExists sequenceName="ward_id_seq"></sequenceExists>
+        </preConditions>
         <createSequence sequenceName="ward_id_seq"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-43">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="application_codeset"/>
+            </not>
+        </preConditions>
         <createTable tableName="application_codeset">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="application_codeset2_pkey"/>
@@ -144,6 +275,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-44">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="application_codeset_has_standard_codeset"/>
+            </not>
+        </preConditions>
         <createTable tableName="application_codeset_has_standard_codeset">
             <column name="standard_codeset_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -154,6 +290,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-45">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="application_codeset_standard_codeset"/>
+            </not>
+        </preConditions>
         <createTable tableName="application_codeset_standard_codeset">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="application_codeset_standard_codeset_pkey"/>
@@ -163,6 +304,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-46">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="application_user"/>
+            </not>
+        </preConditions>
         <createTable tableName="application_user">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="user_pkey"/>
@@ -190,6 +336,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-47">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="application_user_organisation_unit"/>
+            </not>
+        </preConditions>
         <createTable tableName="application_user_organisation_unit">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="application_user_organisation_unit_pkey"/>
@@ -204,6 +355,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-48">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="application_user_patient"/>
+            </not>
+        </preConditions>
         <createTable tableName="application_user_patient">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="application_user_patient_pkey"/>
@@ -223,6 +379,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-49">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="application_user_role"/>
+            </not>
+        </preConditions>
         <createTable tableName="application_user_role">
             <column name="user_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -233,6 +394,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-50">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="appointment"/>
+            </not>
+        </preConditions>
         <sql>
             CREATE TABLE appointment
             (
@@ -253,6 +419,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-52">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="biometric"/>
+            </not>
+        </preConditions>
         <createTable tableName="biometric">
             <column name="id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -281,6 +452,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-53">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="data_source"/>
+            </not>
+        </preConditions>
         <createTable tableName="data_source">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="data_source_pkey"/>
@@ -293,6 +469,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-54">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="drug"/>
+            </not>
+        </preConditions>
         <createTable tableName="drug">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="drug_pkey"/>
@@ -309,6 +490,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-55">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="drug_group"/>
+            </not>
+        </preConditions>
         <createTable tableName="drug_group">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="drug_group_pkey"/>
@@ -323,6 +509,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-56">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="drug_inventory"/>
+            </not>
+        </preConditions>
         <createTable tableName="drug_inventory">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="drug_inventory_pkey"/>
@@ -341,6 +532,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-57">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="encounter"/>
+            </not>
+        </preConditions>
         <createTable tableName="encounter">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="encounter_pkey"/>
@@ -370,6 +566,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-58">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="flag"/>
+            </not>
+        </preConditions>
         <createTable tableName="flag">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="flag_pkey"/>
@@ -388,6 +589,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-59">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="form"/>
+            </not>
+        </preConditions>
         <sql>
             CREATE TABLE form (
             id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
@@ -411,6 +617,11 @@
         </sql>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-60">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="form_data"/>
+            </not>
+        </preConditions>
         <sql>
             CREATE TABLE form_data
             (
@@ -423,6 +634,11 @@
         </sql>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-61">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="form_flag"/>
+            </not>
+        </preConditions>
         <createTable tableName="form_flag">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="flag_form_pkey"/>
@@ -438,6 +654,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-62">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="global_variable"/>
+            </not>
+        </preConditions>
         <createTable tableName="global_variable">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="global_variable_pkey"/>
@@ -450,6 +671,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-63">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="icd"/>
+            </not>
+        </preConditions>
         <createTable tableName="icd">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="icd_pkey"/>
@@ -464,6 +690,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-64">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="image"/>
+            </not>
+        </preConditions>
         <createTable tableName="image">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="image_pkey"/>
@@ -475,6 +706,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-65">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="lab_test"/>
+            </not>
+        </preConditions>
         <createTable tableName="lab_test">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="lab_test_pkey"/>
@@ -491,6 +727,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-66">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="lab_test_group"/>
+            </not>
+        </preConditions>
         <createTable tableName="lab_test_group">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="lab_test_category_pkey"/>
@@ -505,6 +746,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-67">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="menu"/>
+            </not>
+        </preConditions>
         <createTable tableName="menu">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="menu_pkey"/>
@@ -516,6 +762,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-68">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="module"/>
+            </not>
+        </preConditions>
         <createTable tableName="module">
             <column name="id" type="VARCHAR(2147483647)">
                 <constraints nullable="false"/>
@@ -552,6 +803,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-69">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="module_dependency"/>
+            </not>
+        </preConditions>
         <createTable tableName="module_dependency">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="module_dependency_pkey"/>
@@ -563,6 +819,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-70">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="organisation_unit"/>
+            </not>
+        </preConditions>
         <sql>
             CREATE TABLE organisation_unit
             (
@@ -582,6 +843,11 @@
         </sql>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-71">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="organisation_unit_hierarchy"/>
+            </not>
+        </preConditions>
         <createTable tableName="organisation_unit_hierarchy">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="organisation_unit_hierarchy_pkey"/>
@@ -592,6 +858,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-72">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="organisation_unit_identifier"/>
+            </not>
+        </preConditions>
         <createTable tableName="organisation_unit_identifier">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="organisation_unit_identifier_pkey"/>
@@ -602,6 +873,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-73">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="organisation_unit_level"/>
+            </not>
+        </preConditions>
         <createTable tableName="organisation_unit_level">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="organisational_unit_level_pkey"/>
@@ -617,6 +893,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-74">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="patient"/>
+            </not>
+        </preConditions>
         <sql>
             CREATE TABLE patient(
             id bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
@@ -633,6 +914,11 @@
         </sql>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-75">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="patient_flag"/>
+            </not>
+        </preConditions>
         <createTable tableName="patient_flag">
             <column name="patient_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -643,6 +929,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-76">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="permission"/>
+            </not>
+        </preConditions>
         <createTable tableName="permission">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="priviledge_pkey"/>
@@ -657,6 +948,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-77">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="program"/>
+            </not>
+        </preConditions>
         <createTable tableName="program">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="program_pkey"/>
@@ -674,6 +970,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-78">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="radiology_test"/>
+            </not>
+        </preConditions>
         <createTable tableName="radiology_test">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="radiology_test_group_pkey"/>
@@ -688,6 +989,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-79">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="radiology_test_group"/>
+            </not>
+        </preConditions>
         <createTable tableName="radiology_test_group">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="radiology_test_group_pkey1"/>
@@ -701,6 +1007,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-80">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="regimen"/>
+            </not>
+        </preConditions>
         <createTable tableName="regimen">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="regimen_pkey"/>
@@ -717,6 +1028,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-81">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="regimen_drug"/>
+            </not>
+        </preConditions>
         <createTable tableName="regimen_drug">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="regimen_drug_pkey"/>
@@ -735,6 +1051,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-82">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="regimen_line"/>
+            </not>
+        </preConditions>
         <createTable tableName="regimen_line">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="regimen_line_pkey"/>
@@ -749,6 +1070,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-83">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="report_info"/>
+            </not>
+        </preConditions>
         <sql>
             CREATE TABLE report_info
             (
@@ -769,6 +1095,11 @@
         </sql>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-84">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="role"/>
+            </not>
+        </preConditions>
         <createTable tableName="role">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="role_pkey"/>
@@ -783,6 +1114,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-85">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="role_permission"/>
+            </not>
+        </preConditions>
         <createTable tableName="role_permission">
             <column name="role_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -793,6 +1129,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-86">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="standard_codeset"/>
+            </not>
+        </preConditions>
         <createTable tableName="standard_codeset">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="standard_codeset_pkey"/>
@@ -808,6 +1149,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-87">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="standard_codeset_source"/>
+            </not>
+        </preConditions>
         <createTable tableName="standard_codeset_source">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="standard_codeset_source_pkey"/>
@@ -822,6 +1168,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-88">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="visit"/>
+            </not>
+        </preConditions>
         <createTable tableName="visit">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="patient_visit_pkey"/>
@@ -844,6 +1195,11 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-89">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="ward"/>
+            </not>
+        </preConditions>
         <createTable tableName="ward">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="ward_pkey"/>
@@ -859,21 +1215,39 @@
         </createTable>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-90">
+        <preConditions onFail="MARK_RAN">
+            <primaryKeyExists primaryKeyName="application_codeset_has_standard_codeset_pkey" tableName="application_codeset_has_standard_codeset"/>
+        </preConditions>
         <addPrimaryKey columnNames="standard_codeset_id, application_codeset_id" constraintName="application_codeset_has_standard_codeset_pkey" tableName="application_codeset_has_standard_codeset"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-91">
+        <preConditions onFail="MARK_RAN">
+            <primaryKeyExists primaryKeyName="application_codeset_has_standard_codeset_pkey" tableName="application_user_role"/>
+        </preConditions>
         <addPrimaryKey columnNames="user_id, role_id" constraintName="application_user_roles_pkey" tableName="application_user_role"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-92">
+        <preConditions onFail="MARK_RAN">
+            <primaryKeyExists primaryKeyName="biometric_pkey" tableName="biometric"/>
+        </preConditions>
         <addPrimaryKey columnNames="id" constraintName="biometric_pkey" tableName="biometric"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-93">
+        <preConditions onFail="MARK_RAN">
+            <primaryKeyExists primaryKeyName="module_pkey" tableName="module"/>
+        </preConditions>
         <addPrimaryKey columnNames="id" constraintName="module_pkey" tableName="module"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-94">
+        <preConditions onFail="MARK_RAN">
+            <primaryKeyExists primaryKeyName="patient_flag_pkey" tableName="patient_flag"/>
+        </preConditions>
         <addPrimaryKey columnNames="patient_id, flag_id" constraintName="patient_flag_pkey" tableName="patient_flag"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-95">
+        <preConditions onFail="MARK_RAN">
+            <primaryKeyExists primaryKeyName="role_permissions_pkey" tableName="role_permission"/>
+        </preConditions>
         <addPrimaryKey columnNames="role_id, permission_id" constraintName="role_permissions_pkey" tableName="role_permission"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-96">
@@ -901,48 +1275,93 @@
         <addUniqueConstraint columnNames="name" constraintName="unique_name" tableName="permission"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-106">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="drug_group_id_fk"/>
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="drug_group_id" baseTableName="drug" constraintName="drug_group_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="drug_group"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-107">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="drug_id_fk"/>
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="drug_id" baseTableName="drug_inventory" constraintName="drug_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="drug"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-108">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="encounter_program_code_fkey"/>
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="program_code" baseTableName="encounter" constraintName="encounter_program_code_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code" referencedTableName="program"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-109">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="fk7rakobphuf1x8hqj09326h5si"/>
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="standard_codeset_id" baseTableName="application_codeset_standard_codeset" constraintName="fk7rakobphuf1x8hqj09326h5si" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="standard_codeset"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-110">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="fk_group_id_radiology_test_group"/>
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="group_id" baseTableName="radiology_test" constraintName="fk_group_id_radiology_test_group" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="radiology_test_group"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-111">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="fk_organisation_level"/>
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="organisation_unit_level_id" baseTableName="organisation_unit" constraintName="fk_organisation_level" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="organisation_unit_level"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-112">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="fkl126c2uxxdv4qnnx2qnj18mi0"/>
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="form_code" baseTableName="encounter" constraintName="fkl126c2uxxdv4qnnx2qnj18mi0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code" referencedTableName="form"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-113">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="form_code_fk"/>
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="form_code" baseTableName="form_flag" constraintName="form_code_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code" referencedTableName="form"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-114">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="form_program_code_fkey"/>
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="program_code" baseTableName="form" constraintName="form_program_code_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code" referencedTableName="program"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-115">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="lab_test_group_id_fk"/>
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="lab_test_group_id" baseTableName="lab_test" constraintName="lab_test_group_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="lab_test_group"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-116">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="module_id_fk"/>
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="module_id" baseTableName="program" constraintName="module_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="module"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-117">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="organisation_unit_hierarchy"/>
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="organisation_unit_level_id" baseTableName="organisation_unit_hierarchy" constraintName="organisation_unit_level_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="organisation_unit_level"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-118">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="patient_fk"/>
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="patient_flag" constraintName="patient_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patient"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-119">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="regimen_id_fk"/>
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="regimen_id" baseTableName="regimen_drug" constraintName="regimen_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="regimen"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-120">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="regimen_regimen_line_id_fkey"/>
+        </preConditions>
         <addForeignKeyConstraint baseColumnNames="regimen_line_id" baseTableName="regimen" constraintName="regimen_regimen_line_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="regimen_line"/>
     </changeSet>
 </databaseChangeLog>
