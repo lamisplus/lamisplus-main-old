@@ -371,8 +371,8 @@ public class PatientService {
         return patientRepository.findAllByDetails(firstName, lastName, hospitalNumber, getOrganisationUnitId(), UN_ARCHIVED, pageable);
     }
 
-    public Page<Patient> findAllPages(String firstName, String lastName, String hospitalNumber, Pageable pageable) {
-        return patientRepository.findAllByFullDetails(firstName, lastName, hospitalNumber, getOrganisationUnitId(), UN_ARCHIVED, pageable);
+    public Page<Patient> findAllPages(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber, Pageable pageable) {
+        return patientRepository.findAllByFullDetails(firstName, lastName, hospitalNumber, mobilePhoneNumber, getOrganisationUnitId(), UN_ARCHIVED, pageable);
     }
 
     private PatientDTO transformDTO(PatientDTO patientDTO) {

@@ -16,22 +16,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-
-//EncounterRepository
 public interface EncounterRepository extends JpaRepository<Encounter, Long> , JpaSpecificationExecutor {
 
     List <Encounter> findAllByPatientIdAndFormCodeAndOrganisationUnitId(Long patientId, String FormCode, Long organisationUnitId, Pageable pageable);
 
-    //New
-    Page<Encounter> findAllByPatientIdAndFormCodeAndArchived(Pageable pageable, Long patientId, String FormCode, int Archived);
-
     Optional<Encounter> findOneByPatientIdAndFormCodeAndArchived(Long patientId, String FormCode, int Archived);
 
-
-
     Optional<Encounter> findByPatientIdAndProgramCodeAndFormCodeAndDateEncounterAndOrganisationUnitId(Long patientId, String ProgramCode, String FormCode, LocalDate dateFncounter, Long organisationUnitId);
-
-    List<Encounter> findByPatientId(Long PatientId);
 
     //TODO: in progress...
     @Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.EncounterDistinctDTO" +
@@ -42,58 +33,23 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
             "(e.patientId, e.programCode, e.organisationUnitId, e.archived) FROM Encounter e WHERE e.programCode = ?1 and e.organisationUnitId = ?2 and e.archived = ?3")
     List<EncounterDistinctDTO> findDistinctProgramCodeAndOrganisationUnitIdAndArchived(String programCode, Long organisationUnitId, int archived);
 
-    //List<PatientObservation> findByPatientAndFormCodeTitle(Patient patient, Long formCode, String title);
-    Optional<Encounter> findFirstByPatientIdAndProgramCodeAndFormCodeOrderByDateEncounterDesc(Long patientId, String ProgramCode, String FormCode);
-
     Long countByProgramCodeAndArchivedAndOrganisationUnitId(String programCode, int archived, Long organisationUnit);
 
-    //Optional<Encounter> findByMaxDAndDateEncounter(String formCode, Long patientId);
-    //List<Encounter> findAllByPatientIdAndProgramCodeAndFormCodeOrderByDateEncounterDesc(Long patientId, String ProgramCode, String FormCode);
-
-    //List<Encounter> findAllByProgramCodeAndFormCodeAndDateEncounterOrderByDateEncounterDesc(String ProgramCode, String FormCode, LocalDate DateEncounter);
-
-    //Optional <Encounter> findTopByProgramCodeAndFormCodeAndPatientIdOrderByDateEncounterAsc(String ProgramCode, String FormCode, Long patientId);
-
-    //Optional <Encounter> findTopByProgramCodeAndFormCodeAndPatientIdOrderByDateEncounterDesc(String ProgramCode, String FormCode, Long patientId);
-
-    //List<Encounter> findAllByPatientIdAndProgramCodeAndFormCodeAndDateEncounterBetween(Long patientId, String ProgramCode, String FormCode, LocalDate firstDate, LocalDate endDate);
-
-   /* @Query("select e from Encounter e where e.programCode=?1 and e.formCode=?2 " +
-            "and e.dateEncounter >= ?3 and e.dateEncounter <= ?4")
-    List<Encounter> findAllByProgramCodeAndFormCodeAndDateEncounterIsBetweenQuery(String ProgramCode, String FormCode, LocalDate dateStart, LocalDate dateEnd);
-*/
-/*    @Query("select e from Encounter e where e.patientId=?1 and e.programCode=?2 and e.formCode=?3 " +
-            "and e.dateEncounter >= ?4 and e.dateEncounter <= ?5 order by ?6, LIMIT = ?7")*/
-   /* List <Encounter> findAllByPatientIdAndProgramCodeAndFormCode(Long patientId, String ProgramCode, String FormCode, Pageable pageable);
-
-    Optional<Encounter> findFirstByPatientIdAndProgramCodeAndFormCodeAndVisitIdOrderByDateEncounterDesc(Long patientId, String ProgramCode, String FormCode, Long visitId);
-
-    List<Encounter> findAllByPatientIdAndFormCode(Long patientId, String formCode);
-*/
-    /*@Query("select DISTINCT e from Encounter e where e.patientId=?1")
-    List<Encounter> findAllByPatientId(Long patientId);
-*/
-
-    //Encounter
-    //Optional<Encounter> findByPatientIdAndProgramCodeAndFormCodeAndVisitId(Long patientId, String ProgramCode, String FormCode, Long visitId);
-
-
-    //List<Encounter> findAllByFormCode(String formCode);\
 
     List<Encounter> findAllByOrganisationUnitIdAndArchived(Long organisationUnitId, int archived);
 
     Optional<Encounter> findByIdAndArchived(Long id, int archived);
 
-    /*@Query(value = "SELECT * FROM encounter e LEFT JOIN patient p ON p.id = e.patient_id " +
-            "WHERE p.details ->>'firstName' ilike 1? OR p.details ->>'lastName' like 2? OR p.details ->>'hospitalNumber' ilike 3? " +
-            "AND p.organisation_unit_id=4? AND p.archived=?5;", nativeQuery = true)
-    Page<Encounter> findAllByFullDetails(String firstName, String lastName, String hospitalNumber, Long organisationUnitId, int archived, Pageable pageable);*/
+    //escaping the columns for date
+    @Query(value = "SELECT * FROM encounter e LEFT OUTER JOIN patient p ON p.id = e.patient_id " +
+            "WHERE (p.details ->> 'firstName' ilike ?1 OR p.details ->> 'lastName' ilike ?2 " +
+            "OR p.details ->> 'hospitalNumber' ilike ?3 OR details ->>'mobilePhoneNumber' ilike ?4) " +
+            "AND e.form_code = ?5 " +
+            "AND e.date_encounter >= ?6\\:\\:date AND e.date_encounter <= ?7\\:\\:date " +
+            "AND p.organisation_unit_id = ?8 AND p.archived = ?9 AND e.archived = ?9 ORDER BY e.id DESC", nativeQuery = true)
+    Page<Encounter> findEncounterPage(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber, String formCode,
+                                      String dateStart, String dateEnd, Long organisationUnitId, int archived, Pageable pageable);
 
     List<Encounter> findByPatientByPatientIdAndDateModifiedIsAfter(Long patientId, LocalDate dateModified);
-
-    Optional<Encounter> findAllByPatientIdAndFormCodeAndArchived(Long patientId, String formCode, int archived);
-
-    Optional<Encounter> findFirstByFormCodeOrderByIdDesc(String formCode);
-
 }
 

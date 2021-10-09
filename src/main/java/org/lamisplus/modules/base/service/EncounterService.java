@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.FormDataDTO;
+import org.lamisplus.modules.base.domain.dto.PatientDTO;
 import org.lamisplus.modules.base.domain.entity.*;
 import org.lamisplus.modules.base.domain.dto.EncounterDTO;
 
@@ -22,6 +23,7 @@ import org.lamisplus.modules.base.util.GenericSpecification;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -277,25 +280,10 @@ public class EncounterService {
         return encounterDTO;
     }
 
-    /*public Page<Encounter> findAllPages(String firstName, String lastName, String hospitalNumber, Pageable pageable) {
+    public Page<Encounter> findEncounterPage(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber, String formCode, String dateStart, String dateEnd, Pageable pageable) {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-        List<Encounter> encounters = jdbcTemplate.query("SELECT * FROM encounter e LEFT OUTER JOIN patient p ON (p.id = e.patient_id) WHERE (p.details ->>'firstName' ilike "+
-                        "'"+firstName + "' OR p.details ->>'lastName' ilike " +
-                        "'"+lastName +"' OR p.details ->>'hospitalNumber' ilike " +
-                        "'"+hospitalNumber +"' )AND (p.organisation_unit_id="+
-                        organisationUnitId +"AND p.archived="+
-                        UNARCHIVED +")" +" LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset(),
-                (rs, rowNum) -> mapEncounterResult(rs));
-        return new PageImpl<>(encounters);
-    }*/
+        return encounterRepository.findEncounterPage(firstName,lastName,hospitalNumber, mobilePhoneNumber, formCode, dateStart, dateEnd, organisationUnitId,UNARCHIVED, pageable);
+        //return encounterRepository.findEncounterPages(firstName,lastName,hospitalNumber, formCode, organisationUnitId,UNARCHIVED, pageable);
 
-    private Encounter mapEncounterResult(final ResultSet rs) throws SQLException {
-        Encounter encounter = new Encounter();
-        encounter.setId(rs.getLong("id"));
-        encounter.setPatientId(rs.getLong("patient_id"));
-        encounter.setVisitId(rs.getLong("visit_id"));
-        encounter.setFormCode(rs.getString("form_code"));
-        encounter.setProgramCode(rs.getString("program_code"));
-        return encounter;
     }
 }

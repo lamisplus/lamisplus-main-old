@@ -36,6 +36,7 @@ public class PatientController {
                                                            @RequestParam (required = false, defaultValue = "%*%") String searchValue,
                                                            @PageableDefault(value = 100) Pageable pageable) {
         Page<Patient> page;
+        String mobilePhoneNumber;
         if(key != null && !key.isEmpty() && value != null && !value.isEmpty()){
             value = "%"+value+"%";
             page = patientService.findPage(key, value, pageable);
@@ -49,7 +50,8 @@ public class PatientController {
             firstName = "%"+searchValue+"%";
             lastName = "%"+searchValue+"%";
             hospitalNumber = "%"+searchValue+"%";
-            page = patientService.findAllPages(firstName, lastName,hospitalNumber, pageable);
+            mobilePhoneNumber = "%"+searchValue+"%";
+            page = patientService.findAllPages(firstName, lastName,hospitalNumber,mobilePhoneNumber, pageable);
         }
         else {
                 page = patientService.findPage(pageable);
