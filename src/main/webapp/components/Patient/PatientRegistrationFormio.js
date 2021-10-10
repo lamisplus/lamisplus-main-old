@@ -35,13 +35,13 @@ function PatientRegistrationFormio(props) {
     const registerPatient = (formData) => {
         const data = formData.data;
         const onSuccess = () => {
-            toast.success("Patient saved successfully!");
+            
             setTimeout(() => {
                 props.history.push(`/patients`)
             }, 1000)
         }
         const onError = () => {
-            toast.error("An error occurred, could not save patient information");
+            
         }
         props.create({hospitalNumber: data.hospitalNumber, details : data}, onSuccess, onError);
 

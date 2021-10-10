@@ -3,14 +3,12 @@ package org.lamisplus.modules.base.controller;
 import lombok.RequiredArgsConstructor;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.entity.Image;
-import org.lamisplus.modules.base.repository.ImageDbRepository;
+import org.lamisplus.modules.base.repository.ImageRepository;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -19,7 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ImageController {
 
-    private final ImageDbRepository imageRepository;
+    private final ImageRepository imageRepository;
     //private final Image dbImage;
 
     @PostMapping
@@ -33,7 +31,7 @@ public class ImageController {
                 .getId();
     }
 
-    @GetMapping(value = "/api/{uuid}", produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(value = "/images/{uuid}", produces = MediaType.IMAGE_JPEG_VALUE)
     public Resource downloadImage(@PathVariable String uuid) {
         byte[] image = imageRepository.findByUuid(uuid)
                 .orElseThrow(() -> new EntityNotFoundException(Image.class,"UUID:",uuid+""))

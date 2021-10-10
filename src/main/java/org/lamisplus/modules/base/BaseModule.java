@@ -27,8 +27,7 @@ public class BaseModule extends AcrossModule {
                 getClass().getPackage().getName() +".config",
                 getClass().getPackage().getName() +".domain",
                 getClass().getPackage().getName() +".domain.mapper",
-                getClass().getPackage().getName() +".util",
-                "springfox.documentation", "org.springframework.web.socket"));
+                getClass().getPackage().getName() +".util"));
     }
 
     public String getName() {

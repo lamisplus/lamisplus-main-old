@@ -4,5 +4,3 @@ spring.boot:
         org.lamisplus.modules.bootstrap.config.DynamicModuleImportConfigurer: true
         org.lamisplus.modules.bootstrap.module.ApplicationProperties: true
         org.lamisplus.modules.bootstrap.module.ModuleFileStorageService: true
-        org.lamisplus.modules.base.config.SwaggerConfig: true
-

@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface ApplicationUserOrganisationUnitRepository extends JpaRepository<ApplicationUserOrganisationUnit, Long> , JpaSpecificationExecutor {
     Optional<ApplicationUserOrganisationUnit> findByApplicationUserIdAndOrganisationUnitId(Long applicationUserId, Long organisationUnitId);
 
-    Optional<ApplicationUserOrganisationUnit> findByApplicationUserIdAndOrganisationUnitIdAndArchived(Long applicationUserId, Long organisationUnitId, int archived);
+    Optional<ApplicationUserOrganisationUnit> findOneByApplicationUserIdAndOrganisationUnitIdAndArchived(Long applicationUserId, Long organisationUnitId, int archived);
 
     Optional<ApplicationUserOrganisationUnit> findByIdAndArchived(Long id, int archived);
 

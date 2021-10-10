@@ -242,6 +242,21 @@ const UserRegistration = (props) => {
                     />
                   </FormGroup>
                   <FormGroup>
+                    <Label for="password">Password *</Label>
+                    <Input
+                      type="password"
+                      name="password"
+                      id="password"
+                      onChange={handlePassword}
+                      value={values.password}
+                      required
+                      className={validPasswordClass}
+                    />
+                    <FormFeedback>
+                      Password must be atleast 6 characters
+                    </FormFeedback>
+                  </FormGroup>
+                  <FormGroup>
                     <Label for="email">Email *</Label>
                     <Input
                       type="email"
@@ -252,17 +267,8 @@ const UserRegistration = (props) => {
                       required
                     />
                   </FormGroup>
-                  <FormGroup>
-                    <Label for="phoneNumber">Phone Number *</Label>
-                    <Input
-                      type="text"
-                      name="phoneNumber"
-                      id="phoneNumber"
-                      onChange={handleInputChange}
-                      value={values.phoneNumber}
-                      required
-                    />
-                  </FormGroup>
+                 
+                  
                 </Col>
                 <Col md={6}>
                   <FormGroup>
@@ -301,34 +307,30 @@ const UserRegistration = (props) => {
                       ))}
                     </Input>
                   </FormGroup>
+                  {/*<FormGroup>*/}
+                  {/*  <Label>Date of Birth *</Label>*/}
+                  {/*  <DateTimePicker*/}
+                  {/*    time={false}*/}
+                  {/*    name="dateOfBirth"*/}
+                  {/*    value={values.dateOfBirth}*/}
+                  {/*    onChange={(value1) =>*/}
+                  {/*      setValues({ ...values, dateOfBirth: value1 })*/}
+                  {/*    }*/}
+                  {/*    defaultValue={new Date()}*/}
+                  {/*    max={new Date()}*/}
+                  {/*    required*/}
+                  {/*  />*/}
+                  {/*</FormGroup>*/}
                   <FormGroup>
-                    <Label>Date of Birth *</Label>
-                    <DateTimePicker
-                      time={false}
-                      name="dateOfBirth"
-                      value={values.dateOfBirth}
-                      onChange={(value1) =>
-                        setValues({ ...values, dateOfBirth: value1 })
-                      }
-                      defaultValue={new Date()}
-                      max={new Date()}
-                      required
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="password">Password *</Label>
+                    <Label for="phoneNumber">Phone Number *</Label>
                     <Input
-                      type="password"
-                      name="password"
-                      id="password"
-                      onChange={handlePassword}
-                      value={values.password}
+                      type="number"
+                      name="phoneNumber"
+                      id="phoneNumber"
+                      onChange={handleInputChange}
+                      value={values.phoneNumber}
                       required
-                      className={validPasswordClass}
                     />
-                    <FormFeedback>
-                      Password must be atleast 6 characters
-                    </FormFeedback>
                   </FormGroup>
                   <FormGroup>
                     <Label for="confirm">Confirm Password *</Label>

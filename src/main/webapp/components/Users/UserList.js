@@ -26,9 +26,46 @@ import { MdModeEdit } from "react-icons/md";
 import useForm from "../Functions/UseForm";
 import DualListBox from "react-dual-listbox";
 import "react-dual-listbox/lib/react-dual-listbox.css";
-import "react-toastify/dist/ReactToastify.css";
+//import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
 import AssignFacilityModal from "./AssignFacilityModal";
+import { forwardRef } from 'react';
+
+import AddBox from '@material-ui/icons/AddBox';
+import ArrowUpward from '@material-ui/icons/ArrowUpward';
+import Check from '@material-ui/icons/Check';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+import Clear from '@material-ui/icons/Clear';
+import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import Edit from '@material-ui/icons/Edit';
+import FilterList from '@material-ui/icons/FilterList';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import Remove from '@material-ui/icons/Remove';
+import SaveAlt from '@material-ui/icons/SaveAlt';
+import Search from '@material-ui/icons/Search';
+import ViewColumn from '@material-ui/icons/ViewColumn';
+
+const tableIcons = {
+Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
+Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
+Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+SortArrow: forwardRef((props, ref) => <ArrowUpward {...props} ref={ref} />),
+ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
+ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
+};
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -51,6 +88,10 @@ const UserList = (props) => {
   let { values, setValues, handleInputChange, resetForm } = useForm({});
 
   useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = () =>{
     const onSuccess = () => {
       setLoading(false);
     };
@@ -58,8 +99,7 @@ const UserList = (props) => {
       setLoading(false);
     };
     props.fetchAllUsers(onSuccess, onError);
-  }, []);
-
+  }
   /* Get list of Roles from the server */
   useEffect(() => {
     async function getCharacters() {
@@ -85,11 +125,11 @@ const UserList = (props) => {
   };
 
   const toggleAssignModal = (user) => {
-    console.log(user);
+   // console.log(user);
     currentUser = user;
     setAssignFacilityModal(!assignFacilityModal);
-    console.log(assignFacilityModal);
-    console.log("Modal should open")
+    //console.log(assignFacilityModal);
+  
   }
 
   const toggleEditRoles = (id) => {
@@ -125,6 +165,7 @@ const UserList = (props) => {
       setSaving(false);
       toast.success("User roles Updated Successfully");
       resetForm();
+      fetchUsers();
     };
     const onError = () => {
       setSaving(false);
@@ -137,6 +178,7 @@ const UserList = (props) => {
     <div>
       <ToastContainer autoClose={3000} hideProgressBar />
       <MaterialTable
+      icons={tableIcons}
         title="User List"
         columns={[
           { title: "Name", field: "name" },
@@ -187,53 +229,7 @@ const UserList = (props) => {
                   </MenuItem>
                 </MenuList>
               </Menu>
-              <Modal isOpen={modal} backdrop={true}>
-                <Form onSubmit={handleEdit}>
-                  <ModalHeader>Edit Roles</ModalHeader>
-                  <ModalBody>
-                    <FormGroup>
-                      <Label for="roles">Roles</Label>
-                      <DualListBox
-                          canFilter
-                        options={roles}
-                        onChange={onRoleSelect}
-                        selected={selectedRoles}
-                      />
-                    </FormGroup>
-                  </ModalBody>
-                  <ModalFooter>
-                    <MatButton
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      startIcon={<SaveIcon />}
-                      disabled={saving}
-                      onClick={() => toggleEditRoles(userId)}
-                    >
-                      {!saving ? (
-                        <span style={{ textTransform: "capitalize" }}>
-                          Save
-                        </span>
-                      ) : (
-                        <span style={{ textTransform: "capitalize" }}>
-                          Saving...
-                        </span>
-                      )}
-                    </MatButton>
-                    <MatButton
-                      variant="contained"
-                      className={classes.button}
-                      startIcon={<CancelIcon />}
-                      onClick={() => toggleEditRoles(userId)}
-                    >
-                      <span style={{ textTransform: "capitalize" }}>
-                        Cancel
-                      </span>
-                    </MatButton>
-                  </ModalFooter>
-                </Form>
-              </Modal>
+
             </div>
 
           ),
@@ -254,6 +250,53 @@ const UserList = (props) => {
       />
       <AssignFacilityModal
           showModal={assignFacilityModal} toggleModal={() => setAssignFacilityModal(!assignFacilityModal)} user={currentUser}/>
+      <Modal isOpen={modal} >
+        <Form onSubmit={handleEdit}>
+          <ModalHeader>Edit Roles</ModalHeader>
+          <ModalBody>
+            <FormGroup>
+              <Label for="roles">Roles</Label>
+              <DualListBox
+                  canFilter
+                  options={roles}
+                  onChange={onRoleSelect}
+                  selected={selectedRoles}
+              />
+            </FormGroup>
+          </ModalBody>
+          <ModalFooter>
+            <MatButton
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                startIcon={<SaveIcon />}
+                disabled={saving}
+                onClick={() => toggleEditRoles(userId)}
+            >
+              {!saving ? (
+                  <span style={{ textTransform: "capitalize" }}>
+                          Save
+                        </span>
+              ) : (
+                  <span style={{ textTransform: "capitalize" }}>
+                          Saving...
+                        </span>
+              )}
+            </MatButton>
+            <MatButton
+                variant="contained"
+                className={classes.button}
+                startIcon={<CancelIcon />}
+                onClick={() => toggleEditRoles(userId)}
+            >
+                      <span style={{ textTransform: "capitalize" }}>
+                        Cancel
+                      </span>
+            </MatButton>
+          </ModalFooter>
+        </Form>
+      </Modal>
     </div>
   );
 };

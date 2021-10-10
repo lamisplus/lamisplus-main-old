@@ -13,6 +13,8 @@ import Button from "@material-ui/core/Button";
 import { FaPlus } from "react-icons/fa";
 import NewStandard from "./NewStandard";
 import NewStandardCodeset from "./NewStandardCodeset";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const InternationalStandardSearch = (props) => {
     const [loading, setLoading] = React.useState(true);
@@ -76,11 +78,11 @@ const InternationalStandardSearch = (props) => {
 
                 actions= {[
                     {
-                        icon: 'edit',
+                        icon: EditIcon,
                         iconProps: {color: 'primary'},
                         tooltip: 'Edit Standard'},
                     {
-                        icon: 'delete',
+                        icon: DeleteIcon,
                         iconProps: {color: 'primary'},
                         tooltip: 'Delete Standard'}
                         ]}

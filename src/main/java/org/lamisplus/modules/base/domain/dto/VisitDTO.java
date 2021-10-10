@@ -15,13 +15,12 @@ import java.util.List;
 public class VisitDTO {
 
     private Long id;
-    //private Long personId;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Convert(converter = LocalDateConverter.class)
     private LocalDate dateVisitEnd;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Convert(converter = LocalDateConverter.class)
     private LocalDate dateVisitStart;
 
@@ -33,7 +32,7 @@ public class VisitDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "hh:mm a")
     private LocalTime timeVisitStart;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Convert(converter = LocalDateConverter.class)
     private LocalDate dateNextAppointment;
 

@@ -22,6 +22,7 @@ build:
 logging:
     request-response:
         enabled: true
+
     file:
         name: application-debug.log
 server:
@@ -43,7 +44,7 @@ server:
         mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
     http2:
         enabled: true
-    port: 8484
+    port: 8080
     tomcat:
         uri-encoding: UTF-8
         connection-timeout: 20s
@@ -59,17 +60,14 @@ spring:
                 prepStmtCacheSize: 250
                 prepStmtCacheSqlLimit: 2048
                 useServerPrepStmts: true
-            maximum-pool-size: 60
+            maximum-pool-size: 20
+            minimum-idle: 5
     jpa:
         database: POSTGRESQL
         show-sql: true
         open-in-view: false
-        hibernate:
-            ddl-auto: update
-            properties:
         properties:
             hibernate.enable_lazy_load_no_trans: true
-
     mail:
         host: localhost
         port: 25
@@ -86,15 +84,27 @@ spring:
                 fail-on-empty-beans: false
     banner:
         location: banner.txt
-jhipster:
-    security:
-        authentication:
-            jwt:
-                # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
-                base64-secret: YzMzNjBmOTcwN2Y4YmNmNWViMzhhNjk5MjhmMmY5OTZkNWUxYzIwM2Q5ZWU4OWIzNTZmZTBlOTMzZjFhN2ZmMzBlMDIzMGRkYWNkYTIwOThmY2E1ZjNhYTAxODA0NTJkY2U5NTYxZTI1YjA1NTIyN2IwMTZlMTRlMDM0OTIyNzM=
-                # Token is valid 24 hours
-                token-validity-in-seconds: 86400
-                token-validity-in-seconds-for-remember-me: 2592000
+jwt:
+    # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
+    base64-secret: YzMzNjBmOTcwN2Y4YmNmNWViMzhhNjk5MjhmMmY5OTZkNWUxYzIwM2Q5ZWU4OWIzNTZmZTBlOTMzZjFhN2ZmMzBlMDIzMGRkYWNkYTIwOThmY2E1ZjNhYTAxODA0NTJkY2U5NTYxZTI1YjA1NTIyN2IwMTZlMTRlMDM0OTIyNzM=
+    # Token is valid 12 hours
+    token-validity-in-milli-seconds: 43200000
+    token-validity-in-milli-seconds-for-remember-me: 43200000
 lamis:
     temp-dir: runtime/
     module-path: modules
+
+management:
+    endpoints:
+        web:
+            base-path: /management
+            exposure:
+                include: ["configprops", "env", "health", 'jhimetrics', "info", "threaddump", "logfile" ]
+        enabled-by-default: true
+    endpoint:
+        health:
+            show-details: WHEN_AUTHORIZED
+        jhimetrics:
+            enabled: true
+
+

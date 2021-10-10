@@ -13,8 +13,6 @@ import { url } from "../api";
 // import 'react-grid-layout/css/styles.css';
 // import 'react-resizable/css/styles.css';
 
-
-
 // Load Highcharts modules
 require("highcharts/modules/exporting")(Highcharts);
 const cardStyle = {
@@ -27,6 +25,7 @@ const cardStyle = {
 
 const  DashboardPage = (props) => {
   window.scrollTo(0, 0);
+  console.log(props)
   const [genderData, setGenderData] = useState({})
   const [combineChartData, setcombineChartData] = useState({})
   const [birthRateData, setbirthRateData] = useState({})
@@ -45,10 +44,10 @@ const  DashboardPage = (props) => {
   useEffect(() => {
     async function getCharacters() {
         try {
-            const response = await axios.get( url+ 'patients/totalCount');
-                const body2 = response.data && response.data!==null ? response.data :0.00;
-                setTotalPatients(body2) 
-                console.log(body2)
+            const responsetotalCount = await axios.get( url+ 'patients/totalCount');
+                const patientTotalCount = responsetotalCount.data && responsetotalCount.data!==null ? responsetotalCount.data :0;
+                setTotalPatients(patientTotalCount && patientTotalCount >0 ? patientTotalCount : 0 ) 
+                
         } catch (error) {
 
         }
@@ -59,10 +58,10 @@ const  DashboardPage = (props) => {
     useEffect(() => {
       async function getCharacters() {
           try {
-              const response = await axios.get( url+ 'visits/count/1');
-                  const body2 = response.data && response.data!==null ? response.data :0;
-                  setTotalEmergency(body2) 
-                  console.log(body2)
+              const responsevisits = await axios.get( url+ 'visits/count/1');
+                  const visitCount = responsevisits.data && responsevisits.data!==null ? responsevisits.data :0;
+                  setTotalEmergency(visitCount && visitCount >0 ? visitCount : 0) 
+                  
                   
           } catch (error) {}
         }
@@ -72,10 +71,10 @@ const  DashboardPage = (props) => {
         useEffect(() => {
           async function getCharacters() {
               try {
-                  const response = await axios.get( url+ 'visits/count/0');
-                      const body2 = response.data && response.data!==null ? response.data :0;
-                      setTotalCheckin(body2) 
-                      console.log(body2)
+                  const responsevisitsCheckin = await axios.get( url+ 'visits/count/0');
+                      const checkinCounts = responsevisitsCheckin.data && responsevisitsCheckin.data!==null ? responsevisitsCheckin.data :0;
+                      setTotalCheckin(checkinCounts && checkinCounts > 0 ? checkinCounts : 0) 
+                      
               } catch (error) {}
             }
             getCharacters();
@@ -84,9 +83,9 @@ const  DashboardPage = (props) => {
     async function getCharacters() {
         try {
             const response = await axios.get( url+ 'patient-dashboard/pie');
-                const body = response.data && response.data!==null ? response.data : {};
-                console.log(body)
-                setGenderData(body)   
+                const pieChartDashboard = response.data && response.data!==null ? response.data : {};
+                //console.log(pieChartDashboard && pieChartDashboard !==null ? pieChartDashboard : {})
+                setGenderData(pieChartDashboard && pieChartDashboard !==null ? pieChartDashboard : {})   
         } catch (error) {}
       }
       getCharacters();
@@ -96,9 +95,9 @@ useEffect(() => {
   async function getCharacters() {
       try {
           const response = await axios.get( url+ 'patient-dashboard/column');
-              const body = response.data && response.data!==null ? response.data : {};
+              const columnChartDashboard = response.data && response.data!==null ? response.data : {};
 
-              setcombineChartData(body)  
+              setcombineChartData(columnChartDashboard && columnChartDashboard !==null ? columnChartDashboard : {})  
       } catch (error) {}
     }
     getCharacters();
@@ -108,9 +107,8 @@ useEffect(() => {
   async function getCharacters() {
       try {
           const response = await axios.get( url+ 'appointments/count');
-              const bodyResponse = response.data && response.data!==null ? response.data : 0;
-              console.log(bodyResponse)
-              setTotalAppointment(bodyResponse)
+              const appointCount = response.data && response.data!==null ? response.data :0;
+              setTotalAppointment(appointCount && appointCount !==null ? appointCount : 0)  
       } catch (error) {}
     }
     getCharacters();
@@ -119,10 +117,10 @@ useEffect(() => {
 useEffect(() => {
   async function getCharacters() {
       try {
-          const response = await axios.get( url+ 'patient-dashboard/column/birthRate');
-              const body2 = response.data && response.data!==null ? response.data : {};
-              setbirthRateData(body2) 
-              setBirthSereies(body2.series && body2.series!==null ? body2.series : {})
+          const responsebirthRate = await axios.get( url+ 'patient-dashboard/column/birthRate');
+              const bithRateChart = responsebirthRate.data && responsebirthRate.data!==null ? responsebirthRate.data : {};
+              setbirthRateData(bithRateChart) 
+              setBirthSereies(bithRateChart.series && bithRateChart.series!==null ? bithRateChart.series : {})
         
       } catch (error) {}
     }
@@ -133,9 +131,9 @@ useEffect(() => {
   async function getCharacters() {
       try {
           const response = await axios.get( url+ 'patient-dashboard/column/deathRate');
-              const body2 = response.data && response.data!==null ? response.data : {};
-              setdeathRateData(body2) 
-              setDeathSereies(body2.series && body2.series!==null ? body2.series : {})
+              const deathRateChart = response.data && response.data!==null ? response.data : {};
+              setdeathRateData(deathRateChart) 
+              setDeathSereies(deathRateChart.series && deathRateChart.series!==null ? deathRateChart.series : {})
         
       } catch (error) {}
     }
@@ -168,12 +166,14 @@ const genderChart = {
       pie: {
           allowPointSelect: true,
           cursor: 'pointer',
-          depth: 35,
+         
           dataLabels: {
               enabled: true,
               format: '{point.name}'
-          }
+          },
+          showInLegend: true
       }
+      
   },
   series: [{
       
@@ -227,9 +227,7 @@ const birthChart = {
     text: birthRateData.text,
     style:{ "fontSize": "14px" }
   },
-  subtitle: {
-    text: birthRateData.text
-  },
+ 
   plotOptions: {
     column: {
         depth: 25
@@ -252,7 +250,7 @@ const birthChart = {
   
   series: [{
     name: birthSeries.name,
-    data: birthSeries.data
+    data: []
   }]
   };
 /* End of BirthRate Chart */
@@ -271,11 +269,10 @@ const deathChart = {
     }
   },
   title: {
-    text: deathRateData.text
+    text: deathRateData.text,
+    style:{ "fontSize": "14px" }
   },
-  subtitle: {
-    text: deathRateData.text
-  },
+
   plotOptions: {
     column: {
         depth: 25
@@ -298,7 +295,7 @@ const deathChart = {
   
   series: [{
     name: deathSeries.name,
-    data: deathSeries.data
+    data: []
   }]
   };
 /* End of Death Rate Chart */
@@ -307,7 +304,7 @@ const deathChart = {
   return (
       <>
                {/* Card stats */}
-               <Row className={"p-3"}>
+            <Row className={"p-3"}>
               
                 <Col lg={3} md={6} sm={6} xs={12} >
                   <Card  className="card-stats mb-4 mb-xl-0 " style={{backgroundColor: '#FFBF43', color: '#fff',  boxShadow: '1px 2px #eee'}}>
@@ -328,7 +325,7 @@ const deathChart = {
 
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0" style={{ color: 'white'}}>
-                            {totalPatients}
+                            {Number.isInteger(totalPatients) ===true ? totalPatients : 0}
                           </span>
                         </div>
                         
@@ -360,7 +357,8 @@ const deathChart = {
 
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0" style={{ color: 'white' }}>
-                            {totalEmergency}
+                          {Number.isInteger(totalEmergency) ===true ? totalEmergency : 0}
+                            
                           </span>
                         </div>
                        
@@ -391,7 +389,10 @@ const deathChart = {
                                 </div>
 
                           </CardTitle>
-                          <span className="h2 font-weight-bold mb-0" style={{ color: 'white'}}>{totalCheckin}</span>
+                          <span className="h2 font-weight-bold mb-0" style={{ color: 'white'}}>
+                          
+                          {Number.isInteger(totalCheckin) ===true ? totalCheckin : 0}
+                          </span>
                         </div>
                         
                         </Link>
@@ -424,7 +425,8 @@ const deathChart = {
 
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
-                           {totalAppointment}
+                          {Number.isInteger(totalAppointment) ===true ? totalAppointment : 0}
+                          
                           </span>
                         </div>
 
@@ -437,7 +439,7 @@ const deathChart = {
                     </CardBody>
                   </Card>
                 </Col>
-              </Row>
+          </Row>
 
           <Row className={"pl-3 pr-3 "}>
       

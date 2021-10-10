@@ -1,22 +1,31 @@
 package org.lamisplus.modules.base.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import liquibase.pro.packaged.E;
+import lombok.*;
+import org.apache.commons.lang3.builder.ToStringExclude;
+import org.hibernate.annotations.Type;
+import org.lamisplus.modules.base.security.SecurityUtils;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import org.lamisplus.modules.bootstrap.domain.entity.Module;
+
 
 @Entity
 @Getter
 @Setter
 @EqualsAndHashCode
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "flag")
-public class Flag {
+public class Flag extends JsonBEntity {
+
     @Id
     @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,29 +36,61 @@ public class Flag {
     private String name;
 
     @Basic
-    @Column(name = "code")
-    private String code;
+    @Column(name = "field_name")
+    private String fieldName;
 
     @Basic
-    @Column(name = "priority")
-    private Long priority;
+    @Column(name = "field_value")
+    private String fieldValue;
 
     @Basic
-    @Column(name = "description")
-    private String description;
+    @Column(name = "datatype")
+    private Integer datatype;
 
     @Basic
-    @Column(name = "visible")
-    private Boolean visible;
+    @Column(name = "operator")
+    private String operator;
 
-    @ManyToOne
+    @Basic
+    @Column(name = "continuous")
+    private Boolean continuous = false;
+
+    @Basic
+    @Column(name = "archived")
     @JsonIgnore
-    @ToString.Exclude
-    @JoinColumn(name = "module_id", referencedColumnName = "id")
-    private Module moduleByModuleId;
+    private Integer archived=0;
 
+    @OneToMany(mappedBy = "flag")
     @JsonIgnore
-    @ToString.Exclude
-    @OneToMany(mappedBy = "Flag")
+    @ToStringExclude
     private List<PatientFlag> patientFlagsById;
+
+    @OneToMany(mappedBy = "flag")
+    @JsonIgnore
+    @ToStringExclude
+    private List<FormFlag> formsByIdFlag;
+
+    @CreatedBy
+    @Column(name = "created_by", nullable = false, updatable = false)
+    @JsonIgnore
+    @ToString.Exclude
+    private String createdBy = SecurityUtils.getCurrentUserLogin().orElse(null);
+
+    @CreatedDate
+    @Column(name = "date_created", nullable = false, updatable = false)
+    @JsonIgnore
+    @ToString.Exclude
+    private LocalDateTime dateCreated = LocalDateTime.now();
+
+    @LastModifiedBy
+    @Column(name = "modified_by")
+    @JsonIgnore
+    @ToString.Exclude
+    private String modifiedBy = SecurityUtils.getCurrentUserLogin().orElse(null);
+
+    @LastModifiedDate
+    @Column(name = "date_modified")
+    @JsonIgnore
+    @ToString.Exclude
+    private LocalDateTime dateModified = LocalDateTime.now();
 }

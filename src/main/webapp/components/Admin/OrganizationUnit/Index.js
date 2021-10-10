@@ -11,9 +11,9 @@ import "@reach/menu-button/styles.css";
 import MaterialTable from 'material-table';
 import {  MdDelete, MdModeEdit, MdRemoveRedEye } from "react-icons/md";
 import { FaPlusCircle, FaPlus} from 'react-icons/fa'
-import DeleteModule from "./DeleteModule";
-import CreateOrganizationUnit from "./CreateOrganizationUnit";
-import CreatOrgUnitByUpload from "./CreatOrgUnitByUpload";
+import DeleteOrgUnitLevel from "./DeleteOrgUnitLevel";
+import CreateOrganizationUnitLevel from "./CreateOrganizationUnitLevel";
+import UpdateOrganisationUnitLevel from "./UpdateOrganisationUnitLevel";
 import { useSelector, useDispatch } from 'react-redux';
 import {  fetchAllOrganizationalUnit, Delete } from '../../../actions/organizationalUnit';
 import { ToastContainer } from "react-toastify";
@@ -22,7 +22,43 @@ import "react-widgets/dist/css/react-widgets.css";
 import CreateParentOrgUnit from "./CreateParentOrgUnit";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Typography from "@material-ui/core/Typography";
+import { forwardRef } from 'react';
 
+import AddBox from '@material-ui/icons/AddBox';
+import ArrowUpward from '@material-ui/icons/ArrowUpward';
+import Check from '@material-ui/icons/Check';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
+import ChevronRight from '@material-ui/icons/ChevronRight';
+import Clear from '@material-ui/icons/Clear';
+import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import Edit from '@material-ui/icons/Edit';
+import FilterList from '@material-ui/icons/FilterList';
+import FirstPage from '@material-ui/icons/FirstPage';
+import LastPage from '@material-ui/icons/LastPage';
+import Remove from '@material-ui/icons/Remove';
+import SaveAlt from '@material-ui/icons/SaveAlt';
+import Search from '@material-ui/icons/Search';
+import ViewColumn from '@material-ui/icons/ViewColumn';
+
+const tableIcons = {
+Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
+Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
+Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+SortArrow: forwardRef((props, ref) => <ArrowUpward {...props} ref={ref} />),
+ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
+ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
+};
 
 const useStyles = makeStyles({
     root: {
@@ -40,6 +76,7 @@ const useStyles = makeStyles({
 
   const OrganizationUnit = (props) => {
     const [orgUnitID, setorgUnitID] = useState([])
+    const [collectModal, setcollectModal] = useState([])
     const [modal, setModal] = useState(false) // 
     const toggleModal = () => setModal(!modal)
     const [modal2, setModal2] = useState(false) //
@@ -66,11 +103,15 @@ const useStyles = makeStyles({
 
     }, []); //componentDidMount
 
-    const deleteModule = (rowId) => {  
-      if (window.confirm(`Are you sure to delete this record? ${rowId}`))
-      dispatch(Delete(4444))
+    const deleteModule = (row) => {  
+      setcollectModal({...collectModal, ...row});
+      setModal(!modal) 
     }
-
+    const updateOrgUnitLevel = (row) => {  
+      setcollectModal({...collectModal, ...row});
+      setModal3(!modal3) 
+    }
+    
     const createOrgUnit = () => {  
       setModal2(!modal2) 
     }
@@ -79,7 +120,7 @@ const useStyles = makeStyles({
       setModal4(!modal4)
        
     }
-
+console.log(listOfAllOrgUnit)
 return (
     <div >
       <ToastContainer autoClose={3000} hideProgressBar />
@@ -89,7 +130,7 @@ return (
                               <Link color="inherit" to={{pathname: "/admin"}} >
                                   Admin
                               </Link>
-                              <Typography color="textPrimary">Organisational Unit Level Manager </Typography>
+                              <Typography color="textPrimary">Organisational Unit Level Setup </Typography>
                              </Breadcrumbs>
                                
                                
@@ -104,7 +145,8 @@ return (
 
                                   </div>
                             <MaterialTable
-                              title="Organisational Unit Level"
+                            icons={tableIcons}
+                              title="Organisational Unit Levels"
                               columns={[
                                 { title: ' Name', field: 'name' },
                                 { title: 'Description', field: 'description' },
@@ -123,27 +165,32 @@ return (
                                               Actions <span aria-hidden>▾</span>
                                             </MenuButton>
                                                 <MenuList style={{ color:"#000 !important"}} >
-                                                       <MenuItem  style={{ color:"#000 !important"}}  onClick={() => createParentOrgUnit( row)}>                      
-                                                      
-                                                          <FaPlusCircle size="15" color="blue" />{" "}<span style={{color: '#000'}}>Add </span>
-                                                    
-                                                      </MenuItem>
+                                                       
                                                       <MenuItem  style={{ color:"#000 !important"}} >                      
                                                       <Link
                                                         to={{pathname: "/admin-parent-organization-unit", state: { orgUnitLevel: row  }}}>
                                                           <MdRemoveRedEye size="15" color="blue" />{" "}<span style={{color: '#000'}}>View</span>
                                                        </Link>  
                                                       </MenuItem>
-                                                      <MenuItem style={{ color:"#000 !important"}}>
+                                                      <MenuItem style={{ color:"#000 !important"}}  onSelect={() => updateOrgUnitLevel(row)}>
                                                             
                                                               <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit   </span>                   
                                                            
                                                       </MenuItem> 
-                                                      <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule(row.organisationUnitLevelId)}>                      
+                                                      <MenuItem  style={{ color:"#000 !important"}} onSelect={() => deleteModule(row)}>                      
                                                       
                                                             <MdDelete size="15" color="blue" />{" "}<span style={{color: '#000'}}>Delete </span>
                                                                                 
-                                                      </MenuItem>                                    
+                                                      </MenuItem>
+                                                      { row.status ===0 ? 
+                                                      <MenuItem  style={{ color:"#000 !important"}}  onClick={() => createParentOrgUnit( row)}>                      
+                                                      
+                                                          <FaPlusCircle size="15" color="blue" />{" "}<span style={{color: '#000'}}>Add Org. Unit Level </span>
+                                                    
+                                                      </MenuItem>
+                                                      :
+                                                      ""
+                                                      }                               
                                                       
                                               </MenuList>
                                         </Menu>
@@ -168,9 +215,9 @@ return (
                             />
                             </Card>
                       
-       <DeleteModule modalstatus={modal} togglestatus={toggleModal} orgUnitID={orgUnitID}/>
-       <CreateOrganizationUnit modalstatus={modal2} togglestatus={toggleModal2}  />
-       <CreatOrgUnitByUpload modalstatus={modal3} togglestatus={toggleModal3}  />
+       <DeleteOrgUnitLevel modalstatus={modal} togglestatus={toggleModal} orgUnit={collectModal}/>
+       <CreateOrganizationUnitLevel modalstatus={modal2} togglestatus={toggleModal2}  />
+       <UpdateOrganisationUnitLevel modalstatus={modal3} togglestatus={toggleModal3}  orgUnit={collectModal}/>
        <CreateParentOrgUnit modalstatus={modal4} togglestatus={toggleModal4}   orgUnitID={orgUnitID}/>
                        
        

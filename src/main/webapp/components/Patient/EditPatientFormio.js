@@ -47,7 +47,7 @@ const EditPatientFormio = (props) => {
             };
             setShowLoadingPatientInfo(true);
             axios
-                .get(`${baseUrl}patients/${patientHospitalNumber}`, requestOptions)
+                .get(`${baseUrl}patients/hospitalNumber?hospitalNumber=${patientHospitalNumber}`, requestOptions)
                 .then(response => {
                     try {
                         const patientObj = response.data.details;

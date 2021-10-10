@@ -23,4 +23,9 @@ public class OrganisationUnitDTO {
     private Long organisationUnitLevelId;
 
     private Long parentOrganisationUnitId;
+
+    private String  parentOrganisationUnitName;
+
+    private String  parentParentOrganisationUnitName;
+
 }

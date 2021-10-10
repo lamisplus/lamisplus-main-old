@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -38,13 +39,7 @@ public class Patient extends JsonBEntity implements Serializable {
     @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    /*@Basic
-    @Column(name = "date_registration")
-    @NotNull
-    private LocalDate dateRegistration;*/
-    /*@Basic
-    @Column(name = "person_id")
-    private Long personId;*/
+
     @Basic
     @Column(name = "patient_number")
     private String hospitalNumber;
@@ -56,10 +51,6 @@ public class Patient extends JsonBEntity implements Serializable {
     @Column(name = "archived")
     private Integer archived = 0;
 
-    /*@ManyToOne
-    @JoinColumn(name = "person_id", referencedColumnName = "id", insertable = false, updatable = false)
-    @JsonIgnore
-    private Person personByPersonId;*/
     @Basic
     @Column(name = "organisation_unit_id", updatable = false)
     @JsonIgnore
@@ -81,27 +72,22 @@ public class Patient extends JsonBEntity implements Serializable {
     @JsonIgnore
     @ToString.Exclude
     private String createdBy = SecurityUtils.getCurrentUserLogin().orElse(null);
-
     @CreatedDate
     @Column(name = "date_created", nullable = false, updatable = false)
     @JsonIgnore
     @ToString.Exclude
-    private Timestamp dateCreated = Timestamp.from(Instant.now());
-
+    private LocalDateTime dateCreated = LocalDateTime.now();
     @LastModifiedBy
     @Column(name = "modified_by")
     @JsonIgnore
     @ToString.Exclude
     private String modifiedBy = SecurityUtils.getCurrentUserLogin().orElse(null);
-
     @LastModifiedDate
     @Column(name = "date_modified")
     @JsonIgnore
     @ToString.Exclude
-    private Timestamp dateModified = Timestamp.from(Instant.now());
+    private LocalDateTime dateModified = LocalDateTime.now();
 
     @OneToMany(mappedBy = "patientByPatientId")
-    @JsonIgnore
-    @ToString.Exclude
     private List<PatientFlag> patientFlagsById;
 }

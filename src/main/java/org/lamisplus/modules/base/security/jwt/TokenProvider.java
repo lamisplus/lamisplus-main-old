@@ -12,6 +12,7 @@ import org.lamisplus.modules.base.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,24 +34,23 @@ public class TokenProvider {
     private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
     private static final String AUTHORITIES_KEY = "auth";
 
-    //private Key key;
-    private String secret = "DAFGAHJUDJNDfhggtghXMNJHXCCXLKCXMMNCXNCXggdsghvsdvbgsdhjABSDHGDFSV" +
-            "gsdhjABSDHGDFSVhshgsdghdshJHSDJHDJHJDSSDJKDKSJ";
+    @Value("${jwt.base64-secret}")
+    private String secret;
+
+    @Value("${jwt.token-validity-in-milli-seconds}")
     private long tokenValidityInMilliseconds;
+
+    @Value("${jwt.token-validity-in-milli-seconds-for-remember-me}")
+    private long tokenValidityInMillisecondsForRememberMe;
 
     @Autowired
     UserRepository userRepository;
 
-    private long tokenValidityInMillisecondsForRememberMe;
-    public TokenProvider(){
-
-    }
-
-    @PostConstruct
+    /*@PostConstruct
     public void init(){
         byte[] keyBytes;
 
-        /*if (!StringUtils.isEmpty(secret)) {
+        *//*if (!StringUtils.isEmpty(secret)) {
             log.warn(
                     "Warning: the JWT key used is not Base64-encoded"
             );
@@ -59,10 +59,10 @@ public class TokenProvider {
             log.debug("Using a Base64-encoded JWT secret key");
             keyBytes = Decoders.BASE64.decode(secret);
         }
-        this.key = Keys.hmacShaKeyFor(keyBytes);*/
-        this.tokenValidityInMilliseconds = 1000*60*60*10;
-        this.tokenValidityInMillisecondsForRememberMe = 1000*60*60*100;
-    }
+        this.key = Keys.hmacShaKeyFor(keyBytes);*//*
+        //this.tokenValidityInMilliseconds = 1000*60*60*10;
+        //this.tokenValidityInMillisecondsForRememberMe = 1000*60*60*100;
+    }*/
 
     public String createToken(Authentication authentication, UserService userService, boolean rememberMe) {
         //String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
@@ -110,9 +110,14 @@ public class TokenProvider {
         try {
             Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken);
             return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            log.info("Invalid JWT token.");
-            log.trace("Invalid JWT token trace.", e);
+        } catch (MalformedJwtException e) {
+            log.error("Invalid JWT token: {}", e.getMessage());
+        } catch (ExpiredJwtException e) {
+            log.error("JWT token is expired: {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            log.error("JWT token is unsupported: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            log.error("JWT claims string is empty: {}", e.getMessage());
         }
         return false;
     }

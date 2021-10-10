@@ -19,6 +19,7 @@ public class RadiologyController {
 
     @PostMapping(value = "/api/radiologies/{formDataId}/{patientId}", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<List<String>> save(@PathVariable Long formDataId, @PathVariable Long patientId, @RequestPart("formData") String formData, @RequestParam("file") MultipartFile [] files) {
+        log.info("Size {}", files.length);
 
         return ResponseEntity.ok(radiologyService.save(formDataId, patientId, radiologyService.getJson(formData), files));
     }

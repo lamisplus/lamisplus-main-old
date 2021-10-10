@@ -11,4 +11,7 @@ public interface RegimenLineRepository extends JpaRepository<RegimenLine, Long> 
     Optional<RegimenLine> findByIdAndArchived(Long id, int archived);
 
     List<RegimenLine> findAllByArchived(int archived);
+
+    Optional<RegimenLine> getRegimenLineById(Long regimenLineId);
+
 }

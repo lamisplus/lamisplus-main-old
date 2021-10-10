@@ -44,8 +44,9 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
     Page<Patient> findAllByDetails(String firstName, String lastName, String hospitalNumber, Long organisationUnitId, int archived, Pageable pageable);
 
     @Query(value = "SELECT * FROM patient WHERE (details ->>'firstName' ilike ?1 " +
-            "OR details ->>'lastName' ilike ?2 OR details ->>'hospitalNumber' ilike ?3) AND organisation_unit_id=?4 AND archived=?5", nativeQuery = true)
-    Page<Patient> findAllByFullDetails(String firstName, String lastName, String hospitalNumber, Long organisationUnitId, int archived, Pageable pageable);
+            "OR details ->>'lastName' ilike ?2 OR details ->>'hospitalNumber' ilike ?3 " +
+            "OR details ->>'mobilePhoneNumber' ilike ?4) AND organisation_unit_id=?5 AND archived=?6", nativeQuery = true)
+    Page<Patient> findAllByFullDetails(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber, Long organisationUnitId, int archived, Pageable pageable);
 
     @Query(value = "SELECT COUNT(*) FROM patient WHERE details -> 'gender' ->> 'display' ilike ?1 AND " +
             "organisation_unit_id=?2 AND archived=?3 AND details ->>'dateRegistration' BETWEEN ?4 AND ?5", nativeQuery = true)
@@ -59,4 +60,5 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
             "details ->>'dob' BETWEEN ?3 AND ?4", nativeQuery = true)
     Long countByPediatrics(Long organisationUnitId, int archived, LocalDate later, LocalDate now);
 
+    Optional<Patient> findByIdAndOrganisationUnitIdAndArchived(Long patientId, Long organisationUnitId, int archived);
 }

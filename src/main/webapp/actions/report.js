@@ -29,11 +29,21 @@ export const creatReport = (data, onSuccess, onError) => dispatch => {
 };
 
 
-export const generateReport = (data, onError) => dispatch => {
-    const reportFormat = 'application/'+(data.reportFormat).toLowerCase();
+export const generateReport = (data, onSuccess, onError) => dispatch => {
+    let reportFormat = 'application/'+(data.reportFormat).toLowerCase();
+    if(reportFormat === 'application/excel'){
+        reportFormat = 'application/vnd.ms-excel';
+    }
+    if(reportFormat === 'application/csv'){
+        reportFormat = 'text/csv';
+    }
+    console.log(reportFormat);
     axios
         .post(`${url}reports/generate`, data, {responseType: 'arraybuffer'})
         .then(response => {
+            if(onSuccess){
+                onSuccess();
+            }
         //Create a Blob from the PDF Stream
             const file = new Blob(
                 [response.data],

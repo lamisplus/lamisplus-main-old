@@ -1,5 +1,8 @@
 package org.lamisplus.modules.base.util;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Constants {
 
     public static class ArtStatus {
@@ -199,4 +202,10 @@ public class Constants {
         public static String STATE_IDS = "2,3,4,5,6,8,9,12,18,20,25,36";
     }
 
+    @Component
+    public static class ArchiveStatus {
+        public static final int UN_ARCHIVED = 0;
+        public static final int ARCHIVED = 1;
+        public static final int DEACTIVATED = 2;
+    }
 }

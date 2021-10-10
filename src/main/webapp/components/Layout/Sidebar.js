@@ -25,7 +25,8 @@ const navItems = [
     roles:["patient_read", "patient_write", "patient_delete"]},
   { to: '/laboratory', name: 'Laboratory', exact: false, Icon: GiTestTubes,
     roles:["laboratory_read", "laboratory_write", "laboratory_delete"]},
-  { to: '/radiology-home', name: 'Radiology', exact: false, Icon: GiTestTubes },
+  { to: '/radiology-home', name: 'Radiology', exact: false, Icon: GiTestTubes,
+    roles: ["6f757363-0ee7-45df-99e2-39f0f427b096_read", "6f757363-0ee7-45df-99e2-39f0f427b096_write", "6f757363-0ee7-45df-99e2-39f0f427b096_delete"]},
   { to: '/pharmacy', name: 'Pharmacy', exact: false, Icon: GiMedicines,
     roles: ["pharmacy_read", "pharmacy_write", "pharmacy_delete"]},
   { to: '/appointments', name: 'Appointments', exact: false, Icon: MdGraphicEq,
@@ -35,7 +36,7 @@ const navItems = [
   // { to: '/plug-in', name: 'Plugins', exact: false, Icon: GiUnplugged },
   { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog,
     roles: ["admin_read", "user_read"] },
-  // { to: '/data-visualisation', name: 'Data Visualisation', exact: false, Icon: GiTestTubes },
+  // { to: '/data-analytics', name: 'Data Visualisation', exact: false, Icon: MdGraphicEq },
   // { to: '/select', name: 'React Select', exact: false, Icon: FaUserCog },
 
  

@@ -11,7 +11,7 @@ import org.lamisplus.modules.base.domain.entity.Patient;
 import org.lamisplus.modules.base.domain.entity.Visit;
 import org.lamisplus.modules.base.domain.mapper.VisitMapper;
 import org.lamisplus.modules.base.repository.*;
-import org.lamisplus.modules.base.util.CustomDateTimeFormat;
+import org.lamisplus.modules.base.util.converter.CustomDateTimeFormat;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

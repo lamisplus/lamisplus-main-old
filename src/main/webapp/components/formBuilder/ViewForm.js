@@ -32,6 +32,7 @@ import { Alert } from '@material-ui/lab';
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import Typography from "@material-ui/core/Typography";
+import JsonSchemaViewer from "./JsonSchemaViewer";
 
 const useStyles = makeStyles(theme => ({
     root2: {
@@ -53,6 +54,7 @@ const Update = props => {
     const [displayType, setDisplayType] = React.useState("");
     const [formCode, setformCode] = React.useState();
     const [form2, setform2] = React.useState();
+
     const classes = useStyles();
     let myform;
     const submission = props.patient;
@@ -224,10 +226,14 @@ const Update = props => {
                     /> Or Copy the json object below. <br/>
 
                     <div >
+                        <h4>Json Object</h4>
                     <textarea cols="100"
                               ref={textAreaRef}
                               value={res}/>
                     </div>
+
+                        <JsonSchemaViewer formObject={res}/>
+
                 </CardContent>
             </Card>
 
@@ -249,6 +255,10 @@ const Update = props => {
                                         //src={url}
                                         hideComponents={props.hideComponents}
                                         //onSubmit={props.onSubmit}
+                                        onChange={(ch) => {
+                                        console.log(ch.data);
+                                        }
+                                        }
                                         onSubmit={(submission) => {
                                             console.log(submission);
                                             return fetch('https://lp-base-app.herokuapp.com/api/', {

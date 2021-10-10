@@ -45,6 +45,8 @@ public class RadiologyService {
             JSONObject jsonObject = new JSONObject(formDataJsonString);
             if(jsonObject.has(IMAGE_ID)){
                 jsonArray = jsonObject.getJSONArray(IMAGE_ID);
+            }else {
+                jsonObject.put(IMAGE_ID, new ArrayList<>());
             }
             for (String imageUuid : imageUuids) {
                 jsonArray.put(imageUuid);

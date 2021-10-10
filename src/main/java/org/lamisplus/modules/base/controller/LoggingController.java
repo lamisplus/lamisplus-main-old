@@ -2,8 +2,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.util.MediaTypeUtils;
-import org.springframework.beans.factory.annotation.Value;
+import org.lamisplus.modules.base.util.MediaTypeUtil;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,7 @@ import java.nio.file.Paths;
 @RequiredArgsConstructor
 public class LoggingController {
     private final ServletContext servletContext;
-    private String logFile;
+    private String logFile = "application-debug.log";
 
     @GetMapping
     public String log() {
@@ -41,9 +40,7 @@ public class LoggingController {
     public ResponseEntity<ByteArrayResource> getFile() throws IOException {
         File file = new File(logFile);
 
-        MediaType mediaType = MediaTypeUtils.getMediaTypeForFileName(this.servletContext, file.getName());
-        System.out.println("fileName: " + file.getName());
-        System.out.println("mediaType: " + mediaType);
+        MediaType mediaType = MediaTypeUtil.getMediaTypeForFileName(this.servletContext, file.getName());
 
         Path path = Paths.get(logFile);
         byte[] data = Files.readAllBytes(path);
@@ -57,6 +54,5 @@ public class LoggingController {
                 // Content-Length
                 .contentLength(data.length) //
                 .body(resource);
-
     }
 }

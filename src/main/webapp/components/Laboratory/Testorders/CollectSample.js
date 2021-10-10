@@ -208,7 +208,6 @@ const useStyles = makeStyles({
             }
   }
 
-console.log(fetchTestOrders)
 return (
     <div>
       
@@ -323,7 +322,7 @@ return (
                                                       <td className={classes.td}>{sampleTypeList(row.data && row.data.sample_type!==null ? row.data.sample_type : null)}</td>
                                                       <td className={classes.td}> {encounterDate} </td>
                                                       <td className={classes.td}>{sampleStatus(row.data.lab_test_order_status)}  </td>
-                                                      <td className={classes.td} hidden={!authentication.userHasRole(["laboratory_write"])} >{sampleAction(row,encounterDate)}</td>
+                                                      <td className={classes.td} hidden={authentication && !authentication.userHasRole(["laboratory_write"])} >{sampleAction(row,encounterDate)}</td>
                                                     </tr>
                                                     :
                                                     <tr></tr>
@@ -345,11 +344,18 @@ return (
         </Row>
         </CardBody>
     </Card>
-   
-      <SampleCollectionFormIo modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} labnumber={labNumber !=="" ? labNumber : labNum['lab_number'] }/>
-      <ModalSampleTransfer modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} labnumber={labNumber!=="" ? labNumber : labNum}/>
-      <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />
-      <TransferModalConfirmation modalstatus={modal4} togglestatusConfirmation={toggleModal4} datasample={collectModal} actionButton={transferSample} labnumber={labNumber!=="" ? labNumber : labNum}/>
+    {modal || modal2  || modal3 || modal4 ? 
+      (
+        <>
+            <SampleCollectionFormIo modalstatus={modal} togglestatus={toggleModal} datasample={collectModal} labnumber={labNumber !=="" ? labNumber : labNum['lab_number'] }/>
+            <ModalSampleTransfer modalstatus={modal2} togglestatus={toggleModal2} datasample={collectModal} labnumber={labNumber!=="" ? labNumber : labNum}/>
+            <ModalViewResult modalstatus={modal3} togglestatus={toggleModal3} datasample={collectModal} />
+            <TransferModalConfirmation modalstatus={modal4} togglestatusConfirmation={toggleModal4} datasample={collectModal} actionButton={transferSample} labnumber={labNumber!=="" ? labNumber : labNum}/>
+       </>
+      ) 
+      : ""
+      } 
+     
    
     </div>
   )  

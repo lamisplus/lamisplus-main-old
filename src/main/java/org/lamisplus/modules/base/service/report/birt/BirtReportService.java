@@ -3,12 +3,13 @@ package org.lamisplus.modules.base.service.report.birt;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
 import org.eclipse.birt.report.engine.api.*;
 import org.eclipse.birt.report.model.api.*;
 import org.lamisplus.modules.base.config.ApplicationProperties;
-import org.lamisplus.modules.base.config.DatabaseProperties;
+import org.lamisplus.modules.base.config.YmlFile;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ReportDetailDTO;
@@ -109,16 +110,23 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         Optional<User> optionalUser = SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneWithRoleByUserName);
         if(optionalUser.isPresent()){
             user = optionalUser.get();
-            if(params.get("facility_Id") == null){
-                //assign default facilityId
-                params.put("facility_Id", user.getCurrentOrganisationUnitId());
-
-            } else {
-                //check facilityId belongs to user
-                List <Long> orgUnits = user.getApplicationUserOrganisationUnits().stream().map(ApplicationUserOrganisationUnit::getOrganisationUnitId).collect(Collectors.toList());
-                if(!orgUnits.contains(Long.valueOf((Integer)params.get("facility_Id")))){
-                    throw new EntityNotFoundException(OrganisationUnit.class,"FacilityId","User not in Organisation Unit");
+            List <Long> orgUnits = user.getApplicationUserOrganisationUnits().stream().map(ApplicationUserOrganisationUnit::getOrganisationUnitId).collect(Collectors.toList());
+            if(params.get("facilityId") != null){
+                if(!orgUnits.contains(Long.valueOf(params.get("facilityId").toString()))){
+                    throw new EntityNotFoundException(OrganisationUnit.class,"FacilityId","Organisation Unit not valid");
                 }
+
+            }  else if(params.get("facilityIds") != null){
+                List<Integer> facilityIds = (List<Integer>) params.get("facilityIds");
+                params.remove("facilityIds");
+                facilityIds.forEach(facilityId->{
+                    if(!orgUnits.contains(Long.valueOf(facilityId))){
+                        facilityIds.remove(facilityId);
+                    }
+                });
+                params.put("facilityIds", StringUtils.join(facilityIds, ","));
+            } else {
+                params.put("facilityId", user.getCurrentOrganisationUnitId());
             }
         }
 
@@ -219,12 +227,12 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         EXCELRenderOption excelRenderOption = new EXCELRenderOption(options);
         excelRenderOption.setOutputFormat("xls");
         runAndRenderTask.setRenderOption(excelRenderOption);
-        runAndRenderTask.getAppContext().put("HTML_RENDER_CONTEXT", request);
+        runAndRenderTask.getAppContext().put("EXCEL_RENDER_CONTEXT", request);
 
 
         try {
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + reportName.replace(" ","_")+ LocalDate.now().toString().replace("-", "") + "\".xls");
-            response.setContentType(".xls");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + reportName.replace(" ","_")+ LocalDate.now().toString().replace("-", ""));
+            response.setContentType("xls");
             excelRenderOption.setOutputStream(response.getOutputStream());
             runAndRenderTask.run();
         } catch (Exception e) {
@@ -296,25 +304,13 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
                 new EntityNotFoundException(ReportInfo.class, "Id", id+""));
     }
 
-    private String dbUrl;
-
-    private String dbUser;
-
-    private String dbPass;
-
     private void getDatabaseConnectionParameters( IReportRunnable iReportRunnable ) {
         String fileSeparator = File.separator;
-        File ymlFile = new File(ApplicationProperties.modulePath + fileSeparator +"config.yml");
-        try {
-            readYml(ymlFile).getSpring().forEach((k, v) -> {
-                dbUrl = v.getUrl();
-                dbUser = v.getUsername();
-                dbPass = v.getPassword();
-            });
+        YmlFile.getDatabaseConnectionParameters(ApplicationProperties.modulePath + fileSeparator +"config.yml");
+        String dbUrl = YmlFile.dbUrl;
+        String dbUser = YmlFile.dbUser;
+        String dbPass = YmlFile.dbPass;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         DesignElementHandle deh = iReportRunnable.getDesignHandle();
         SlotHandle slotHandle = deh.getSlot(ReportDesignHandle.DATA_SOURCE_SLOT );
         Iterator iter = slotHandle.iterator();
@@ -353,24 +349,5 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
         {
             e.printStackTrace();
         }
-    }
-
-    private DatabaseProperties readYml(File ymlFile) throws IOException {
-        BufferedReader in = null;
-        DatabaseProperties databaseProperties;
-        try {
-            in = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(ymlFile.getAbsolutePath())));
-            Yaml yaml = new Yaml();
-            databaseProperties = yaml.loadAs(in, DatabaseProperties.class);
-
-            in.close();
-        } catch (Exception e){
-            e.printStackTrace();
-            throw new RuntimeException("Error: " + e.getMessage());
-        }finally {
-            if (in != null) {in.close(); }
-        }
-        return databaseProperties;
     }
 }

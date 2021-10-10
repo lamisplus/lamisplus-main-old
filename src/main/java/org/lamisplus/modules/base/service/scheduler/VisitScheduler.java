@@ -8,7 +8,7 @@ import org.lamisplus.modules.base.domain.entity.Visit;
 import org.lamisplus.modules.base.domain.mapper.VisitMapper;
 import org.lamisplus.modules.base.repository.VisitRepository;
 import org.lamisplus.modules.base.service.VisitService;
-import org.lamisplus.modules.base.util.CustomDateTimeFormat;
+import org.lamisplus.modules.base.util.converter.CustomDateTimeFormat;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 

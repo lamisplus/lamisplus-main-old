@@ -1,6 +1,5 @@
 package org.lamisplus.modules.base.controller;
 
-import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.entity.Encounter;
@@ -16,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,19 +40,29 @@ public class EncounterController {
             "Example - api/encounters/{formCode}?dateStart=01-01-2020&dateEnd=01-04-2020")*/
     @GetMapping("/{formCode}/{dateStart}/{dateEnd}")
     public ResponseEntity<List<EncounterDTO>> getEncounterByFormCodeAndDateEncounter(@PathVariable String formCode,
-                                                                 @ApiParam(defaultValue = "") @PathVariable(required = false) Optional<String> dateStart,
-                                                                                     @ApiParam(value = "") @PathVariable(required = false) Optional<String> dateEnd,
-                                                                                     @RequestParam (required = false, defaultValue = "%*%")String searchValue,
+                                                                  @PathVariable(required = false) Optional<String> dateStart,
+                                                                                     @PathVariable(required = false) Optional<String> dateEnd,
+                                                                                     @RequestParam (required = false, defaultValue = "*")String search,
                                                                                      @PageableDefault(value = 100) Pageable pageable) {
 
         Page<Encounter> page;
-        /*if(!searchValue.equals("%*%")) {
-            String firstName = "%"+searchValue+"%";
-            String lastName = "%"+searchValue+"%";
-            String hospitalNumber = "%"+searchValue+"%";
-            page = encounterService.findAllPages(firstName, lastName,hospitalNumber, pageable);
-        }*/
-        page = encounterService.getEncounterByFormCodeAndDateEncounter(formCode, dateStart, dateEnd, pageable);
+        if(!search.equals("*")) {
+            String firstName = "%"+search+"%";
+            String lastName = "%"+search+"%";
+            String hospitalNumber = "%"+search+"%";
+            String mobilePhoneNumber = "%"+search+"%";
+            String start = "1970-01-01"; // Unix time
+            String end = LocalDate.now().toString();
+            if(dateStart.isPresent() && !dateStart.get().equals("{dateStart}")){
+                start = dateStart.get();
+            }
+            if(dateEnd.isPresent() && !dateEnd.get().equals("{dateEnd}")){
+                end = dateEnd.get();
+            }
+            page = encounterService.findEncounterPage(firstName, lastName,hospitalNumber, mobilePhoneNumber, formCode, start, end, pageable);
+        } else {
+            page = encounterService.getEncounterByFormCodeAndDateEncounter(formCode, dateStart, dateEnd, pageable);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(encounterService.getAllEncounters(page), headers, HttpStatus.OK);
     }
@@ -82,5 +92,4 @@ public class EncounterController {
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
         return ResponseEntity.ok(this.encounterService.delete(id));
     }
-
 }

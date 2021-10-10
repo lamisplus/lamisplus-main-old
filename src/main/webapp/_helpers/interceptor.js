@@ -22,16 +22,18 @@ axios.interceptors.response.use(function (response) {
     return response;
   }, function (error) {
       // TODO: Brian Update 403(Forbiden) once roles is completed
-    console.log(error.response);
-    if( authentication.currentUserValue != null && error.response.status == 403){
+    console.log(error);
+    if( error && error.response && error.response.status && error.response.status == 403 && authentication.currentUserValue != null ){
         // do nothing if the api has to do with an encounter, this is for custom handling of api response rather than redirecting to the unauthorised page
-        if(!error.request.responseURL.contains("encounters")){
-            window.location.href = '/unauthorised';
+        console.log(error.request.responseURL);
+        const url = error.request && error.request.responseURL ? error.request.responseURL.toString() : null;
+        if(url && !url.includes("encounters")){
+           // window.location.href = '/unauthorised';
         }
 
     }
    else
-       if (error.response.status === 401 ) {
+       if (error && error.response && error.response.status && error.response.status === 401 ) {
         // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
         authentication.logout();
         dispatch({

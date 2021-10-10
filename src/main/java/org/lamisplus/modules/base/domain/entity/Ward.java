@@ -3,15 +3,7 @@ package org.lamisplus.modules.base.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.lamisplus.modules.base.util.UuidGenerator;
-
 import javax.persistence.*;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.Objects;
 
 @Entity
 @Data
@@ -28,8 +20,8 @@ public class Ward extends Audit<String>{
     private String name;
 
     @Basic
-    @Column(name = "uuid", updatable = false)
-    private String uuid;
+    @Column(name = "code", updatable = false)
+    private String code;
 
     @Basic
     @Column(name = "archived")

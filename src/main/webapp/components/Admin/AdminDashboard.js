@@ -20,15 +20,15 @@ import {
   } from 'react-icons/md';
 
 
+// Load Highcharts modules
+require("highcharts/modules/exporting")(Highcharts);
 
 function AdminDashboard(props) {
-
-
-
 
     const [testOrderGroupData, settestOrderGroupData] = useState({})
     const [testOrdersStackChart, settestOrdersStackChart] = useState({})
     const [limsBarChart, setlimsBarChart] = useState({})
+    const [TotalLoginUser, setTotalLoginUser] = useState(0)
     // APi request for Pie chart
         useEffect(() => {
             async function getCharacters() {
@@ -41,6 +41,20 @@ function AdminDashboard(props) {
             }
             getCharacters();
         }, []);  
+    //API TO GET TOTAL LOGIN USER 
+    useEffect(() => {
+        async function getCharacters() {
+            try {
+                const response = await axios.get( url+ 'users/loggedInCount');
+                    const loggedInCount = response.data && response.data!==null ? response.data :0;
+                    setTotalLoginUser(loggedInCount) 
+                    console.log(loggedInCount)
+            } catch (error) {
+    
+            }
+          }
+          getCharacters();
+      }, []);
     // API request for stack bar chart    
         useEffect(() => {
             async function getCharacters() {
@@ -176,28 +190,28 @@ const testGroup = {
             bgColor="white"
             inverse={false}
             icon={MdDelete}
-            title="50"
+            title="0"
             subtitle="Archive Records"
           />
           <IconWidget
             bgColor="success"
             inverse={false}
             icon={MdPersonPin}
-            title="10"
+            title="0"
             subtitle="Active Users"
           />
           <IconWidget
             bgColor="white"
             inverse={false}
             icon={MdPeople}
-            title="20"
+            title={TotalLoginUser}
             subtitle="Login Users"
           />
           <IconWidget
             bgColor="primary"
             inverse={false}
             icon={MdShowChart}
-            title="20"
+            title="0"
             subtitle="Facilities"
           />
         </CardGroup>

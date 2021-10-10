@@ -30,7 +30,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { BehaviorSubject } from "rxjs";
 import { ToastContainer, toast } from "react-toastify";
 import { Button } from 'semantic-ui-react'
-
+import {authentication} from '../../../_services/authentication';
 import Moment from "moment";
 import momentLocalizer from "react-widgets-moment";
 import LabTestOrderPage from "./LabTestOrderPage";
@@ -213,7 +213,7 @@ function TestOrderPage(props) {
             <Button.Group >
               <Button toggle active={showLabForm} onClick={handleToggle}>Laboratory</Button>
               <Button.Or />
-              <Button toggle active={!showLabForm} onClick={handleToggle}>Radiology</Button>
+              <Button toggle active={!showLabForm} onClick={handleToggle} disabled={!authentication.userHasRole(["6f757363-0ee7-45df-99e2-39f0f427b096_write", "6f757363-0ee7-45df-99e2-39f0f427b096_read","6f757363-0ee7-45df-99e2-39f0f427b096_delete"])}>Radiology</Button>
             </Button.Group>
          </CardHeader>
           <CardBody>

@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 import {toast, ToastContainer} from "react-toastify";
 import axios from 'axios';
 import {url} from '../../api';
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 
 const useStyles = makeStyles(theme => ({
@@ -36,6 +37,7 @@ const GenerateReport = props => {
     const [res, setRes] = React.useState("");
     const [formCode, setformCode] = React.useState();
     const [loading, setLoading] = React.useState(true);
+    const [downloading, setDownLoading] = React.useState(false);
     const [form2, setform2] = React.useState();
     const [reportId, setreportId] = React.useState();
     const classes = useStyles();
@@ -70,8 +72,12 @@ const GenerateReport = props => {
 
     const submitForm = (submission) => {
        const onError = () => {
+           setDownLoading(false);
            toast.error('An error occurred, please contact Admin')
        }
+        const onSuccess = () => {
+            setDownLoading(false);
+        }
         const data = submission.data;
         let formattedData = [];
         _.forOwn(data, function(value, key) {
@@ -84,7 +90,8 @@ const GenerateReport = props => {
         } );
         newdata2['reportId']=form2.id;
         newdata2['parameters']=data ;
-        props.generateReport(newdata2, onError);
+        setDownLoading(true);
+        props.generateReport(newdata2, onSuccess, onError);
         return;
     }
 
@@ -99,6 +106,13 @@ const GenerateReport = props => {
                     <Typography color="textPrimary">Generate Report - {row.name || ''} </Typography>
                 </Breadcrumbs>
                 <br/>
+
+                {downloading &&
+                <LinearProgress color="primary" thickness={5}/>
+                }
+                {loading &&
+                <LinearProgress color="primary" thickness={5}/>
+                }
                 <Card>
                     <CardBody>
                     { form2 ?

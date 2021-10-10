@@ -1,8 +1,8 @@
 package org.lamisplus.modules.base.controller;
 
-import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.*;
 import org.lamisplus.modules.base.domain.entity.Patient;
 import org.lamisplus.modules.base.service.PatientService;
@@ -26,6 +26,7 @@ import java.util.Optional;
 public class PatientController {
     private final PatientService patientService;
 
+    @Audit(action = "api/patients")
     @GetMapping
     public ResponseEntity<List<PatientDTO>> getAllPatients(@RequestParam (required = false, defaultValue = "%*%") String firstName,
                                                            @RequestParam (required = false, defaultValue = "%*%") String lastName,
@@ -35,6 +36,7 @@ public class PatientController {
                                                            @RequestParam (required = false, defaultValue = "%*%") String searchValue,
                                                            @PageableDefault(value = 100) Pageable pageable) {
         Page<Patient> page;
+        String mobilePhoneNumber;
         if(key != null && !key.isEmpty() && value != null && !value.isEmpty()){
             value = "%"+value+"%";
             page = patientService.findPage(key, value, pageable);
@@ -48,7 +50,8 @@ public class PatientController {
             firstName = "%"+searchValue+"%";
             lastName = "%"+searchValue+"%";
             hospitalNumber = "%"+searchValue+"%";
-            page = patientService.findAllPages(firstName, lastName,hospitalNumber, pageable);
+            mobilePhoneNumber = "%"+searchValue+"%";
+            page = patientService.findAllPages(firstName, lastName,hospitalNumber,mobilePhoneNumber, pageable);
         }
         else {
                 page = patientService.findPage(pageable);
@@ -95,16 +98,6 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getEncountersByPatientIdAndFormCode(pageable, id, formCode, sortField, sortOrder, limit));
     }
 
-    /*@GetMapping("/{id}/encounters/test/{fCode}")
-    public ResponseEntity<List> getEncountersByPatientIdAndFCode(@PathVariable Long id,
-                                                                 @PathVariable String fCode, @RequestParam (required = false) String sortField,
-                                                                 @RequestParam(required = false) String sortOrder, @RequestParam(required = false) Integer limit,
-                                                                 @PageableDefault(value = 100) Pageable pageable) {
-        final Page<Encounter> page = patientService.getEncountersByPatientIdAndFCode(pageable, id, fCode,sortField, sortOrder, limit);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }*/
-
     @GetMapping("/{id}/encounters/programCodeExclusionList")
     //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List> getEncountersByPatientIdAndProgramCodeExclusionList(@PathVariable Long id, @RequestParam(required = false) List<String> programCodeExclusionList) {
@@ -121,8 +114,8 @@ public class PatientController {
             "Example - /api/patient/20/visits?dateStart=02-03-2020")*/
     @GetMapping("/{id}/visits/{dateStart}/{dateEnd}")
     //@PreAuthorize("hasAuthority('patient_read')")
-    public ResponseEntity<List<VisitDTO>> getVisitByPatientIdAndVisitDate(@PathVariable Optional<Long> id, @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional<String> dateStart,
-                                                                          @ApiParam(defaultValue = "",required = false) @PathVariable(required = false) Optional <String> dateEnd) {
+    public ResponseEntity<List<VisitDTO>> getVisitByPatientIdAndVisitDate(@PathVariable Optional<Long> id, /*@ApiParam(defaultValue = "",required = false) */@PathVariable(required = false) Optional<String> dateStart,
+                                                                          /*@ApiParam(defaultValue = "",required = false)*/ @PathVariable(required = false) Optional <String> dateEnd) {
         return ResponseEntity.ok(patientService.getVisitByPatientIdAndVisitDate(id,dateStart,dateEnd));
     }
 
@@ -131,8 +124,8 @@ public class PatientController {
     @GetMapping("/{id}/encounters/{formCode}/{dateStart}/{dateEnd}")
     //@PreAuthorize("hasAuthority('patient_read')")
     public List getEncountersByPatientIdAndDateEncounter(@PathVariable Long id, @PathVariable String formCode,
-                                                         @ApiParam(defaultValue = "") @PathVariable(required = false) Optional<String> dateStart,
-                                                         @ApiParam(defaultValue = "") @PathVariable(required = false) Optional<String> dateEnd) {
+                                                         /*@ApiParam(defaultValue = "")*/ @PathVariable(required = false) Optional<String> dateStart,
+                                                         /*@ApiParam(defaultValue = "")*/ @PathVariable(required = false) Optional<String> dateEnd) {
         return patientService.getEncountersByPatientIdAndDateEncounter(id, formCode, dateStart, dateEnd);
     }
 

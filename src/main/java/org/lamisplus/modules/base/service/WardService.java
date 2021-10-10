@@ -39,7 +39,7 @@ public class WardService {
         if (wardOptional.isPresent()) throw new RecordExistException(Ward.class,"Name:",wardDTO.getName());
         Ward ward = wardMapper.toWard(wardDTO);
         ward.setOrganisationUnitId(getOrganisationUnitId());
-        ward.setUuid(UUID.randomUUID().toString());
+        ward.setCode(UUID.randomUUID().toString());
         return wardRepository.save(ward);
     }
 

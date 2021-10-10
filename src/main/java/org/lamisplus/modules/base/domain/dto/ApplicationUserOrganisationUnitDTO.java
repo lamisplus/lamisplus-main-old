@@ -1,13 +1,6 @@
 package org.lamisplus.modules.base.domain.dto;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import org.lamisplus.modules.base.domain.entity.OrganisationUnit;
-import org.lamisplus.modules.base.domain.entity.User;
-
-import javax.persistence.*;
 
 @Data
 public class ApplicationUserOrganisationUnitDTO {

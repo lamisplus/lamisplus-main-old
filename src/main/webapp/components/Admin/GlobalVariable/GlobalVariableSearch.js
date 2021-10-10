@@ -16,6 +16,8 @@ import {toast} from "react-toastify";
 import SaveIcon from "@material-ui/icons/Delete";
 import CancelIcon from "@material-ui/icons/Cancel";
 import {makeStyles} from "@material-ui/core/styles";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -102,13 +104,13 @@ const GlobalVariableSearch = (props) => {
 
                 actions= {[
                     {
-                        icon: 'edit',
+                        icon: EditIcon,
                         iconProps: {color: 'primary'},
                         tooltip: 'Edit Global Variable',
                         onClick: (event, rowData) => openGlobalVariable(rowData)
                     },
                     {
-                        icon: 'delete',
+                        icon: DeleteIcon,
                         iconProps: {color: 'primary'},
                         tooltip: 'Delete Global Variable',
                         onClick: (event, rowData) => deleteGlobalVariable(rowData)

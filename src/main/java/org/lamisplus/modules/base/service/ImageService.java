@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.IllegalTypeException;
 import org.lamisplus.modules.base.domain.entity.Image;
-import org.lamisplus.modules.base.repository.ImageDbRepository;
+import org.lamisplus.modules.base.repository.ImageRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +20,7 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 public class ImageService {
-    private final ImageDbRepository imageRepository;
+    private final ImageRepository imageRepository;
 
     public List<String> uploadImage(MultipartFile [] multipartImages, Long patientId) throws Exception {
         List<String> imageIds = new ArrayList<>();
@@ -29,7 +29,7 @@ public class ImageService {
                 throw new IllegalTypeException(Image.class, file.getOriginalFilename(), " not an image");
             }
             Image dbImage = new Image();
-            dbImage.setName(file.getName());
+            dbImage.setName(file.getOriginalFilename());
             dbImage.setPatientId(patientId);
             dbImage.setUuid(UUID.randomUUID().toString());
             try {

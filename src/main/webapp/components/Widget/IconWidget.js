@@ -23,8 +23,8 @@ const IconWidget = ({
         <Icon size={50} {...iconProps} />
       </CardBody>
       <CardBody>
-        <CardTitle>{title}</CardTitle>
-        <CardSubtitle>{subtitle}</CardSubtitle>
+        <CardTitle><h2>{title}</h2></CardTitle>
+        <CardSubtitle><b>{subtitle}</b></CardSubtitle>
       </CardBody>
     </Card>
   );
