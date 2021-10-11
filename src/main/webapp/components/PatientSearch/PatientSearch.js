@@ -126,7 +126,7 @@ const PatientSearch = (props) => {
                         field: "name",
                       },
                       { title: "Patient ID", field: "id" },
-                      { title: "Age", field: "age", filtering: false },
+                      { title: "Age", field: "age", filtering: true },
                       { title: "Gender", field: "gender", filtering: false },
                       { title: "Address", field: "address", filtering: false },
                       {title: "", field: "actions", filtering: false,},
