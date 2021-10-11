@@ -2,7 +2,6 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.*;
 import org.lamisplus.modules.base.domain.entity.Patient;
 import org.lamisplus.modules.base.service.PatientService;
@@ -26,7 +25,7 @@ import java.util.Optional;
 public class PatientController {
     private final PatientService patientService;
 
-    @Audit(action = "api/patients")
+
     @GetMapping
     public ResponseEntity<List<PatientDTO>> getAllPatients(@RequestParam (required = false, defaultValue = "%*%") String firstName,
                                                            @RequestParam (required = false, defaultValue = "%*%") String lastName,
