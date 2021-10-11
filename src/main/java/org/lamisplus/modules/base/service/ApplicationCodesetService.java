@@ -29,8 +29,7 @@ public class ApplicationCodesetService {
     private final ArchiveStatus constant;
 
     public List<ApplicationCodesetDTO> getAllApplicationCodeset(){
-        List<ApplicationCodeSet> applicationCodeSets = applicationCodesetRepository.findAllByArchivedOrderByIdAsc(constant.UN_ARCHIVED);
-        return applicationCodesetMapper.toApplicationCodesetDTOList(applicationCodesetRepository.findAllByArchivedOrderByIdAsc(constant.UN_ARCHIVED));
+        return applicationCodesetMapper.toApplicationCodesetDTOList(applicationCodesetRepository.findAllByArchivedNotOrderByIdAsc(constant.ARCHIVED));
     }
 
     public ApplicationCodeSet save(ApplicationCodesetDTO applicationCodesetDTO){
@@ -59,7 +58,7 @@ public class ApplicationCodesetService {
     }
 
     public ApplicationCodeSet update(Long id, ApplicationCodesetDTO applicationCodesetDTO){
-        applicationCodesetRepository.findByIdAndArchived(id, constant.UN_ARCHIVED)
+        applicationCodesetRepository.findByIdAndArchivedNot(id, constant.ARCHIVED)
                 .orElseThrow(() -> new EntityNotFoundException(ApplicationCodeSet.class,"Display:",id+""));
 
         final ApplicationCodeSet applicationCodeset = applicationCodesetMapper.toApplicationCodeset(applicationCodesetDTO);

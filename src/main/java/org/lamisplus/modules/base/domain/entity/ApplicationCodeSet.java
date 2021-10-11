@@ -43,6 +43,5 @@ public class ApplicationCodeSet extends Audit<String> {
 
     @Basic
     @Column(name = "archived")
-    @JsonIgnore
     private Integer archived;
 }
