@@ -32,7 +32,7 @@ public class FlagUtil {
 
     public void checkForAndSavePatientFlag(Long patientId, Object object, List<FormFlag> formFlags, Boolean temp){
         formFlags.forEach(formFlag -> {
-            int flagDataType = formFlag.getFlag().getDatatype();
+            int flagDataType = formFlag.getFlag().getDatatype();// 0 - string, 1 - application codeset, 2 - integer
             String fieldName = formFlag.getFlag().getFieldName().trim();
             String operator = formFlag.getFlag().getOperator().trim();
             Boolean continuous = formFlag.getFlag().getContinuous();
