@@ -306,7 +306,7 @@
             <artifactId>testcontainers</artifactId>
             <version>1.14.3</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.jumpmind.symmetric</groupId>
             <artifactId>symmetric-core</artifactId>
             <version>3.10.0</version>
@@ -336,8 +336,8 @@
                     <artifactId>spring-core</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
+        </dependency>-->
+        <!--<dependency>
             <groupId>org.jumpmind.symmetric</groupId>
             <artifactId>symmetric-server</artifactId>
             <version>3.10.0</version>
@@ -359,7 +359,7 @@
                     <artifactId>log4j</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
         <!--<dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-maven-plugin</artifactId>
