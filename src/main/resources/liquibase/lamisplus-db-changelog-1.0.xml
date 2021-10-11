@@ -1249,7 +1249,7 @@
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-96">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
-                SELECT 1 FROM pg_constraint WHERE conname = 'form_code_key'
+                SELECT COUNT(*) FROM pg_constraint WHERE conname = 'form_code_key'
             </sqlCheck>
         </preConditions>
         <addUniqueConstraint columnNames="code" constraintName="form_code_key" tableName="form"/>
@@ -1257,7 +1257,7 @@
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-97">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
-                SELECT 1 FROM pg_constraint WHERE conname = 'patient_code_key'
+                SELECT COUNT(*) FROM pg_constraint WHERE conname = 'patient_code_key'
             </sqlCheck>
         </preConditions>
         <addUniqueConstraint columnNames="uuid" constraintName="patient_code_key" tableName="patient"/>
@@ -1265,7 +1265,7 @@
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-98">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
-                SELECT 1 FROM pg_constraint WHERE conname = 'program_code_key'
+                SELECT COUNT(*) FROM pg_constraint WHERE conname = 'program_code_key'
             </sqlCheck>
         </preConditions>
         <addUniqueConstraint columnNames="code" constraintName="program_code_key" tableName="program"/>
@@ -1273,7 +1273,7 @@
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-99">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
-                SELECT 1 FROM pg_constraint WHERE conname = 'uk_f73dsvaor0f4cycvldyt2idf1'
+                SELECT COUNT(*) FROM pg_constraint WHERE conname = 'uk_f73dsvaor0f4cycvldyt2idf1'
             </sqlCheck>
         </preConditions>
         <addUniqueConstraint columnNames="name" constraintName="uk_f73dsvaor0f4cycvldyt2idf1" tableName="module"/>
@@ -1281,7 +1281,7 @@
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-101">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
-                SELECT 1 FROM pg_constraint WHERE conname = 'uk_fuq6kda6folarp19oggaf02vb'
+                SELECT COUNT(*) FROM pg_constraint WHERE conname = 'uk_fuq6kda6folarp19oggaf02vb'
             </sqlCheck>
         </preConditions>
         <addUniqueConstraint columnNames="code" constraintName="uk_fuq6kda6folarp19oggaf02vb" tableName="program"/>
@@ -1289,7 +1289,7 @@
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-102">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
-                SELECT 1 FROM pg_constraint WHERE conname = 'uk_msgp2h0jmt17kj329439hmixa'
+                SELECT COUNT(*) FROM pg_constraint WHERE conname = 'uk_msgp2h0jmt17kj329439hmixa'
             </sqlCheck>
         </preConditions>
         <addUniqueConstraint columnNames="name" constraintName="uk_msgp2h0jmt17kj329439hmixa" tableName="data_source"/>
@@ -1297,7 +1297,7 @@
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-103">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
-                SELECT 1 FROM pg_constraint WHERE conname = 'uk_rxqkmhg2y507iqe53my30p6sv'
+                SELECT COUNT(*) FROM pg_constraint WHERE conname = 'uk_rxqkmhg2y507iqe53my30p6sv'
             </sqlCheck>
         </preConditions>
         <addUniqueConstraint columnNames="base_package" constraintName="uk_rxqkmhg2y507iqe53my30p6sv" tableName="module"/>
@@ -1305,7 +1305,7 @@
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-104">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
-                SELECT 1 FROM pg_constraint WHERE conname = 'unique_name'
+                SELECT COUNT(*) FROM pg_constraint WHERE conname = 'unique_name'
             </sqlCheck>
         </preConditions>
         <addUniqueConstraint columnNames="name" constraintName="unique_name" tableName="permission"/>
