@@ -21,6 +21,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
         if (request.getRequestURI().contains("/api/")) {
             log.info("Request URL {}", request.getRequestURI());
+
             return true;
         }
         else{

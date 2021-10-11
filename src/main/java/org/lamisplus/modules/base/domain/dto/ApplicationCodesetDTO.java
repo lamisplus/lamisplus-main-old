@@ -15,4 +15,6 @@ public class ApplicationCodesetDTO {
 
     private String code;
 
+    private Integer archived;
+
 }

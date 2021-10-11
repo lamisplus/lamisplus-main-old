@@ -2,7 +2,6 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.audit4j.core.annotation.Audit;
 import org.lamisplus.modules.base.domain.dto.*;
 import org.lamisplus.modules.base.domain.entity.Patient;
 import org.lamisplus.modules.base.service.PatientService;
@@ -26,7 +25,7 @@ import java.util.Optional;
 public class PatientController {
     private final PatientService patientService;
 
-    @Audit(action = "api/patients")
+
     @GetMapping
     public ResponseEntity<List<PatientDTO>> getAllPatients(@RequestParam (required = false, defaultValue = "%*%") String firstName,
                                                            @RequestParam (required = false, defaultValue = "%*%") String lastName,
@@ -36,6 +35,7 @@ public class PatientController {
                                                            @RequestParam (required = false, defaultValue = "%*%") String searchValue,
                                                            @PageableDefault(value = 100) Pageable pageable) {
         Page<Patient> page;
+        String mobilePhoneNumber;
         if(key != null && !key.isEmpty() && value != null && !value.isEmpty()){
             value = "%"+value+"%";
             page = patientService.findPage(key, value, pageable);
@@ -49,7 +49,8 @@ public class PatientController {
             firstName = "%"+searchValue+"%";
             lastName = "%"+searchValue+"%";
             hospitalNumber = "%"+searchValue+"%";
-            page = patientService.findAllPages(firstName, lastName,hospitalNumber, pageable);
+            mobilePhoneNumber = "%"+searchValue+"%";
+            page = patientService.findAllPages(firstName, lastName,hospitalNumber,mobilePhoneNumber, pageable);
         }
         else {
                 page = patientService.findPage(pageable);

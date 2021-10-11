@@ -41,7 +41,7 @@ public class ApplicationUserPatientService {
 
     public UserDTO getAllApplicationUserByPatientId(Long patientId) {
         ApplicationUserPatient applicationUserPatient = applicationUserPatientRepository.findAllByPatientIdAndArchived(patientId, 0)
-                .orElseThrow(() ->new EntityNotFoundException(ApplicationUserPatient.class,"patientId:",patientId+""));
+                .orElseThrow(() -> new EntityNotFoundException(ApplicationUserPatient.class,"patientId:",patientId+""));
 
         return userMapper.userToUserDTO(applicationUserPatient.getApplicationUserByApplicationUserId());
     }

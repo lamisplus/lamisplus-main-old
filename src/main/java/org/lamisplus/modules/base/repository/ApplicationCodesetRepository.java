@@ -25,7 +25,12 @@ public interface ApplicationCodesetRepository extends JpaRepository<ApplicationC
 
     Optional<ApplicationCodeSet> findByIdAndArchived(Long id, int archive);
 
+    Optional<ApplicationCodeSet> findByIdAndArchivedNot(Long id, int archive);
+
+
     List<ApplicationCodeSet> findAllByArchivedOrderByIdAsc(int archived);
+
+    List<ApplicationCodeSet> findAllByArchivedNotOrderByIdAsc(int archived);
 
     @Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.ApplicationCodesetResponseDTO" +
             "(a.id, a.display, a.code) FROM ApplicationCodeSet a WHERE a.codesetGroup = ?1 and a.archived = ?2")
