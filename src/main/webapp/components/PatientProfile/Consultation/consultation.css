@@ -1,0 +1,28 @@
+/* .formio-button-add-row{
+    background: #17224D !important;
+    border:  #17224D !important;
+} */
+
+/* .formio-button-remove-row{
+    background: red !important;
+    border:  red !important;
+} */
+.page-item.active .page-link{
+    color: #fff ;
+    background-color: #212529 ;
+    border: 1px solid #dee2e6 ;
+    cursor: pointer;
+}
+
+.page-item .page-link{
+    color: #212529 ;
+    background-color: #e9ecef ;
+    border: 1px solid #dee2e6 ;
+    line-height: 2 ;
+    cursor: pointer;
+}
+
+
+
+
+
