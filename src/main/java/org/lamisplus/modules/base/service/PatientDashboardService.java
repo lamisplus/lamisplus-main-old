@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.repository.AppointmentRepository;
 import org.lamisplus.modules.base.repository.PatientRepository;
 import org.lamisplus.modules.base.repository.VisitRepository;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class PatientDashboardService {
@@ -80,39 +82,42 @@ public class PatientDashboardService {
         List<Object> columnSeries = new ArrayList<>();
         List<Object> appointmentData = new ArrayList<Object>();
         LocalDate currentMonth = YearMonth.now().atEndOfMonth();
-        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+        try {
+            Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+            appointmentData.add(appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDateBetween(organisationUnitId, 0, currentMonth.minusMonths(6), currentMonth.minusMonths(5)));
+            appointmentData.add(appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDateBetween(organisationUnitId, 0, currentMonth.minusMonths(5), currentMonth.minusMonths(4)));
+            appointmentData.add(appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDateBetween(organisationUnitId, 0, currentMonth.minusMonths(4), currentMonth.minusMonths(3)));
+            appointmentData.add(appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDateBetween(organisationUnitId, 0, currentMonth.minusMonths(3), currentMonth.minusMonths(2)));
+            appointmentData.add(appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDateBetween(organisationUnitId, 0, currentMonth.minusMonths(2), currentMonth.minusMonths(1)));
+            appointmentData.add(appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDateBetween(organisationUnitId, 0, currentMonth.minusMonths(1), currentMonth));
 
+            columnSeries.add(chartUtil.getMainMap(appointmentData, "Appointment", null, null, null));
 
-        appointmentData.add(appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDateBetween(organisationUnitId,0, currentMonth.minusMonths(6), currentMonth.minusMonths(5)));
-        appointmentData.add(appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDateBetween(organisationUnitId,0, currentMonth.minusMonths(5), currentMonth.minusMonths(4)));
-        appointmentData.add(appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDateBetween(organisationUnitId,0, currentMonth.minusMonths(4), currentMonth.minusMonths(3)));
-        appointmentData.add(appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDateBetween(organisationUnitId,0, currentMonth.minusMonths(3), currentMonth.minusMonths(2)));
-        appointmentData.add(appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDateBetween(organisationUnitId,0, currentMonth.minusMonths(2), currentMonth.minusMonths(1)));
-        appointmentData.add(appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDateBetween(organisationUnitId,0, currentMonth.minusMonths(1), currentMonth));
+            List<Object> attendanceData = new ArrayList<Object>();
+            attendanceData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(organisationUnitId, 0, currentMonth.minusMonths(6), currentMonth.minusMonths(5)));
+            attendanceData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(organisationUnitId, 0, currentMonth.minusMonths(5), currentMonth.minusMonths(4)));
+            attendanceData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(organisationUnitId, 0, currentMonth.minusMonths(4), currentMonth.minusMonths(3)));
+            attendanceData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(organisationUnitId, 0, currentMonth.minusMonths(3), currentMonth.minusMonths(2)));
+            attendanceData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(organisationUnitId, 0, currentMonth.minusMonths(2), currentMonth.minusMonths(1)));
+            attendanceData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(organisationUnitId, 0, currentMonth.minusMonths(1), currentMonth));
+            columnSeries.add(chartUtil.getMainMap(attendanceData, "Attendance", null, null, null));
 
-        columnSeries.add(chartUtil.getMainMap(appointmentData, "Appointment", null, null, null));
+            List<Object> emergenciesData = new ArrayList<Object>();
+            Long visitTypeId = 373L;
+            emergenciesData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndVisitTypeIdAndDateVisitStartBetween(organisationUnitId, 0, visitTypeId, currentMonth.minusMonths(6), currentMonth.minusMonths(5)));
+            emergenciesData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndVisitTypeIdAndDateVisitStartBetween(organisationUnitId, 0, visitTypeId, currentMonth.minusMonths(5), currentMonth.minusMonths(4)));
+            emergenciesData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndVisitTypeIdAndDateVisitStartBetween(organisationUnitId, 0, visitTypeId, currentMonth.minusMonths(4), currentMonth.minusMonths(3)));
+            emergenciesData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndVisitTypeIdAndDateVisitStartBetween(organisationUnitId, 0, visitTypeId, currentMonth.minusMonths(3), currentMonth.minusMonths(2)));
+            emergenciesData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndVisitTypeIdAndDateVisitStartBetween(organisationUnitId, 0, visitTypeId, currentMonth.minusMonths(2), currentMonth.minusMonths(1)));
+            emergenciesData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndVisitTypeIdAndDateVisitStartBetween(organisationUnitId, 0, visitTypeId, currentMonth.minusMonths(1), currentMonth));
+            columnSeries.add(chartUtil.getMainMap(emergenciesData, "Emergencies", null, null, null));
 
-        List<Object> attendanceData = new ArrayList<Object>();
-        attendanceData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(organisationUnitId,0, currentMonth.minusMonths(6), currentMonth.minusMonths(5)));
-        attendanceData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(organisationUnitId,0, currentMonth.minusMonths(5), currentMonth.minusMonths(4)));
-        attendanceData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(organisationUnitId,0, currentMonth.minusMonths(4), currentMonth.minusMonths(3)));
-        attendanceData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(organisationUnitId,0, currentMonth.minusMonths(3), currentMonth.minusMonths(2)));
-        attendanceData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(organisationUnitId,0, currentMonth.minusMonths(2), currentMonth.minusMonths(1)));
-        attendanceData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(organisationUnitId,0, currentMonth.minusMonths(1), currentMonth));
-        columnSeries.add(chartUtil.getMainMap(attendanceData, "Attendance", null, null, null));
-
-        List<Object> emergenciesData = new ArrayList<Object>();
-        Long visitTypeId = 373L;
-        emergenciesData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndVisitTypeIdAndDateVisitStartBetween(organisationUnitId,0, visitTypeId, currentMonth.minusMonths(6), currentMonth.minusMonths(5)));
-        emergenciesData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndVisitTypeIdAndDateVisitStartBetween(organisationUnitId,0, visitTypeId, currentMonth.minusMonths(5), currentMonth.minusMonths(4)));
-        emergenciesData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndVisitTypeIdAndDateVisitStartBetween(organisationUnitId,0, visitTypeId, currentMonth.minusMonths(4), currentMonth.minusMonths(3)));
-        emergenciesData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndVisitTypeIdAndDateVisitStartBetween(organisationUnitId,0, visitTypeId, currentMonth.minusMonths(3), currentMonth.minusMonths(2)));
-        emergenciesData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndVisitTypeIdAndDateVisitStartBetween(organisationUnitId,0, visitTypeId, currentMonth.minusMonths(2), currentMonth.minusMonths(1)));
-        emergenciesData.add(visitRepository.countAllByOrganisationUnitIdAndArchivedAndVisitTypeIdAndDateVisitStartBetween(organisationUnitId,0, visitTypeId, currentMonth.minusMonths(1), currentMonth));
-        columnSeries.add(chartUtil.getMainMap(emergenciesData, "Emergencies", null, null, null));
-
-        return chartUtil.buildMainMap(type, chartTitle, subTitle, chartUtil.getXAxis(),
-                chartUtil.getYAxis(), columnSeries, null);
+            return chartUtil.buildMainMap(type, chartTitle, subTitle, chartUtil.getXAxis(),
+                    chartUtil.getYAxis(), columnSeries, null);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+        return null;
     }
 
     public Object getBirthRateColumnChart() {
