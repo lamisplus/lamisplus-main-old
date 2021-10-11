@@ -84,15 +84,14 @@ public class FormService {
         return form;
     }
 
-    public Form getFormByFormCode(String formCode, Optional<Integer> type) {
+    public Form getFormByFormCode(String formCode, Optional<Integer> formType) {
         Set<String> permissions = accessRight.getAllPermission();
 
         accessRight.grantAccess(formCode, FormService.class, permissions);
-        if (type.isPresent()) {
-            if (type.get() == 1) {
-                formRepository.findByCodeAndArchivedAndType(formCode, UN_ARCHIVED, type.get())
-                        .orElseThrow(() -> new EntityNotFoundException(Form.class, "Form Code has no retrospective", formCode));
-            }
+        //if form is retrospective  - 1
+        if (formType.isPresent() && formType.get() == 1) {
+            return formRepository.findByMainCodeAndArchivedAndType(formCode, UN_ARCHIVED, formType.get())
+                    .orElseThrow(() -> new EntityNotFoundException(Form.class, "Form Code has no retrospective", formCode));
         }
         return formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED)
                 .orElseThrow(() -> new EntityNotFoundException(Form.class, "Form Code", formCode));
