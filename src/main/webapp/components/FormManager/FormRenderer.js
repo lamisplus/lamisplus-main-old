@@ -117,8 +117,8 @@ const FormRenderer = (props) => {
       const keys = Object.keys(submission.data);
       console.log(keys);
       // remove the base
-      if(keys.length == 1 && _.isArray(submission.data[keys[0]])){
-        submission.data = submission.data[keys[0]];
+      if(keys.includes('orders') && _.isArray(submission.data['orders'])){
+        submission.data = submission.data['orders'];
       }
 
       saveForm(submission, onSuccess, onError);
