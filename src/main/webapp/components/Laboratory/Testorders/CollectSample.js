@@ -152,7 +152,7 @@ const useStyles = makeStyles({
         }else if(e===5){
             return <p><Badge  color="light">Result Available</Badge></p>
         }else{
-            return <p>{" "}</p>
+            return <p><Badge  color="light">Pending Collection</Badge></p>
         }
     }
 

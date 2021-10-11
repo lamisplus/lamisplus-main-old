@@ -9,7 +9,8 @@ import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import { forwardRef } from 'react';
-
+import axios from "axios";
+import { url as baseUrl , LABSERVICECODE} from "../../../api";
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import Check from '@material-ui/icons/Check';
@@ -112,44 +113,79 @@ const PatientSearch = (props) => {
           },
         ]}
         isLoading={loading}
-        data={collectedSamples.map((row) => ({
-          Id: row.hospitalNumber,
-          name: row.firstName +  ' ' + row.lastName,
+        // data={collectedSamples.map((row) => ({
+        //   Id: row.hospitalNumber,
+        //   name: row.firstName +  ' ' + row.lastName,
           
-          date: row.dateEncounter,
-          count: row.formDataObj.length,
-          samplecount: totalResultCollected(row.formDataObj),
-          actions: <Link to ={{ 
-                        pathname: "/collect-result",  
-                        state: row
-                      }} 
-                        style={{ cursor: "pointer", color: "blue", 
-                        fontStyle: "bold" }}>
-                          <Tooltip title="Enter Result">
-                            <IconButton aria-label="Enter Result" >
-                            <NoteAddIcon color="primary"/>
-                          </IconButton>
-                          </Tooltip>
-                        </Link>
+        //   date: row.dateEncounter,
+        //   count: row.formDataObj.length,
+        //   samplecount: totalResultCollected(row.formDataObj),
+        //   actions: <Link to ={{ 
+        //                 pathname: "/collect-result",  
+        //                 state: row
+        //               }} 
+        //                 style={{ cursor: "pointer", color: "blue", 
+        //                 fontStyle: "bold" }}>
+        //                   <Tooltip title="Enter Result">
+        //                     <IconButton aria-label="Enter Result" >
+        //                     <NoteAddIcon color="primary"/>
+        //                   </IconButton>
+        //                   </Tooltip>
+        //                 </Link>
 
-            }))}
-        options={{
-          pageSizeOptions: [5,10,50,100,150,200],
-          headerStyle: {
-            backgroundColor: "#9F9FA5",
-            color: "#000",
-            margin: "auto"
-          },
-          filtering: true,
-          searchFieldStyle: {
-            width : '250%',
-            margingLeft: '250px',
-          },
-          
-          exportButton: true,
-          searchFieldAlignment: 'left',
-          
-        }}
+        //     }))}
+        data={query =>
+                  new Promise((resolve, reject) =>
+                      axios.get(`${baseUrl}encounters/${LABSERVICECODE}/{dateStart}/{dateEnd}?size=${query.pageSize}&page=${query.page}&search=${query.search}`)
+                          .then(response => response)
+                          .then(result => {
+
+                              //console.log('in result')
+                              //console.log( result.headers);
+                              console.log( result.headers['x-total-count']);
+                              resolve({
+                                  data: result.data.map((row) => ({
+                                      Id: row.hospitalNumber,
+                                      name: row.firstName +  ' ' + row.lastName,
+                                      
+                                      date: row.dateEncounter,
+                                      count: row.formDataObj.length,
+                                      samplecount: totalResultCollected(row.formDataObj),
+                                      actions:
+                                      <Link to ={{ 
+                                          pathname: "/collect-result",  
+                                          state: row
+                                        }} 
+                                          style={{ cursor: "pointer", color: "blue", 
+                                          fontStyle: "bold" }}>
+                                            <Tooltip title="Enter Result">
+                                              <IconButton aria-label="Enter Result" >
+                                              <NoteAddIcon color="primary"/>
+                                            </IconButton>
+                                            </Tooltip>
+                                          </Link>
+                                  })),
+                                  page: query.page,
+                                  totalCount: result.headers['x-total-count'],
+                              })
+                          })
+                  )}
+              options={{
+                headerStyle: {
+                    backgroundColor: "#9F9FA5",
+                    color: "#000",
+                },
+                searchFieldStyle: {
+                    width : '300%',
+                    margingLeft: '250px',
+                },
+                filtering: false,
+                exportButton: false,
+                searchFieldAlignment: 'left',
+                pageSizeOptions:[10,20,100],
+                pageSize:10,
+                debounceInterval: 400
+            }}
 
       />
     </div>
