@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-121">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM application_codeset WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/application_codeset.sql"
                  relativeToChangelogFile="true"
@@ -9,6 +14,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-122">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM organisation_unit_level WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/organisation_unit_level.sql"
                  relativeToChangelogFile="true"
@@ -17,6 +27,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-123">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM organisation_unit WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/organisation_unit.sql"
                  relativeToChangelogFile="true"
@@ -25,6 +40,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-125">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM lab_test_group WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/lab_test_group.sql"
                  relativeToChangelogFile="true"
@@ -33,6 +53,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-126">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM lab_test WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/lab_test.sql"
                  relativeToChangelogFile="true"
@@ -41,6 +66,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-127">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM drug_group WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/drug_group.sql"
                  relativeToChangelogFile="true"
@@ -49,15 +79,24 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-128">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM drug WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/drug.sql"
                  relativeToChangelogFile="true"
                  splitStatements="false"
                  stripComments="true"/>
-
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-129">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM radiology_test_group WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/radiology_test_group.sql"
                  relativeToChangelogFile="true"
@@ -66,6 +105,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-130">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM radiology_test WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/radiology_test.sql"
                  relativeToChangelogFile="true"
@@ -74,6 +118,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-131">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM regimen_line WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/regimen_line.sql"
                  relativeToChangelogFile="true"
@@ -82,6 +131,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-132">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM regimen WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/regimen.sql"
                  relativeToChangelogFile="true"
@@ -90,6 +144,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-133">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM regimen_drug WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/regimen_drug.sql"
                  relativeToChangelogFile="true"
@@ -98,6 +157,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-134">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM module WHERE id='1';
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/module.sql"
                  relativeToChangelogFile="true"
@@ -106,6 +170,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-135">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM program WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/program.sql"
                  relativeToChangelogFile="true"
@@ -114,6 +183,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-136">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM form WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/form.sql"
                  relativeToChangelogFile="true"
@@ -122,6 +196,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-137">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM role WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/role.sql"
                  relativeToChangelogFile="true"
@@ -130,6 +209,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-138">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM permission WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/permission.sql"
                  relativeToChangelogFile="true"
@@ -138,6 +222,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-139">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM role_permission WHERE role_id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/role_permission.sql"
                  relativeToChangelogFile="true"
@@ -146,6 +235,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-140">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM application_user WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/application_user.sql"
                  relativeToChangelogFile="true"
@@ -154,6 +248,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-141">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM application_user_role WHERE user_id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/application_user_role.sql"
                  relativeToChangelogFile="true"
@@ -162,6 +261,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-142">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM flag WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/flag.sql"
                  relativeToChangelogFile="true"
@@ -170,6 +274,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-143">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM form_flag WHERE id=4;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/form_flag.sql"
                  relativeToChangelogFile="true"
@@ -178,6 +287,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-144">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM report_info WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/report_info.sql"
                  relativeToChangelogFile="true"
@@ -186,6 +300,11 @@
     </changeSet>
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-145">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM organisation_unit_hierarchy WHERE id=1;
+            </sqlCheck>
+        </preConditions>
         <sqlFile dbms="postgresql"
                  path="sql/organisation_unit_hierarchy.sql"
                  relativeToChangelogFile="true"

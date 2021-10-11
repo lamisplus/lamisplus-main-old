@@ -234,12 +234,6 @@
         </preConditions>
         <createSequence sequenceName="standard_codeset_source_id_seq"/>
     </changeSet>
-    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-40">
-        <preConditions onFail="MARK_RAN">
-            <sequenceExists sequenceName="sym_data_data_id_seq"></sequenceExists>
-        </preConditions>
-        <createSequence sequenceName="sym_data_data_id_seq"/>
-    </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-41">
         <preConditions onFail="MARK_RAN">
             <sequenceExists sequenceName="visit_id_seq"></sequenceExists>
@@ -1214,153 +1208,225 @@
             <column name="date_created" type="TIMESTAMP WITHOUT TIME ZONE"/>
         </createTable>
     </changeSet>
-    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-90">
-        <preConditions onFail="MARK_RAN">
-            <primaryKeyExists primaryKeyName="application_codeset_has_standard_codeset_pkey" tableName="application_codeset_has_standard_codeset"/>
-        </preConditions>
-        <addPrimaryKey columnNames="standard_codeset_id, application_codeset_id" constraintName="application_codeset_has_standard_codeset_pkey" tableName="application_codeset_has_standard_codeset"/>
-    </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-91">
         <preConditions onFail="MARK_RAN">
-            <primaryKeyExists primaryKeyName="application_codeset_has_standard_codeset_pkey" tableName="application_user_role"/>
+            <primaryKeyExists primaryKeyName="application_user_roles_pkey" tableName="application_user_role"/>
         </preConditions>
         <addPrimaryKey columnNames="user_id, role_id" constraintName="application_user_roles_pkey" tableName="application_user_role"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-92">
         <preConditions onFail="MARK_RAN">
+            <not>
             <primaryKeyExists primaryKeyName="biometric_pkey" tableName="biometric"/>
+            </not>
         </preConditions>
         <addPrimaryKey columnNames="id" constraintName="biometric_pkey" tableName="biometric"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-93">
         <preConditions onFail="MARK_RAN">
+            <not>
             <primaryKeyExists primaryKeyName="module_pkey" tableName="module"/>
+            </not>
         </preConditions>
         <addPrimaryKey columnNames="id" constraintName="module_pkey" tableName="module"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-94">
         <preConditions onFail="MARK_RAN">
+            <not>
             <primaryKeyExists primaryKeyName="patient_flag_pkey" tableName="patient_flag"/>
+            </not>
         </preConditions>
         <addPrimaryKey columnNames="patient_id, flag_id" constraintName="patient_flag_pkey" tableName="patient_flag"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-95">
         <preConditions onFail="MARK_RAN">
+            <not>
             <primaryKeyExists primaryKeyName="role_permissions_pkey" tableName="role_permission"/>
+            </not>
         </preConditions>
         <addPrimaryKey columnNames="role_id, permission_id" constraintName="role_permissions_pkey" tableName="role_permission"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-96">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT 1 FROM pg_constraint WHERE conname = 'form_code_key'
+            </sqlCheck>
+        </preConditions>
         <addUniqueConstraint columnNames="code" constraintName="form_code_key" tableName="form"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-97">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT 1 FROM pg_constraint WHERE conname = 'patient_code_key'
+            </sqlCheck>
+        </preConditions>
         <addUniqueConstraint columnNames="uuid" constraintName="patient_code_key" tableName="patient"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-98">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT 1 FROM pg_constraint WHERE conname = 'program_code_key'
+            </sqlCheck>
+        </preConditions>
         <addUniqueConstraint columnNames="code" constraintName="program_code_key" tableName="program"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-99">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT 1 FROM pg_constraint WHERE conname = 'uk_f73dsvaor0f4cycvldyt2idf1'
+            </sqlCheck>
+        </preConditions>
         <addUniqueConstraint columnNames="name" constraintName="uk_f73dsvaor0f4cycvldyt2idf1" tableName="module"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-101">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT 1 FROM pg_constraint WHERE conname = 'uk_fuq6kda6folarp19oggaf02vb'
+            </sqlCheck>
+        </preConditions>
         <addUniqueConstraint columnNames="code" constraintName="uk_fuq6kda6folarp19oggaf02vb" tableName="program"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-102">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT 1 FROM pg_constraint WHERE conname = 'uk_msgp2h0jmt17kj329439hmixa'
+            </sqlCheck>
+        </preConditions>
         <addUniqueConstraint columnNames="name" constraintName="uk_msgp2h0jmt17kj329439hmixa" tableName="data_source"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-103">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT 1 FROM pg_constraint WHERE conname = 'uk_rxqkmhg2y507iqe53my30p6sv'
+            </sqlCheck>
+        </preConditions>
         <addUniqueConstraint columnNames="base_package" constraintName="uk_rxqkmhg2y507iqe53my30p6sv" tableName="module"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-104">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT 1 FROM pg_constraint WHERE conname = 'unique_name'
+            </sqlCheck>
+        </preConditions>
         <addUniqueConstraint columnNames="name" constraintName="unique_name" tableName="permission"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-106">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyName="drug_group_id_fk"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="drug_group_id_fk"/>
+            </not>
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="drug_group_id" baseTableName="drug" constraintName="drug_group_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="drug_group"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-107">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyName="drug_id_fk"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="drug_id_fk"/>
+            </not>
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="drug_id" baseTableName="drug_inventory" constraintName="drug_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="drug"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-108">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyName="encounter_program_code_fkey"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="encounter_program_code_fkey"/>
+            </not>
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="program_code" baseTableName="encounter" constraintName="encounter_program_code_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code" referencedTableName="program"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-109">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyName="fk7rakobphuf1x8hqj09326h5si"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk7rakobphuf1x8hqj09326h5si"/>
+            </not>
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="standard_codeset_id" baseTableName="application_codeset_standard_codeset" constraintName="fk7rakobphuf1x8hqj09326h5si" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="standard_codeset"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-110">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyName="fk_group_id_radiology_test_group"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_group_id_radiology_test_group"/>
+            </not>
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="group_id" baseTableName="radiology_test" constraintName="fk_group_id_radiology_test_group" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="radiology_test_group"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-111">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyName="fk_organisation_level"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_organisation_level"/>
+            </not>
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="organisation_unit_level_id" baseTableName="organisation_unit" constraintName="fk_organisation_level" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="organisation_unit_level"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-112">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyName="fkl126c2uxxdv4qnnx2qnj18mi0"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fkl126c2uxxdv4qnnx2qnj18mi0"/>
+            </not>
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="form_code" baseTableName="encounter" constraintName="fkl126c2uxxdv4qnnx2qnj18mi0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code" referencedTableName="form"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-113">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyName="form_code_fk"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="form_code_fk"/>
+            </not>
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="form_code" baseTableName="form_flag" constraintName="form_code_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code" referencedTableName="form"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-114">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyName="form_program_code_fkey"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="form_program_code_fkey"/>
+            </not>
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="program_code" baseTableName="form" constraintName="form_program_code_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="code" referencedTableName="program"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-115">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyName="lab_test_group_id_fk"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="lab_test_group_id_fk"/>
+            </not>
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="lab_test_group_id" baseTableName="lab_test" constraintName="lab_test_group_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="lab_test_group"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-116">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyName="module_id_fk"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="module_id_fk"/>
+            </not>
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="module_id" baseTableName="program" constraintName="module_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="module"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-117">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyName="organisation_unit_hierarchy"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="organisation_unit_hierarchy"/>
+            </not>
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="organisation_unit_level_id" baseTableName="organisation_unit_hierarchy" constraintName="organisation_unit_level_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="organisation_unit_level"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-118">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyName="patient_fk"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="patient_fk"/>
+            </not>
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="patient_flag" constraintName="patient_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patient"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-119">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyName="regimen_id_fk"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="regimen_id_fk"/>
+            </not>
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="regimen_id" baseTableName="regimen_drug" constraintName="regimen_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="regimen"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-120">
         <preConditions onFail="MARK_RAN">
-            <foreignKeyConstraintExists foreignKeyName="regimen_regimen_line_id_fkey"/>
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="regimen_regimen_line_id_fkey"/>
+            </not>
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="regimen_line_id" baseTableName="regimen" constraintName="regimen_regimen_line_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="regimen_line"/>
     </changeSet>
