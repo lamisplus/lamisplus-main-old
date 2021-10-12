@@ -5,10 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.RoleDTO;
+import org.lamisplus.modules.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.domain.entity.Permission;
 import org.lamisplus.modules.base.domain.entity.Role;
+import org.lamisplus.modules.base.domain.mapper.UserMapper;
 import org.lamisplus.modules.base.repository.PermissionRepository;
 import org.lamisplus.modules.base.repository.RoleRepository;
+import org.lamisplus.modules.base.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +29,8 @@ import java.util.Optional;
 public class RoleService {
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @PersistenceContext
     EntityManager em;
@@ -88,5 +93,15 @@ public class RoleService {
             }
         }
         return permissionsSet;
+    }
+
+    @Transactional
+    public List<UserDTO> getAllUsersByRoleId(Long id){
+        HashSet<Role> roles = new HashSet<>();
+        Role role = roleRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException(Role.class, "id", ""+id));
+        roles.add(role);
+        //TODO: find by user in organisation Unit...
+        return userMapper.usersToUserDTOs(userRepository.findAllByRoleIn(roles));
     }
 }

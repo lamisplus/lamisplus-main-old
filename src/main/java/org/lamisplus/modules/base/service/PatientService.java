@@ -39,7 +39,7 @@ public class PatientService {
 
     public static final String HOSPITAL_NUMBER = "hospitalNumber";
     private final EncounterRepository encounterRepository;
-    private final ApplicationCodesetRepository applicationCodesetRepository;
+    private final PatientTransformer patientTransformer;
     private final PatientRepository patientRepository;
     private final VisitRepository visitRepository;
     private final PatientMapper patientMapper;
@@ -51,7 +51,7 @@ public class PatientService {
     private final ProgramRepository programRepository;
     private final FormRepository formRepository;
     private final FormFlagRepository formFlagRepository;
-    private final PatientFlagRepository patientFlagRepository;
+    private final UserMapper userMapper;
     private final AccessRight accessRight;
     public static final String FORM_CODE = "formCode";
     private static final int UN_ARCHIVED = 0;
@@ -66,7 +66,7 @@ public class PatientService {
     public Patient save(PatientDTO patientDTO) {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
 
-        patientDTO = transformDTO(HOSPITAL_NUMBER, patientDTO);
+        patientDTO = patientTransformer.transformDTO(HOSPITAL_NUMBER, patientDTO);
 
         Optional<Patient> patient1 = patientRepository.findByHospitalNumberAndOrganisationUnitIdAndArchived(patientDTO.getHospitalNumber(), organisationUnitId, UN_ARCHIVED);
         if (patient1.isPresent())
@@ -112,7 +112,7 @@ public class PatientService {
         patientRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() ->
                 new EntityNotFoundException(Patient.class, "Id", id + ""));
 
-        patientDTO = transformDTO(HOSPITAL_NUMBER, patientDTO);
+        patientDTO = patientTransformer.transformDTO(HOSPITAL_NUMBER, patientDTO);
 
         final Patient patient = patientMapper.toPatient(patientDTO);
         patient.setId(id);
@@ -350,7 +350,7 @@ public class PatientService {
             Optional<Visit> visitOptional = visitRepository.findTopByPatientIdAndDateVisitEndIsNullOrderByDateVisitStartDesc(patient.getId());
             PatientDTO patientDTO = visitOptional.isPresent() ? patientMapper.toPatientDTO(visitOptional.get(), patient) : patientMapper.toPatientDTO(patient);
             patientDTO.setFlags(flags);
-            patientDTOs.add(transformDTO(patientDTO));
+            patientDTOs.add(patientTransformer.transformDTO(patientDTO));
         });
 
         return patientDTOs;
@@ -372,86 +372,26 @@ public class PatientService {
         return patientRepository.findAllByFullDetails(firstName, lastName, hospitalNumber, mobilePhoneNumber, getOrganisationUnitId(), UN_ARCHIVED, pageable);
     }
 
-    private PatientDTO transformDTO(PatientDTO patientDTO) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        try {
-            //Instance of ObjectMapper provides functionality for reading and writing JSON
-            ObjectMapper mapper = new ObjectMapper();
-            if (patientDTO.getDetails().toString() != null) {
-                mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-                String patientDetailsString = mapper.writeValueAsString(patientDTO.getDetails());
-                JSONObject patientJson = new JSONObject(patientDetailsString);
-                if (patientJson.get("firstName").toString() != null) patientDTO.setFirstName(patientJson.get("firstName").toString());
-                if (patientJson.get("lastName").toString() != null) patientDTO.setLastName(patientJson.get("lastName").toString());
-                if (patientJson.get("hospitalNumber").toString() != null) patientDTO.setHospitalNumber(patientJson.get("hospitalNumber").toString());
-                if (patientJson.get("gender")!= null && !patientJson.get("gender").toString().isEmpty()) {
-                    JSONObject genderJson = new JSONObject(patientJson.get("gender").toString());
-                    patientDTO.setGenderId(Long.valueOf(genderJson.get("id").toString()));
-                }
-                if (patientJson.get("otherNames").toString() != null) patientDTO.setOtherNames(patientJson.get("otherNames").toString());
-                if (patientJson.get("dob").toString() != null) patientDTO.setDob(LocalDate.parse(patientJson.get("dob").toString(), formatter));
-                if (patientJson.get("dobEstimated").toString() != null) patientDTO.setDobEstimated(Boolean.valueOf(patientJson.get("dobEstimated").toString()));
-                if (patientJson.get("mobilePhoneNumber").toString() != null) patientDTO.setMobilePhoneNumber(patientJson.get("mobilePhoneNumber").toString());
-                if (patientJson.get("alternatePhoneNumber").toString() != null) patientDTO.setAlternatePhoneNumber(patientJson.get("alternatePhoneNumber").toString());
-                if (patientJson.get("street").toString() != null) patientDTO.setStreet(patientJson.get("street").toString());
-                if (patientJson.get("landmark").toString() != null) patientDTO.setLandmark(patientJson.get("landmark").toString());
-                if (patientJson.optJSONObject("education")!= null && !patientJson.get("education").toString().isEmpty()) {
-                    JSONObject educationJson = new JSONObject(patientJson.get("education").toString());
-                    patientDTO.setEducationId(Long.valueOf(educationJson.get("id").toString()));
-                }
-                if (patientJson.optJSONObject("occupation") != null && !patientJson.get("occupation").toString().isEmpty()) {
-                    JSONObject occupationJson = new JSONObject(patientJson.get("occupation").toString());
-                    patientDTO.setOccupationId(Long.valueOf(occupationJson.get("id").toString()));
-                }
-                if (patientJson.optJSONObject("country") != null) {
-                    JSONObject countryJson = new JSONObject(patientJson.get("country").toString());
-                    patientDTO.setCountryId(Long.valueOf(countryJson.get("id").toString()));
-                }
-                if (patientJson.optJSONObject("maritalStatus") != null && !patientJson.get("maritalStatus").toString().isEmpty()) {
-                    JSONObject maritalStatusJson = new JSONObject(patientJson.get("maritalStatus").toString());
-                    patientDTO.setMaritalStatusId(Long.valueOf(maritalStatusJson.get("id").toString()));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return patientDTO;
+    public Page<Patient> findAllByPatientNotCaseManagedByFilteredParameters(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber,
+                                      String gender, String programCode, Pageable pageable) {
+        return patientRepository.findAllByPatientNotCaseManagedByFilteredParameters(firstName, lastName, hospitalNumber, mobilePhoneNumber,
+                gender, UN_ARCHIVED, getOrganisationUnitId(), programCode, pageable);
     }
 
-    private PatientDTO transformDTO(String key, PatientDTO patientDTO){
-        try {
-            //Instance of ObjectMapper provides functionality for reading and writing JSON
-            String formDataJsonString = mapper.writeValueAsString(patientDTO.getDetails());
-
-            JSONObject patientDetails = new JSONObject(formDataJsonString);
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            if(patientDetails.optJSONObject("otherIdentifier") != null) {
-                JSONArray otherIdentifier = new JSONArray(patientDetails.get("otherIdentifier").toString());
-
-
-                if (otherIdentifier != null && patientDTO.getHospitalNumber().equals("")) {
-                    if (!mapper.readValue(otherIdentifier.toString(), List.class).isEmpty()) {
-                        String identifier = otherIdentifier.getJSONObject(0).get("identifier").toString();
-                        /*String time = String.valueOf(Timestamp.from(Instant.now())).replace("-", "")
-                                .replace(" ", "")
-                                .replace(":", "")
-                                .replace(".", "");
-                        patientDetails.put("hospitalNumber", RandomCodeGenerator.randomAlphabeticString(4) + time);*/
-                    }
-                }
-            }
-
-            if (patientDetails.has(key)) {
-                patientDTO.setHospitalNumber(patientDetails.get(key).toString());
-                patientDTO.setDetails(patientDetails.toString());
-            } else {
-                throw new EntityNotFoundException(Patient.class, "Hospital Number", "null");
-            }
-        } catch (JSONException | JsonProcessingException  | NullPointerException e) {
-            e.printStackTrace();
-        }
-        return patientDTO;
+    public Page<Patient> findAllByPatientNotCaseManaged(String programCode, Pageable pageable) {
+        return patientRepository.findAllByPatientNotCaseManaged(programCode, UN_ARCHIVED, getOrganisationUnitId(), pageable);
     }
+
+    //Case management
+    public UserDTO getUserByPatientId(Long id){
+        patientRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException(Patient.class, "id", ""+id));
+        ApplicationUserPatient applicationUserPatient = applicationUserPatientRepository.findAllByPatientIdAndArchived(id, UN_ARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(ApplicationUserPatient.class,"id:",id+""));
+
+        return userMapper.userToUserDTO(applicationUserPatient.getApplicationUserByApplicationUserId());
+    }
+
 
     private Set<String> getFormPrecedence(Form form) {
         JSONArray jsonArray = new JSONArray();
@@ -577,7 +517,7 @@ public class PatientService {
         //Check for currently check-in patient
         PatientDTO patientDTO = visitOptional.isPresent() ? patientMapper.toPatientDTO(visitOptional.get(), patientOptional.get()) : patientMapper.toPatientDTO(patientOptional.get());
         patientDTO.setFlags(flags);
-        return transformDTO(patientDTO);
+        return patientTransformer.transformDTO(patientDTO);
     }
 
     private Object setAge(Object object){

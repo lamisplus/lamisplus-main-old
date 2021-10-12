@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.controller;
 
 import org.lamisplus.modules.base.domain.dto.RoleDTO;
+import org.lamisplus.modules.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.repository.RoleRepository;
 import org.lamisplus.modules.base.service.RoleService;
@@ -66,5 +67,10 @@ public class RoleController {
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    @GetMapping("/{id}/user")
+    public ResponseEntity<List<UserDTO>> getAllUsersByRoleId(@PathVariable Long id) {
+        return ResponseEntity.ok(roleService.getAllUsersByRoleId(id));
     }
 }
