@@ -3,7 +3,6 @@ package org.lamisplus.modules.base.service;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.application.Application;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
@@ -31,7 +30,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -50,7 +48,6 @@ public class PatientService {
     private final FormMapper formMapper;
     private final UserService userService;
     private final AppointmentService appointmentService;
-    private final FlagService flagService;
     private final ProgramRepository programRepository;
     private final FormRepository formRepository;
     private final FormFlagRepository formFlagRepository;
@@ -64,7 +61,7 @@ public class PatientService {
     private static final String WRITE = "write";
     private static final String DELETE = "delete";
     private final ObjectMapper mapper;
-    private final FlagUtil flagUtil;
+    private final FlagService flagService;
 
     public Patient save(PatientDTO patientDTO) {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
@@ -131,7 +128,7 @@ public class PatientService {
         //Start of flag operation for associated with (0)
         List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived(formCode, 0, UN_ARCHIVED);
         if(!formFlags.isEmpty()){
-            flagUtil.checkForAndSavePatientFlag(patientId, this.setAge(details), formFlags, false);
+            flagService.checkForAndSavePatientFlag(patientId, this.setAge(details), formFlags, false);
         }
 
     }
@@ -298,14 +295,14 @@ public class PatientService {
             for (String formCode : formCodeSet) {
                 Form form = formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED).get();
                 //Start of flag operation
-                forms = flagUtil.setAndGetFormListForFlagOperation(this.getPatientById(patientId), form, forms);
+                forms = flagService.setAndGetFormListForFlagOperation(this.getPatientById(patientId), form, forms);
             }
 
         } else {
             for (Form form : program.getFormsByProgram()) {
                 if (form.getFormPrecedence() == null) {
                     //Start of flag operation
-                    forms = flagUtil.setAndGetFormListForFlagOperation(this.getPatientById(patientId), form, forms);
+                    forms = flagService.setAndGetFormListForFlagOperation(this.getPatientById(patientId), form, forms);
                 }
             }
         }
@@ -434,11 +431,12 @@ public class PatientService {
 
                 if (otherIdentifier != null && patientDTO.getHospitalNumber().equals("")) {
                     if (!mapper.readValue(otherIdentifier.toString(), List.class).isEmpty()) {
-                        String time = String.valueOf(Timestamp.from(Instant.now())).replace("-", "")
+                        String identifier = otherIdentifier.getJSONObject(0).get("identifier").toString();
+                        /*String time = String.valueOf(Timestamp.from(Instant.now())).replace("-", "")
                                 .replace(" ", "")
                                 .replace(":", "")
                                 .replace(".", "");
-                        patientDetails.put("hospitalNumber", RandomCodeGenerator.randomAlphabeticString(4) + time);
+                        patientDetails.put("hospitalNumber", RandomCodeGenerator.randomAlphabeticString(4) + time);*/
                     }
                 }
             }
@@ -613,7 +611,7 @@ public class PatientService {
         List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("bbc01821-ff3b-463d-842b-b90eab4bdacd", 0, UN_ARCHIVED);
         if (!formFlags.isEmpty()) {
             String details = JsonUtil.getJsonNode(patientDTO.getDetails()).toString();
-            flagUtil.checkForAndSavePatientFlag(patientDTO.getPatientId(), this.setAge(details), formFlags, true);
+            flagService.checkForAndSavePatientFlag(patientDTO.getPatientId(), this.setAge(details), formFlags, true);
         }
 
         Optional<Encounter> optionalEncounter = encounterRepository.findOneByPatientIdAndFormCodeAndArchived(patientDTO.getPatientId(), "3746bd2c-362d-4944-8982-5189441b1d59", UN_ARCHIVED);
@@ -624,7 +622,7 @@ public class PatientService {
                 formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("3746bd2c-362d-4944-8982-5189441b1d59", 0, UN_ARCHIVED);
                 if (!formFlags.isEmpty()) {
                     String formData = JsonUtil.getJsonNode(optionalFormData.get().getData()).toString();
-                    flagUtil.checkForAndSavePatientFlag(patientDTO.getPatientId(), formData, formFlags, true);
+                    flagService.checkForAndSavePatientFlag(patientDTO.getPatientId(), formData, formFlags, true);
                 }
             }
         }
