@@ -40,16 +40,6 @@ public class Role extends Audit<String> {
     @Setter
     @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<Permission> permission;
-    //private Collection<ApplicationUserRole> applicationUserRolesById;
-    /*@OneToMany(mappedBy = "roleByRoleId")
-    public Collection<ApplicationUserRole> getApplicationUserRolesById() {
-        return applicationUserRolesById;
-    }
-
-    public void setApplicationUserRolesById(Collection<ApplicationUserRole> applicationUserRolesById) {
-        this.applicationUserRolesById = applicationUserRolesById;
-    }*/
-    //private Collection<RolePermission> rolePermissionsById;
 
     @Override
     public int hashCode() {
@@ -81,13 +71,4 @@ public class Role extends Audit<String> {
                 ", permissions=" + permission +
                 '}';
     }
-
-    /*@OneToMany(mappedBy = "roleByRoleId")
-    public Collection<RolePermission> getRolePermissionsById() {
-        return rolePermissionsById;
-    }
-
-    public void setRolePermissionsById(Collection<RolePermission> rolePermissionsById) {
-        this.rolePermissionsById = rolePermissionsById;
-    }*/
 }
