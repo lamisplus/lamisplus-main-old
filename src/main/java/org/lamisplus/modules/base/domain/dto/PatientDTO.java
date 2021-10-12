@@ -23,6 +23,7 @@ public class PatientDTO {
     private String firstName;
     private String lastName;
     private String otherNames;
+    private String patientNumberType;
     @Convert(converter = LocalDateConverter.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dob;
