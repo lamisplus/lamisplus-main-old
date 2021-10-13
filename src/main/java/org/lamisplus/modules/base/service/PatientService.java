@@ -37,7 +37,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class PatientService {
 
-    public static final String HOSPITAL_NUMBER = "hospitalNumber";
+    public static final String HOSPITAL_NUMBER = "Hospital Number";
     private final EncounterRepository encounterRepository;
     private final PatientTransformer patientTransformer;
     private final PatientRepository patientRepository;
@@ -65,9 +65,7 @@ public class PatientService {
 
     public Patient save(PatientDTO patientDTO) {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-
         patientDTO = patientTransformer.transformDTO(HOSPITAL_NUMBER, patientDTO);
-
         Optional<Patient> patient1 = patientRepository.findByHospitalNumberAndOrganisationUnitIdAndArchived(patientDTO.getHospitalNumber(), organisationUnitId, UN_ARCHIVED);
         if (patient1.isPresent())
             throw new RecordExistException(Patient.class, "Hospital Number", patientDTO.getHospitalNumber() + "");
@@ -75,12 +73,10 @@ public class PatientService {
         final Patient patient = patientMapper.toPatient(patientDTO);
         patient.setUuid(UUID.randomUUID().toString());
         patient.setOrganisationUnitId(organisationUnitId);
-
-
         Patient savedPatient =  patientRepository.save(patient);
 
         //Start of flag operation for associated with (0)
-        savePatientAndCheckForFlag(savedPatient.getId(), "bbc01821-ff3b-463d-842b-b90eab4bdacd", this.setAge(savedPatient.getDetails()));
+        savePatientAndCheckForFlag(savedPatient.getId(), "bbc01821-ff3b-463d-842b-b90eab4bdacd", setAge(savedPatient.getDetails()));
 
         return savedPatient;
     }
@@ -95,6 +91,16 @@ public class PatientService {
     public List<PatientDTO> getAllPatients(Page page) {
         List<Patient> patients = page.getContent();
         return getPatients(patients);
+    }
+
+    public PatientDTO getPatientByHospitalNumber(String hospitalNumber, String patientNumberType) {
+        Optional<Patient> patientOptional = this.patientRepository.findByHospitalNumberAndPatientNumberTypeAndOrganisationUnitIdAndArchived(hospitalNumber, patientNumberType, getOrganisationUnitId(), UN_ARCHIVED);
+
+        if (!patientOptional.isPresent()) {
+            throw new EntityNotFoundException(Patient.class, "Hospital Number", hospitalNumber + "");
+        }
+
+        return this.updatePatientFlag(getPatient(patientOptional));
     }
 
     public PatientDTO getPatientByHospitalNumber(String hospitalNumber) {
@@ -523,8 +529,8 @@ public class PatientService {
     private Object setAge(Object object){
         try {
             mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            String details = object.toString();
 
+            String details = mapper.writeValueAsString(object);
             JSONObject patientDetails = new JSONObject(details);
             String dob = patientDetails.optString("dob");
             if(dob != null) {
@@ -537,7 +543,6 @@ public class PatientService {
                 patientDetails.put("age", period.getYears());
             }
             return patientDetails;
-
         } catch(Exception e){
             e.printStackTrace();
         }

@@ -98,4 +98,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
             "AND e.organisation_unit_id=?3 " +
             "AND e.patient_id NOT IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?2)", nativeQuery = true)
     Page<Patient> findAllByPatientNotCaseManaged(String programCode, int archived, Long organisationUnitId, Pageable pageable);
+
+    Optional<Patient> findByHospitalNumberAndPatientNumberTypeAndOrganisationUnitIdAndArchived(String hospitalNumber, String patientNumberType, Long organisationUnitId, int archived);
 }
