@@ -90,7 +90,7 @@ public class FormService {
         accessRight.grantAccess(formCode, FormService.class, permissions);
         //if form is retrospective  - 1
         if (formType.isPresent() && formType.get() == 1) {
-            return formRepository.findByMainCodeAndArchivedAndType(formCode, UN_ARCHIVED, formType.get())
+            return formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED)
                     .orElseThrow(() -> new EntityNotFoundException(Form.class, "Form Code has no retrospective", formCode));
         }
         return formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED)
