@@ -117,7 +117,13 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
             "AND e.organisation_unit_id=?7 " +
             "AND e.patient_id IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?6)", nativeQuery = true)
     Page<Patient> findAllByPatientManagedByFilteredParameters(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber,
-                                                                     String gender, int archived, Long organisationUnitId, String programCode, Pageable pageable);
+                                                              String gender, int archived, Long organisationUnitId, String programCode, Pageable pageable);
 
-
+    @Query(value = "SELECT p.identifier_number ->> 'identifier' " +
+            "FROM patient, jsonb_array_elements(details ->'otherIdentifier') " +
+            "WITH ordinality p(identifier_number) " +
+            "WHERE patient.patient_number=?1 AND patient.patient_number_type = ?2 " +
+            "AND p.identifier_number-> 'identifierType' ->> 'code' = ?3 " +
+            "AND patient.archived = ?4 AND patient.organisation_unit_id = ?5", nativeQuery = true)
+    Optional<String> findPatientIdentifierNumber(String hospitalNumber, String patientNumberType, String identifierCode, int archived, Long organisationUnitId);
 }

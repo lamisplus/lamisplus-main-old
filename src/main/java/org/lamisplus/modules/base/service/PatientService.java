@@ -589,4 +589,11 @@ public class PatientService {
         return patientDTO;
     }
 
+    public String getPatientIdentifierNumber(String hospitalNumber, String patientNumberType, String identifierCode) {
+        patientRepository.findByHospitalNumberAndPatientNumberTypeAndOrganisationUnitIdAndArchived
+                (hospitalNumber, patientNumberType, getOrganisationUnitId(), UN_ARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(Patient.class, "Hospital Number", hospitalNumber + ""));
+        return patientRepository.findPatientIdentifierNumber(hospitalNumber,patientNumberType, identifierCode, UN_ARCHIVED, getOrganisationUnitId())
+        .orElse(null);
+    }
 }

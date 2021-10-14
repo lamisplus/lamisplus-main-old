@@ -101,9 +101,15 @@ public class PatientController {
     public ResponseEntity<Boolean> exist(@PathVariable String hospitalNumber) {
         return ResponseEntity.ok(patientService.exist(hospitalNumber));
     }
+
+    @GetMapping("/identifier-number")
+    public ResponseEntity<String> getPatientIdentifierNumber(@RequestParam String hospitalNumber,
+                                                                             @RequestParam String patientNumberType,
+                                                                             @RequestParam String identifierCode) {
+        return ResponseEntity.ok(patientService.getPatientIdentifierNumber(hospitalNumber, patientNumberType, identifierCode));
+    }
   
     @GetMapping("/{id}/encounters/{formCode}")
-    //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List> getEncountersByPatientIdAndFormCode(@PathVariable Long id,
                                                                     @PathVariable String formCode, @RequestParam(required = false) String sortOrder,
                                                                     @RequestParam (required = false) String sortField, @RequestParam(required = false) Integer limit,
@@ -117,13 +123,11 @@ public class PatientController {
     }
 
     @GetMapping("/{programCode}/registered")
-    //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List> getAllPatientsByProgramCode(@PathVariable String programCode) {
         return ResponseEntity.ok(patientService.getAllPatientsByProgramCode(programCode));
     }
 
     @GetMapping("/{id}/visits/{dateStart}/{dateEnd}")
-    //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List<VisitDTO>> getVisitByPatientIdAndVisitDate(@PathVariable Optional<Long> id, /*@ApiParam(defaultValue = "",required = false) */@PathVariable(required = false) Optional<String> dateStart,
                                                                           /*@ApiParam(defaultValue = "",required = false)*/ @PathVariable(required = false) Optional <String> dateEnd) {
         return ResponseEntity.ok(patientService.getVisitByPatientIdAndVisitDate(id,dateStart,dateEnd));
@@ -131,17 +135,13 @@ public class PatientController {
 
 
     @GetMapping("/{id}/encounters/{formCode}/{dateStart}/{dateEnd}")
-    //@PreAuthorize("hasAuthority('patient_read')")
     public List getEncountersByPatientIdAndDateEncounter(@PathVariable Long id, @PathVariable String formCode,
                                                          /*@ApiParam(defaultValue = "")*/ @PathVariable(required = false) Optional<String> dateStart,
                                                          /*@ApiParam(defaultValue = "")*/ @PathVariable(required = false) Optional<String> dateEnd) {
         return patientService.getEncountersByPatientIdAndDateEncounter(id, formCode, dateStart, dateEnd);
     }
 
-    /*@ApiOperation(value="getAllEncountersByPatientId", notes = " id=required\n\n" +
-            "Example - /api/encounters/20")*/
     @GetMapping("/{id}/encounters")
-    //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List> getAllEncounterByPatientId(@PathVariable Long id){
         return ResponseEntity.ok(patientService.getAllEncountersByPatientId(id));
     }
@@ -177,20 +177,7 @@ public class PatientController {
         return ResponseEntity.ok(patientService.delete(id));
     }
 
-    /*    @ApiOperation(value="getFormsByPatientId", notes = " id=required, formCode=required\n\n")
-    @GetMapping("/{id}/{formCode}")
-    public ResponseEntity<List<EncounterDTO>> getFormsByPatientId(@PathVariable Long id, @PathVariable String formCode) throws BadRequestAlertException {
-        return ResponseEntity.ok(this.patientService.getFormsByPatientId(id, formCode));
-    }*/
-
-
-/*    @ApiOperation(value="getFormsByPatientId", notes = " id=required, formCode=required\n\n")
-    @GetMapping("/{id}/form")
-    public ResponseEntity<List<Form>> getFormsByPatientId(@PathVariable Long id) throws BadRequestAlertException {
-        return ResponseEntity.ok(this.patientService.getFormsByPatientId(id, formCode));
-    }*/
-
-    @GetMapping("/{id}/user")
+    @GetMapping("/{id}/users")
     public ResponseEntity<UserDTO> getAllApplicationUserByPatientId(@PathVariable Long id) {
         return ResponseEntity.ok(patientService.getUserByPatientId(id));
     }
