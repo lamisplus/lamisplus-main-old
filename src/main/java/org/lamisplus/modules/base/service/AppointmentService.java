@@ -87,7 +87,12 @@ public class AppointmentService {
     }
 
     public Long getTodayAppointmentCount() {
-        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-        return appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDate(organisationUnitId, constant.UN_ARCHIVED, LocalDate.now());
+        try {
+            Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+            return appointmentRepository.countAllByOrganisationUnitIdAndArchivedAndDate(organisationUnitId, constant.UN_ARCHIVED, LocalDate.now());
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+        return 0L;
     }
 }

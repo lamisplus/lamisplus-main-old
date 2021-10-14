@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-146">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM pg_attribute
+                WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'patient')
+                AND attname = 'patient_number_type';
+            </sqlCheck>
+        </preConditions>
+        <addColumn tableName="patient" >
+            <column name="patient_number_type" afterColumn="patient_number" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-147">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*)
+                FROM pg_attribute
+                WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'application_user_patient')
+                AND attname = 'managed_type';
+            </sqlCheck>
+        </preConditions>
+        <addColumn tableName="application_user_patient" >
+            <column name="managed_type" afterColumn="archived" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

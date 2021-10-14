@@ -7,31 +7,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.FormDataDTO;
-import org.lamisplus.modules.base.domain.dto.PatientDTO;
 import org.lamisplus.modules.base.domain.entity.*;
 import org.lamisplus.modules.base.domain.dto.EncounterDTO;
-
 import org.lamisplus.modules.base.domain.mapper.EncounterMapper;
 import org.lamisplus.modules.base.domain.mapper.FormDataMapper;
 import org.lamisplus.modules.base.repository.*;
-
 import org.lamisplus.modules.base.util.AccessRight;
-import org.lamisplus.modules.base.util.FlagUtil;
 import org.lamisplus.modules.base.util.JsonUtil;
 import org.lamisplus.modules.base.util.converter.CustomDateTimeFormat;
 import org.lamisplus.modules.base.util.GenericSpecification;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -57,7 +48,7 @@ public class EncounterService {
     private static final int ARCHIVED = 1;
     private static final String WRITE = "write";
     private static final String DELETE = "delete";
-    private final FlagUtil flagUtil;
+    private final FlagService flagService;
 
     public List<EncounterDTO> getAllEncounters() {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
@@ -191,16 +182,14 @@ public class EncounterService {
         List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived(savedEncounter.getFormCode(), 0, UNARCHIVED);
         if(!formFlags.isEmpty()) {
             final Object finalFormData = formDataRepository.findOneByEncounterIdOrderByIdDesc(savedEncounter.getId()).get().getData();
-            flagUtil.checkForAndSavePatientFlag(savedEncounter.getPatientId(), JsonUtil.getJsonNode(finalFormData), formFlags, false);
+            flagService.checkForAndSavePatientFlag(savedEncounter.getPatientId(), JsonUtil.getJsonNode(finalFormData), formFlags, false);
         }
-
         return savedEncounter;
     }
 
     public Integer delete(Long id) {
         Encounter encounter = encounterRepository.findByIdAndArchived(id, UNARCHIVED)
                 .orElseThrow(() -> new EntityNotFoundException(Encounter.class, "Id",id+"" ));
-
         accessRight.grantAccessByAccessType(encounter.getFormCode(), Encounter.class, DELETE, checkForEncounterAndGetPermission(id));
 
         encounter.setArchived(ARCHIVED);
@@ -253,6 +242,11 @@ public class EncounterService {
         return encounterRepository.countByProgramCodeAndArchivedAndOrganisationUnitId(programCode, UNARCHIVED, organisationUnitId);
     }
 
+    public Page<Encounter> findEncounterPage(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber, String formCode, String dateStart, String dateEnd, Pageable pageable) {
+        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+        return encounterRepository.findEncounterPage(firstName,lastName,hospitalNumber, mobilePhoneNumber, formCode, dateStart, dateEnd, organisationUnitId,UNARCHIVED, pageable);
+    }
+
     private Set<String> checkForEncounterAndGetPermission(Long id){
         return accessRight.getAllPermission();
     }
@@ -278,12 +272,5 @@ public class EncounterService {
             e.printStackTrace();
         }
         return encounterDTO;
-    }
-
-    public Page<Encounter> findEncounterPage(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber, String formCode, String dateStart, String dateEnd, Pageable pageable) {
-        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-        return encounterRepository.findEncounterPage(firstName,lastName,hospitalNumber, mobilePhoneNumber, formCode, dateStart, dateEnd, organisationUnitId,UNARCHIVED, pageable);
-        //return encounterRepository.findEncounterPages(firstName,lastName,hospitalNumber, formCode, organisationUnitId,UNARCHIVED, pageable);
-
     }
 }

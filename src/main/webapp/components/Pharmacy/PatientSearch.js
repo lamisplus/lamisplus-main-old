@@ -6,7 +6,8 @@ import "./patientPrescriptions.css";
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
-
+import axios from "axios";
+import { url as baseUrl , PHARMACYSERVICECODE} from "../../api";
 import { forwardRef } from 'react';
 
 import AddBox from '@material-ui/icons/AddBox';
@@ -106,47 +107,83 @@ console.log(prescriptions)
             filtering: false,
           },
         ]}
-        data={ prescriptions.map((prescription) => ({
-          Id: prescription.hospitalNumber,
-          name: prescription.firstName + " " + prescription.lastName,
-          date: prescription.dateEncounter,
-          prescribedCount: prescription.formDataObj.length,
-          dispensedCount: totalDrugsPrescribed(prescription.formDataObj),
-         // type:   drugType(prescription.formDataObj),
-          actions: (
+        // data={ prescriptions.map((prescription) => ({
+        //   Id: prescription.hospitalNumber,
+        //   name: prescription.firstName + " " + prescription.lastName,
+        //   date: prescription.dateEncounter,
+        //   prescribedCount: prescription.formDataObj.length,
+        //   dispensedCount: totalDrugsPrescribed(prescription.formDataObj),
+        //  // type:   drugType(prescription.formDataObj),
+        //   actions: (
             
-            <Link
-              to={{
-                pathname: "/prescriptions",
-                state: prescription,
+        //     <Link
+        //       to={{
+        //         pathname: "/prescriptions",
+        //         state: prescription,
                
-              }}
-              style={{ cursor: "pointer", color: "blue", fontStyle: "bold" }}>
-              <Tooltip title="View Prescription">
-                <IconButton aria-label="View Prescription">
-                  <VisibilityIcon color="primary" />
-                </IconButton>
-              </Tooltip>
-            </Link>
-          ),
-        }))}
-        options={{
-          pageSizeOptions: [50,100,150,200],
-          actionsColumnIndex: -1,
-          headerStyle: {
-            backgroundColor: "#9F9FA5",
-            color: "#000",
-            margin: "auto",
-          },
-          searchFieldStyle: {
-                width : '300%',
-                margingLeft: '250px',
-            },
-            filtering: true,
-            exportButton: false,
-            searchFieldAlignment: 'left',
-            actionsColumnIndex: -1
-        }}
+        //       }}
+        //       style={{ cursor: "pointer", color: "blue", fontStyle: "bold" }}>
+        //       <Tooltip title="View Prescription">
+        //         <IconButton aria-label="View Prescription">
+        //           <VisibilityIcon color="primary" />
+        //         </IconButton>
+        //       </Tooltip>
+        //     </Link>
+        //   ),
+        // }))}
+        data={query =>
+                  new Promise((resolve, reject) =>
+                      axios.get(`${baseUrl}encounters/${PHARMACYSERVICECODE}/{dateStart}/{dateEnd}?size=${query.pageSize}&page=${query.page}&search=${query.search}`)
+                          .then(response => response)
+                          .then(result => {
+
+                              //console.log('in result')
+                              //console.log( result.headers);
+                              console.log( result.headers['x-total-count']);
+                              resolve({
+                                  data: result.data.map((prescription) => ({
+                                    Id: prescription.hospitalNumber,
+                                    name: prescription.firstName + " " + prescription.lastName,
+                                    date: prescription.dateEncounter,
+                                    prescribedCount: prescription.formDataObj.length,
+                                    dispensedCount: totalDrugsPrescribed(prescription.formDataObj),
+                                    type:   drugType(prescription.formDataObj),
+                                      actions:
+                                      <Link
+                                        to={{
+                                          pathname: "/prescriptions",
+                                          state: prescription,
+                                        
+                                        }}
+                                        style={{ cursor: "pointer", color: "blue", fontStyle: "bold" }}>
+                                        <Tooltip title="View Prescription">
+                                          <IconButton aria-label="View Prescription">
+                                            <VisibilityIcon color="primary" />
+                                          </IconButton>
+                                        </Tooltip>
+                                      </Link>
+                                  })),
+                                  page: query.page,
+                                  totalCount: result.headers['x-total-count'],
+                              })
+                          })
+                  )}
+                  options={{
+                    headerStyle: {
+                        backgroundColor: "#9F9FA5",
+                        color: "#000",
+                    },
+                    searchFieldStyle: {
+                        width : '300%',
+                        margingLeft: '250px',
+                    },
+                    filtering: false,
+                    exportButton: false,
+                    searchFieldAlignment: 'left',
+                    pageSizeOptions:[10,20,100],
+                    pageSize:10,
+                    debounceInterval: 400
+                }}
       />
     </div>
   );

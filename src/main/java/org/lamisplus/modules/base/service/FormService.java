@@ -90,7 +90,7 @@ public class FormService {
         accessRight.grantAccess(formCode, FormService.class, permissions);
         //if form is retrospective  - 1
         if (formType.isPresent() && formType.get() == 1) {
-            return formRepository.findByMainCodeAndArchivedAndType(formCode, UN_ARCHIVED, formType.get())
+            return formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED)
                     .orElseThrow(() -> new EntityNotFoundException(Form.class, "Form Code has no retrospective", formCode));
         }
         return formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED)
@@ -123,11 +123,11 @@ public class FormService {
         Set<String> permissions = accessRight.getAllPermission();
 
         accessRight.grantAccessByAccessType(formDTO.getCode(), FormService.class, WRITE, permissions);
-        Form form = formRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(Form.class, "Id", id +""));
+        formRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(Form.class, "Id", id +""));
 
-        form = formMapper.toFormDTO(formDTO);
+        Form form = formMapper.toFormDTO(formDTO);
         form.setId(id);
-        form.setArchived(0);
+        form.setArchived(UN_ARCHIVED);
         return formRepository.save(form);
     }
 

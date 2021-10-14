@@ -12,5 +12,7 @@ import java.util.Objects;
 public class ApplicationUserPatientDTO {
     private Long id;
     private Long UserId;
+    //private String managedType;
     private List<Long> patientIds;
+    private Integer archived;
 }

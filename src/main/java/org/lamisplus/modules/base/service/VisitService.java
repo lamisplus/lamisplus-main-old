@@ -111,10 +111,15 @@ public class VisitService {
     }
 
     public Long getVisitType(Long type){
-        if(type != null && type == 1) {
-            return visitRepository.countByVisitTypeIdAndArchivedAndOrganisationUnitId(373L, UNARCHIVED, getOrganisationUnitId()); //Emergency
+        try {
+            if (type != null && type == 1) {
+                return visitRepository.countByVisitTypeIdAndArchivedAndOrganisationUnitId(373L, UNARCHIVED, getOrganisationUnitId()); //Emergency
+            }
+            return visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(getOrganisationUnitId(), UNARCHIVED, LocalDate.now().minusDays(LocalDate.now().getDayOfWeek().getValue()), LocalDate.now()); //Emergency
+        }catch (Exception e){
+            log.error(e.getMessage());
         }
-        return visitRepository.countAllByOrganisationUnitIdAndArchivedAndDateVisitStartBetween(getOrganisationUnitId(), UNARCHIVED, LocalDate.now().minusDays(LocalDate.now().getDayOfWeek().getValue()),LocalDate.now()); //Emergency
+        return null;
     }
 
     private Long getOrganisationUnitId(){

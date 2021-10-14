@@ -25,6 +25,8 @@ import java.util.List;
 @Table(name = "organisation_unit")
 public class OrganisationUnit extends JsonBEntity implements Serializable {
 
+
+
     @Id
     @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,12 +35,15 @@ public class OrganisationUnit extends JsonBEntity implements Serializable {
     @Basic
     @Column(name = "name")
     private String name;
+
     @Basic
     @Column(name = "description")
     private String description;
+
     @Basic
     @Column(name = "organisation_unit_level_id")
     private Long organisationUnitLevelId;
+
     @Basic
     @Column(name = "parent_organisation_unit_id")
     private Long parentOrganisationUnitId;
@@ -73,15 +78,16 @@ public class OrganisationUnit extends JsonBEntity implements Serializable {
     @ToString.Exclude
     private LocalDateTime dateModified = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
-    @JsonIgnore
-    @ToString.Exclude
-    public List<Appointment> appointmentsById;
+    @Transient
+    private String  parentOrganisationUnitName;
+
+    @Transient
+    private String  parentParentOrganisationUnitName;
 
     @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
     @JsonIgnore
     @ToString.Exclude
-    public List<ApplicationUserPatient> applicationUserPatientsById;
+    public List<Appointment> appointmentsById;
 
     @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
     @JsonIgnore
@@ -107,10 +113,8 @@ public class OrganisationUnit extends JsonBEntity implements Serializable {
     @ToString.Exclude
     public List<User> users;
 
-    @Transient
-    private String  parentOrganisationUnitName;
-
-    @Transient
-    private String  parentParentOrganisationUnitName;
-
+    @OneToMany(mappedBy = "organisationUnitByOrganisationUnitId")
+    @JsonIgnore
+    @ToString.Exclude
+    List<ApplicationUserPatient> applicationUserPatientsById;
 }

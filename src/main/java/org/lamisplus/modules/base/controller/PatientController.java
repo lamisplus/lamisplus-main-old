@@ -27,42 +27,43 @@ public class PatientController {
 
 
     @GetMapping
-    public ResponseEntity<List<PatientDTO>> getAllPatients(@RequestParam (required = false, defaultValue = "%*%") String firstName,
-                                                           @RequestParam (required = false, defaultValue = "%*%") String lastName,
-                                                           @RequestParam (required = false, defaultValue = "%*%") String hospitalNumber,
-                                                           @RequestParam (required = false)String key,
-                                                           @RequestParam (required = false)String value,
-                                                           @RequestParam (required = false, defaultValue = "%*%") String searchValue,
+    public ResponseEntity<List<PatientDTO>> getAllPatients(@RequestParam (required = false, defaultValue = "*") String searchValue,
                                                            @PageableDefault(value = 100) Pageable pageable) {
         Page<Patient> page;
-        String mobilePhoneNumber;
-        if(key != null && !key.isEmpty() && value != null && !value.isEmpty()){
-            value = "%"+value+"%";
-            page = patientService.findPage(key, value, pageable);
-        } else if(!firstName.equals("%*%") || !lastName.equals("%*%") || !hospitalNumber.equals("%*%")){
-            if(!firstName.equals("%*%"))firstName = "%"+firstName+"%";
-            if(!lastName.equals("%*%"))lastName = "%"+lastName+"%";
-            if(!hospitalNumber.equals("%*%"))hospitalNumber = "%"+hospitalNumber+"%";
-            page = patientService.findPage(firstName, lastName,hospitalNumber, pageable);
-
-        } else if(!searchValue.equals("%*%")) {
-            firstName = "%"+searchValue+"%";
-            lastName = "%"+searchValue+"%";
-            hospitalNumber = "%"+searchValue+"%";
-            mobilePhoneNumber = "%"+searchValue+"%";
+        if(!searchValue.equals("*")) {
+            String firstName = "%"+searchValue+"%";
+            String lastName = "%"+searchValue+"%";
+            String hospitalNumber = "%"+searchValue+"%";
+            String mobilePhoneNumber = "%"+searchValue+"%";
             page = patientService.findAllPages(firstName, lastName,hospitalNumber,mobilePhoneNumber, pageable);
         }
         else {
-                page = patientService.findPage(pageable);
+            page = patientService.findPage(pageable);
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(patientService.getAllPatients(page), headers, HttpStatus.OK);
     }
 
-    /*@GetMapping
-    public ResponseEntity<List<PatientDTO>> getAllPatients() {
-        return ResponseEntity.ok(patientService.getAllPatients());
-    }*/
+    @GetMapping("/notManaged/{programCode}")
+    public ResponseEntity<List<PatientDTO>> getPatientsNotCaseManaged(@PathVariable String programCode, @RequestParam (required = false, defaultValue = "*") String search,
+                                                                      @PageableDefault(value = 50) Pageable pageable) {
+        Page<Patient> page;
+        if(!search.equals("*")) {
+            String firstName = "%"+search+"%";
+            String lastName = "%"+search+"%";
+            String hospitalNumber = "%"+search+"%";
+            String mobilePhoneNumber = "%"+search+"%";
+            String gender = search+"%";
+
+            page = patientService.findAllByPatientNotCaseManagedByFilteredParameters(firstName, lastName,hospitalNumber,mobilePhoneNumber, gender, programCode, pageable);
+        }
+        else {
+            page = patientService.findAllByPatientNotCaseManaged(programCode, pageable);
+
+        }
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(patientService.getAllPatients(page), headers, HttpStatus.OK);
+    }
 
     @GetMapping("/totalCount")
     public ResponseEntity<Long> getTotalCount() {
@@ -72,18 +73,12 @@ public class PatientController {
 
     @GetMapping("/hospitalNumber")
     //@PreAuthorize("hasAuthority('patient_read')")
-    public ResponseEntity<PatientDTO> getPatientByHospitalNumber(@RequestParam String hospitalNumber) {
-        return ResponseEntity.ok(patientService.getPatientByHospitalNumber(hospitalNumber));
-    }
-
-    @GetMapping("/{hospitalNumber}")
-    //@PreAuthorize("hasAuthority('patient_read')")
-    public ResponseEntity<PatientDTO> getPatientByHospitalNumber2(@PathVariable String hospitalNumber) {
-        return ResponseEntity.ok(patientService.getPatientByHospitalNumber(hospitalNumber));
+    public ResponseEntity<PatientDTO> getPatientByHospitalNumber(@RequestParam String hospitalNumber,
+                                                                 @RequestParam (required = false, defaultValue = "Hospital Number") String patientNumberType) {
+        return ResponseEntity.ok(patientService.getPatientByHospitalNumber(hospitalNumber, patientNumberType));
     }
 
     @GetMapping("/{hospitalNumber}/exist")
-    //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<Boolean> exist(@PathVariable String hospitalNumber) {
         return ResponseEntity.ok(patientService.exist(hospitalNumber));
     }
@@ -98,7 +93,6 @@ public class PatientController {
     }
 
     @GetMapping("/{id}/encounters/programCodeExclusionList")
-    //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List> getEncountersByPatientIdAndProgramCodeExclusionList(@PathVariable Long id, @RequestParam(required = false) List<String> programCodeExclusionList) {
         return ResponseEntity.ok(patientService.getEncountersByPatientIdAndProgramCodeExclusionList(id, programCodeExclusionList));
     }
@@ -109,8 +103,6 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getAllPatientsByProgramCode(programCode));
     }
 
-    /*@ApiOperation(value="getVisitByPatientIdAndVisitDate", notes = "patientId= required, dateStart=optional, dateEnd=optional\n\n" +
-            "Example - /api/patient/20/visits?dateStart=02-03-2020")*/
     @GetMapping("/{id}/visits/{dateStart}/{dateEnd}")
     //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<List<VisitDTO>> getVisitByPatientIdAndVisitDate(@PathVariable Optional<Long> id, /*@ApiParam(defaultValue = "",required = false) */@PathVariable(required = false) Optional<String> dateStart,
@@ -118,8 +110,7 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getVisitByPatientIdAndVisitDate(id,dateStart,dateEnd));
     }
 
-    /*@ApiOperation(value="getEncountersByPatientIdAndDateEncounter", notes = " programCode= required, formCode=required, dateStart=optional, dateEnd=optional\n\n" +
-            "Example - api/encounters/{programCode}/{formCode}?dateStart=01-01-2020&dateEnd=01-04-2020")*/
+
     @GetMapping("/{id}/encounters/{formCode}/{dateStart}/{dateEnd}")
     //@PreAuthorize("hasAuthority('patient_read')")
     public List getEncountersByPatientIdAndDateEncounter(@PathVariable Long id, @PathVariable String formCode,
@@ -180,4 +171,8 @@ public class PatientController {
         return ResponseEntity.ok(this.patientService.getFormsByPatientId(id, formCode));
     }*/
 
+    @GetMapping("/{id}/user")
+    public ResponseEntity<UserDTO> getAllApplicationUserByPatientId(@PathVariable Long id) {
+        return ResponseEntity.ok(patientService.getUserByPatientId(id));
+    }
 }

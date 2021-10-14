@@ -5,20 +5,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.dto.ApplicationUserPatientDTO;
 import org.lamisplus.modules.base.domain.dto.PatientDTO;
-import org.lamisplus.modules.base.domain.dto.UserDTO;
-import org.lamisplus.modules.base.domain.entity.ApplicationCodeSet;
-import org.lamisplus.modules.base.domain.entity.ApplicationUserOrganisationUnit;
 import org.lamisplus.modules.base.domain.entity.ApplicationUserPatient;
 import org.lamisplus.modules.base.domain.entity.Patient;
 import org.lamisplus.modules.base.domain.mapper.UserMapper;
 import org.lamisplus.modules.base.repository.ApplicationUserPatientRepository;
 import org.lamisplus.modules.base.repository.PatientRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -27,9 +24,9 @@ import java.util.Optional;
 public class ApplicationUserPatientService {
     private final ApplicationUserPatientRepository applicationUserPatientRepository;
     private final PatientService patientService;
-    private final UserMapper userMapper;
-    private final PatientRepository patientRepository;
     private static final int UN_ARCHIVED = 0;
+    private static final int ARCHIVED = 1;
+    private final UserService userService;
 
     public List<PatientDTO> getAllPatientByUserId(Long userId) {
         List<Patient> patients = new ArrayList<>();
@@ -39,17 +36,19 @@ public class ApplicationUserPatientService {
             return patientService.getPatients(patients);
     }
 
-    public UserDTO getAllApplicationUserByPatientId(Long patientId) {
-        ApplicationUserPatient applicationUserPatient = applicationUserPatientRepository.findAllByPatientIdAndArchived(patientId, 0)
-                .orElseThrow(() -> new EntityNotFoundException(ApplicationUserPatient.class,"patientId:",patientId+""));
-
-        return userMapper.userToUserDTO(applicationUserPatient.getApplicationUserByApplicationUserId());
-    }
-
-    public List save(ApplicationUserPatientDTO applicationUserPatientDTO) {
+    public List<ApplicationUserPatient> save(ApplicationUserPatientDTO applicationUserPatientDTO) {
+        Long orgUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+        Long userId = applicationUserPatientDTO.getUserId();
         List<ApplicationUserPatient> applicationUserPatients  = new ArrayList<>();
         applicationUserPatientDTO.getPatientIds().forEach(patientId ->{
-            applicationUserPatients.add(new ApplicationUserPatient(applicationUserPatientDTO.getUserId(), patientId));
+            applicationUserPatientRepository.findAllByPatientIdAndUserIdAndArchived(patientId, userId, UN_ARCHIVED)
+                    .orElseThrow(() -> new EntityNotFoundException(ApplicationUserPatient.class,"patientId & userId:",patientId+" & " + userId));
+
+            ApplicationUserPatient applicationUserPatient = new ApplicationUserPatient(userId, patientId);
+            applicationUserPatient.setOrganisationUnitId(orgUnitId);
+            applicationUserPatient.setArchived(UN_ARCHIVED);
+            //applicationUserPatient.setManagedType(applicationUserPatientDTO.getManagedType());
+            applicationUserPatients.add(applicationUserPatient);
         });
         return applicationUserPatientRepository.saveAll(applicationUserPatients);
     }
@@ -65,26 +64,17 @@ public class ApplicationUserPatientService {
         return applicationUserPatientDTO;
     }
 
-    private List<Long> getPatientIds(String programCode){
-        List<Long> patientIds = new ArrayList();
-        patientService.getAllPatientsByProgramCode(programCode).forEach(patientDTO -> {
-            patientIds.add(patientDTO.getPatientId());
+    public List<ApplicationUserPatient> unassignCaseManagerToPatient(ApplicationUserPatientDTO applicationUserPatientDTO) {
+        Long userId = applicationUserPatientDTO.getUserId();
+
+        List<ApplicationUserPatient> applicationUserPatients  = new ArrayList<>();
+        applicationUserPatientDTO.getPatientIds().forEach(patientId ->{
+            ApplicationUserPatient applicationUserPatient = applicationUserPatientRepository.findAllByPatientIdAndUserIdAndArchived(patientId, userId, UN_ARCHIVED)
+                    .orElseThrow(() -> new EntityNotFoundException(ApplicationUserPatient.class,"patientId & userId:",patientId+" & " + userId));
+            applicationUserPatient.setArchived(ARCHIVED);
+            applicationUserPatients.add(applicationUserPatient);
         });
-        return patientIds;
-    }
-
-    public List<PatientDTO> getPatientsNotCaseManaged(String programCode) {
-        List<Long> patientList = getPatientIds(programCode);
-
-        applicationUserPatientRepository.findAllByPatientIdIn(getPatientIds(programCode)).forEach(appUserPatient ->{
-            if(appUserPatient.getArchived() != 0){
-                return;
-            } else {
-                patientList.remove(appUserPatient.getPatientId());
-            }
-        });
-
-        return patientService.getPatients(patientRepository.findAllByIdIn(patientList));
+        return applicationUserPatientRepository.saveAll(applicationUserPatients);
     }
 
     public Integer delete(Long id){

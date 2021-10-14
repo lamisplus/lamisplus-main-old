@@ -27,19 +27,10 @@ import java.util.List;
 @Table(name = "patient")
 public class Patient extends JsonBEntity implements Serializable {
 
-    @OneToMany(mappedBy = "patientByPatientId")
-    @JsonIgnore
-    @ToString.Exclude
-    public List<ApplicationUserPatient> applicationUserPatientsById;
-    @OneToMany(mappedBy = "patientByPatientId")
-    @JsonIgnore
-    @ToString.Exclude
-    public List<Appointment> appointmentsById;
     @Id
     @Column(name = "id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Basic
     @Column(name = "patient_number")
     private String hospitalNumber;
@@ -50,7 +41,9 @@ public class Patient extends JsonBEntity implements Serializable {
     @Basic
     @Column(name = "archived")
     private Integer archived = 0;
-
+    @Basic
+    @Column(name = "patient_number_type")
+    private String patientNumberType;
     @Basic
     @Column(name = "organisation_unit_id", updatable = false)
     @JsonIgnore
@@ -87,7 +80,16 @@ public class Patient extends JsonBEntity implements Serializable {
     @JsonIgnore
     @ToString.Exclude
     private LocalDateTime dateModified = LocalDateTime.now();
-
     @OneToMany(mappedBy = "patientByPatientId")
     private List<PatientFlag> patientFlagsById;
+
+    @OneToMany(mappedBy = "patientByPatientId")
+    @JsonIgnore
+    @ToString.Exclude
+    public List<Appointment> appointmentsById;
+
+    @OneToMany(mappedBy = "patientByPatientId")
+    @JsonIgnore
+    @ToString.Exclude
+    List<ApplicationUserPatient> applicationUserPatientsById;
 }
