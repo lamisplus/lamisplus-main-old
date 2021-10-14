@@ -76,7 +76,7 @@ public class PatientService {
         Patient savedPatient =  patientRepository.save(patient);
 
         //Start of flag operation for associated with (0)
-        savePatientAndCheckForFlag(savedPatient.getId(), "bbc01821-ff3b-463d-842b-b90eab4bdacd", setAge(savedPatient.getDetails()));
+        savePatientAndCheckForFlag(savedPatient.getId(), "bbc01821-ff3b-463d-842b-b90eab4bdacd", savedPatient.getDetails());
 
         return savedPatient;
     }
@@ -133,8 +133,9 @@ public class PatientService {
     private void savePatientAndCheckForFlag(Long patientId, String formCode, Object details){
         //Start of flag operation for associated with (0)
         List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived(formCode, 0, UN_ARCHIVED);
+        Object patientDetails = this.setAge(details);
         if(!formFlags.isEmpty()){
-            flagService.checkForAndSavePatientFlag(patientId, this.setAge(details), formFlags, false);
+            flagService.checkForAndSavePatientFlag(patientId, patientDetails, formFlags, false);
         }
 
     }
@@ -528,7 +529,7 @@ public class PatientService {
 
     private Object setAge(Object object){
         try {
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            //mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
             String details = mapper.writeValueAsString(object);
             JSONObject patientDetails = new JSONObject(details);
