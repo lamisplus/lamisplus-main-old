@@ -43,7 +43,7 @@ const FormRenderer = (props) => {
 
   React.useEffect(() => {
     formRendererService
-      .fetchFormByFormCode(props.formCode).then((response) => {
+      .fetchFormByFormCode(props.formCode, props.formType).then((response) => {
         setForm(response.data);
         setShowLoadingForm(false);
       }) .catch((error) => {

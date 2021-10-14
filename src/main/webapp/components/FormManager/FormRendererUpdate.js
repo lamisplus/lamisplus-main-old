@@ -89,7 +89,10 @@ const FormRenderer = props => {
           setErrorMsg("Could not load encounter information");
           setShowErrorMsg(true);
         }
-        setSubmission(JSON.stringify(_.merge({ data: extractedData }, JSON.parse(submission))));
+        const submissionJson = JSON.stringify(_.merge({ data: extractedData }, JSON.parse(submission)));
+        console.log(submissionJson);
+        setSubmission(submissionJson);
+
       })
       .catch((error) => {
         setErrorMsg("Could not load encounter information");
