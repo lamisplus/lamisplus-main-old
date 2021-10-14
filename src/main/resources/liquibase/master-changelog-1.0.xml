@@ -3,4 +3,5 @@
     <include relativeToChangelogFile="true" file="lamisplus-db-changelog-1.0.xml"/>
     <include relativeToChangelogFile="true" file="lamisplus-db-changelog-insert-1.0.xml"/>
     <include relativeToChangelogFile="true" file="lamisplus-db-changelog-1.1.xml"/>
+    <include relativeToChangelogFile="true" file="lamisplus-db-changelog-update-1.1.xml"/>
 </databaseChangeLog>
