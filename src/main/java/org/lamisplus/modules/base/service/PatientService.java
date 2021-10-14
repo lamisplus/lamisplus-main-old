@@ -379,14 +379,28 @@ public class PatientService {
         return patientRepository.findAllByFullDetails(firstName, lastName, hospitalNumber, mobilePhoneNumber, getOrganisationUnitId(), UN_ARCHIVED, pageable);
     }
 
-    public Page<Patient> findAllByPatientNotCaseManagedByFilteredParameters(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber,
+    //Patients Not Managed
+    public Page<Patient> findAllByPatientNotManagedByFilteredParameters(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber,
                                       String gender, String programCode, Pageable pageable) {
         return patientRepository.findAllByPatientNotCaseManagedByFilteredParameters(firstName, lastName, hospitalNumber, mobilePhoneNumber,
                 gender, UN_ARCHIVED, getOrganisationUnitId(), programCode, pageable);
     }
 
-    public Page<Patient> findAllByPatientNotCaseManaged(String programCode, Pageable pageable) {
-        return patientRepository.findAllByPatientNotCaseManaged(programCode, UN_ARCHIVED, getOrganisationUnitId(), pageable);
+    //Patients Managed
+    public Page<Patient> findAllByPatientManagedByFilteredParameters(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber,
+                                                                        String gender, String programCode, Pageable pageable) {
+        return patientRepository.findAllByPatientManagedByFilteredParameters(firstName, lastName, hospitalNumber, mobilePhoneNumber,
+                gender, UN_ARCHIVED, getOrganisationUnitId(), programCode, pageable);
+    }
+
+    //Patients Not Managed
+    public Page<Patient> findAllByPatientNotManaged(String programCode, Pageable pageable) {
+        return patientRepository.findAllByPatientsNotManaged(programCode, UN_ARCHIVED, getOrganisationUnitId(), pageable);
+    }
+
+    //Patients Managed
+    public Page<Patient> findAllByPatientManaged(String programCode, Pageable pageable) {
+        return patientRepository.findAllByPatientsManaged(programCode, UN_ARCHIVED, getOrganisationUnitId(), pageable);
     }
 
     //Case management

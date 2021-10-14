@@ -44,8 +44,8 @@ public class PatientController {
         return new ResponseEntity<>(patientService.getAllPatients(page), headers, HttpStatus.OK);
     }
 
-    @GetMapping("/notManaged/{programCode}")
-    public ResponseEntity<List<PatientDTO>> getPatientsNotCaseManaged(@PathVariable String programCode, @RequestParam (required = false, defaultValue = "*") String search,
+    @GetMapping("/not-managed/{programCode}")
+    public ResponseEntity<List<PatientDTO>> getPatientsNotManagedByProgramCode(@PathVariable String programCode, @RequestParam (required = false, defaultValue = "*") String search,
                                                                       @PageableDefault(value = 50) Pageable pageable) {
         Page<Patient> page;
         if(!search.equals("*")) {
@@ -55,11 +55,31 @@ public class PatientController {
             String mobilePhoneNumber = "%"+search+"%";
             String gender = search+"%";
 
-            page = patientService.findAllByPatientNotCaseManagedByFilteredParameters(firstName, lastName,hospitalNumber,mobilePhoneNumber, gender, programCode, pageable);
+            page = patientService.findAllByPatientNotManagedByFilteredParameters(firstName, lastName,hospitalNumber,mobilePhoneNumber, gender, programCode, pageable);
         }
         else {
-            page = patientService.findAllByPatientNotCaseManaged(programCode, pageable);
+            page = patientService.findAllByPatientNotManaged(programCode, pageable);
 
+        }
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(patientService.getAllPatients(page), headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/managed/{programCode}")
+    public ResponseEntity<List<PatientDTO>> getPatientsManagedByProgramCode(@PathVariable String programCode, @RequestParam (required = false, defaultValue = "*") String search,
+                                                                      @PageableDefault(value = 50) Pageable pageable) {
+        Page<Patient> page;
+        if(!search.equals("*")) {
+            String firstName = "%"+search+"%";
+            String lastName = "%"+search+"%";
+            String hospitalNumber = "%"+search+"%";
+            String mobilePhoneNumber = "%"+search+"%";
+            String gender = search+"%";
+
+            page = patientService.findAllByPatientManagedByFilteredParameters(firstName, lastName,hospitalNumber,mobilePhoneNumber, gender, programCode, pageable);
+        }
+        else {
+            page = patientService.findAllByPatientManaged(programCode, pageable);
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(patientService.getAllPatients(page), headers, HttpStatus.OK);
@@ -72,7 +92,6 @@ public class PatientController {
 
 
     @GetMapping("/hospitalNumber")
-    //@PreAuthorize("hasAuthority('patient_read')")
     public ResponseEntity<PatientDTO> getPatientByHospitalNumber(@RequestParam String hospitalNumber,
                                                                  @RequestParam (required = false, defaultValue = "Hospital Number") String patientNumberType) {
         return ResponseEntity.ok(patientService.getPatientByHospitalNumber(hospitalNumber, patientNumberType));
