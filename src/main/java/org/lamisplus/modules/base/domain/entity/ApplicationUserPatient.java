@@ -42,8 +42,8 @@ public class ApplicationUserPatient extends Audit<String>{
     private Long organisationUnitId;
 
     @Basic
-    @Column(name = "managed_type")
-    private String managedType = "HIV";
+    @Column(name = "program_code")
+    private String programCode;
 
     @ManyToOne
     @JoinColumn(name = "application_user_id", referencedColumnName = "id", insertable = false, updatable = false)

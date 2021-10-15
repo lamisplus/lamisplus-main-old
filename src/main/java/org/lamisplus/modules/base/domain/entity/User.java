@@ -105,4 +105,7 @@ public class User {
     @JoinColumn(name = "current_organisation_unit_id", referencedColumnName = "id", insertable = false, updatable = false)
     @ToString.Exclude
     private OrganisationUnit organisationUnitByCurrentOrganisationUnitId;
+
+    @Transient
+    private int managedPatientCount;
 }

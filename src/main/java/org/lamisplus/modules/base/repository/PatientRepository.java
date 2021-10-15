@@ -126,4 +126,12 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
             "AND p.identifier_number-> 'identifierType' ->> 'code' = ?3 " +
             "AND patient.archived = ?4 AND patient.organisation_unit_id = ?5", nativeQuery = true)
     Optional<String> findPatientIdentifierNumber(String hospitalNumber, String patientNumberType, String identifierCode, int archived, Long organisationUnitId);
+
+    @Query(value = "SELECT p.identifier_number ->> 'identifier' " +
+            "FROM patient, jsonb_array_elements(details ->'otherIdentifier') " +
+            "WITH ordinality p(identifier_number) " +
+            "WHERE patient.id=?1 " +
+            "AND p.identifier_number-> 'identifierType' ->> 'code' = ?2 " +
+            "AND patient.archived = ?3 AND patient.organisation_unit_id = ?4", nativeQuery = true)
+    Optional<String> findPatientIdentifierNumberByPatientId(Long id, String identifierCode, int archived, Long organisationUnitId);
 }
