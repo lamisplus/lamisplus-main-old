@@ -102,11 +102,9 @@ public class PatientController {
         return ResponseEntity.ok(patientService.exist(hospitalNumber));
     }
 
-    @GetMapping("/identifier-number")
-    public ResponseEntity<String> getPatientIdentifierNumber(@RequestParam String hospitalNumber,
-                                                                             @RequestParam String patientNumberType,
-                                                                             @RequestParam String identifierCode) {
-        return ResponseEntity.ok(patientService.getPatientIdentifierNumber(hospitalNumber, patientNumberType, identifierCode));
+    @GetMapping("/{id}/identifier-number")
+    public ResponseEntity<String> getPatientIdentifierNumber(@PathVariable Long id, @RequestParam String identifierCode) {
+        return ResponseEntity.ok(patientService.getPatientIdentifierNumber(id, identifierCode));
     }
   
     @GetMapping("/{id}/encounters/{formCode}")
