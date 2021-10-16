@@ -17,7 +17,6 @@ const PatientSearch = (props) => {
   const [loading, setLoading] = useState('')
   const [modal3, setModal3] = useState(false)//modal to View Result
   const togglemodal3 = () => setModal3(!modal3)
-  
   const [collectmodal, setcollectmodal] = useState([])//to collect array of datas into the modal and pass it as props
             
 useEffect(() => {
