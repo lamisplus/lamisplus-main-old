@@ -62,24 +62,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
 
     Optional<Patient> findByIdAndOrganisationUnitIdAndArchived(Long patientId, Long organisationUnitId, int archived);
 
-   /* @Query(value = "SELECT * FROM (SELECT * FROM patient WHERE archived = ?2 AND organisation_unit_id = ?3 " +
-            "AND id NOT IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?2)) p " +
-            "LEFT JOIN (SELECT DISTINCT patient_id FROM encounter WHERE archived = ?2 " +
-            "AND program_code = ?1 AND organisation_unit_id = ?3 " +
-            "AND patient_id NOT IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?2)) e " +
-            "ON p.id = e.patient_id ORDER BY p.id DESC", nativeQuery = true)
-    Page<Patient> findAllByPatientNotCaseManaged(String programCode, int archived, Long organisationUnitId, Pageable pageable);
-*/
-    /*@Query(value = "SELECT * FROM (SELECT * FROM patient WHERE (details ->>'firstName' ilike ?1 " +
-            "OR details ->>'lastName' ilike ?2 OR details ->>'hospitalNumber' ilike ?3 " +
-            "OR details ->>'mobilePhoneNumber' ilike ?4 OR details ->'gender' ->> 'display' ilike ?5) AND " +
-            "archived = ?6 AND organisation_unit_id = ?7 " +
-            "AND id NOT IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?6)) p " +
-            "LEFT JOIN (SELECT DISTINCT patient_id FROM encounter WHERE archived = ?6 " +
-            "AND program_code = ?8 AND organisation_unit_id = ?7 " +
-            "AND patient_id NOT IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?6)) e " +
-            "ON p.id = e.patient_id ORDER BY p.id DESC", nativeQuery = true)*/
-
    @Query(value = "SELECT DISTINCT e.patient_id, p.* FROM encounter e " +
            "LEFT OUTER JOIN patient p ON p.id = e.patient_id " +
            "WHERE (p.details ->>'firstName' ilike ?1 OR p.details ->>'lastName' ilike ?2 " +
@@ -90,7 +72,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
            "AND e.patient_id NOT IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?6)", nativeQuery = true)
    Page<Patient> findAllByPatientNotCaseManagedByFilteredParameters(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber,
                                                                      String gender, int archived, Long organisationUnitId, String programCode, Pageable pageable);
-
 
     @Query(value = "SELECT DISTINCT e.patient_id, p.* FROM encounter e " +
             "LEFT OUTER JOIN patient p ON p.id = e.patient_id " +

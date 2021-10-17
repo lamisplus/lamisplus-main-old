@@ -37,7 +37,6 @@ public class EncounterService {
     private static final int UNARCHIVED = 0;
     private final EncounterRepository encounterRepository;
     private final VisitRepository visitRepository;
-    private final PatientFlagRepository patientFlagRepository;
     private final EncounterMapper encounterMapper;
     private final FormDataMapper formDataMapper;
     private final FormDataRepository formDataRepository;
@@ -54,8 +53,9 @@ public class EncounterService {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
         List<EncounterDTO> encounterDTOS = new ArrayList();
         List<Encounter> encounters = encounterRepository.findAllByOrganisationUnitIdAndArchived(organisationUnitId, UNARCHIVED);
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
         encounters.forEach(singleEncounter -> {
+            //filtering by user permission
             if(!accessRight.grantAccessForm(singleEncounter.getFormCode(), permissions)){
                 return;
             }
@@ -76,12 +76,12 @@ public class EncounterService {
 
     public EncounterDTO getEncounter(Long id) {
         Encounter encounter = encounterRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Encounter.class, "Id",id+"" ));
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
+        //Grant access
         accessRight.grantAccess(encounter.getFormCode(), Encounter.class, permissions);
 
         Patient patient = encounter.getPatientByPatientId();
-
         Form form = encounter.getFormForEncounterByFormCode();
 
         final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(patient, encounter, form);
@@ -112,7 +112,7 @@ public class EncounterService {
 
     public Encounter save(EncounterDTO encounterDTO, int formType) {
         //Get all permissions
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         //Grant access by access type = WRITE
         accessRight.grantAccessByAccessType(encounterDTO.getFormCode(), Encounter.class, WRITE, permissions);
@@ -199,7 +199,7 @@ public class EncounterService {
 
     public Page<Encounter> getEncounterByFormCodeAndDateEncounter(String formCode, Optional<String> dateStart, Optional<String> dateEnd, Pageable pageable) {
         Specification<Encounter> specification = null;
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         accessRight.grantAccess(formCode, Encounter.class, permissions);
 
@@ -248,7 +248,7 @@ public class EncounterService {
     }
 
     private Set<String> checkForEncounterAndGetPermission(Long id){
-        return accessRight.getAllPermission();
+        return accessRight.getAllPermissionForCurrentUser();
     }
 
     private EncounterDTO addProperties(EncounterDTO encounterDTO) {
