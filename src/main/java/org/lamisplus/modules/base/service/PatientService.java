@@ -55,14 +55,14 @@ public class PatientService {
     private static final int ARCHIVED = 1;
     private final ApplicationUserPatientRepository applicationUserPatientRepository;
     private static final String READ = "read";
-    private static final String WRITE = "write";
-    private static final String DELETE = "delete";
+    /*private static final String WRITE = "write";
+    private static final String DELETE = "delete";*/
     private final ObjectMapper mapper;
     private final FlagService flagService;
 
     public Patient save(PatientDTO patientDTO) {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-        patientDTO = patientTransformer.transformDTO(HOSPITAL_NUMBER, patientDTO);
+        patientDTO = patientTransformer.checkForPatientNumber(patientDTO);
         Optional<Patient> patient1 = patientRepository.findByHospitalNumberAndPatientNumberTypeAndOrganisationUnitIdAndArchived(
                 patientDTO.getHospitalNumber(), patientDTO.getPatientNumberType(), organisationUnitId, UN_ARCHIVED);
         if (patient1.isPresent())
@@ -116,7 +116,7 @@ public class PatientService {
         patientRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() ->
                 new EntityNotFoundException(Patient.class, "Id", id + ""));
 
-        patientDTO = patientTransformer.transformDTO(HOSPITAL_NUMBER, patientDTO);
+        patientDTO = patientTransformer.checkForPatientNumber(patientDTO);
 
         final Patient patient = patientMapper.toPatient(patientDTO);
         patient.setId(id);

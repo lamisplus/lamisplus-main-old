@@ -70,7 +70,7 @@ public class PatientTransformer {
         return patientDTO;
     }
 
-    public PatientDTO transformDTO(String key, PatientDTO patientDTO){
+    public PatientDTO checkForPatientNumber(PatientDTO patientDTO){
         try {
             //Instance of ObjectMapper provides functionality for reading and writing JSON
             String details = mapper.writeValueAsString(patientDTO.getDetails());
