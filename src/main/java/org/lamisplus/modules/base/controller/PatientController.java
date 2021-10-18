@@ -92,9 +92,9 @@ public class PatientController {
 
 
     @GetMapping("/hospitalNumber")
-    public ResponseEntity<PatientDTO> getPatientByHospitalNumber(@RequestParam String hospitalNumber,
-                                                                 @RequestParam (required = false, defaultValue = "Hospital Number") String patientNumberType) {
-        return ResponseEntity.ok(patientService.getPatientByHospitalNumber(hospitalNumber, patientNumberType));
+    public ResponseEntity<PatientDTO> getPatientByPatientNumberTypeHospitalNumber(@RequestParam String hospitalNumber,
+                                                                 @RequestParam (defaultValue = "Hospital Number") String patientNumberType) {
+        return ResponseEntity.ok(patientService.getPatientByPatientNumberTypeHospitalNumber(hospitalNumber, patientNumberType));
     }
 
     @GetMapping("/{hospitalNumber}/exist")

@@ -63,7 +63,8 @@ public class PatientService {
     public Patient save(PatientDTO patientDTO) {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
         patientDTO = patientTransformer.transformDTO(HOSPITAL_NUMBER, patientDTO);
-        Optional<Patient> patient1 = patientRepository.findByHospitalNumberAndOrganisationUnitIdAndArchived(patientDTO.getHospitalNumber(), organisationUnitId, UN_ARCHIVED);
+        Optional<Patient> patient1 = patientRepository.findByHospitalNumberAndPatientNumberTypeAndOrganisationUnitIdAndArchived(
+                patientDTO.getHospitalNumber(), patientDTO.getPatientNumberType(), organisationUnitId, UN_ARCHIVED);
         if (patient1.isPresent())
             throw new RecordExistException(Patient.class, "Hospital Number", patientDTO.getHospitalNumber() + "");
 
@@ -85,12 +86,12 @@ public class PatientService {
     }
 
 
-    public List<PatientDTO> getAllPatients(Page page) {
+    public List<PatientDTO> getAllPatients(Page<Patient> page) {
         List<Patient> patients = page.getContent();
         return getPatients(patients);
     }
 
-    public PatientDTO getPatientByHospitalNumber(String hospitalNumber, String patientNumberType) {
+    public PatientDTO getPatientByPatientNumberTypeHospitalNumber(String hospitalNumber, String patientNumberType) {
         Optional<Patient> patientOptional = this.patientRepository.findByHospitalNumberAndPatientNumberTypeAndOrganisationUnitIdAndArchived(hospitalNumber, patientNumberType, getOrganisationUnitId(), UN_ARCHIVED);
 
         if (!patientOptional.isPresent()) {

@@ -39,13 +39,15 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
     @Query(value = "SELECT * FROM patient WHERE details ->>?1 like ?2", nativeQuery = true)
     Page<Patient> findAllByDetails(String key, String value,Pageable pageable);
 
-    @Query(value = "SELECT * FROM patient WHERE details ->>'firstName'like ?1 " +
-            "OR details ->>'lastName' like ?2 OR details ->>'hospitalNumber' like ?3 AND organisation_unit_id=?4 AND archived=?5", nativeQuery = true)
+    @Query(value = "SELECT * FROM patient WHERE (details ->>'firstName' ilike ?1 " +
+            "OR details ->>'lastName' ilike ?2 OR details ->>'hospitalNumber' ilike ?3 OR patient_number ilike ?3) " +
+            "AND organisation_unit_id=?4 AND archived=?5", nativeQuery = true)
     Page<Patient> findAllByDetails(String firstName, String lastName, String hospitalNumber, Long organisationUnitId, int archived, Pageable pageable);
 
     @Query(value = "SELECT * FROM patient WHERE (details ->>'firstName' ilike ?1 " +
             "OR details ->>'lastName' ilike ?2 OR details ->>'hospitalNumber' ilike ?3 " +
-            "OR details ->>'mobilePhoneNumber' ilike ?4) AND organisation_unit_id=?5 AND archived=?6", nativeQuery = true)
+            "OR details ->>'mobilePhoneNumber' ilike ?4 OR patient_number ilike ?3) " +
+            "AND organisation_unit_id=?5 AND archived=?6", nativeQuery = true)
     Page<Patient> findAllByFullDetails(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber, Long organisationUnitId, int archived, Pageable pageable);
 
     @Query(value = "SELECT COUNT(*) FROM patient WHERE details -> 'gender' ->> 'display' ilike ?1 AND " +
@@ -66,7 +68,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
            "LEFT OUTER JOIN patient p ON p.id = e.patient_id " +
            "WHERE (p.details ->>'firstName' ilike ?1 OR p.details ->>'lastName' ilike ?2 " +
            "OR p.details ->>'hospitalNumber' ilike ?3 OR p.details ->>'mobilePhoneNumber' ilike ?4 " +
-           "OR p.details ->'gender' ->> 'display' ilike ?5) AND " +
+           "OR p.details ->'gender' ->> 'display' ilike ?5 OR p.patient_number ilike ?3) AND " +
            "e.program_code = ?8 AND e.archived=?6 AND p.archived=?6 AND p.organisation_unit_id=?7 " +
            "AND e.organisation_unit_id=?7 " +
            "AND e.patient_id NOT IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?6)", nativeQuery = true)
@@ -93,7 +95,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
             "LEFT OUTER JOIN patient p ON p.id = e.patient_id " +
             "WHERE (p.details ->>'firstName' ilike ?1 OR p.details ->>'lastName' ilike ?2 " +
             "OR p.details ->>'hospitalNumber' ilike ?3 OR p.details ->>'mobilePhoneNumber' ilike ?4 " +
-            "OR p.details ->'gender' ->> 'display' ilike ?5) AND " +
+            "OR p.details ->'gender' ->> 'display' ilike ?5 OR p.patient_number ilike ?3) AND " +
             "e.program_code = ?8 AND e.archived=?6 AND p.archived=?6 AND p.organisation_unit_id=?7 " +
             "AND e.organisation_unit_id=?7 " +
             "AND e.patient_id IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?6)", nativeQuery = true)
