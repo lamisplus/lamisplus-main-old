@@ -106,5 +106,3 @@ management:
             show-details: WHEN_AUTHORIZED
         jhimetrics:
             enabled: true
-
-
