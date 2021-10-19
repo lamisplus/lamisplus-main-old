@@ -86,6 +86,11 @@ public class EncounterController {
         return ResponseEntity.ok(this.encounterService.update(id, encounterDTO));
     }
 
+    @PutMapping("/{id}/retrospective-data")
+    public ResponseEntity<Encounter> updateRetrospectiveData(@PathVariable Long id, @RequestBody EncounterDTO encounterDTO){
+        return ResponseEntity.ok(this.encounterService.updateRetrospectiveData(id, encounterDTO));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
         return ResponseEntity.ok(this.encounterService.delete(id));

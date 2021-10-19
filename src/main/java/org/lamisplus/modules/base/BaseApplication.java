@@ -16,7 +16,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -33,7 +32,6 @@ import java.util.List;
 
 import java.io.File;
 
-@EnableScheduling
 @AcrossApplication(
         modules = {
                 AcrossHibernateJpaModule.NAME,

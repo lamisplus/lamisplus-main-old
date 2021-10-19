@@ -34,7 +34,9 @@ import java.util.*;
 @RequiredArgsConstructor
 public class PatientService {
 
-    public static final String HOSPITAL_NUMBER = "Hospital Number";
+    private static final String PATIENT_REGISTRATION_FORM_CODE = "bbc01821-ff3b-463d-842b-b90eab4bdacd";
+    private static final int STATUS = 0;
+    private static final String INTAKE_FORM_CODE = "3746bd2c-362d-4944-8982-5189441b1d59";
     private final EncounterRepository encounterRepository;
     private final PatientTransformer patientTransformer;
     private final PatientRepository patientRepository;
@@ -81,7 +83,6 @@ public class PatientService {
 
     public List<PatientDTO> getAllPatients() {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-
         return getPatients(patientRepository.findAllByArchivedAndOrganisationUnitIdOrderByIdDesc(UN_ARCHIVED, organisationUnitId));
     }
 
@@ -97,7 +98,6 @@ public class PatientService {
         if (!patientOptional.isPresent()) {
             throw new EntityNotFoundException(Patient.class, "Hospital Number & Patient Number Type", hospitalNumber + " & " + patientNumberType);
         }
-
         return updatePatientFlag(getPatient(patientOptional));
     }
 
@@ -107,7 +107,6 @@ public class PatientService {
         if (!patientOptional.isPresent()) {
             throw new EntityNotFoundException(Patient.class, "Hospital Number", hospitalNumber + "");
         }
-
         return this.updatePatientFlag(getPatient(patientOptional));
     }
 
@@ -117,7 +116,6 @@ public class PatientService {
                 new EntityNotFoundException(Patient.class, "Id", id + ""));
 
         patientDTO = patientTransformer.checkForPatientNumber(patientDTO);
-
         final Patient patient = patientMapper.toPatient(patientDTO);
         patient.setId(id);
         Patient savedPatient = patientRepository.save(patient);
@@ -133,20 +131,17 @@ public class PatientService {
         List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived(formCode, 0, UN_ARCHIVED);
         Object patientDetails = this.setAge(details);
         if(!formFlags.isEmpty()){
-            flagService.checkForAndSavePatientFlag(patientId, patientDetails, formFlags, false);
+            flagService.checkForAndSavePatientFlag(patientId, patientDetails, formFlags);
         }
-
     }
 
 
     public List getEncountersByPatientIdAndDateEncounter(Long patientId, String formCode, Optional<String> dateStart, Optional<String> dateEnd) {
         Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
-
         accessRight.grantAccessByAccessType(formCode, Patient.class, READ, permissions);
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
 
         Specification<Encounter> specification = new GenericSpecification<Encounter>().findAllEncountersByPatientIdAndDateEncounter(patientId, formCode, dateStart, dateEnd, organisationUnitId);
-
         List<Encounter> encounters = encounterRepository.findAll(specification);
 
         return getFormData(encounters, null);
@@ -182,7 +177,6 @@ public class PatientService {
         List<EncounterDTO> encounterDTOS = new ArrayList<>();
         Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
-
         if (programCodeExclusionList != null && programCodeExclusionList.size() > 0)
             programCodeExclusionList.forEach(programCode -> {
 
@@ -193,7 +187,6 @@ public class PatientService {
                     }
                     if (singleEncounter.getProgramCode().equals(programCode)) return;
                     Patient patient = singleEncounter.getPatientByPatientId();
-                    //Person person = patient.getPersonByPersonId();
                     Form form = singleEncounter.getFormForEncounterByFormCode();
 
                     final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(patient, singleEncounter, form);
@@ -210,7 +203,6 @@ public class PatientService {
      * @return integer to confirm archive
      */
     public Integer delete(Long id) {
-        //String username = userService.getUserWithRoles().get().getUserName();
         Optional<Patient> patientOptional = this.patientRepository.findByIdAndArchivedAndOrganisationUnitId(id, UN_ARCHIVED, getOrganisationUnitId());
         if (!patientOptional.isPresent()) throw new EntityNotFoundException(Patient.class, "Id", id + "");
         //setting all patient archive to 1
@@ -273,7 +265,8 @@ public class PatientService {
             filledFormSet.add(distinctEncounter.getFormCode());
         });
 
-        if (filledFormSet.size() > 0) {
+        /*.size() > 0*/
+        if (!filledFormSet.isEmpty()) {
             program.getFormsByProgram().forEach(form -> {
                 //if form has been filled, then return
                 if (filledFormSet.contains(form.getCode())) {
@@ -568,21 +561,21 @@ public class PatientService {
     //Temp method to update Patient Flag
     private PatientDTO updatePatientFlag(PatientDTO patientDTO) {
         //Start of flag operation for associated with (0)
-        List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("bbc01821-ff3b-463d-842b-b90eab4bdacd", 0, UN_ARCHIVED);
+        List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived(PATIENT_REGISTRATION_FORM_CODE, STATUS, UN_ARCHIVED);
         if (!formFlags.isEmpty()) {
             String details = JsonUtil.getJsonNode(patientDTO.getDetails()).toString();
-            flagService.checkForAndSavePatientFlag(patientDTO.getPatientId(), setAge(details), formFlags, true);
+            flagService.checkForAndSavePatientFlag(patientDTO.getPatientId(), setAge(details), formFlags);
         }
 
-        Optional<Encounter> optionalEncounter = encounterRepository.findOneByPatientIdAndFormCodeAndArchived(patientDTO.getPatientId(), "3746bd2c-362d-4944-8982-5189441b1d59", UN_ARCHIVED);
+        Optional<Encounter> optionalEncounter = encounterRepository.findOneByPatientIdAndFormCodeAndArchived(patientDTO.getPatientId(), INTAKE_FORM_CODE, UN_ARCHIVED);
         if(optionalEncounter.isPresent()){
             Encounter encounter = optionalEncounter.get();
             Optional<FormData> optionalFormData = encounter.getFormDataByEncounter().stream().findFirst();
             if(optionalFormData.isPresent()){
-                formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("3746bd2c-362d-4944-8982-5189441b1d59", 0, UN_ARCHIVED);
+                formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("INTAKE_FORM_CODE", STATUS, UN_ARCHIVED);
                 if (!formFlags.isEmpty()) {
                     String formData = JsonUtil.getJsonNode(optionalFormData.get().getData()).toString();
-                    flagService.checkForAndSavePatientFlag(patientDTO.getPatientId(), formData, formFlags, true);
+                    flagService.checkForAndSavePatientFlag(patientDTO.getPatientId(), formData, formFlags);
                 }
             }
         }

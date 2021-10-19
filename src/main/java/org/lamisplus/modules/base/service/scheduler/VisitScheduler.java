@@ -9,7 +9,6 @@ import org.lamisplus.modules.base.domain.mapper.VisitMapper;
 import org.lamisplus.modules.base.repository.VisitRepository;
 import org.lamisplus.modules.base.service.VisitService;
 import org.lamisplus.modules.base.util.converter.CustomDateTimeFormat;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -28,7 +27,6 @@ public class VisitScheduler {
     /**
      * Auto checkOut fires 1 hour
      */
-    @Scheduled(fixedDelay = 10000000, initialDelay = 50000)
     public void autoCheckOut() {
         try {
             List<VisitDTO> visitDTOList = this.visitService.getAllVisits();

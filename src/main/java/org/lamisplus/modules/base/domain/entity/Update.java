@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.domain.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -15,8 +16,8 @@ public class Update {
     private Long id;
 
     @Basic
-    @Column(name = "version")
-    private Double version;
+    @Column(name = "code")
+    private String code;
 
     @Basic
     @Column(name = "name")
@@ -28,7 +29,7 @@ public class Update {
 
     @Basic
     @Column(name = "date_created")
-    private String dateCreated;
+    private Timestamp dateCreated;
 
     @Basic
     @Column(name = "created_by")
@@ -40,5 +41,9 @@ public class Update {
 
     @Basic
     @Column(name = "size")
-    private String size;
+    private Double size;
+
+    @Basic
+    @Column(name = "version")
+    private Double version;
  }
