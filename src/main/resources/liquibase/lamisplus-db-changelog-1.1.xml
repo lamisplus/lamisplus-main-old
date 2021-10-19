@@ -40,4 +40,32 @@
                       oldColumnName="managed_type"
                       tableName="application_user_patient"/>
     </changeSet>
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1634653439837-150">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="update_id_seq"></sequenceExists>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="update_id_seq"/>
+    </changeSet>
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1634653439837-151">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="update"/>
+            </not>
+        </preConditions>
+        <createTable tableName="update">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="update_pkey"/>
+            </column>
+            <column name="code" type="VARCHAR(2147483647)"/>
+            <column name="name" type="VARCHAR(2147483647)"/>
+            <column name="url" type="VARCHAR(2147483647)"/>
+            <column name="date_created" type="TIMESTAMP(29) WITHOUT TIME ZONE"/>
+            <column name="created_by" type="VARCHAR(2147483647)"/>
+            <column name="status" type="INT"/>
+            <column name="size" type="FLOAT8"/>
+            <column name="version" type="FLOAT8"/>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
