@@ -11,17 +11,4 @@
             <where>id=15</where>
         </update>
     </changeSet>
-
-    <!--changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-143">
-        <preConditions onFail="MARK_RAN">
-            <sqlCheck expectedResult="0">
-                SELECT COUNT(*) FROM form_flag WHERE id=4;
-            </sqlCheck>
-        </preConditions>
-        <sqlFile dbms="postgresql"
-                 path="sql/form_flag.sql"
-                 relativeToChangelogFile="true"
-                 splitStatements="false"
-                 stripComments="true"/>
-    </changeSet>-->
 </databaseChangeLog>
