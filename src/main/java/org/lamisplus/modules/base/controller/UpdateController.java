@@ -23,4 +23,9 @@ public class UpdateController {
     public Update checkForUpdateOnServer(@RequestParam Double version) {
         return updateService.checkForUpdateOnServer(version);
     }
+
+    @PostMapping
+    public void downloadUpdateOnServer(@RequestParam String url) throws IOException {
+        updateService.downloadUpdateOnServer(url);
+    }
 }

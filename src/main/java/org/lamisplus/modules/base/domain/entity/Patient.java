@@ -105,4 +105,7 @@ public class Patient extends JsonBEntity implements Serializable {
     @JsonIgnore
     @ToString.Exclude
     List<ApplicationUserPatient> applicationUserPatientsById;
+
+    @Transient
+    private String artStatus;
 }

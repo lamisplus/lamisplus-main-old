@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.domain.entity.Update;
 import org.lamisplus.modules.base.repository.UpdateRepository;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -29,7 +31,7 @@ public class UpdateService {
         return this.updateRepository.findAll();
     }
 
-    public void downloadUpdateOnServer(String url) {
+    public void downloadUpdateOnServer(String url) throws IOException {
         try {
             URL urlObject = new URL(url);
             URLConnection urlConnection = urlObject.openConnection();
@@ -37,9 +39,10 @@ public class UpdateService {
             InputStream inputStream = urlConnection.getInputStream();
             readFromInputStream(inputStream);
         } catch (IOException e) {
-            log.error(e.getMessage());
+            throw new IOException("No internet connection");
         }
     }
+
 
     private void readFromInputStream(InputStream inputStream){
         File file = new File("update/lamisplus.jar");
@@ -81,7 +84,7 @@ public class UpdateService {
     }
 
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
     public void readUpdateOnStartUp() throws IOException {
         URL resource = getClass().getClassLoader().getResource("update.yml");
         File updateFile = null;

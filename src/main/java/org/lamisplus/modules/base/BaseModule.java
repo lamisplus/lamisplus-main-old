@@ -27,7 +27,9 @@ public class BaseModule extends AcrossModule {
                 getClass().getPackage().getName() +".config",
                 getClass().getPackage().getName() +".domain",
                 getClass().getPackage().getName() +".domain.mapper",
-                getClass().getPackage().getName() +".util"));
+                getClass().getPackage().getName() +".util",
+                getClass().getPackage().getName() +".component",
+                getClass().getPackage().getName() +".job"));
     }
 
     public String getName() {

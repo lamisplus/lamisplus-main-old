@@ -25,7 +25,7 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
             "(e.patientId, e.formCode, e.programCode, e.organisationUnitId, e.archived) FROM Encounter e WHERE e.patientId = ?1 and e.programCode = ?2 and e.organisationUnitId = ?3 and e.archived = ?4")*/
 
     @Query(value = "SELECT DISTINCT ON (patient_id, form_code) encounter.* FROM encounter " +
-            "WHERE program_code = ?2 AND patient_id = ?1" +
+            "WHERE program_code = ?2 AND patient_id = ?1 " +
             "AND organisation_unit_id = ?3 AND archived = ?4 ORDER BY patient_id DESC", nativeQuery = true)
     List<Encounter> findDistinctPatientIdAndProgramCodeAndOrganisationUnitIdAndArchived(Long patientId, String programCode, Long organisationUnitId, int archived);
 

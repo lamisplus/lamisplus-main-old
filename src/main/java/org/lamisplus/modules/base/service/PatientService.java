@@ -293,7 +293,7 @@ public class PatientService {
             for (String formCode : formCodeSet) {
                 Form form = formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED).get();
                 //Start of flag operation
-                forms = flagService.setAndGetFormListForFlagOperation(this.getPatientById(patientId), form, forms);
+                    forms = flagService.setAndGetFormListForFlagOperation(this.getPatientById(patientId), form, forms);
             }
 
         } else {
@@ -306,8 +306,6 @@ public class PatientService {
         }
         return formMapper.FormToFormDTOs(forms);
     }
-
-
 
 
     public List<FormDTO> getFilledFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
