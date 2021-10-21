@@ -183,6 +183,17 @@ const FormRenderer = (props) => {
   </span>);
   }
 
+  const onSave = (submission) => {
+    delete submission.data.patient;
+    delete submission.data.authHeader;
+    delete submission.data.submit;
+    delete submission.data.baseUrl;
+
+    if (props.onSubmit) {
+      return props.onSubmit(submission);
+    }
+    return submitForm(submission);
+  }
   return (
     <React.Fragment>
         <Card>
@@ -207,15 +218,13 @@ const FormRenderer = (props) => {
               hideComponents={props.hideComponents}
               options={options}
               onSubmit={(submission) => {
-                delete submission.data.patient;
-                delete submission.data.authHeader;
-                delete submission.data.submit;
-                delete submission.data.baseUrl;
-
-                if (props.onSubmit) {
-                  return props.onSubmit(submission);
+                onSave(submission);
+              }}
+              onCustomEvent={(submission) => {
+                if(submission.type === 'onSubmitOrderButtonClicked'){
+                  console.log('is onSubmitOrderButtonClicked');
+                  onSave(submission);
                 }
-                return submitForm(submission);
               }}
             />
           </CardBody>

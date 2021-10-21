@@ -7,8 +7,6 @@ import ErrorIcon from "@material-ui/icons/Error";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import CancelIcon from "@material-ui/icons/Cancel";
 import {CircularProgress} from "@material-ui/core";
-import {fetchApplicationCodeSet} from "../../actions/applicationCodeset";
-import {fetchByHospitalNumber} from "../../actions/patients";
 import {connect} from "react-redux";
 
 const SearchPatientByFingerprint = (props) => {

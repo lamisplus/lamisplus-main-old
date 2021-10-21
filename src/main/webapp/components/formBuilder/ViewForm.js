@@ -111,7 +111,7 @@ const Update = props => {
 
     useEffect (() => {
         setformCode(row.code);
-        props.fetchPatientByHospitalNumber('AD-0221', null, null)
+        props.fetchPatientByHospitalNumber('AD-0221','Hospital Number', null, null)
     }, [])
 
     const handleSubmit = e =>  {

@@ -383,7 +383,7 @@ function ServiceFormPage(props) {
                         title="Services Form History"
                         columns={[
                           { title: 'Form Name', field: 'formName' },
-                          { title: 'Date', field: 'date' },
+                          { title: 'Date', field: 'dateEncounter' },
                         ]}
                         data={patientEncounters}
                         actions={[

@@ -143,6 +143,7 @@ console.log(prescriptions)
                               resolve({
                                   data: result.data.map((prescription) => ({
                                     Id: prescription.hospitalNumber,
+                                      numberType: prescription.patientNumberType,
                                     name: prescription.firstName + " " + prescription.lastName,
                                     date: prescription.dateEncounter,
                                     prescribedCount: prescription.formDataObj.length,
