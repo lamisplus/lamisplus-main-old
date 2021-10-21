@@ -190,7 +190,7 @@ const CaseManagerPatients = (props) => {
                               console.log( result.headers['x-total-count']);
                               resolve({
                                   data: result.data.map((row) => ({
-                                    patientId: row.patientId + "(" + row.hospitalNumber + ")" ,
+                                    patientId: row.patientId  ,
                                     name: row.firstName + " " + row.lastName,
                                     gender: row.details && row.details.gender && row.details.gender.display ? row.details.gender.display : 'N/A',
                                     age: (row.dob === 0 ||
@@ -230,9 +230,9 @@ const CaseManagerPatients = (props) => {
                 }}
               actions={[        
                     {
-                    tooltip: 'Assign Case Manager',
+                    tooltip: 'Un-Assign/Re-Assign Case Manager',
                     icon: 'add' ,
-                    label: 'Assign Case Manager ',
+                    label: 'Un-Assign/Re-Assign Case Manager',
                     onClick: (evt, data) => getCaseManager(evt, data)
                     }
         ]} 

@@ -140,7 +140,7 @@ const AssignCaseManager = (props) => {
       
   return (      
       <div >
-    <ToastContainer autoClose={3000} hideProgressBar />
+
             <Modal isOpen={props.modalstatus} toggle={props.togglestatus} className={props.className} size="md">
             <Form onSubmit={saveSample}>
             <ModalHeader toggle={props.togglestatus}>Assign Case Manager</ModalHeader>

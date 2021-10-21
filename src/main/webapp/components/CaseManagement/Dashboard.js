@@ -246,7 +246,8 @@ const ScrollableTabsButtonForce = (props) => {
         series: [{
             name: "Total Case Manager",
             innerSize: '50%',
-            data: drugPieChart.data
+            //data: drugPieChart.data
+            data: []
         }]
         }
     // This is for the BAR chart
@@ -291,7 +292,8 @@ const ScrollableTabsButtonForce = (props) => {
       series: [{
           name: "Total Case Manager",
           innerSize: '50%',
-          data: drugPieChart.data
+          //data: drugPieChart.data
+          data: []
       }]
       }
         

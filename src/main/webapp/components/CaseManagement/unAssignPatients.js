@@ -19,7 +19,7 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-import {Col,FormGroup,Label,Input} from 'reactstrap';
+import {Col,FormGroup,Label,Input, Row, Card} from 'reactstrap';
 import {url} from '../../api';
 
 
@@ -50,25 +50,70 @@ const CaseManagerSearch = (props) => {
   const togglemodal3 = () => setModal3(!modal3)
   const [collectmodal, setcollectmodal] = useState([])//
   const [programCode, setProgramCode] = useState("")
-  const [programs, setPrograms] = useState([]);
-
-
+  const [otherDetails, setOtherDetails] = useState({state: "", lga: "", gender: "", artStatus:""});
+  const [provinces, setProvinces] = useState([]);
+  const [gender, setGender] = useState([]);
+  const [lgaDetail, setLgaDetail] = useState();
+  const [stateDetail, setStateDetail] = useState();
+  const [states, setStates] = useState([]);
+  /* Get list of gender parameter from the endpoint */
   useEffect(() => {
-    async function getPrograms() {
-        try {
-            const response = await axios(
-                url + "programs"
-            );
-            const body = response.data && response.data !==null ? response.data : {};
-            setPrograms(
-                 body.map(({ name, code }) => ({ title: name, value: code }))
-             );
-        } catch (error) {
-        }
+    async function getGender() {
+      axios
+        .get(`${url}application-codesets/codesetGroup?codesetGroup=GENDER`)
+        .then((response) => {
+          console.log(Object.entries(response.data));
+          setGender(
+            Object.entries(response.data).map(([key, value]) => ({
+              label: value.display,
+              value: value.display,
+            }))
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
-    getPrograms();
-}, []);
+    getGender();
+    setStateByCountryId()
+  }, []);
 
+
+
+   //Get States from selected country
+
+
+const  setStateByCountryId=() =>{
+    async function getStateByCountryId() {
+        const response = await axios.get(url + 'organisation-units/hierarchy/1/2')
+        const stateList = response.data;
+        console.log(stateList)
+        setStates(stateList);
+    }
+    getStateByCountryId();
+}
+
+//fetch province
+const getProvinces = e => {
+  setOtherDetails({ ...otherDetails, [e.target.name]: e.target.value });
+        const stateId = e.target.value;
+        
+            async function getCharacters() {
+                const response = await axios.get(`${url}organisation-units/hierarchy/`+stateId+"/3");
+                const newStates = states.filter(state => state.id == stateId)
+                setStateDetail(newStates)
+                setOtherDetails({...otherDetails, state:stateId})
+                setProvinces(response.data);
+
+            }
+            getCharacters();
+};
+const getlgaObj = e => {
+
+    const newlga = provinces.filter(lga => lga.id == e.target.value)
+    setLgaDetail(newlga)
+    setOtherDetails({...otherDetails, lga:e.target.value})
+}
     const calculate_age = dob => {
         var today = new Date();
         var dateParts = dob.split("-");
@@ -84,6 +129,16 @@ const CaseManagerSearch = (props) => {
                 }
                 return age_now + " year(s)";
     };
+
+    const handleInputChange = e => {
+      const { name, value } = e.target
+      const fieldValue = { [name]: value }
+      setOtherDetails({
+          ...otherDetails,
+          ...fieldValue
+      })
+
+  }
 
     function getCaseManager (evt, data){
         setcollectmodal({...collectmodal, ...data});
@@ -105,9 +160,12 @@ const CaseManagerSearch = (props) => {
 
   return (
     <div>
-       <Col md={3}>
+    <Card>
+      <Row className=" mr-5  ml-5 mt-5 mb-5">
+      
+        <Col md={6}>
             <FormGroup>
-                <Label for="occupation">Program Area </Label>
+                <Label for="occupation">Age Group </Label>
 
                     <Input
                       type="select"
@@ -116,19 +174,100 @@ const CaseManagerSearch = (props) => {
                       onChange={getProgramCode}
                     >
                         <option> </option>
-                        {programs.map(({ title, value }) => (
-                            
-                            <option key={value} value={value}>
-                                {title}
-                            </option>
-                        ))}
+                       
+                  </Input>
+            </FormGroup>
+        </Col>
+        <Col md={6}>
+            <FormGroup>
+                <Label for="occupation">Gender </Label>
+
+                    <Input
+                      type="select"
+                      name="gender"
+                      id="gender"
+                      value={otherDetails.gender}
+                      onChange={handleInputChange}
+                      
+                      >
+                      <option value=""> </option>
+                      {gender.map(({ label, value }) => (
+                          <option key={value} value={value}>
+                          {label}
+                          </option>
+                      ))}
+                  </Input>
+            </FormGroup>
+        </Col>
+        <Col md={6}>
+            <FormGroup>
+                <Label for="occupation">State of Residence </Label>
+
+                    <Input
+                      type="select"
+                      name="program"
+                      id="program"
+                      value={otherDetails.stateId}
+                          onChange={getProvinces}
+                      >
+                          <option >Please Select State</option>
+                          {states.map((row) => (
+                              <option key={row.id} value={row.id}>
+                                  {row.name}
+                              </option>
+                          ))}
                         
                   </Input>
             </FormGroup>
         </Col>
+        <Col md={6}>
+            <FormGroup>
+                <Label for="occupation">Lga of Residence </Label>
+
+                    <Input
+                      type="select"
+                      name="program"
+                      id="program"
+                      onChange={getlgaObj}
+                      >
+                          {provinces.length > 0 ? (
+                              provinces.map((row) => (
+                                  <option key={row.name} value={row.id}>
+                                      {row.name}
+                                  </option>
+                              ))
+                          ) : (
+                              <option key="" value="">
+                                  {" "}
+                                      No Record Found
+                              </option>
+                          )}
+                  </Input>
+            </FormGroup>
+        </Col>
+        <Col md={6}>
+            <FormGroup>
+                <Label for="occupation">Pregnancy Status </Label>
+
+                    <Input
+                      type="select"
+                      name="program"
+                      id="program"
+                      onChange={getProgramCode}
+                    >
+                        <option> </option>
+                        <option value="true"> True</option>
+                        <option value="false"> False</option>
+                  </Input>
+            </FormGroup>
+        </Col>
+        
+      </Row> 
+      </Card>  
+      <br/>
       <MaterialTable
        icons={tableIcons}
-        title="Patients List (Not Assign)"
+        title="Un-Assign Patients List"
         tableRef={tableRef}
         columns={[
           { title: " ID", field: "patientId" },
@@ -144,7 +283,7 @@ const CaseManagerSearch = (props) => {
 
         data={query =>
                   new Promise((resolve, reject) =>
-                      axios.get(`${baseUrl}patients/not-managed/${codes}?size=${query.pageSize}&page=${query.page}&search=${query.search}`)
+                      axios.get(`${baseUrl}patients/${codes}/false/programs?size=${query.pageSize}&page=${query.page}&search=${query.search}`)
                           .then(response => response)
                           .then(result => {
 

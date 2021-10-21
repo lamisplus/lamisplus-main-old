@@ -22,7 +22,11 @@ import ViewColumn from '@material-ui/icons/ViewColumn';
 import {  FaUserPlus } from "react-icons/fa";
 import Button from "@material-ui/core/Button";
 import AddCaseManager from './addCaseManager';
-import {  Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const tableIcons = {
 Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -51,6 +55,9 @@ const CaseManagerSearch = (props) => {
   const [modal, setModal] = useState(false);
   const toggle = () => setModal(!modal);
 
+  const [modaltoast, setModaltoast] = useState(true);
+ 
+
   useEffect(() => {
     fetchMe()
 
@@ -60,7 +67,7 @@ const CaseManagerSearch = (props) => {
   async function fetchMe() {
 
     axios
-        .get(`${baseUrl}roles/8/user`,
+        .get(`${baseUrl}users/roles/8`,
         // { headers: {"Authorization" : `Bearer ${token}`} }
           )
         .then((response) => {
@@ -76,6 +83,21 @@ const addManager =()=> {
   setModal(!modal)
 }
 
+const dismissAll = () =>  toast.dismiss();
+const notify = () => toast.info(<>
+<p>Testing now </p>
+<br/>
+<button onClick={dismissAll}>Close Toast!</button>
+</>, {
+  
+  position: "top-right",
+  autoClose: false,
+  hideProgressBar: true,
+  closeOnClick: modaltoast,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  });
  
   return (
     <div>
@@ -89,6 +111,7 @@ const addManager =()=> {
             <span style={{ textTransform: "capitalize" }}>Add Case Manager</span>
         </Button>
         <br/><br/>
+        <button onClick={notify}>Notify!</button>
       <MaterialTable
        icons={tableIcons}
         title="Case Managers"
@@ -127,7 +150,19 @@ const addManager =()=> {
           status: "Active",
           patients: manager.managedPatientCount,
 
-          actions: "View"
+          actions: <Link to ={{ 
+                      pathname: "/case-manager-patients",
+                      state: manager.id,
+                      caseManagerName: manager.firstName + " " + manager.lastName 
+                    }} 
+                        style={{ cursor: "pointer", color: "blue", fontStyle: "bold"}}
+                    >
+                        <Tooltip title="Collect Sample">
+                            <IconButton aria-label="Collect Sample" >
+                                <VisibilityIcon color="primary"/>
+                            </IconButton>
+                        </Tooltip>
+                    </Link>
         }))}
        
                   options={{
@@ -147,7 +182,7 @@ const addManager =()=> {
                     debounceInterval: 400
                 }}
       />
-      <AddCaseManager modalstatus={modal} togglestatus={toggle} />
+      <AddCaseManager modalstatus={modal} togglestatus={toggle} loadCaseManagers ={fetchMe} />
       
     </div>
   );

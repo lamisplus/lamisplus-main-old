@@ -9,7 +9,7 @@ export const initialfieldState_userRegistration = {
     dateOfBirth: new Date(),
     password: '',
     adminRegistration: true,
-    lga: {},
+    details:{}
 
   }
   

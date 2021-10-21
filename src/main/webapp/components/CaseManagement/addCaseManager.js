@@ -79,12 +79,14 @@ const AddCaseManager = (props) => {
       const [saving, setSaving] = useState(false);
       const [states, setStates] = useState([]);
       const [lgaDetail, setLgaDetail] = useState();
+      const [stateDetail, setStateDetail] = useState();
+      const [otherDetails, setOtherDetails] = useState({state: "", lga: "", address: ""});
       const [provinces, setProvinces] = useState([]);
 
       const apistate = url + "countries/";
       /* Get list of gender parameter from the endpoint */
       useEffect(() => {
-        async function getCharacters() {
+        async function getGender() {
           axios
             .get(`${url}application-codesets/codesetGroup?codesetGroup=GENDER`)
             .then((response) => {
@@ -100,14 +102,12 @@ const AddCaseManager = (props) => {
               console.log(error);
             });
         }
-        getCharacters();
-        
-
+        getGender();
       }, []);
     
       /* Get list of Role parameter from the endpoint */
       useEffect(() => {
-        async function getCharacters() {
+        async function getRoles() {
           axios
             .get(`${url}roles`)
             .then((response) => {
@@ -123,7 +123,7 @@ const AddCaseManager = (props) => {
               console.log(error);
             });
         }
-        getCharacters();
+        getRoles();
         setStateByCountryId();
       }, []);
 
@@ -131,12 +131,12 @@ const AddCaseManager = (props) => {
 
 
     const  setStateByCountryId=() =>{
-        async function getCharacters() {
+        async function getStateByCountryId() {
             const response = await axios.get(url + 'organisation-units/hierarchy/1/2')
             const stateList = response.data;
                 setStates(response.data);
         }
-        getCharacters();
+        getStateByCountryId();
     }
 
     //fetch province
@@ -147,17 +147,21 @@ const AddCaseManager = (props) => {
                 async function getCharacters() {
                     const response = await axios.get(`${url}organisation-units/hierarchy/`+stateId+"/3");
                     const newStates = states.filter(state => state.id == stateId)
-                    console.log(newStates)
-                        setProvinces(response.data);
+                    setStateDetail(newStates)
+                    setOtherDetails({...otherDetails, state:newStates})
+                    setProvinces(response.data);
 
                 }
                 getCharacters();
     };
     const getlgaObj = e => {
 
-            const newlga = provinces.filter(lga => lga.id == e.target.value)
-             console.log(newlga)
-             setLgaDetail(newlga)
+        const newlga = provinces.filter(lga => lga.id == e.target.value)
+        setLgaDetail(newlga)
+        setOtherDetails({...otherDetails, lga:newlga})
+    }
+    const handleAddress = e => {
+         setOtherDetails({...otherDetails, address:e.target.value})
     }
     
       // check if password and confirm password match
@@ -188,30 +192,32 @@ const AddCaseManager = (props) => {
     
       const handleSubmit = (e) => {
         e.preventDefault();
-        values["roles"] = [values["role"]]
+        values["roles"] = ["Case Manager"];
+        values["details"] = otherDetails;
+        
         setSaving(true);
-        const onSuccess = () => {
-          setSaving(false);
-          toast.success("Registration Successful");
-          resetForm();
-        };
-        const onError = () => {
-          setSaving(false);
-          toast.error("Something went wrong");
-        };
-        console.log(values)
-        return;
-        props.register(values, onSuccess, onError);
+        axios.post(`${url}register`, values)
+                    .then(response => {
+                        setSaving(false);
+                        toast.success("Registration Successful");
+                        resetForm();
+                        props.loadCaseManagers();
+                         //Closing of the modal 
+                        props.togglestatus();
+                    })
+                    .catch(error => {
+                        setSaving(false);
+                        toast.error("Something went wrong");
+                    });
       };
 
 
       
   return (      
       <div >
-    <ToastContainer autoClose={3000} hideProgressBar />
             <Modal isOpen={props.modalstatus} toggle={props.togglestatus}  size="lg">
             
-            <ModalHeader toggle={props.togglestatus}>Assign Case Manager</ModalHeader>
+            <ModalHeader toggle={props.togglestatus}>Create Case Manager</ModalHeader>
                 <ModalBody>
                   
                         <Form onSubmit={handleSubmit}>
@@ -288,8 +294,8 @@ const AddCaseManager = (props) => {
                                         type="texarea"
                                         name="address"
                                         id="address"
-                                        onChange={handleInputChange}
-                                        value={values.address}
+                                        onChange={handleAddress}
+                                        value={otherDetails.address}
                                         required
                                         />
                                     </FormGroup>
@@ -319,7 +325,6 @@ const AddCaseManager = (props) => {
                                                 type="select"
                                                 name="lga"
                                                 id="lga"
-                                                
                                                 onChange={getlgaObj}
                                             >
                                                 {provinces.length > 0 ? (
@@ -403,7 +408,8 @@ const AddCaseManager = (props) => {
                                     variant="contained"
                                     className={classes.button}
                                     startIcon={<CancelIcon />}
-                                    onClick={resetForm}
+                                    onClick={props.togglestatus}
+                                   
                                 >
                                     <span style={{ textTransform: "capitalize" }}>Cancel</span>
                                 </MatButton>
