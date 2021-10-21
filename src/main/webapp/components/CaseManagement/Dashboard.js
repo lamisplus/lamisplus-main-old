@@ -10,8 +10,8 @@ import Grid from '@material-ui/core/Grid';
 import { MdDashboard, MdContacts } from 'react-icons/md';
 import {Card, CardBody, CardDeck, CardHeader} from 'reactstrap';
 import CaseManagerSearch from './CaseManagerSearch';
-import AssignPatients from './AssignPatients';
-import ReAssignPatients from './ReAssignPatients';
+import UnAssignPatients from './unAssignPatients';
+import ManagedPatients from './managedPatients';
 import { fetchPrescriptions } from "../../actions/pharmacy";
 import { connect } from 'react-redux';
 import Highcharts from 'highcharts';
@@ -326,7 +326,7 @@ const ScrollableTabsButtonForce = (props) => {
             />
             <Tab
               className={classes.title}
-              label="Assign Patients"
+              label="Un-Assigned Patients"
               icon={<MdContacts />}
               {...a11yProps(2)}
             />
@@ -368,10 +368,10 @@ const ScrollableTabsButtonForce = (props) => {
           <CaseManagerSearch />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <AssignPatients />
+          <UnAssignPatients />
         </TabPanel>
         <TabPanel value={value} index={3}>
-          <ReAssignPatients />
+          <ManagedPatients />
         </TabPanel>
 
       </div>

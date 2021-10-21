@@ -19,6 +19,10 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import {  FaUserPlus } from "react-icons/fa";
+import Button from "@material-ui/core/Button";
+import AddCaseManager from './addCaseManager';
+import {  Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 const tableIcons = {
 Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -43,8 +47,10 @@ ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 
 const CaseManagerSearch = (props) => {
 
-  let token = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJndWVzdEBsYW1pc3BsdXMub3JnIiwiYXV0aCI6IlN1cGVyIEFkbWluIiwibmFtZSI6Ikd1ZXN0IEd1ZXN0IiwiZXhwIjoxNjMzMDczMDYyfQ.XMXtJMvmDVHBUiUr78KSvD2JIMO6pjxx3r_9USI6DP8FdUVdTbNu7eGlzgZUaqq57WfSCe-y9MkbY48uDqLwcA';
   const [caseManagersList, setCaseManagersList] = useState( [])
+  const [modal, setModal] = useState(false);
+  const toggle = () => setModal(!modal);
+
   useEffect(() => {
     fetchMe()
 
@@ -65,9 +71,24 @@ const CaseManagerSearch = (props) => {
         });
   
 }
+
+const addManager =()=> {  
+  setModal(!modal)
+}
+
  
   return (
     <div>
+        <Button
+            variant="contained"
+            color="primary"
+            className=" float-right mr-1"
+            startIcon={<FaUserPlus />}
+            onClick={() =>addManager()}
+          >
+            <span style={{ textTransform: "capitalize" }}>Add Case Manager</span>
+        </Button>
+        <br/><br/>
       <MaterialTable
        icons={tableIcons}
         title="Case Managers"
@@ -106,7 +127,7 @@ const CaseManagerSearch = (props) => {
           status: "Active",
           patients: manager.managedPatientCount,
 
-          actions: ""
+          actions: "View"
         }))}
        
                   options={{
@@ -126,6 +147,8 @@ const CaseManagerSearch = (props) => {
                     debounceInterval: 400
                 }}
       />
+      <AddCaseManager modalstatus={modal} togglestatus={toggle} />
+      
     </div>
   );
 }

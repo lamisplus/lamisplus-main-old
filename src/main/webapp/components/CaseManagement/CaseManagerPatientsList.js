@@ -26,6 +26,7 @@ import Typography from "@material-ui/core/Typography";
 import { TiArrowBack } from 'react-icons/ti'
 import MatButton from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
+import {Col,FormGroup,Label,Input} from 'reactstrap';
 
 const tableIcons = {
 Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -63,6 +64,8 @@ const CaseManagerPatients = (props) => {
   const [modal3, setModal3] = useState(false)//
   const togglemodal3 = () => setModal3(!modal3)
   const [collectmodal, setcollectmodal] = useState([])//
+  const [programCode, setProgramCode] = useState("")
+  const [programs, setPrograms] = useState([]);
   const classes = useStyles()
   const caseManagerId = props.location && props.location.state ? props.location.state : 0
   const caseManagerName = props.location && props.location.caseManagerName ? props.location.caseManagerName : "";
@@ -93,6 +96,14 @@ const CaseManagerPatients = (props) => {
   const refreshTable = () => {
     tableRef.current && tableRef.current.onQueryChange()
   }
+  const getProgramCode = e => {
+    const getValue =e.target.value;
+    setProgramCode(getValue)
+    refreshTable()
+  };
+
+  const codes= programCode==''?'0d31f6ee-571c-45b8-80d5-3f7e1d5377b7?size' : programCode;
+
 
   return (
     
@@ -130,7 +141,30 @@ const CaseManagerPatients = (props) => {
                 </MatButton>
           
             </Link>  
-        <br/><br/><br/>
+        <br/>
+
+        {/* <Col md={3}>
+            <FormGroup>
+                <Label for="occupation">Program Area </Label>
+
+                    <Input
+                      type="select"
+                      name="program"
+                      id="program"
+                      onChange={getProgramCode}
+                    >
+                        <option> </option>
+                        {programs.map(({ title, value }) => (
+                            
+                            <option key={value} value={value}>
+                                {title}
+                            </option>
+                        ))}
+                        
+                  </Input>
+            </FormGroup>
+        </Col> */}
+        <br/>
       <MaterialTable
        icons={tableIcons}
         title="List of Managed Patients"

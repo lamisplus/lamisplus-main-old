@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import MaterialTable from 'material-table';
 import axios from "axios";
 import { url as baseUrl } from "../../api";
-import { url } from "../../api";
 import { forwardRef } from 'react';
 import AssignCaseManager from './AssignCaseManager';
 import AddBox from '@material-ui/icons/AddBox';
@@ -21,6 +20,8 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import {Col,FormGroup,Label,Input} from 'reactstrap';
+import {url} from '../../api';
+
 
 const tableIcons = {
 Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -48,7 +49,6 @@ const CaseManagerSearch = (props) => {
   const [modal3, setModal3] = useState(false)//
   const togglemodal3 = () => setModal3(!modal3)
   const [collectmodal, setcollectmodal] = useState([])//
-
   const [programCode, setProgramCode] = useState("")
   const [programs, setPrograms] = useState([]);
 
@@ -69,7 +69,6 @@ const CaseManagerSearch = (props) => {
     getPrograms();
 }, []);
 
- 
     const calculate_age = dob => {
         var today = new Date();
         var dateParts = dob.split("-");
@@ -98,7 +97,11 @@ const CaseManagerSearch = (props) => {
 
   const getProgramCode = e => {
     const getValue =e.target.value;
+    setProgramCode(getValue)
+    refreshTable()
   };
+
+  const codes= programCode==''?'0d31f6ee-571c-45b8-80d5-3f7e1d5377b7?size' : programCode;
 
   return (
     <div>
@@ -125,7 +128,7 @@ const CaseManagerSearch = (props) => {
         </Col>
       <MaterialTable
        icons={tableIcons}
-        title="List of Managed Patients"
+        title="Patients List (Not Assign)"
         tableRef={tableRef}
         columns={[
           { title: " ID", field: "patientId" },
@@ -141,7 +144,7 @@ const CaseManagerSearch = (props) => {
 
         data={query =>
                   new Promise((resolve, reject) =>
-                      axios.get(`${baseUrl}patients/managed/0d31f6ee-571c-45b8-80d5-3f7e1d5377b7?size=${query.pageSize}&page=${query.page}&search=${query.search}`)
+                      axios.get(`${baseUrl}patients/not-managed/${codes}?size=${query.pageSize}&page=${query.page}&search=${query.search}`)
                           .then(response => response)
                           .then(result => {
 
