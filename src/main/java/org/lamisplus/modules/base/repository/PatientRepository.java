@@ -117,4 +117,39 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
             "AND p.identifier_number-> 'identifierType' ->> 'code' = ?2 " +
             "AND patient.archived = ?3 AND patient.organisation_unit_id = ?4", nativeQuery = true)
     Optional<String> findPatientIdentifierNumberByPatientId(Long id, String identifierCode, int archived, Long organisationUnitId);
+
+    @Query(value = "WITH enc AS " +
+            "(SELECT * FROM " +
+            "(SELECT e.patient_id, e.id, p.*,fd.encounter_id, " +
+            "fd.data -> 'hiv_current_status' ->> 'display'  as art_status, " +
+            "rank() over(PARTITION BY e.patient_id ORDER BY e.date_encounter DESC) rn FROM encounter e " +
+            "LEFT OUTER JOIN patient p ON p.id = e.patient_id " +
+            "LEFT OUTER JOIN form_data fd ON fd.encounter_id = e.id " +
+            "WHERE e.program_code = ?1 AND e.archived=?2 AND p.archived=?2 AND p.organisation_unit_id=?3 " +
+            "AND e.organisation_unit_id=?3 AND e.form_code = '5210f079-27e9-4d01-a713-a2c400e0926c' " +
+            "AND e.patient_id IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?2) " +
+            ")m WHERE rn = ?4) " +
+            "SELECT enc.art_status, enc.* FROM enc", nativeQuery = true)
+    Page<Patient> findAllByPatientsManagedInHIV(String programCode, int archived, Long organisationUnitId, int rank, Pageable pageable);
+
+
+    @Query(value = "WITH enc AS " +
+            "(SELECT * FROM " +
+            "(SELECT e.patient_id, e.id, p.*, fd.encounter_id, " +
+            "fd.data -> 'hiv_current_status' ->> 'display'  as art_status, " +
+            "rank() over(PARTITION BY e.patient_id ORDER BY e.date_encounter DESC) rn FROM encounter e " +
+            "LEFT OUTER JOIN patient p ON p.id = e.patient_id " +
+            "LEFT OUTER JOIN form_data fd ON fd.encounter_id = e.id " +
+            "WHERE (p.details ->>'firstName' ilike ?1 OR p.details ->>'lastName' ilike ?2 " +
+            "OR p.details ->>'hospitalNumber' ilike ?3 OR p.details ->>'mobilePhoneNumber' ilike ?4 " +
+            "OR p.details ->'gender' ->> 'display' ilike ?5 OR p.patient_number ilike ?3) AND " +
+            "e.program_code = ?6 AND e.archived=?7 AND p.archived=?7 AND p.organisation_unit_id=?8 " +
+            "AND e.organisation_unit_id=?8 AND e.form_code = '5210f079-27e9-4d01-a713-a2c400e0926c' " +
+            "AND e.patient_id IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?7) " +
+            ")m WHERE rn = ?9) " +
+            "SELECT enc.art_status, enc.* FROM enc", nativeQuery = true)
+    Page<Patient> findAllByPatientsManagedInHIVByFilteredParameters(String firstName, String lastName, String hospitalNumber,
+                                                                    String mobilePhoneNumber, String gender, String programCode,
+                                                                    int archived, Long organisationUnitId, int rank, Pageable pageable);
+
 }

@@ -376,6 +376,10 @@ public class PatientService {
     //Patients Managed
     public Page<Patient> findAllByPatientManagedByFilteredParameters(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber,
                                                                         String gender, String programCode, Pageable pageable) {
+        if(programCode.equalsIgnoreCase("0d31f6ee-571c-45b8-80d5-3f7e1d5377b7")){
+            return patientRepository.findAllByPatientsManagedInHIVByFilteredParameters(firstName, lastName, hospitalNumber, mobilePhoneNumber,
+                    gender, programCode, UN_ARCHIVED, getOrganisationUnitId(), 1, pageable);
+        }
         return patientRepository.findAllByPatientManagedByFilteredParameters(firstName, lastName, hospitalNumber, mobilePhoneNumber,
                 gender, UN_ARCHIVED, getOrganisationUnitId(), programCode, pageable);
     }
@@ -387,6 +391,9 @@ public class PatientService {
 
     //Patients Managed
     public Page<Patient> findAllByPatientManaged(String programCode, Pageable pageable) {
+        if(programCode.equalsIgnoreCase("0d31f6ee-571c-45b8-80d5-3f7e1d5377b7")){
+            return patientRepository.findAllByPatientsManagedInHIV(programCode, UN_ARCHIVED, getOrganisationUnitId(), 1, pageable);
+        }
         return patientRepository.findAllByPatientsManaged(programCode, UN_ARCHIVED, getOrganisationUnitId(), pageable);
     }
 

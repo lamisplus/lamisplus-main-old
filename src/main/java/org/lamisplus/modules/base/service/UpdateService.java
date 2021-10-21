@@ -86,18 +86,12 @@ public class UpdateService {
 
     @EventListener(ApplicationReadyEvent.class)
     public void readUpdateOnStartUp() throws IOException {
-        URL resource = getClass().getClassLoader().getResource("update.yml");
         File updateFile = null;
-        try {
-            updateFile = new File(resource.toURI());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
         BufferedReader in = null;
         Update update;
         try {
             in = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(updateFile)));
+                    getClass().getClassLoader().getResourceAsStream("update.yml")));
             Yaml yaml = new Yaml();
             update = yaml.loadAs(in, Update.class);
 
@@ -111,6 +105,7 @@ public class UpdateService {
             }
         }
         update.setDateCreated(new Timestamp(System.currentTimeMillis()));
+        update.setUrl("http://localhost:8080/api/updates/server");
         //This checks if that update is already in the db
         Optional<Update> optionalUpdate = updateRepository.findByCodeAndVersion(update.getCode(), update.getVersion());
         if (optionalUpdate.isPresent()) {

@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
@@ -106,6 +107,7 @@ public class Patient extends JsonBEntity implements Serializable {
     @ToString.Exclude
     List<ApplicationUserPatient> applicationUserPatientsById;
 
+    //Just for ART STATUS
     @Transient
     private String artStatus;
 }

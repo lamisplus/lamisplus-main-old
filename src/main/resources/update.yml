@@ -1,6 +1,6 @@
 code: a8ee0b70-301f-11ec-8d3d-0242ac130003
 name: LAMISPlus
-url: Localhost
+url: 'http://localhost:8080/api/updates/server'
 createdBy: System
 status: 3
 size: 200.0
