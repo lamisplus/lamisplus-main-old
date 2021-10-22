@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,18 +16,17 @@ import org.lamisplus.modules.base.util.*;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -367,34 +367,77 @@ public class PatientService {
     }
 
     //Patients Not Managed
-    public Page<Patient> findAllByPatientNotManagedByFilteredParameters(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber,
-                                      String gender, String programCode, Pageable pageable) {
-        return patientRepository.findAllByPatientNotCaseManagedByFilteredParameters(firstName, lastName, hospitalNumber, mobilePhoneNumber,
-                gender, UN_ARCHIVED, getOrganisationUnitId(), programCode, pageable);
+    public Page<Patient> findAllByPatientNotManagedByFilteredParameters(String programCode, String gender, String state, String lga,
+                                                                        Boolean pregnant, Integer ageFrom, Integer ageTo, Pageable pageable) {
+        LocalDate currentMonth = YearMonth.now().atEndOfMonth();
+        LocalDate nineMonths = currentMonth.minusMonths(9);
+        if(pregnant) {
+            List<Patient> patients = patientRepository.findAllByPatientsNotManagedInHIVPregnantByFilteredParameters(getOrganisationUnitId(),
+                    ageFrom, ageTo, nineMonths, pageable)
+                    .stream()
+                    .filter(patient -> checkFilterParameters(JsonUtil.getJsonNode(patient.getDetails()).toString(), gender, state, lga) == true)
+                    .collect(Collectors.toList());
+            return new PageImpl<Patient>(patients, pageable, pageable.getPageSize());
+        }
+        List<Patient> patients = patientRepository.findAllByPatientsNotManagedInHIVNotPregnantByFilteredParameters(getOrganisationUnitId(),
+                ageFrom, ageTo, nineMonths, pageable)
+                .stream()
+                .filter(patient -> checkFilterParameters(JsonUtil.getJsonNode(patient.getDetails()).toString(), gender, state, lga) == true)
+                .collect(Collectors.toList());
+        return new PageImpl<Patient>(patients, pageable, pageable.getPageSize());
+
+    }
+    private Boolean checkFilterParameters(String patientDetails, String gender, String state, String lga){
+        JsonNode tree = null;
+        JsonNode jsonNode;
+        Boolean find = false;
+        log.info("In checkFilterParameters......");
+
+        try {
+            tree = mapper.readTree(patientDetails).get("gender");
+            jsonNode = tree.get("display");
+            String gen = String.valueOf(jsonNode).replaceAll("^\"+|\"+$", "");
+
+            tree = mapper.readTree(patientDetails).get("province");
+            jsonNode = tree.get("name");
+            String localGovt = String.valueOf(jsonNode).replaceAll("^\"+|\"+$", "");
+
+            tree = mapper.readTree(patientDetails).get("state");
+            jsonNode = tree.get("name");
+            String st= String.valueOf(jsonNode).replaceAll("^\"+|\"+$", "");
+
+            if(gender != "*" && gender.equalsIgnoreCase(gen)) {
+                find = true;
+            }else if(gender == "*"){
+                find = true;
+            }
+            if(localGovt != "*" && localGovt.equalsIgnoreCase(lga)) {
+                find = true;
+            } else if(localGovt == "*"){
+                find = true;
+            }
+            if(st != "*" && st.equalsIgnoreCase(lga)) {
+                find = true;
+            } else if(st == "*"){
+                find = true;
+            }
+            return find;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     //Patients Managed
-    public Page<Patient> findAllByPatientManagedByFilteredParameters(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber,
-                                                                        String gender, String programCode, Pageable pageable) {
-        if(programCode.equalsIgnoreCase("0d31f6ee-571c-45b8-80d5-3f7e1d5377b7")){
-            return patientRepository.findAllByPatientsManagedInHIVByFilteredParameters(firstName, lastName, hospitalNumber, mobilePhoneNumber,
-                    gender, programCode, UN_ARCHIVED, getOrganisationUnitId(), 1, pageable);
-        }
-        return patientRepository.findAllByPatientManagedByFilteredParameters(firstName, lastName, hospitalNumber, mobilePhoneNumber,
-                gender, UN_ARCHIVED, getOrganisationUnitId(), programCode, pageable);
-    }
+    public Page<Patient> findAllByPatientManagedByFilteredParameters(String gender, String state, String lga,
+                                                                     Integer ageTo, Integer ageFrom, Pageable pageable) {
 
-    //Patients Not Managed
-    public Page<Patient> findAllByPatientNotManaged(String programCode, Pageable pageable) {
-        return patientRepository.findAllByPatientsNotManaged(programCode, UN_ARCHIVED, getOrganisationUnitId(), pageable);
-    }
 
-    //Patients Managed
-    public Page<Patient> findAllByPatientManaged(String programCode, Pageable pageable) {
-        if(programCode.equalsIgnoreCase("0d31f6ee-571c-45b8-80d5-3f7e1d5377b7")){
-            return patientRepository.findAllByPatientsManagedInHIV(programCode, UN_ARCHIVED, getOrganisationUnitId(), 1, pageable);
-        }
-        return patientRepository.findAllByPatientsManaged(programCode, UN_ARCHIVED, getOrganisationUnitId(), pageable);
+        List<Patient> patients = patientRepository.findAllByPatientsManagedInHIVByFilteredParameters(getOrganisationUnitId(), ageFrom, ageTo)
+                .stream()
+                .filter(patient -> checkFilterParameters(JsonUtil.getJsonNode(patient.getDetails()).toString(), gender, state, lga) == true)
+                .collect(Collectors.toList());
+        return new PageImpl<Patient>(patients, pageable, pageable.getPageSize());
     }
 
     //Case management
@@ -594,4 +637,27 @@ public class PatientService {
         return patientRepository.findPatientIdentifierNumberByPatientId(id, identifierCode, UN_ARCHIVED, getOrganisationUnitId())
         .orElse(null);
     }
+
+
+    //Patients Not Managed
+    /*public Page<Patient> findAllByPatientNotManaged(String programCode, String gender, String state, String lga,
+                                                    Boolean pregnant, Long applicationUserId, int age, Pageable pageable) {
+        LocalDate currentMonth = YearMonth.now().atEndOfMonth();
+        LocalDate nineMonths = currentMonth.minusMonths(9);
+        if(pregnant) {
+            return patientRepository.findAllByPatientsNotManagedInHIVPregnantByFilteredParameters(gender, state, lga,
+                    age, nineMonths, UN_ARCHIVED, getOrganisationUnitId(), 1, pageable);
+        }
+        return patientRepository.findAllByPatientsNotManagedInHIVNotPregnantByFilteredParameters(gender, state, lga,
+                age, nineMonths, UN_ARCHIVED, getOrganisationUnitId(), 1, pageable);
+    }*/
+
+   /* //Patients Managed
+    public Page<Patient> findAllByPatientManaged(String programCode, Pageable pageable) {
+        if(programCode.equalsIgnoreCase("0d31f6ee-571c-45b8-80d5-3f7e1d5377b7")){
+            return patientRepository.findAllByPatientsManagedInHIV(programCode, UN_ARCHIVED, getOrganisationUnitId(), 1, pageable);
+        }
+        return patientRepository.findAllByPatientsManaged(programCode, UN_ARCHIVED, getOrganisationUnitId(), pageable);
+    }*/
+
 }

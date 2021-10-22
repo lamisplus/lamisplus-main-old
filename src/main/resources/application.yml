@@ -4,7 +4,7 @@ across:
     web:
         resources:
             caching:
-                period: 2592000
+                period: 25920000
 acrossHibernate:
     create-unit-of-work-factory: true
     hibernate-properties:
@@ -36,9 +36,14 @@ server:
             auto-commit: false
             data-source-properties:
                 cachePrepStmts: true
-                prepStmtCacheSize: 250
-                prepStmtCacheSqlLimit: 2048
+                prepStmtCacheSize: 35000
+                prepStmtCacheSqlLimit: 10048
                 useServerPrepStmts: true
+            maximum-pool-size: 60
+            minimum-idle: 80
+            max-lifetime: 180000000
+            connection-timeout: 180000000
+            validation-timeout: 180000000
     compression:
         enabled: true
         mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
@@ -57,11 +62,14 @@ spring:
             auto-commit: true
             data-source-properties:
                 cachePrepStmts: true
-                prepStmtCacheSize: 250
-                prepStmtCacheSqlLimit: 2048
+                prepStmtCacheSize: 25000
+                prepStmtCacheSqlLimit: 60480
                 useServerPrepStmts: true
-            maximum-pool-size: 20
-            minimum-idle: 5
+            maximum-pool-size: 60
+            minimum-idle: 80
+            max-lifetime: 180000000
+            connection-timeout: 180000000
+            validation-timeout: 180000000
     jpa:
         hibernate:
             ddl-auto: none

@@ -2,6 +2,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.lamisplus.modules.base.controller.apierror.IllegalTypeException;
 import org.lamisplus.modules.base.domain.dto.*;
 import org.lamisplus.modules.base.domain.entity.Patient;
 import org.lamisplus.modules.base.service.PatientService;
@@ -45,51 +46,39 @@ public class PatientController {
     }
 
     @GetMapping("/{programCode}/{managed}/programs")
-    public ResponseEntity<List<PatientDTO>> getPatientsNotManagedByProgramCode(@PathVariable String programCode, @PathVariable Boolean managed, @RequestParam (required = false, defaultValue = "*") String search,
-                                                                      @PageableDefault(value = 50) Pageable pageable) {
+    public ResponseEntity<List<PatientDTO>> getPatientsNotManagedByProgramCode(@PathVariable String programCode,
+                                                                               @PathVariable Boolean managed,
+                                                                               @RequestParam (required = false, defaultValue = "*")  String gender,
+                                                                               @RequestParam (required = false, defaultValue = "*") String state,
+                                                                               @RequestParam (required = false, defaultValue = "*")String lga,
+                                                                               @RequestParam (required = false, defaultValue = "0")Integer ageFrom,
+                                                                               @RequestParam (required = false, defaultValue = "200")Integer ageTo,
+                                                                               @RequestParam (required = false, defaultValue = "false") Boolean pregnant,
+                                                                               @PageableDefault(value = 20) Pageable pageable) {
         Page<Patient> page;
-        if(!search.equals("*")) {
-            String firstName = "%"+search+"%";
-            String lastName = "%"+search+"%";
-            String hospitalNumber = "%"+search+"%";
-            String mobilePhoneNumber = "%"+search+"%";
-            String gender = search+"%";
-            if(managed) {
-                page = patientService.findAllByPatientManagedByFilteredParameters(firstName, lastName,hospitalNumber,mobilePhoneNumber, gender, programCode, pageable);
-            } else {
-                page = patientService.findAllByPatientNotManagedByFilteredParameters(firstName, lastName, hospitalNumber, mobilePhoneNumber, gender, programCode, pageable);
-            }
+        if((ageFrom instanceof Integer && ageTo instanceof Integer) == true && ageFrom > ageTo){
+            throw new IllegalTypeException(Patient.class, "Age", "not valid");
         }
-        else {
-            if(managed){
-                page = patientService.findAllByPatientManaged(programCode, pageable);
-            } else {
-                page = patientService.findAllByPatientNotManaged(programCode, pageable);
-            }
+        if(ageFrom > 0 && ageTo == 200){
+            ageTo = ageFrom;
         }
+        if(ageFrom == null && ageTo == null){
+            ageTo = 200;
+            ageFrom = 0;
+        }
+        if(((pregnant instanceof Boolean) == true && pregnant) && gender.equalsIgnoreCase("Male")){
+            throw new IllegalTypeException(Patient.class, "Male & Pregnant", "not valid");
+        }
+
+        if(managed) {
+            page = patientService.findAllByPatientManagedByFilteredParameters(gender, state, lga, ageTo, ageFrom, pageable);
+        } else {
+            page = patientService.findAllByPatientNotManagedByFilteredParameters(programCode, gender, state, lga, pregnant, ageFrom, ageTo, pageable);
+        }
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(patientService.getAllPatients(page), headers, HttpStatus.OK);
     }
-
-    /*@GetMapping("/managed/{programCode}")
-    public ResponseEntity<List<PatientDTO>> getPatientsManagedByProgramCode(@PathVariable String programCode, @RequestParam (required = false, defaultValue = "*") String search,
-                                                                      @PageableDefault(value = 50) Pageable pageable) {
-        Page<Patient> page;
-        if(!search.equals("*")) {
-            String firstName = "%"+search+"%";
-            String lastName = "%"+search+"%";
-            String hospitalNumber = "%"+search+"%";
-            String mobilePhoneNumber = "%"+search+"%";
-            String gender = search+"%";
-
-            page = patientService.findAllByPatientManagedByFilteredParameters(firstName, lastName,hospitalNumber,mobilePhoneNumber, gender, programCode, pageable);
-        }
-        else {
-            page = patientService.findAllByPatientManaged(programCode, pageable);
-        }
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return new ResponseEntity<>(patientService.getAllPatients(page), headers, HttpStatus.OK);
-    }*/
 
     @GetMapping("/totalCount")
     public ResponseEntity<Long> getTotalCount() {

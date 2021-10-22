@@ -14,18 +14,18 @@ public class UpdateController {
     private final UpdateService updateService;
 
 
-    @GetMapping
-    public Boolean updatedAvailable() {
-        return updateService.updateAvailable();
-    }
-
     @GetMapping("/server")
     public Update checkForUpdateOnServer(@RequestParam Double version) {
         return updateService.checkForUpdateOnServer(version);
     }
 
+    @GetMapping("/client")
+    public Boolean checkForUpdateOnClient() {
+        return updateService.checkForUpdateOnClient();
+    }
+
     @PostMapping
-    public void downloadUpdateOnServer(@RequestParam String url) throws IOException {
-        updateService.downloadUpdateOnServer(url);
+    public void downloadUpdateOnServer() throws IOException {
+        updateService.downloadUpdateOnServer();
     }
 }

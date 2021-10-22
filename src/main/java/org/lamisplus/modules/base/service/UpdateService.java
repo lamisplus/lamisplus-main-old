@@ -2,10 +2,13 @@ package org.lamisplus.modules.base.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.entity.Update;
 import org.lamisplus.modules.base.repository.UpdateRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -26,18 +29,30 @@ public class UpdateService {
     private static final int UPDATE_AVAILABLE = 1;
     private static final int UPDATE_COMPLETED = 3;
     private final UpdateRepository updateRepository;
+    @Autowired
+    Environment environment;
+
 
     public List<Update> getUpdates() {
         return this.updateRepository.findAll();
     }
 
-    public void downloadUpdateOnServer(String url) throws IOException {
+    public void downloadUpdateOnServer() throws IOException {
+        Optional<Update> optionalUpdate = updateRepository.findUpdateByMaxVersionFromClient();
         try {
-            URL urlObject = new URL(url);
-            URLConnection urlConnection = urlObject.openConnection();
-            urlConnection.connect();
-            InputStream inputStream = urlConnection.getInputStream();
-            readFromInputStream(inputStream);
+            if(optionalUpdate.isPresent()) {
+                URL urlObject = new URL(optionalUpdate.get().getUrl());
+                URLConnection urlConnection = urlObject.openConnection();
+                urlConnection.connect();
+                InputStream inputStream = urlConnection.getInputStream();
+                readFromInputStream(inputStream);
+            }else {
+                if(!checkForUpdateOnClient()) {
+                    throw new EntityNotFoundException(Update.class, "update", "not available at this time");
+                }else {
+
+                }
+            }
         } catch (IOException e) {
             throw new IOException("No internet connection");
         }
@@ -78,10 +93,12 @@ public class UpdateService {
         }
     }
 
+    //On the server
     public Update checkForUpdateOnServer(Double version){
         Update update = updateRepository.findByMaxVersion(version);
         return update;
     }
+
 
 
     @EventListener(ApplicationReadyEvent.class)
@@ -121,13 +138,14 @@ public class UpdateService {
 
     }
 
-    public Boolean updateAvailable(){
+    //On client
+    public Boolean checkForUpdateOnClient(){
         Double updateNotCompleted = updateRepository.findMaxVersionByUpdateAvailableStatus();
-        Double lastUpdateCompleted = updateRepository.findMaxVersion();
+        Update lastUpdateCompleted = updateRepository.findUpdateByMaxVersion();
         Boolean isUpdatedAvailable = false;
 
         if(updateNotCompleted == null) {
-            String uri = "http://localhost:8080/api/updates/server?version=" + lastUpdateCompleted;
+            String uri = lastUpdateCompleted.getUrl() + "?version=" + lastUpdateCompleted.getVersion();
             RestTemplate restTemplate = new RestTemplate();
             Update result = restTemplate.getForObject(uri, Update.class);
             if (result != null) {

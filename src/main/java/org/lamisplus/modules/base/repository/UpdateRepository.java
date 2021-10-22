@@ -17,6 +17,9 @@ public interface UpdateRepository extends JpaRepository<Update, Long> {
     @Query(value = "SELECT * FROM update WHERE version = (SELECT max(version) FROM update WHERE status = 3)", nativeQuery = true)
     Update findUpdateByMaxVersion();
 
+    @Query(value = "SELECT * FROM update WHERE version = (SELECT max(version) FROM update WHERE status != 3)", nativeQuery = true)
+    Optional<Update> findUpdateByMaxVersionFromClient();
+
     Optional<Update> findAllByCodeAndNameAndVersion(String code, String name, Double version);
 
     @Query(value = "SELECT max(version) FROM update WHERE status = 1", nativeQuery = true)
