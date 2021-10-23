@@ -14,7 +14,7 @@ import {url} from './../../api'
 import { Alert } from 'reactstrap';
 import { Spinner } from 'reactstrap';
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-widgets/dist/css/react-widgets.css";
 import Title from "components/Title/CardTitle";

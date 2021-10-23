@@ -6,10 +6,9 @@ import { notificationsData } from "demos/header";
 import { authentication } from "../../_services/authentication";
 import axios from "axios";
 import Select from "react-select";
-
 // import withBadge from 'hocs/withBadge';
 import { Link } from "react-router-dom";
-
+import Button from "@material-ui/core/Button";
 import {
   MdClearAll,
   MdExitToApp,
@@ -18,7 +17,6 @@ import {
   MdPersonPin,
 } from "react-icons/md";
 import {
-  Button,
   ListGroup,
   ListGroupItem,
   // NavbarToggler,
@@ -95,11 +93,44 @@ function Header() {
 
   //TO ASSIGN FACILITIES
   const toggleAssignModal = () => {
-    
     setAssignFacilityModal(!assignFacilityModal);
-    console.log(assignFacilityModal);
-    console.log("Modal should open")
   }
+
+  const downloadNotice = () => toast.info("Downloading....");
+  const downloadComplete = () => toast.success("Downloading Complete");
+
+  //Download the update 
+  async function DownloadButton() {
+    dismissAll();
+    downloadNotice();
+    axios
+        .gpostet(`${baseUrl}updates`)
+        .then((response) => {
+            if(response.date=="true"){
+              downloadComplete();
+            }                    
+        })
+        .catch((error) => {
+          //notify();
+        });     
+}
+  const dismissAll = () =>  toast.dismiss();
+
+  const notify = () => toast.info(< >
+
+  <h3 className="mt-2">Update is available</h3>
+  <Button variant="contained" onClick={DownloadButton}>Download Now!</Button>
+  </>, {
+    className: 'black-background',
+    position: "top-right",
+    autoClose: false,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    toastClassName:"dark-toast"
+    });
 
   async function fetchMe() {
     if( authentication.currentUserValue != null ) {
@@ -113,7 +144,8 @@ function Header() {
               type: ACTION_TYPES.FETCH_PERMISSIONS,
               payload: response.data.permissions,
             });
-            console.log(response.data)
+            //notify();
+            //console.log(response.data)
             if(response.data && response.data.currentOrganisationUnitId === null ){
               toggleAssignModal()
             }            
@@ -140,13 +172,25 @@ function Header() {
   }
 
   const currentUser = authentication.getCurrentUser();
-  // if(user && user.currentOrganisationUnitName !==null ){
-  //   toggleAssignModal()
-  // }
-
+  //CHECK FOR ONLINE UPDATE 
+  async function checkUpdate() {
+        axios
+            .get(`${baseUrl}updates/client`)
+            .then((response) => {
+                if(response.date=="true"){
+                  notify();
+                }else{
+                  //notify();
+                }                    
+            })
+            .catch((error) => {
+              //notify();
+            });     
+  }
 
   useEffect(() => {
     fetchMe();
+    checkUpdate();
   }, []);
 
 
@@ -217,6 +261,9 @@ function Header() {
                     </ListGroupItem>
                     <ListGroupItem tag="button" action className="border-light">
                       <MdHelp /> Help
+                    </ListGroupItem>
+                    <ListGroupItem tag="button" action className="border-light"  onClick={DownloadButton}>
+                      <MdHelp /> Download Update
                     </ListGroupItem>
                     <ListGroupItem tag="button" action className="border-light">
                       <MdExitToApp />{" "}

@@ -21,7 +21,8 @@ import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import {Col,FormGroup,Label,Input, Row, Card} from 'reactstrap';
 import {url} from '../../api';
-
+import {  toast } from "react-toastify";
+import Button from "@material-ui/core/Button";
 
 const tableIcons = {
 Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -50,12 +51,20 @@ const CaseManagerSearch = (props) => {
   const togglemodal3 = () => setModal3(!modal3)
   const [collectmodal, setcollectmodal] = useState([])//
   const [programCode, setProgramCode] = useState("")
-  const [otherDetails, setOtherDetails] = useState({state: "", lga: "", gender: "", artStatus:""});
+  const [otherDetails, setOtherDetails] = useState({state: "", lga: "", gender: "", pregnant:"", to: "", from: ""});
   const [provinces, setProvinces] = useState([]);
   const [gender, setGender] = useState([]);
   const [lgaDetail, setLgaDetail] = useState();
   const [stateDetail, setStateDetail] = useState();
   const [states, setStates] = useState([]);
+  const [matchingAgeGroupClass, setMatchingAgeGroupClass] = useState("");
+  //Query Parameter
+  const [toValue, setToValue] = useState("");
+  const [fromValue, setFromValue] = useState("");
+  const [stateValue, setStateValue] = useState("");
+  const [lgaValue, setLgaValue] = useState([]);
+  const [genderValue, setGenderValue] = useState("");
+  const [pregnantValue, setPregnantValue] = useState("");
   /* Get list of gender parameter from the endpoint */
   useEffect(() => {
     async function getGender() {
@@ -150,13 +159,38 @@ const getlgaObj = e => {
     tableRef.current && tableRef.current.onQueryChange()
   }
 
-  const getProgramCode = e => {
-    const getValue =e.target.value;
-    setProgramCode(getValue)
-    refreshTable()
-  };
 
-  const codes= programCode==''?'0d31f6ee-571c-45b8-80d5-3f7e1d5377b7?size' : programCode;
+  const dismissAll = () =>  toast.dismiss();
+  const handleAgeGroup = (e) => {
+    setOtherDetails({...otherDetails, from:e.target.value})
+    handleInputChange(e);
+    if(otherDetails.from > otherDetails.to){
+     // toast.error("Age Group From cannot be greater than Age Group TO")
+      setMatchingAgeGroupClass("is-invalid");
+      } else {
+        dismissAll();
+        setMatchingAgeGroupClass("");
+      }
+
+  }
+
+  const FilterQuery = () => {
+    if(otherDetails.from > otherDetails.to){
+       toast.error("Age Group From cannot be greater than Age Group TO")
+       setMatchingAgeGroupClass("is-invalid");
+       }
+      setToValue(otherDetails.to)
+      setFromValue(otherDetails.from);
+      setStateValue(stateDetail[0].name);
+      setLgaValue(otherDetails.lga);
+      setPregnantValue(otherDetails.pregnant);
+      setGenderValue(otherDetails.gender);
+      //alert("testing")
+      refreshTable();
+      console.log(stateDetail[0].name)
+      console.log(otherDetails)
+    }
+    const codes= programCode==''?'0d31f6ee-571c-45b8-80d5-3f7e1d5377b7' : programCode;
 
   return (
     <div>
@@ -164,23 +198,43 @@ const getlgaObj = e => {
       <Row className=" mr-5  ml-5 mt-5 mb-5">
       
         <Col md={6}>
+        
+        <Row>
+        <Col md={6}>
             <FormGroup>
-                <Label for="occupation">Age Group </Label>
+                <Label for="AgeGroup">Age Group (From) </Label>
 
                     <Input
-                      type="select"
-                      name="program"
-                      id="program"
-                      onChange={getProgramCode}
-                    >
-                        <option> </option>
+                      type="number"
+                      name="from"
+                      id="from"
+                      value={otherDetails.from}
+                      onChange={handleInputChange}
+                    />
                        
-                  </Input>
+                  
             </FormGroup>
         </Col>
         <Col md={6}>
             <FormGroup>
-                <Label for="occupation">Gender </Label>
+                <Label for="AgeGroup">Age Group (To) </Label>
+
+                    <Input
+                      type="number"
+                      name="to"
+                      id="to"
+                      value={otherDetails.to}
+                      onChange={handleAgeGroup}
+                      className={matchingAgeGroupClass}
+                   />
+                  
+            </FormGroup>
+        </Col>
+        </Row>
+        </Col>
+        <Col md={6} style={{margingTop: "10px !important"}}>
+            <FormGroup className="pt-10" >
+                <Label for="occupation" >Gender </Label>
 
                     <Input
                       type="select"
@@ -192,7 +246,7 @@ const getlgaObj = e => {
                       >
                       <option value=""> </option>
                       {gender.map(({ label, value }) => (
-                          <option key={value} value={value}>
+                          <option key={label} value={value}>
                           {label}
                           </option>
                       ))}
@@ -205,8 +259,8 @@ const getlgaObj = e => {
 
                     <Input
                       type="select"
-                      name="program"
-                      id="program"
+                      name="state"
+                      id="state"
                       value={otherDetails.stateId}
                           onChange={getProvinces}
                       >
@@ -226,13 +280,13 @@ const getlgaObj = e => {
 
                     <Input
                       type="select"
-                      name="program"
-                      id="program"
+                      name="lga"
+                      id="lga"
                       onChange={getlgaObj}
                       >
                           {provinces.length > 0 ? (
                               provinces.map((row) => (
-                                  <option key={row.name} value={row.id}>
+                                  <option key={row.name} value={row.name}>
                                       {row.name}
                                   </option>
                               ))
@@ -247,19 +301,32 @@ const getlgaObj = e => {
         </Col>
         <Col md={6}>
             <FormGroup>
-                <Label for="occupation">Pregnancy Status </Label>
+                <Label >Pregnancy Status </Label>
 
                     <Input
                       type="select"
-                      name="program"
-                      id="program"
-                      onChange={getProgramCode}
+                      name="pregnant"
+                      id="pregnant"
+                      value={otherDetails.pregnant}
+                      onChange={handleInputChange}
                     >
                         <option> </option>
                         <option value="true"> True</option>
                         <option value="false"> False</option>
                   </Input>
             </FormGroup>
+        </Col>
+        <Col md={6}>
+        <br/>
+          <Button
+              variant="contained"
+              color="primary"
+              className=" float-left ml-10"
+              startIcon={<FilterList />}
+              onClick={() =>FilterQuery()}
+            >
+              <span style={{ textTransform: "capitalize" }}>Filter</span>
+          </Button>
         </Col>
         
       </Row> 
@@ -283,7 +350,7 @@ const getlgaObj = e => {
 
         data={query =>
                   new Promise((resolve, reject) =>
-                      axios.get(`${baseUrl}patients/${codes}/false/programs?size=${query.pageSize}&page=${query.page}&search=${query.search}`)
+                      axios.get(`${baseUrl}patients/${codes}/false/programs?gender=${genderValue}&state=${stateValue}&lga=${lgaValue}&ageFrom=${fromValue}&ageTo=${toValue}&pregnant=${pregnantValue}&size=${query.pageSize}&page=${query.page}&search=${query.search}`)
                           .then(response => response)
                           .then(result => {
 

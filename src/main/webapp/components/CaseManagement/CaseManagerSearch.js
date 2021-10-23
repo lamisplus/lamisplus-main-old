@@ -83,21 +83,7 @@ const addManager =()=> {
   setModal(!modal)
 }
 
-const dismissAll = () =>  toast.dismiss();
-const notify = () => toast.info(<>
-<p>Testing now </p>
-<br/>
-<button onClick={dismissAll}>Close Toast!</button>
-</>, {
-  
-  position: "top-right",
-  autoClose: false,
-  hideProgressBar: true,
-  closeOnClick: modaltoast,
-  pauseOnHover: true,
-  draggable: true,
-  progress: undefined,
-  });
+
  
   return (
     <div>
@@ -111,7 +97,7 @@ const notify = () => toast.info(<>
             <span style={{ textTransform: "capitalize" }}>Add Case Manager</span>
         </Button>
         <br/><br/>
-        <button onClick={notify}>Notify!</button>
+
       <MaterialTable
        icons={tableIcons}
         title="Case Managers"

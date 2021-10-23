@@ -21,6 +21,7 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import {Col,FormGroup,Label,Input,Row, Card} from 'reactstrap';
+import Button from "@material-ui/core/Button";
 
 const tableIcons = {
 Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -53,11 +54,7 @@ const CaseManagerSearch = (props) => {
   const [programs, setPrograms] = useState([]);
 
   const [otherDetails, setOtherDetails] = useState({state: "", lga: "", gender: "", artStatus:"", caseManager:""});
-  const [provinces, setProvinces] = useState([]);
-  const [gender, setGender] = useState([]);
-  const [lgaDetail, setLgaDetail] = useState();
-  const [stateDetail, setStateDetail] = useState();
-  const [states, setStates] = useState([]);
+
   const [caseManager, setCaseManager] = useState([]);
 
   useEffect(() => {
@@ -75,64 +72,9 @@ const CaseManagerSearch = (props) => {
     }
     getCharacters();
 }, []);
-  /* Get list of gender parameter from the endpoint */
-  useEffect(() => {
-    async function getGender() {
-      axios
-        .get(`${url}application-codesets/codesetGroup?codesetGroup=GENDER`)
-        .then((response) => {
-          console.log(Object.entries(response.data));
-          setGender(
-            Object.entries(response.data).map(([key, value]) => ({
-              label: value.display,
-              value: value.display,
-            }))
-          );
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-    getGender();
-    setStateByCountryId()
-  }, []);
+ 
 
 
-
-   //Get States from selected country
-
-
-const  setStateByCountryId=() =>{
-    async function getStateByCountryId() {
-        const response = await axios.get(url + 'organisation-units/hierarchy/1/2')
-        const stateList = response.data;
-        console.log(stateList)
-        setStates(stateList);
-    }
-    getStateByCountryId();
-}
-
-//fetch province
-const getProvinces = e => {
-  setOtherDetails({ ...otherDetails, [e.target.name]: e.target.value });
-        const stateId = e.target.value;
-        
-            async function getCharacters() {
-                const response = await axios.get(`${url}organisation-units/hierarchy/`+stateId+"/3");
-                const newStates = states.filter(state => state.id == stateId)
-                setStateDetail(newStates)
-                setOtherDetails({...otherDetails, state:stateId})
-                setProvinces(response.data);
-
-            }
-            getCharacters();
-};
-const getlgaObj = e => {
-
-    const newlga = provinces.filter(lga => lga.id == e.target.value)
-    setLgaDetail(newlga)
-    setOtherDetails({...otherDetails, lga:e.target.value})
-}
     const calculate_age = dob => {
         var today = new Date();
         var dateParts = dob.split("-");
@@ -175,7 +117,10 @@ const getlgaObj = e => {
     refreshTable()
   };
 
-  const codes= programCode==''?'0d31f6ee-571c-45b8-80d5-3f7e1d5377b7?size' : programCode;
+  const FilterQuery = () => {
+
+  }
+  const codes= programCode==''?'0d31f6ee-571c-45b8-80d5-3f7e1d5377b7' : programCode;
 
   return (
     <div>
@@ -203,105 +148,20 @@ const getlgaObj = e => {
                   </Input>
             </FormGroup>
         </Col>
-        {/* <Col md={6}>
-            <FormGroup>
-                <Label for="occupation">Age Group </Label>
-
-                    <Input
-                      type="select"
-                      name="program"
-                      id="program"
-                      onChange={getProgramCode}
-                    >
-                        <option> </option>
-                       
-                  </Input>
-            </FormGroup>
-        </Col>
+       
         <Col md={6}>
-            <FormGroup>
-                <Label for="occupation">Gender </Label>
-
-                    <Input
-                      type="select"
-                      name="gender"
-                      id="gender"
-                      value={otherDetails.gender}
-                      onChange={handleInputChange}
-                      
-                      >
-                      <option value=""> </option>
-                      {gender.map(({ label, value }) => (
-                          <option key={value} value={value}>
-                          {label}
-                          </option>
-                      ))}
-                  </Input>
-            </FormGroup>
-        </Col>
-        <Col md={6}>
-            <FormGroup>
-                <Label for="occupation">State of Residence </Label>
-
-                    <Input
-                      type="select"
-                      name="program"
-                      id="program"
-                      value={otherDetails.stateId}
-                          onChange={getProvinces}
-                      >
-                          <option >Please Select State</option>
-                          {states.map((row) => (
-                              <option key={row.id} value={row.id}>
-                                  {row.name}
-                              </option>
-                          ))}
-                        
-                  </Input>
-            </FormGroup>
-        </Col>
-        <Col md={6}>
-            <FormGroup>
-                <Label for="occupation">Lga of Residence </Label>
-
-                    <Input
-                      type="select"
-                      name="program"
-                      id="program"
-                      onChange={getlgaObj}
-                      >
-                          {provinces.length > 0 ? (
-                              provinces.map((row) => (
-                                  <option key={row.name} value={row.id}>
-                                      {row.name}
-                                  </option>
-                              ))
-                          ) : (
-                              <option key="" value="">
-                                  {" "}
-                                      No Record Found
-                              </option>
-                          )}
-                  </Input>
-            </FormGroup>
-        </Col>
-        <Col md={6}>
-            <FormGroup>
-                <Label for="occupation">Pregnancy Status </Label>
-
-                    <Input
-                      type="select"
-                      name="program"
-                      id="program"
-                      onChange={getProgramCode}
-                    >
-                        <option> </option>
-                       
-                  </Input>
-            </FormGroup>
-        </Col>
-         */}
-      </Row> 
+        <br/>
+          <Button
+              variant="contained"
+              color="primary"
+              className=" float-left ml-10"
+              startIcon={<FilterList />}
+              onClick={() =>FilterQuery()}
+            >
+              <span style={{ textTransform: "capitalize" }}>Filter</span>
+          </Button>
+        </Col>      
+        </Row> 
       </Card>  
       <br/>  
       <MaterialTable
