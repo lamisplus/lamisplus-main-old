@@ -170,27 +170,30 @@ const CaseManagerSearch = (props) => {
         tableRef={tableRef}
         columns={[
           { title: " ID", field: "patientId" },
+          {title:"Hospital Number", field: "hospitalNumber"},
           {
             title: "Name",
             field: "name",
           },
           { title: "Gender", field: "gender", filtering: false },
           { title: "Age", field: "age", filtering: false },
-          { title: "Disease Area", field: "area", filtering: false },
-          { title: "User Assigned", field: "user", filtering: false },
-          { title: "Status", field: "status", filtering: false, },
+          { title: "Phone Number", field: "phone", filtering: false },
+          { title: "State", field: "state", filtering: false, },
+          { title: "lga", field: "lga", filtering: false, },
+          { title: "address", field: "address", filtering: false, },
         ]}
 
         data={query =>
                   new Promise((resolve, reject) =>
-                      axios.get(`${baseUrl}patients/${codes}/true/programs?size=${query.pageSize}&page=${query.page}&search=${query.search}`)
+                      axios.get(`${baseUrl}patients/${codes}/true/programs?applicationUserId=*&size=${query.pageSize}&page=${query.page}&search=${query.search}`)
                           .then(response => response)
                           .then(result => {
 
                               console.log( result.headers['x-total-count']);
                               resolve({
                                   data: result.data.map((row) => ({
-                                    patientId: row.patientId + "(" + row.hospitalNumber + ")" ,
+                                    patientId: row.patientId,
+                                    hospitalNumber: row.hospitalNumber,
                                     name: row.firstName + " " + row.lastName,
                                     gender: row.details && row.details.gender && row.details.gender.display ? row.details.gender.display : 'N/A',
                                     age: (row.dob === 0 ||
@@ -199,10 +202,10 @@ const CaseManagerSearch = (props) => {
                                       row.dob === "" )
                                       ? 0
                                       : calculate_age(row.details && row.details.dob ? row.details.dob : row.dob),
+                                    phone: row.mobilePhoneNumber,
+                                    state: row.details.state.name,
+                                    lga: row.details.province.name,
                                     address: row.street || '',
-                                    area: "HIV",
-                                    user: "John Snow",
-                                    status: "Active",
                                     
                                       
                                   })),

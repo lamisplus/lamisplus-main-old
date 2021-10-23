@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import axios from "axios";
 import { url as baseUrl } from "../../api";
 import { forwardRef } from 'react';
-import AssignCaseManager from './AssignCaseManager';
+import UnAssignPatientsCaseManager from './UnAssignPatientsCaseManager';
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import Check from '@material-ui/icons/Check';
@@ -171,14 +171,17 @@ const CaseManagerPatients = (props) => {
         tableRef={tableRef}
         columns={[
           { title: " ID", field: "patientId" },
+          {title:"Hospital Number", field: "hospitalNumber"},
           {
             title: "Name",
             field: "name",
           },
           { title: "Gender", field: "gender", filtering: false },
           { title: "Age", field: "age", filtering: false },
-          { title: "Disease Area", field: "area", filtering: false },
-          { title: "Status", field: "status", filtering: false, },
+          { title: "Phone Number", field: "phone", filtering: false },
+          { title: "State", field: "state", filtering: false, },
+          { title: "lga", field: "lga", filtering: false, },
+          { title: "address", field: "address", filtering: false, },
         ]}
 
         data={query =>
@@ -191,6 +194,7 @@ const CaseManagerPatients = (props) => {
                               resolve({
                                   data: result.data.map((row) => ({
                                     patientId: row.patientId  ,
+                                    hospitalNumber: row.hospitalNumber,
                                     name: row.firstName + " " + row.lastName,
                                     gender: row.details && row.details.gender && row.details.gender.display ? row.details.gender.display : 'N/A',
                                     age: (row.dob === 0 ||
@@ -199,10 +203,10 @@ const CaseManagerPatients = (props) => {
                                       row.dob === "" )
                                       ? 0
                                       : calculate_age(row.details && row.details.dob ? row.details.dob : row.dob),
+                                      phone: row.mobilePhoneNumber,
+                                    state: row.details.state.name,
+                                    lga: row.details.province.name,
                                     address: row.street || '',
-                                    area: "HIV",
-                                    status: "Active",
-                                    patients: 0,
                                       
                                   })),
                                   page: query.page,
@@ -230,7 +234,7 @@ const CaseManagerPatients = (props) => {
                 }}
               actions={[        
                     {
-                    tooltip: 'Un-Assign/Re-Assign Case Manager',
+                    tooltip: 'Un-Assign Patients',
                     icon: 'add' ,
                     label: 'Un-Assign/Re-Assign Case Manager',
                     onClick: (evt, data) => getCaseManager(evt, data)
@@ -238,7 +242,7 @@ const CaseManagerPatients = (props) => {
         ]} 
       />
 
-      <AssignCaseManager modalstatus={modal3} togglestatus={togglemodal3} totalPatients={collectmodal} loadPatients={refreshTable}/>
+      <UnAssignPatientsCaseManager modalstatus={modal3} togglestatus={togglemodal3} totalPatients={collectmodal} loadPatients={refreshTable} caseManagerId={caseManagerId}/>
         
     </div>
 

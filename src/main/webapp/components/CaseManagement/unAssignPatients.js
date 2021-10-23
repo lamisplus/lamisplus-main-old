@@ -337,15 +337,18 @@ const getlgaObj = e => {
         title="Un-Assign Patients List"
         tableRef={tableRef}
         columns={[
-          { title: " ID", field: "patientId" },
+          { title: "Patient ID", field: "patientId" },
+          {title:"Hospital Number", field: "hospitalNumber"},
           {
             title: "Name",
             field: "name",
           },
           { title: "Gender", field: "gender", filtering: false },
           { title: "Age", field: "age", filtering: false },
-          { title: "Disease Area", field: "area", filtering: false },
-          { title: "Status", field: "status", filtering: false, },
+          { title: "Phone Number", field: "phone", filtering: false },
+          { title: "State", field: "state", filtering: false, },
+          { title: "lga", field: "lga", filtering: false, },
+          { title: "address", field: "address", filtering: false, },
         ]}
 
         data={query =>
@@ -357,7 +360,8 @@ const getlgaObj = e => {
                               console.log( result.headers['x-total-count']);
                               resolve({
                                   data: result.data.map((row) => ({
-                                    patientId: row.patientId + "(" + row.hospitalNumber + ")" ,
+                                    patientId: row.patientId,
+                                    hospitalNumber: row.hospitalNumber,
                                     name: row.firstName + " " + row.lastName,
                                     gender: row.details && row.details.gender && row.details.gender.display ? row.details.gender.display : 'N/A',
                                     age: (row.dob === 0 ||
@@ -366,10 +370,11 @@ const getlgaObj = e => {
                                       row.dob === "" )
                                       ? 0
                                       : calculate_age(row.details && row.details.dob ? row.details.dob : row.dob),
+                                    phone: row.mobilePhoneNumber,
+                                    state: row.details.state.name,
+                                    lga: row.details.province.name,
                                     address: row.street || '',
-                                    area: "HIV",
-                                    status: "Active",
-                                    patients: 0,
+                                    
                                       
                                   })),
                                   page: query.page,

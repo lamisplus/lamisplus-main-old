@@ -67,7 +67,7 @@ const CaseManagerSearch = (props) => {
   async function fetchMe() {
 
     axios
-        .get(`${baseUrl}users/roles/8`,
+        .get(`${baseUrl}roles/8/users?programCode=*`,
         // { headers: {"Authorization" : `Bearer ${token}`} }
           )
         .then((response) => {
@@ -108,6 +108,9 @@ const addManager =()=> {
             field: "name",
           },
           { title: "Gender", field: "gender", filtering: false },
+          { title: "State", field: "state", filtering: false },
+          { title: "Lga", field: "lga", filtering: false },
+          { title: "address", field: "address", filtering: false },
           { title: "Status", field: "status", filtering: false, },
           {
             title: "Total Patients",
@@ -122,34 +125,37 @@ const addManager =()=> {
           },
         ]}
         data={ caseManagersList.map((manager) => ({
-          //Id: manager.id,
-          name: <Link
-                  to ={{
-                      pathname: "/case-manager-patients",
-                      state: manager.id,
-                      caseManagerName: manager.firstName + " " + manager.lastName  
-                  }}
+            //Id: manager.id,
+            name: <Link
+                    to ={{
+                        pathname: "/case-manager-patients",
+                        state: manager.id,
+                        caseManagerName: manager.firstName + " " + manager.lastName  
+                    }}
 
-                  title={"Click to view patients"}
-              >{manager.firstName} {' '} {manager.lastName} </Link>,
-          gender: manager.gender,
-          status: "Active",
-          patients: manager.managedPatientCount,
+                    title={"Click to view patients"}
+                >{manager.firstName} {' '} {manager.lastName} </Link>,
+              gender: manager.gender,
+              state: manager.details!==null && manager.details.state ? manager.details.state[0].name : "",
+              lga: manager.details!==null && manager.details.lga ? manager.details.lga[0].name : "",
+              address: manager.details!==null && manager.details.address ? manager.details.address : "",
+              status: "Active",
+              patients: manager.managedPatientCount,
 
-          actions: <Link to ={{ 
-                      pathname: "/case-manager-patients",
-                      state: manager.id,
-                      caseManagerName: manager.firstName + " " + manager.lastName 
-                    }} 
-                        style={{ cursor: "pointer", color: "blue", fontStyle: "bold"}}
-                    >
-                        <Tooltip title="Collect Sample">
-                            <IconButton aria-label="Collect Sample" >
-                                <VisibilityIcon color="primary"/>
-                            </IconButton>
-                        </Tooltip>
-                    </Link>
-        }))}
+              actions: <Link to ={{ 
+                          pathname: "/case-manager-patients",
+                          state: manager.id,
+                          caseManagerName: manager.firstName + " " + manager.lastName 
+                        }} 
+                            style={{ cursor: "pointer", color: "blue", fontStyle: "bold"}}
+                        >
+                            <Tooltip title="View Patients">
+                                <IconButton aria-label="View Patients" >
+                                    <VisibilityIcon color="primary"/>
+                                </IconButton>
+                            </Tooltip>
+                        </Link>
+            }))}
        
                   options={{
                     headerStyle: {
