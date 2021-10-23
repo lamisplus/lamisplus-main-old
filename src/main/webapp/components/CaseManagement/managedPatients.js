@@ -4,7 +4,7 @@ import axios from "axios";
 import { url as baseUrl } from "../../api";
 import { url } from "../../api";
 import { forwardRef } from 'react';
-import AssignCaseManager from './AssignCaseManager';
+import UnAssignPatientsCaseManager from './UnAssignPatientsCaseManager';
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import Check from '@material-ui/icons/Check';
@@ -49,11 +49,10 @@ const CaseManagerSearch = (props) => {
   const [modal3, setModal3] = useState(false)//
   const togglemodal3 = () => setModal3(!modal3)
   const [collectmodal, setcollectmodal] = useState([])//
-
   const [programCode, setProgramCode] = useState("")
   const [programs, setPrograms] = useState([]);
-
-  const [otherDetails, setOtherDetails] = useState({state: "", lga: "", gender: "", artStatus:"", caseManager:""});
+  const [caseManagerId, setCaseManagerId] = useState(-1)
+  const [otherDetails, setOtherDetails] = useState({ caseManagerID:""});
 
   const [caseManager, setCaseManager] = useState([]);
 
@@ -61,7 +60,7 @@ const CaseManagerSearch = (props) => {
     async function getCharacters() {
         try {
             const response = await axios(
-                url + "users/roles/8"
+                url + "roles/8/users?programCode=*"
             );
             const body = response.data && response.data !==null ? response.data : {};
             setCaseManager(
@@ -91,15 +90,15 @@ const CaseManagerSearch = (props) => {
                 return age_now + " year(s)";
     };
 
-    const handleInputChange = e => {
-      const { name, value } = e.target
-      const fieldValue = { [name]: value }
-      setOtherDetails({
-          ...otherDetails,
-          ...fieldValue
-      })
+  //  const handleInputChange = e => {
+  //     const { name, value } = e.target
+  //     const fieldValue = { [name]: value }
+  //     setOtherDetails({
+  //         ...otherDetails,
+  //         ...fieldValue
+  //     })
 
-  }
+  // }
 
     function getCaseManager (evt, data){
         setcollectmodal({...collectmodal, ...data});
@@ -111,9 +110,9 @@ const CaseManagerSearch = (props) => {
     tableRef.current && tableRef.current.onQueryChange()
   }
 
-  const getProgramCode = e => {
+  const handleInputChange = e => {
     const getValue =e.target.value;
-    setProgramCode(getValue)
+    setCaseManagerId(getValue)
     refreshTable()
   };
 
@@ -137,7 +136,7 @@ const CaseManagerSearch = (props) => {
                       value={otherDetails.caseManager}
                       onChange={handleInputChange}
                     >
-                        <option> </option>
+                        <option value='-1'> Select Case Manager </option>
                         {caseManager.map(({ title, value }) => (
                             
                             <option key={value} value={value}>
@@ -185,7 +184,7 @@ const CaseManagerSearch = (props) => {
 
         data={query =>
                   new Promise((resolve, reject) =>
-                      axios.get(`${baseUrl}patients/${codes}/true/programs?applicationUserId=*&size=${query.pageSize}&page=${query.page}&search=${query.search}`)
+                      axios.get(`${baseUrl}patients/${codes}/true/programs?applicationUserId=${caseManagerId}&size=${query.pageSize}&page=${query.page}&search=${query.search}`)
                           .then(response => response)
                           .then(result => {
 
@@ -234,15 +233,15 @@ const CaseManagerSearch = (props) => {
                 }}
               actions={[        
                     {
-                    tooltip: 'Un-Assign/Re-Assign Case Manager',
+                    tooltip: 'Un-Assign Patients',
                     icon: 'add' ,
-                    label: 'Un-Assign/Re-Assign Case Manager ',
+                    label: 'Un-Assign Patients',
                     onClick: (evt, data) => getCaseManager(evt, data)
                     }
         ]} 
       />
 
-      <AssignCaseManager modalstatus={modal3} togglestatus={togglemodal3} totalPatients={collectmodal} loadPatients={refreshTable}/>
+      <UnAssignPatientsCaseManager modalstatus={modal3} togglestatus={togglemodal3} totalPatients={collectmodal} loadPatients={refreshTable} caseManagerId={caseManagerId}/>
 
     </div>
   );
