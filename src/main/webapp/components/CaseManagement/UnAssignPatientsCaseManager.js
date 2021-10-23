@@ -109,32 +109,28 @@ const UnAssignPatientsCaseManager = (props) => {
                 patientIds.push(item['patientId']);
                 return item;
             })
-            //Manipulating the manifestPatients            
-                if(validate()){
-                 
-                    //Process the Patients to be assign 
-                    patientManifest['patientIds'] = patientIds;
-                    patientManifest['userId'] = props.caseManagerId;
-                    patientManifest['programCode'] = "0d31f6ee-571c-45b8-80d5-3f7e1d5377b7";
-                    
-                    console.log(patientManifest)
-                    //SENDING A POST REQUEST 
-                    axios.post(`${url}application_user_patient/assign`, patientManifest)
-                    .then(response => {
-                        setLoading(false)
-                        toast.success("Patients Assign Successfully!");
-                        props.loadPatients();
-                         //Closing of the modal 
-                        props.togglestatus();
-                    })
-                    .catch(error => {
-                        setLoading(false)
-                        toast.error("Something went wrong please try again...");
-                    });
-                    
-
-          }
-  }
+              
+            //Process the Patients to be assign 
+            patientManifest['patientIds'] = patientIds;
+            patientManifest['userId'] = props.caseManagerId;
+            patientManifest['programCode'] = "0d31f6ee-571c-45b8-80d5-3f7e1d5377b7";
+            
+            console.log(patientManifest)
+            //SENDING A POST REQUEST 
+            axios.post(`${url}application_user_patient/unssign`, patientManifest)
+            .then(response => {
+                setLoading(false)
+                toast.success("Patients Un-assign Successfully!");
+                props.loadPatients();
+                    //Closing of the modal 
+                props.togglestatus();
+            })
+            .catch(error => {
+                setLoading(false)
+                toast.error("Something went wrong please try again...");
+            });
+      
+    }
 
 
       
