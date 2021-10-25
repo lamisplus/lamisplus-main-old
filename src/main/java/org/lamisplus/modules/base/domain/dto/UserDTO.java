@@ -33,6 +33,8 @@ public class UserDTO {
     @ToString.Exclude
     private List<ApplicationUserOrganisationUnit> applicationUserOrganisationUnits;
     private String currentOrganisationUnitName;
+    private int managedPatientCount;
+    private Object details;
 
 
 
@@ -52,7 +54,9 @@ public class UserDTO {
         this.gender = user.getGender();
         this.currentOrganisationUnitId = user.getCurrentOrganisationUnitId();
         this.applicationUserOrganisationUnits = user.getApplicationUserOrganisationUnits();
+        this.managedPatientCount = user.getManagedPatientCount();
         currentOrganisationUnitName = user.getOrganisationUnitByCurrentOrganisationUnitId() != null ? user.getOrganisationUnitByCurrentOrganisationUnitId().getName() : null;
+        this.details = user.getDetails();
     }
 
 
@@ -66,6 +70,8 @@ public class UserDTO {
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", gender='" + gender + '\'' +
+                ", details='" + details + '\'' +
+                ", managedPatientCount='" + managedPatientCount + '\'' +
                 ", currentOrganisationUnitId='" + currentOrganisationUnitId + '\'' +
                 ", roles=" + roles + '\'' +
                 ", permissions=" + permissions + '\'' +

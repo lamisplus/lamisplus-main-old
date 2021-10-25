@@ -1210,14 +1210,16 @@
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-91">
         <preConditions onFail="MARK_RAN">
-            <primaryKeyExists primaryKeyName="application_user_roles_pkey" tableName="application_user_role"/>
+            <not>
+                <primaryKeyExists primaryKeyName="application_user_roles_pkey" tableName="application_user_role"/>
+            </not>
         </preConditions>
         <addPrimaryKey columnNames="user_id, role_id" constraintName="application_user_roles_pkey" tableName="application_user_role"/>
     </changeSet>
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-92">
         <preConditions onFail="MARK_RAN">
             <not>
-            <primaryKeyExists primaryKeyName="biometric_pkey" tableName="biometric"/>
+                <primaryKeyExists primaryKeyName="biometric_pkey" tableName="biometric"/>
             </not>
         </preConditions>
         <addPrimaryKey columnNames="id" constraintName="biometric_pkey" tableName="biometric"/>
@@ -1225,7 +1227,7 @@
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-93">
         <preConditions onFail="MARK_RAN">
             <not>
-            <primaryKeyExists primaryKeyName="module_pkey" tableName="module"/>
+                <primaryKeyExists primaryKeyName="module_pkey" tableName="module"/>
             </not>
         </preConditions>
         <addPrimaryKey columnNames="id" constraintName="module_pkey" tableName="module"/>
@@ -1233,7 +1235,7 @@
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-94">
         <preConditions onFail="MARK_RAN">
             <not>
-            <primaryKeyExists primaryKeyName="patient_flag_pkey" tableName="patient_flag"/>
+                <primaryKeyExists primaryKeyName="patient_flag_pkey" tableName="patient_flag"/>
             </not>
         </preConditions>
         <addPrimaryKey columnNames="patient_id, flag_id" constraintName="patient_flag_pkey" tableName="patient_flag"/>
@@ -1241,7 +1243,7 @@
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-95">
         <preConditions onFail="MARK_RAN">
             <not>
-            <primaryKeyExists primaryKeyName="role_permissions_pkey" tableName="role_permission"/>
+                <primaryKeyExists primaryKeyName="role_permissions_pkey" tableName="role_permission"/>
             </not>
         </preConditions>
         <addPrimaryKey columnNames="role_id, permission_id" constraintName="role_permissions_pkey" tableName="role_permission"/>
@@ -1401,7 +1403,7 @@
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-117">
         <preConditions onFail="MARK_RAN">
             <not>
-                <foreignKeyConstraintExists foreignKeyName="organisation_unit_hierarchy"/>
+                <foreignKeyConstraintExists foreignKeyName="organisation_unit_level_id_fk"/>
             </not>
         </preConditions>
         <addForeignKeyConstraint baseColumnNames="organisation_unit_level_id" baseTableName="organisation_unit_hierarchy" constraintName="organisation_unit_level_id_fk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="organisation_unit_level"/>

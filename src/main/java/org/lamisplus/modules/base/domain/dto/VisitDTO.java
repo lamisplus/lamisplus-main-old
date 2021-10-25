@@ -42,23 +42,6 @@ public class VisitDTO {
 
     private Long visitTypeId;
 
-    //PATIENT PERSONAL DETAILS
-    /*@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    @Convert(converter = LocalDateConverter.class)
-    private LocalDate dateRegistration;
-    private String hospitalNumber;
-    private String firstName;
-    private String lastName;
-    private String otherNames;
-    private Long maritalStatusId;
-    private Long titleId;*/
-
-    /*@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    @Convert(converter = LocalDateConverter.class)
-    private LocalDate dob;
-    private Long genderId;
-    private Long educationId;
-    private Long occupationId;*/
     private List<AppointmentDTO> appointmentDTOList;
     private Long appointmentId;
     private Object details;

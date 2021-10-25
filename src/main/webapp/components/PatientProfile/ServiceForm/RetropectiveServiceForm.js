@@ -399,6 +399,10 @@ function ServiceFormPage(props) {
                   visitId={props.patient.visitId}
                   onSuccess={onSuccess}
                   encounterId={currentForm.encounterId}
+                  timeCreated={currentForm.timeCreated}
+                  dateEncounter={currentForm.dateEncounter}
+                  organisationUnitId={currentForm.organisationUnitId}
+
                   formType={1}
                 />
               )}

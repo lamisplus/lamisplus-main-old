@@ -114,8 +114,10 @@ const FormRenderer = (props) => {
     if(formId){
       updateForm(submission, onSuccess, onError);
     }else{
+
+
       const keys = Object.keys(submission.data);
-      console.log(keys);
+
       // remove the base
       if(keys.includes('orders') && _.isArray(submission.data['orders'])){
         submission.data = submission.data['orders'];

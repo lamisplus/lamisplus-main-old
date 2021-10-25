@@ -43,7 +43,7 @@ public class FormService {
 
     public List getAllForms() {
         List<Form> forms = formRepository.findAllByArchivedOrderByIdAsc(UN_ARCHIVED);
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         return getForms(forms, permissions);
     }
@@ -77,7 +77,7 @@ public class FormService {
         Form form = this.formRepository.findByIdAndArchived(id, UN_ARCHIVED)
                 .orElseThrow(() -> new EntityNotFoundException(Form.class, "Id", id+""));
 
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         accessRight.grantAccess(form.getCode(), FormService.class, permissions);
 
@@ -85,13 +85,14 @@ public class FormService {
     }
 
     public Form getFormByFormCode(String formCode, Optional<Integer> formType) {
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         accessRight.grantAccess(formCode, FormService.class, permissions);
         //if form is retrospective  - 1
         if (formType.isPresent() && formType.get() == 1) {
-            return formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED)
-                    .orElseThrow(() -> new EntityNotFoundException(Form.class, "Form Code has no retrospective", formCode));
+            return formRepository.findByMainCodeAndArchived(formCode, UN_ARCHIVED)
+                    .orElse(formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED)
+                            .orElseThrow(() -> new EntityNotFoundException(Form.class, "Form Code", formCode)));
         }
         return formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED)
                 .orElseThrow(() -> new EntityNotFoundException(Form.class, "Form Code", formCode));
@@ -99,7 +100,7 @@ public class FormService {
 
     public List getFormsByUsageStatus(Integer usageStatus) {
         List<Form> forms = formRepository.findAllByUsageCodeAndArchived(usageStatus, UN_ARCHIVED);
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         return getForms(forms, permissions);
     }
@@ -120,7 +121,7 @@ public class FormService {
     }
 
     public Form update(Long id, FormDTO formDTO) {
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         accessRight.grantAccessByAccessType(formDTO.getCode(), FormService.class, WRITE, permissions);
         formRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(Form.class, "Id", id +""));
@@ -134,7 +135,7 @@ public class FormService {
     public Integer delete(Long id) {
         Form form = formRepository.findByIdAndArchived(id, UN_ARCHIVED)
                 .orElseThrow(() -> new EntityNotFoundException(Form.class, "Id", id +""));
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         accessRight.grantAccessByAccessType(form.getCode(), FormService.class, DELETE, permissions);
 

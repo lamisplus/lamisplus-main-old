@@ -263,7 +263,7 @@
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-142">
         <preConditions onFail="MARK_RAN">
             <sqlCheck expectedResult="0">
-                SELECT COUNT(*) FROM flag WHERE id=1;
+                SELECT COUNT(*) FROM flag WHERE id=4;
             </sqlCheck>
         </preConditions>
         <sqlFile dbms="postgresql"

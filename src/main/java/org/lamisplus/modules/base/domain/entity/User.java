@@ -2,6 +2,7 @@ package org.lamisplus.modules.base.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.Type;
 import org.lamisplus.modules.base.security.SecurityUtils;
 import javax.persistence.*;
 import java.sql.Date;
@@ -105,4 +106,12 @@ public class User {
     @JoinColumn(name = "current_organisation_unit_id", referencedColumnName = "id", insertable = false, updatable = false)
     @ToString.Exclude
     private OrganisationUnit organisationUnitByCurrentOrganisationUnitId;
+
+    @Transient
+    private int managedPatientCount;
+
+    @Type(type = "jsonb")
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "details", nullable = true, columnDefinition = "jsonb")
+    private Object details;
 }

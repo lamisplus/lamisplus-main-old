@@ -24,8 +24,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -37,7 +35,9 @@ import java.util.*;
 @RequiredArgsConstructor
 public class PatientService {
 
-    public static final String HOSPITAL_NUMBER = "Hospital Number";
+    private static final String PATIENT_REGISTRATION_FORM_CODE = "bbc01821-ff3b-463d-842b-b90eab4bdacd";
+    private static final int STATUS = 0;
+    private static final String INTAKE_FORM_CODE = "3746bd2c-362d-4944-8982-5189441b1d59";
     private final EncounterRepository encounterRepository;
     private final PatientTransformer patientTransformer;
     private final PatientRepository patientRepository;
@@ -58,15 +58,16 @@ public class PatientService {
     private static final int ARCHIVED = 1;
     private final ApplicationUserPatientRepository applicationUserPatientRepository;
     private static final String READ = "read";
-    private static final String WRITE = "write";
-    private static final String DELETE = "delete";
+    /*private static final String WRITE = "write";
+    private static final String DELETE = "delete";*/
     private final ObjectMapper mapper;
     private final FlagService flagService;
 
     public Patient save(PatientDTO patientDTO) {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-        patientDTO = patientTransformer.transformDTO(HOSPITAL_NUMBER, patientDTO);
-        Optional<Patient> patient1 = patientRepository.findByHospitalNumberAndOrganisationUnitIdAndArchived(patientDTO.getHospitalNumber(), organisationUnitId, UN_ARCHIVED);
+        patientDTO = patientTransformer.checkForPatientNumber(patientDTO);
+        Optional<Patient> patient1 = patientRepository.findByHospitalNumberAndPatientNumberTypeAndOrganisationUnitIdAndArchived(
+                patientDTO.getHospitalNumber(), patientDTO.getPatientNumberType(), organisationUnitId, UN_ARCHIVED);
         if (patient1.isPresent())
             throw new RecordExistException(Patient.class, "Hospital Number", patientDTO.getHospitalNumber() + "");
 
@@ -76,31 +77,29 @@ public class PatientService {
         Patient savedPatient =  patientRepository.save(patient);
 
         //Start of flag operation for associated with (0)
-        savePatientAndCheckForFlag(savedPatient.getId(), "bbc01821-ff3b-463d-842b-b90eab4bdacd", setAge(savedPatient.getDetails()));
+        savePatientAndCheckForFlag(savedPatient.getId(), "bbc01821-ff3b-463d-842b-b90eab4bdacd", savedPatient.getDetails());
 
         return savedPatient;
     }
 
     public List<PatientDTO> getAllPatients() {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-
         return getPatients(patientRepository.findAllByArchivedAndOrganisationUnitIdOrderByIdDesc(UN_ARCHIVED, organisationUnitId));
     }
 
 
-    public List<PatientDTO> getAllPatients(Page page) {
+    public List<PatientDTO> getAllPatients(Page<Patient> page) {
         List<Patient> patients = page.getContent();
         return getPatients(patients);
     }
 
-    public PatientDTO getPatientByHospitalNumber(String hospitalNumber, String patientNumberType) {
+    public PatientDTO getPatientByPatientNumberTypeHospitalNumber(String hospitalNumber, String patientNumberType) {
         Optional<Patient> patientOptional = this.patientRepository.findByHospitalNumberAndPatientNumberTypeAndOrganisationUnitIdAndArchived(hospitalNumber, patientNumberType, getOrganisationUnitId(), UN_ARCHIVED);
 
         if (!patientOptional.isPresent()) {
-            throw new EntityNotFoundException(Patient.class, "Hospital Number", hospitalNumber + "");
+            throw new EntityNotFoundException(Patient.class, "Hospital Number & Patient Number Type", hospitalNumber + " & " + patientNumberType);
         }
-
-        return this.updatePatientFlag(getPatient(patientOptional));
+        return updatePatientFlag(getPatient(patientOptional));
     }
 
     public PatientDTO getPatientByHospitalNumber(String hospitalNumber) {
@@ -109,7 +108,6 @@ public class PatientService {
         if (!patientOptional.isPresent()) {
             throw new EntityNotFoundException(Patient.class, "Hospital Number", hospitalNumber + "");
         }
-
         return this.updatePatientFlag(getPatient(patientOptional));
     }
 
@@ -118,8 +116,7 @@ public class PatientService {
         patientRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() ->
                 new EntityNotFoundException(Patient.class, "Id", id + ""));
 
-        patientDTO = patientTransformer.transformDTO(HOSPITAL_NUMBER, patientDTO);
-
+        patientDTO = patientTransformer.checkForPatientNumber(patientDTO);
         final Patient patient = patientMapper.toPatient(patientDTO);
         patient.setId(id);
         Patient savedPatient = patientRepository.save(patient);
@@ -133,21 +130,19 @@ public class PatientService {
     private void savePatientAndCheckForFlag(Long patientId, String formCode, Object details){
         //Start of flag operation for associated with (0)
         List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived(formCode, 0, UN_ARCHIVED);
+        Object patientDetails = this.setAge(details);
         if(!formFlags.isEmpty()){
-            flagService.checkForAndSavePatientFlag(patientId, this.setAge(details), formFlags, false);
+            flagService.checkForAndSavePatientFlag(patientId, patientDetails, formFlags);
         }
-
     }
 
 
     public List getEncountersByPatientIdAndDateEncounter(Long patientId, String formCode, Optional<String> dateStart, Optional<String> dateEnd) {
-        Set<String> permissions = accessRight.getAllPermission();
-
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
         accessRight.grantAccessByAccessType(formCode, Patient.class, READ, permissions);
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
 
         Specification<Encounter> specification = new GenericSpecification<Encounter>().findAllEncountersByPatientIdAndDateEncounter(patientId, formCode, dateStart, dateEnd, organisationUnitId);
-
         List<Encounter> encounters = encounterRepository.findAll(specification);
 
         return getFormData(encounters, null);
@@ -156,7 +151,7 @@ public class PatientService {
     public List getAllEncountersByPatientId(Long patientId) {
         List<Encounter> encounters = getEncounterByPatientIdDesc(patientId);
         List<Object> formDataList = new ArrayList<>();
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         encounters.forEach(encounter -> {
             if (!accessRight.grantAccessForm(encounter.getFormCode(), permissions)) {
@@ -170,7 +165,7 @@ public class PatientService {
     }
 
     public List getEncountersByPatientIdAndFormCode(Pageable pageable, Long patientId, String formCode, String sortField, String sortOrder, Integer limit) {
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         accessRight.grantAccessByAccessType(formCode, Patient.class, READ, permissions);
         Pageable pageableSorter = createPageRequest(pageable, sortField, sortOrder, limit);
@@ -181,8 +176,7 @@ public class PatientService {
     public List getEncountersByPatientIdAndProgramCodeExclusionList(Long patientId, List<String> programCodeExclusionList) {
         List<Encounter> encounters = getEncounterByPatientIdDesc(patientId);
         List<EncounterDTO> encounterDTOS = new ArrayList<>();
-        Set<String> permissions = accessRight.getAllPermission();
-
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         if (programCodeExclusionList != null && programCodeExclusionList.size() > 0)
             programCodeExclusionList.forEach(programCode -> {
@@ -194,7 +188,6 @@ public class PatientService {
                     }
                     if (singleEncounter.getProgramCode().equals(programCode)) return;
                     Patient patient = singleEncounter.getPatientByPatientId();
-                    //Person person = patient.getPersonByPersonId();
                     Form form = singleEncounter.getFormForEncounterByFormCode();
 
                     final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(patient, singleEncounter, form);
@@ -211,7 +204,6 @@ public class PatientService {
      * @return integer to confirm archive
      */
     public Integer delete(Long id) {
-        //String username = userService.getUserWithRoles().get().getUserName();
         Optional<Patient> patientOptional = this.patientRepository.findByIdAndArchivedAndOrganisationUnitId(id, UN_ARCHIVED, getOrganisationUnitId());
         if (!patientOptional.isPresent()) throw new EntityNotFoundException(Patient.class, "Id", id + "");
         //setting all patient archive to 1
@@ -270,11 +262,12 @@ public class PatientService {
         HashSet<String> formCodeSet = new HashSet<>();
 
         //Check for filled forms by the patient in that program
-        encounterRepository.findDistinctPatientIdAndProgramCodeAndOrganisationUnitIdAndArchived(patientId, programCode, getOrganisationUnitId(), UN_ARCHIVED).forEach(encounterDistinctDTO -> {
-            filledFormSet.add(encounterDistinctDTO.getFormCode());
+        encounterRepository.findDistinctPatientIdAndProgramCodeAndOrganisationUnitIdAndArchived(patientId, programCode, getOrganisationUnitId(), UN_ARCHIVED).forEach(distinctEncounter -> {
+            filledFormSet.add(distinctEncounter.getFormCode());
         });
 
-        if (filledFormSet.size() > 0) {
+        /*.size() > 0*/
+        if (!filledFormSet.isEmpty()) {
             program.getFormsByProgram().forEach(form -> {
                 //if form has been filled, then return
                 if (filledFormSet.contains(form.getCode())) {
@@ -301,7 +294,7 @@ public class PatientService {
             for (String formCode : formCodeSet) {
                 Form form = formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED).get();
                 //Start of flag operation
-                forms = flagService.setAndGetFormListForFlagOperation(this.getPatientById(patientId), form, forms);
+                    forms = flagService.setAndGetFormListForFlagOperation(this.getPatientById(patientId), form, forms);
             }
 
         } else {
@@ -316,13 +309,11 @@ public class PatientService {
     }
 
 
-
-
     public List<FormDTO> getFilledFormsByPatientIdAndProgramCode(Long patientId, String programCode) {
         List<Form> forms = new ArrayList<>();
         //Check for filled forms by the patient in that program
-        encounterRepository.findDistinctPatientIdAndProgramCodeAndOrganisationUnitIdAndArchived(patientId, programCode, getOrganisationUnitId(), UN_ARCHIVED).forEach(encounterDistinctDTO -> {
-            forms.add(formRepository.findByCodeAndArchived(encounterDistinctDTO.getFormCode(), UN_ARCHIVED).get());
+        encounterRepository.findDistinctPatientIdAndProgramCodeAndOrganisationUnitIdAndArchived(patientId, programCode, getOrganisationUnitId(), UN_ARCHIVED).forEach(distinctEncounter -> {
+            forms.add(formRepository.findByCodeAndArchived(distinctEncounter.getFormCode(), UN_ARCHIVED).get());
         });
         return formMapper.FormToFormDTOs(forms);
     }
@@ -337,12 +328,11 @@ public class PatientService {
 
     public List<PatientDTO> getAllPatientsByProgramCode(String programCode) {
         List<PatientDTO> patientDTOList = new ArrayList<>();
-        encounterRepository.findDistinctProgramCodeAndOrganisationUnitIdAndArchived(programCode, getOrganisationUnitId(), UN_ARCHIVED).forEach(encounterDistinctDTO -> {
-            patientDTOList.add(getPatientByHospitalNumber(patientRepository.findById(encounterDistinctDTO.getPatientId()).get().getHospitalNumber()));
+        encounterRepository.findDistinctProgramCodeAndOrganisationUnitIdAndArchived(programCode, getOrganisationUnitId(), UN_ARCHIVED).forEach(distinctEncounter -> {
+            patientDTOList.add(getPatientByHospitalNumber(patientRepository.findById(distinctEncounter.getPatientId()).get().getHospitalNumber()));
         });
         return patientDTOList;
     }
-
 
     public List<PatientDTO> getPatients(List<Patient> patients) {
         List<PatientDTO> patientDTOs = new ArrayList<>();
@@ -358,7 +348,6 @@ public class PatientService {
             patientDTO.setFlags(flags);
             patientDTOs.add(patientTransformer.transformDTO(patientDTO));
         });
-
         return patientDTOs;
     }
 
@@ -378,14 +367,35 @@ public class PatientService {
         return patientRepository.findAllByFullDetails(firstName, lastName, hospitalNumber, mobilePhoneNumber, getOrganisationUnitId(), UN_ARCHIVED, pageable);
     }
 
-    public Page<Patient> findAllByPatientNotCaseManagedByFilteredParameters(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber,
+    //Patients Not Managed
+    public Page<Patient> findAllByPatientNotManagedByFilteredParameters(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber,
                                       String gender, String programCode, Pageable pageable) {
         return patientRepository.findAllByPatientNotCaseManagedByFilteredParameters(firstName, lastName, hospitalNumber, mobilePhoneNumber,
                 gender, UN_ARCHIVED, getOrganisationUnitId(), programCode, pageable);
     }
 
-    public Page<Patient> findAllByPatientNotCaseManaged(String programCode, Pageable pageable) {
-        return patientRepository.findAllByPatientNotCaseManaged(programCode, UN_ARCHIVED, getOrganisationUnitId(), pageable);
+    //Patients Managed
+    public Page<Patient> findAllByPatientManagedByFilteredParameters(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber,
+                                                                        String gender, String programCode, Pageable pageable) {
+        if(programCode.equalsIgnoreCase("0d31f6ee-571c-45b8-80d5-3f7e1d5377b7")){
+            return patientRepository.findAllByPatientsManagedInHIVByFilteredParameters(firstName, lastName, hospitalNumber, mobilePhoneNumber,
+                    gender, programCode, UN_ARCHIVED, getOrganisationUnitId(), 1, pageable);
+        }
+        return patientRepository.findAllByPatientManagedByFilteredParameters(firstName, lastName, hospitalNumber, mobilePhoneNumber,
+                gender, UN_ARCHIVED, getOrganisationUnitId(), programCode, pageable);
+    }
+
+    //Patients Not Managed
+    public Page<Patient> findAllByPatientNotManaged(String programCode, Pageable pageable) {
+        return patientRepository.findAllByPatientsNotManaged(programCode, UN_ARCHIVED, getOrganisationUnitId(), pageable);
+    }
+
+    //Patients Managed
+    public Page<Patient> findAllByPatientManaged(String programCode, Pageable pageable) {
+        if(programCode.equalsIgnoreCase("0d31f6ee-571c-45b8-80d5-3f7e1d5377b7")){
+            return patientRepository.findAllByPatientsManagedInHIV(programCode, UN_ARCHIVED, getOrganisationUnitId(), 1, pageable);
+        }
+        return patientRepository.findAllByPatientsManaged(programCode, UN_ARCHIVED, getOrganisationUnitId(), pageable);
     }
 
     //Case management
@@ -528,9 +538,13 @@ public class PatientService {
 
     private Object setAge(Object object){
         try {
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-            String details = mapper.writeValueAsString(object);
+            //mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            String details = "";
+            if(object instanceof String){
+                details = object.toString();
+            } else {
+                details = mapper.writeValueAsString(object);
+            }
             JSONObject patientDetails = new JSONObject(details);
             String dob = patientDetails.optString("dob");
             if(dob != null) {
@@ -553,25 +567,32 @@ public class PatientService {
     //Temp method to update Patient Flag
     private PatientDTO updatePatientFlag(PatientDTO patientDTO) {
         //Start of flag operation for associated with (0)
-        List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("bbc01821-ff3b-463d-842b-b90eab4bdacd", 0, UN_ARCHIVED);
+        List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived(PATIENT_REGISTRATION_FORM_CODE, STATUS, UN_ARCHIVED);
         if (!formFlags.isEmpty()) {
             String details = JsonUtil.getJsonNode(patientDTO.getDetails()).toString();
-            flagService.checkForAndSavePatientFlag(patientDTO.getPatientId(), this.setAge(details), formFlags, true);
+            flagService.checkForAndSavePatientFlag(patientDTO.getPatientId(), setAge(details), formFlags);
         }
 
-        Optional<Encounter> optionalEncounter = encounterRepository.findOneByPatientIdAndFormCodeAndArchived(patientDTO.getPatientId(), "3746bd2c-362d-4944-8982-5189441b1d59", UN_ARCHIVED);
+        Optional<Encounter> optionalEncounter = encounterRepository.findOneByPatientIdAndFormCodeAndArchived(patientDTO.getPatientId(), INTAKE_FORM_CODE, UN_ARCHIVED);
         if(optionalEncounter.isPresent()){
             Encounter encounter = optionalEncounter.get();
             Optional<FormData> optionalFormData = encounter.getFormDataByEncounter().stream().findFirst();
             if(optionalFormData.isPresent()){
-                formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("3746bd2c-362d-4944-8982-5189441b1d59", 0, UN_ARCHIVED);
+                formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("INTAKE_FORM_CODE", STATUS, UN_ARCHIVED);
                 if (!formFlags.isEmpty()) {
                     String formData = JsonUtil.getJsonNode(optionalFormData.get().getData()).toString();
-                    flagService.checkForAndSavePatientFlag(patientDTO.getPatientId(), formData, formFlags, true);
+                    flagService.checkForAndSavePatientFlag(patientDTO.getPatientId(), formData, formFlags);
                 }
             }
         }
         return patientDTO;
     }
 
+    public String getPatientIdentifierNumber(Long id, String identifierCode) {
+        patientRepository.findByIdAndOrganisationUnitIdAndArchived
+                (id, getOrganisationUnitId(), UN_ARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(Patient.class, "id", id + ""));
+        return patientRepository.findPatientIdentifierNumberByPatientId(id, identifierCode, UN_ARCHIVED, getOrganisationUnitId())
+        .orElse(null);
+    }
 }

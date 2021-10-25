@@ -69,8 +69,9 @@ public class RoleController {
         }
     }
 
-    @GetMapping("/{id}/user")
-    public ResponseEntity<List<UserDTO>> getAllUsersByRoleId(@PathVariable Long id) {
-        return ResponseEntity.ok(roleService.getAllUsersByRoleId(id));
+    @GetMapping("/{id}/users")
+    public ResponseEntity<List<UserDTO>> getAllUsersByRoleId(@PathVariable Long id,
+                                                             @RequestParam(required = false, defaultValue = "*") String programCode) {
+        return ResponseEntity.ok(roleService.getAllUsersByRoleId(id, programCode));
     }
 }

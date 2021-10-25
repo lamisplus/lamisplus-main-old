@@ -101,6 +101,45 @@ const FormRenderer = props => {
       });
   }, []);
 
+  const submitEncounter = (submission) => {
+      const onSuccess = () => {
+          setShowLoading(false)
+          toast.success('Form saved successfully!', { appearance: 'success' })
+      }
+      const onError = errstatus => {
+          setErrorMsg('Something went wrong, request failed! Please contact admin.')
+          setShowErrorMsg(true)
+          setShowLoading(false)
+      }
+
+      const keys = Object.keys(submission.data);
+
+      // remove the base
+      if(keys.includes('orders') && _.isArray(submission.data['orders'])){
+          submission.data = submission.data['orders'];
+      }
+
+      const data = {
+          data: submission.data,
+          encounterId: props.encounterId,
+          visitId: props.visitId,
+          patientId: props.patientId,
+          dateEncounter: props.dateEncounter,
+          timeCreated: props.timeCreated,
+          organisationUnitId: props.organisationUnitId,
+          formCode: props.formCode,
+          programCode: props.programCode
+      }
+
+
+      formRendererService.updateEncounter(props.encounterId, data)
+          .then((response) => {
+              props.onSuccess ? props.onSuccess() : onSuccess();
+          })
+          .catch((error) => {
+              props.onError ? props.onError() : onError()
+          });
+  }
   const submitForm = ( submission) => {
    // e.preventDefault()
    
@@ -113,11 +152,11 @@ const FormRenderer = props => {
         setShowErrorMsg(true)
         setShowLoading(false)
       }
-      _.omit(submission.data, 'patient');
-      _.omit(submission.data, 'authHeader');
+
       const data = {
           data: submission.data,
       }
+
 
       formRendererService.updateFormData(formData.id, data)
       .then((response) => {
@@ -127,9 +166,6 @@ const FormRenderer = props => {
         props.onError ? props.onError() : onError()
       });
 
-      // props.updateFormData(formData.id, data, 
-      //   props.onSuccess ? props.onSuccess : onSuccess, 
-      //   props.onError ? props.onError : onError);
   }
 
   if(showLoadingForm){
@@ -155,6 +191,19 @@ const FormRenderer = props => {
           return props.onSubmit(submission);
       }
 
+      let isEncounter = false;
+      // check if data has orders in it, if yes then its retrospective then save as encounter
+      const keys = Object.keys(submission.data);
+      if(keys.includes('orders') && _.isArray(submission.data['orders'])){
+           isEncounter = true;
+      }
+
+
+
+      console.log( isEncounter);
+      if(isEncounter){
+          return submitEncounter(submission)
+      }
       return submitForm (submission);
   }
   return (
@@ -174,12 +223,15 @@ const FormRenderer = props => {
           options={options}
           hideComponents={props.hideComponents}
           onCustomEvent={(submission) => {
+              console.log('is submit2')
               if(submission.type === 'onSubmitOrderButtonClicked'){
                   console.log('is onSubmitOrderButtonClicked');
-                  onSave(submission);
+                  onSave(submission, true);
               }
           }}
           onSubmit={(submission) => {
+              console.log('is submit')
+
               onSave(submission)
             }}
         />

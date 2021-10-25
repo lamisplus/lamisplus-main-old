@@ -39,13 +39,15 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
     @Query(value = "SELECT * FROM patient WHERE details ->>?1 like ?2", nativeQuery = true)
     Page<Patient> findAllByDetails(String key, String value,Pageable pageable);
 
-    @Query(value = "SELECT * FROM patient WHERE details ->>'firstName'like ?1 " +
-            "OR details ->>'lastName' like ?2 OR details ->>'hospitalNumber' like ?3 AND organisation_unit_id=?4 AND archived=?5", nativeQuery = true)
+    @Query(value = "SELECT * FROM patient WHERE (details ->>'firstName' ilike ?1 " +
+            "OR details ->>'lastName' ilike ?2 OR details ->>'hospitalNumber' ilike ?3 OR patient_number ilike ?3) " +
+            "AND organisation_unit_id=?4 AND archived=?5", nativeQuery = true)
     Page<Patient> findAllByDetails(String firstName, String lastName, String hospitalNumber, Long organisationUnitId, int archived, Pageable pageable);
 
     @Query(value = "SELECT * FROM patient WHERE (details ->>'firstName' ilike ?1 " +
             "OR details ->>'lastName' ilike ?2 OR details ->>'hospitalNumber' ilike ?3 " +
-            "OR details ->>'mobilePhoneNumber' ilike ?4) AND organisation_unit_id=?5 AND archived=?6", nativeQuery = true)
+            "OR details ->>'mobilePhoneNumber' ilike ?4 OR patient_number ilike ?3) " +
+            "AND organisation_unit_id=?5 AND archived=?6", nativeQuery = true)
     Page<Patient> findAllByFullDetails(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber, Long organisationUnitId, int archived, Pageable pageable);
 
     @Query(value = "SELECT COUNT(*) FROM patient WHERE details -> 'gender' ->> 'display' ilike ?1 AND " +
@@ -62,42 +64,92 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
 
     Optional<Patient> findByIdAndOrganisationUnitIdAndArchived(Long patientId, Long organisationUnitId, int archived);
 
-   /* @Query(value = "SELECT * FROM (SELECT * FROM patient WHERE archived = ?2 AND organisation_unit_id = ?3 " +
-            "AND id NOT IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?2)) p " +
-            "LEFT JOIN (SELECT DISTINCT patient_id FROM encounter WHERE archived = ?2 " +
-            "AND program_code = ?1 AND organisation_unit_id = ?3 " +
-            "AND patient_id NOT IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?2)) e " +
-            "ON p.id = e.patient_id ORDER BY p.id DESC", nativeQuery = true)
-    Page<Patient> findAllByPatientNotCaseManaged(String programCode, int archived, Long organisationUnitId, Pageable pageable);
-*/
-    /*@Query(value = "SELECT * FROM (SELECT * FROM patient WHERE (details ->>'firstName' ilike ?1 " +
-            "OR details ->>'lastName' ilike ?2 OR details ->>'hospitalNumber' ilike ?3 " +
-            "OR details ->>'mobilePhoneNumber' ilike ?4 OR details ->'gender' ->> 'display' ilike ?5) AND " +
-            "archived = ?6 AND organisation_unit_id = ?7 " +
-            "AND id NOT IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?6)) p " +
-            "LEFT JOIN (SELECT DISTINCT patient_id FROM encounter WHERE archived = ?6 " +
-            "AND program_code = ?8 AND organisation_unit_id = ?7 " +
-            "AND patient_id NOT IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?6)) e " +
-            "ON p.id = e.patient_id ORDER BY p.id DESC", nativeQuery = true)*/
-
    @Query(value = "SELECT DISTINCT e.patient_id, p.* FROM encounter e " +
            "LEFT OUTER JOIN patient p ON p.id = e.patient_id " +
            "WHERE (p.details ->>'firstName' ilike ?1 OR p.details ->>'lastName' ilike ?2 " +
            "OR p.details ->>'hospitalNumber' ilike ?3 OR p.details ->>'mobilePhoneNumber' ilike ?4 " +
-           "OR p.details ->'gender' ->> 'display' ilike ?5) AND " +
+           "OR p.details ->'gender' ->> 'display' ilike ?5 OR p.patient_number ilike ?3) AND " +
            "e.program_code = ?8 AND e.archived=?6 AND p.archived=?6 AND p.organisation_unit_id=?7 " +
            "AND e.organisation_unit_id=?7 " +
            "AND e.patient_id NOT IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?6)", nativeQuery = true)
    Page<Patient> findAllByPatientNotCaseManagedByFilteredParameters(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber,
                                                                      String gender, int archived, Long organisationUnitId, String programCode, Pageable pageable);
 
-
     @Query(value = "SELECT DISTINCT e.patient_id, p.* FROM encounter e " +
             "LEFT OUTER JOIN patient p ON p.id = e.patient_id " +
             "WHERE e.program_code = ?1 AND e.archived=?2 AND p.archived=?2 AND p.organisation_unit_id=?3 " +
             "AND e.organisation_unit_id=?3 " +
             "AND e.patient_id NOT IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?2)", nativeQuery = true)
-    Page<Patient> findAllByPatientNotCaseManaged(String programCode, int archived, Long organisationUnitId, Pageable pageable);
+    Page<Patient> findAllByPatientsNotManaged(String programCode, int archived, Long organisationUnitId, Pageable pageable);
 
     Optional<Patient> findByHospitalNumberAndPatientNumberTypeAndOrganisationUnitIdAndArchived(String hospitalNumber, String patientNumberType, Long organisationUnitId, int archived);
+
+    @Query(value = "SELECT DISTINCT e.patient_id, p.* FROM encounter e " +
+            "LEFT OUTER JOIN patient p ON p.id = e.patient_id " +
+            "WHERE e.program_code = ?1 AND e.archived=?2 AND p.archived=?2 AND p.organisation_unit_id=?3 " +
+            "AND e.organisation_unit_id=?3 " +
+            "AND e.patient_id IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?2)", nativeQuery = true)
+    Page<Patient> findAllByPatientsManaged(String programCode, int archived, Long organisationUnitId, Pageable pageable);
+
+    @Query(value = "SELECT DISTINCT e.patient_id, p.* FROM encounter e " +
+            "LEFT OUTER JOIN patient p ON p.id = e.patient_id " +
+            "WHERE (p.details ->>'firstName' ilike ?1 OR p.details ->>'lastName' ilike ?2 " +
+            "OR p.details ->>'hospitalNumber' ilike ?3 OR p.details ->>'mobilePhoneNumber' ilike ?4 " +
+            "OR p.details ->'gender' ->> 'display' ilike ?5 OR p.patient_number ilike ?3) AND " +
+            "e.program_code = ?8 AND e.archived=?6 AND p.archived=?6 AND p.organisation_unit_id=?7 " +
+            "AND e.organisation_unit_id=?7 " +
+            "AND e.patient_id IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?6)", nativeQuery = true)
+    Page<Patient> findAllByPatientManagedByFilteredParameters(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber,
+                                                              String gender, int archived, Long organisationUnitId, String programCode, Pageable pageable);
+
+    @Query(value = "SELECT p.identifier_number ->> 'identifier' " +
+            "FROM patient, jsonb_array_elements(details ->'otherIdentifier') " +
+            "WITH ordinality p(identifier_number) " +
+            "WHERE patient.patient_number=?1 AND patient.patient_number_type = ?2 " +
+            "AND p.identifier_number-> 'identifierType' ->> 'code' = ?3 " +
+            "AND patient.archived = ?4 AND patient.organisation_unit_id = ?5", nativeQuery = true)
+    Optional<String> findPatientIdentifierNumber(String hospitalNumber, String patientNumberType, String identifierCode, int archived, Long organisationUnitId);
+
+    @Query(value = "SELECT p.identifier_number ->> 'identifier' " +
+            "FROM patient, jsonb_array_elements(details ->'otherIdentifier') " +
+            "WITH ordinality p(identifier_number) " +
+            "WHERE patient.id=?1 " +
+            "AND p.identifier_number-> 'identifierType' ->> 'code' = ?2 " +
+            "AND patient.archived = ?3 AND patient.organisation_unit_id = ?4", nativeQuery = true)
+    Optional<String> findPatientIdentifierNumberByPatientId(Long id, String identifierCode, int archived, Long organisationUnitId);
+
+    @Query(value = "WITH enc AS " +
+            "(SELECT * FROM " +
+            "(SELECT e.patient_id, e.id, p.*,fd.encounter_id, " +
+            "fd.data -> 'hiv_current_status' ->> 'display'  as art_status, " +
+            "rank() over(PARTITION BY e.patient_id ORDER BY e.date_encounter DESC) rn FROM encounter e " +
+            "LEFT OUTER JOIN patient p ON p.id = e.patient_id " +
+            "LEFT OUTER JOIN form_data fd ON fd.encounter_id = e.id " +
+            "WHERE e.program_code = ?1 AND e.archived=?2 AND p.archived=?2 AND p.organisation_unit_id=?3 " +
+            "AND e.organisation_unit_id=?3 AND e.form_code = '5210f079-27e9-4d01-a713-a2c400e0926c' " +
+            "AND e.patient_id IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?2) " +
+            ")m WHERE rn = ?4) " +
+            "SELECT enc.art_status, enc.* FROM enc", nativeQuery = true)
+    Page<Patient> findAllByPatientsManagedInHIV(String programCode, int archived, Long organisationUnitId, int rank, Pageable pageable);
+
+
+    @Query(value = "WITH enc AS " +
+            "(SELECT * FROM " +
+            "(SELECT e.patient_id, e.id, p.*, fd.encounter_id, " +
+            "fd.data -> 'hiv_current_status' ->> 'display'  as art_status, " +
+            "rank() over(PARTITION BY e.patient_id ORDER BY e.date_encounter DESC) rn FROM encounter e " +
+            "LEFT OUTER JOIN patient p ON p.id = e.patient_id " +
+            "LEFT OUTER JOIN form_data fd ON fd.encounter_id = e.id " +
+            "WHERE (p.details ->>'firstName' ilike ?1 OR p.details ->>'lastName' ilike ?2 " +
+            "OR p.details ->>'hospitalNumber' ilike ?3 OR p.details ->>'mobilePhoneNumber' ilike ?4 " +
+            "OR p.details ->'gender' ->> 'display' ilike ?5 OR p.patient_number ilike ?3) AND " +
+            "e.program_code = ?6 AND e.archived=?7 AND p.archived=?7 AND p.organisation_unit_id=?8 " +
+            "AND e.organisation_unit_id=?8 AND e.form_code = '5210f079-27e9-4d01-a713-a2c400e0926c' " +
+            "AND e.patient_id IN (SELECT DISTINCT patient_id FROM application_user_patient WHERE archived = ?7) " +
+            ")m WHERE rn = ?9) " +
+            "SELECT enc.art_status, enc.* FROM enc", nativeQuery = true)
+    Page<Patient> findAllByPatientsManagedInHIVByFilteredParameters(String firstName, String lastName, String hospitalNumber,
+                                                                    String mobilePhoneNumber, String gender, String programCode,
+                                                                    int archived, Long organisationUnitId, int rank, Pageable pageable);
+
 }

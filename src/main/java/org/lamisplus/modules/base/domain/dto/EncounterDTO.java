@@ -44,7 +44,7 @@ public class EncounterDTO implements Serializable {
     @Convert(converter = LocalDateConverter.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dob;
-    //private String OtherNames;
+    private String patientNumberType;
     private String hospitalNumber;
     private String formName;
     private Integer typePatient = 0;
