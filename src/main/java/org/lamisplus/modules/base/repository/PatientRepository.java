@@ -206,7 +206,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
             "p.archived=0 AND " +
             "p.organisation_unit_id=?1 AND " +
             "e.organisation_unit_id=?1 AND " +
-            "e.form_code = '5210f079-27e9-4d01-a713-a2c400e0926c' AND " +
+            "e.program_code = '0d31f6ee-571c-45b8-80d5-3f7e1d5377b7' AND " +
             "EXTRACT(YEAR from AGE(NOW(), (p.details ->> 'dob')\\:\\:date)) >= ?2 AND " +
             "EXTRACT(YEAR from AGE(NOW(), (p.details ->> 'dob')\\:\\:date)) <= ?3) m WHERE rn = 1)", nativeQuery = true)
     List<Patient> findAllByPatientsManagedInHIVByFilteredParameters(Long organisationUnit, int ageFrom, int ageTo,
@@ -277,7 +277,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
             "p.archived=0 AND " +
             "p.organisation_unit_id=?4 AND " +
             "e.organisation_unit_id=?4 AND " +
-            "e.form_code = '5210f079-27e9-4d01-a713-a2c400e0926c' AND " +
+            "e.program_code = '0d31f6ee-571c-45b8-80d5-3f7e1d5377b7'  AND " +
             "a.patient_id is null AND " +
             "EXTRACT(YEAR from AGE(NOW(), (p.details ->> 'dob')\\:\\:date)) >= ?5 AND " +
             "EXTRACT(YEAR from AGE(NOW(), (p.details ->> 'dob')\\:\\:date)) <= ?6) m WHERE rn = 1), " +
@@ -316,7 +316,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
             "p.archived=0 AND " +
             "p.organisation_unit_id=?1 AND " +
             "e.organisation_unit_id=?1 AND " +
-            "e.form_code = '5210f079-27e9-4d01-a713-a2c400e0926c' AND " +
+            "e.program_code = '0d31f6ee-571c-45b8-80d5-3f7e1d5377b7'  AND " +
             "EXTRACT(YEAR from AGE(NOW(), (p.details ->> 'dob')\\:\\:date)) >= ?2 AND " +
             "EXTRACT(YEAR from AGE(NOW(), (p.details ->> 'dob')\\:\\:date)) <= ?3 AND " +
             "u.id=?4) m WHERE rn = 1)", nativeQuery = true)
