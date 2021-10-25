@@ -96,9 +96,17 @@ function Header() {
     setAssignFacilityModal(!assignFacilityModal);
   }
 
-  const downloadNotice = () => toast.info("Downloading....");
+  const downloadNotice = () => toast.info("Downloading....",{
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+  });
   const downloadComplete = () => toast.success("Update Completed please restart your system");
-  const downloadError = () => toast.error("Please check URL or Internet connection. ");
+  const downloadError = () => toast.error('Please check Update URL or Internet connection.');
 
   //Download the update 
   async function DownloadButton() {
@@ -107,10 +115,10 @@ function Header() {
     axios
         .post(`${baseUrl}updates`)
         .then((response) => {
-            if(response.date=="true"){
+            if(response.data){
               downloadComplete();
             }else{
-
+              downloadError();
             }                    
         })
         .catch((error) => {
@@ -147,8 +155,7 @@ function Header() {
               type: ACTION_TYPES.FETCH_PERMISSIONS,
               payload: response.data.permissions,
             });
-            //notify();
-            //console.log(response.data)
+
             if(response.data && response.data.currentOrganisationUnitId === null ){
               toggleAssignModal()
             }            
@@ -175,15 +182,16 @@ function Header() {
   }
 
   const currentUser = authentication.getCurrentUser();
+
   //CHECK FOR ONLINE UPDATE 
   async function checkUpdate() {
         axios
             .get(`${baseUrl}updates/client`)
             .then((response) => {
-                if(response.date=="true"){
+              //alert(response.data)
+              console.log(response)
+                if(response.data){                 
                   notify();
-                }else{
-                  //notify();
                 }                    
             })
             .catch((error) => {
@@ -248,6 +256,7 @@ function Header() {
                 style={{ backgroundColor: "#000 !important" }}
                 onMouseLeave={toggleUserCardPopover}
               >
+
                 <UserCard
                   title={currentUser ? currentUser.name : ""}
                   subtitle2={currentUser && currentUser.role ? currentUser.role : ""}
@@ -265,6 +274,16 @@ function Header() {
                     <ListGroupItem tag="button" action className="border-light">
                       <MdHelp /> Help
                     </ListGroupItem>
+                    {
+                      currentUser.auth=='Super Admin' || currentUser.auth=='Facility Admin' ?
+                      <>
+                      <ListGroupItem tag="button" action className="border-light"  onClick={DownloadButton}>
+                      <MdHelp /> Download Update
+                      </ListGroupItem>
+                      </>
+                      :""
+                    
+                    }
                     {/* <ListGroupItem tag="button" action className="border-light"  onClick={DownloadButton}>
                       <MdHelp /> Download Update
                     </ListGroupItem> */}
