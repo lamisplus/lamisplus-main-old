@@ -171,131 +171,13 @@ const ScrollableTabsButtonForce = (props) => {
   useEffect ( () => {
     switch(urlTabs){  
       case "case-managers": return setValue(1)
-      default: return setValue(0)
+      default: return setValue(1)
     }
   }, [urlIndex]);
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
-    const [drugPieChart, setdrugPieChart] = useState({})
-    const [drugBarChart, setdrugBarChart] = useState({})
-
-    // APi request for Pie chart
-      useEffect(() => {
-          async function getCharacters() {
-              try {
-                  const response = await axios.get( url+ 'pharmacy-dashboard/pie');
-                  const bodyPie = response.data && response.data!==null ? response.data : {}; 
-                  setdrugPieChart(bodyPie)                         
-              } catch (error) {}
-          }
-          getCharacters();
-      }, []); 
-     // APi request for Bar chart
-     useEffect(() => {
-      async function getCharacters() {
-          try {
-              const response = await axios.get( url+ 'pharmacy-dashboard/column');
-              const body2 = response.data && response.data!==null ? response.data : {}; 
-              setdrugBarChart(body2)                         
-          } catch (error) {}
-      }
-      getCharacters();
-    }, []);
-    console.log(drugBarChart.categories)
-    /// This is for the Pie Chart
-    const drugChart = {
-          chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: 0,
-            plotShadow: false,
-            type: drugPieChart.type
-        },
-        title: {
-            text: "Total Case Manager",
-            align: 'center',
-            style:{ "fontSize": "14px" }
-            // verticalAlign: 'middle',
-            // y: 60
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        accessibility: {
-            point: {
-                valueSuffix: '%'
-            }
-        },
-        plotOptions: {
-            pie: {
-                dataLabels: {
-                    enabled: true,
-                    distance: -50,
-                    style: {
-                        fontWeight: 'bold',
-                        color: 'white'
-                    }
-                },
-                startAngle: -90,
-                endAngle: 90,
-                center: ['50%', '75%'],
-                size: '110%'
-            }
-        },
-        series: [{
-            name: "Total Case Manager",
-            innerSize: '50%',
-            //data: drugPieChart.data
-            data: []
-        }]
-        }
-    // This is for the BAR chart
-    const patientChart = {
-        chart: {
-          plotBackgroundColor: null,
-          plotBorderWidth: 0,
-          plotShadow: false,
-          type: drugPieChart.type
-      },
-      title: {
-          text: "Total Patients",
-          align: 'center',
-          style:{ "fontSize": "14px" }
-          // verticalAlign: 'middle',
-          // y: 60
-      },
-      tooltip: {
-          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-      },
-      accessibility: {
-          point: {
-              valueSuffix: '%'
-          }
-      },
-      plotOptions: {
-          pie: {
-              dataLabels: {
-                  enabled: true,
-                  distance: -50,
-                  style: {
-                      fontWeight: 'bold',
-                      color: 'white'
-                  }
-              },
-              startAngle: -90,
-              endAngle: 90,
-              center: ['50%', '75%'],
-              size: '110%'
-          }
-      },
-      series: [{
-          name: "Total Case Manager",
-          innerSize: '50%',
-          //data: drugPieChart.data
-          data: []
-      }]
-      }
         
         
     return (
@@ -314,17 +196,12 @@ const ScrollableTabsButtonForce = (props) => {
             textColor="inherit"
             aria-label="scrollable force tabs example"
           >
-            <Tab
-              className={classes.title}
-              label="Dashboard"
-              icon={<MdDashboard />}
-              {...a11yProps(0)}
-            />
+            
             <Tab
               className={classes.title}
               label="Case Managers"
               icon={<MdContacts />}
-              {...a11yProps(1)}
+              {...a11yProps(0)}
             />
             <Tab
               className={classes.title}
@@ -342,37 +219,14 @@ const ScrollableTabsButtonForce = (props) => {
           <div></div>
         </AppBar>
 
+        
         <TabPanel value={value} index={0}>
-          <CardDeck>
-            <Card>
-              
-              <CardBody>
-                <div>
-                    <HighchartsReact options={drugChart} />
-                </div> 
-              </CardBody>
-            </Card>
-            <Card>
-             
-              <CardBody>
-                <div>
-                 <HighchartsReact options={patientChart} /> 
-                </div> 
-              
-              </CardBody>
-            </Card>
-          </CardDeck>
-          <br />
-          <br />
-
-        </TabPanel>
-        <TabPanel value={value} index={1}>
           <CaseManagerSearch />
         </TabPanel>
-        <TabPanel value={value} index={2}>
+        <TabPanel value={value} index={1}>
           <UnAssignPatients />
         </TabPanel>
-        <TabPanel value={value} index={3}>
+        <TabPanel value={value} index={2}>
           <ManagedPatients />
         </TabPanel>
 

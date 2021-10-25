@@ -106,7 +106,9 @@ const  setStateByCountryId=() =>{
 const getProvinces = e => {
   setOtherDetails({ ...otherDetails, [e.target.name]: e.target.value });
         const stateId = e.target.value;
-        
+          if(stateId =="" || stateId==null){
+            setLgaDetail("")
+          }else{
             async function getCharacters() {
                 const response = await axios.get(`${url}organisation-units/hierarchy/`+stateId+"/3");
                 const newStates = states.filter(state => state.id == stateId)
@@ -116,6 +118,7 @@ const getProvinces = e => {
 
             }
             getCharacters();
+          }
 };
 const getlgaObj = e => {
 
@@ -181,13 +184,13 @@ const getlgaObj = e => {
        }
       setToValue(otherDetails.to)
       setFromValue(otherDetails.from);
-      setStateValue(stateDetail[0].name);
+      setStateValue(stateDetail && stateDetail.length>0 ? stateDetail[0].name : "");
       setLgaValue(otherDetails.lga);
       setPregnantValue(otherDetails.pregnant);
       setGenderValue(otherDetails.gender);
       //alert("testing")
       refreshTable();
-      console.log(stateDetail[0].name)
+      console.log(stateDetail)
       console.log(otherDetails)
     }
     const codes= programCode==''?'0d31f6ee-571c-45b8-80d5-3f7e1d5377b7' : programCode;
@@ -282,6 +285,7 @@ const getlgaObj = e => {
                       type="select"
                       name="lga"
                       id="lga"
+                      value={otherDetails.lga}
                       onChange={getlgaObj}
                       >
                           {provinces.length > 0 ? (
@@ -353,7 +357,7 @@ const getlgaObj = e => {
 
         data={query =>
                   new Promise((resolve, reject) =>
-                      axios.get(`${baseUrl}patients/${codes}/false/programs?gender=${genderValue}&state=${stateValue}&lga=${lgaValue}&ageFrom=${fromValue}&ageTo=${toValue}&pregnant=${pregnantValue}&size=${query.pageSize}&page=${query.page}&search=${query.search}`)
+                      axios.get(`${baseUrl}patients/${codes}/false/programs?gender=${genderValue}&state=${stateValue}&lga=${lgaValue}&ageFrom=${fromValue}&ageTo=${toValue}&pregnant=${pregnantValue}&size=${query.pageSize}&page=${query.page}`)
                           .then(response => response)
                           .then(result => {
 
@@ -371,8 +375,8 @@ const getlgaObj = e => {
                                       ? 0
                                       : calculate_age(row.details && row.details.dob ? row.details.dob : row.dob),
                                     phone: row.mobilePhoneNumber,
-                                    state: row.details.state.name,
-                                    lga: row.details.province.name,
+                                    state: row.details!==null && row.details.state ? row.details.state.name : "",
+                                    lga: row.details!==null && row.details.province ? row.details.province.name : "",
                                     address: row.street || '',
                                     
                                       
@@ -385,6 +389,7 @@ const getlgaObj = e => {
        
             options={{
                     selection: true,
+                    search: false,
                     headerStyle: {
                         backgroundColor: "#9F9FA5",
                         color: "#000",

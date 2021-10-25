@@ -69,6 +69,9 @@ const CaseManagerPatients = (props) => {
   const classes = useStyles()
   const caseManagerId = props.location && props.location.state ? props.location.state : 0
   const caseManagerName = props.location && props.location.caseManagerName ? props.location.caseManagerName : "";
+  if(caseManagerName==null || caseManagerName==""){
+    props.history.push(`/case-management`, {state: 'case-managers'} )
+  }
   
  
     const calculate_age = dob => {

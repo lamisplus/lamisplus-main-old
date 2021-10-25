@@ -174,7 +174,7 @@ const UnAssignPatientsCaseManager = (props) => {
                                               startIcon={<SaveIcon />}
                                               disabled={loading}
                                           >   
-                                              Save
+                                              Yes
                                           </MatButton>
                                            
                                           <MatButton

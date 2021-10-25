@@ -97,21 +97,24 @@ function Header() {
   }
 
   const downloadNotice = () => toast.info("Downloading....");
-  const downloadComplete = () => toast.success("Downloading Complete");
+  const downloadComplete = () => toast.success("Update Completed please restart your system");
+  const downloadError = () => toast.error("Please check URL or Internet connection. ");
 
   //Download the update 
   async function DownloadButton() {
     dismissAll();
     downloadNotice();
     axios
-        .gpostet(`${baseUrl}updates`)
+        .post(`${baseUrl}updates`)
         .then((response) => {
             if(response.date=="true"){
               downloadComplete();
+            }else{
+
             }                    
         })
         .catch((error) => {
-          //notify();
+          downloadError();
         });     
 }
   const dismissAll = () =>  toast.dismiss();
@@ -262,9 +265,9 @@ function Header() {
                     <ListGroupItem tag="button" action className="border-light">
                       <MdHelp /> Help
                     </ListGroupItem>
-                    <ListGroupItem tag="button" action className="border-light"  onClick={DownloadButton}>
+                    {/* <ListGroupItem tag="button" action className="border-light"  onClick={DownloadButton}>
                       <MdHelp /> Download Update
-                    </ListGroupItem>
+                    </ListGroupItem> */}
                     <ListGroupItem tag="button" action className="border-light">
                       <MdExitToApp />{" "}
                       <Link className="option"  onClick={logout} to="/login">
