@@ -139,7 +139,9 @@ const addRole = React.lazy(() => import("components/Roles/AddRole"))
 const UnauthorisedPage = React.lazy(() => import("pages/Unauthorised"));
 const BootstrapPage = React.lazy(() => import("pages/bootstrap"));
 const BootstrapPage2 = React.lazy(() => import("pages/bootstrap2"))
-
+/* Case Management page loading */
+const CaseManagement = React.lazy(() => import("./components/CaseManagement/Dashboard"))
+const CaseManagerPatients = React.lazy(() => import("./components/CaseManagement/CaseManagerPatientsList"))
 const FingerPrintPage = React.lazy(() => import("components/Biometrics/CaptureBiometrics"));
 class Routes extends Component {
   render() {
@@ -278,13 +280,16 @@ class Routes extends Component {
                 <PrivateRoute exact path={"/data-visualisation"} component={DataVisualizationDashboard} />
                 <PrivateRoute exact path={"/gridlayout"} component={GridLayout} />
                 
-              {/* The route to Visualization*/}
+               {/* The route to Visualization*/}
                 <PrivateRoute exact path={"/unauthorised"} component={UnauthorisedPage} />
                 <PrivateRoute  path="/external-modules" component={BootstrapPage2} />
 
                 <PrivateRoute exact path={"/tabmenu"} component={TabMenu} />
                 <PrivateRoute exact path={"/dashboard2"} component={Dashboard2} />
+                {/* The route to Case management*/}
                 
+                <PrivateRoute  path="/case-management" component={CaseManagement} />
+                <PrivateRoute  path="/case-manager-patients" component={CaseManagerPatients} />
             </React.Suspense>
           </MainLayout>
           
