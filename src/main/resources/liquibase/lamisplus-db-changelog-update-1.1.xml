@@ -11,4 +11,37 @@
             <where>id=15</where>
         </update>
     </changeSet>
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-156">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM update WHERE id=1 AND code='a8ee0b70-301f-11ec-8d3d-0242ac130003' AND (status=1 OR status=2);
+            </sqlCheck>
+        </preConditions>
+        <update tableName="update">
+            <column name="status" value="3" />
+            <where>id=1</where>
+        </update>
+    </changeSet>
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-155">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM update WHERE id=1 AND code='a8ee0b70-301f-11ec-8d3d-0242ac130003';
+            </sqlCheck>
+        </preConditions>
+        <sqlFile dbms="postgresql"
+                 path="sql/update.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"
+                 stripComments="true"/>
+    </changeSet>
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-157">
+        <sqlFile dbms="postgresql"
+                 path="sql/patient_number_type.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"
+                 stripComments="true"/>
+    </changeSet>
 </databaseChangeLog>

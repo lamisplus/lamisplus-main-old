@@ -33,4 +33,6 @@ public interface ApplicationUserPatientRepository extends JpaRepository<Applicat
     int findCountOfPatientManagedByUserInAllProgram(Long userId, int archived);
 
     Optional<ApplicationUserPatient> findAllByPatientIdAndUserIdAndProgramCodeAndArchived(Long patientId, Long userId, String programCode, int archived);
+
+    Optional<ApplicationUserPatient> findAllByPatientIdAndProgramCodeAndArchived(Long patientId, String programCode, int archived);
 }

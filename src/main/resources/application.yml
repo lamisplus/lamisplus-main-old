@@ -4,7 +4,7 @@ across:
     web:
         resources:
             caching:
-                period: 25920000
+                period: 2592000
 acrossHibernate:
     create-unit-of-work-factory: true
     hibernate-properties:
@@ -36,14 +36,9 @@ server:
             auto-commit: false
             data-source-properties:
                 cachePrepStmts: true
-                prepStmtCacheSize: 35000
-                prepStmtCacheSqlLimit: 10048
+                prepStmtCacheSize: 250
+                prepStmtCacheSqlLimit: 2048
                 useServerPrepStmts: true
-            maximum-pool-size: 60
-            minimum-idle: 80
-            max-lifetime: 180000000
-            connection-timeout: 180000000
-            validation-timeout: 180000000
     compression:
         enabled: true
         mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
@@ -62,17 +57,12 @@ spring:
             auto-commit: true
             data-source-properties:
                 cachePrepStmts: true
-                prepStmtCacheSize: 25000
-                prepStmtCacheSqlLimit: 60480
+                prepStmtCacheSize: 250
+                prepStmtCacheSqlLimit: 2048
                 useServerPrepStmts: true
-            maximum-pool-size: 60
-            minimum-idle: 80
-            max-lifetime: 180000000
-            connection-timeout: 180000000
-            validation-timeout: 180000000
+            maximum-pool-size: 20
+            minimum-idle: 5
     jpa:
-        hibernate:
-            ddl-auto: none
         database: POSTGRESQL
         show-sql: true
         open-in-view: false
@@ -116,3 +106,8 @@ management:
             show-details: WHEN_AUTHORIZED
         jhimetrics:
             enabled: true
+application:
+    async:
+        core-pool-size: 10
+        max-pool-size: 50
+        queue-capacity: 10000

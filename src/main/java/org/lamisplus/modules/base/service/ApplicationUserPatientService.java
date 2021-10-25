@@ -6,7 +6,11 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.ApplicationUserPatientDTO;
 import org.lamisplus.modules.base.domain.entity.ApplicationUserPatient;
+import org.lamisplus.modules.base.domain.entity.Patient;
+import org.lamisplus.modules.base.domain.entity.User;
 import org.lamisplus.modules.base.repository.ApplicationUserPatientRepository;
+import org.lamisplus.modules.base.repository.PatientRepository;
+import org.lamisplus.modules.base.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +23,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ApplicationUserPatientService {
     private final ApplicationUserPatientRepository applicationUserPatientRepository;
+    private final PatientRepository patientRepository;
+    private final UserRepository userRepository;
+
+
     private static final int UN_ARCHIVED = 0;
     private static final int ARCHIVED = 1;
     private final UserService userService;
@@ -28,12 +36,19 @@ public class ApplicationUserPatientService {
         Long userId = applicationUserPatientDTO.getUserId();
         String programCode = applicationUserPatientDTO.getProgramCode();
         List<ApplicationUserPatient> applicationUserPatients  = new ArrayList<>();
+        //Check if user is valid
+        userRepository.findByIdAndArchived(userId, UN_ARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(User.class, "id", userId+""));
 
         applicationUserPatientDTO.getPatientIds().forEach(patientId ->{
-            applicationUserPatientRepository.findAllByPatientIdAndUserIdAndProgramCodeAndArchived(patientId, userId, programCode, UN_ARCHIVED)
-                    .ifPresent(applicationUserPatient -> {
-                        throw new RecordExistException(ApplicationUserPatient.class,"patientId & userId:",patientId+" & " + userId +" in same program");
-                    });
+            //Check if patient is valid
+            patientRepository.findByIdAndArchived(patientId, UN_ARCHIVED)
+                    .orElseThrow(() -> new EntityNotFoundException(Patient.class, "patientId", patientId+""));
+            //Check if patient already managed in same program
+            applicationUserPatientRepository.findAllByPatientIdAndProgramCodeAndArchived(
+                    patientId, programCode, UN_ARCHIVED).ifPresent(applicationUserPatient -> {
+                throw new RecordExistException(ApplicationUserPatient.class,"patientId & program:"," already managed in program");
+            });
             ApplicationUserPatient applicationUserPatient = new ApplicationUserPatient(userId, patientId);
             applicationUserPatient.setOrganisationUnitId(orgUnitId);
             applicationUserPatient.setProgramCode(programCode);
@@ -54,13 +69,14 @@ public class ApplicationUserPatientService {
         return applicationUserPatientDTO;
     }
 
-    public List<ApplicationUserPatient> unassignCaseManagerToPatient(ApplicationUserPatientDTO applicationUserPatientDTO) {
+    public List<ApplicationUserPatient> unAssignCaseManagerToPatient(ApplicationUserPatientDTO applicationUserPatientDTO) {
         Long userId = applicationUserPatientDTO.getUserId();
+        String programCode = applicationUserPatientDTO.getProgramCode();
 
         List<ApplicationUserPatient> applicationUserPatients  = new ArrayList<>();
         applicationUserPatientDTO.getPatientIds().forEach(patientId ->{
-            ApplicationUserPatient applicationUserPatient = applicationUserPatientRepository.findAllByPatientIdAndUserIdAndArchived(patientId, userId, UN_ARCHIVED)
-                    .orElseThrow(() -> new EntityNotFoundException(ApplicationUserPatient.class,"patientId & userId:",patientId+" & " + userId));
+            ApplicationUserPatient applicationUserPatient = applicationUserPatientRepository.findAllByPatientIdAndUserIdAndProgramCodeAndArchived(patientId, userId, programCode, UN_ARCHIVED)
+                    .orElseThrow(() -> new EntityNotFoundException(ApplicationUserPatient.class,"patientId & userId in program ",patientId+" & " + userId));
             applicationUserPatient.setArchived(ARCHIVED);
             applicationUserPatients.add(applicationUserPatient);
         });

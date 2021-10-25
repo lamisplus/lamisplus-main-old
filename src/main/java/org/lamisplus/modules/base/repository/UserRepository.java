@@ -26,4 +26,6 @@ public interface UserRepository  extends JpaRepository<User, Long> {
     List<User>findAllByRoleIn(HashSet<Role> roles);
 
     Page<User> findAllByArchived(Pageable pageable, int archived);
+
+    Optional<User>  findByIdAndArchived(Long id, int archived);
 }

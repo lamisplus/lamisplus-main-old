@@ -28,4 +28,9 @@ public interface OrganisationUnitRepository extends JpaRepository<OrganisationUn
             "AND organisation_unit_level_id=2)", nativeQuery = true)
     Long findByOrganisationDetails(String parentOrganisationUnitName, String parentsParentOrganisationUnitName);
 
+    @Query(value = "SELECT name FROM organisation_unit WHERE organisation_unit_level_id=2", nativeQuery = true)
+    List<String> findAllState();
+
+    @Query(value = "SELECT name FROM organisation_unit WHERE organisation_unit_level_id=3", nativeQuery = true)
+    List<String> findAllProvince();
 }

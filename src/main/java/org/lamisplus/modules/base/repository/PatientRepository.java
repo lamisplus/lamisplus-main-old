@@ -156,7 +156,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
     @Query(value = "WITH enc AS (SELECT * FROM " +
             "(SELECT e.patient_id, e.id, p.*,fd.encounter_id, " +
             "fd.data -> 'hiv_current_status' ->> 'display'  as art_status, " +
-            "rank() over(PARTITION BY e.patient_id ORDER BY e.date_encounter DESC) rn FROM encounter e " +
+            "rank() over(PARTITION BY e.patient_id ORDER BY e.date_encounter, fd.id DESC) rn FROM encounter e " +
             "LEFT OUTER JOIN patient p ON p.id = e.patient_id " +
             "LEFT OUTER JOIN form_data fd ON fd.encounter_id = e.id " +
             "WHERE p.details ->'gender' ->> 'display' = ?1 AND p.details ->'state' ->> 'name' = ?2 " +
@@ -193,11 +193,12 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
 
     //-- TO CHECK PATIENT INFO FOR ASSIGNED PATIENTS
     @Query(value = "(SELECT * FROM " +
-            "(SELECT e.patient_id, e.id, p.*,fd.encounter_id, " +
+            "(SELECT e.patient_id, p.*, " +
             "fd.data -> 'hiv_current_status' ->> 'display'  as art_status, " +
-            "rank() over(PARTITION BY e.patient_id ORDER BY e.date_encounter DESC) rn " +
+            "rank() over(PARTITION BY e.patient_id ORDER BY e.date_encounter, fd.id DESC) rn " +
             "FROM encounter e " +
             "INNER JOIN application_user_patient a ON a.patient_id = e.patient_id " +
+            "AND a.archived = e.archived " +
             "INNER JOIN patient p ON p.id = e.patient_id " +
             "INNER JOIN form_data fd ON fd.encounter_id = e.id " +
             "WHERE " +
@@ -208,26 +209,34 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
             "e.form_code = '5210f079-27e9-4d01-a713-a2c400e0926c' AND " +
             "EXTRACT(YEAR from AGE(NOW(), (p.details ->> 'dob')\\:\\:date)) >= ?2 AND " +
             "EXTRACT(YEAR from AGE(NOW(), (p.details ->> 'dob')\\:\\:date)) <= ?3) m WHERE rn = 1)", nativeQuery = true)
-    List<Patient> findAllByPatientsManagedInHIVByFilteredParameters(Long organisationUnit, int ageFrom, int ageTo);
+    List<Patient> findAllByPatientsManagedInHIVByFilteredParameters(Long organisationUnit, int ageFrom, int ageTo,
+                                                                    Pageable pageable);
 
     //-- TO CHECK PATIENT INFO FOR UNASSIGNED PATIENTS & PREGNANT +
     @Query(value = "WITH enc as (SELECT * FROM " +
-            "(SELECT e.patient_id, e.id, p.*,fd.encounter_id, " +
+            "(SELECT e.patient_id, p.*, " +
             "fd.data -> 'hiv_current_status' ->> 'display'  as art_status, " +
-            "rank() over(PARTITION BY e.patient_id ORDER BY e.date_encounter DESC) rn " +
+            "rank() over(PARTITION BY e.patient_id ORDER BY e.date_encounter, fd.id DESC) rn " +
             "FROM encounter e " +
             "LEFT JOIN application_user_patient a ON a.patient_id = e.patient_id " +
+            "AND a.archived = e.archived " +
             "INNER JOIN patient p ON p.id = e.patient_id " +
             "INNER JOIN form_data fd ON fd.encounter_id = e.id " +
             "WHERE " +
+            "p.details ->'gender' ->> 'display' IN (?1) " +
+            "AND " +
+            "p.details ->'state' ->> 'name' IN (?2) " +
+            "AND " +
+            "p.details ->'province' ->> 'name' IN (?3) " +
+            "AND " +
             "e.archived = 0 AND " +
             "p.archived=0 AND " +
-            "p.organisation_unit_id=?1 AND " +
-            "e.organisation_unit_id=?1 AND " +
+            "p.organisation_unit_id=?4 AND " +
+            "e.organisation_unit_id=?4 AND " +
             "e.form_code = '5210f079-27e9-4d01-a713-a2c400e0926c' AND " +
             "a.patient_id is null AND " +
-            "EXTRACT(YEAR from AGE(NOW(), (p.details ->> 'dob')\\:\\:date)) >= ?2 AND " +
-            "EXTRACT(YEAR from AGE(NOW(), (p.details ->> 'dob')\\:\\:date)) <= ?3) m WHERE rn = 1), " +
+            "EXTRACT(YEAR from AGE(NOW(), (p.details ->> 'dob')\\:\\:date)) >= ?5 AND " +
+            "EXTRACT(YEAR from AGE(NOW(), (p.details ->> 'dob')\\:\\:date)) <= ?6) m WHERE rn = 1), " +
             "pregnancy_status as " +
             "(SELECT * FROM" +
             "(SELECT visit_enc.patient_id, " +
@@ -236,34 +245,42 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
             "FROM encounter visit_enc " +
             "LEFT JOIN form_data visit_fd ON visit_fd.encounter_id = visit_enc.id " +
             "AND (visit_fd.data ->> 'date_visit' <> '') IS NOT TRUE " +
-            "AND (visit_fd.data ->> 'date_visit')\\:\\:date >= ?4 " +
+            "AND (visit_fd.data ->> 'date_visit')\\:\\:date >= ?7 " +
             "AND visit_enc.form_code = '5c8741de-f722-4e0a-a505-24e039bf4340' " +
             "WHERE visit_fd.data -> 'pregnant' ->> 'display' IS NOT NULL ) enc " +
             "WHERE rn = 1 )" +
             "SELECT * FROM enc " +
             "INNER JOIN pregnancy_status " +
             "ON pregnancy_status.patient_id = enc.patient_id ORDER BY enc.patient_id DESC", nativeQuery = true)
-    List<Patient> findAllByPatientsNotManagedInHIVPregnantByFilteredParameters(Long organisationUnit, int ageForm, int ageTo,
-                                                                                  LocalDate nineMonths, Pageable pageable);
+    List<Patient> findAllByPatientsNotManagedInHIVPregnantByFilteredParameters(List<String> gender, List<String> state,
+                                                                               List<String> province, Long organisationUnit,
+                                                                               int ageForm, int ageTo, LocalDate nineMonths, Pageable pageable);
 
     //-- TO CHECK PATIENT INFO FOR UNASSIGNED PATIENTS & NOT PREGNANT +
     @Query(value = "WITH enc as (SELECT * FROM " +
-            "(SELECT e.patient_id, e.id, p.*,fd.encounter_id, " +
+            "(SELECT e.patient_id, p.*, " +
             "fd.data -> 'hiv_current_status' ->> 'display'  as art_status, " +
-            "rank() over(PARTITION BY e.patient_id ORDER BY e.date_encounter DESC) rn " +
+            "rank() over(PARTITION BY e.patient_id ORDER BY e.date_encounter, fd.id DESC) rn " +
             "FROM encounter e " +
             "LEFT JOIN application_user_patient a ON a.patient_id = e.patient_id " +
+            "AND a.archived = e.archived " +
             "INNER JOIN patient p ON p.id = e.patient_id " +
             "INNER JOIN form_data fd ON fd.encounter_id = e.id " +
             "WHERE " +
+            "p.details ->'gender' ->> 'display' IN (?1) " +
+            "AND " +
+            "p.details ->'state' ->> 'name' IN (?2) " +
+            "AND " +
+            "p.details ->'province' ->> 'name' IN (?3) " +
+            "AND " +
             "e.archived = 0 AND " +
             "p.archived=0 AND " +
-            "p.organisation_unit_id=?1 AND " +
-            "e.organisation_unit_id=?1 AND " +
+            "p.organisation_unit_id=?4 AND " +
+            "e.organisation_unit_id=?4 AND " +
             "e.form_code = '5210f079-27e9-4d01-a713-a2c400e0926c' AND " +
             "a.patient_id is null AND " +
-            "EXTRACT(YEAR from AGE(NOW(), (p.details ->> 'dob')\\:\\:date)) >= ?2 AND " +
-            "EXTRACT(YEAR from AGE(NOW(), (p.details ->> 'dob')\\:\\:date)) <= ?3) m WHERE rn = 1), " +
+            "EXTRACT(YEAR from AGE(NOW(), (p.details ->> 'dob')\\:\\:date)) >= ?5 AND " +
+            "EXTRACT(YEAR from AGE(NOW(), (p.details ->> 'dob')\\:\\:date)) <= ?6) m WHERE rn = 1), " +
             "pregnancy_status as " +
             "(SELECT * FROM" +
             "(SELECT visit_enc.patient_id, " +
@@ -272,15 +289,41 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
             "FROM encounter visit_enc " +
             "LEFT JOIN form_data visit_fd ON visit_fd.encounter_id = visit_enc.id " +
             "AND (visit_fd.data ->> 'date_visit' <> '') IS NOT TRUE " +
-            "AND (visit_fd.data ->> 'date_visit')\\:\\:date >= ?4 " +
+            "AND (visit_fd.data ->> 'date_visit')\\:\\:date >= ?7 " +
             "AND visit_enc.form_code = '5c8741de-f722-4e0a-a505-24e039bf4340' " +
             "WHERE visit_fd.data -> 'pregnant' ->> 'display' IS NOT NULL ) enc " +
             "WHERE rn = 1 )" +
             "SELECT * FROM enc " +
             "LEFT JOIN pregnancy_status ON " +
             "pregnancy_status.patient_id = enc.patient_id ORDER BY enc.patient_id DESC", nativeQuery = true)
-    List<Patient> findAllByPatientsNotManagedInHIVNotPregnantByFilteredParameters(Long organisationUnit, int ageForm, int ageTo,
-                                                                               LocalDate nineMonths, Pageable pageable);
+    List<Patient> findAllByPatientsNotManagedInHIVNotPregnantByFilteredParameters(List<String> gender, List<String> state,
+                                                                                  List<String> province, Long organisationUnit,
+                                                                                  int ageForm, int ageTo, LocalDate nineMonths, Pageable pageable);
+
+    //-- TO CHECK PATIENT INFO FOR ASSIGNED PATIENTS BY USER(CASE MANAGER) ID
+    @Query(value = "(SELECT * FROM " +
+            "(SELECT e.patient_id, p.*, " +
+            "fd.data -> 'hiv_current_status' ->> 'display'  as art_status, " +
+            "rank() over(PARTITION BY e.patient_id ORDER BY e.date_encounter, fd.id DESC) rn " +
+            "FROM encounter e " +
+            "INNER JOIN application_user_patient a ON a.patient_id = e.patient_id " +
+            "AND a.archived = e.archived " +
+            "INNER JOIN patient p ON p.id = e.patient_id " +
+            "INNER JOIN form_data fd ON fd.encounter_id = e.id " +
+            "INNER JOIN application_user u ON a.application_user_id = u.id " +
+            "WHERE " +
+            "e.archived = 0 AND " +
+            "p.archived=0 AND " +
+            "p.organisation_unit_id=?1 AND " +
+            "e.organisation_unit_id=?1 AND " +
+            "e.form_code = '5210f079-27e9-4d01-a713-a2c400e0926c' AND " +
+            "EXTRACT(YEAR from AGE(NOW(), (p.details ->> 'dob')\\:\\:date)) >= ?2 AND " +
+            "EXTRACT(YEAR from AGE(NOW(), (p.details ->> 'dob')\\:\\:date)) <= ?3 AND " +
+            "u.id=?4) m WHERE rn = 1)", nativeQuery = true)
+    List<Patient> findAllByPatientsManagedInHIVByFilteredParametersByApplicationUserId(Long organisationUnit, int ageFrom, int ageTo,
+                                                                                       Long applicationUserId, Pageable pageable);
+
+
 
 
 

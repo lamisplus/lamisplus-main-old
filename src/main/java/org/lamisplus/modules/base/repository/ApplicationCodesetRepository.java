@@ -36,4 +36,6 @@ public interface ApplicationCodesetRepository extends JpaRepository<ApplicationC
             "(a.id, a.display, a.code) FROM ApplicationCodeSet a WHERE a.codesetGroup = ?1 and a.archived = ?2")
     List<ApplicationCodesetResponseDTO> findAllByCodesetGroupAndArchivedOrderByIdAsc(String codeSetGroup, int archived);
 
+    @Query(value = "SELECT display FROM application_codeset WHERE codeset_group='GENDER'", nativeQuery = true)
+    List<String> findAllGender();
 }

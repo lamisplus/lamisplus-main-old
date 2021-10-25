@@ -51,10 +51,11 @@ public class PatientController {
                                                                                @RequestParam (required = false, defaultValue = "*")  String gender,
                                                                                @RequestParam (required = false, defaultValue = "*") String state,
                                                                                @RequestParam (required = false, defaultValue = "*")String lga,
+                                                                               @RequestParam (required = false, defaultValue = "0")Long applicationUserId,
                                                                                @RequestParam (required = false, defaultValue = "0")Integer ageFrom,
                                                                                @RequestParam (required = false, defaultValue = "200")Integer ageTo,
                                                                                @RequestParam (required = false, defaultValue = "false") Boolean pregnant,
-                                                                               @PageableDefault(value = 20) Pageable pageable) {
+                                                                               @PageableDefault(value = 100) Pageable pageable) {
         Page<Patient> page;
         if((ageFrom instanceof Integer && ageTo instanceof Integer) == true && ageFrom > ageTo){
             throw new IllegalTypeException(Patient.class, "Age", "not valid");
@@ -71,7 +72,7 @@ public class PatientController {
         }
 
         if(managed) {
-            page = patientService.findAllByPatientManagedByFilteredParameters(gender, state, lga, ageTo, ageFrom, pageable);
+            page = patientService.findAllByPatientManagedByFilteredParameters(gender, state, lga, ageTo, ageFrom, applicationUserId, pageable);
         } else {
             page = patientService.findAllByPatientNotManagedByFilteredParameters(programCode, gender, state, lga, pregnant, ageFrom, ageTo, pageable);
         }

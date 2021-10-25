@@ -25,8 +25,8 @@ public class ApplicationUserPatientController {
     }
 
     @PostMapping("/unssign")
-    public ResponseEntity<List<ApplicationUserPatient>> unassignCaseManagerToPatient (@Valid @RequestBody ApplicationUserPatientDTO applicationUserPatientDTO) {
-        return ResponseEntity.ok(applicationUserPatientService.unassignCaseManagerToPatient(applicationUserPatientDTO));
+    public ResponseEntity<List<ApplicationUserPatient>> unAssignCaseManagerToPatient (@Valid @RequestBody ApplicationUserPatientDTO applicationUserPatientDTO) {
+        return ResponseEntity.ok(applicationUserPatientService.unAssignCaseManagerToPatient(applicationUserPatientDTO));
     }
 
     @PutMapping("{id}")

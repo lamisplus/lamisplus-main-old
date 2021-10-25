@@ -50,6 +50,8 @@ public class PatientService {
     private final ProgramRepository programRepository;
     private final FormRepository formRepository;
     private final FormFlagRepository formFlagRepository;
+    private final OrganisationUnitRepository organisationUnitRepository;
+    private final ApplicationCodesetRepository applicationCodesetRepository;
     private final UserMapper userMapper;
     private final AccessRight accessRight;
     public static final String FORM_CODE = "formCode";
@@ -371,22 +373,72 @@ public class PatientService {
                                                                         Boolean pregnant, Integer ageFrom, Integer ageTo, Pageable pageable) {
         LocalDate currentMonth = YearMonth.now().atEndOfMonth();
         LocalDate nineMonths = currentMonth.minusMonths(9);
-        if(pregnant) {
-            List<Patient> patients = patientRepository.findAllByPatientsNotManagedInHIVPregnantByFilteredParameters(getOrganisationUnitId(),
-                    ageFrom, ageTo, nineMonths, pageable)
-                    .stream()
-                    .filter(patient -> checkFilterParameters(JsonUtil.getJsonNode(patient.getDetails()).toString(), gender, state, lga) == true)
-                    .collect(Collectors.toList());
-            return new PageImpl<Patient>(patients, pageable, pageable.getPageSize());
+        List<String> genders = new ArrayList<>();
+        List<String> states = new ArrayList<>();
+        List<String> provinces = new ArrayList<>();
+        List<Patient> patients;
+        if(gender == null || gender.equalsIgnoreCase("*")){
+            if(pregnant){
+                genders.add("Female");
+            } else {
+                genders = applicationCodesetRepository.findAllGender();
+            }
+        }else {
+            genders.add(gender);
         }
-        List<Patient> patients = patientRepository.findAllByPatientsNotManagedInHIVNotPregnantByFilteredParameters(getOrganisationUnitId(),
-                ageFrom, ageTo, nineMonths, pageable)
-                .stream()
-                .filter(patient -> checkFilterParameters(JsonUtil.getJsonNode(patient.getDetails()).toString(), gender, state, lga) == true)
-                .collect(Collectors.toList());
-        return new PageImpl<Patient>(patients, pageable, pageable.getPageSize());
 
+        if(state == null || state.equalsIgnoreCase("*")){
+            states = organisationUnitRepository.findAllState();
+        }else {
+            states.add(state);
+        }
+
+        if(lga == null || lga.equalsIgnoreCase("*")){
+            provinces = organisationUnitRepository.findAllProvince();
+        }else {
+            provinces.add(lga);
+        }
+
+        if(pregnant) {
+            patients = patientRepository.findAllByPatientsNotManagedInHIVPregnantByFilteredParameters(genders, states, provinces,
+                    getOrganisationUnitId(), ageFrom, ageTo, nineMonths, pageable)
+                    .stream()
+                    .collect(Collectors.toList());
+        }else {
+            patients = patientRepository.findAllByPatientsNotManagedInHIVNotPregnantByFilteredParameters(genders, states, provinces,
+                    getOrganisationUnitId(), ageFrom, ageTo, nineMonths, pageable)
+                    .stream()
+                    .collect(Collectors.toList());
+        }
+
+        log.info("patients size {}", patients.size());
+        //log.info("patientList size {}", patientList.size());
+        Page page = new PageImpl<Patient>(patients, pageable, pageable.getPageSize());
+        log.info("patients page size {}", page.getContent().size());
+        return page;
     }
+
+
+    //Patients Managed
+    public Page<Patient> findAllByPatientManagedByFilteredParameters(String gender, String state, String lga,
+                                                                     Integer ageTo, Integer ageFrom, Long applicationUserId, Pageable pageable) {
+
+
+        List<Patient> patients;
+
+        if(applicationUserId == null || applicationUserId == 0) {
+            patients = patientRepository.findAllByPatientsManagedInHIVByFilteredParameters(getOrganisationUnitId(), ageFrom, ageTo, pageable)
+                    .stream()
+                    .collect(Collectors.toList());
+        } else {
+            patients = patientRepository.findAllByPatientsManagedInHIVByFilteredParametersByApplicationUserId(getOrganisationUnitId(), ageFrom, ageTo, applicationUserId, pageable)
+                    .stream()
+                    .collect(Collectors.toList());
+        }
+        log.info("patients size {}", patients.size());
+        return new PageImpl<Patient>(patients, pageable, pageable.getPageSize());
+    }
+
     private Boolean checkFilterParameters(String patientDetails, String gender, String state, String lga){
         JsonNode tree = null;
         JsonNode jsonNode;
@@ -426,18 +478,6 @@ public class PatientService {
             e.printStackTrace();
         }
         return false;
-    }
-
-    //Patients Managed
-    public Page<Patient> findAllByPatientManagedByFilteredParameters(String gender, String state, String lga,
-                                                                     Integer ageTo, Integer ageFrom, Pageable pageable) {
-
-
-        List<Patient> patients = patientRepository.findAllByPatientsManagedInHIVByFilteredParameters(getOrganisationUnitId(), ageFrom, ageTo)
-                .stream()
-                .filter(patient -> checkFilterParameters(JsonUtil.getJsonNode(patient.getDetails()).toString(), gender, state, lga) == true)
-                .collect(Collectors.toList());
-        return new PageImpl<Patient>(patients, pageable, pageable.getPageSize());
     }
 
     //Case management

@@ -2,13 +2,17 @@ package org.lamisplus.modules.base.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.lamisplus.modules.base.config.ApplicationProperties;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
+import org.lamisplus.modules.base.controller.apierror.IllegalTypeException;
 import org.lamisplus.modules.base.domain.entity.Update;
 import org.lamisplus.modules.base.repository.UpdateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -20,6 +24,8 @@ import java.net.*;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 
 @Service
 @Transactional
@@ -27,47 +33,66 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UpdateService {
     private static final int UPDATE_AVAILABLE = 1;
-    private static final int UPDATE_COMPLETED = 3;
+    private static final int UPDATE_COMPLETED = 2;
     private final UpdateRepository updateRepository;
     @Autowired
     Environment environment;
 
 
-    public List<Update> getUpdates() {
-        return this.updateRepository.findAll();
-    }
-
-    public void downloadUpdateOnServer() throws IOException {
+    public Update getLatestUpdate() {
         Optional<Update> optionalUpdate = updateRepository.findUpdateByMaxVersionFromClient();
-        try {
-            if(optionalUpdate.isPresent()) {
-                URL urlObject = new URL(optionalUpdate.get().getUrl());
-                URLConnection urlConnection = urlObject.openConnection();
-                urlConnection.connect();
-                InputStream inputStream = urlConnection.getInputStream();
-                readFromInputStream(inputStream);
-            }else {
-                if(!checkForUpdateOnClient()) {
-                    throw new EntityNotFoundException(Update.class, "update", "not available at this time");
-                }else {
-
-                }
-            }
-        } catch (IOException e) {
-            throw new IOException("No internet connection");
+        if(optionalUpdate.isPresent()){
+            return optionalUpdate.get();
         }
+        throw new EntityNotFoundException(Update.class, "Update", "No update available check db");
+    }
+
+    public CompletableFuture<Boolean> downloadUpdateOnServer() {
+        checkForUpdateOnClient();
+        Optional<Update> optionalUpdate = updateRepository.findAnyUpdateByMaxVersion();
+        CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
+
+        //Downloading update on a new thread
+        Executors.newCachedThreadPool().submit(() -> {
+            try {
+                if(optionalUpdate.isPresent()) {
+                    URL urlObject = new URL(optionalUpdate.get().getUrl());
+                    URLConnection urlConnection = urlObject.openConnection();
+                    urlConnection.connect();
+                    InputStream inputStream = urlConnection.getInputStream();
+                    if (readFromInputStream(inputStream)) {
+                        Update update = optionalUpdate.get();
+                        update.setStatus(UPDATE_COMPLETED);
+                        updateRepository.save(update);
+                        completableFuture.complete(true);
+                    } else {
+                        completableFuture.complete(false);
+                    }
+                }
+            } catch (IOException e) {
+                completableFuture.complete(false);
+                throw new IOException("No internet connection");
+            }
+            return null;
+        });
+        return completableFuture;
     }
 
 
-    private void readFromInputStream(InputStream inputStream){
-        File file = new File("update/lamisplus.jar");
+    private Boolean readFromInputStream(InputStream inputStream){
+        Boolean updatedDownloaded;
+        File updateFolder = new File(ApplicationProperties.modulePath + File.separator +"update");
+        if (!updateFolder.exists() && !updateFolder.isDirectory()) {
+            updateFolder.mkdir();
+        }
+        File lamisPlusJar = new File(updateFolder.getAbsolutePath() + File.separator +"lamisplus.jar");
         int nBytesToRead;
         FileOutputStream fileInputStream = null;
         BufferedOutputStream bufferedOutputStream = null;
 
         try {
             nBytesToRead = inputStream.available();
-            fileInputStream = new FileOutputStream(file);
+            fileInputStream = new FileOutputStream(lamisPlusJar);
             bufferedOutputStream = new BufferedOutputStream(fileInputStream);
             int nRead;
             byte[] data = new byte[nBytesToRead];
@@ -75,10 +100,10 @@ public class UpdateService {
                 log.info("Writing some bytes of file...");
                 bufferedOutputStream.write(data, 0, nRead);
             }
-
+            updatedDownloaded = true;
         }catch (IOException e){
+            updatedDownloaded = false;
             log.error(e.getMessage());
-            e.printStackTrace();
         } finally {
             try {
                 bufferedOutputStream.close();
@@ -88,9 +113,10 @@ public class UpdateService {
                 e.printStackTrace();
             }
         }
-        if(file.exists()){
-            //update update table
+        if(lamisPlusJar.exists()){
+            return updatedDownloaded;
         }
+        return updatedDownloaded;
     }
 
     //On the server
@@ -100,60 +126,39 @@ public class UpdateService {
     }
 
 
-
-    @EventListener(ApplicationReadyEvent.class)
-    public void readUpdateOnStartUp() throws IOException {
-        File updateFile = null;
-        BufferedReader in = null;
-        Update update;
-        try {
-            in = new BufferedReader(new InputStreamReader(
-                    getClass().getClassLoader().getResourceAsStream("update.yml")));
-            Yaml yaml = new Yaml();
-            update = yaml.loadAs(in, Update.class);
-
-            in.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error: " + e.getMessage());
-        } finally {
-            if (in != null) {
-                in.close();
-            }
-        }
-        update.setDateCreated(new Timestamp(System.currentTimeMillis()));
-        update.setUrl("http://localhost:8080/api/updates/server");
-        //This checks if that update is already in the db
-        Optional<Update> optionalUpdate = updateRepository.findByCodeAndVersion(update.getCode(), update.getVersion());
-        if (optionalUpdate.isPresent()) {
-            Update update1 = optionalUpdate.get();
-            if (update.getStatus() != update1.getStatus()) {
-                update1.setStatus(UPDATE_COMPLETED);
-                updateRepository.save(update1);
-                return;
-            }
-        } else {
-            updateRepository.save(update);
-        }
-
-    }
-
     //On client
+    @Scheduled(fixedDelay = 10000, initialDelay = 10000)
     public Boolean checkForUpdateOnClient(){
-        Double updateNotCompleted = updateRepository.findMaxVersionByUpdateAvailableStatus();
         Update lastUpdateCompleted = updateRepository.findUpdateByMaxVersion();
+        Update updateNotCompleted = updateRepository.findUpdateByMaxVersionNotCompleted();
         Boolean isUpdatedAvailable = false;
 
-        if(updateNotCompleted == null) {
-            String uri = lastUpdateCompleted.getUrl() + "?version=" + lastUpdateCompleted.getVersion();
-            RestTemplate restTemplate = new RestTemplate();
-            Update result = restTemplate.getForObject(uri, Update.class);
-            if (result != null) {
-                result.setStatus(UPDATE_AVAILABLE);
-                updateRepository.save(result);
+        try {
+            if (lastUpdateCompleted != null && updateNotCompleted == null) {
+                String uri = "http://localhost:8080/api/updates/server?version="+lastUpdateCompleted.getVersion();
+                RestTemplate restTemplate = new RestTemplate();
+                Update result = restTemplate.getForObject(uri, Update.class);
+                if (result != null) {
+                    result.setStatus(UPDATE_AVAILABLE);
+                    updateRepository.save(result);
+                    isUpdatedAvailable = true;
+                }
+            }
+            else if(updateNotCompleted != null){
                 isUpdatedAvailable = true;
             }
+        }catch (Exception ce){
+            ce.printStackTrace();
+            throw new IllegalTypeException(Update.class, "url", lastUpdateCompleted.getUrl());
         }
         return isUpdatedAvailable;
+    }
+
+
+    public Update save(Long id, Update update){
+        Update update1 = updateRepository.findByIdAndMaxVersion(id)
+                .orElseThrow(() -> new EntityNotFoundException(Update.class, "id", id+""));
+        update.setId(update1.getId());
+        return updateRepository.save(update);
     }
 }
