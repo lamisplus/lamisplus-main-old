@@ -116,13 +116,15 @@ function Header() {
         .post(`${baseUrl}updates`)
         .then((response) => {
             if(response.data){
+              dismissAll();
               downloadComplete();
             }else{
+              dismissAll();
               downloadError();
             }                    
         })
         .catch((error) => {
-          downloadError();
+          //downloadError();
         });     
 }
   const dismissAll = () =>  toast.dismiss();
@@ -207,7 +209,7 @@ function Header() {
 
     return (
       <Navbar light expand className={bem.b("bg-white")}>
-        <ToastContainer />
+        {/* <ToastContainer /> */}
         <Nav navbar className="mr-2">
           <Button outline onClick={handleSidebarControlButton}>
             <MdClearAll size={25} />

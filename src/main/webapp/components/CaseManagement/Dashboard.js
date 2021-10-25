@@ -170,8 +170,8 @@ const ScrollableTabsButtonForce = (props) => {
   const urlTabs = urlIndex !== null ? urlIndex : props.location.state ;
   useEffect ( () => {
     switch(urlTabs){  
-      case "case-managers": return setValue(1)
-      default: return setValue(1)
+      case "case-managers": return setValue(0)
+      default: return setValue(0)
     }
   }, [urlIndex]);
     const handleChange = (event, newValue) => {
