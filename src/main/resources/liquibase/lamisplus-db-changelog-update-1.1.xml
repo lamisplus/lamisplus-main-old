@@ -113,7 +113,7 @@
             </sqlCheck>
         </preConditions>
         <sql dbms="postgresql">
-            DELETE * FROM form_flag WHERE id=60;
+            DELETE FROM form_flag WHERE id=60;
         </sql>
     </changeSet>
 
