@@ -87,22 +87,22 @@
 
     <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-164">
         <sql dbms="postgresql">
-            INSERT INTO organisation_unit_hierarchy (id, organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (5038, 1972, 1, 4);
-            INSERT INTO organisation_unit_hierarchy (id, organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (5037, 1972, 23, 4);
-            INSERT INTO organisation_unit_hierarchy (id, organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (5036, 1972, 491, 4);
-            INSERT INTO organisation_unit_hierarchy (id, organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (5035, 1971, 1, 4);
-            INSERT INTO organisation_unit_hierarchy (id, organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (5034, 1971, 38, 4);
-            INSERT INTO organisation_unit_hierarchy (id, organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (5033, 1971, 805, 4);
-            INSERT INTO organisation_unit_hierarchy (id, organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (5032, 1970, 1, 4);
-            INSERT INTO organisation_unit_hierarchy (id, organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (5031, 1970, 35, 4);
-            INSERT INTO organisation_unit_hierarchy (id, organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (5030, 1970, 758, 4);
-            INSERT INTO organisation_unit_hierarchy (id, organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (5029, 1969, 1, 4);
-            INSERT INTO organisation_unit_hierarchy (id, organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (5028, 1969, 6, 4);
-            INSERT INTO organisation_unit_hierarchy (id, organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (5027, 1969, 142, 4);
-            INSERT INTO organisation_unit_hierarchy (id, organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (5026, 1968, 1, 4);
-            INSERT INTO organisation_unit_hierarchy (id, organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (5025, 1968, 3, 4);
-            INSERT INTO organisation_unit_hierarchy (id, organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (5024, 1968, 69, 4);
-            SELECT setval('organisation_unit_hierarchy_id_seq', (5038));
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1972, 1, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1972, 23, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1972, 491, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1971, 1, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1971, 38, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1971, 805, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1970, 1, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1970, 35, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1970, 758, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1969, 1, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1969, 6, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1969, 142, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1968, 1, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1968, 3, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1968, 69, 4);
+            SELECT setval('organisation_unit_hierarchy_id_seq', (5039));
         </sql>
     </changeSet>
 
@@ -113,7 +113,7 @@
             </sqlCheck>
         </preConditions>
         <sql dbms="postgresql">
-            DELETE form_flag WHERE id=60;
+            DELETE * FROM form_flag WHERE id=60;
         </sql>
     </changeSet>
 
@@ -124,9 +124,9 @@
             </sqlCheck>
         </preConditions>
         <sql dbms="postgresql">
-            INSERT INTO permission (id, description, name, date_created, created_by, date_modified, modified_by, archived) OVERRIDING SYSTEM VALUE VALUES (223, 'Case Manager Read', 'case_manager_read', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', 0);
-            INSERT INTO permission (id, description, name, date_created, created_by, date_modified, modified_by, archived) OVERRIDING SYSTEM VALUE VALUES (224, 'Case Manager Write', 'case_manager_write', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', 0);
-            INSERT INTO permission (id, description, name, date_created, created_by, date_modified, modified_by, archived) OVERRIDING SYSTEM VALUE VALUES (225, 'Case Manager Delete', 'case_manager_delete', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', 0);
+            INSERT INTO permission (id, description, name, date_created, created_by, date_modified, modified_by, archived) OVERRIDING SYSTEM VALUE VALUES (224, 'Case Manager Read', 'case_manager_read', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', 0);
+            INSERT INTO permission (id, description, name, date_created, created_by, date_modified, modified_by, archived) OVERRIDING SYSTEM VALUE VALUES (225, 'Case Manager Write', 'case_manager_write', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', 0);
+            INSERT INTO permission (id, description, name, date_created, created_by, date_modified, modified_by, archived) OVERRIDING SYSTEM VALUE VALUES (226, 'Case Manager Delete', 'case_manager_delete', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', 0);
             SELECT pg_catalog.setval('permission_id_seq', 225, false);
         </sql>
     </changeSet>
