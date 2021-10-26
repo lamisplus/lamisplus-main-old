@@ -113,11 +113,11 @@ const CaseManagerSearch = (props) => {
   const handleInputChange = e => {
     const getValue =e.target.value;
     setCaseManagerId(getValue)
-    refreshTable()
+    
   };
 
   const FilterQuery = () => {
-
+    refreshTable()
   }
   const codes= programCode==''?'0d31f6ee-571c-45b8-80d5-3f7e1d5377b7' : programCode;
 
