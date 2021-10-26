@@ -300,7 +300,7 @@ const getlgaObj = e => {
         
         <Col md={6}>
             <FormGroup>
-                <Label for="occupation">Lga of Residence </Label>
+                <Label for="occupation">Local Government Area of Residence </Label>
 
                     <Input
                       type="select"
