@@ -105,4 +105,29 @@
             SELECT setval('organisation_unit_hierarchy_id_seq', (5038));
         </sql>
     </changeSet>
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-165">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="1">
+                SELECT COUNT(*) FROM form_flag WHERE id=60;
+            </sqlCheck>
+        </preConditions>
+        <sql dbms="postgresql">
+            DELETE form_flag WHERE id=60;
+        </sql>
+    </changeSet>
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-166">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM permission WHERE id=223;
+            </sqlCheck>
+        </preConditions>
+        <sql dbms="postgresql">
+            INSERT INTO permission (id, description, name, date_created, created_by, date_modified, modified_by, archived) OVERRIDING SYSTEM VALUE VALUES (223, 'Case Manager Read', 'case_manager_read', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', 0);
+            INSERT INTO permission (id, description, name, date_created, created_by, date_modified, modified_by, archived) OVERRIDING SYSTEM VALUE VALUES (224, 'Case Manager Write', 'case_manager_write', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', 0);
+            INSERT INTO permission (id, description, name, date_created, created_by, date_modified, modified_by, archived) OVERRIDING SYSTEM VALUE VALUES (225, 'Case Manager Delete', 'case_manager_delete', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', 0);
+            SELECT pg_catalog.setval('permission_id_seq', 225, false);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
