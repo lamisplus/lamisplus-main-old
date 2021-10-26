@@ -157,7 +157,7 @@ const UnAssignPatientsCaseManager = (props) => {
                                     </Col>
                                     
                                     <Col md={12}>
-                                        <h3>Are you sure you want to un-assign patients</h3>
+                                        <h3>Are you sure you want to unassign patients ?</h3>
                                       </Col>
                                      
                                       

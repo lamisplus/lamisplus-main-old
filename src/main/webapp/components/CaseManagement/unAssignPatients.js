@@ -228,12 +228,34 @@ const getlgaObj = e => {
                       id="to"
                       value={otherDetails.to}
                       onChange={handleAgeGroup}
-                      className={matchingAgeGroupClass}
+                      //className={matchingAgeGroupClass}
                    />
                   
             </FormGroup>
         </Col>
         </Row>
+        </Col>
+        
+        <Col md={6}>
+            <FormGroup>
+                <Label for="occupation">State of Residence </Label>
+
+                    <Input
+                      type="select"
+                      name="state"
+                      id="state"
+                      value={otherDetails.stateId}
+                          onChange={getProvinces}
+                      >
+                          <option >Please Select State</option>
+                          {states.map((row) => (
+                              <option key={row.id} value={row.id}>
+                                  {row.name}
+                              </option>
+                          ))}
+                        
+                  </Input>
+            </FormGroup>
         </Col>
         <Col md={6} style={{margingTop: "10px !important"}}>
             <FormGroup className="pt-10" >
@@ -253,27 +275,6 @@ const getlgaObj = e => {
                           {label}
                           </option>
                       ))}
-                  </Input>
-            </FormGroup>
-        </Col>
-        <Col md={6}>
-            <FormGroup>
-                <Label for="occupation">State of Residence </Label>
-
-                    <Input
-                      type="select"
-                      name="state"
-                      id="state"
-                      value={otherDetails.stateId}
-                          onChange={getProvinces}
-                      >
-                          <option >Please Select State</option>
-                          {states.map((row) => (
-                              <option key={row.id} value={row.id}>
-                                  {row.name}
-                              </option>
-                          ))}
-                        
                   </Input>
             </FormGroup>
         </Col>
@@ -338,7 +339,7 @@ const getlgaObj = e => {
       <br/>
       <MaterialTable
        icons={tableIcons}
-        title="Un-Assign Patients List"
+        title="Unassign Patients List"
         tableRef={tableRef}
         columns={[
           { title: "Patient ID", field: "patientId" },

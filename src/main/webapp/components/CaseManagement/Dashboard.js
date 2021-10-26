@@ -205,7 +205,7 @@ const ScrollableTabsButtonForce = (props) => {
             />
             <Tab
               className={classes.title}
-              label="Un-Assigned Patients"
+              label="Unassigned Patients"
               icon={<MdContacts />}
               {...a11yProps(2)}
             />

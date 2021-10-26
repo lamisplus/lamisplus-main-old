@@ -96,7 +96,7 @@ function Header() {
     setAssignFacilityModal(!assignFacilityModal);
   }
 
-  const downloadNotice = () => toast.info("Downloading....",{
+  const downloadNotice = () => toast.info("Downloading update ....",{
     position: "top-right",
     autoClose: 2000,
     hideProgressBar: false,
