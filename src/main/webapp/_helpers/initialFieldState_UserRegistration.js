@@ -8,6 +8,8 @@ export const initialfieldState_userRegistration = {
     gender: '',
     dateOfBirth: new Date(),
     password: '',
-    adminRegistration: true
+    adminRegistration: true,
+    details:{}
+
   }
   

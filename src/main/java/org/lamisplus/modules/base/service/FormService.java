@@ -1,6 +1,5 @@
 package org.lamisplus.modules.base.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
@@ -43,7 +42,7 @@ public class FormService {
 
     public List getAllForms() {
         List<Form> forms = formRepository.findAllByArchivedOrderByIdAsc(UN_ARCHIVED);
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         return getForms(forms, permissions);
     }
@@ -77,22 +76,21 @@ public class FormService {
         Form form = this.formRepository.findByIdAndArchived(id, UN_ARCHIVED)
                 .orElseThrow(() -> new EntityNotFoundException(Form.class, "Id", id+""));
 
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         accessRight.grantAccess(form.getCode(), FormService.class, permissions);
 
         return form;
     }
 
-    public Form getFormByFormCode(String formCode, Optional<Integer> type) {
-        Set<String> permissions = accessRight.getAllPermission();
+    public Form getFormByFormCode(String formCode, Optional<Integer> formType) {
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         accessRight.grantAccess(formCode, FormService.class, permissions);
-        if (type.isPresent()) {
-            if (type.get() == 1) {
-                formRepository.findByCodeAndArchivedAndType(formCode, UN_ARCHIVED, type.get())
-                        .orElseThrow(() -> new EntityNotFoundException(Form.class, "Form Code has no retrospective", formCode));
-            }
+        //if form is retrospective  - 1
+        if (formType.isPresent() && formType.get() == 1) {
+            return formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED)
+                    .orElseThrow(() -> new EntityNotFoundException(Form.class, "Form Code has no retrospective", formCode));
         }
         return formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED)
                 .orElseThrow(() -> new EntityNotFoundException(Form.class, "Form Code", formCode));
@@ -100,7 +98,7 @@ public class FormService {
 
     public List getFormsByUsageStatus(Integer usageStatus) {
         List<Form> forms = formRepository.findAllByUsageCodeAndArchived(usageStatus, UN_ARCHIVED);
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         return getForms(forms, permissions);
     }
@@ -121,21 +119,21 @@ public class FormService {
     }
 
     public Form update(Long id, FormDTO formDTO) {
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         accessRight.grantAccessByAccessType(formDTO.getCode(), FormService.class, WRITE, permissions);
-        Form form = formRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(Form.class, "Id", id +""));
+        formRepository.findByIdAndArchived(id, UN_ARCHIVED).orElseThrow(() -> new EntityNotFoundException(Form.class, "Id", id +""));
 
-        form = formMapper.toFormDTO(formDTO);
+        Form form = formMapper.toFormDTO(formDTO);
         form.setId(id);
-        form.setArchived(0);
+        form.setArchived(UN_ARCHIVED);
         return formRepository.save(form);
     }
 
     public Integer delete(Long id) {
         Form form = formRepository.findByIdAndArchived(id, UN_ARCHIVED)
                 .orElseThrow(() -> new EntityNotFoundException(Form.class, "Id", id +""));
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         accessRight.grantAccessByAccessType(form.getCode(), FormService.class, DELETE, permissions);
 

@@ -2,6 +2,7 @@ package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
+import org.lamisplus.modules.base.domain.dto.PatientDTO;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.domain.entity.User;
@@ -24,17 +25,14 @@ public class UserController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final SessionRegistry sessionRegistry;
-    //private final MyLogoutSuccessHandler logoutSuccessHandler;
 
 
     @GetMapping("/{id}")
-    //@PreAuthorize("hasAuthority('user_read')")
     public ResponseEntity<UserDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok(userRepository.findById(id).map(UserDTO::new).get());
     }
 
     @PostMapping("/{id}/roles")
-    //@PreAuthorize("hasAuthority('user_write')")
     public ResponseEntity<Object[]> updateRoles(@Valid @RequestBody List<Role> roles, @PathVariable Long id) throws Exception {
         try {
             User user = userRepository.findById(id).get();
@@ -61,7 +59,6 @@ public class UserController {
     }
 
     @GetMapping("/roles/{roleId}")
-    //@PreAuthorize("hasAuthority('user_read')")
     public ResponseEntity<List<UserDTO>> getAllUserByRole(@PathVariable Long roleId) {
         return ResponseEntity.ok(userService.getAllUserByRole(roleId));
     }
@@ -89,13 +86,8 @@ public class UserController {
         }*/
     }
 
-/*@PostMapping("/logOut")
-public void logOut(HttpServletRequest request,
-                      HttpServletResponse response, Authentication authentication) {
-    try {
-        logoutSuccessHandler.onLogoutSuccess(request, response, authentication);
-    } catch (IOException | ServletException e) {
-        e.printStackTrace();
+    @GetMapping("/{id}/patients")
+    public ResponseEntity<List<PatientDTO>> getPatientByUserId(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getAllPatientByUserId(id));
     }
-}*/
 }

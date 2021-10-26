@@ -7,31 +7,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.FormDataDTO;
-import org.lamisplus.modules.base.domain.dto.PatientDTO;
 import org.lamisplus.modules.base.domain.entity.*;
 import org.lamisplus.modules.base.domain.dto.EncounterDTO;
-
 import org.lamisplus.modules.base.domain.mapper.EncounterMapper;
 import org.lamisplus.modules.base.domain.mapper.FormDataMapper;
 import org.lamisplus.modules.base.repository.*;
-
 import org.lamisplus.modules.base.util.AccessRight;
-import org.lamisplus.modules.base.util.FlagUtil;
 import org.lamisplus.modules.base.util.JsonUtil;
 import org.lamisplus.modules.base.util.converter.CustomDateTimeFormat;
 import org.lamisplus.modules.base.util.GenericSpecification;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -46,7 +37,6 @@ public class EncounterService {
     private static final int UNARCHIVED = 0;
     private final EncounterRepository encounterRepository;
     private final VisitRepository visitRepository;
-    private final PatientFlagRepository patientFlagRepository;
     private final EncounterMapper encounterMapper;
     private final FormDataMapper formDataMapper;
     private final FormDataRepository formDataRepository;
@@ -57,14 +47,15 @@ public class EncounterService {
     private static final int ARCHIVED = 1;
     private static final String WRITE = "write";
     private static final String DELETE = "delete";
-    private final FlagUtil flagUtil;
+    private final FlagService flagService;
 
     public List<EncounterDTO> getAllEncounters() {
         Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
         List<EncounterDTO> encounterDTOS = new ArrayList();
         List<Encounter> encounters = encounterRepository.findAllByOrganisationUnitIdAndArchived(organisationUnitId, UNARCHIVED);
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
         encounters.forEach(singleEncounter -> {
+            //filtering by user permission
             if(!accessRight.grantAccessForm(singleEncounter.getFormCode(), permissions)){
                 return;
             }
@@ -85,12 +76,12 @@ public class EncounterService {
 
     public EncounterDTO getEncounter(Long id) {
         Encounter encounter = encounterRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Encounter.class, "Id",id+"" ));
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
+        //Grant access
         accessRight.grantAccess(encounter.getFormCode(), Encounter.class, permissions);
 
         Patient patient = encounter.getPatientByPatientId();
-
         Form form = encounter.getFormForEncounterByFormCode();
 
         final EncounterDTO encounterDTO = encounterMapper.toEncounterDTO(patient, encounter, form);
@@ -119,19 +110,46 @@ public class EncounterService {
         return encounter;
     }
 
+    public Encounter updateRetrospectiveData(Long id, EncounterDTO encounterDTO) {
+        encounterRepository.findByIdAndArchived(id, UNARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(Encounter.class, "Id",id+"" ));
+
+        accessRight.grantAccessByAccessType(encounterDTO.getFormCode(),
+                Encounter.class, WRITE, checkForEncounterAndGetPermission(id));
+
+        final Encounter encounter = encounterMapper.toEncounter(encounterDTO);
+        encounter.setId(id);
+
+        if(encounterDTO.getData().size() > 0) {
+            List<FormData> formDataList = new ArrayList<>();
+            encounterDTO.getData().forEach(data -> {
+                FormData formData = new FormData();
+                formData.setEncounterId(encounter.getId());
+                formData.setData(data);
+                formData.setOrganisationUnitId(getOrganisationUnitId());
+                formDataList.add(formData);
+            });
+            formDataRepository.deleteAllByEncounterId(encounter.getId());
+            formDataRepository.saveAll(formDataList);
+        }
+
+
+        encounterRepository.save(encounter);
+        return encounter;
+    }
+
     public Encounter save(EncounterDTO encounterDTO, int formType) {
         //Get all permissions
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         //Grant access by access type = WRITE
         accessRight.grantAccessByAccessType(encounterDTO.getFormCode(), Encounter.class, WRITE, permissions);
-        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
 
         encounterDTO.setTimeCreated(CustomDateTimeFormat.LocalTimeByFormat(LocalTime.now(),"hh:mm a"));
 
         encounterRepository.findByPatientIdAndProgramCodeAndFormCodeAndDateEncounterAndOrganisationUnitId(
                 encounterDTO.getPatientId(), encounterDTO.getFormCode(), encounterDTO.getProgramCode(),
-                encounterDTO.getDateEncounter(), organisationUnitId).ifPresent(encounter -> {
+                encounterDTO.getDateEncounter(), getOrganisationUnitId()).ifPresent(encounter -> {
             throw new RecordExistException(Encounter.class, "Patient Id ",
                     encounterDTO.getPatientId() + ", " + "Program Code = " +
                             encounterDTO.getProgramCode() + ", Form Code =" + encounterDTO.getFormCode() + ", Date =" +
@@ -159,7 +177,7 @@ public class EncounterService {
                 visit.setDateNextAppointment(null);
                 visit.setPatientId(encounter.getPatientId());
                 visit.setTypePatient(0);
-                visit.setOrganisationUnitId(organisationUnitId);
+                visit.setOrganisationUnitId(getOrganisationUnitId());
                 visit = visitRepository.save(visit);
             }
             encounter.setVisitId(visit.getId());
@@ -170,7 +188,7 @@ public class EncounterService {
 
         encounter.setUuid(UUID.randomUUID().toString());
         encounter.setCreatedBy(userService.getUserWithRoles().get().getUserName());
-        encounter.setOrganisationUnitId(organisationUnitId);
+        encounter.setOrganisationUnitId(getOrganisationUnitId());
         Encounter savedEncounter = this.encounterRepository.save(encounter);
 
         if(encounterDTO.getTypePatient() != null) {
@@ -183,7 +201,7 @@ public class EncounterService {
                 FormData formData = new FormData();
                 formData.setEncounterId(savedEncounter.getId());
                 formData.setData(formDataList);
-                formData.setOrganisationUnitId(organisationUnitId);
+                formData.setOrganisationUnitId(getOrganisationUnitId());
                 formDataRepository.save(formData);
             });
         }
@@ -191,16 +209,14 @@ public class EncounterService {
         List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived(savedEncounter.getFormCode(), 0, UNARCHIVED);
         if(!formFlags.isEmpty()) {
             final Object finalFormData = formDataRepository.findOneByEncounterIdOrderByIdDesc(savedEncounter.getId()).get().getData();
-            flagUtil.checkForAndSavePatientFlag(savedEncounter.getPatientId(), JsonUtil.getJsonNode(finalFormData), formFlags, false);
+            flagService.checkForAndSavePatientFlag(savedEncounter.getPatientId(), JsonUtil.getJsonNode(finalFormData), formFlags);
         }
-
         return savedEncounter;
     }
 
     public Integer delete(Long id) {
         Encounter encounter = encounterRepository.findByIdAndArchived(id, UNARCHIVED)
                 .orElseThrow(() -> new EntityNotFoundException(Encounter.class, "Id",id+"" ));
-
         accessRight.grantAccessByAccessType(encounter.getFormCode(), Encounter.class, DELETE, checkForEncounterAndGetPermission(id));
 
         encounter.setArchived(ARCHIVED);
@@ -210,12 +226,12 @@ public class EncounterService {
 
     public Page<Encounter> getEncounterByFormCodeAndDateEncounter(String formCode, Optional<String> dateStart, Optional<String> dateEnd, Pageable pageable) {
         Specification<Encounter> specification = null;
-        Set<String> permissions = accessRight.getAllPermission();
+        Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
 
         accessRight.grantAccess(formCode, Encounter.class, permissions);
 
         specification = new GenericSpecification<Encounter>().findAllEncounter(formCode, dateStart, dateEnd, UNARCHIVED,
-                userService.getUserWithRoles().get().getCurrentOrganisationUnitId());
+                getOrganisationUnitId());
         return encounterRepository.findAll(specification, pageable);
     }
 
@@ -248,13 +264,15 @@ public class EncounterService {
     }
 
     public Long getTotalCount(String programCode) {
-        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
+        return encounterRepository.countByProgramCodeAndArchivedAndOrganisationUnitId(programCode, UNARCHIVED, getOrganisationUnitId());
+    }
 
-        return encounterRepository.countByProgramCodeAndArchivedAndOrganisationUnitId(programCode, UNARCHIVED, organisationUnitId);
+    public Page<Encounter> findEncounterPage(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber, String formCode, String dateStart, String dateEnd, Pageable pageable) {
+        return encounterRepository.findEncounterPage(firstName,lastName,hospitalNumber, mobilePhoneNumber, formCode, dateStart, dateEnd, getOrganisationUnitId(),UNARCHIVED, pageable);
     }
 
     private Set<String> checkForEncounterAndGetPermission(Long id){
-        return accessRight.getAllPermission();
+        return accessRight.getAllPermissionForCurrentUser();
     }
 
     private EncounterDTO addProperties(EncounterDTO encounterDTO) {
@@ -280,10 +298,8 @@ public class EncounterService {
         return encounterDTO;
     }
 
-    public Page<Encounter> findEncounterPage(String firstName, String lastName, String hospitalNumber, String mobilePhoneNumber, String formCode, String dateStart, String dateEnd, Pageable pageable) {
-        Long organisationUnitId = userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
-        return encounterRepository.findEncounterPage(firstName,lastName,hospitalNumber, mobilePhoneNumber, formCode, dateStart, dateEnd, organisationUnitId,UNARCHIVED, pageable);
-        //return encounterRepository.findEncounterPages(firstName,lastName,hospitalNumber, formCode, organisationUnitId,UNARCHIVED, pageable);
+    private Long getOrganisationUnitId(){
+        return userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
 
     }
 }

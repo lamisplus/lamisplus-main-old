@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-148">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT datatype FROM flag WHERE id=15;
+            </sqlCheck>
+        </preConditions>
+        <update tableName="flag">
+            <column name="datatype" value="2" />
+            <where>id=15</where>
+        </update>
+    </changeSet>
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-156">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM update WHERE id=1 AND code='a8ee0b70-301f-11ec-8d3d-0242ac130003' AND (status=1 OR status=2);
+            </sqlCheck>
+        </preConditions>
+        <update tableName="update">
+            <column name="status" value="3" />
+            <where>id=1</where>
+        </update>
+    </changeSet>
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-155">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM update WHERE id=1 AND code='a8ee0b70-301f-11ec-8d3d-0242ac130003';
+            </sqlCheck>
+        </preConditions>
+        <sqlFile dbms="postgresql"
+                 path="sql/update.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"
+                 stripComments="true"/>
+    </changeSet>
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-157">
+        <sqlFile dbms="postgresql"
+                 path="sql/patient_number_type.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"
+                 stripComments="true"/>
+    </changeSet>
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-159">
+        <sqlFile dbms="postgresql"
+                 path="sql/report_info_template_update.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"
+                 stripComments="true"/>
+    </changeSet>
+
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-160">
+        <sqlFile dbms="postgresql"
+                 path="sql/retrospective_forms_update.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"
+                 stripComments="true"/>
+    </changeSet>
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-162">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM form_flag WHERE id=60;
+            </sqlCheck>
+        </preConditions>
+        <sql dbms="postgresql">
+            INSERT INTO form_flag (id, flag_id, status, created_by, date_created, modified_by, date_modified, archived, form_code) VALUES (60, 4, 1, 'guest@lamisplus.org', '2021-10-11 22:42:48.908', 'guest@lamisplus.org', '2021-10-11 22:42:48.908', 0, '0871d0b9-0fb3-4579-bdec-77d684b0cea6');
+            SELECT pg_catalog.setval('public.form_flag_id_seq', 60, false);
+        </sql>
+    </changeSet>
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-163">
+        <sql dbms="postgresql">
+            INSERT INTO organisation_unit (id, name, description, organisation_unit_level_id, parent_organisation_unit_id, archived, details, date_created, created_by, date_modified, modified_by) OVERRIDING SYSTEM VALUE VALUES (1972,'Birnin Kebbi KP OSS','Facility in Birnin Kebbi',4,491,0, NULL, NULL, NULL, NULL, NULL);
+            INSERT INTO organisation_unit (id, name, description, organisation_unit_level_id, parent_organisation_unit_id, archived, details, date_created, created_by, date_modified, modified_by) OVERRIDING SYSTEM VALUE VALUES (1971,'Gusau KP OSS','Facility in Gusau',4,805,0, NULL, NULL, NULL, NULL, NULL);
+            INSERT INTO organisation_unit (id, name, description, organisation_unit_level_id, parent_organisation_unit_id, archived, details, date_created, created_by, date_modified, modified_by) OVERRIDING SYSTEM VALUE VALUES (1970,'Sokoto KP OSS','Facility in Sokoto North',4,758,0, NULL, NULL, NULL, NULL, NULL);
+            INSERT INTO organisation_unit (id, name, description, organisation_unit_level_id, parent_organisation_unit_id, archived, details, date_created, created_by, date_modified, modified_by) OVERRIDING SYSTEM VALUE VALUES (1969,'Misau KP OSS','Facility in Misau',4,142,0, NULL, NULL, NULL, NULL, NULL);
+            INSERT INTO organisation_unit (id, name, description, organisation_unit_level_id, parent_organisation_unit_id, archived, details, date_created, created_by, date_modified, modified_by) OVERRIDING SYSTEM VALUE VALUES (1968,'Mubi KP OSS','Facility in Mubi North',4,69,0, NULL, NULL, NULL, NULL, NULL);
+            SELECT setval('organisation_unit_id_seq', (1972));
+        </sql>
+    </changeSet>
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-164">
+        <sql dbms="postgresql">
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1972, 1, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1972, 23, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1972, 491, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1971, 1, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1971, 38, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1971, 805, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1970, 1, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1970, 35, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1970, 758, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1969, 1, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1969, 6, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1969, 142, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1968, 1, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1968, 3, 4);
+            INSERT INTO organisation_unit_hierarchy (organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) VALUES (1968, 69, 4);
+            SELECT setval('organisation_unit_hierarchy_id_seq', (5039));
+        </sql>
+    </changeSet>
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-165">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="1">
+                SELECT COUNT(*) FROM form_flag WHERE id=60;
+            </sqlCheck>
+        </preConditions>
+        <sql dbms="postgresql">
+            DELETE FROM form_flag WHERE id=60;
+        </sql>
+    </changeSet>
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-166">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM permission WHERE id=223;
+            </sqlCheck>
+        </preConditions>
+        <sql dbms="postgresql">
+            INSERT INTO permission (id, description, name, date_created, created_by, date_modified, modified_by, archived) OVERRIDING SYSTEM VALUE VALUES (224, 'Case Manager Read', 'case_manager_read', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', 0);
+            INSERT INTO permission (id, description, name, date_created, created_by, date_modified, modified_by, archived) OVERRIDING SYSTEM VALUE VALUES (225, 'Case Manager Write', 'case_manager_write', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', 0);
+            INSERT INTO permission (id, description, name, date_created, created_by, date_modified, modified_by, archived) OVERRIDING SYSTEM VALUE VALUES (226, 'Case Manager Delete', 'case_manager_delete', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', '2021-04-07 00:00:00', 'Chukwuemeka Ilozue', 0);
+            SELECT pg_catalog.setval('permission_id_seq', 225, false);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

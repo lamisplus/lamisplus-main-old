@@ -3,9 +3,12 @@ package org.lamisplus.modules.base.service;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
+import org.lamisplus.modules.base.domain.dto.PatientDTO;
 import org.lamisplus.modules.base.domain.dto.UserDTO;
 import org.lamisplus.modules.base.domain.entity.*;
+import org.lamisplus.modules.base.domain.mapper.PatientMapper;
 import org.lamisplus.modules.base.domain.mapper.UserMapper;
+import org.lamisplus.modules.base.repository.ApplicationUserPatientRepository;
 import org.lamisplus.modules.base.repository.RoleRepository;
 import org.lamisplus.modules.base.repository.UserRepository;
 import org.lamisplus.modules.base.security.RolesConstants;
@@ -26,8 +29,6 @@ import java.util.*;
 @Transactional
 @RequiredArgsConstructor
 public class UserService {
-    private final Logger log = LoggerFactory.getLogger(UserService.class);
-
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
@@ -36,13 +37,12 @@ public class UserService {
 
     private final UserMapper userMapper;
 
-    /*public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, UserMapper userMapper, OrganisationUnitRepository organisationUnitRepository) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.roleRepository = roleRepository;
-        this.userMapper = userMapper;
-        this.organisationUnitRepository = organisationUnitRepository;
-    }*/
+    private final ApplicationUserPatientRepository applicationUserPatientRepository;
+
+    private final PatientMapper patientMapper;
+
+    private final PatientTransformer patientTransformer;
+    private final int UN_ARCHIVED =0;
 
     @Transactional
     public Optional<User> getUserWithAuthoritiesByUsername(String userName){
@@ -76,6 +76,9 @@ public class UserService {
         newUser.setPassword(encryptedPassword);
         newUser.setFirstName(userDTO.getFirstName());
         newUser.setLastName(userDTO.getLastName());
+        if(userDTO.getDetails() != null){
+            newUser.setDetails(userDTO.getDetails());
+        }
 
         if (userDTO.getRoles() == null || userDTO.getRoles().isEmpty()) {
             Set<Role> roles = new HashSet<>();
@@ -152,7 +155,17 @@ public class UserService {
         user.setCurrentOrganisationUnitId(organisationUnitId);
         return userMapper.userToUserDTO(userRepository.save(user));
     }
+
+    //Case management
+    public List<PatientDTO> getAllPatientByUserId(Long id) {
+        List<PatientDTO> patientDTOS = new ArrayList<>();
+        applicationUserPatientRepository.findAllByUserIdAndArchived(id, UN_ARCHIVED).forEach(applicationUserPatient -> {
+            patientDTOS.add(patientTransformer.transformDTO(patientMapper.toPatientDTO(applicationUserPatient.getPatientByPatientId())));
+        });
+        return patientDTOS;
+    }
 }
+
 
 class UsernameAlreadyUsedException extends RuntimeException {
     private static final long serialVersionUID = 1L;

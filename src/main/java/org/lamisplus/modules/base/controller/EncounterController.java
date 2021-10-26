@@ -36,8 +36,6 @@ public class EncounterController {
         return ResponseEntity.ok(this.encounterService.getAllEncounters());
     }
 
-    /*@ApiOperation(value="getEncounterByFormCodeAndDateEncounter", notes = " formCode=required, dateStart=optional, dateEnd=optional\n\n" +
-            "Example - api/encounters/{formCode}?dateStart=01-01-2020&dateEnd=01-04-2020")*/
     @GetMapping("/{formCode}/{dateStart}/{dateEnd}")
     public ResponseEntity<List<EncounterDTO>> getEncounterByFormCodeAndDateEncounter(@PathVariable String formCode,
                                                                   @PathVariable(required = false) Optional<String> dateStart,
@@ -86,6 +84,11 @@ public class EncounterController {
     @PutMapping("/{id}")
     public ResponseEntity<Encounter> update(@PathVariable Long id, @RequestBody EncounterDTO encounterDTO){
         return ResponseEntity.ok(this.encounterService.update(id, encounterDTO));
+    }
+
+    @PutMapping("/{id}/retrospective-data")
+    public ResponseEntity<Encounter> updateRetrospectiveData(@PathVariable Long id, @RequestBody EncounterDTO encounterDTO){
+        return ResponseEntity.ok(this.encounterService.updateRetrospectiveData(id, encounterDTO));
     }
 
     @DeleteMapping("/{id}")

@@ -16,8 +16,9 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -33,7 +34,6 @@ import java.util.List;
 
 import java.io.File;
 
-@EnableScheduling
 @AcrossApplication(
         modules = {
                 AcrossHibernateJpaModule.NAME,
@@ -42,6 +42,8 @@ import java.io.File;
         modulePackageClasses = {BootstrapModule.class})
 @Slf4j
 @EnableSwagger2
+@EnableAsync
+@EnableScheduling
 public class BaseApplication extends SpringBootServletInitializer {
 
     @Autowired

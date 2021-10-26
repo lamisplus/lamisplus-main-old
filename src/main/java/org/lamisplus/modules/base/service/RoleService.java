@@ -5,10 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
 import org.lamisplus.modules.base.domain.dto.RoleDTO;
+import org.lamisplus.modules.base.domain.dto.UserDTO;
+import org.lamisplus.modules.base.domain.entity.ApplicationUserPatient;
 import org.lamisplus.modules.base.domain.entity.Permission;
 import org.lamisplus.modules.base.domain.entity.Role;
+import org.lamisplus.modules.base.domain.entity.User;
+import org.lamisplus.modules.base.domain.mapper.UserMapper;
+import org.lamisplus.modules.base.repository.ApplicationUserPatientRepository;
 import org.lamisplus.modules.base.repository.PermissionRepository;
 import org.lamisplus.modules.base.repository.RoleRepository;
+import org.lamisplus.modules.base.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +30,12 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class RoleService {
+    private static final int UN_ARCHIVED = 0;
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
+    private final UserRepository userRepository;
+    private final ApplicationUserPatientRepository applicationUserPatientRepository;
+    private final UserMapper userMapper;
 
     @PersistenceContext
     EntityManager em;
@@ -63,7 +73,6 @@ public class RoleService {
         if(!roleOptional.isPresent())throw new EntityNotFoundException(Role.class, "Id", id +"");
         Role updatedRole = roleOptional.get();
         HashSet<Permission> permissionsSet = getPermissions(permissions);
-        System.out.println(permissionsSet);
         updatedRole.setPermission(permissionsSet);
         return roleRepository.save(updatedRole);
     }
@@ -75,10 +84,8 @@ public class RoleService {
             try {
                 // add permissions by either id or name
                 if (null != p.getName()) {
-                    permissionToAdd = permissionRepository.findByNameAndArchived(p.getName(), 0).get();
-                } /*else if(p.getId() != null ){
-                permissionToAdd = permissionRepository.findById(p.getId()).get();
-            }*/ else {
+                    permissionToAdd = permissionRepository.findByNameAndArchived(p.getName(), UN_ARCHIVED).get();
+                }  else {
                     ResponseEntity.badRequest();
                     return null;
                 }
@@ -88,5 +95,23 @@ public class RoleService {
             }
         }
         return permissionsSet;
+    }
+
+    @Transactional
+    public List<UserDTO> getAllUsersByRoleId(Long id, String programCode){
+        HashSet<Role> roles = new HashSet<>();
+        Role role = roleRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException(Role.class, "id", ""+id));
+        roles.add(role);
+        userRepository.findAllByRoleIn(roles).forEach(user -> {
+            if(!programCode.equalsIgnoreCase("*")) {
+                user.setManagedPatientCount(applicationUserPatientRepository.findCountOfPatientManagedByUserInASpecificProgram(user.getId(), programCode, UN_ARCHIVED));
+            } else {
+                user.setManagedPatientCount(applicationUserPatientRepository.findCountOfPatientManagedByUserInAllProgram(user.getId(), UN_ARCHIVED));
+            }
+        });
+
+        //TODO: find by user in organisation Unit...
+        return userMapper.usersToUserDTOs(userRepository.findAllByRoleIn(roles));
     }
 }

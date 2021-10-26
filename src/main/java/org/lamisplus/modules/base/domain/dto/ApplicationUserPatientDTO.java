@@ -1,16 +1,18 @@
 package org.lamisplus.modules.base.domain.dto;
 
 import lombok.Data;
-import org.lamisplus.modules.base.domain.entity.Patient;
-import org.lamisplus.modules.base.domain.entity.User;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Objects;
 
 @Data
 public class ApplicationUserPatientDTO {
     private Long id;
+    @NotNull(message = "UserId cannot be empty")
     private Long UserId;
+    @NotNull(message = "programCode cannot be empty")
+    private String programCode;
+    @NotNull(message = "patientIds cannot be empty")
     private List<Long> patientIds;
+    private Integer archived;
 }

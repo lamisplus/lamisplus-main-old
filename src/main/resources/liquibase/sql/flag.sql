@@ -21,4 +21,3 @@ SELECT setval('flag_id_seq', (15));
 --
 -- PostgreSQL database dump complete
 --
-

@@ -1,11 +1,8 @@
 package org.lamisplus.modules.base.repository;
 
-import org.lamisplus.modules.base.domain.dto.EncounterDistinctDTO;
 import org.lamisplus.modules.base.domain.entity.Encounter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -24,14 +21,21 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
 
     Optional<Encounter> findByPatientIdAndProgramCodeAndFormCodeAndDateEncounterAndOrganisationUnitId(Long patientId, String ProgramCode, String FormCode, LocalDate dateFncounter, Long organisationUnitId);
 
-    //TODO: in progress...
-    @Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.EncounterDistinctDTO" +
-            "(e.patientId, e.formCode, e.programCode, e.organisationUnitId, e.archived) FROM Encounter e WHERE e.patientId = ?1 and e.programCode = ?2 and e.organisationUnitId = ?3 and e.archived = ?4")
-    List<EncounterDistinctDTO> findDistinctPatientIdAndProgramCodeAndOrganisationUnitIdAndArchived(Long patientId, String programCode, Long organisationUnitId, int archived);
+/*    @Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.EncounterDistinctDTO" +
+            "(e.patientId, e.formCode, e.programCode, e.organisationUnitId, e.archived) FROM Encounter e WHERE e.patientId = ?1 and e.programCode = ?2 and e.organisationUnitId = ?3 and e.archived = ?4")*/
 
-    @Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.EncounterDistinctDTO" +
-            "(e.patientId, e.programCode, e.organisationUnitId, e.archived) FROM Encounter e WHERE e.programCode = ?1 and e.organisationUnitId = ?2 and e.archived = ?3")
-    List<EncounterDistinctDTO> findDistinctProgramCodeAndOrganisationUnitIdAndArchived(String programCode, Long organisationUnitId, int archived);
+    @Query(value = "SELECT DISTINCT ON (patient_id, form_code) encounter.* FROM encounter " +
+            "WHERE program_code = ?2 AND patient_id = ?1 " +
+            "AND organisation_unit_id = ?3 AND archived = ?4 ORDER BY patient_id DESC", nativeQuery = true)
+    List<Encounter> findDistinctPatientIdAndProgramCodeAndOrganisationUnitIdAndArchived(Long patientId, String programCode, Long organisationUnitId, int archived);
+
+/*    @Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.EncounterDistinctDTO" +
+            "(e.patientId, e.programCode, e.organisationUnitId, e.archived) FROM Encounter e WHERE e.programCode = ?1 and e.organisationUnitId = ?2 and e.archived = ?3")*/
+
+    @Query(value = "SELECT DISTINCT ON (patient_id, program_code) encounter.* FROM encounter " +
+            "WHERE program_code = ?1 " +
+            "AND organisation_unit_id = ?2 AND archived = ?3 ORDER BY patient_id DESC", nativeQuery = true)
+    List<Encounter> findDistinctProgramCodeAndOrganisationUnitIdAndArchived(String programCode, Long organisationUnitId, int archived);
 
     Long countByProgramCodeAndArchivedAndOrganisationUnitId(String programCode, int archived, Long organisationUnit);
 
@@ -51,5 +55,7 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
                                       String dateStart, String dateEnd, Long organisationUnitId, int archived, Pageable pageable);
 
     List<Encounter> findByPatientByPatientIdAndDateModifiedIsAfter(Long patientId, LocalDate dateModified);
+
+
 }
 

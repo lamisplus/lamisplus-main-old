@@ -10,6 +10,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 
 import { forwardRef } from 'react';
+import axios from "axios";
+import { url as baseUrl , LABSERVICECODE} from "../../../api";
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
@@ -90,7 +92,7 @@ const PatientSearch = (props) => {
     
   return (
       <div>
-          <MaterialTable
+          {/* <MaterialTable
            icons={tableIcons}
               title="Laboratory Test Orders"
               columns={[
@@ -153,6 +155,107 @@ const PatientSearch = (props) => {
                   exportButton: true,
                   searchFieldAlignment: 'left',          
               }}
+
+          /> */}
+          <MaterialTable
+           icons={tableIcons}
+              title="Laboratory Test Orders"
+              columns={[
+                  { title: "Patient ID", field: "Id" },
+                  {
+                    title: "Patient Name",
+                    field: "name",
+                  },
+                  { title: "Date Order", field: "date", type: "date" , filtering: false},          
+                  {
+                    title: "Total Sample ",
+                    field: "count",
+                    filtering: false
+                  },
+                  {
+                    title: "Sample Collected ",
+                    field: "samplecount",
+                    filtering: false
+                  },
+                  {
+                    title: "Action",
+                    field: "actions",
+                    filtering: false,
+                  },
+              ]}
+              isLoading={loading}
+            //   data={collectedSamples.map((row) => ({
+            //       Id: row.hospitalNumber,
+            //       name: row.firstName +  ' ' + row.lastName,
+            //       date: row.dateEncounter,
+            //       count: row.formDataObj.length,
+            //       samplecount: totalSampleConllected(row.formDataObj),
+            //       actions:  <Link to ={{ 
+            //                       pathname: "/collect-sample",  
+            //                       state: row
+            //                   }} 
+            //                       style={{ cursor: "pointer", color: "blue", fontStyle: "bold"}}
+            //                 >
+            //                     <Tooltip title="Collect Sample">
+            //                         <IconButton aria-label="Collect Sample" >
+            //                             <VisibilityIcon color="primary"/>
+            //                         </IconButton>
+            //                     </Tooltip>
+            //                 </Link>
+
+            //   }))}
+            data={query =>
+                  new Promise((resolve, reject) =>
+                      axios.get(`${baseUrl}encounters/${LABSERVICECODE}/{dateStart}/{dateEnd}?size=${query.pageSize}&page=${query.page}&search=${query.search}`)
+                          .then(response => response)
+                          .then(result => {
+
+                              //console.log('in result')
+                              //console.log( result.headers);
+                              console.log( result.headers['x-total-count']);
+                              resolve({
+                                  data: result.data.map((row) => ({
+                                    Id: row.hospitalNumber,
+                                    name: row.firstName +  ' ' + row.lastName,
+                                    date: row.dateEncounter,
+                                    count: row.formDataObj.length,
+                                    samplecount: totalSampleConllected(row.formDataObj),
+                                      actions:
+                                      <Link to ={{ 
+                                                    pathname: "/collect-sample",  
+                                                    state: row
+                                                }} 
+                                                    style={{ cursor: "pointer", color: "blue", fontStyle: "bold"}}
+                                                >
+                                                    <Tooltip title="Collect Sample">
+                                                        <IconButton aria-label="Collect Sample" >
+                                                            <VisibilityIcon color="primary"/>
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                </Link>
+                                  })),
+                                  page: query.page,
+                                  totalCount: result.headers['x-total-count'],
+                              })
+                          })
+                  )}
+
+                  options={{
+                    headerStyle: {
+                        backgroundColor: "#9F9FA5",
+                        color: "#000",
+                    },
+                    searchFieldStyle: {
+                        width : '300%',
+                        margingLeft: '250px',
+                    },
+                    filtering: false,
+                    exportButton: false,
+                    searchFieldAlignment: 'left',
+                    pageSizeOptions:[10,20,100],
+                    pageSize:10,
+                    debounceInterval: 400
+                }}
 
           />
         

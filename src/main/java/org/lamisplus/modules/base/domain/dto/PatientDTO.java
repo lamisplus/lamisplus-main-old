@@ -23,6 +23,7 @@ public class PatientDTO {
     private String firstName;
     private String lastName;
     private String otherNames;
+    private String patientNumberType;
     @Convert(converter = LocalDateConverter.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dob;
@@ -42,7 +43,8 @@ public class PatientDTO {
     private Long countryId;
     private Long stateId;
     private Long provinceId;
-    List<Object> otherIdentifier;
+    private List<Object> otherIdentifier;
+    private String artStatus;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateVisitEnd;
@@ -56,7 +58,7 @@ public class PatientDTO {
 
     private Integer typePatient;
 
-    List<Flag> flags;
+    private List<Flag> flags;
 
     private Object details;
 }

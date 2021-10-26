@@ -37,6 +37,14 @@ public class ApplicationUserPatient extends Audit<String>{
     @JsonIgnore
     private int archived = 0;
 
+    @Basic
+    @Column(name = "organisation_unit_id", updatable = false)
+    private Long organisationUnitId;
+
+    @Basic
+    @Column(name = "program_code")
+    private String programCode;
+
     @ManyToOne
     @JoinColumn(name = "application_user_id", referencedColumnName = "id", insertable = false, updatable = false)
     @ToString.Exclude
@@ -50,7 +58,7 @@ public class ApplicationUserPatient extends Audit<String>{
     private Patient patientByPatientId;
 
     @ManyToOne
-    @JoinColumn(name = "organisation_unit_id", referencedColumnName = "id")
+    @JoinColumn(name = "organisation_unit_id", referencedColumnName = "id", insertable = false, updatable = false)
     @ToString.Exclude
     @JsonIgnore
     private OrganisationUnit organisationUnitByOrganisationUnitId;

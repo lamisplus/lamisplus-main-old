@@ -78,4 +78,6 @@ public interface FormDataRepository extends JpaRepository<FormData, Long>, JpaSp
 
     @Query(value = "select d from FormData d where d.encounterId = (select distinct e.id from Encounter e where e.dateEncounter = ?1 and e.patientId = ?2)")
     List<FormData> findByDateEncounterAndPatientId(LocalDate dateEncounter, Long patientId);
+
+    void deleteAllByEncounterId(Long encounterId);
 }

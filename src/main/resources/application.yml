@@ -106,5 +106,8 @@ management:
             show-details: WHEN_AUTHORIZED
         jhimetrics:
             enabled: true
-
-
+application:
+    async:
+        core-pool-size: 10
+        max-pool-size: 50
+        queue-capacity: 10000

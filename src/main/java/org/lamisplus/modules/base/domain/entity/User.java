@@ -2,17 +2,10 @@ package org.lamisplus.modules.base.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Type;
 import org.lamisplus.modules.base.security.SecurityUtils;
-
 import javax.persistence.*;
-import java.io.Serializable;
 import java.sql.Date;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -86,21 +79,9 @@ public class User {
     @Column(name = "reset_key")
     private String resetKey;
 
-    /*@Basic
-    @Column(name = "uploaded")
-    private Integer uploaded;
-
-    @Basic
-    @Column(name = "time_uploaded")
-    private Time timeUploaded;*/
-
     @Basic
     @Column(name = "current_organisation_unit_id")
     private Long currentOrganisationUnitId;
-
-    /*@Basic
-    @Column(name = "person_id")
-    private Long personId;*/
 
     @Basic
     @Column(name = "first_name")
@@ -125,4 +106,12 @@ public class User {
     @JoinColumn(name = "current_organisation_unit_id", referencedColumnName = "id", insertable = false, updatable = false)
     @ToString.Exclude
     private OrganisationUnit organisationUnitByCurrentOrganisationUnitId;
+
+    @Transient
+    private int managedPatientCount;
+
+    @Type(type = "jsonb")
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "details", nullable = true, columnDefinition = "jsonb")
+    private Object details;
 }
