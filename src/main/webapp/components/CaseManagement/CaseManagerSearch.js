@@ -27,6 +27,10 @@ import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Menu, MenuList, MenuButton, MenuItem } from "@reach/menu-button";
+import "@reach/menu-button/styles.css";
+import { MdModeEdit } from "react-icons/md";
+import 'react-widgets/dist/css/react-widgets.css'
 
 const tableIcons = {
 Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -126,7 +130,13 @@ const addManager =()=> {
         ]}
         data={ caseManagersList.map((manager) => ({
             //Id: manager.id,
-            name: <Link
+            name: manager.firstName +' ' + manager.lastName,
+              gender: manager.gender,
+              state: manager.details!==null && manager.details.state ? manager.details.state[0].name : "",
+              lga: manager.details!==null && manager.details.lga ? manager.details.lga[0].name : "",
+              address: manager.details!==null && manager.details.address ? manager.details.address : "",
+              status: "Active",
+              patients: <Link
                     to ={{
                         pathname: "/case-manager-patients",
                         state: manager.id,
@@ -134,27 +144,52 @@ const addManager =()=> {
                     }}
 
                     title={"Click to view patients"}
-                >{manager.firstName} {' '} {manager.lastName} </Link>,
-              gender: manager.gender,
-              state: manager.details!==null && manager.details.state ? manager.details.state[0].name : "",
-              lga: manager.details!==null && manager.details.lga ? manager.details.lga[0].name : "",
-              address: manager.details!==null && manager.details.address ? manager.details.address : "",
-              status: "Active",
-              patients: manager.managedPatientCount,
+                > {manager.managedPatientCount} </Link>,
 
-              actions: <Link to ={{ 
+              actions: 
+              (
+            <div>
+              <Menu>
+                <MenuButton
+                  style={{
+                    backgroundColor: "#3F51B5",
+                    color: "#fff",
+                    border: "2px solid #3F51B5",
+                    borderRadius: "4px",
+                  }}
+                >
+                  Actions <span aria-hidden>▾</span>
+                </MenuButton>
+                <MenuList style={{ color: "#000 !important" }}>
+                  {/* <MenuItem style={{ color: "#000 !important" }} >
+                    <Button
+                      size="sm"
+                      color="link"
+                    >
+                      <MdModeEdit size="15" />{" "}
+                      <span style={{ color: "#000" }}>Edit Case Manager </span>
+                    </Button>
+                  </MenuItem> */}
+                  <MenuItem style={{ color: "#000 !important" }}>
+                  <Link to ={{  
                           pathname: "/case-manager-patients",
-                          state: manager.id,
-                          caseManagerName: manager.firstName + " " + manager.lastName 
-                        }} 
-                            style={{ cursor: "pointer", color: "blue", fontStyle: "bold"}}
-                        >
-                            <Tooltip title="View Patients">
-                                <IconButton aria-label="View Patients" >
-                                    <VisibilityIcon color="primary"/>
-                                </IconButton>
-                            </Tooltip>
-                        </Link>
+                           state: manager.id,
+                           caseManagerName: manager.firstName + " " + manager.lastName 
+                         }} 
+                             style={{ cursor: "pointer", color: "blue", fontStyle: "bold"}}
+                         >
+                   
+
+                      <VisibilityIcon size="15" />{" "}
+                      <span style={{ color: "#000" }}>View Patients </span>
+                  
+                    </Link>
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+              </div>
+              )
+                   
             }))}
        
                   options={{

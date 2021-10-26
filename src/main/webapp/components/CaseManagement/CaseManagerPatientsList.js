@@ -237,9 +237,9 @@ const CaseManagerPatients = (props) => {
                 }}
               actions={[        
                     {
-                    tooltip: 'Un-Assign Patients',
+                    tooltip: 'Unassign Patients',
                     icon: 'add' ,
-                    label: 'Un-Assign/Re-Assign Case Manager',
+                    label: 'Unassign/Reassign Case Manager',
                     onClick: (evt, data) => getCaseManager(evt, data)
                     }
         ]} 

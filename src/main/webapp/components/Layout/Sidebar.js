@@ -34,7 +34,8 @@ const navItems = [
   { to: '/report', name: 'Reports', exact: false, Icon: FaListUl },
   // { to: '/data-visualisation', name: 'Data Visualization', exact: false, Icon: MdGraphicEq },
   // { to: '/plug-in', name: 'Plugins', exact: false, Icon: GiUnplugged },
-  { to: '/case-management', name: 'Case Management', exact: false, Icon: FaUserCog },
+  { to: '/case-management', name: 'Case Management', exact: false, Icon: FaUserCog,  roles: ["admin_read", "user_read"]  },
+  
   { to: '/admin', name: 'Administration', exact: false, Icon: FaUserCog,
     roles: ["admin_read", "user_read"] },
   // { to: '/data-analytics', name: 'Data Visualisation', exact: false, Icon: MdGraphicEq },

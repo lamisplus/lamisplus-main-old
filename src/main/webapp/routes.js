@@ -97,7 +97,7 @@ const ClinicalCascade = React.lazy(() => import("components/Admin/DashboardAnaly
 const CommodityManagement = React.lazy(() => import("components/Admin/DashboardAnalytics/CommodityManagement/Index"));
 const MortalitySurvillance = React.lazy(() => import("components/Admin/DashboardAnalytics/MortalitySurvillance/Index"));
 const RecencyTesting = React.lazy(() => import("components/Admin/DashboardAnalytics/RecencyTesting/Index"));
-
+const ApplicationUpdates = React.lazy(() => import("components/Admin/ApplicationUpdate/UpdateList"));
 const DataVisualizationDashboard = React.lazy(() => import("components/Admin/DataVisualisation/Index"));
 /* Sample table i design */
 const TestPage = React.lazy(() => import("pages/TestPage"));
@@ -287,6 +287,8 @@ class Routes extends Component {
                 
                 <PrivateRoute  path="/case-management" component={CaseManagement} />
                 <PrivateRoute  path="/case-manager-patients" component={CaseManagerPatients} />
+                <PrivateRoute  path="/application-update" component={ApplicationUpdates} />
+                
             </React.Suspense>
           </MainLayout>
           

@@ -186,6 +186,7 @@ const AssignCaseManager = (props) => {
                                                     vaule={otherfields.userId}
                                                     onChange={handleOtherFieldInputChange}
                                                     {...(errors.userId && { invalid: true})}
+                                                    required
                                                   >
                                                         <option> </option>
                                                         {caseManager.map(({ title, value }) => (

@@ -233,7 +233,7 @@ const CaseManagerSearch = (props) => {
                 }}
               actions={[        
                     {
-                    tooltip: 'Un-Assign Patients',
+                    tooltip: 'Unassign Patients',
                     icon: 'add' ,
                     label: 'Un-Assign Patients',
                     onClick: (evt, data) => getCaseManager(evt, data)
