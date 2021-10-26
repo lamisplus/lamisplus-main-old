@@ -1,7 +1,7 @@
 import React, {useEffect, forwardRef} from 'react';
 import MaterialTable from 'material-table';
 import { connect } from "react-redux";
-import { fetchAll, deleteApplicationCodeset} from "actions/applicationCodeset";
+import { fetchAll, deleteApplicationCodeset, updateApplicationCodeset} from "actions/applicationCodeset";
 import {
     Card,
     CardBody, Modal, ModalBody, ModalHeader, Spinner, ModalFooter
@@ -16,6 +16,7 @@ import SaveIcon from "@material-ui/icons/Delete";
 import CancelIcon from "@material-ui/icons/Cancel";
 import {makeStyles} from "@material-ui/core/styles";
 import { ToastContainer, toast } from "react-toastify";
+import { Label } from "semantic-ui-react";
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
@@ -34,6 +35,9 @@ import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import BlockIcon from '@material-ui/icons/Block';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import {Menu, MenuButton, MenuItem, MenuList} from "@reach/menu-button";
 
 const tableIcons = {
 Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -66,7 +70,8 @@ const ApplicationCodesetSearch = (props) => {
     const [showModal, setShowModal] = React.useState(false);
     const [showDeleteModal, setShowDeleteModal] = React.useState(false);
     const [currentCodeset, setCurrentCodeset] = React.useState(null);
-    const toggleModal = () => setShowModal(!showModal)
+    const toggleModal = () => setShowModal(!showModal);
+    const [currentAction, setCurrentAction] = React.useState("");
     const toggleDeleteModal = () => setShowDeleteModal(!showDeleteModal)
     const classes = useStyles()
 
@@ -84,26 +89,38 @@ const ApplicationCodesetSearch = (props) => {
      props.fetchAll(onSuccess, onError);
     }
 
-const processDelete = (id) => {
+const processUpdateStatus = (row) => {
      setDeleting(true);
     const onSuccess = () => {
         setDeleting(false);
         toggleDeleteModal();
-        toast.success("Application codeset deleted successfully!");
+        toast.success("Application Codeset " +currentAction+"d Successfully!");
         loadApplicationCodeset();
     };
     const onError = () => {
         setDeleting(false);
         toast.error("Something went wrong, please contact administration");
     };
-    props.delete(id, onSuccess, onError);
+    if(currentAction == "Delete"){
+        props.delete(row.id,onSuccess, onError);
     }
+    if(currentAction == "Deactivate"){
+        row['archived'] = 2;
+        props.update(row.id, row, onSuccess, onError);
+    }
+    if(currentAction == "Activate"){
+        row['archived'] = 0;
+        props.update(row.id, row, onSuccess, onError);
+    }
+
+}
     const openApplicationCodeset = (row) => {
         setCurrentCodeset(row);
         toggleModal();
     }
 
-    const deleteApplicationCodeset = (row) => {
+    const updateApplicationCodesetStatus = (row, action) => {
+        setCurrentAction(action);
         setCurrentCodeset(row);
         toggleDeleteModal();
     }
@@ -143,32 +160,71 @@ const processDelete = (id) => {
                     { title: "Value", field: "display" },
                     { title: "Version", field: "version" },
                     { title: "Language", field: "language" },
+                    { title: "Status", field: "archived", render: rowData => <span>{rowData.archived === 0 ?  <Label color={"green"} >Active</Label> : <Label>Inactive</Label>} </span> },
+                    { title: "Action", field: "language",
+                        render: rowData =>  <div>
+                            <Menu>
+                                <MenuButton style={{ backgroundColor:"#3F51B5", color:"#fff", border:"2px solid #3F51B5", borderRadius:"4px", }}>
+                                    Actions <span aria-hidden>▾</span>
+                                </MenuButton>
+                                <MenuList style={{ color:"#000 !important"}} >
+                                    <MenuItem  style={{ color:"#000 !important", cursor:"pointer"}} onClick={() => openApplicationCodeset(rowData)}>
+                                            <EditIcon size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Codeset</span>
+                                    </MenuItem>
+                                    {rowData.archived === 0 &&
+                                    <MenuItem style={{color: "#000 !important", cursor: "pointer"}}
+                                              onClick={() => updateApplicationCodesetStatus(rowData, 'Deactivate')}>
+                                        <CheckCircleIcon size="15" color="blue"/>{" "}
+                                        <span style={{color: '#000'}}>Deactivate Codeset </span>
+                                    </MenuItem>
+                                    }
+                                    {rowData.archived === 2 &&
+                                    <MenuItem style={{color: "#000 !important", cursor: "pointer"}}
+                                              onClick={() => updateApplicationCodesetStatus(rowData, 'Activate')}>
+                                        <CheckCircleIcon size="15" color="blue"/>{" "}
+                                        <span style={{color: '#000'}}>Activate Codeset </span>
+                                    </MenuItem>
+                                    }
+                                    <MenuItem style={{ color:"#000 !important", cursor:"pointer"}} onClick={() => updateApplicationCodesetStatus(rowData, 'Delete')}>
+                                            <DeleteIcon size="15" color="blue" />{" "}
+                                            <span style={{color: '#000'}}>Delete Codeset</span>
+                                    </MenuItem>
+                                </MenuList>
+                            </Menu>
+                        </div>}
                 ]}
                 isLoading={loading}
-                data={props.applicationCodesetList.map((row) => ({
-                    codesetGroup: row.codesetGroup,
-                    id: row.id,
-                    display: row.display,
-                    language: row.language,
-                    version: row.version
-                }))}
-
-                actions= {[
-                    {
-                        icon: EditIcon,
-                        iconProps: {color: 'primary'},
-                        tooltip: 'Edit Codeset',
-                        onClick: (event, rowData) => openApplicationCodeset(rowData)
-                    },
-                    {
-                        icon: DeleteIcon,
-                        iconProps: {color: 'primary'},
-                        tooltip: 'Delete Codeset',
-                        onClick: (event, rowData) => deleteApplicationCodeset(rowData)
-                    }
-                        ]}
+                data={props.applicationCodesetList}
+                // actions= {[
+                //     {
+                //         icon: EditIcon,
+                //         iconProps: {color: 'primary'},
+                //         tooltip: 'Edit Codeset',
+                //         onClick: (event, rowData) => openApplicationCodeset(rowData)
+                //     },
+                //     rowData => ({
+                //         icon: BlockIcon,
+                //         iconProps: {color: 'primary'},
+                //         tooltip: 'Deactivate Codeset',
+                //         onClick: (event, rowData) => updateApplicationCodesetStatus(rowData, 'Deactivate'),
+                //         hidden: rowData.archived === 2
+                //     }),
+                //     rowData => ({
+                //         icon: CheckCircleIcon,
+                //         iconProps: {color: 'primary'},
+                //         tooltip: 'Activate Codeset',
+                //         onClick: (event, rowData) => updateApplicationCodesetStatus(rowData, 'Activate'),
+                //         hidden: rowData.archived === 0
+                //     }),
+                //     {
+                //         icon: DeleteIcon,
+                //         iconProps: {color: 'primary'},
+                //         tooltip: 'Delete Codeset',
+                //         onClick: (event, rowData) => updateApplicationCodesetStatus(rowData, 'Delete')
+                //     }
+                //         ]}
                 //overriding action menu with props.actions
-                components={props.actions}
+
                 options={{
                     headerStyle: {
                         backgroundColor: "#9F9FA5",
@@ -188,7 +244,7 @@ const processDelete = (id) => {
 
             <NewApplicationCodeset toggleModal={toggleModal} showModal={showModal} loadApplicationCodeset={loadApplicationCodeset} formData={currentCodeset}/>
             <Modal isOpen={showDeleteModal} toggle={toggleDeleteModal} >
-                    <ModalHeader toggle={props.toggleDeleteModal}> Delete Global Variable - {currentCodeset && currentCodeset.display ? currentCodeset.display : ""} </ModalHeader>
+                    <ModalHeader toggle={props.toggleDeleteModal}> {currentAction} Global Variable - {currentCodeset && currentCodeset.display ? currentCodeset.display : ""} </ModalHeader>
                     <ModalBody>
                         <p>Are you sure you want to proceed ?</p>
                     </ModalBody>
@@ -200,9 +256,9 @@ const processDelete = (id) => {
                         className={classes.button}
                         startIcon={<SaveIcon />}
                         disabled={deleting}
-                        onClick={() => processDelete(currentCodeset.id)}
+                        onClick={() => processUpdateStatus(currentCodeset)}
                     >
-                        Delete  {deleting ? <Spinner /> : ""}
+                        {currentAction}  {deleting ? <Spinner /> : ""}
                     </Button>
                     <Button
                         variant='contained'
@@ -227,7 +283,8 @@ const mapStateToProps = state => {
 
 const mapActionToProps = {
     fetchAll: fetchAll,
-    delete: deleteApplicationCodeset
+    delete: deleteApplicationCodeset,
+    update: updateApplicationCodeset
 };
 
 export default connect(mapStateToProps, mapActionToProps)(ApplicationCodesetSearch);

@@ -23,6 +23,7 @@ const EditPatientFormio = (props) => {
     const [showLoadingPatientInfo , setShowLoadingPatientInfo] = React.useState(false);
 
     const patientHospitalNumber = props.location.state;
+    const type = props.location.numberType;
     let patientId;
     const currentForm = {
         code: CODES.PATIENT_REGISTRATION_FORM,
@@ -47,7 +48,7 @@ const EditPatientFormio = (props) => {
             };
             setShowLoadingPatientInfo(true);
             axios
-                .get(`${baseUrl}patients/hospitalNumber?hospitalNumber=${patientHospitalNumber}`, requestOptions)
+                .get(`${baseUrl}patients/hospitalNumber?hospitalNumber=${patientHospitalNumber}&patientNumberType=${type}`, requestOptions)
                 .then(response => {
                     try {
                         const patientObj = response.data.details;

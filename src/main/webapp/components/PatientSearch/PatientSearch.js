@@ -31,6 +31,7 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 const tableIcons = {
 Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -140,18 +141,18 @@ const PatientSearch = (props) => {
 
                               //console.log('in result')
                               //console.log( result.headers);
-                              console.log( result.headers['x-total-count']);
+                              //console.log( result.headers['x-total-count']);
                               resolve({
                                   data: result.data.map((row) => ({
                                       name: <Link
                                           to ={{
                                               pathname: "/patient-dashboard",
-                                              state: row.hospitalNumber
+                                              state: {patientNumber: row.hospitalNumber, numberType: row.patientNumberType},
                                           }}
 
-                                          title={"Click to view patient dashboard"}
-                                      >{row.firstName}  { ' '}  {row.lastName ? row.lastName.toUpperCase() : ""}</Link>,
-                                      id: row.hospitalNumber,
+                                          title={"Click to view patient dashboard for patient"}
+                                      >{row.firstName}  { ' '}  {row.lastName ? row.lastName.toUpperCase() : ""}  </Link>,
+                                      id: <span title={row.patientNumberType || ""}> {row.hospitalNumber} <FiberManualRecordIcon fontSize={"small"} color={row.patientNumberType && row.patientNumberType === 'Hospital Number' ? 'primary': 'secondary' } /></span>,
                                       gender: row.details && row.details.gender && row.details.gender.display ? row.details.gender.display : 'N/A',
                                       age: (row.dob === 0 ||
                                           row.dob === undefined ||
@@ -177,7 +178,8 @@ const PatientSearch = (props) => {
                                                           <Link
                                                               to ={{
                                                                   pathname: "/patient-dashboard",
-                                                                  state: (row.details && row.details.hospitalNumber ? row.details.hospitalNumber : row.hospitalNumber)
+                                                                  state: {patientNumber: (row.details && row.details.hospitalNumber ? row.details.hospitalNumber : row.hospitalNumber), numberType: row.patientNumberType}
+
                                                               }}
                                                           >
                                                               <MdDashboard size="15" color="blue" />{" "}<span style={{color: '#000'}}>Patient Dashboard</span>
@@ -188,7 +190,8 @@ const PatientSearch = (props) => {
                                                           <Link
                                                               to={{
                                                                   pathname: "/patient-update-formio",
-                                                                  state: (row.details && row.details.hospitalNumber ? row.details.hospitalNumber : row.hospitalNumber)
+                                                                  state: (row.details && row.details.hospitalNumber ? row.details.hospitalNumber : row.hospitalNumber),
+                                                                  numberType: row.patientNumberType
                                                               }}
                                                           >
                                                               <MdModeEdit size="15" color="blue" />{" "}<span style={{color: '#000'}}>Edit Patient </span>

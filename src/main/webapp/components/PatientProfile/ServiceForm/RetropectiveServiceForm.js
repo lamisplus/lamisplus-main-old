@@ -118,7 +118,7 @@ function ServiceFormPage(props) {
 
   React.useEffect(() => {
     setPrograms(
-      props.programList
+      props.programList.filter((x) => x.value !== CODES.GENERAL_SERVICE)
         .map((x) => ({ ...x, label: x.name, value: x.code }))
         //.filter((x) => x.value === CODES.GENERAL_SERVICE)
     );
@@ -184,7 +184,9 @@ function ServiceFormPage(props) {
   };
 
   const handleProgramChange = (newValue, actionMeta) => {
-    fetchServiceByProgram(newValue.id);
+    //fetchServiceByProgram(newValue.id);
+    fetchPatientServiceByProgram(props.patient.patientId, newValue.code);
+   // fetchPatientServiceByProgram(props.patient.patientId, newValue.code);
   };
 
   async function fetchServiceByProgram( programId) {
@@ -320,7 +322,7 @@ function ServiceFormPage(props) {
                     title="Services Form History"
                     columns={[
                       { title: 'Form Name', field: 'formName' },
-                      { title: 'Date', field: 'date' },
+                      { title: 'Date', field: 'dateEncounter' },
                     ]}
                     data={props.patientEncounterList}
                     actions={[
@@ -386,6 +388,7 @@ function ServiceFormPage(props) {
                   visitId={props.patient.visitId}
                   onSuccess={onSuccess}
                   encounterId={currentForm.encounterId}
+                  formType={1}
                 />
               )}
               {currentForm && currentForm.type === "EDIT" && (
@@ -396,6 +399,10 @@ function ServiceFormPage(props) {
                   visitId={props.patient.visitId}
                   onSuccess={onSuccess}
                   encounterId={currentForm.encounterId}
+                  timeCreated={currentForm.timeCreated}
+                  dateEncounter={currentForm.dateEncounter}
+                  organisationUnitId={currentForm.organisationUnitId}
+
                   formType={1}
                 />
               )}

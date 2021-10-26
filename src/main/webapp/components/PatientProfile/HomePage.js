@@ -86,9 +86,8 @@ function HomePage(props) {
   ]
   const changeDashboard = (e, { value }) => setDashboard(value);
   const [fetchingPatient, setFetchingPatient] = useState(false);
-
-
-  const hospitalNumber = props.location.state;
+  const hospitalNumber = props.location.state.patientNumber;
+  const type = props.location.state.numberType;
 
   const isEmpty = (value) => {
     if (JSON.stringify(value) === "{}") {
@@ -105,7 +104,7 @@ function HomePage(props) {
     const onError = () => {
       setFetchingPatient(false);
     };
-    props.fetchPatientByHospitalNumber(hospitalNumber, onSuccess, onError);
+    props.fetchPatientByHospitalNumber(hospitalNumber, type,  onSuccess, onError);
   }, [hospitalNumber]);
 
   const handleChange = (event, newValue) => {
