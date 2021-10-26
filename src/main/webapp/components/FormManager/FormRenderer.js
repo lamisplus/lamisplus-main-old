@@ -114,11 +114,13 @@ const FormRenderer = (props) => {
     if(formId){
       updateForm(submission, onSuccess, onError);
     }else{
+
+
       const keys = Object.keys(submission.data);
-      console.log(keys);
+
       // remove the base
-      if(keys.length == 1 && _.isArray(submission.data[keys[0]])){
-        submission.data = submission.data[keys[0]];
+      if(keys.includes('orders') && _.isArray(submission.data['orders'])){
+        submission.data = submission.data['orders'];
       }
 
       saveForm(submission, onSuccess, onError);
@@ -183,6 +185,17 @@ const FormRenderer = (props) => {
   </span>);
   }
 
+  const onSave = (submission) => {
+    delete submission.data.patient;
+    delete submission.data.authHeader;
+    delete submission.data.submit;
+    delete submission.data.baseUrl;
+
+    if (props.onSubmit) {
+      return props.onSubmit(submission);
+    }
+    return submitForm(submission);
+  }
   return (
     <React.Fragment>
         <Card>
@@ -207,15 +220,13 @@ const FormRenderer = (props) => {
               hideComponents={props.hideComponents}
               options={options}
               onSubmit={(submission) => {
-                delete submission.data.patient;
-                delete submission.data.authHeader;
-                delete submission.data.submit;
-                delete submission.data.baseUrl;
-
-                if (props.onSubmit) {
-                  return props.onSubmit(submission);
+                onSave(submission);
+              }}
+              onCustomEvent={(submission) => {
+                if(submission.type === 'onSubmitOrderButtonClicked'){
+                  console.log('is onSubmitOrderButtonClicked');
+                  onSave(submission);
                 }
-                return submitForm(submission);
               }}
             />
           </CardBody>

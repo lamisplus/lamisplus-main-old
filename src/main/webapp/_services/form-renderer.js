@@ -4,7 +4,8 @@ import axios from "axios";
 export const formRendererService = {
     fetchEncounterById,
     fetchFormByFormCode,
-    updateFormData
+    updateFormData,
+    updateEncounter
 };
 
 function fetchEncounterById(encounterId) {
@@ -20,3 +21,7 @@ function fetchFormByFormCode(formCode, formType) {
  function updateFormData(id, data){
     return axios.put(`${url}form-data/${id}`, data)
  }
+
+function updateEncounter(id, data){
+    return axios.put(`${url}encounters/${id}/retrospective-data`, data)
+}

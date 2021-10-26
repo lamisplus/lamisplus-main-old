@@ -135,7 +135,7 @@ public class UpdateService {
 
         try {
             if (lastUpdateCompleted != null && updateNotCompleted == null) {
-                String uri = "http://localhost:8080/api/updates/server?version="+lastUpdateCompleted.getVersion();
+                String uri = "http://www.lamisplus.org/base-module/api/updates/server?version="+lastUpdateCompleted.getVersion();
                 RestTemplate restTemplate = new RestTemplate();
                 Update result = restTemplate.getForObject(uri, Update.class);
                 if (result != null) {

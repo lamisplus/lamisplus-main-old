@@ -286,11 +286,11 @@ export const fetchPatientVitalSigns = (id, onSuccess, onError) => dispatch => {
      }  
  }
 
- export const fetchByHospitalNumber = (id, onSuccess, onError) => dispatch => {
+ export const fetchByHospitalNumber = (id, type, onSuccess, onError) => dispatch => {
     console.log(id);
     if(id) {
         axios
-            .get(`${baseUrl}patients/hospitalNumber?hospitalNumber=${id}`)
+            .get(`${baseUrl}patients/hospitalNumber?hospitalNumber=${id}&patientNumberType=${type}`)
             .then(response => {
                 dispatch({
                     type: ACTION_TYPES.PATIENTS_FETCH_BY_ID,
@@ -335,6 +335,7 @@ export const fetchPatientEncounterProgramCodeExclusionList = (id, onSuccess, onE
      )
      }  
  }
+
 
 export const fetchCountries = () => dispatch => {
   axios(`${baseUrl}countries`)

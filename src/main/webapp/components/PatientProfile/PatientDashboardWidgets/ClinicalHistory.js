@@ -67,7 +67,7 @@ function ClinicalHistory(props) {
         <Tabs
           value={value}
           onChange={handleChange}
-          aria-label="wrapped label tabs example"
+          aria-label=""
         >
           <Tab value="one" label="Clinic" {...a11yProps("one")} />
           <Tab value="two" label="Vital Signs" wrapped {...a11yProps("two")} />
