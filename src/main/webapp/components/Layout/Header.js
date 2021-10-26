@@ -132,7 +132,7 @@ function Header() {
   const notify = () => toast.info(< >
 
   <h3 className="mt-2">Update is available</h3>
-  <Button variant="contained" onClick={DownloadButton}>Download Now!</Button>
+  <Button variant="contained" onClick={DownloadButton} style={{ textTransform: "capitalize", backgroundColor: "balck !important" }}>Download </Button>
   </>, {
     className: 'black-background',
     position: "top-right",
