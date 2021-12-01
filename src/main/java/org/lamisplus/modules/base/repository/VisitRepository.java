@@ -53,6 +53,8 @@ public interface VisitRepository extends JpaRepository<Visit, Long>, JpaSpecific
             "date_visit_start BETWEEN ?4 AND ?5", nativeQuery = true)
     Long countAllByOrganisationUnitIdAndArchivedAndVisitTypeIdAndDateVisitStartBetween(Long organisationUnitId, int archived, Long visitTypeId, LocalDate to, LocalDate now);
 
+    @Query(value = "SELECT * FROM visit WHERE uuid is NULL", nativeQuery = true)
+    List<Visit> findNullUuid();
 
     //Date Visit End Less than or equal to today
 }

@@ -130,4 +130,12 @@
             SELECT pg_catalog.setval('permission_id_seq', 225, false);
         </sql>
     </changeSet>
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1628678831400-167">
+        <sqlFile dbms="postgresql"
+                 path="sql/hiv_form_update.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="false"
+                 stripComments="true"/>
+    </changeSet>
 </databaseChangeLog>

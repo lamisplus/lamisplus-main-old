@@ -80,4 +80,7 @@ public interface FormDataRepository extends JpaRepository<FormData, Long>, JpaSp
     List<FormData> findByDateEncounterAndPatientId(LocalDate dateEncounter, Long patientId);
 
     void deleteAllByEncounterId(Long encounterId);
+
+    @Query(value = "SELECT * FROM form_data WHERE uuid is NULL", nativeQuery = true)
+    List<FormData> findNullUuid();
 }

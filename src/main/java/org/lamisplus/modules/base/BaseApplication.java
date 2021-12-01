@@ -10,9 +10,11 @@ import org.lamisplus.modules.base.config.ApplicationProperties;
 import org.lamisplus.modules.bootstrap.BootstrapModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
+import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.FileSystemResource;
@@ -49,11 +51,14 @@ public class BaseApplication extends SpringBootServletInitializer {
     @Autowired
     private DataSource dataSource;
 
+    private static ConfigurableApplicationContext context;
+
     public static void main(String[] args) {
-        SpringApplication.run(BaseApplication.class, args);
+
+        context = SpringApplication.run(BaseApplication.class, args);
     }
 
-    @Bean
+    /*@Bean
     //Reads database properties from the config.yml
     public static PropertySourcesPlaceholderConfigurer properties() {
         PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
@@ -62,7 +67,7 @@ public class BaseApplication extends SpringBootServletInitializer {
         propertySourcesPlaceholderConfigurer.setProperties(yaml.getObject());
         propertySourcesPlaceholderConfigurer.setIgnoreResourceNotFound(true);
         return propertySourcesPlaceholderConfigurer;
-    }
+    }*/
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -130,5 +135,17 @@ public class BaseApplication extends SpringBootServletInitializer {
         liquibase.setChangeLog("classpath:liquibase/master-changelog-1.0.xml");
         liquibase.setDataSource(dataSource);
         return liquibase;
+    }
+
+    public static void restart() {
+        ApplicationArguments args = context.getBean(ApplicationArguments.class);
+
+        Thread thread = new Thread(() -> {
+            context.close();
+            context = SpringApplication.run(BaseApplication.class, args.getSourceArgs());
+        });
+
+        thread.setDaemon(false);
+        thread.start();
     }
 }

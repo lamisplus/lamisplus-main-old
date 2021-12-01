@@ -57,5 +57,9 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
     List<Encounter> findByPatientByPatientIdAndDateModifiedIsAfter(Long patientId, LocalDate dateModified);
 
 
+    @Query(value = "SELECT * FROM encounter WHERE uuid is NULL", nativeQuery = true)
+    List<Encounter> findNullUuid();
+
+
 }
 

@@ -127,7 +127,8 @@ public class UpdateService {
 
 
     //On client
-    @Scheduled(fixedDelay = 10000, initialDelay = 10000)
+    // cron to execute each 1h
+    @Scheduled(cron = "0 */1 * * *")
     public Boolean checkForUpdateOnClient(){
         Update lastUpdateCompleted = updateRepository.findUpdateByMaxVersion();
         Update updateNotCompleted = updateRepository.findUpdateByMaxVersionNotCompleted();

@@ -45,4 +45,8 @@ public class FormData extends JsonBEntity implements Serializable {
     @JoinColumn(name = "organisation_unit_id", referencedColumnName = "id", insertable = false, updatable = false)
     @ToString.Exclude
     public OrganisationUnit organisationUnitByOrganisationUnitId;
+
+    @Basic
+    @Column(name = "uuid")
+    private String uuid;
 }
