@@ -89,9 +89,7 @@ const CaseManagerSearch = (props) => {
 
 
 
-   //Get States from selected country
-
-
+//Get States from selected country
 const  setStateByCountryId=() =>{
     async function getStateByCountryId() {
         const response = await axios.get(url + 'organisation-units/hierarchy/1/2')

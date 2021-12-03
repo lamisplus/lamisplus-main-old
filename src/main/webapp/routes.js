@@ -89,6 +89,7 @@ const EnrolledPatientsDashboard = React.lazy(() => import("components/PatientPro
 /* Data Visualisation */ 
 const AnalyticsDashboards = React.lazy(() => import("components/Admin/DashboardAnalytics/Index"));
 const TestPageForVisualisation = React.lazy(() => import("pages/TestPageForVisualisation"));
+const SyncVisualisation = React.lazy(() => import("components/Admin/Sync/SyncVisualisation"));
 const MonitoringForVisualisation = React.lazy(() => import("components/Admin/DashboardAnalytics/Monitoring/Index"));
 const QualityCareForVisualisation = React.lazy(() => import("components/Admin/DashboardAnalytics/QualityCare/Index"));
 const CaseBaseSurvillance = React.lazy(() => import("components/Admin/DashboardAnalytics/CaseBaseSurvillance/Index"));
@@ -264,6 +265,7 @@ class Routes extends Component {
               {/* The route to Visualization*/} 
                 <PrivateRoute exact path={"/data-analytics"} component={AnalyticsDashboards} />
                 <PrivateRoute exact path={"/visual"} component={TestPageForVisualisation} />
+                <PrivateRoute exact path={"/sync-visualisation"} component={SyncVisualisation} />
                 <PrivateRoute exact path={"/monitoring"} component={MonitoringForVisualisation} />
                 <PrivateRoute exact path={"/quality-care"} component={QualityCareForVisualisation} />
                 <PrivateRoute exact path={"/case-base-survillance"} component={CaseBaseSurvillance} />
