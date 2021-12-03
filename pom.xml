@@ -12,7 +12,7 @@
     <groupId>org.lamisplus.modules</groupId>
     <artifactId>base-module</artifactId>
     <version>1.1.0</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <name>base-module</name>
     <description>LamisPlus base module</description>
 
@@ -36,12 +36,12 @@
             <name>Foreach nexus</name>
             <url>https://repository.foreach.be/nexus/repository/public/</url>
         </repository>
-        <repository>
+        <!--<repository>
             <id>SymmetricDS</id>
             <name>SymmetricDS</name>
             <url>http://maven.jumpmind.com/repo/</url>
             <layout>default</layout>
-        </repository>
+        </repository>-->
     </repositories>
     <!--<distributionManagement>
         <repository>
@@ -56,13 +56,13 @@
         </dependencies>
     </dependencyManagement>
 
-    <distributionManagement>
+    <!--<distributionManagement>
         <repository>
             <id>internal.repo</id>
             <name>Temporary Staging Repository</name>
             <url>file://${project.build.directory}/mvn-repo</url>
         </repository>
-    </distributionManagement>
+    </distributionManagement>-->
 
     <dependencies>
         <dependency>
@@ -448,7 +448,7 @@
                    </execution>
                </executions>
            </plugin>-->
-            <plugin>
+            <!--<plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>2.8.2</version>
                 <configuration>
@@ -460,16 +460,16 @@
                 <artifactId>site-maven-plugin</artifactId>
                 <version>0.11</version>
                 <configuration>
-                    <message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
-                    <noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
-                    <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
-                    <branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
+                    <message>Maven artifacts for ${project.version}</message>  &lt;!&ndash; git commit message &ndash;&gt;
+                    <noJekyll>true</noJekyll>                                  &lt;!&ndash; disable webpage processing &ndash;&gt;
+                    <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> &lt;!&ndash; matches distribution management repository url above &ndash;&gt;
+                    <branch>refs/heads/mvn-repo</branch>                       &lt;!&ndash; remote branch name &ndash;&gt;
                     <includes><include>**/*</include></includes>
-                    <repositoryName>YOUR-REPOSITORY-NAME</repositoryName>      <!-- github repo name -->
-                    <repositoryOwner>YOUR-GITHUB-USERNAME</repositoryOwner>    <!-- github username  -->
+                    <repositoryName>YOUR-REPOSITORY-NAME</repositoryName>      &lt;!&ndash; github repo name &ndash;&gt;
+                    <repositoryOwner>YOUR-GITHUB-USERNAME</repositoryOwner>    &lt;!&ndash; github username  &ndash;&gt;
                 </configuration>
                 <executions>
-                    <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
+                    &lt;!&ndash; run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase &ndash;&gt;
                     <execution>
                         <goals>
                             <goal>site</goal>
@@ -477,7 +477,7 @@
                         <phase>deploy</phase>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 </project>

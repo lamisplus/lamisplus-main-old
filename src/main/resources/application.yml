@@ -51,8 +51,8 @@ server:
 spring:
     datasource:
         username: postgres
-        password: admin!123
-        url: jdbc:postgresql://localhost:5432/lamisplus
+        password: emeka
+        url: jdbc:postgresql://localhost:5432/Yola_OSS_Adamawa
         driver-class-name: org.postgresql.Driver
         hibernate:
             event.merge.enty_copy_observer: allow

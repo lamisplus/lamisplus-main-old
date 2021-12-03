@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.config;
 
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.yaml.snakeyaml.Yaml;
 
@@ -8,10 +9,13 @@ import java.io.*;
 @Configuration
 @Data
 public class YmlFile {
+    @Value("${spring.datasource.url}")
     public static String dbUrl;
 
+    @Value("${spring.datasource.username}")
     public static String dbUser;
 
+    @Value("${spring.datasource.password}")
     public static String dbPass;
 
     public static DatabaseProperties readYml(File ymlFile) throws IOException {
