@@ -86,13 +86,13 @@ const Example = (props) => {
                     <Card   style={{backgroundColor: '#7DC2AF', color: '#fff'}}>
                       <CardBody>
                         <CardTitle className="text-capitalize">
-                           <h3>94</h3>
+                           <h3>94 Facilities </h3>
                         </CardTitle>
                         <CardText>
-                          <h4>Facilities </h4>
-                          <h3>
+                         
+                          <h2>
                             Expected
-                          </h3>
+                          </h2>
                         </CardText>
                       </CardBody>
                     </Card>
@@ -101,13 +101,13 @@ const Example = (props) => {
                     <Card   style={{backgroundColor: '#05396B', color: '#fff'}}>
                       <CardBody>
                         <CardTitle className="text-capitalize">
-                        <h3>60 </h3>
+                        <h3>60  Facilities</h3>
                         </CardTitle>
                         <CardText>
-                        <h4>Facilities</h4>
-                          <h3>
+                       
+                          <h2>
                             Queue 
-                          </h3>
+                          </h2>
                         </CardText>
                       </CardBody>
                     </Card>
@@ -116,13 +116,13 @@ const Example = (props) => {
                     <Card   style={{backgroundColor: '#000', color: '#fff'}}>
                       <CardBody>
                         <CardTitle className="text-capitalize">
-                           <h3>10</h3>
+                           <h3>10 Facilities</h3>
                         </CardTitle>
                         <CardText>
-                        <h4>Facilities</h4>
-                          <h3>
+                       
+                          <h2>
                              Processing 
-                          </h3>
+                          </h2>
                         </CardText>
                       </CardBody>
                     </Card>
@@ -131,13 +131,13 @@ const Example = (props) => {
                     <Card   style={{backgroundColor: '#FFBF43'}}>
                       <CardBody>
                         <CardTitle className="text-capitalize">
-                          <h3>20</h3>
+                          <h3>20 Facilities</h3>
                         </CardTitle>
                         <CardText>
-                        <h4>Facilities</h4>
-                          <h3>
+                      
+                          <h2>
                              Completed 
-                          </h3>
+                          </h2>
                         </CardText>
                       </CardBody>
                     </Card>
