@@ -9,13 +9,10 @@ import java.io.*;
 @Configuration
 @Data
 public class YmlFile {
-    @Value("${spring.datasource.url}")
     public static String dbUrl;
 
-    @Value("${spring.datasource.username}")
     public static String dbUser;
 
-    @Value("${spring.datasource.password}")
     public static String dbPass;
 
     public static DatabaseProperties readYml(File ymlFile) throws IOException {
@@ -39,7 +36,7 @@ public class YmlFile {
 
     public static void getDatabaseConnectionParameters(String file) {
         String fileSeparator = File.separator;
-        File ymlFile = new File(ApplicationProperties.modulePath + fileSeparator + "config.yml");
+        File ymlFile = new File(file);
         try {
             readYml(ymlFile).getSpring().forEach((k, v) -> {
                 dbUrl = v.getUrl();
