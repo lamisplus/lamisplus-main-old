@@ -101,7 +101,7 @@ const RecencyTesting = React.lazy(() => import("components/Admin/DashboardAnalyt
 const ApplicationUpdates = React.lazy(() => import("components/Admin/ApplicationUpdate/UpdateList"));
 const DataVisualizationDashboard = React.lazy(() => import("components/Admin/DataVisualisation/Index"));
 /* Sample table i design */
-const TestPage = React.lazy(() => import("pages/TestPage"));
+const TestPage = React.lazy(() => import("components/Patient/PateintRegistationPage"));
 const TabMenu = React.lazy(() => import("pages/TabMenu"));
 const FormRendererPage = React.lazy(() => import("components/FormManager/FormRendererPage"));
 //Reporting components
