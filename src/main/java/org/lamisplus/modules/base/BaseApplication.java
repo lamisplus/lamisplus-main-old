@@ -58,7 +58,7 @@ public class BaseApplication extends SpringBootServletInitializer {
         context = SpringApplication.run(BaseApplication.class, args);
     }
 
-    /*@Bean
+    @Bean
     //Reads database properties from the config.yml
     public static PropertySourcesPlaceholderConfigurer properties() {
         PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
@@ -67,7 +67,7 @@ public class BaseApplication extends SpringBootServletInitializer {
         propertySourcesPlaceholderConfigurer.setProperties(yaml.getObject());
         propertySourcesPlaceholderConfigurer.setIgnoreResourceNotFound(true);
         return propertySourcesPlaceholderConfigurer;
-    }*/
+    }
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {

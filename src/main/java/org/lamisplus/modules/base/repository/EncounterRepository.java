@@ -19,6 +19,9 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
 
     Optional<Encounter> findOneByPatientIdAndFormCodeAndArchived(Long patientId, String FormCode, int Archived);
 
+    Optional<Encounter> findTopByPatientIdAndFormCodeAndOrganisationUnitIdOrderByIdDesc(Long patientId, String FormCode, Long organisationUnitId);
+
+
     Optional<Encounter> findByPatientIdAndProgramCodeAndFormCodeAndDateEncounterAndOrganisationUnitId(Long patientId, String ProgramCode, String FormCode, LocalDate dateFncounter, Long organisationUnitId);
 
 /*    @Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.EncounterDistinctDTO" +

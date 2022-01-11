@@ -75,7 +75,7 @@ public class PatientService {
         final Patient patient = patientMapper.toPatient(patientDTO);
         patient.setUuid(UUID.randomUUID().toString());
         patient.setOrganisationUnitId(organisationUnitId);
-        Patient savedPatient =  patientRepository.save(patient);
+        Patient savedPatient = patientRepository.save(patient);
 
         //Start of flag operation for associated with (0)
         savePatientAndCheckForFlag(savedPatient.getId(), "bbc01821-ff3b-463d-842b-b90eab4bdacd", savedPatient.getDetails());
@@ -128,11 +128,11 @@ public class PatientService {
 
     }
 
-    private void savePatientAndCheckForFlag(Long patientId, String formCode, Object details){
+    private void savePatientAndCheckForFlag(Long patientId, String formCode, Object details) {
         //Start of flag operation for associated with (0)
         List<FormFlag> formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived(formCode, 0, UN_ARCHIVED);
         Object patientDetails = this.setAge(details);
-        if(!formFlags.isEmpty()){
+        if (!formFlags.isEmpty()) {
             flagService.checkForAndSavePatientFlag(patientId, patientDetails, formFlags);
         }
     }
@@ -295,7 +295,7 @@ public class PatientService {
             for (String formCode : formCodeSet) {
                 Form form = formRepository.findByCodeAndArchived(formCode, UN_ARCHIVED).get();
                 //Start of flag operation
-                    forms = flagService.setAndGetFormListForFlagOperation(this.getPatientById(patientId), form, forms);
+                forms = flagService.setAndGetFormListForFlagOperation(this.getPatientById(patientId), form, forms);
             }
 
         } else {
@@ -377,34 +377,34 @@ public class PatientService {
         List<String> states = new ArrayList<>();
         List<String> provinces = new ArrayList<>();
         List<Patient> patients;
-        if(gender == null || gender.equalsIgnoreCase("*")){
-            if(pregnant){
+        if (gender == null || gender.equalsIgnoreCase("*")) {
+            if (pregnant) {
                 genders.add("Female");
             } else {
                 genders = applicationCodesetRepository.findAllGender();
             }
-        }else {
+        } else {
             genders.add(gender);
         }
 
-        if(state == null || state.equalsIgnoreCase("*")){
+        if (state == null || state.equalsIgnoreCase("*")) {
             states = organisationUnitRepository.findAllState();
-        }else {
+        } else {
             states.add(state);
         }
 
-        if(lga == null || lga.equalsIgnoreCase("*")){
+        if (lga == null || lga.equalsIgnoreCase("*")) {
             provinces = organisationUnitRepository.findAllProvince();
-        }else {
+        } else {
             provinces.add(lga);
         }
 
-        if(pregnant) {
+        if (pregnant) {
             patients = patientRepository.findAllByPatientsNotManagedInHIVPregnantByFilteredParameters(genders, states, provinces,
                     getOrganisationUnitId(), ageFrom, ageTo, nineMonths, pageable)
                     .stream()
                     .collect(Collectors.toList());
-        }else {
+        } else {
             patients = patientRepository.findAllByPatientsNotManagedInHIVNotPregnantByFilteredParameters(genders, states, provinces,
                     getOrganisationUnitId(), ageFrom, ageTo, nineMonths, pageable)
                     .stream()
@@ -426,7 +426,7 @@ public class PatientService {
 
         List<Patient> patients;
 
-        if(applicationUserId == null || applicationUserId == 0) {
+        if (applicationUserId == null || applicationUserId == 0) {
             patients = patientRepository.findAllByPatientsManagedInHIVByFilteredParameters(getOrganisationUnitId(), ageFrom, ageTo, pageable)
                     .stream()
                     .collect(Collectors.toList());
@@ -439,7 +439,7 @@ public class PatientService {
         return new PageImpl<Patient>(patients, pageable, pageable.getPageSize());
     }
 
-    private Boolean checkFilterParameters(String patientDetails, String gender, String state, String lga){
+    private Boolean checkFilterParameters(String patientDetails, String gender, String state, String lga) {
         JsonNode tree = null;
         JsonNode jsonNode;
         Boolean find = false;
@@ -456,21 +456,21 @@ public class PatientService {
 
             tree = mapper.readTree(patientDetails).get("state");
             jsonNode = tree.get("name");
-            String st= String.valueOf(jsonNode).replaceAll("^\"+|\"+$", "");
+            String st = String.valueOf(jsonNode).replaceAll("^\"+|\"+$", "");
 
-            if(gender != "*" && gender.equalsIgnoreCase(gen)) {
+            if (gender != "*" && gender.equalsIgnoreCase(gen)) {
                 find = true;
-            }else if(gender == "*"){
-                find = true;
-            }
-            if(localGovt != "*" && localGovt.equalsIgnoreCase(lga)) {
-                find = true;
-            } else if(localGovt == "*"){
+            } else if (gender == "*") {
                 find = true;
             }
-            if(st != "*" && st.equalsIgnoreCase(lga)) {
+            if (localGovt != "*" && localGovt.equalsIgnoreCase(lga)) {
                 find = true;
-            } else if(st == "*"){
+            } else if (localGovt == "*") {
+                find = true;
+            }
+            if (st != "*" && st.equalsIgnoreCase(lga)) {
+                find = true;
+            } else if (st == "*") {
                 find = true;
             }
             return find;
@@ -481,11 +481,11 @@ public class PatientService {
     }
 
     //Case management
-    public UserDTO getUserByPatientId(Long id){
+    public UserDTO getUserByPatientId(Long id) {
         patientRepository.findById(id)
-                .orElseThrow(()-> new EntityNotFoundException(Patient.class, "id", ""+id));
+                .orElseThrow(() -> new EntityNotFoundException(Patient.class, "id", "" + id));
         ApplicationUserPatient applicationUserPatient = applicationUserPatientRepository.findAllByPatientIdAndArchived(id, UN_ARCHIVED)
-                .orElseThrow(() -> new EntityNotFoundException(ApplicationUserPatient.class,"id:",id+""));
+                .orElseThrow(() -> new EntityNotFoundException(ApplicationUserPatient.class, "id:", id + ""));
 
         return userMapper.userToUserDTO(applicationUserPatient.getApplicationUserByApplicationUserId());
     }
@@ -519,7 +519,7 @@ public class PatientService {
         return userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
     }
 
-    private PatientDTO getPatientById(Long patientId){
+    private PatientDTO getPatientById(Long patientId) {
         Optional<Patient> patientOptional = this.patientRepository.findByIdAndOrganisationUnitIdAndArchived(patientId, getOrganisationUnitId(), UN_ARCHIVED);
 
         if (!patientOptional.isPresent()) {
@@ -604,7 +604,7 @@ public class PatientService {
         return PageRequest.of(pageNumber, pageSize, sort);
     }
 
-    private PatientDTO getPatient(Optional<Patient> patientOptional){
+    private PatientDTO getPatient(Optional<Patient> patientOptional) {
         List<Flag> flags = new ArrayList<>();
 
         patientOptional.get().getPatientFlagsById().forEach(patientFlag -> {
@@ -618,18 +618,18 @@ public class PatientService {
         return patientTransformer.transformDTO(patientDTO);
     }
 
-    private Object setAge(Object object){
+    private Object setAge(Object object) {
         try {
             //mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             String details = "";
-            if(object instanceof String){
+            if (object instanceof String) {
                 details = object.toString();
             } else {
                 details = mapper.writeValueAsString(object);
             }
             JSONObject patientDetails = new JSONObject(details);
             String dob = patientDetails.optString("dob");
-            if(dob != null) {
+            if (dob != null) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
                 //convert String to LocalDate
@@ -639,7 +639,7 @@ public class PatientService {
                 patientDetails.put("age", period.getYears());
             }
             return patientDetails;
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -656,10 +656,10 @@ public class PatientService {
         }
 
         Optional<Encounter> optionalEncounter = encounterRepository.findOneByPatientIdAndFormCodeAndArchived(patientDTO.getPatientId(), INTAKE_FORM_CODE, UN_ARCHIVED);
-        if(optionalEncounter.isPresent()){
+        if (optionalEncounter.isPresent()) {
             Encounter encounter = optionalEncounter.get();
             Optional<FormData> optionalFormData = encounter.getFormDataByEncounter().stream().findFirst();
-            if(optionalFormData.isPresent()){
+            if (optionalFormData.isPresent()) {
                 formFlags = formFlagRepository.findByFormCodeAndStatusAndArchived("INTAKE_FORM_CODE", STATUS, UN_ARCHIVED);
                 if (!formFlags.isEmpty()) {
                     String formData = JsonUtil.getJsonNode(optionalFormData.get().getData()).toString();
@@ -675,11 +675,43 @@ public class PatientService {
                 (id, getOrganisationUnitId(), UN_ARCHIVED)
                 .orElseThrow(() -> new EntityNotFoundException(Patient.class, "id", id + ""));
         return patientRepository.findPatientIdentifierNumberByPatientId(id, identifierCode, UN_ARCHIVED, getOrganisationUnitId())
-        .orElse(null);
+                .orElse(null);
     }
 
+    public String getFormFieldValue(Long id, String formCode, String fieldName, Boolean isAppCodeSet) {
+        patientRepository.findByIdAndOrganisationUnitIdAndArchived
+                (id, getOrganisationUnitId(), UN_ARCHIVED)
+                .orElseThrow(() -> new EntityNotFoundException(Patient.class, "id", id + ""));
 
-    //Patients Not Managed
+        Optional<Encounter> optionalEncounter = encounterRepository.findTopByPatientIdAndFormCodeAndOrganisationUnitIdOrderByIdDesc(id, formCode, getOrganisationUnitId());
+
+        if (optionalEncounter.isPresent()) {
+            Encounter encounter = optionalEncounter.get();
+            int size = encounter.getFormDataByEncounter().size();
+            FormData formData = encounter.getFormDataByEncounter().get(size - 1);
+            Object data = formData.getData();
+            String object = JsonUtil.getJsonNode(data).toString();
+            JsonNode jsonNode = null;
+
+            try {
+                if (isAppCodeSet) {
+                    jsonNode = mapper.readTree(object).get(fieldName);
+                    jsonNode = jsonNode.get("display");
+                    return String.valueOf(jsonNode).replaceAll("^\"+|\"+$", "");
+                } else {
+                    jsonNode = mapper.readTree(object.toString()).get(fieldName);
+                    return String.valueOf(jsonNode).replaceAll("^\"+|\"+$", "");
+                }
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+}
+
+
+        //Patients Not Managed
     /*public Page<Patient> findAllByPatientNotManaged(String programCode, String gender, String state, String lga,
                                                     Boolean pregnant, Long applicationUserId, int age, Pageable pageable) {
         LocalDate currentMonth = YearMonth.now().atEndOfMonth();
@@ -699,5 +731,3 @@ public class PatientService {
         }
         return patientRepository.findAllByPatientsManaged(programCode, UN_ARCHIVED, getOrganisationUnitId(), pageable);
     }*/
-
-}

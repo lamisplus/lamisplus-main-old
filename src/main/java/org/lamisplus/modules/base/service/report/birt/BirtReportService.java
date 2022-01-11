@@ -306,7 +306,7 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
     private void getDatabaseConnectionParameters( IReportRunnable iReportRunnable ) {
         String fileSeparator = File.separator;
-        YmlFile.getDatabaseConnectionParameters(ApplicationProperties.modulePath + fileSeparator +"config.yml");
+        //YmlFile.getDatabaseConnectionParameters(ApplicationProperties.modulePath + fileSeparator +"config.yml");
         String dbUrl = YmlFile.dbUrl;
         String dbUser = YmlFile.dbUser;
         String dbPass = YmlFile.dbPass;
