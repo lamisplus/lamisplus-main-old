@@ -1,7 +1,5 @@
 package org.lamisplus.modules.base.util;
 
-import org.eclipse.birt.report.engine.api.IRenderOption;
-
 public enum OperatorType {
     EQUAL_T0("equal_to"),
     GREATER_THAN("greater_than"),
