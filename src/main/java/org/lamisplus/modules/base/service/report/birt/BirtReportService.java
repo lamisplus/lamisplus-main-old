@@ -8,7 +8,6 @@ import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
 import org.eclipse.birt.report.engine.api.*;
 import org.eclipse.birt.report.model.api.*;
-import org.lamisplus.modules.base.config.ApplicationProperties;
 import org.lamisplus.modules.base.config.YmlFile;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
