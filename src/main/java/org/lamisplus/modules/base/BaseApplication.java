@@ -3,14 +3,11 @@ package org.lamisplus.modules.base;
 import com.foreach.across.config.AcrossApplication;
 import com.foreach.across.modules.hibernate.jpa.AcrossHibernateJpaModule;
 import com.foreach.across.modules.web.AcrossWebModule;
-import com.google.common.collect.Lists;
 import liquibase.integration.spring.SpringLiquibase;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.config.ApplicationProperties;
 import org.lamisplus.modules.bootstrap.BootstrapModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
-import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
@@ -53,6 +50,9 @@ public class BaseApplication extends SpringBootServletInitializer {
 
     private static ConfigurableApplicationContext context;
 
+    public static String modulePath = System.getProperty("user.dir");
+
+
     public static void main(String[] args) {
 
         context = SpringApplication.run(BaseApplication.class, args);
@@ -63,7 +63,7 @@ public class BaseApplication extends SpringBootServletInitializer {
     public static PropertySourcesPlaceholderConfigurer properties() {
         PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
         YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
-        yaml.setResources(new FileSystemResource(ApplicationProperties.modulePath + File.separator +"config.yml"));
+        yaml.setResources(new FileSystemResource(modulePath + File.separator +"config.yml"));
         propertySourcesPlaceholderConfigurer.setProperties(yaml.getObject());
         propertySourcesPlaceholderConfigurer.setIgnoreResourceNotFound(true);
         return propertySourcesPlaceholderConfigurer;

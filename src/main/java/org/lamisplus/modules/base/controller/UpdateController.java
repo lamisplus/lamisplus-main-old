@@ -1,13 +1,10 @@
 package org.lamisplus.modules.base.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.lamisplus.modules.base.config.AsyncConfiguration;
 import org.lamisplus.modules.base.domain.entity.Update;
 import org.lamisplus.modules.base.service.UpdateService;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 

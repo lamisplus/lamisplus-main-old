@@ -2,27 +2,18 @@ package org.lamisplus.modules.base.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.config.ApplicationProperties;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.IllegalTypeException;
 import org.lamisplus.modules.base.domain.entity.Update;
 import org.lamisplus.modules.base.repository.UpdateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-import org.yaml.snakeyaml.Yaml;
-
-import javax.annotation.PostConstruct;
 import java.io.*;
 import java.net.*;
-import java.sql.Timestamp;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -35,6 +26,8 @@ public class UpdateService {
     private static final int UPDATE_AVAILABLE = 1;
     private static final int UPDATE_COMPLETED = 2;
     private final UpdateRepository updateRepository;
+    public static String modulePath = System.getProperty("user.dir");
+
     @Autowired
     Environment environment;
 
@@ -81,7 +74,7 @@ public class UpdateService {
 
     private Boolean readFromInputStream(InputStream inputStream){
         Boolean updatedDownloaded;
-        File updateFolder = new File(ApplicationProperties.modulePath + File.separator +"update");
+        File updateFolder = new File(modulePath + File.separator +"update");
         if (!updateFolder.exists() && !updateFolder.isDirectory()) {
             updateFolder.mkdir();
         }

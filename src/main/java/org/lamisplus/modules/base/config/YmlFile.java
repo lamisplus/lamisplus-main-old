@@ -9,14 +9,14 @@ import java.io.*;
 @Configuration
 @Data
 public class YmlFile {
-    @Value("${spring.datasource.url}")
-    public static String dbUrl;
+    //@Value("${spring.datasource.url}")
+    public String dbUrl;
 
-    @Value("${spring.datasource.username}")
-    public static String dbUser;
+    //@Value("${spring.datasource.username}")
+    public String dbUser;
 
-    @Value("${spring.datasource.password}")
-    public static String dbPass;
+    //@Value("${spring.datasource.password}")
+    public String dbPass;
 
     public static DatabaseProperties readYml(File ymlFile) throws IOException {
         BufferedReader in = null;
@@ -37,8 +37,8 @@ public class YmlFile {
         return databaseProperties;
     }
 
-    public static void getDatabaseConnectionParameters(String file) {
-        String fileSeparator = File.separator;
+    public void getDatabaseConnectionParameters(String file) {
+        //String fileSeparator = File.separator;
         File ymlFile = new File(file);
         try {
             readYml(ymlFile).getSpring().forEach((k, v) -> {
