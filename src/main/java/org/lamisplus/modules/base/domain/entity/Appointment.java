@@ -33,6 +33,12 @@ public class Appointment extends Audit<String>{
     @Column(name = "visit_id")
     private Long visitId;
 
+    //TODO: add to liquibase
+    @Basic
+    @Column(name = "uuid", updatable = false)
+    @JsonIgnore
+    private String uuid;
+
     @Type(type = "jsonb")
     @Basic(fetch = FetchType.LAZY)
     @Column(name = "detail", nullable = false, columnDefinition = "jsonb")
