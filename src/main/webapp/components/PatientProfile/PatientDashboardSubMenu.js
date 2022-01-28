@@ -116,7 +116,7 @@ function PatientDashboardSubMenu(props) {
   const onSuccess = () => {
     toast.success("Form saved successfully!", { appearance: "success" });
     setShowFormModal(false);
-    props.fetchPatientByHospitalNumber(props.patientHospitalNumber)
+    props.fetchPatientByHospitalNumber(props.patientHospitalNumber, props.patient.patientNumberType)
   };
 
   const onError = () => {
@@ -371,7 +371,7 @@ function PatientDashboardSubMenu(props) {
                      onClick={() => setBiometricsModal(!biometricsModal)}
 
           >
-            <Link to={{pathname: "/patients/biometrics", state: props.patient.hospitalNumber}} >
+            <Link to={{pathname: "/patients/biometrics", state: {patientNumber: props.patient.hospitalNumber, numberType: props.patient.patientNumberType}}} >
               Capture Biometrics
             </Link>
 

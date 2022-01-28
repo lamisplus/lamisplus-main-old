@@ -89,9 +89,7 @@ const CaseManagerSearch = (props) => {
 
 
 
-   //Get States from selected country
-
-
+//Get States from selected country
 const  setStateByCountryId=() =>{
     async function getStateByCountryId() {
         const response = await axios.get(url + 'organisation-units/hierarchy/1/2')
@@ -179,7 +177,7 @@ const getlgaObj = e => {
 
   const FilterQuery = () => {
     if(otherDetails.from > otherDetails.to){
-       toast.error("Age Group From cannot be greater than Age Group TO")
+       toast.error("Age Group From cannot be greater than Age Group To")
        setMatchingAgeGroupClass("is-invalid");
        }
       setToValue(otherDetails.to)
@@ -197,10 +195,8 @@ const getlgaObj = e => {
 
   return (
     <div>
-    <Card>
-      <Row className=" mr-5  ml-5 mt-5 mb-5">
-      
-        <Col md={6}>
+    <Card className=" pr-5  pl-5 pt-5 pb-5">
+
         
         <Row>
         <Col md={6}>
@@ -233,30 +229,11 @@ const getlgaObj = e => {
                   
             </FormGroup>
         </Col>
+      
         </Row>
-        </Col>
-        
-        <Col md={6}>
-            <FormGroup>
-                <Label for="occupation">State of Residence </Label>
 
-                    <Input
-                      type="select"
-                      name="state"
-                      id="state"
-                      value={otherDetails.stateId}
-                          onChange={getProvinces}
-                      >
-                          <option >Please Select State</option>
-                          {states.map((row) => (
-                              <option key={row.id} value={row.id}>
-                                  {row.name}
-                              </option>
-                          ))}
-                        
-                  </Input>
-            </FormGroup>
-        </Col>
+
+        <Row>
         <Col md={6} style={{margingTop: "10px !important"}}>
             <FormGroup className="pt-10" >
                 <Label for="occupation" >Gender </Label>
@@ -280,32 +257,6 @@ const getlgaObj = e => {
         </Col>
         <Col md={6}>
             <FormGroup>
-                <Label for="occupation">Lga of Residence </Label>
-
-                    <Input
-                      type="select"
-                      name="lga"
-                      id="lga"
-                      value={otherDetails.lga}
-                      onChange={getlgaObj}
-                      >
-                          {provinces.length > 0 ? (
-                              provinces.map((row) => (
-                                  <option key={row.name} value={row.name}>
-                                      {row.name}
-                                  </option>
-                              ))
-                          ) : (
-                              <option key="" value="">
-                                  {" "}
-                                      No Record Found
-                              </option>
-                          )}
-                  </Input>
-            </FormGroup>
-        </Col>
-        <Col md={6}>
-            <FormGroup>
                 <Label >Pregnancy Status </Label>
 
                     <Input
@@ -321,19 +272,76 @@ const getlgaObj = e => {
                   </Input>
             </FormGroup>
         </Col>
+        </Row>
+        <Row>
+        <Col md={6}>
+            <FormGroup>
+                <Label for="occupation">State of Residence </Label>
+
+                    <Input
+                      type="select"
+                      name="state"
+                      id="state"
+                      value={otherDetails.stateId}
+                          onChange={getProvinces}
+                      >
+                          <option >Please Select State</option>
+                          {states.map((row) => (
+                              <option key={row.id} value={row.id}>
+                                  {row.name}
+                              </option>
+                          ))}
+                        
+                  </Input>
+            </FormGroup>
+        </Col>
+        
+        <Col md={6}>
+            <FormGroup>
+                <Label for="occupation">Local Government Area of Residence </Label>
+
+                    <Input
+                      type="select"
+                      name="lga"
+                      id="lga"
+                      value={otherDetails.lga}
+                      onChange={getlgaObj}
+                      >
+                          {provinces.length > 0 ? (
+                            <>
+                            <option>Please Select LGA</option>
+                              {provinces.map((row) => (
+                                  <option key={row.name} value={row.name}>
+                                      {row.name}
+                                  </option>
+                              ))
+                              }
+                            </>
+                          ) : (
+                              <option key="" value="">
+                                  {" "}
+                                      No Record Found
+                              </option>
+                          )}
+                  </Input>
+            </FormGroup>
+        </Col>
+  
+        <Row>
+        <Col md={6}></Col>
         <Col md={6}>
         <br/>
           <Button
               variant="contained"
               color="primary"
-              className=" float-left ml-10"
+              className=" float-right ml-100"
               startIcon={<FilterList />}
               onClick={() =>FilterQuery()}
             >
               <span style={{ textTransform: "capitalize" }}>Filter</span>
           </Button>
         </Col>
-        
+        </Row>
       </Row> 
       </Card>  
       <br/>

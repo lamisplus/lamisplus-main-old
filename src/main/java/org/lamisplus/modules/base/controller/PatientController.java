@@ -175,4 +175,11 @@ public class PatientController {
     public ResponseEntity<UserDTO> getAllApplicationUserByPatientId(@PathVariable Long id) {
         return ResponseEntity.ok(patientService.getUserByPatientId(id));
     }
+
+    @GetMapping("/{id}/{formCode}/{fieldName}")
+    public ResponseEntity<String> getFormFieldValue(@PathVariable Long id, @PathVariable String formCode,
+                                                    @PathVariable String fieldName,
+                                                    @RequestParam (required = false) Boolean isAppCodeSet) {
+        return ResponseEntity.ok(patientService.getFormFieldValue(id, formCode, fieldName, isAppCodeSet));
+    }
 }

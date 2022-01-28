@@ -90,7 +90,7 @@ const {
           const onSuccess = () => {
             setLoading(false)
             toast.success('Patient Checked In Successfully')
-            props.fetchPatientByHospitalNumber(props.patient.hospitalNumber)
+            props.fetchPatientByHospitalNumber(props.patient.hospitalNumber, props.patient.patientNumberType)
             props.setShowModal(false);
           }
           const onError = errstatus => {

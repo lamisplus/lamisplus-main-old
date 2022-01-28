@@ -136,13 +136,7 @@ function HomePage(props) {
                         icon={<GiFiles />}
                         {...a11yProps(3)}/>
 
-                    {/*<Tab*/}
-                    {/*    className={classes.title}*/}
-                    {/*    label="Boostrap Configuration"*/}
-                    {/*    //disabled={!authentication.userHasRole(["bootstrap_read", "bootstrap_write", "bootstrap_delete"])}*/}
-                    {/*    icon={<GiFiles />}*/}
-                    {/*    {...a11yProps(4)}*/}
-                    {/*/>4*/}
+             
                 </Tabs>
 
                 <div></div>

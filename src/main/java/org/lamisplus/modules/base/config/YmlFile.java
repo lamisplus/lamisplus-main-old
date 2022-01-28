@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.config;
 
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.yaml.snakeyaml.Yaml;
 
@@ -8,11 +9,14 @@ import java.io.*;
 @Configuration
 @Data
 public class YmlFile {
-    public static String dbUrl;
+    //@Value("${spring.datasource.url}")
+    public String dbUrl;
 
-    public static String dbUser;
+    //@Value("${spring.datasource.username}")
+    public String dbUser;
 
-    public static String dbPass;
+    //@Value("${spring.datasource.password}")
+    public String dbPass;
 
     public static DatabaseProperties readYml(File ymlFile) throws IOException {
         BufferedReader in = null;
@@ -33,9 +37,9 @@ public class YmlFile {
         return databaseProperties;
     }
 
-    public static void getDatabaseConnectionParameters(String file) {
-        String fileSeparator = File.separator;
-        File ymlFile = new File(ApplicationProperties.modulePath + fileSeparator + "config.yml");
+    public void getDatabaseConnectionParameters(String file) {
+        //String fileSeparator = File.separator;
+        File ymlFile = new File(file);
         try {
             readYml(ymlFile).getSpring().forEach((k, v) -> {
                 dbUrl = v.getUrl();

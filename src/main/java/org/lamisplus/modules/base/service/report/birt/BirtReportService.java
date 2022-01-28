@@ -8,7 +8,6 @@ import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
 import org.eclipse.birt.report.engine.api.*;
 import org.eclipse.birt.report.model.api.*;
-import org.lamisplus.modules.base.config.ApplicationProperties;
 import org.lamisplus.modules.base.config.YmlFile;
 import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.controller.apierror.RecordExistException;
@@ -42,7 +41,8 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
     private static final int UN_ARCHIVED = 0;
     private static final int ARCHIVED = 1;
     private final UserRepository userRepository;
-    private static String name;
+    private final YmlFile ymlFile;
+    public static String modulePath = System.getProperty("user.dir");
 
     /*@Value("${reports.relative.path}")
     private String reportsPath = System.getProperty("user.dir");
@@ -306,10 +306,10 @@ public class BirtReportService implements ApplicationContextAware, DisposableBea
 
     private void getDatabaseConnectionParameters( IReportRunnable iReportRunnable ) {
         String fileSeparator = File.separator;
-        YmlFile.getDatabaseConnectionParameters(ApplicationProperties.modulePath + fileSeparator +"config.yml");
-        String dbUrl = YmlFile.dbUrl;
-        String dbUser = YmlFile.dbUser;
-        String dbPass = YmlFile.dbPass;
+        ymlFile.getDatabaseConnectionParameters(modulePath + fileSeparator +"config.yml");
+        String dbUrl = ymlFile.dbUrl;
+        String dbUser = ymlFile.dbUser;
+        String dbPass = ymlFile.dbPass;
 
         DesignElementHandle deh = iReportRunnable.getDesignHandle();
         SlotHandle slotHandle = deh.getSlot(ReportDesignHandle.DATA_SOURCE_SLOT );

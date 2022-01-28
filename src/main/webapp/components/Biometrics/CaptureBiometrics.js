@@ -43,11 +43,11 @@ const CaptureBiometrics = (props) => {
         template: [],
 
     }
-    const hospitalNumber = props.location.state;
-
+    const hospitalNumber = props.location.state.patientNumber;
+    const type = props.location.state.numberType;
     React.useEffect(() => {
        // if(!props.patient) {
-            props.fetchPatientByHospitalNumber(hospitalNumber);
+            props.fetchPatientByHospitalNumber(hospitalNumber, type);
         //}
     }, [hospitalNumber]);
 
@@ -172,7 +172,7 @@ const CaptureBiometrics = (props) => {
             <Card>
                 <CardBody>
             <Breadcrumbs aria-label="breadcrumb">
-                <Link color="inherit" to={{pathname: "/patient-dashboard", state: props.patient.hospitalNumber}} >
+                <Link color="inherit" to={{pathname: "/patient-dashboard", state: {patientNumber: props.patient.hospitalNumber, numberType: props.patient.patientNumberType}}} >
                     Patient dashboard
                 </Link>
                 <Typography color="textPrimary">Capture Biometrics</Typography>

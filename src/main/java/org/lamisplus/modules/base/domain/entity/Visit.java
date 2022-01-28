@@ -62,7 +62,7 @@ public class Visit extends Audit<String> {
     private Long visitTypeId;
 
     @Basic
-    @Column(name = "uuid", updatable = false)
+    @Column(name = "uuid")
     @JsonIgnore
     private String uuid;
 

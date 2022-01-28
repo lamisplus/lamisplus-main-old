@@ -60,7 +60,7 @@ public class Encounter implements Serializable  {
     private LocalTime timeCreated;
 
     @Basic
-    @Column(name = "uuid", updatable = false)
+    @Column(name = "uuid")
     @JsonIgnore
     private String uuid;
 

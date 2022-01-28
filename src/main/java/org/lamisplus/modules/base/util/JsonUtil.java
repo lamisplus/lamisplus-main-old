@@ -111,6 +111,7 @@ public class JsonUtil {
         return jsonFieldNames;
     }
 
+    //converts an object to a JsonNode
     public static JsonNode getJsonNode(Object object){
         if(object != null){
             ObjectMapper objectMapper = new ObjectMapper();

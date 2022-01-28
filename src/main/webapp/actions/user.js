@@ -30,7 +30,9 @@ export const register = (data, onSuccess, onError) => (dispatch) => {
         type: ACTION_TYPES.REGISTER_FAILURE,
         payload: "Something went wrong, please try again",
       });
-      console.log(error);
+     if(onError){
+         onError();
+     }
     });
 };
 

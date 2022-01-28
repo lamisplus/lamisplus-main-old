@@ -125,4 +125,15 @@ public class VisitService {
     private Long getOrganisationUnitId(){
         return userService.getUserWithRoles().get().getCurrentOrganisationUnitId();
     }
+
+    /*public void addUuid(){
+        List<Visit> visits = visitRepository.findNullUuid();
+        List<Visit> visits1 = new ArrayList<>();
+        visits.forEach(visit -> {
+            visit.setUuid(UUID.randomUUID().toString());
+            visits.add(visit);
+        });
+        visitRepository.saveAll(visits1);
+    }*/
+
 }

@@ -34,7 +34,7 @@ function MedicationPage(props) {
   return (
     <Row>
 
-      <Col lg={6}>
+      <Col lg={5}>
         <Card>
           <CardHeader>
             Drug / Regimen Prescription
@@ -54,15 +54,13 @@ function MedicationPage(props) {
         </Card>
       </Col>
 
-      <Col lg={6}>
-               <Row>
-          <Col lg={12}>
-            <Card style={cardStyle}>
+      <Col lg={7}>
+            <Card>
               <CardHeader>Previous Drug Order</CardHeader>
+              <CardBody>
               <PreviousMedication patientId={props.patient.patientId} />
+              </CardBody>
             </Card>
-          </Col>
-        </Row>
       </Col>
     </Row>
   );

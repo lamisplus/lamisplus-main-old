@@ -117,23 +117,23 @@ INSERT INTO public.report_info (id, archived, description, name, program_code, t
                     <property name="nativeDataType">91</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e1.patient_id , 
-ac1.display as gender, 
+            <xml-property name="queryText"><![CDATA[select distinct e1.patient_id ,
+ac1.display as gender,
 EXTRACT(YEAR from AGE(NOW(), pr1.dob)) as age, pr1.dob
 
 from encounter e1 inner join patient p1 on e1.patient_id = p1.id
 inner join person pr1 on p1.person_id = pr1.id
 inner join application_codeset ac1 on ac1.id = pr1.gender_id
-where e1.form_code in (''87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e'', ''4ab293ff-6837-41e8-aa85-14f25ce59ef0'') and e1.patient_id in  
+where e1.form_code in (''87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e'', ''4ab293ff-6837-41e8-aa85-14f25ce59ef0'') and e1.patient_id in
 (
-select p.id 
+select p.id
 from form_data fd inner join encounter e on fd.encounter_id = e.id
 inner join patient p on p.id = e.patient_id
-where 
+where
 	e.date_encounter between ''2000-11-18'' and ''2021-11-18'' and
 	e.form_code = ''0871d0b9-0fb3-4579-bdec-77d684b0cea6''
-and (fd.data ->> ''date_registration'')::timestamp AT TIME ZONE ''GMT'' <= ''2021-11-18T00:00:00+01:00''::timestamp with time zone  
-and (fd.data -> ''status_registration'' ->> ''display'' IN (''ART Start'', ''ART Restart'', ''ART Transfer In'') 
+and (fd.data ->> ''date_registration'')::timestamp AT TIME ZONE ''GMT'' <= ''2021-11-18T00:00:00+01:00''::timestamp with time zone
+and (fd.data -> ''status_registration'' ->> ''display'' IN (''ART Start'', ''ART Restart'', ''ART Transfer In'')
 	 OR (fd.data -> ''status_registration'' ->> ''display'' IN (''ART Transfer Out'', ''Lost to Follow Up'', ''Stopped Treatment'', ''Known Death'')
 		and (fd.data ->> ''date_registration'')::timestamp AT TIME ZONE ''GMT'' > ''2000-11-18T00:00:00+01:00''::timestamp with time zone)))]]></xml-property>
         </oda-data-set>
@@ -203,8 +203,8 @@ and (fd.data -> ''status_registration'' ->> ''display'' IN (''ART Start'', ''ART
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select distinct e1.patient_id, ''Pregnant'' as pregnancy_status, '''' as breastfeeding_status
-from encounter e1 
-where e1.form_code = ''87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e'' 
+from encounter e1
+where e1.form_code = ''87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e''
 and e1.date_encounter between ''2000-11-18'' and ''2021-11-18'']]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -1106,18 +1106,18 @@ and e1.date_encounter between ''2000-11-18'' and ''2021-11-18'']]></xml-property
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[SELECT distinct e.patient_id,  
-fd.data -> ''status_registration''  ->> ''display'' as registration_status, 
+            <xml-property name="queryText"><![CDATA[SELECT distinct e.patient_id,
+fd.data -> ''status_registration''  ->> ''display'' as registration_status,
 ac.display as gender,
 EXTRACT(YEAR from AGE(NOW(), pr.dob)) as age,
 fd.data -> ''tb_status''  ->> ''display'' as tb_status,
-fd.data -> ''pregnancy_status''  ->> ''display'' as pregnancy_status 
-FROM encounter e 
+fd.data -> ''pregnancy_status''  ->> ''display'' as pregnancy_status
+FROM encounter e
 inner join patient p on e.patient_id = p.id
 inner join person pr on p.person_id = pr.id
 inner join application_codeset ac on ac.id = pr.gender_id
 inner join form_data fd on fd.encounter_id = e.id
-WHERE e.form_code = ''0871d0b9-0fb3-4579-bdec-77d684b0cea6'' 
+WHERE e.form_code = ''0871d0b9-0fb3-4579-bdec-77d684b0cea6''
 AND fd.data -> ''status_registration'' ->> ''display'' = ''HIV+ non ART''
 AND EXTRACT(YEAR FROM (fd.data ->> ''date_registration'')::timestamp) = 2020
 AND EXTRACT(MONTH FROM (fd.data ->> ''date_registration'')::timestamp) = 12
@@ -2145,20 +2145,20 @@ AND EXTRACT(MONTH FROM (fd.data ->> ''date_registration'')::timestamp) = 12
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[-- ART 4: Total number of people living with HIV who are currently receiving ART during the month (All regimen)
-select distinct e.patient_id, rl.id, ac.display as gender, 
+select distinct e.patient_id, rl.id, ac.display as gender,
 EXTRACT ( YEAR from AGE(NOW(), pr.dob)) as age,
 rl.name as regimenLine,
 rl.id as regimenLineCode
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join person pr on p.person_id = pr.id
 inner join application_codeset ac on ac.id = pr.gender_id
 inner join form_data fd on fd.encounter_id = e.id
 inner join regimen r on (fd.data -> ''regimen'' ->> ''id'')::int = r.id
 inner join regimen_line rl on rl.id = r.regimen_line_id
-where e.form_code = ''4ab293ff-6837-41e8-aa85-14f25ce59ef0'' 
+where e.form_code = ''4ab293ff-6837-41e8-aa85-14f25ce59ef0''
 and e.date_encounter between ''2000-11-18'' and ''2021-11-18''
-and fd.data ->> ''regimen'' is not null 
+and fd.data ->> ''regimen'' is not null
 and EXTRACT(DAY FROM (NOW() - e.date_encounter + (fd.data ->> ''duration_in_days'')::int * INTERVAL ''1 day'')) <= 28]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -2451,18 +2451,18 @@ and EXTRACT(DAY FROM (NOW() - e.date_encounter + (fd.data ->> ''duration_in_days
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[SELECT distinct e.patient_id,
-enrollment_fd.data -> ''status_registration''  ->> ''display'' as registration_status, 
+enrollment_fd.data -> ''status_registration''  ->> ''display'' as registration_status,
 art_commencement_fd.data ->> ''date_enrollment'' as date_enrolled,
 ac.display as gender,
 EXTRACT(YEAR from AGE(NOW(), pr.dob)) as age,
 art_commencement_fd.data -> ''tb_status''  ->> ''display'' as tb_status,
-art_commencement_fd.data -> ''pregnancy_status''  ->> ''display'' as pregnancy_status 
-FROM encounter e 
+art_commencement_fd.data -> ''pregnancy_status''  ->> ''display'' as pregnancy_status
+FROM encounter e
 inner join patient p on e.patient_id = p.id
 inner join person pr on p.person_id = pr.id
 inner join application_codeset ac on ac.id = pr.gender_id
-inner join form_data art_commencement_fd on art_commencement_fd.encounter_id = e.id and e.form_code = ''0a8b31d2-9397-42f8-9300-688b62c75571'' 
-left join form_data enrollment_fd on enrollment_fd.encounter_id = e.id and e.form_code = ''0871d0b9-0fb3-4579-bdec-77d684b0cea6'' 
+inner join form_data art_commencement_fd on art_commencement_fd.encounter_id = e.id and e.form_code = ''0a8b31d2-9397-42f8-9300-688b62c75571''
+left join form_data enrollment_fd on enrollment_fd.encounter_id = e.id and e.form_code = ''0871d0b9-0fb3-4579-bdec-77d684b0cea6''
 WHERE EXTRACT(YEAR FROM (art_commencement_fd.data ->> ''date_enrollment'')::timestamp) = 2020
 AND EXTRACT(MONTH FROM (art_commencement_fd.data ->> ''date_enrollment'')::timestamp) = 11
 AND enrollment_fd.data -> ''status_registration'' ->> ''display'' != ''ART Transfer In''
@@ -2686,14 +2686,14 @@ AND enrollment_fd.data -> ''status_registration'' ->> ''display'' != ''ART Trans
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[-- ART 5
-SELECT distinct e.patient_id, lab_fd.data, 
+SELECT distinct e.patient_id, lab_fd.data,
 ac.display as gender,
 EXTRACT(YEAR from AGE(NOW(), pr.dob)) as age
-FROM encounter e 
+FROM encounter e
 inner join patient p on e.patient_id = p.id
 inner join person pr on p.person_id = pr.id
 inner join application_codeset ac on ac.id = pr.gender_id
-inner join form_data lab_fd on lab_fd.encounter_id = e.id and e.form_code = ''87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e'' 
+inner join form_data lab_fd on lab_fd.encounter_id = e.id and e.form_code = ''87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e''
 WHERE EXTRACT(YEAR FROM (lab_fd.data ->> ''date_result_reported'')::date) = 2020
 AND EXTRACT(MONTH FROM (lab_fd.data ->> ''date_result_reported'')::date) = 11
 AND lab_fd.data ->> ''description'' ilike ''Viral load''
@@ -2881,14 +2881,14 @@ AND lab_fd.data ->> ''description'' ilike ''Viral load''
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[-- ART 7
-SELECT distinct e.patient_id, fd.data, 
+SELECT distinct e.patient_id, fd.data,
 ac.display as gender,
 EXTRACT(YEAR from AGE(NOW(), pr.dob)) as age
-FROM encounter e 
+FROM encounter e
 inner join patient p on e.patient_id = p.id
 inner join person pr on p.person_id = pr.id
 inner join application_codeset ac on ac.id = pr.gender_id
-inner join form_data fd on fd.encounter_id = e.id and e.form_code = ''5210f079-27e9-4d01-a713-a2c400e0926c'' 
+inner join form_data fd on fd.encounter_id = e.id and e.form_code = ''5210f079-27e9-4d01-a713-a2c400e0926c''
 WHERE EXTRACT(YEAR FROM (fd.data ->> ''date_current_status'')::timestamp) = 2020
 AND EXTRACT(MONTH FROM (fd.data ->> ''date_current_status'')::timestamp) = 04
 AND fd.data -> ''current_status'' ->> ''code'' = ''7e8d0627-7670-40b6-baad-53bc944c1e57''
@@ -3077,14 +3077,14 @@ AND fd.data -> ''current_status'' ->> ''code'' = ''7e8d0627-7670-40b6-baad-53bc9
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[-- ART 8
-SELECT distinct e.patient_id, fd.data, 
+SELECT distinct e.patient_id, fd.data,
 ac.display as gender,
 EXTRACT(YEAR from AGE(NOW(), pr.dob)) as age
-FROM encounter e 
+FROM encounter e
 inner join patient p on e.patient_id = p.id
 inner join person pr on p.person_id = pr.id
 inner join application_codeset ac on ac.id = pr.gender_id
-inner join form_data fd on fd.encounter_id = e.id and e.form_code = ''5210f079-27e9-4d01-a713-a2c400e0926c'' 
+inner join form_data fd on fd.encounter_id = e.id and e.form_code = ''5210f079-27e9-4d01-a713-a2c400e0926c''
 WHERE EXTRACT(YEAR FROM (fd.data ->> ''date_current_status'')::timestamp) = 2020
 AND EXTRACT(MONTH FROM (fd.data ->> ''date_current_status'')::timestamp) = 04
 AND fd.data -> ''current_status'' ->> ''code'' = ''e69c44fb-f011-4bb0-8262-88e13f08c5d4''
@@ -11514,19 +11514,19 @@ INSERT INTO public.report_info (id, archived, description, name, program_code, t
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select distinct on (a.id) a.id,
-p.patient_number, 
-concat(p.details ->> ''firstName'' , '' '', p.details ->> ''lastName'') as name, 
+p.patient_number,
+concat(p.details ->> ''firstName'' , '' '', p.details ->> ''lastName'') as name,
 p.details ->> ''dob'' as dob, EXTRACT(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age,
 p.details -> ''gender'' ->> ''display'' as gender,
-p.details ->> ''street'' as address, 
+p.details ->> ''street'' as address,
 p.details ->> ''mobilePhoneNumber'' as phoneNumber,
 a.detail ->> ''appointment_date'' as appointmentDate,
 COALESCE ((client_status_fd.data -> ''hiv_current_status'' ->> ''display''), ''N/A'') as current_status
-from appointment a 
+from appointment a
 inner join patient p on a.patient_id = p.id
 -- client status update form 5210f079-27e9-4d01-a713-a2c400e0926c
 left join encounter client_status_enc on client_status_enc.patient_id = p.id and client_status_enc.form_code = ''5210f079-27e9-4d01-a713-a2c400e0926c''
-left join form_data client_status_fd on client_status_fd.encounter_id = client_status_enc.id 
+left join form_data client_status_fd on client_status_fd.encounter_id = client_status_enc.id
 
 where (a.detail ->> ''appointment_date'')::date >= ?
 and (a.detail ->> ''appointment_date'')::date <= ?
@@ -12080,18 +12080,18 @@ client_status_enc.date_encounter desc]]></xml-property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select distinct on (a.id) a.id,
-p.patient_number, 
-concat(p.details ->> ''firstName'' , '' '', p.details ->> ''lastName'') as name, 
+p.patient_number,
+concat(p.details ->> ''firstName'' , '' '', p.details ->> ''lastName'') as name,
 p.details ->> ''dob'' as dob, EXTRACT(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age,
 p.details -> ''gender'' ->> ''display'' as gender,
-p.details ->> ''street'' as address, 
+p.details ->> ''street'' as address,
 p.details ->> ''mobilePhoneNumber'' as phoneNumber,
 a.detail ->> ''appointment_date'' as appointmentDate,
 (client_status_fd.data -> ''hiv_current_status'' ->> ''display'') as current_status,
 visit_fd.data -> ''date_visit'' as lastVisit,
 '''' as dateTracked,
 '''' as trackingOutcome
-from appointment a 
+from appointment a
 inner join patient p on a.patient_id = p.id
 inner join person pr on p.person_id = pr.id
 left join application_codeset gender on pr.gender_id = gender.id
@@ -12099,7 +12099,7 @@ inner join person_contact pc on pc.person_id = pr.id
 
 -- client status update form 5210f079-27e9-4d01-a713-a2c400e0926c
 left join encounter client_status_enc on client_status_enc.patient_id = p.id and client_status_enc.form_code = ''5210f079-27e9-4d01-a713-a2c400e0926c''
-left join form_data client_status_fd on client_status_fd.encounter_id = client_status_enc.id 
+left join form_data client_status_fd on client_status_fd.encounter_id = client_status_enc.id
 
 -- clinic follow up visit 5c8741de-f722-4e0a-a505-24e039bf4340
 left join encounter visit_enc on visit_enc.patient_id = p.id and visit_enc.form_code = ''5c8741de-f722-4e0a-a505-24e039bf4340''
@@ -12109,7 +12109,7 @@ where (a.detail ->> ''appointment_date'')::date >= ?
 and (a.detail ->> ''appointment_date'')::date <= ?
 and a.organisation_unit_id = ?
 and (a.detail->''appointment_type'')  @> ''"Clinic Visit"''
-and a.visit_id is null 
+and a.visit_id is null
 order by a.id desc,
 -- ordering by encounter date so that the query can pick the last encounter since theres is a distinct on appointment ID. in order words, its to avoid duplicate and pick the most recent record
 client_status_enc.date_encounter desc,
@@ -12661,18 +12661,18 @@ visit_enc.date_encounter desc
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select distinct on (a.id) a.id,
-p.patient_number, 
-concat(p.details ->> ''firstName'' , '' '', p.details ->> ''lastName'') as name, 
+p.patient_number,
+concat(p.details ->> ''firstName'' , '' '', p.details ->> ''lastName'') as name,
 p.details ->> ''dob'' as dob, EXTRACT(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age,
 p.details -> ''gender'' ->> ''display'' as gender,
-p.details ->> ''street'' as address, 
+p.details ->> ''street'' as address,
 p.details ->> ''mobilePhoneNumber'' as phoneNumber,
 a.detail ->> ''appointment_date'' as appointmentDate,
 (client_status_fd.data -> ''hiv_current_status'' ->> ''display'') as current_status,
 visit_fd.data -> ''date_visit'' as lastVisit,
 '''' as dateTracked,
 '''' as trackingOutcome
-from appointment a 
+from appointment a
 inner join patient p on a.patient_id = p.id
 inner join person pr on p.person_id = pr.id
 left join application_codeset gender on pr.gender_id = gender.id
@@ -12680,7 +12680,7 @@ inner join person_contact pc on pc.person_id = pr.id
 
 -- client status update form 5210f079-27e9-4d01-a713-a2c400e0926c
 left join encounter client_status_enc on client_status_enc.patient_id = p.id and client_status_enc.form_code = ''5210f079-27e9-4d01-a713-a2c400e0926c''
-left join form_data client_status_fd on client_status_fd.encounter_id = client_status_enc.id 
+left join form_data client_status_fd on client_status_fd.encounter_id = client_status_enc.id
 
 -- clinic follow up visit 5c8741de-f722-4e0a-a505-24e039bf4340
 left join encounter visit_enc on visit_enc.patient_id = p.id and visit_enc.form_code = ''5c8741de-f722-4e0a-a505-24e039bf4340''
@@ -12690,7 +12690,7 @@ where (a.detail ->> ''appointment_date'')::date >= ?
 and (a.detail ->> ''appointment_date'')::date <= ?
 and a.organisation_unit_id = ?
 and (a.detail->''appointment_type'')  @> ''"Refill Visit"''
-and a.visit_id is null 
+and a.visit_id is null
 order by a.id desc,
 -- ordering by encounter date so that the query can pick the last encounter since theres is a distinct on appointment ID. in order words, its to avoid duplicate and pick the most recent record
 client_status_enc.date_encounter desc,
@@ -13330,20 +13330,20 @@ org_unit.organisation_unit_id = ?
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select distinct on (e.id) e.id,
-p.patient_number, 
-concat(p.details ->> ''firstName'' , '' '', p.details ->> ''lastName'') as name, 
+p.patient_number,
+concat(p.details ->> ''firstName'' , '' '', p.details ->> ''lastName'') as name,
 p.details ->> ''dob'' as dob, EXTRACT(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age,
 p.details -> ''gender'' ->> ''display'' as gender,
-p.details ->> ''street'' as address, 
+p.details ->> ''street'' as address,
 p.details ->> ''mobilePhoneNumber'' as phoneNumber,
 rl.name as regimenLine,
 r.name as regimen,
-case 
+case
 when (fd.data ->> ''duration_unit'') = ''weeks'' then (fd.data ->> ''duration'')::integer * 7
 when (fd.data ->> ''duration_unit'') = ''months'' then (fd.data ->> ''duration'')::integer * 30
 else (fd.data ->> ''duration'')::integer
 end durationInDays
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join person pr on p.person_id = pr.id
 left join application_codeset gender on pr.gender_id = gender.id
@@ -13353,10 +13353,10 @@ inner join form_data fd on fd.encounter_id = e.id
 inner join regimen r on (fd.data -> ''regimen'' ->> ''id'')::int = r.id
 inner join regimen_line rl on rl.id = r.regimen_line_id
 
--- drug prescription encounters 
-where e.form_code = ''4ab293ff-6837-41e8-aa85-14f25ce59ef0'' 
+-- drug prescription encounters
+where e.form_code = ''4ab293ff-6837-41e8-aa85-14f25ce59ef0''
 and e.date_encounter between ? and ?
-and fd.data ->> ''regimen'' is not null 
+and fd.data ->> ''regimen'' is not null
 and e.organisation_unit_id = ?
 
 ]]></xml-property>
@@ -13856,21 +13856,21 @@ and e.organisation_unit_id = ?
             </list-property>
             <xml-property name="queryText"><![CDATA[select distinct on (e.id) e.id,
 e.date_encounter as visitDate,
-p.patient_number, 
-concat(p.details ->> ''firstName'' , '' '', p.details ->> ''lastName'') as name, 
+p.patient_number,
+concat(p.details ->> ''firstName'' , '' '', p.details ->> ''lastName'') as name,
  EXTRACT(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age,
 p.details -> ''gender'' ->> ''display'' as gender,
 fd.data -> ''functional_status''  ->> ''display'' as currentStatus,
 fd.data -> ''clinic_stage'' ->> ''display'' as clinicStage,
 fd.data -> ''tb_status'' ->> ''display'' as tbStatus
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 
--- clinic follow up visit 5c8741de-f722-4e0a-a505-24e039bf4340 
-where e.form_code = ''5c8741de-f722-4e0a-a505-24e039bf4340'' 
+-- clinic follow up visit 5c8741de-f722-4e0a-a505-24e039bf4340
+where e.form_code = ''5c8741de-f722-4e0a-a505-24e039bf4340''
 and e.date_encounter between ? and ?
-and e.organisation_unit_id = ? 
+and e.organisation_unit_id = ?
 
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -16503,22 +16503,22 @@ INSERT INTO public.report_info (id, archived, description, name, program_code, t
             </structure>
          </list-property>
          <xml-property name="queryText"><![CDATA[select distinct on (a.id) a.id,
-p.patient_number, 
-concat(pr.first_name , '' '', pr.last_name) as name, 
+p.patient_number,
+concat(pr.first_name , '' '', pr.last_name) as name,
 pr.dob, EXTRACT(YEAR from AGE(NOW(), pr.dob)) as age,
 gender.display as gender,
-pc.street as address, 
+pc.street as address,
 pc.mobile_phone_number as phoneNumber,
 a.detail ->> ''appointment_date'' as appointmentDate,
 COALESCE ((client_status_fd.data -> ''hiv_current_status'' ->> ''display''), ''N/A'') as current_status
-from appointment a 
+from appointment a
 inner join patient p on a.patient_id = p.id
 inner join person pr on p.person_id = pr.id
 left join application_codeset gender on pr.gender_id = gender.id
 inner join person_contact pc on pc.person_id = pr.id
 -- client status update form 5210f079-27e9-4d01-a713-a2c400e0926c
 left join encounter client_status_enc on client_status_enc.patient_id = p.id and client_status_enc.form_code = ''5210f079-27e9-4d01-a713-a2c400e0926c''
-left join form_data client_status_fd on client_status_fd.encounter_id = client_status_enc.id 
+left join form_data client_status_fd on client_status_fd.encounter_id = client_status_enc.id
 
 where (a.detail ->> ''appointment_date'')::date >= ?
 and (a.detail ->> ''appointment_date'')::date <= ?
@@ -17073,18 +17073,18 @@ client_status_enc.date_encounter desc]]></xml-property>
             </structure>
          </list-property>
          <xml-property name="queryText"><![CDATA[select distinct on (a.id) a.id,
-p.patient_number, 
-concat(pr.first_name , '' '', pr.last_name) as name, 
+p.patient_number,
+concat(pr.first_name , '' '', pr.last_name) as name,
 pr.dob, EXTRACT(YEAR from AGE(NOW(), pr.dob)) as age,
 gender.display as gender,
-pc.street as address, 
+pc.street as address,
 pc.mobile_phone_number as phoneNumber,
 a.detail ->> ''appointment_date'' as appointmentDate,
 (client_status_fd.data -> ''hiv_current_status'' ->> ''display'') as current_status,
 visit_fd.data -> ''date_visit'' as lastVisit,
 '''' as dateTracked,
 '''' as trackingOutcome
-from appointment a 
+from appointment a
 inner join patient p on a.patient_id = p.id
 inner join person pr on p.person_id = pr.id
 left join application_codeset gender on pr.gender_id = gender.id
@@ -17092,7 +17092,7 @@ inner join person_contact pc on pc.person_id = pr.id
 
 -- client status update form 5210f079-27e9-4d01-a713-a2c400e0926c
 left join encounter client_status_enc on client_status_enc.patient_id = p.id and client_status_enc.form_code = ''5210f079-27e9-4d01-a713-a2c400e0926c''
-left join form_data client_status_fd on client_status_fd.encounter_id = client_status_enc.id 
+left join form_data client_status_fd on client_status_fd.encounter_id = client_status_enc.id
 
 -- clinic follow up visit 5c8741de-f722-4e0a-a505-24e039bf4340
 left join encounter visit_enc on visit_enc.patient_id = p.id and visit_enc.form_code = ''5c8741de-f722-4e0a-a505-24e039bf4340''
@@ -17102,7 +17102,7 @@ where (a.detail ->> ''appointment_date'')::date >= ?
 and (a.detail ->> ''appointment_date'')::date <= ?
 and a.organisation_unit_id = ?
 and (a.detail->''appointment_type'')  @> ''"Clinic Visit"''
-and a.visit_id is null 
+and a.visit_id is null
 order by a.id desc,
 -- ordering by encounter date so that the query can pick the last encounter since theres is a distinct on appointment ID. in order words, its to avoid duplicate and pick the most recent record
 client_status_enc.date_encounter desc,
@@ -17653,18 +17653,18 @@ visit_enc.date_encounter desc]]></xml-property>
             </structure>
          </list-property>
          <xml-property name="queryText"><![CDATA[select distinct on (a.id) a.id,
-p.patient_number, 
-concat(pr.first_name , '' '', pr.last_name) as name, 
+p.patient_number,
+concat(pr.first_name , '' '', pr.last_name) as name,
 pr.dob, EXTRACT(YEAR from AGE(NOW(), pr.dob)) as age,
 gender.display as gender,
-pc.street as address, 
+pc.street as address,
 pc.mobile_phone_number as phoneNumber,
 a.detail ->> ''appointment_date'' as appointmentDate,
 (client_status_fd.data -> ''hiv_current_status'' ->> ''display'') as current_status,
 visit_fd.data -> ''date_visit'' as lastVisit,
 '''' as dateTracked,
 '''' as trackingOutcome
-from appointment a 
+from appointment a
 inner join patient p on a.patient_id = p.id
 inner join person pr on p.person_id = pr.id
 left join application_codeset gender on pr.gender_id = gender.id
@@ -17672,7 +17672,7 @@ inner join person_contact pc on pc.person_id = pr.id
 
 -- client status update form 5210f079-27e9-4d01-a713-a2c400e0926c
 left join encounter client_status_enc on client_status_enc.patient_id = p.id and client_status_enc.form_code = ''5210f079-27e9-4d01-a713-a2c400e0926c''
-left join form_data client_status_fd on client_status_fd.encounter_id = client_status_enc.id 
+left join form_data client_status_fd on client_status_fd.encounter_id = client_status_enc.id
 
 -- clinic follow up visit 5c8741de-f722-4e0a-a505-24e039bf4340
 left join encounter visit_enc on visit_enc.patient_id = p.id and visit_enc.form_code = ''5c8741de-f722-4e0a-a505-24e039bf4340''
@@ -17682,7 +17682,7 @@ where (a.detail ->> ''appointment_date'')::date >= ?
 and (a.detail ->> ''appointment_date'')::date <= ?
 and a.organisation_unit_id = ?
 and (a.detail->''appointment_type'')  @> ''"Refill Visit"''
-and a.visit_id is null 
+and a.visit_id is null
 order by a.id desc,
 -- ordering by encounter date so that the query can pick the last encounter since theres is a distinct on appointment ID. in order words, its to avoid duplicate and pick the most recent record
 client_status_enc.date_encounter desc,
@@ -18301,20 +18301,20 @@ org_unit.organisation_unit_id = ?]]></xml-property>
             </structure>
          </list-property>
          <xml-property name="queryText"><![CDATA[select distinct on (e.id) e.id,
-p.patient_number, 
-concat(pr.first_name , '' '', pr.last_name) as name, 
+p.patient_number,
+concat(pr.first_name , '' '', pr.last_name) as name,
 EXTRACT(YEAR from AGE(NOW(), pr.dob)) as age,
 gender.display as gender,
-pc.street as address, 
+pc.street as address,
 pc.mobile_phone_number as phoneNumber,
 rl.name as regimenLine,
 r.name as regimen,
-case 
+case
 when (fd.data ->> ''duration_unit'') = ''weeks'' then (fd.data ->> ''duration'')::integer * 7
 when (fd.data ->> ''duration_unit'') = ''months'' then (fd.data ->> ''duration'')::integer * 30
 else (fd.data ->> ''duration'')::integer
 end durationInDays
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join person pr on p.person_id = pr.id
 left join application_codeset gender on pr.gender_id = gender.id
@@ -18324,10 +18324,10 @@ inner join form_data fd on fd.encounter_id = e.id
 inner join regimen r on (fd.data -> ''regimen'' ->> ''id'')::int = r.id
 inner join regimen_line rl on rl.id = r.regimen_line_id
 
--- drug prescription encounters 
-where e.form_code = ''4ab293ff-6837-41e8-aa85-14f25ce59ef0'' 
+-- drug prescription encounters
+where e.form_code = ''4ab293ff-6837-41e8-aa85-14f25ce59ef0''
 and e.date_encounter between ? and ?
-and fd.data ->> ''regimen'' is not null 
+and fd.data ->> ''regimen'' is not null
 and e.organisation_unit_id = ?]]></xml-property>
          <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -18825,14 +18825,14 @@ and e.organisation_unit_id = ?]]></xml-property>
          </list-property>
          <xml-property name="queryText"><![CDATA[select distinct on (e.id) e.id,
 e.date_encounter as visitDate,
-p.patient_number, 
-concat(pr.first_name , '' '', pr.last_name) as name, 
+p.patient_number,
+concat(pr.first_name , '' '', pr.last_name) as name,
 EXTRACT(YEAR from AGE(NOW(), pr.dob)) as age,
 gender.display as gender,
 fd.data -> ''functional_status''  ->> ''display'' as currentStatus,
 fd.data -> ''clinic_stage'' ->> ''display'' as clinicStage,
 fd.data -> ''tb_status'' ->> ''display'' as tbStatus
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join person pr on p.person_id = pr.id
 left join application_codeset gender on pr.gender_id = gender.id
@@ -18840,8 +18840,8 @@ inner join person_contact pc on pc.person_id = pr.id
 inner join application_codeset ac on ac.id = pr.gender_id
 inner join form_data fd on fd.encounter_id = e.id
 
--- clinic follow up visit 5c8741de-f722-4e0a-a505-24e039bf4340 
-where e.form_code = ''5c8741de-f722-4e0a-a505-24e039bf4340'' 
+-- clinic follow up visit 5c8741de-f722-4e0a-a505-24e039bf4340
+where e.form_code = ''5c8741de-f722-4e0a-a505-24e039bf4340''
 and e.date_encounter between ? and ?
 and e.organisation_unit_id = ?]]></xml-property>
          <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -21381,7 +21381,7 @@ INSERT INTO public.report_info (id, archived, description, name, program_code, t
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct p.id as patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct p.id as patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
 from patient p
@@ -21634,13 +21634,13 @@ and p.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
-where e.form_code = ''96a45213-0018-40cf-ad6a-a201cecf1140'' 
+where e.form_code = ''96a45213-0018-40cf-ad6a-a201cecf1140''
 and extract(YEAR from (fd.data ->> ''date_visit'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_visit'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -21932,14 +21932,14 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where (fd.data -> ''risk_score'')::int > 0
-and e.form_code = ''96a45213-0018-40cf-ad6a-a201cecf1140'' 
+and e.form_code = ''96a45213-0018-40cf-ad6a-a201cecf1140''
 and extract(YEAR from (fd.data ->> ''date_visit'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_visit'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -22110,15 +22110,15 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
-where fd.data -> ''hiv_test_result'' ->> ''display'' is not null 
-and  fd.data -> ''testing_setting'' ->> ''display'' = ''OPD'' 
-and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59'' 
+where fd.data -> ''hiv_test_result'' ->> ''display'' is not null
+and  fd.data -> ''testing_setting'' ->> ''display'' = ''OPD''
+and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59''
 and extract(YEAR from (fd.data ->> ''date_visit'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_visit'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -22410,15 +22410,15 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''hiv_test_result'' ->> ''display'' = ''Positive''
-and  fd.data -> ''testing_setting'' ->> ''display'' = ''OPD'' 
-and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59'' 
+and  fd.data -> ''testing_setting'' ->> ''display'' = ''OPD''
+and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59''
 and extract(YEAR from (fd.data ->> ''date_visit'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_visit'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -22640,15 +22640,15 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''hiv_test_result'' ->> ''display'' is not null
-and  fd.data -> ''testing_setting'' ->> ''display'' = ''CT'' 
-and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59'' 
+and  fd.data -> ''testing_setting'' ->> ''display'' = ''CT''
+and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59''
 and extract(YEAR from (fd.data ->> ''date_visit'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_visit'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -22940,15 +22940,15 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''hiv_test_result'' ->> ''display'' = ''Positive''
-and  fd.data -> ''testing_setting'' ->> ''display'' = ''CT'' 
-and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59'' 
+and  fd.data -> ''testing_setting'' ->> ''display'' = ''CT''
+and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59''
 and extract(YEAR from (fd.data ->> ''date_visit'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_visit'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -23239,15 +23239,15 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''hiv_test_result'' ->> ''display'' is not null
-and  fd.data -> ''testing_setting'' ->> ''display'' = ''Ward'' 
-and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59'' 
+and  fd.data -> ''testing_setting'' ->> ''display'' = ''Ward''
+and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59''
 and extract(YEAR from (fd.data ->> ''date_visit'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_visit'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -23539,15 +23539,15 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''hiv_test_result'' ->> ''display'' = ''Positive''
-and  fd.data -> ''testing_setting'' ->> ''display'' = ''Ward'' 
-and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59'' 
+and  fd.data -> ''testing_setting'' ->> ''display'' = ''Ward''
+and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59''
 and extract(YEAR from (fd.data ->> ''date_visit'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_visit'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -23840,14 +23840,14 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''hiv_test_result'' ->> ''display'' is not null
-and e.form_code = ''5a011eca-b5c1-47a4-b6d8-b1161b5f8b36'' 
+and e.form_code = ''5a011eca-b5c1-47a4-b6d8-b1161b5f8b36''
 and extract(YEAR from (fd.data ->> ''date_first_anc'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_first_anc'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -24139,14 +24139,14 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''hiv_test_result'' ->> ''display'' = ''Positive''
-and e.form_code = ''5a011eca-b5c1-47a4-b6d8-b1161b5f8b36'' 
+and e.form_code = ''5a011eca-b5c1-47a4-b6d8-b1161b5f8b36''
 and extract(YEAR from (fd.data ->> ''date_first_anc'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_first_anc'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -24438,15 +24438,15 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''hiv_test_result'' ->> ''display'' is not null
-and  fd.data -> ''testing_setting'' ->> ''display'' = ''STI'' 
-and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59'' 
+and  fd.data -> ''testing_setting'' ->> ''display'' = ''STI''
+and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59''
 and extract(YEAR from (fd.data ->> ''date_visit'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_visit'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -24738,15 +24738,15 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''hiv_test_result'' ->> ''display'' = ''Positive''
-and  fd.data -> ''testing_setting'' ->> ''display'' = ''STI'' 
-and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59'' 
+and  fd.data -> ''testing_setting'' ->> ''display'' = ''STI''
+and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59''
 and extract(YEAR from (fd.data ->> ''date_visit'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_visit'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -25038,14 +25038,14 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
-where fd.data -> ''regimen_id'' ->> ''display'' is not null 
-and e.form_code = ''0a8b31d2-9397-42f8-9300-688b62c75571'' 
+where fd.data -> ''regimen_id'' ->> ''display'' is not null
+and e.form_code = ''0a8b31d2-9397-42f8-9300-688b62c75571''
 and extract(YEAR from (fd.data ->> ''date_art_start'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_art_start'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -25343,10 +25343,10 @@ and e.organisation_unit_id = ?]]></xml-property>
             <xml-property name="queryText"><![CDATA[select fd.id as form_id,
 fd.data -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (fd.data ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
-where e.form_code = ''b1c73da8-95d7-48db-9ed9-fd32a38cc1e3'' 
+where e.form_code = ''b1c73da8-95d7-48db-9ed9-fd32a38cc1e3''
 and extract(YEAR from (fd.data ->> ''date_screening_ict'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_screening_ict'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -25550,14 +25550,14 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select 
+            <xml-property name="queryText"><![CDATA[select
 fd.data -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (fd.data ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''ict_tracking_outcome'' ->> ''display'' = ''Accept HTS''
-and e.form_code = ''b1c73da8-95d7-48db-9ed9-fd32a38cc1e3'' 
+and e.form_code = ''b1c73da8-95d7-48db-9ed9-fd32a38cc1e3''
 and extract(YEAR from (fd.data ->> ''date_screening_ict'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_screening_ict'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -25831,14 +25831,14 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select  
+            <xml-property name="queryText"><![CDATA[select
 fd.data -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (fd.data ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''hiv_status'' ->> ''display'' = ''Positive''
-and e.form_code = ''b1c73da8-95d7-48db-9ed9-fd32a38cc1e3'' 
+and e.form_code = ''b1c73da8-95d7-48db-9ed9-fd32a38cc1e3''
 and extract(YEAR from (fd.data ->> ''date_screening_ict'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_screening_ict'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -26130,14 +26130,14 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 fd.data -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (fd.data ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''hiv_status'' ->> ''display'' = ''Negative''
-and e.form_code = ''b1c73da8-95d7-48db-9ed9-fd32a38cc1e3'' 
+and e.form_code = ''b1c73da8-95d7-48db-9ed9-fd32a38cc1e3''
 and extract(YEAR from (fd.data ->> ''date_screening_ict'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_screening_ict'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -26411,14 +26411,14 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select  
+            <xml-property name="queryText"><![CDATA[select
 fd.data -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (fd.data ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''hiv_status'' ->> ''display'' = ''Previously Known''
-and e.form_code = ''b1c73da8-95d7-48db-9ed9-fd32a38cc1e3'' 
+and e.form_code = ''b1c73da8-95d7-48db-9ed9-fd32a38cc1e3''
 and extract(YEAR from (fd.data ->> ''date_screening_ict'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_screening_ict'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -26692,15 +26692,15 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select 
+            <xml-property name="queryText"><![CDATA[select
 fd.data -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (fd.data ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
-where fd.data -> ''hiv_test_result'' ->> ''display'' = ''Positive'' 
-and  fd.data -> ''link_care'' ->> ''display'' = ''YES'' 
-and e.form_code = ''b1c73da8-95d7-48db-9ed9-fd32a38cc1e3'' 
+where fd.data -> ''hiv_test_result'' ->> ''display'' = ''Positive''
+and  fd.data -> ''link_care'' ->> ''display'' = ''YES''
+and e.form_code = ''b1c73da8-95d7-48db-9ed9-fd32a38cc1e3''
 and extract(YEAR from (fd.data ->> ''date_screening_ict'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_screening_ict'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -26974,15 +26974,15 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select  
+            <xml-property name="queryText"><![CDATA[select
 fd.data -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (fd.data ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
-where fd.data -> ''hiv_test_result'' ->> ''display'' = ''Positive'' 
-and  fd.data -> ''link_care'' ->> ''display'' = ''YES'' 
-and e.form_code = ''b1c73da8-95d7-48db-9ed9-fd32a38cc1e3'' 
+where fd.data -> ''hiv_test_result'' ->> ''display'' = ''Positive''
+and  fd.data -> ''link_care'' ->> ''display'' = ''YES''
+and e.form_code = ''b1c73da8-95d7-48db-9ed9-fd32a38cc1e3''
 and extract(YEAR from (fd.data ->> ''date_screening_ict'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_screening_ict'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -27274,15 +27274,15 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''hiv_test_result'' ->> ''display'' is not null
-and  fd.data -> ''testing_setting'' ->> ''display'' = ''TB'' 
-and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59'' 
+and  fd.data -> ''testing_setting'' ->> ''display'' = ''TB''
+and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59''
 and extract(YEAR from (fd.data ->> ''date_visit'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_visit'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -27574,15 +27574,15 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''hiv_test_result'' ->> ''display'' = ''Positive''
-and  fd.data -> ''testing_setting'' ->> ''display'' = ''TB'' 
-and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59'' 
+and  fd.data -> ''testing_setting'' ->> ''display'' = ''TB''
+and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59''
 and extract(YEAR from (fd.data ->> ''date_visit'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_visit'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -27874,16 +27874,16 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''hiv_test_result'' ->> ''display''is not null
-and  (fd.data -> ''testing_setting'' ->> ''display'' = ''Blood Bank'' 
+and  (fd.data -> ''testing_setting'' ->> ''display'' = ''Blood Bank''
 or  fd.data -> ''testing_setting'' ->> ''display'' = ''FP'')
-and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59'' 
+and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59''
 and extract(YEAR from (fd.data ->> ''date_visit'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_visit'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -28054,16 +28054,16 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''hiv_test_result'' ->> ''display'' = ''Positive''
-and  (fd.data -> ''testing_setting'' ->> ''display'' = ''Blood Bank'' 
+and  (fd.data -> ''testing_setting'' ->> ''display'' = ''Blood Bank''
 or  fd.data -> ''testing_setting'' ->> ''display'' = ''FP'' )
-and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59'' 
+and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59''
 and extract(YEAR from (fd.data ->> ''date_visit'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_visit'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -28285,15 +28285,15 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''previous_hiv_test'' ->> ''display'' = ''NO''
 and fd.data -> ''received_test_result'' ->> ''display'' = ''YES''
-and e.form_code = ''5a011eca-b5c1-47a4-b6d8-b1161b5f8b36'' 
+and e.form_code = ''5a011eca-b5c1-47a4-b6d8-b1161b5f8b36''
 and extract(YEAR from (fd.data ->> ''date_first_anc'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_first_anc'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -28690,14 +28690,14 @@ org_unit.organisation_unit_id = ?
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select  
+            <xml-property name="queryText"><![CDATA[select
 fd.data -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (fd.data ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''type_relationship'' ->> ''display'' in (''Live-in Parners'', ''Boyfriend/Girlfriend'', ''Regular Casual Partner'', ''Infrequent Casual Partner'', ''sex Worker'')
-and e.form_code = ''b1c73da8-95d7-48db-9ed9-fd32a38cc1e3'' 
+and e.form_code = ''b1c73da8-95d7-48db-9ed9-fd32a38cc1e3''
 and extract(YEAR from (fd.data ->> ''date_screening_ict'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_screening_ict'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -28968,14 +28968,14 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,  
+            <xml-property name="queryText"><![CDATA[select distinct e.patient_id,
 p.details -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''previous_hiv_test'' ->> ''display'' = ''Sero-converted to HIV positive''
-and e.form_code = ''5a011eca-b5c1-47a4-b6d8-b1161b5f8b36'' 
+and e.form_code = ''5a011eca-b5c1-47a4-b6d8-b1161b5f8b36''
 and extract(YEAR from (fd.data ->> ''date_first_anc'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_first_anc'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -29249,14 +29249,14 @@ and e.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">8</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select  
+            <xml-property name="queryText"><![CDATA[select
 fd.data -> ''gender'' ->> ''display'' as gender,
 extract(YEAR from AGE(NOW(), (fd.data ->> ''dob'')::date)) as age
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 where fd.data -> ''index_testing'' ->> ''display'' = ''Biological''
-and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59'' 
+and e.form_code = ''3746bd2c-362d-4944-8982-5189441b1d59''
 and extract(YEAR from (fd.data ->> ''date_visit'')::timestamp) = ?
 and extract(MONTH from (fd.data ->> ''date_visit'')::timestamp) = ?
 and e.organisation_unit_id = ?]]></xml-property>
@@ -36901,24 +36901,24 @@ INSERT INTO public.report_info (id, archived, description, name, program_code, t
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select distinct e1.patient_id , 
-p1.details -> ''gender'' ->> ''display'' as gender, 
+            <xml-property name="queryText"><![CDATA[select distinct e1.patient_id ,
+p1.details -> ''gender'' ->> ''display'' as gender,
 EXTRACT(YEAR from AGE(NOW(), (p1.details ->> ''dob'')::date)) as age, p1.details ->> ''dob'' as dob
 
 from encounter e1 inner join patient p1 on e1.patient_id = p1.id
 inner join person pr1 on p1.person_id = pr1.id
 inner join application_codeset ac1 on ac1.id = pr1.gender_id
-where e1.form_code in (''87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e'', ''4ab293ff-6837-41e8-aa85-14f25ce59ef0'') and e1.patient_id in  
+where e1.form_code in (''87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e'', ''4ab293ff-6837-41e8-aa85-14f25ce59ef0'') and e1.patient_id in
 (
-select p.id 
+select p.id
 from form_data fd inner join encounter e on fd.encounter_id = e.id
 inner join patient p on p.id = e.patient_id
-where 
+where
 	e.date_encounter between ? and ? and
 	 e.organisation_unit_id = ? and
 	e.form_code = ''0871d0b9-0fb3-4579-bdec-77d684b0cea6''
-and (fd.data ->> ''date_registration'')::timestamp AT TIME ZONE ''GMT'' <= ?  
-and (fd.data -> ''status_registration'' ->> ''display'' IN (''ART Start'', ''ART Restart'', ''ART Transfer In'') 
+and (fd.data ->> ''date_registration'')::timestamp AT TIME ZONE ''GMT'' <= ?
+and (fd.data -> ''status_registration'' ->> ''display'' IN (''ART Start'', ''ART Restart'', ''ART Transfer In'')
 	 OR (fd.data -> ''status_registration'' ->> ''display'' IN (''ART Transfer Out'', ''Lost to Follow Up'', ''Stopped Treatment'', ''Known Death'')
 		and (fd.data ->> ''date_registration'')::timestamp AT TIME ZONE ''GMT'' > ?)))]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -37070,8 +37070,8 @@ and (fd.data -> ''status_registration'' ->> ''display'' IN (''ART Start'', ''ART
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select distinct e1.patient_id, ''Pregnant'' as pregnancy_status, '''' as breastfeeding_status
-from encounter e1 
-where e1.form_code = ''87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e'' 
+from encounter e1
+where e1.form_code = ''87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e''
 and e1.date_encounter between ? and ?
 AND e1.organisation_unit_id = ?]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -38547,16 +38547,16 @@ AND e1.organisation_unit_id = ?]]></xml-property>
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[SELECT distinct e.patient_id,  
-fd.data -> ''status_registration''  ->> ''display'' as registration_status, 
+            <xml-property name="queryText"><![CDATA[SELECT distinct e.patient_id,
+fd.data -> ''status_registration''  ->> ''display'' as registration_status,
 p.details -> ''gender'' ->> ''display'' as gender,
 EXTRACT(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age,
 fd.data -> ''tb_status''  ->> ''display'' as tb_status,
-fd.data -> ''pregnancy_status''  ->> ''display'' as pregnancy_status 
-FROM encounter e 
+fd.data -> ''pregnancy_status''  ->> ''display'' as pregnancy_status
+FROM encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
-WHERE e.form_code = ''0871d0b9-0fb3-4579-bdec-77d684b0cea6'' 
+WHERE e.form_code = ''0871d0b9-0fb3-4579-bdec-77d684b0cea6''
 AND fd.data -> ''status_registration'' ->> ''display'' = ''HIV+ non ART''
 AND EXTRACT(YEAR FROM (fd.data ->> ''date_registration'')::timestamp) = ?
 AND EXTRACT(MONTH FROM (fd.data ->> ''date_registration'')::timestamp) = ?
@@ -39661,19 +39661,19 @@ AND e.organisation_unit_id = ?]]></xml-property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[-- ART 4: Total number of people living with HIV who are currently receiving ART during the month (All regimen)
-select distinct e.patient_id, rl.id,  p.details -> ''gender'' ->> ''display'' as gender, 
+select distinct e.patient_id, rl.id,  p.details -> ''gender'' ->> ''display'' as gender,
 EXTRACT ( YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age,
 rl.name as regimenLine,
 rl.id as regimenLineCode
-from encounter e 
+from encounter e
 inner join patient p on e.patient_id = p.id
 inner join form_data fd on fd.encounter_id = e.id
 inner join regimen r on (fd.data -> ''regimen'' ->> ''id'')::int = r.id
 inner join regimen_line rl on rl.id = r.regimen_line_id
-where e.form_code = ''4ab293ff-6837-41e8-aa85-14f25ce59ef0'' 
+where e.form_code = ''4ab293ff-6837-41e8-aa85-14f25ce59ef0''
 and e.date_encounter between ? and ?
 AND e.organisation_unit_id = ?
-and fd.data ->> ''regimen'' is not null 
+and fd.data ->> ''regimen'' is not null
 and EXTRACT(DAY FROM (NOW() - e.date_encounter + (fd.data ->> ''duration_in_days'')::int * INTERVAL ''1 day'')) <= 28
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -40573,16 +40573,16 @@ and EXTRACT(DAY FROM (NOW() - e.date_encounter + (fd.data ->> ''duration_in_days
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[SELECT distinct e.patient_id,
-enrollment_fd.data -> ''status_registration''  ->> ''display'' as registration_status, 
+enrollment_fd.data -> ''status_registration''  ->> ''display'' as registration_status,
 art_commencement_fd.data ->> ''date_enrollment'' as date_enrolled,
 p.details -> ''gender'' ->> ''display'' as gender,
 EXTRACT(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age,
 art_commencement_fd.data -> ''tb_status''  ->> ''display'' as tb_status,
-art_commencement_fd.data -> ''pregnancy_status''  ->> ''display'' as pregnancy_status 
-FROM encounter e 
+art_commencement_fd.data -> ''pregnancy_status''  ->> ''display'' as pregnancy_status
+FROM encounter e
 inner join patient p on e.patient_id = p.id
-inner join form_data art_commencement_fd on art_commencement_fd.encounter_id = e.id and e.form_code = ''0a8b31d2-9397-42f8-9300-688b62c75571'' 
-left join form_data enrollment_fd on enrollment_fd.encounter_id = e.id and e.form_code = ''0871d0b9-0fb3-4579-bdec-77d684b0cea6'' 
+inner join form_data art_commencement_fd on art_commencement_fd.encounter_id = e.id and e.form_code = ''0a8b31d2-9397-42f8-9300-688b62c75571''
+left join form_data enrollment_fd on enrollment_fd.encounter_id = e.id and e.form_code = ''0871d0b9-0fb3-4579-bdec-77d684b0cea6''
 WHERE EXTRACT(YEAR FROM (art_commencement_fd.data ->> ''date_enrollment'')::timestamp) = ?
 AND EXTRACT(MONTH FROM (art_commencement_fd.data ->> ''date_enrollment'')::timestamp) = ?
 AND enrollment_fd.data -> ''status_registration'' ->> ''display'' != ''ART Transfer In''
@@ -41416,12 +41416,12 @@ AND e.organisation_unit_id = ?]]></xml-property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[-- ART 5
-SELECT distinct e.patient_id, lab_fd.data, 
+SELECT distinct e.patient_id, lab_fd.data,
 p.details -> ''gender'' ->> ''display'' as gender,
 EXTRACT(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-FROM encounter e 
+FROM encounter e
 inner join patient p on e.patient_id = p.id
-inner join form_data lab_fd on lab_fd.encounter_id = e.id and e.form_code = ''87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e'' 
+inner join form_data lab_fd on lab_fd.encounter_id = e.id and e.form_code = ''87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e''
 WHERE EXTRACT(YEAR FROM (lab_fd.data ->> ''date_result_reported'')::date) = ?
 AND EXTRACT(MONTH FROM (lab_fd.data ->> ''date_result_reported'')::date) = ?
 AND lab_fd.data ->> ''description'' ilike ''Viral load''
@@ -42214,17 +42214,17 @@ AND e.organisation_unit_id = ?
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[-- ART 7
-SELECT distinct e.patient_id, fd.data, 
+SELECT distinct e.patient_id, fd.data,
 p.details -> ''gender'' ->> ''display'' as gender,
 EXTRACT(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-FROM encounter e 
+FROM encounter e
 inner join patient p on e.patient_id = p.id
-inner join form_data fd on fd.encounter_id = e.id and e.form_code = ''5210f079-27e9-4d01-a713-a2c400e0926c'' 
+inner join form_data fd on fd.encounter_id = e.id and e.form_code = ''5210f079-27e9-4d01-a713-a2c400e0926c''
 WHERE EXTRACT(YEAR FROM (fd.data ->> ''date_current_status'')::timestamp) = ?
 AND EXTRACT(MONTH FROM (fd.data ->> ''date_current_status'')::timestamp) = ?
 AND fd.data -> ''current_status'' ->> ''code'' = ''7e8d0627-7670-40b6-baad-53bc944c1e57''
  AND e.organisation_unit_id = ?
- 
+
 
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -43014,12 +43014,12 @@ AND fd.data -> ''current_status'' ->> ''code'' = ''7e8d0627-7670-40b6-baad-53bc9
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[-- ART 8
-SELECT distinct e.patient_id, fd.data, 
+SELECT distinct e.patient_id, fd.data,
 p.details -> ''gender'' ->> ''display'' as gender,
 EXTRACT(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-FROM encounter e 
+FROM encounter e
 inner join patient p on e.patient_id = p.id
-inner join form_data fd on fd.encounter_id = e.id and e.form_code = ''5210f079-27e9-4d01-a713-a2c400e0926c'' 
+inner join form_data fd on fd.encounter_id = e.id and e.form_code = ''5210f079-27e9-4d01-a713-a2c400e0926c''
 WHERE EXTRACT(YEAR FROM (fd.data ->> ''date_current_status'')::timestamp) = ?
 AND EXTRACT(MONTH FROM (fd.data ->> ''date_current_status'')::timestamp) = ?
 AND e.organisation_unit_id = ?
@@ -43813,14 +43813,14 @@ AND fd.data -> ''current_status'' ->> ''code'' = ''e69c44fb-f011-4bb0-8262-88e13
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[-- ART 5
-SELECT distinct e.patient_id, lab_fd.data, 
+SELECT distinct e.patient_id, lab_fd.data,
 p.details -> ''gender'' ->> ''display'' as gender,
 EXTRACT(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age
-FROM encounter e 
+FROM encounter e
 inner join patient p on e.patient_id = p.id
 inner join person pr on p.person_id = pr.id
 inner join application_codeset ac on ac.id = pr.gender_id
-inner join form_data lab_fd on lab_fd.encounter_id = e.id and e.form_code = ''87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e'' 
+inner join form_data lab_fd on lab_fd.encounter_id = e.id and e.form_code = ''87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e''
 WHERE EXTRACT(YEAR FROM (lab_fd.data ->> ''date_result_reported'')::date) = ?
 AND EXTRACT(MONTH FROM (lab_fd.data ->> ''date_result_reported'')::date) = ?
 AND lab_fd.data ->> ''description'' ilike ''Viral load''
@@ -54529,10 +54529,10 @@ if (params["facilityIds"].value){
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select distinct on (p.id) p.id,
-p.details ->> ''firstName'' as firstName, p.details ->> ''lastName'' as lastName, 
-p.patient_number,  
-p.details ->> ''dob'' as dob, 
-p.details -> ''gender'' ->> ''display'' as gender, 
+p.details ->> ''firstName'' as firstName, p.details ->> ''lastName'' as lastName,
+p.patient_number,
+p.details ->> ''dob'' as dob,
+p.details -> ''gender'' ->> ''display'' as gender,
 enrollment_fd.data -> ''care_entry_point'' ->> ''display'' as entryPoint,
 (enrollment_fd.data ->> ''date_confirmed_hiv'') as date_confirmed_hiv,
 (enrollment_fd.data -> ''enrollment_setting'' ->> ''display'') as enrollment_setting,
@@ -54542,10 +54542,10 @@ enrollment_fd.data -> ''care_entry_point'' ->> ''display'' as entryPoint,
 baseline_regimen_line.name as first_regimen_line,
 baseline_regimen.name as first_regimen,
 (client_status_fd.data -> ''current_status'' ->> ''display'') as current_status,
-current_rl.name as current_regimen_line, 
+current_rl.name as current_regimen_line,
 (phar_fd.data -> ''regimen'' ->> ''name'') as current_regimen,
 phar_fd.data ->> ''date_dispensed'' as date_last_refill,
-case 
+case
 when (phar_fd.data ->> ''duration_unit'') = ''weeks'' then (phar_fd.data ->> ''duration'')::integer * 7
 when (phar_fd.data ->> ''duration_unit'') = ''months'' then (phar_fd.data ->> ''duration'')::integer * 30
 else (phar_fd.data ->> ''duration'')::integer
@@ -54583,12 +54583,12 @@ end tpt_given
 
 from patient p
 -- enrollment
-left join encounter enrollment_enc on enrollment_enc.patient_id = p.id 
+left join encounter enrollment_enc on enrollment_enc.patient_id = p.id
 	AND enrollment_enc.form_code = ''0871d0b9-0fb3-4579-bdec-77d684b0cea6''
-left join form_data enrollment_fd on enrollment_fd.encounter_id = enrollment_enc.id 
+left join form_data enrollment_fd on enrollment_fd.encounter_id = enrollment_enc.id
 
 -- client status update form 5210f079-27e9-4d01-a713-a2c400e0926c
-left join encounter client_status_enc on client_status_enc.patient_id = p.id 
+left join encounter client_status_enc on client_status_enc.patient_id = p.id
 	AND client_status_enc.form_code = ''5210f079-27e9-4d01-a713-a2c400e0926c''
 left join form_data client_status_fd on client_status_fd.encounter_id = client_status_enc.id
 and (client_status_fd.data ->> ''date_current_status'' <> '''') is not true
@@ -54596,20 +54596,20 @@ and (client_status_fd.data ->> ''date_current_status'' <> '''') is not true
 	AND (client_status_fd.data ->> ''date_current_status'')::date <= ?
 
 -- hiv commencement form 0a8b31d2-9397-42f8-9300-688b62c75571
-inner join encounter art_enc on art_enc.patient_id = p.id 
+inner join encounter art_enc on art_enc.patient_id = p.id
 	AND art_enc.form_code = ''0a8b31d2-9397-42f8-9300-688b62c75571''
-inner join form_data art_fd on art_fd.encounter_id = art_enc.id 
+inner join form_data art_fd on art_fd.encounter_id = art_enc.id
 left join regimen_line baseline_regimen_line on baseline_regimen_line.id = (art_fd.data ->> ''regimen_line_id'')::integer
 left join regimen baseline_regimen on baseline_regimen.id = (art_fd.data ->> ''regimen_id'')::integer
 
 -- pharmacy 4ab293ff-6837-41e8-aa85-14f25ce59ef0
-left join 
+left join
 ( SELECT phar_fd.data, phar_enc.patient_id
-		FROM encounter phar_enc 
-		INNER JOIN form_data phar_fd ON phar_fd.encounter_id = phar_enc.id 
+		FROM encounter phar_enc
+		INNER JOIN form_data phar_fd ON phar_fd.encounter_id = phar_enc.id
 		-- type = 0 means regimen_prescriptions only and prescription_status = 1 means the prescription was dispensed
-		AND (phar_fd.data ->> ''type'')::int = 0 
-		AND (phar_fd.data ->> ''prescription_status'')::int = 1 
+		AND (phar_fd.data ->> ''type'')::int = 0
+		AND (phar_fd.data ->> ''prescription_status'')::int = 1
 		AND (COALESCE(TRIM(phar_fd.data ->> ''date_dispensed'', '''')) = '''') is false
 		-- less than the reporting period
 		AND (phar_fd.data ->> ''date_dispensed'')::date <= ?
@@ -54620,51 +54620,51 @@ left join regimen_line current_rl on current_rl.id = (phar_fd.data -> ''regimen'
 -- pharmacy 4ab293ff-6837-41e8-aa85-14f25ce59ef0 for isonazids
 left join ( SELECT tpt_phar_fd.data, tpt_phar_enc.patient_id
  	FROM encounter tpt_phar_enc
- 	INNER JOIN form_data tpt_phar_fd ON tpt_phar_fd.encounter_id = tpt_phar_enc.id 
+ 	INNER JOIN form_data tpt_phar_fd ON tpt_phar_fd.encounter_id = tpt_phar_enc.id
 	AND (tpt_phar_fd.data ->> ''type'')::int = 1
-	AND (tpt_phar_fd.data ->> ''prescription_status'')::int = 1 
+	AND (tpt_phar_fd.data ->> ''prescription_status'')::int = 1
 	AND tpt_phar_fd.data ->''drugs''->0->''drug'' ->> ''name'' ilike ''Isoniazid''
 	AND (COALESCE(TRIM(tpt_phar_fd.data ->> ''date_prescribed'', '''')) = '''') is false
 	-- less than two years before the reporting period
 	--AND (tpt_phar_fd.data ->> ''date_prescribed'')::date >= (''2021-02-02''::date - INTERVAL ''2 year'')
  	WHERE tpt_phar_enc.form_code = ''4ab293ff-6837-41e8-aa85-14f25ce59ef0''
 	) tpt_phar_fd on (tpt_phar_fd.patient_id = p.id)
-	
+
 
 -- clinic follow up visit 5c8741de-f722-4e0a-a505-24e039bf4340
-left join encounter visit_enc on visit_enc.patient_id = p.id 
+left join encounter visit_enc on visit_enc.patient_id = p.id
 	AND visit_enc.form_code = ''5c8741de-f722-4e0a-a505-24e039bf4340''
 left join form_data visit_fd on visit_fd.encounter_id = visit_enc.id and (visit_fd.data ->> ''date_visit'' <> '''') is not true
 -- less than the reporting period
-	AND (visit_fd.data ->> ''date_visit'')::date <= ? 
+	AND (visit_fd.data ->> ''date_visit'')::date <= ?
 
 -- lab 87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e
-left join encounter lab_enc on lab_enc.patient_id = p.id 
+left join encounter lab_enc on lab_enc.patient_id = p.id
 	AND lab_enc.form_code = ''87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e''
 	-- less than the reporting period
 	AND  lab_enc.date_encounter  <= ?
-left join form_data lab_fd on lab_fd.encounter_id = lab_enc.id 
+left join form_data lab_fd on lab_fd.encounter_id = lab_enc.id
 	AND lab_fd.data ->> ''description'' ilike ''Viral load''
-	
+
 
 -- DMOC d1477f0c-3320-4bfe-abac-d26388cb3b09
-left join encounter dmoc_enc on dmoc_enc.patient_id = p.id 
+left join encounter dmoc_enc on dmoc_enc.patient_id = p.id
 	AND dmoc_enc.form_code = ''d1477f0c-3320-4bfe-abac-d26388cb3b09''
 	-- less than the reporting period
 	AND dmoc_enc.date_encounter  <= ?
 left join form_data dmoc_fd on dmoc_fd.encounter_id = dmoc_enc.id
 
 -- EAC e856bdfc-16e0-413e-aab1-afbe5c717caf
-left join encounter eac_enc on eac_enc.patient_id = p.id 
+left join encounter eac_enc on eac_enc.patient_id = p.id
 	AND eac_enc.form_code = ''e856bdfc-16e0-413e-aab1-afbe5c717caf''
 	-- less than the reporting period
 	AND eac_enc.date_encounter  <= ?
-left join form_data eac_fd on eac_fd.encounter_id = eac_enc.id 
-where 
-EXTRACT(YEAR FROM (art_fd.data ->> ''date_art_start'')::date) >= ? AND 
-EXTRACT(YEAR FROM (art_fd.data ->> ''date_art_start'')::date) <= ? AND 
+left join form_data eac_fd on eac_fd.encounter_id = eac_enc.id
+where
+EXTRACT(YEAR FROM (art_fd.data ->> ''date_art_start'')::date) >= ? AND
+EXTRACT(YEAR FROM (art_fd.data ->> ''date_art_start'')::date) <= ? AND
 EXTRACT(MONTH FROM (art_fd.data ->> ''date_art_start'')::date) >= ? AND
-EXTRACT(MONTH FROM (art_fd.data ->> ''date_art_start'')::date) <= ? 
+EXTRACT(MONTH FROM (art_fd.data ->> ''date_art_start'')::date) <= ?
 --$facility
 --p.organisation_unit_id IN ( ? )
 
@@ -57260,10 +57260,10 @@ if (params["artStartDateTo"].value){
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select distinct on (p.id) p.id,
-facility.id as facilityId, facility.name as facilityName, 
+facility.id as facilityId, facility.name as facilityName,
 p.details -> ''state'' ->> ''name'' as state, p.details -> ''province'' ->> ''name'' as province,
-p.details ->> ''firstName'' as firstName, p.details ->> ''lastName'' as lastName, 
-p.patient_number, p.details ->> ''dateRegistration'' as date_registration, 
+p.details ->> ''firstName'' as firstName, p.details ->> ''lastName'' as lastName,
+p.patient_number, p.details ->> ''dateRegistration'' as date_registration,
 p.details ->> ''dob'' as dob, EXTRACT(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age,
 p.details -> ''gender'' ->> ''display'' as gender, p.details -> ''maritalStatus'' ->> ''display'' as maritalStatus,
 p.details -> ''education'' ->> ''display'' as education, p.details -> ''occupation'' ->> ''display'' as occupation,
@@ -57304,15 +57304,15 @@ inner join organisation_unit facility on p.organisation_unit_id = facility.id
 
 -- enrollment
 left join encounter enrollment_enc on enrollment_enc.patient_id = p.id and enrollment_enc.form_code = ''0871d0b9-0fb3-4579-bdec-77d684b0cea6''
-left join form_data enrollment_fd on enrollment_fd.encounter_id = enrollment_enc.id 
+left join form_data enrollment_fd on enrollment_fd.encounter_id = enrollment_enc.id
 
 -- client status update form 5210f079-27e9-4d01-a713-a2c400e0926c
 left join encounter client_status_enc on client_status_enc.patient_id = p.id and client_status_enc.form_code = ''5210f079-27e9-4d01-a713-a2c400e0926c''
-left join form_data client_status_fd on client_status_fd.encounter_id = client_status_enc.id 
+left join form_data client_status_fd on client_status_fd.encounter_id = client_status_enc.id
 
 -- hiv commencement form 0a8b31d2-9397-42f8-9300-688b62c75571
 left join encounter art_enc on art_enc.patient_id = p.id and art_enc.form_code = ''0a8b31d2-9397-42f8-9300-688b62c75571''
-left join form_data art_fd on art_fd.encounter_id = art_enc.id 
+left join form_data art_fd on art_fd.encounter_id = art_enc.id
 left join regimen_line baseline_regimen_line on baseline_regimen_line.id = (art_fd.data ->> ''regimen_line_id'')::integer
 left join regimen baseline_regimen on baseline_regimen.id = (art_fd.data ->> ''regimen_id'')::integer
 -- pharmacy 4ab293ff-6837-41e8-aa85-14f25ce59ef0
@@ -57324,8 +57324,8 @@ left join regimen_line current_rl on current_rl.id = (phar_fd.data -> ''regimen'
 left join encounter visit_enc on visit_enc.patient_id = p.id and visit_enc.form_code = ''5c8741de-f722-4e0a-a505-24e039bf4340''
 left join form_data visit_fd on visit_fd.encounter_id = visit_enc.id
 
--- appointment 
-left join appointment appointment on appointment.patient_id = p.id and appointment.detail -> ''appointment_type'' ->> ''display'' = ''Clinic Visit'' 
+-- appointment
+left join appointment appointment on appointment.patient_id = p.id and appointment.detail -> ''appointment_type'' ->> ''display'' = ''Clinic Visit''
 
 -- lab 87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e
 left join encounter lab_enc on lab_enc.patient_id = p.id and lab_enc.form_code = ''87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e''
@@ -59422,10 +59422,10 @@ INSERT INTO public.report_info (id, archived, description, name, program_code, t
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select distinct on (p.id) p.id,
-facility.id as facilityId, facility.name as facilityName, 
+facility.id as facilityId, facility.name as facilityName,
 p.details -> ''state'' ->> ''name'' as state, p.details -> ''province'' ->> ''name'' as province,
-p.details ->> ''firstName'' as firstName, p.details ->> ''lastName'' as lastName, 
-p.patient_number, p.details ->> ''dateRegistration'' as date_registration, 
+p.details ->> ''firstName'' as firstName, p.details ->> ''lastName'' as lastName,
+p.patient_number, p.details ->> ''dateRegistration'' as date_registration,
 p.details ->> ''dob'' as dob, EXTRACT(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age,
 p.details -> ''gender'' ->> ''display'' as gender, p.details -> ''maritalStatus'' ->> ''display'' as maritalStatus,
 p.details -> ''education'' ->> ''display'' as education, p.details -> ''occupation'' ->> ''display'' as occupation,
@@ -60645,10 +60645,10 @@ INSERT INTO public.report_info (id, archived, description, name, program_code, t
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[select distinct on (p.id) p.id,
-facility.id as facilityId, facility.name as facilityName, 
+facility.id as facilityId, facility.name as facilityName,
 p.details -> ''state'' ->> ''name'' as state, p.details -> ''province'' ->> ''name'' as province,
-p.details ->> ''firstName'' as firstName, p.details ->> ''lastName'' as lastName, 
-p.patient_number, p.details ->> ''dateRegistration'' as date_registration, 
+p.details ->> ''firstName'' as firstName, p.details ->> ''lastName'' as lastName,
+p.patient_number, p.details ->> ''dateRegistration'' as date_registration,
 p.details ->> ''dob'' as dob, EXTRACT(YEAR from AGE(NOW(), (p.details ->> ''dob'')::date)) as age,
 p.details -> ''gender'' ->> ''display'' as gender, p.details -> ''maritalStatus'' ->> ''display'' as maritalStatus,
 p.details -> ''education'' ->> ''display'' as education, p.details -> ''occupation'' ->> ''display'' as occupation,
@@ -61732,10 +61732,10 @@ INSERT INTO public.report_info (id, archived, description, name, program_code, t
                     <property name="nativeDataType">12</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[select p.id, 
-facility.id as facilityId, facility.name as facilityName, 
+            <xml-property name="queryText"><![CDATA[select p.id,
+facility.id as facilityId, facility.name as facilityName,
 p.uuid as uuid,
-p.patient_number, 
+p.patient_number,
 lab_fd.data ->> ''description'' as test,
 lab_fd.data -> ''date_sample_collected'' as sample_date,
 -- result is an array , see https://stackoverflow.com/questions/27552105/find-the-last-item-in-a-json-array-in-postgres-9-4 to fetch last object
@@ -61746,8 +61746,8 @@ inner join organisation_unit facility on p.organisation_unit_id = facility.id
 
 -- lab 87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e
  join encounter lab_enc on lab_enc.patient_id = p.id and lab_enc.form_code = ''87cb9bc7-ea0d-4c83-a70d-b57a5fb7769e''
- join form_data lab_fd on lab_fd.encounter_id = lab_enc.id 
-where p.organisation_unit_id = ? 
+ join form_data lab_fd on lab_fd.encounter_id = lab_enc.id
+where p.organisation_unit_id = ?
 and lab_fd.data ->> ''description'' ilike ?
 --$dateToParam$
 --$dateFromParam$

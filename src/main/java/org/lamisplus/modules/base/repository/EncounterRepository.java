@@ -19,6 +19,9 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
 
     Optional<Encounter> findOneByPatientIdAndFormCodeAndArchived(Long patientId, String FormCode, int Archived);
 
+    Optional<Encounter> findTopByPatientIdAndFormCodeAndOrganisationUnitIdOrderByIdDesc(Long patientId, String FormCode, Long organisationUnitId);
+
+
     Optional<Encounter> findByPatientIdAndProgramCodeAndFormCodeAndDateEncounterAndOrganisationUnitId(Long patientId, String ProgramCode, String FormCode, LocalDate dateFncounter, Long organisationUnitId);
 
 /*    @Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.EncounterDistinctDTO" +
@@ -55,6 +58,10 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
                                       String dateStart, String dateEnd, Long organisationUnitId, int archived, Pageable pageable);
 
     List<Encounter> findByPatientByPatientIdAndDateModifiedIsAfter(Long patientId, LocalDate dateModified);
+
+
+    @Query(value = "SELECT * FROM encounter WHERE uuid is NULL", nativeQuery = true)
+    List<Encounter> findNullUuid();
 
 
 }

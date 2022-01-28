@@ -1,6 +1,7 @@
 import React from "react";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import Divider from "@material-ui/core/Divider";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { makeStyles } from "@material-ui/core/styles";
 import { Age } from "components/Functions/GetAge";
@@ -82,7 +83,7 @@ function PatientDetailCard(props) {
             <Col md={4} className={classes.root2}>
               <span>
                 {" "}
-                Patient ID : <b>{patient.hospitalNumber}</b>
+                Patient ID : <b>{patient.hospitalNumber} - ({patient.patientNumberType || ''})</b>
               </span>
             </Col>
 
@@ -140,6 +141,33 @@ function PatientDetailCard(props) {
             </Col>
           </Row>
         </ExpansionPanelSummary>
+<Divider />
+        {/*<ExpansionPanelDetails>*/}
+        <div className={"pl-4 pr-4 pt-2"}>
+
+          <Row>
+            <Col md={6}>
+          {patient.details && patient.details.otherIdentifier && patient.details.otherIdentifier.length > 0 ?
+              <div>
+              <span>
+                <b>Patient Other Identifier</b>
+              </span>
+              <Row>
+            {patient.details.otherIdentifier.map((x) =>
+              <Col md={12}>
+                <span>
+                 {x.identifierType.display || "N/A"} : <b>{x.identifier || "N/A"}</b>
+              </span>
+              </Col>
+            )}
+          </Row>
+              </div>
+:""
+          }
+            </Col>
+          </Row>
+        </div>
+        {/*</ExpansionPanelDetails>*/}
       </ExpansionPanel>
     </div>
   );

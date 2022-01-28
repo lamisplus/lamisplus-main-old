@@ -3,16 +3,15 @@ package org.lamisplus.modules.base;
 import com.foreach.across.config.AcrossApplication;
 import com.foreach.across.modules.hibernate.jpa.AcrossHibernateJpaModule;
 import com.foreach.across.modules.web.AcrossWebModule;
-import com.google.common.collect.Lists;
 import liquibase.integration.spring.SpringLiquibase;
 import lombok.extern.slf4j.Slf4j;
-import org.lamisplus.modules.base.config.ApplicationProperties;
 import org.lamisplus.modules.bootstrap.BootstrapModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.FileSystemResource;
@@ -49,8 +48,14 @@ public class BaseApplication extends SpringBootServletInitializer {
     @Autowired
     private DataSource dataSource;
 
+    private static ConfigurableApplicationContext context;
+
+    public static String modulePath = System.getProperty("user.dir");
+
+
     public static void main(String[] args) {
-        SpringApplication.run(BaseApplication.class, args);
+
+        context = SpringApplication.run(BaseApplication.class, args);
     }
 
     @Bean
@@ -58,7 +63,7 @@ public class BaseApplication extends SpringBootServletInitializer {
     public static PropertySourcesPlaceholderConfigurer properties() {
         PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
         YamlPropertiesFactoryBean yaml = new YamlPropertiesFactoryBean();
-        yaml.setResources(new FileSystemResource(ApplicationProperties.modulePath + File.separator +"config.yml"));
+        yaml.setResources(new FileSystemResource(modulePath + File.separator +"config.yml"));
         propertySourcesPlaceholderConfigurer.setProperties(yaml.getObject());
         propertySourcesPlaceholderConfigurer.setIgnoreResourceNotFound(true);
         return propertySourcesPlaceholderConfigurer;
@@ -131,4 +136,16 @@ public class BaseApplication extends SpringBootServletInitializer {
         liquibase.setDataSource(dataSource);
         return liquibase;
     }
+
+    /*public static void restart() {
+        ApplicationArguments args = context.getBean(ApplicationArguments.class);
+
+        Thread thread = new Thread(() -> {
+            context.close();
+            context = SpringApplication.run(BaseApplication.class, args.getSourceArgs());
+        });
+
+        thread.setDaemon(false);
+        thread.start();
+    }*/
 }
