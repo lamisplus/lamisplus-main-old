@@ -1,13 +1,10 @@
 package org.lamisplus.modules.base.security.jwt;
 
 import io.jsonwebtoken.*;
-//import io.jsonwebtoken.io.Decoders;
-//import io.jsonwebtoken.security.Keys;
-import org.hibernate.Criteria;
-import org.lamisplus.modules.base.domain.entity.Permission;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.lamisplus.modules.base.domain.entity.Role;
 import org.lamisplus.modules.base.repository.UserRepository;
-import org.lamisplus.modules.base.security.SecurityUtils;
 import org.lamisplus.modules.base.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,17 +14,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
-import javax.annotation.PostConstruct;
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 public class TokenProvider {
@@ -87,13 +78,13 @@ public class TokenProvider {
                 .claim(AUTHORITIES_KEY, authorities)
                 .claim("name", name)
                 //.claim("role", role)
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(this.getSigningKey(), SignatureAlgorithm.HS512)
                 .setExpiration(validity)
                 .compact();
     }
 
     public Authentication getAuthentication(String token) {
-        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        Claims claims = Jwts.parserBuilder().setSigningKey(this.getSigningKey()).build().parseClaimsJws(token).getBody();
         //Todo: fix
 
         Collection<? extends GrantedAuthority> authorities = Arrays
@@ -108,7 +99,7 @@ public class TokenProvider {
 
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken);
+            Jwts.parserBuilder().setSigningKey(this.getSigningKey()).build().parseClaimsJws(authToken);
             return true;
         } catch (MalformedJwtException e) {
             log.error("Invalid JWT token: {}", e.getMessage());
@@ -120,5 +111,10 @@ public class TokenProvider {
             log.error("JWT claims string is empty: {}", e.getMessage());
         }
         return false;
+    }
+
+    private Key getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(this.secret);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }
