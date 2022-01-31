@@ -37,23 +37,6 @@ public class TokenProvider {
     @Autowired
     UserRepository userRepository;
 
-    /*@PostConstruct
-    public void init(){
-        byte[] keyBytes;
-
-        *//*if (!StringUtils.isEmpty(secret)) {
-            log.warn(
-                    "Warning: the JWT key used is not Base64-encoded"
-            );
-            keyBytes = secret.getBytes(StandardCharsets.UTF_8);
-        } else {
-            log.debug("Using a Base64-encoded JWT secret key");
-            keyBytes = Decoders.BASE64.decode(secret);
-        }
-        this.key = Keys.hmacShaKeyFor(keyBytes);*//*
-        //this.tokenValidityInMilliseconds = 1000*60*60*10;
-        //this.tokenValidityInMillisecondsForRememberMe = 1000*60*60*100;
-    }*/
 
     public String createToken(Authentication authentication, UserService userService, boolean rememberMe) {
         //String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
