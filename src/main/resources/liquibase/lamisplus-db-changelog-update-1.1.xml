@@ -166,4 +166,15 @@
             <column name="uuid" afterColumn="id" type="varchar(255)"/>
         </addColumn>
     </changeSet>
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1634653439837-172">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) from patient WHERE patient_number_type is null;
+            </sqlCheck>
+        </preConditions>
+        <sql dbms="postgresql">
+            UPDATE patient set patient_number_type='Hospital Number' where patient_number_type is null
+        </sql>
+    </changeSet>
 </databaseChangeLog>

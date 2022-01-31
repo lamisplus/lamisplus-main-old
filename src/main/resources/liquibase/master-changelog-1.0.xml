@@ -4,5 +4,5 @@
     <include relativeToChangelogFile="true" file="lamisplus-db-changelog-insert-1.0.xml"/>
     <include relativeToChangelogFile="true" file="lamisplus-db-changelog-1.1.xml"/>
     <include relativeToChangelogFile="true" file="lamisplus-db-changelog-update-1.1.xml"/>
-    <!--last changeSet id - 1634653439837-171-->
+    <!--last changeSet id - 1634653439837-172-->
 </databaseChangeLog>
