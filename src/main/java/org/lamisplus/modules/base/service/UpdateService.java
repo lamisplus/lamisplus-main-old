@@ -142,7 +142,7 @@ public class UpdateService {
                 isUpdatedAvailable = true;
             }
         }catch (Exception ce){
-            ce.printStackTrace();
+            //ce.printStackTrace();
             throw new IllegalTypeException(Update.class, "url", lastUpdateCompleted.getUrl());
         }
         return isUpdatedAvailable;
