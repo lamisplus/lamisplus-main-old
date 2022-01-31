@@ -177,4 +177,30 @@
             UPDATE patient set patient_number_type='Hospital Number' where patient_number_type is null
         </sql>
     </changeSet>
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1634653439837-173">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM organisation_unit WHERE id=2024;
+            </sqlCheck>
+        </preConditions>
+        <sql dbms="postgresql">
+            INSERT INTO organisation_unit (id, name, description, organisation_unit_level_id, parent_organisation_unit_id, archived, details, date_created, created_by, date_modified, modified_by) OVERRIDING SYSTEM VALUE VALUES (2024, 'Dutse KP OSS', 'Facility in Dutse', 4, 363, 0, NULL, '2022-01-31 12:50:13.261', 'Emeka', '2022-01-31 12:50:13.261', 'Emeka');
+            SELECT pg_catalog.setval('organisation_unit_id_seq', 2024, false);
+        </sql>
+    </changeSet>
+
+    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="1634653439837-174">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM organisation_unit_hierarchy WHERE id=5177;
+            </sqlCheck>
+        </preConditions>
+        <sql dbms="postgresql">
+            INSERT INTO organisation_unit_hierarchy (id, organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) OVERRIDING SYSTEM VALUE VALUES (5175, 2024, 363, 4);
+            INSERT INTO organisation_unit_hierarchy (id, organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) OVERRIDING SYSTEM VALUE VALUES (5176, 2024, 19, 4);
+            INSERT INTO organisation_unit_hierarchy (id, organisation_unit_id, parent_organisation_unit_id, organisation_unit_level_id) OVERRIDING SYSTEM VALUE VALUES (5177, 2024, 1, 4);
+            SELECT pg_catalog.setval('organisation_unit_hierarchy_id_seq', 5177, false);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
