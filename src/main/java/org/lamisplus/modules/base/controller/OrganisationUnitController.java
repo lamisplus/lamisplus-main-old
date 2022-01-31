@@ -58,11 +58,6 @@ public class OrganisationUnitController {
         return ResponseEntity.ok(this.organisationUnitService.getAllOrganisationUnitByOrganisationUnitLevelId(id));
     }
 
-    /*@GetMapping ("/organisation-unit-levels/test")
-    public  ResponseEntity<List>  getAll() {
-        return ResponseEntity.ok(this.organisationUnitService.getAll());
-    }
-*/
     @GetMapping ("/hierarchy/{parentOrgUnitId}/{orgUnitLevelId}")
     public  ResponseEntity<List<OrganisationUnitDTO>>  getOrganisationUnitSubsetByParentOrganisationUnitIdAndOrganisationUnitLevelId(
             @PathVariable Long parentOrgUnitId, @PathVariable Long orgUnitLevelId) {
@@ -73,4 +68,10 @@ public class OrganisationUnitController {
     public ResponseEntity<Integer> delete(@PathVariable Long id) {
         return ResponseEntity.ok(organisationUnitService.delete(id));
     }
+
+    /*//For updating organisation unit from excel
+    @GetMapping ("/organisation-unit-levels/test")
+    public  ResponseEntity<List>  getAll() {
+        return ResponseEntity.ok(this.organisationUnitService.getAll());
+    }*/
 }
