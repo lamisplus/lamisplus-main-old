@@ -33,4 +33,7 @@ public interface OrganisationUnitRepository extends JpaRepository<OrganisationUn
 
     @Query(value = "SELECT name FROM organisation_unit WHERE organisation_unit_level_id=3", nativeQuery = true)
     List<String> findAllProvince();
+
+    @Query(value = "select * from organisation_unit org where  org.id in (select distinct ps.organisation_unit_id from patient ps)", nativeQuery = true)
+    List<OrganisationUnit> findOrganisationUnitWithRecords();
 }

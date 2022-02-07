@@ -24,6 +24,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -55,6 +56,7 @@ public class EncounterService {
         List<Encounter> encounters = encounterRepository.findAllByOrganisationUnitIdAndArchived(organisationUnitId, UNARCHIVED);
         Set<String> permissions = accessRight.getAllPermissionForCurrentUser();
         encounters.forEach(singleEncounter -> {
+            //log.info("Encounter {}", singleEncounter);
             //filtering by user permission
             if(!accessRight.grantAccessForm(singleEncounter.getFormCode(), permissions)){
                 return;
@@ -145,7 +147,7 @@ public class EncounterService {
         //Grant access by access type = WRITE
         accessRight.grantAccessByAccessType(encounterDTO.getFormCode(), Encounter.class, WRITE, permissions);
 
-        encounterDTO.setTimeCreated(CustomDateTimeFormat.LocalTimeByFormat(LocalTime.now(),"hh:mm a"));
+        encounterDTO.setTimeCreated(CustomDateTimeFormat.LocalDateTimeByFormat(LocalDateTime.now(),"hh:mm a"));
 
         encounterRepository.findByPatientIdAndProgramCodeAndFormCodeAndDateEncounterAndOrganisationUnitId(
                 encounterDTO.getPatientId(), encounterDTO.getFormCode(), encounterDTO.getProgramCode(),
@@ -167,13 +169,13 @@ public class EncounterService {
             if(form.getMainCode() != null){
                 encounter.setFormCode(form.getMainCode());
             }
-            visit = visitRepository.findTopByPatientIdAndDateVisitStartOrderByDateVisitStartDesc(encounterDTO.getPatientId(), encounter.getDateEncounter()).orElse(null);
+            visit = visitRepository.findTopByPatientIdAndDateVisitStartOrderByDateVisitStartDesc(encounterDTO.getPatientId(), encounter.getDateEncounter().toLocalDate()).orElse(null);
             if(visit == null) {
                 visit = new Visit();
-                visit.setDateVisitEnd(encounter.getDateEncounter());
-                visit.setDateVisitStart(encounter.getDateEncounter());
-                visit.setTimeVisitStart(LocalTime.now());
-                visit.setTimeVisitEnd(LocalTime.now());
+                visit.setDateVisitEnd(encounter.getDateEncounter().toLocalDate());
+                visit.setDateVisitStart(encounter.getDateEncounter().toLocalDate());
+                visit.setTimeVisitStart(LocalDateTime.now());
+                visit.setTimeVisitEnd(LocalDateTime.now());
                 visit.setDateNextAppointment(null);
                 visit.setPatientId(encounter.getPatientId());
                 visit.setTypePatient(0);

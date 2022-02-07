@@ -1,6 +1,10 @@
 package org.lamisplus.modules.base.domain.entity;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -9,6 +13,7 @@ import org.lamisplus.modules.base.util.converter.LocalDateConverter;
 import org.lamisplus.modules.base.util.converter.LocalTimeAttributeConverter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -49,15 +54,19 @@ public class Encounter implements Serializable  {
 
     @Basic
     @Column(name = "date_encounter")
-    @Convert(converter = LocalDateConverter.class)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private LocalDate dateEncounter;
+    private LocalDateTime dateEncounter;
 
     @Basic
     @Column(name = "date_created")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "hh:mm a")
-    @Convert(converter = LocalTimeAttributeConverter.class)
-    private LocalTime timeCreated;
+    private LocalDateTime timeCreated = LocalDateTime.now();
 
     @Basic
     @Column(name = "uuid")
@@ -79,6 +88,12 @@ public class Encounter implements Serializable  {
     @JsonIgnore
     @UpdateTimestamp
     private LocalDateTime dateModified = LocalDateTime.now();
+
+    /*@Basic
+    @Column(name = "date_created")
+    @JsonIgnore
+    @UpdateTimestamp
+    private LocalDateTime dateCreated = LocalDateTime.now();*/
 
     @LastModifiedBy
     @Basic

@@ -2,16 +2,22 @@ package org.lamisplus.modules.base.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.lamisplus.modules.base.util.converter.LocalTimeAttributeConverter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -37,16 +43,20 @@ public class Visit extends Audit<String> {
 
     @Basic
     @Column(name = "time_visit_start")
-    @Convert(converter = LocalTimeAttributeConverter.class)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "hh:mm a")
     @NotNull(message = "timeVisitStart cannot be null")
-    private LocalTime timeVisitStart;
+    private LocalDateTime timeVisitStart;
 
     @Basic
-    @Column(name = "time_visit_end", nullable = true)
-    @Convert(converter = LocalTimeAttributeConverter.class)
+    @Column(name = "time_visit_end")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "hh:mm a")
-    private LocalTime timeVisitEnd;
+    private LocalDateTime timeVisitEnd;
 
     @Basic
     @Column(name = "date_next_appointment")

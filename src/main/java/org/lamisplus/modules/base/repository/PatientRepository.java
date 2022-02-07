@@ -6,9 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -322,6 +324,15 @@ public interface PatientRepository extends JpaRepository<Patient, Long> , JpaSpe
             "u.id=?4) m WHERE rn = 1)", nativeQuery = true)
     List<Patient> findAllByPatientsManagedInHIVByFilteredParametersByApplicationUserId(Long organisationUnit, int ageFrom, int ageTo,
                                                                                        Long applicationUserId, Pageable pageable);
+
+
+    Optional<Patient> findByUuid(String uuid);
+
+    @Query(value = "SELECT * FROM patient WHERE uuid is NULL", nativeQuery = true)
+    List<Patient> findNullUuid();
+
+    @Query(value = "select * from patient where date_modified >=:dateLastSync or date_created >=:dateLastSync", nativeQuery = true)
+    List<Patient> getPatientsDueForServerUpload(@Param("dateLastSync") LocalDateTime dateLastSync);
 
 
 

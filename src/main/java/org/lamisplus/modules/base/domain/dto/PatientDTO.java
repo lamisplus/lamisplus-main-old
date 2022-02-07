@@ -2,14 +2,20 @@ package org.lamisplus.modules.base.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Data;
 import org.lamisplus.modules.base.domain.entity.Flag;
 import org.lamisplus.modules.base.domain.entity.PatientFlag;
 import org.lamisplus.modules.base.util.converter.LocalDateConverter;
 import org.lamisplus.modules.base.util.converter.LocalTimeAttributeConverter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Convert;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -52,9 +58,11 @@ public class PatientDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateVisitStart;
 
-    @Convert(converter = LocalTimeAttributeConverter.class)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "hh:mm a")
-    private LocalTime timeVisitStart;
+    private LocalDateTime timeVisitStart;
 
     private Integer typePatient;
 

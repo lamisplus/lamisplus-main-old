@@ -83,4 +83,9 @@ public interface FormDataRepository extends JpaRepository<FormData, Long>, JpaSp
 
     @Query(value = "SELECT * FROM form_data WHERE uuid is NULL", nativeQuery = true)
     List<FormData> findNullUuid();
+
+    Optional<FormData> findByUuid(String uuid);
+
+    @Query(value = "select * from form_data where date_modified >=:dateLastSync or date_created >=:dateLastSync", nativeQuery = true)
+    List<FormData> getFormDataDueForServerUpload(@Param("dateLastSync") LocalDateTime dateLastSync);
 }

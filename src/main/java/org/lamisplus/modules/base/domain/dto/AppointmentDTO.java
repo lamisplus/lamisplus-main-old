@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 public class AppointmentDTO {
@@ -12,7 +13,7 @@ public class AppointmentDTO {
     private Long id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss")
-    private Timestamp date;
+    private LocalDateTime date;
 
     @NotNull(message = "patientId")
     private Long patientId;

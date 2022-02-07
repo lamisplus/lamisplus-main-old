@@ -3,6 +3,7 @@ package org.lamisplus.modules.base.util.converter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -17,5 +18,10 @@ public class CustomDateTimeFormat {
     public static LocalTime LocalTimeByFormat(LocalTime time, String format){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
         return LocalTime.parse(formatter.format(time),formatter);
+    }
+
+    public static LocalDateTime LocalDateTimeByFormat(LocalDateTime time, String format){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        return LocalDateTime.parse(formatter.format(time),formatter);
     }
 }

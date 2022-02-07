@@ -12,6 +12,7 @@ import org.lamisplus.modules.base.util.converter.CustomDateTimeFormat;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class VisitScheduler {
     /**
      * Auto checkOut fires 1 hour
      */
-    public void autoCheckOut() {
+    /*public void autoCheckOut() {
         try {
             List<VisitDTO> visitDTOList = this.visitService.getAllVisits();
             List<Visit> visits = new ArrayList<>();
@@ -40,13 +41,13 @@ public class VisitScheduler {
                     }
                     if (visit.getDateVisitEnd() == null || visit.getTimeVisitEnd() == null) {
                         LocalDate localDate = visit.getDateVisitStart().plusDays(1);
-                        LocalTime localTime = visit.getTimeVisitStart().plusHours(24);
+                        LocalDateTime localDateTime = visit.getTimeVisitStart().plusHours(24);
                         LocalDate customNowLocalDate = CustomDateTimeFormat.LocalDateByFormat(LocalDate.now(), "dd-MM-yyyy");
                         LocalTime customNowLocalTime = CustomDateTimeFormat.LocalTimeByFormat(LocalTime.now(), "hh:mm a");
                         if ((customNowLocalDate.isAfter(localDate) || customNowLocalDate.isEqual(localDate)) &&
-                                (customNowLocalTime.isAfter(localTime) || customNowLocalTime.equals(localTime))) {
+                                (customNowLocalTime.isAfter(localDateTime) || customNowLocalTime.equals(localTime))) {
                             visit.setDateVisitEnd(localDate);
-                            visit.setTimeVisitEnd(localTime);
+                            visit.setTimeVisitEnd(localDateTime);
                             visit.setModifiedBy("System");
                             visits.add(visit);
                         }
@@ -59,5 +60,5 @@ public class VisitScheduler {
         }catch(NullPointerException e){
             log.info(e.getMessage());
         }
-    }
+    }*/
 }

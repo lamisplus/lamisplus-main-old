@@ -6,9 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +24,7 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
     Optional<Encounter> findTopByPatientIdAndFormCodeAndOrganisationUnitIdOrderByIdDesc(Long patientId, String FormCode, Long organisationUnitId);
 
 
-    Optional<Encounter> findByPatientIdAndProgramCodeAndFormCodeAndDateEncounterAndOrganisationUnitId(Long patientId, String ProgramCode, String FormCode, LocalDate dateFncounter, Long organisationUnitId);
+    Optional<Encounter> findByPatientIdAndProgramCodeAndFormCodeAndDateEncounterAndOrganisationUnitId(Long patientId, String ProgramCode, String FormCode, LocalDateTime dateFncounter, Long organisationUnitId);
 
 /*    @Query("SELECT DISTINCT new org.lamisplus.modules.base.domain.dto.EncounterDistinctDTO" +
             "(e.patientId, e.formCode, e.programCode, e.organisationUnitId, e.archived) FROM Encounter e WHERE e.patientId = ?1 and e.programCode = ?2 and e.organisationUnitId = ?3 and e.archived = ?4")*/
@@ -63,6 +65,9 @@ public interface EncounterRepository extends JpaRepository<Encounter, Long> , Jp
     @Query(value = "SELECT * FROM encounter WHERE uuid is NULL", nativeQuery = true)
     List<Encounter> findNullUuid();
 
+    Optional<Encounter> findByUuid(String uuid);
 
+    @Query(value = "select * from encounter where date_modified >=:dateLastSync or date_created >=:dateLastSync", nativeQuery = true)
+    List<Encounter> getEncountersDueForServerUpload(@Param("dateLastSync") LocalDateTime dateLastSync);
 }
 

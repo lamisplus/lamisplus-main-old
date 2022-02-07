@@ -9,6 +9,8 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -24,7 +26,7 @@ public class Appointment extends Audit<String>{
     @Basic
     @Column(name = "date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd@HH:mm:ss")
-    private Timestamp date;
+    private LocalDateTime date;
 
     @Column(name = "patient_id")
     private Long patientId;
