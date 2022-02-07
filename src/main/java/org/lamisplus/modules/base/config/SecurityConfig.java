@@ -31,13 +31,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAuthenticationEntryPoint unauthorizedHandler;
 
     //Swagger interface
-    private static final String[] AUTH_LIST = { //
-            "/v2/api-docs", //
-            "/configuration/ui", //
-            "/swagger-resources", //
-            "/configuration/security", //
-            "/swagger-ui.html", //
-            "/webjars/**" //
+    private static final String[] PERMIT_LIST = {"/v2/api-docs", "/configuration/ui", "/swagger-resources",
+            "/configuration/security", "/swagger-ui.html", "/webjars/**",
+            "/api/authenticate", "/api/swagger-ui.html", "/api/application-codesets/codesetGroup", "/api/updates/server",
+            "/api/sync/**" //Permit temporarily for server
     };
 
 
@@ -54,9 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/api/authenticate", "/api/swagger-ui.html", "/api/application-codesets/codesetGroup", "/api/updates/server").permitAll()
-                    .antMatchers("/api/**").authenticated()
-                .antMatchers(AUTH_LIST).permitAll()
+                .antMatchers(PERMIT_LIST).permitAll()
+                .antMatchers("/api/**").authenticated()
                 .and().headers().frameOptions().sameOrigin()
                 .and().apply(securityConfigurerAdapter())
                 .and().csrf().disable()
