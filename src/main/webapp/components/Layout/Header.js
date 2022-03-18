@@ -217,7 +217,7 @@ function Header() {
         </Nav>
         <Nav navbar>
           <NavItem className="ml-2 d-inline-flex">
-            <h4>Logged In Facility: {user && user.currentOrganisationUnitName ? user.currentOrganisationUnitName : ""}</h4>
+            <h4>Logged In Server: {user && user.currentOrganisationUnitName ? user.currentOrganisationUnitName : ""}</h4>
           </NavItem>
         </Nav>
         <Nav navbar>{/* <SearchInput /> */}</Nav>
