@@ -3,7 +3,9 @@ package org.lamisplus.modules.base.domain.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.lamisplus.modules.base.domain.entity.FormData;
 import org.lamisplus.modules.base.util.converter.LocalDateConverter;
@@ -13,10 +15,13 @@ import javax.persistence.Convert;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class EncounterDTO implements Serializable {
     private Long encounterId;
     @JsonIgnore
@@ -52,4 +57,13 @@ public class EncounterDTO implements Serializable {
     private List<Object> formDataObj;
     private Object details;
     private Long organisationUnitId;
+    private String patientUuid;
+    private String visitUuid;
+    private String createdBy;
+    private String modifiedBy;
+    private String uuid;
+    private LocalDateTime dateModified;
+    private Integer archived;
+    private LocalDateTime dateCreated;
+
 }

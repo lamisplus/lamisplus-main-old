@@ -188,7 +188,9 @@ public class EncounterService {
 
         encounter.setUuid(UUID.randomUUID().toString());
         encounter.setCreatedBy(userService.getUserWithRoles().get().getUserName());
+        encounter.setModifiedBy(userService.getUserWithRoles().get().getUserName());
         encounter.setOrganisationUnitId(getOrganisationUnitId());
+        encounter.setArchived(UNARCHIVED);
         Encounter savedEncounter = this.encounterRepository.save(encounter);
 
         if(encounterDTO.getTypePatient() != null) {
@@ -201,6 +203,7 @@ public class EncounterService {
                 FormData formData = new FormData();
                 formData.setEncounterId(savedEncounter.getId());
                 formData.setData(formDataList);
+                formData.setUuid(UUID.randomUUID().toString());
                 formData.setOrganisationUnitId(getOrganisationUnitId());
                 formDataRepository.save(formData);
             });

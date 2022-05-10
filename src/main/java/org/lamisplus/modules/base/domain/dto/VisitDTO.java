@@ -1,17 +1,22 @@
 package org.lamisplus.modules.base.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.lamisplus.modules.base.util.converter.LocalDateConverter;
 import org.lamisplus.modules.base.util.converter.LocalTimeAttributeConverter;
 
 import javax.persistence.Convert;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class VisitDTO {
 
     private Long id;
@@ -32,7 +37,7 @@ public class VisitDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "hh:mm a")
     private LocalTime timeVisitStart;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @Convert(converter = LocalDateConverter.class)
     private LocalDate dateNextAppointment;
 
@@ -45,5 +50,13 @@ public class VisitDTO {
     private List<AppointmentDTO> appointmentDTOList;
     private Long appointmentId;
     private Object details;
+    private String patientUuid;
+    private String uuid;
+    private Long organisationUnitId;
+    private String createdBy;
+    private String modifiedBy;
+    private LocalDateTime dateCreated;
+    private LocalDateTime dateModified;
+    private String archived;
 
 }

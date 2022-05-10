@@ -26,6 +26,8 @@ import java.util.List;
 @Entity
 @EqualsAndHashCode
 @Table(name = "patient")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Patient extends JsonBEntity implements Serializable {
 
     @Id
@@ -39,7 +41,6 @@ public class Patient extends JsonBEntity implements Serializable {
 
     @Basic
     @Column(name = "uuid", updatable = false)
-    @JsonIgnore
     private String uuid;
 
     @Basic

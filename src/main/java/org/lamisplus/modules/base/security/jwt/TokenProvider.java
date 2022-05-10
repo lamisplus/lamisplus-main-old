@@ -38,16 +38,18 @@ public class TokenProvider {
     UserRepository userRepository;
 
 
-    public String createToken(Authentication authentication, UserService userService, boolean rememberMe) {
+    public String createToken(Authentication authentication, UserService userService, boolean rememberMe, Date tokenValidity) {
         //String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
         Date validity;
+
         if (rememberMe) {
             validity = new Date(now + this.tokenValidityInMillisecondsForRememberMe);
         } else {
             validity = new Date(now + this.tokenValidityInMilliseconds);
         }
+        if(tokenValidity != null)validity=tokenValidity;
         org.lamisplus.modules.base.domain.entity.User user = userService.getUserWithRoles().get();
         //getting & adding user details to token
         String name = user.getFirstName() + " " +

@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.lamisplus.modules.bootstrap.BootstrapModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
+import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
@@ -137,7 +138,7 @@ public class BaseApplication extends SpringBootServletInitializer {
         return liquibase;
     }
 
-    /*public static void restart() {
+    public static void restart() {
         ApplicationArguments args = context.getBean(ApplicationArguments.class);
 
         Thread thread = new Thread(() -> {
@@ -147,5 +148,5 @@ public class BaseApplication extends SpringBootServletInitializer {
 
         thread.setDaemon(false);
         thread.start();
-    }*/
+    }
 }

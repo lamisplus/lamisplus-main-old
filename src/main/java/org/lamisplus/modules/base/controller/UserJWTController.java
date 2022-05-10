@@ -1,6 +1,7 @@
 package org.lamisplus.modules.base.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.StringUtils;
 import org.lamisplus.modules.base.controller.vm.LoginVM;
 import org.lamisplus.modules.base.security.jwt.JWTFilter;
 import org.lamisplus.modules.base.security.jwt.TokenProvider;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/api")
@@ -33,16 +35,24 @@ public class UserJWTController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<JWTToken> authorize(@Valid @RequestBody LoginVM loginVM) {
+    public ResponseEntity<JWTToken> authorize(@Valid @RequestBody LoginVM loginVM, Long validityByHour) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginVM.getUsername(),
                 loginVM.getPassword()
         );
+        Date validityDate = null;
+        Long validityByMilliseconds;
+        long now = (new Date()).getTime();
+        if(validityByHour != null) {
+            validityDate = new Date();
+            validityByMilliseconds = validityByHour * 3600000;
+            validityDate = new Date(now + validityByMilliseconds);
+        }
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         boolean rememberMe = (loginVM.isRememberMe() == null) ? false : loginVM.isRememberMe();
-        String jwt = tokenProvider.createToken(authentication, userService, rememberMe);
+        String jwt = tokenProvider.createToken(authentication, userService, rememberMe, validityDate);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
         return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
@@ -51,7 +61,7 @@ public class UserJWTController {
     /**
      * Object to return as body in JWT Authentication.
      */
-    static class JWTToken {
+    public static class JWTToken {
         private String idToken;
 
         JWTToken(String idToken) {
@@ -59,7 +69,7 @@ public class UserJWTController {
         }
 
         @JsonProperty("id_token")
-        String getIdToken() {
+        public String getIdToken() {
             return idToken;
         }
 

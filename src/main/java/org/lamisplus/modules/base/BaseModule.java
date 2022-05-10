@@ -29,7 +29,8 @@ public class BaseModule extends AcrossModule {
                 getClass().getPackage().getName() +".domain.mapper",
                 getClass().getPackage().getName() +".util",
                 getClass().getPackage().getName() +".component",
-                getClass().getPackage().getName() +".job"));
+                getClass().getPackage().getName() +".job",
+                "org.springframework.web.socket"));
     }
 
     public String getName() {

@@ -7,6 +7,7 @@ import org.lamisplus.modules.base.controller.apierror.EntityNotFoundException;
 import org.lamisplus.modules.base.domain.dto.AppointmentDTO;
 import org.lamisplus.modules.base.domain.entity.Appointment;
 import org.lamisplus.modules.base.domain.entity.Patient;
+import org.lamisplus.modules.base.domain.entity.Visit;
 import org.lamisplus.modules.base.domain.mapper.AppointmentMapper;
 import org.lamisplus.modules.base.repository.AppointmentRepository;
 import org.lamisplus.modules.base.util.Constants;
@@ -34,7 +35,8 @@ public class AppointmentService {
         List<AppointmentDTO> appointmentDTOS = new ArrayList<>();
         appointments.forEach(appointment -> {
             Patient patient = appointment.getPatientByPatientId();
-            final AppointmentDTO appointmentDTO = appointmentMapper.toAppointmentDTO(appointment, patient);
+            Visit visit = appointment.getVisitByVisitId();
+            final AppointmentDTO appointmentDTO = appointmentMapper.toAppointmentDTO(appointment, patient, visit);
 
             appointmentDTOS.add(appointmentDTO);
         });
@@ -82,8 +84,9 @@ public class AppointmentService {
 
     private AppointmentDTO getAppointmentDTO(Appointment appointment){
         Patient patient = appointment.getPatientByPatientId();
+        Visit visit = appointment.getVisitByVisitId();
 
-        return  appointmentMapper.toAppointmentDTO(appointment, patient);
+        return  appointmentMapper.toAppointmentDTO(appointment, patient, visit);
     }
 
     public Long getTodayAppointmentCount() {

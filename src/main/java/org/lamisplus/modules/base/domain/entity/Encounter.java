@@ -26,6 +26,8 @@ import java.util.List;
 @ToString
 @Table(name = "encounter")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Encounter implements Serializable  {
 
     @Id
@@ -54,12 +56,6 @@ public class Encounter implements Serializable  {
     private LocalDate dateEncounter;
 
     @Basic
-    @Column(name = "date_created")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "hh:mm a")
-    @Convert(converter = LocalTimeAttributeConverter.class)
-    private LocalTime timeCreated;
-
-    @Basic
     @Column(name = "uuid")
     @JsonIgnore
     private String uuid;
@@ -79,6 +75,12 @@ public class Encounter implements Serializable  {
     @JsonIgnore
     @UpdateTimestamp
     private LocalDateTime dateModified = LocalDateTime.now();
+
+    @Basic
+    @Column(name = "date_created")
+    @JsonIgnore
+    @UpdateTimestamp
+    private LocalDateTime dateCreated = LocalDateTime.now();
 
     @LastModifiedBy
     @Basic

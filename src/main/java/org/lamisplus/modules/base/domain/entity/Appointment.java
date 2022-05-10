@@ -2,9 +2,7 @@ package org.lamisplus.modules.base.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -14,6 +12,8 @@ import java.sql.Timestamp;
 @Data
 @EqualsAndHashCode
 @Table(name = "appointment")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Appointment extends Audit<String>{
 
     @Id
@@ -57,6 +57,12 @@ public class Appointment extends Audit<String>{
     @JsonIgnore
     @ToString.Exclude
     private Patient patientByPatientId;
+
+    @ManyToOne
+    @JoinColumn(name = "visit_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
+    @ToString.Exclude
+    private Visit visitByVisitId;
 
     @ManyToOne
     @JoinColumn(name = "organisation_unit_id", referencedColumnName = "id", insertable = false, updatable = false)

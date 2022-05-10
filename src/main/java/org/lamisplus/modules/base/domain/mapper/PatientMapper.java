@@ -14,6 +14,7 @@ public interface PatientMapper {
     @Mappings({
             @Mapping(source="visit.id", target="visitId"),
             @Mapping(source="patient.id", target="patientId"),
+            @Mapping(source="patient.uuid", target="uuid"),
             @Mapping(source="patient.organisationUnitId", target="organisationUnitId")
     })
     PatientDTO toPatientDTO(Visit visit, Patient patient);

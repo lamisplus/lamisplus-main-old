@@ -19,6 +19,8 @@ import java.util.List;
 @Data
 @EqualsAndHashCode
 @Table(name = "visit")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Visit extends Audit<String> {
     @Id
     @Column(name = "id", updatable = false)
@@ -50,7 +52,7 @@ public class Visit extends Audit<String> {
 
     @Basic
     @Column(name = "date_next_appointment")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate dateNextAppointment;
 
     @Basic
@@ -89,4 +91,9 @@ public class Visit extends Audit<String> {
     @Basic
     @Column(name = "organisation_unit_id", updatable = false)
     private Long organisationUnitId;
+
+    @OneToMany(mappedBy = "visitByVisitId")
+    @JsonIgnore
+    @ToString.Exclude
+    public List<Appointment> appointmentsById;
 }

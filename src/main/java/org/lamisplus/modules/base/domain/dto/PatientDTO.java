@@ -45,6 +45,7 @@ public class PatientDTO {
     private Long provinceId;
     private List<Object> otherIdentifier;
     private String artStatus;
+    private String uuid;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dateVisitEnd;

@@ -218,7 +218,7 @@
         </addColumn>
     </changeSet>
 
-    <changeSet failOnError="false" author="Chukwuemeka Ilozue" id="sync-1">
+    <!--<changeSet failOnError="false" author="Chukwuemeka Ilozue" id="sync-1">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="remote_access_token"/>
@@ -303,5 +303,5 @@
             CONSTRAINT sync_queue_pkey PRIMARY KEY (id)
             )
         </sql>
-    </changeSet>
+    </changeSet>-->
 </databaseChangeLog>
